@@ -1,0 +1,1709 @@
+{
+  "applications": {
+    "editor": {
+      "functions": 119,
+      "codeBytes": 89168,
+      "imageBytes": 242124,
+      "imageSHA256": "08016c7169fd133488b95c2d8eb037f0eb27a13b54b9d427d0dd8ebe327ec38d",
+      "certificateBytes": 33050,
+      "calls": 430,
+      "maxFrame": 192,
+      "entries": {
+        "typedWorldMeta": {
+          "name": "typedWorldMeta",
+          "frame": 64,
+          "calls": [],
+          "typed": 64,
+          "sdk": {}
+        },
+        "typedWorldEvent": {
+          "name": "typedWorldEvent",
+          "frame": 48,
+          "calls": [
+            {
+              "at": 108,
+              "name": "editorOpen",
+              "external": false
+            },
+            {
+              "at": 204,
+              "name": "editorInput",
+              "external": false
+            },
+            {
+              "at": 344,
+              "name": "editorWriteDone",
+              "external": false
+            },
+            {
+              "at": 396,
+              "name": "__typed_async_resume",
+              "external": false
+            },
+            {
+              "at": 460,
+              "name": "editorShow",
+              "external": false
+            },
+            {
+              "at": 648,
+              "name": "editorShow",
+              "external": false
+            },
+            {
+              "at": 828,
+              "name": "editorRestorePosition",
+              "external": false
+            },
+            {
+              "at": 860,
+              "name": "editorShow",
+              "external": false
+            },
+            {
+              "at": 1132,
+              "name": "editorEmptyFrame",
+              "external": false
+            },
+            {
+              "at": 1168,
+              "name": "typedSdkScreen",
+              "external": true
+            },
+            {
+              "at": 1184,
+              "name": "__typed_async_pending",
+              "external": false
+            }
+          ],
+          "typed": 944,
+          "sdk": {
+            "typedSdkBuffer": 800,
+            "typedSdkEventText": 336,
+            "typedSdkEventHandle": 160,
+            "typedSdkReply": 448,
+            "typedSdkRelease": 400,
+            "typedSdkView": 800,
+            "typedSdkFileRead": 336,
+            "typedSdkLastIndex": 480,
+            "typedSdkCountUnit": 464,
+            "typedSdkCodePoints": 736,
+            "typedSdkTimestamp": 464,
+            "typedSdkStoreLoad": 464,
+            "typedSdkMove": 656,
+            "typedSdkStoreSave": 464,
+            "typedSdkCapture": 400,
+            "typedSdkYield": 496,
+            "typedSdkNthIndex": 480,
+            "typedSdkSeek": 784,
+            "typedSdkPointIndex": 480,
+            "typedSdkCopySpan": 672,
+            "typedSdkUpper": 560,
+            "typedSdkScreen": 448,
+            "typedSdkRestore": 256,
+            "typedSdkSend": 336,
+            "typedSdkWriteSnapshot": 240,
+            "typedSdkError": 240,
+            "typedSdkMatches": 112,
+            "typedSdkEventInt": 112
+          }
+        }
+      },
+      "all": [
+        {
+          "name": "editorHighSurrogate",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorLowSurrogate",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorNext",
+          "frame": 32,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorPrevious",
+          "frame": 32,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorWrapEnd",
+          "frame": 48,
+          "typed": 96,
+          "external": 0
+        },
+        {
+          "name": "editorColumn",
+          "frame": 32,
+          "typed": 80,
+          "external": 0
+        },
+        {
+          "name": "editorOffset",
+          "frame": 48,
+          "typed": 96,
+          "external": 0
+        },
+        {
+          "name": "editorFold",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorEmptyFrame",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorWhitespace",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorMdSpace",
+          "frame": 32,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorMdSuffix",
+          "frame": 48,
+          "typed": 64,
+          "external": 0
+        },
+        {
+          "name": "editorIsMarkdown",
+          "frame": 32,
+          "typed": 96,
+          "external": 2
+        },
+        {
+          "name": "editorMdFence",
+          "frame": 32,
+          "typed": 80,
+          "external": 0
+        },
+        {
+          "name": "editorMdHeading",
+          "frame": 32,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorMdColor",
+          "frame": 32,
+          "typed": 112,
+          "external": 0
+        },
+        {
+          "name": "editorMdMarker",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorMdListEnd",
+          "frame": 32,
+          "typed": 80,
+          "external": 0
+        },
+        {
+          "name": "editorMdNextMarker",
+          "frame": 80,
+          "typed": 80,
+          "external": 0
+        },
+        {
+          "name": "editorMdEmit",
+          "frame": 32,
+          "typed": 32,
+          "external": 1
+        },
+        {
+          "name": "editorMdOpen",
+          "frame": 80,
+          "typed": 112,
+          "external": 2
+        },
+        {
+          "name": "editorMdBold",
+          "frame": 80,
+          "typed": 112,
+          "external": 2
+        },
+        {
+          "name": "editorMdCode",
+          "frame": 64,
+          "typed": 96,
+          "external": 2
+        },
+        {
+          "name": "editorMdLink",
+          "frame": 64,
+          "typed": 96,
+          "external": 2
+        },
+        {
+          "name": "editorMdMatch",
+          "frame": 32,
+          "typed": 144,
+          "external": 2
+        },
+        {
+          "name": "editorMdStep",
+          "frame": 16,
+          "typed": 160,
+          "external": 4
+        },
+        {
+          "name": "editorHex",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorQuoteContent",
+          "frame": 80,
+          "typed": 96,
+          "external": 0
+        },
+        {
+          "name": "editorQuote",
+          "frame": 48,
+          "typed": 144,
+          "external": 0
+        },
+        {
+          "name": "editorLineEnd",
+          "frame": 48,
+          "typed": 48,
+          "external": 1
+        },
+        {
+          "name": "editorFirstRow",
+          "frame": 16,
+          "typed": 112,
+          "external": 1
+        },
+        {
+          "name": "editorNextRow",
+          "frame": 16,
+          "typed": 112,
+          "external": 1
+        },
+        {
+          "name": "editorStoreRow",
+          "frame": 80,
+          "typed": 80,
+          "external": 0
+        },
+        {
+          "name": "editorFrameRow",
+          "frame": 64,
+          "typed": 160,
+          "external": 1
+        },
+        {
+          "name": "editorResetRows",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorInvalidateRows",
+          "frame": 48,
+          "typed": 48,
+          "external": 1
+        },
+        {
+          "name": "editorRowAnchor",
+          "frame": 16,
+          "typed": 176,
+          "external": 2
+        },
+        {
+          "name": "editorNeedsRow",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorLocate",
+          "frame": 16,
+          "typed": 192,
+          "external": 2
+        },
+        {
+          "name": "editorFrameNeedsRow",
+          "frame": 16,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "editorFrameLocate",
+          "frame": 48,
+          "typed": 224,
+          "external": 3
+        },
+        {
+          "name": "editorDigits",
+          "frame": 32,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "editorSavedStatus",
+          "frame": 32,
+          "typed": 64,
+          "external": 0
+        },
+        {
+          "name": "editorSaveError",
+          "frame": 64,
+          "typed": 80,
+          "external": 1
+        },
+        {
+          "name": "editorFindMatch",
+          "frame": 48,
+          "typed": 64,
+          "external": 0
+        },
+        {
+          "name": "editorSetFound",
+          "frame": 48,
+          "typed": 64,
+          "external": 0
+        },
+        {
+          "name": "editorFindActive",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorFindAdvance",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorFindNext",
+          "frame": 16,
+          "typed": 256,
+          "external": 5
+        },
+        {
+          "name": "editorFindInput",
+          "frame": 48,
+          "typed": 304,
+          "external": 5
+        },
+        {
+          "name": "editorBeginFind",
+          "frame": 16,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "editorFindStatus",
+          "frame": 64,
+          "typed": 64,
+          "external": 1
+        },
+        {
+          "name": "editorFindMark",
+          "frame": 64,
+          "typed": 96,
+          "external": 0
+        },
+        {
+          "name": "editorFindMarks",
+          "frame": 112,
+          "typed": 272,
+          "external": 2
+        },
+        {
+          "name": "editorPreviewSlot",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorPreviewFinish",
+          "frame": 32,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorPreviewAppend",
+          "frame": 64,
+          "typed": 80,
+          "external": 0
+        },
+        {
+          "name": "editorPreviewIndent",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorPreviewWord",
+          "frame": 80,
+          "typed": 160,
+          "external": 0
+        },
+        {
+          "name": "editorPreviewStage",
+          "frame": 80,
+          "typed": 128,
+          "external": 2
+        },
+        {
+          "name": "editorPreviewUpper",
+          "frame": 48,
+          "typed": 64,
+          "external": 4
+        },
+        {
+          "name": "editorPreviewCooked",
+          "frame": 32,
+          "typed": 192,
+          "external": 4
+        },
+        {
+          "name": "editorPreviewSource",
+          "frame": 112,
+          "typed": 240,
+          "external": 3
+        },
+        {
+          "name": "editorPreviewReset",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorPreviewReady",
+          "frame": 32,
+          "typed": 272,
+          "external": 7
+        },
+        {
+          "name": "editorPreviewFrame",
+          "frame": 192,
+          "typed": 336,
+          "external": 2
+        },
+        {
+          "name": "editorBeginPreview",
+          "frame": 16,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "editorPreviewKey",
+          "frame": 32,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "editorRowColor",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorStatus",
+          "frame": 128,
+          "typed": 208,
+          "external": 2
+        },
+        {
+          "name": "editorDocumentFrame",
+          "frame": 160,
+          "typed": 496,
+          "external": 4
+        },
+        {
+          "name": "editorHints",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorShow",
+          "frame": 48,
+          "typed": 544,
+          "external": 10
+        },
+        {
+          "name": "editorPositionDict",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorPositionKeyEnd",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorPositionNumberStop",
+          "frame": 32,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "editorPositionNumber",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorPositionTuple",
+          "frame": 64,
+          "typed": 112,
+          "external": 0
+        },
+        {
+          "name": "editorPositionKeyEqual",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorPositionKey",
+          "frame": 16,
+          "typed": 160,
+          "external": 2
+        },
+        {
+          "name": "editorPositionApply",
+          "frame": 32,
+          "typed": 80,
+          "external": 6
+        },
+        {
+          "name": "editorRestorePosition",
+          "frame": 48,
+          "typed": 208,
+          "external": 7
+        },
+        {
+          "name": "editorPositionNewer",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorPositionRank",
+          "frame": 96,
+          "typed": 144,
+          "external": 1
+        },
+        {
+          "name": "editorPositionCopy",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "editorPositionAppend",
+          "frame": 96,
+          "typed": 240,
+          "external": 2
+        },
+        {
+          "name": "editorRemember",
+          "frame": 128,
+          "typed": 368,
+          "external": 9
+        },
+        {
+          "name": "editorEqual",
+          "frame": 32,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "editorKeyCode",
+          "frame": 192,
+          "typed": 224,
+          "external": 0
+        },
+        {
+          "name": "editorChange",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorMakeRoom",
+          "frame": 32,
+          "typed": 80,
+          "external": 2
+        },
+        {
+          "name": "editorInsert",
+          "frame": 32,
+          "typed": 112,
+          "external": 3
+        },
+        {
+          "name": "editorDelete",
+          "frame": 32,
+          "typed": 80,
+          "external": 4
+        },
+        {
+          "name": "editorContinueList",
+          "frame": 80,
+          "typed": 160,
+          "external": 4
+        },
+        {
+          "name": "editorSplit",
+          "frame": 32,
+          "typed": 192,
+          "external": 4
+        },
+        {
+          "name": "editorMoveRow",
+          "frame": 64,
+          "typed": 224,
+          "external": 2
+        },
+        {
+          "name": "editorJump",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "editorPlainKey",
+          "frame": 48,
+          "typed": 272,
+          "external": 6
+        },
+        {
+          "name": "editorSave",
+          "frame": 32,
+          "typed": 32,
+          "external": 4
+        },
+        {
+          "name": "editorGoFiles",
+          "frame": 80,
+          "typed": 80,
+          "external": 2
+        },
+        {
+          "name": "editorDiscard",
+          "frame": 32,
+          "typed": 400,
+          "external": 11
+        },
+        {
+          "name": "editorEscape",
+          "frame": 16,
+          "typed": 416,
+          "external": 11
+        },
+        {
+          "name": "editorApplyKey",
+          "frame": 32,
+          "typed": 448,
+          "external": 16
+        },
+        {
+          "name": "editorInput",
+          "frame": 128,
+          "typed": 672,
+          "external": 21
+        },
+        {
+          "name": "editorWriteDone",
+          "frame": 64,
+          "typed": 608,
+          "external": 19
+        },
+        {
+          "name": "typedWorldMeta",
+          "frame": 64,
+          "typed": 64,
+          "external": 0
+        },
+        {
+          "name": "editorReplyError",
+          "frame": 32,
+          "typed": 176,
+          "external": 1
+        },
+        {
+          "name": "editorRefuseOpen",
+          "frame": 64,
+          "typed": 240,
+          "external": 4
+        },
+        {
+          "name": "editorOpen",
+          "frame": 112,
+          "typed": 896,
+          "external": 22
+        },
+        {
+          "name": "editorOpened",
+          "frame": 64,
+          "typed": 608,
+          "external": 16
+        },
+        {
+          "name": "editorOpenFailed",
+          "frame": 48,
+          "typed": 224,
+          "external": 3
+        },
+        {
+          "name": "typedWorldEvent",
+          "frame": 48,
+          "typed": 944,
+          "external": 28
+        },
+        {
+          "name": "__typed_async_1_editorFindTask_editorFindTask_step",
+          "frame": 160,
+          "typed": 224,
+          "external": 5
+        },
+        {
+          "name": "__typed_async_2_editorOpenTask_editorOpenTask_step",
+          "frame": 144,
+          "typed": 752,
+          "external": 21
+        },
+        {
+          "name": "__typed_async_1_editorFindTask_editorFindTask_start",
+          "frame": 16,
+          "typed": 240,
+          "external": 5
+        },
+        {
+          "name": "__typed_async_1_editorFindTask_editorFindTask_cancel",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "__typed_async_2_editorOpenTask_editorOpenTask_start",
+          "frame": 32,
+          "typed": 784,
+          "external": 21
+        },
+        {
+          "name": "__typed_async_pending",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "__typed_async_resume",
+          "frame": 32,
+          "typed": 784,
+          "external": 21
+        }
+      ],
+      "samples": {
+        "stock": [
+          133.1309960000001,
+          64.56435600000009,
+          62.0231040000001,
+          55.99094000000014,
+          69.5160350000001,
+          56.41197299999976,
+          113.16966700000012
+        ],
+        "cert": [
+          109.42711899999995,
+          66.75384699999995,
+          74.76436600000011,
+          45.97046099999989,
+          64.92231800000013,
+          106.22703200000024,
+          81.45982999999978
+        ],
+        "checker": [
+          30.321624000000156,
+          41.15165499999989,
+          36.138876999999866,
+          6.259970000000067,
+          11.776006999999936,
+          3.4039880000000267,
+          26.471074000000044
+        ]
+      },
+      "medians": {
+        "stock": 64.56435600000009,
+        "cert": 74.76436600000011,
+        "checker": 26.471074000000044
+      }
+    },
+    "chess": {
+      "functions": 82,
+      "codeBytes": 256400,
+      "imageBytes": 274892,
+      "imageSHA256": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685",
+      "certificateBytes": 21267,
+      "calls": 284,
+      "maxFrame": 224,
+      "entries": {
+        "typedWorldMeta": {
+          "name": "typedWorldMeta",
+          "frame": 64,
+          "calls": [],
+          "typed": 64,
+          "sdk": {}
+        },
+        "typedWorldEvent": {
+          "name": "typedWorldEvent",
+          "frame": 144,
+          "calls": [
+            {
+              "at": 32,
+              "name": "typedSdkBuffer",
+              "external": true
+            },
+            {
+              "at": 116,
+              "name": "chessNewGame",
+              "external": false
+            },
+            {
+              "at": 156,
+              "name": "chessRender",
+              "external": false
+            },
+            {
+              "at": 272,
+              "name": "typedSdkBuffer",
+              "external": true
+            },
+            {
+              "at": 336,
+              "name": "chessSearchSlice",
+              "external": false
+            },
+            {
+              "at": 364,
+              "name": "chessStopSearch",
+              "external": false
+            },
+            {
+              "at": 396,
+              "name": "chessSchedule",
+              "external": false
+            },
+            {
+              "at": 456,
+              "name": "chessRender",
+              "external": false
+            },
+            {
+              "at": 528,
+              "name": "typedSdkBuffer",
+              "external": true
+            },
+            {
+              "at": 548,
+              "name": "typedSdkBuffer",
+              "external": true
+            },
+            {
+              "at": 592,
+              "name": "typedSdkEventText",
+              "external": true
+            },
+            {
+              "at": 784,
+              "name": "chessUiEqual",
+              "external": false
+            },
+            {
+              "at": 1124,
+              "name": "chessUiEqual",
+              "external": false
+            },
+            {
+              "at": 1232,
+              "name": "typedSdkEventText",
+              "external": true
+            },
+            {
+              "at": 1508,
+              "name": "chessUiEqual",
+              "external": false
+            },
+            {
+              "at": 1636,
+              "name": "chessRender",
+              "external": false
+            },
+            {
+              "at": 1888,
+              "name": "typedSdkEventText",
+              "external": true
+            },
+            {
+              "at": 2068,
+              "name": "chessUiEqual",
+              "external": false
+            },
+            {
+              "at": 2304,
+              "name": "typedSdkEventText",
+              "external": true
+            },
+            {
+              "at": 2340,
+              "name": "chessUiKey",
+              "external": false
+            },
+            {
+              "at": 2512,
+              "name": "typedSdkEventText",
+              "external": true
+            },
+            {
+              "at": 2704,
+              "name": "chessControl",
+              "external": false
+            },
+            {
+              "at": 2744,
+              "name": "chessRender",
+              "external": false
+            }
+          ],
+          "typed": 928,
+          "sdk": {
+            "typedSdkBuffer": 272,
+            "typedSdkPainterSource": 256,
+            "typedSdkScreen": 416,
+            "typedSdkPainterFrame": 256,
+            "typedSdkYield": 256,
+            "typedSdkEventText": 144,
+            "typedSdkSend": 272
+          }
+        }
+      },
+      "all": [
+        {
+          "name": "chessOnBoard",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessSquare",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessDense",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessMove",
+          "frame": 32,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "chessFrom",
+          "frame": 16,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessTo",
+          "frame": 16,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessPromotion",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessSide",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessPawnStep",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessRearPiece",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessResetPosition",
+          "frame": 80,
+          "typed": 96,
+          "external": 0
+        },
+        {
+          "name": "chessCopyPosition",
+          "frame": 32,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessRay",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessKnight",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessIsPiece",
+          "frame": 32,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "chessAttacked",
+          "frame": 64,
+          "typed": 112,
+          "external": 0
+        },
+        {
+          "name": "chessInCheck",
+          "frame": 16,
+          "typed": 128,
+          "external": 0
+        },
+        {
+          "name": "chessRight",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessRemoveRight",
+          "frame": 16,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessRookRight",
+          "frame": 16,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "chessPromotedKind",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessMake",
+          "frame": 208,
+          "typed": 256,
+          "external": 0
+        },
+        {
+          "name": "chessUnmake",
+          "frame": 96,
+          "typed": 128,
+          "external": 0
+        },
+        {
+          "name": "chessAdd",
+          "frame": 48,
+          "typed": 96,
+          "external": 0
+        },
+        {
+          "name": "chessPawnAdd",
+          "frame": 64,
+          "typed": 160,
+          "external": 0
+        },
+        {
+          "name": "chessPawnMoves",
+          "frame": 112,
+          "typed": 272,
+          "external": 0
+        },
+        {
+          "name": "chessCastle",
+          "frame": 112,
+          "typed": 224,
+          "external": 0
+        },
+        {
+          "name": "chessPieceMoves",
+          "frame": 96,
+          "typed": 368,
+          "external": 0
+        },
+        {
+          "name": "chessPseudoMoves",
+          "frame": 48,
+          "typed": 416,
+          "external": 0
+        },
+        {
+          "name": "chessLegal",
+          "frame": 32,
+          "typed": 288,
+          "external": 0
+        },
+        {
+          "name": "chessLegalMoves",
+          "frame": 48,
+          "typed": 464,
+          "external": 0
+        },
+        {
+          "name": "chessPerft",
+          "frame": 112,
+          "typed": 576,
+          "external": 0
+        },
+        {
+          "name": "chessValue",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessAbs",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessCenter",
+          "frame": 16,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessEvaluate",
+          "frame": 96,
+          "typed": 128,
+          "external": 0
+        },
+        {
+          "name": "chessCapture",
+          "frame": 48,
+          "typed": 80,
+          "external": 0
+        },
+        {
+          "name": "chessTactical",
+          "frame": 16,
+          "typed": 96,
+          "external": 0
+        },
+        {
+          "name": "chessPriority",
+          "frame": 48,
+          "typed": 128,
+          "external": 0
+        },
+        {
+          "name": "chessTacticalMoves",
+          "frame": 48,
+          "typed": 144,
+          "external": 0
+        },
+        {
+          "name": "chessOrder",
+          "frame": 80,
+          "typed": 208,
+          "external": 0
+        },
+        {
+          "name": "chessFirstLegal",
+          "frame": 32,
+          "typed": 320,
+          "external": 0
+        },
+        {
+          "name": "chessFrame",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessUndo",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessList",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessInitNode",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "chessStartSearch",
+          "frame": 80,
+          "typed": 496,
+          "external": 0
+        },
+        {
+          "name": "chessStopSearch",
+          "frame": 32,
+          "typed": 160,
+          "external": 0
+        },
+        {
+          "name": "chessAcceptScore",
+          "frame": 64,
+          "typed": 64,
+          "external": 0
+        },
+        {
+          "name": "chessCompleteNode",
+          "frame": 48,
+          "typed": 176,
+          "external": 0
+        },
+        {
+          "name": "chessPrepareNode",
+          "frame": 128,
+          "typed": 544,
+          "external": 0
+        },
+        {
+          "name": "chessSearchStep",
+          "frame": 128,
+          "typed": 672,
+          "external": 0
+        },
+        {
+          "name": "chessSearchSlice",
+          "frame": 32,
+          "typed": 704,
+          "external": 0
+        },
+        {
+          "name": "typedWorldMeta",
+          "frame": 64,
+          "typed": 64,
+          "external": 0
+        },
+        {
+          "name": "chessUiEqual",
+          "frame": 32,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessUiKey",
+          "frame": 112,
+          "typed": 144,
+          "external": 0
+        },
+        {
+          "name": "chessDeadMaterial",
+          "frame": 48,
+          "typed": 64,
+          "external": 0
+        },
+        {
+          "name": "chessOutcome",
+          "frame": 32,
+          "typed": 448,
+          "external": 0
+        },
+        {
+          "name": "chessNewGame",
+          "frame": 16,
+          "typed": 112,
+          "external": 0
+        },
+        {
+          "name": "chessPlay",
+          "frame": 32,
+          "typed": 480,
+          "external": 0
+        },
+        {
+          "name": "chessFinishBlack",
+          "frame": 16,
+          "typed": 496,
+          "external": 0
+        },
+        {
+          "name": "chessSchedule",
+          "frame": 32,
+          "typed": 528,
+          "external": 1
+        },
+        {
+          "name": "chessPlayWhite",
+          "frame": 32,
+          "typed": 560,
+          "external": 2
+        },
+        {
+          "name": "chessSelectedMove",
+          "frame": 48,
+          "typed": 512,
+          "external": 0
+        },
+        {
+          "name": "chessHome",
+          "frame": 80,
+          "typed": 80,
+          "external": 2
+        },
+        {
+          "name": "chessPromotionKey",
+          "frame": 16,
+          "typed": 16,
+          "external": 0
+        },
+        {
+          "name": "chessControl",
+          "frame": 48,
+          "typed": 608,
+          "external": 3
+        },
+        {
+          "name": "typedWorldEvent",
+          "frame": 144,
+          "typed": 928,
+          "external": 7
+        },
+        {
+          "name": "chessAppendNumber",
+          "frame": 48,
+          "typed": 48,
+          "external": 0
+        },
+        {
+          "name": "chessAppendCoordinates",
+          "frame": 32,
+          "typed": 80,
+          "external": 0
+        },
+        {
+          "name": "chessPieceGlyph",
+          "frame": 32,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessAppendSquareName",
+          "frame": 32,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessAppendStatus",
+          "frame": 96,
+          "typed": 224,
+          "external": 0
+        },
+        {
+          "name": "chessMarkDestinations",
+          "frame": 48,
+          "typed": 512,
+          "external": 0
+        },
+        {
+          "name": "chessAppendLabel",
+          "frame": 64,
+          "typed": 144,
+          "external": 0
+        },
+        {
+          "name": "chessAppendTile",
+          "frame": 224,
+          "typed": 304,
+          "external": 0
+        },
+        {
+          "name": "chessRenderTree",
+          "frame": 160,
+          "typed": 672,
+          "external": 1
+        },
+        {
+          "name": "chessPainterSource",
+          "frame": 144,
+          "typed": 144,
+          "external": 0
+        },
+        {
+          "name": "chessDisplayStatus",
+          "frame": 16,
+          "typed": 144,
+          "external": 0
+        },
+        {
+          "name": "chessVisibleSquare",
+          "frame": 16,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessPutPainterField",
+          "frame": 32,
+          "typed": 32,
+          "external": 0
+        },
+        {
+          "name": "chessRender",
+          "frame": 112,
+          "typed": 784,
+          "external": 4
+        }
+      ],
+      "samples": {
+        "stock": [
+          48.1888399999998,
+          33.139284000000316,
+          25.500078999999914,
+          24.05738199999996,
+          23.264044000000013,
+          70.84398299999975,
+          29.614834999999402
+        ],
+        "cert": [
+          92.20522700000038,
+          47.01909799999976,
+          28.207358000000113,
+          44.2763930000001,
+          30.533868999999868,
+          60.095588000000134,
+          60.72863299999972
+        ],
+        "checker": [
+          7.0279239999999845,
+          11.658129000000372,
+          13.955219999999827,
+          10.56156699999974,
+          8.216959999999744,
+          6.278885000000628,
+          9.335253000000193
+        ]
+      },
+      "medians": {
+        "stock": 29.614834999999402,
+        "cert": 47.01909799999976,
+        "checker": 9.335253000000193
+      }
+    }
+  },
+  "negative": [
+    {
+      "name": "wrong frame",
+      "error": "Error: frame leaf"
+    },
+    {
+      "name": "wrong RA slot",
+      "error": "Error: frame leaf"
+    },
+    {
+      "name": "wrong function extent",
+      "error": "Error: extent leaf"
+    },
+    {
+      "name": "wrong function name",
+      "error": "Error: extent leaf"
+    },
+    {
+      "name": "omitted direct call",
+      "error": "Error: call evidence mid"
+    },
+    {
+      "name": "phantom direct call",
+      "error": "Error: call evidence leaf"
+    },
+    {
+      "name": "mistyped callee",
+      "error": "Error: call evidence mid"
+    },
+    {
+      "name": "wrong call site",
+      "error": "Error: call evidence mid"
+    },
+    {
+      "name": "unsupported custom word",
+      "error": "Error: unsupported word leaf b"
+    },
+    {
+      "name": "unsupported compressed instruction",
+      "error": "Error: unsupported word leaf a10001"
+    },
+    {
+      "name": "dynamic stack assignment",
+      "error": "Error: unsupported word leaf 50113"
+    },
+    {
+      "name": "incorrect epilogue",
+      "error": "Error: return leaf"
+    },
+    {
+      "name": "jump into save slot",
+      "error": "Error: local branch target leaf"
+    },
+    {
+      "name": "stack store outside frame",
+      "error": "Error: stack slot leaf"
+    }
+  ],
+  "development": [
+    {
+      "name": "sequential siblings, nested calls, alternate returns",
+      "facts": {
+        "leaf": {
+          "name": "leaf",
+          "frame": 16,
+          "calls": [],
+          "typed": 16,
+          "sdk": {}
+        },
+        "mid": {
+          "name": "mid",
+          "frame": 16,
+          "calls": [
+            {
+              "at": 20,
+              "name": "leaf",
+              "external": false
+            },
+            {
+              "at": 40,
+              "name": "leaf",
+              "external": false
+            }
+          ],
+          "typed": 32,
+          "sdk": {}
+        },
+        "top": {
+          "name": "top",
+          "frame": 16,
+          "calls": [
+            {
+              "at": 40,
+              "name": "mid",
+              "external": false
+            },
+            {
+              "at": 64,
+              "name": "leaf",
+              "external": false
+            }
+          ],
+          "typed": 48,
+          "sdk": {}
+        }
+      }
+    },
+    {
+      "name": "closed chain 1",
+      "expected": 16,
+      "typed": 16
+    },
+    {
+      "name": "closed chain 2",
+      "expected": 32,
+      "typed": 32
+    },
+    {
+      "name": "closed chain 3",
+      "expected": 48,
+      "typed": 48
+    },
+    {
+      "name": "closed chain 4",
+      "expected": 64,
+      "typed": 64
+    },
+    {
+      "name": "closed chain 5",
+      "expected": 80,
+      "typed": 80
+    },
+    {
+      "name": "closed chain 6",
+      "expected": 96,
+      "typed": 96
+    },
+    {
+      "name": "closed chain 7",
+      "expected": 112,
+      "typed": 112
+    },
+    {
+      "name": "closed chain 8",
+      "expected": 128,
+      "typed": 128
+    },
+    {
+      "name": "closed chain 9",
+      "expected": 144,
+      "typed": 144
+    },
+    {
+      "name": "closed chain 10",
+      "expected": 160,
+      "typed": 160
+    },
+    {
+      "name": "closed chain 11",
+      "expected": 176,
+      "typed": 176
+    },
+    {
+      "name": "closed chain 12",
+      "expected": 192,
+      "typed": 192
+    }
+  ]
+}

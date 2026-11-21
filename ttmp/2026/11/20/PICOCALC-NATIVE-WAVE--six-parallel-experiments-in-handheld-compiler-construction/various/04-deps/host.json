@@ -1,0 +1,1304 @@
+{
+  "apps": {
+    "editor": {
+      "body": {
+        "artifact": {
+          "hash": "3a2a453f73210b40d8d1873752501449125b3cb6cc1c66dfe70563274ad4d858",
+          "meta": "36390f724f42d497e44f4d3377bb3c7b6373157e45221f7ac0437fde133717c6",
+          "bytes": 242124
+        },
+        "rows": [
+          {
+            "block": 0,
+            "arm": "clean",
+            "ms": 101.51835900000003
+          },
+          {
+            "block": 0,
+            "arm": "global",
+            "ms": 54.1186899999999,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 0,
+            "arm": "precise",
+            "ms": 73.86556399999995,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 1,
+            "arm": "global",
+            "ms": 52.534372000000076,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 1,
+            "arm": "precise",
+            "ms": 65.34694000000013,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 1,
+            "arm": "clean",
+            "ms": 87.07784300000003
+          },
+          {
+            "block": 2,
+            "arm": "precise",
+            "ms": 50.40821600000004,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 2,
+            "arm": "clean",
+            "ms": 95.31338699999992
+          },
+          {
+            "block": 2,
+            "arm": "global",
+            "ms": 54.08454599999982,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 3,
+            "arm": "clean",
+            "ms": 88.75755600000002
+          },
+          {
+            "block": 3,
+            "arm": "global",
+            "ms": 38.88582599999995,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 3,
+            "arm": "precise",
+            "ms": 50.91706199999999,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 4,
+            "arm": "global",
+            "ms": 61.971383999999944,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 4,
+            "arm": "precise",
+            "ms": 77.96110199999998,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 4,
+            "arm": "clean",
+            "ms": 80.84068200000002
+          },
+          {
+            "block": 5,
+            "arm": "precise",
+            "ms": 40.123817000000145,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 5,
+            "arm": "clean",
+            "ms": 72.66956200000004
+          },
+          {
+            "block": 5,
+            "arm": "global",
+            "ms": 38.226156000000174,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 6,
+            "arm": "clean",
+            "ms": 70.31928999999991
+          },
+          {
+            "block": 6,
+            "arm": "global",
+            "ms": 34.84243800000013,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 6,
+            "arm": "precise",
+            "ms": 40.241607999999815,
+            "stats": {
+              "reused": 118,
+              "rebuilt": 1
+            }
+          }
+        ],
+        "rebuilt": [
+          "editorPreviewSlot"
+        ]
+      },
+      "signature": {
+        "artifact": {
+          "hash": "442e54e58c295e816ada52a398691197d3f1d35a82c0be3f15f1748008abdf3a",
+          "meta": "e0d17999abb0b9987e5b357290e053b8b05b90abcb87c7034f757e75a916150d",
+          "bytes": 242124
+        },
+        "rows": [
+          {
+            "block": 0,
+            "arm": "clean",
+            "ms": 102.2732930000002
+          },
+          {
+            "block": 0,
+            "arm": "global",
+            "ms": 83.45643999999993,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 0,
+            "arm": "precise",
+            "ms": 46.68450500000017,
+            "stats": {
+              "reused": 115,
+              "rebuilt": 4
+            }
+          },
+          {
+            "block": 1,
+            "arm": "global",
+            "ms": 86.82138899999973,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 1,
+            "arm": "precise",
+            "ms": 22.548095000000103,
+            "stats": {
+              "reused": 115,
+              "rebuilt": 4
+            }
+          },
+          {
+            "block": 1,
+            "arm": "clean",
+            "ms": 56.000430999999935
+          },
+          {
+            "block": 2,
+            "arm": "precise",
+            "ms": 19.92813299999989,
+            "stats": {
+              "reused": 115,
+              "rebuilt": 4
+            }
+          },
+          {
+            "block": 2,
+            "arm": "clean",
+            "ms": 44.12151999999969
+          },
+          {
+            "block": 2,
+            "arm": "global",
+            "ms": 62.01862099999971,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 3,
+            "arm": "clean",
+            "ms": 68.54348399999981
+          },
+          {
+            "block": 3,
+            "arm": "global",
+            "ms": 84.63698799999975,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 3,
+            "arm": "precise",
+            "ms": 43.34965199999988,
+            "stats": {
+              "reused": 115,
+              "rebuilt": 4
+            }
+          },
+          {
+            "block": 4,
+            "arm": "global",
+            "ms": 93.13743000000022,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 4,
+            "arm": "precise",
+            "ms": 40.95792500000016,
+            "stats": {
+              "reused": 115,
+              "rebuilt": 4
+            }
+          },
+          {
+            "block": 4,
+            "arm": "clean",
+            "ms": 84.13912299999993
+          },
+          {
+            "block": 5,
+            "arm": "precise",
+            "ms": 59.81105599999955,
+            "stats": {
+              "reused": 115,
+              "rebuilt": 4
+            }
+          },
+          {
+            "block": 5,
+            "arm": "clean",
+            "ms": 77.37166400000024
+          },
+          {
+            "block": 5,
+            "arm": "global",
+            "ms": 66.81019199999992,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 6,
+            "arm": "clean",
+            "ms": 69.17266599999994
+          },
+          {
+            "block": 6,
+            "arm": "global",
+            "ms": 100.04251999999997,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 6,
+            "arm": "precise",
+            "ms": 53.66199899999947,
+            "stats": {
+              "reused": 115,
+              "rebuilt": 4
+            }
+          }
+        ],
+        "rebuilt": [
+          "editorPreviewSlot",
+          "editorPreviewFinish",
+          "editorPreviewAppend",
+          "editorPreviewFrame"
+        ]
+      },
+      "layout": {
+        "artifact": {
+          "hash": "6911edc15c18f699983d69a8e3d260e8b5e9e58819d6b82cd23b94d59d58d3ce",
+          "meta": "6dac2a5e0093341095ef03ca35edeafe683be0602066833ebc699f9d254e8640",
+          "bytes": 242124
+        },
+        "rows": [
+          {
+            "block": 0,
+            "arm": "clean",
+            "ms": 81.46919100000014
+          },
+          {
+            "block": 0,
+            "arm": "global",
+            "ms": 56.50196800000049,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 0,
+            "arm": "precise",
+            "ms": 25.98795699999937,
+            "stats": {
+              "reused": 109,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 1,
+            "arm": "global",
+            "ms": 105.81824200000028,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 1,
+            "arm": "precise",
+            "ms": 73.64371899999969,
+            "stats": {
+              "reused": 109,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 1,
+            "arm": "clean",
+            "ms": 86.27665699999943
+          },
+          {
+            "block": 2,
+            "arm": "precise",
+            "ms": 45.8050030000004,
+            "stats": {
+              "reused": 109,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 2,
+            "arm": "clean",
+            "ms": 67.03052600000046
+          },
+          {
+            "block": 2,
+            "arm": "global",
+            "ms": 77.43038299999989,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 3,
+            "arm": "clean",
+            "ms": 63.257816000000275
+          },
+          {
+            "block": 3,
+            "arm": "global",
+            "ms": 76.24701000000005,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 3,
+            "arm": "precise",
+            "ms": 45.65821700000015,
+            "stats": {
+              "reused": 109,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 4,
+            "arm": "global",
+            "ms": 60.574703999999656,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 4,
+            "arm": "precise",
+            "ms": 57.556808000000274,
+            "stats": {
+              "reused": 109,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 4,
+            "arm": "clean",
+            "ms": 60.60476800000015
+          },
+          {
+            "block": 5,
+            "arm": "precise",
+            "ms": 47.03294900000037,
+            "stats": {
+              "reused": 109,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 5,
+            "arm": "clean",
+            "ms": 65.94124499999998
+          },
+          {
+            "block": 5,
+            "arm": "global",
+            "ms": 31.277376000000004,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 6,
+            "arm": "clean",
+            "ms": 61.54661599999963
+          },
+          {
+            "block": 6,
+            "arm": "global",
+            "ms": 37.34795800000029,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 119
+            }
+          },
+          {
+            "block": 6,
+            "arm": "precise",
+            "ms": 67.86163099999976,
+            "stats": {
+              "reused": 109,
+              "rebuilt": 10
+            }
+          }
+        ],
+        "rebuilt": [
+          "editorShow",
+          "editorRemember",
+          "editorSave",
+          "editorApplyKey",
+          "editorInput",
+          "editorOpen",
+          "editorOpened",
+          "editorOpenFailed",
+          "typedWorldEvent",
+          "__typed_async_2_editorOpenTask_editorOpenTask_step"
+        ]
+      },
+      "bad": {
+        "error": "SyntaxError: 730:53: expected ,",
+        "rows": [
+          {
+            "block": 0,
+            "arm": "clean"
+          },
+          {
+            "block": 0,
+            "arm": "global",
+            "stats": {
+              "reused": 0,
+              "rebuilt": 56
+            }
+          },
+          {
+            "block": 0,
+            "arm": "precise",
+            "stats": {
+              "reused": 54,
+              "rebuilt": 2
+            }
+          }
+        ]
+      }
+    },
+    "chess": {
+      "body": {
+        "artifact": {
+          "hash": "1dbe9a9379ddd392250fb306bb4f3c60ce8437b7b0eed0cab65b6e653fb37ff7",
+          "meta": "95cb9b4f84ceff132cc7a875d8c192bf4997016a939ee64141c1fd628c0e8738",
+          "bytes": 274892
+        },
+        "rows": [
+          {
+            "block": 0,
+            "arm": "clean",
+            "ms": 49.76560400000017
+          },
+          {
+            "block": 0,
+            "arm": "global",
+            "ms": 7.323002000000088,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 0,
+            "arm": "precise",
+            "ms": 16.01762300000064,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 1,
+            "arm": "global",
+            "ms": 7.1155909999997675,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 1,
+            "arm": "precise",
+            "ms": 7.822209999999359,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 1,
+            "arm": "clean",
+            "ms": 38.18833099999938
+          },
+          {
+            "block": 2,
+            "arm": "precise",
+            "ms": 17.744720000000598,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 2,
+            "arm": "clean",
+            "ms": 46.44226199999957
+          },
+          {
+            "block": 2,
+            "arm": "global",
+            "ms": 13.37618300000031,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 3,
+            "arm": "clean",
+            "ms": 36.83373800000027
+          },
+          {
+            "block": 3,
+            "arm": "global",
+            "ms": 7.4459939999997005,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 3,
+            "arm": "precise",
+            "ms": 14.522017999999662,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 4,
+            "arm": "global",
+            "ms": 18.575587999999698,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 4,
+            "arm": "precise",
+            "ms": 29.83303700000033,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 4,
+            "arm": "clean",
+            "ms": 32.581208999999944
+          },
+          {
+            "block": 5,
+            "arm": "precise",
+            "ms": 8.186431000000084,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 5,
+            "arm": "clean",
+            "ms": 76.19837600000028
+          },
+          {
+            "block": 5,
+            "arm": "global",
+            "ms": 17.681235000000015,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 6,
+            "arm": "clean",
+            "ms": 35.36345900000015
+          },
+          {
+            "block": 6,
+            "arm": "global",
+            "ms": 6.373175999999148,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          },
+          {
+            "block": 6,
+            "arm": "precise",
+            "ms": 8.98249499999929,
+            "stats": {
+              "reused": 81,
+              "rebuilt": 1
+            }
+          }
+        ],
+        "rebuilt": [
+          "chessFrom"
+        ]
+      },
+      "signature": {
+        "artifact": {
+          "hash": "5f6bb7a5a3aa85ea586de328bdf2e3e47a3f2f4b2d7112a5d4f0e270965304ea",
+          "meta": "95cb9b4f84ceff132cc7a875d8c192bf4997016a939ee64141c1fd628c0e8738",
+          "bytes": 274892
+        },
+        "rows": [
+          {
+            "block": 0,
+            "arm": "clean",
+            "ms": 46.52651800000058
+          },
+          {
+            "block": 0,
+            "arm": "global",
+            "ms": 33.65624899999966,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 0,
+            "arm": "precise",
+            "ms": 15.395809999999983,
+            "stats": {
+              "reused": 72,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 1,
+            "arm": "global",
+            "ms": 41.9129240000002,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 1,
+            "arm": "precise",
+            "ms": 14.92008000000078,
+            "stats": {
+              "reused": 72,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 1,
+            "arm": "clean",
+            "ms": 24.335777999999664
+          },
+          {
+            "block": 2,
+            "arm": "precise",
+            "ms": 13.386139000000185,
+            "stats": {
+              "reused": 72,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 2,
+            "arm": "clean",
+            "ms": 28.80408299999999
+          },
+          {
+            "block": 2,
+            "arm": "global",
+            "ms": 51.35775999999987,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 3,
+            "arm": "clean",
+            "ms": 42.211709999999584
+          },
+          {
+            "block": 3,
+            "arm": "global",
+            "ms": 26.644562000000406,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 3,
+            "arm": "precise",
+            "ms": 12.070980999999847,
+            "stats": {
+              "reused": 72,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 4,
+            "arm": "global",
+            "ms": 26.986735000000408,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 4,
+            "arm": "precise",
+            "ms": 24.803353000000243,
+            "stats": {
+              "reused": 72,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 4,
+            "arm": "clean",
+            "ms": 23.838247000000592
+          },
+          {
+            "block": 5,
+            "arm": "precise",
+            "ms": 12.056342999999288,
+            "stats": {
+              "reused": 72,
+              "rebuilt": 10
+            }
+          },
+          {
+            "block": 5,
+            "arm": "clean",
+            "ms": 22.58196399999997
+          },
+          {
+            "block": 5,
+            "arm": "global",
+            "ms": 45.92812200000026,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 6,
+            "arm": "clean",
+            "ms": 27.011450999999397
+          },
+          {
+            "block": 6,
+            "arm": "global",
+            "ms": 31.542609999999513,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 6,
+            "arm": "precise",
+            "ms": 11.511164999999892,
+            "stats": {
+              "reused": 72,
+              "rebuilt": 10
+            }
+          }
+        ],
+        "rebuilt": [
+          "chessFrom",
+          "chessMake",
+          "chessUnmake",
+          "chessCapture",
+          "chessPriority",
+          "chessSelectedMove",
+          "chessMarkDestinations",
+          "chessAppendTile",
+          "chessRenderTree",
+          "chessRender"
+        ]
+      },
+      "layout": {
+        "artifact": {
+          "hash": "9c527677c57ea6b569afcc68a820a11b3c7e0f2d4c14e4a808cd3b907dc5306a",
+          "meta": "95cb9b4f84ceff132cc7a875d8c192bf4997016a939ee64141c1fd628c0e8738",
+          "bytes": 274892
+        },
+        "rows": [
+          {
+            "block": 0,
+            "arm": "clean",
+            "ms": 37.04892800000016
+          },
+          {
+            "block": 0,
+            "arm": "global",
+            "ms": 49.95426099999986,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 0,
+            "arm": "precise",
+            "ms": 19.35121699999945,
+            "stats": {
+              "reused": 76,
+              "rebuilt": 6
+            }
+          },
+          {
+            "block": 1,
+            "arm": "global",
+            "ms": 66.88965300000018,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 1,
+            "arm": "precise",
+            "ms": 25.914114999999583,
+            "stats": {
+              "reused": 76,
+              "rebuilt": 6
+            }
+          },
+          {
+            "block": 1,
+            "arm": "clean",
+            "ms": 44.32184899999993
+          },
+          {
+            "block": 2,
+            "arm": "precise",
+            "ms": 22.725327000000107,
+            "stats": {
+              "reused": 76,
+              "rebuilt": 6
+            }
+          },
+          {
+            "block": 2,
+            "arm": "clean",
+            "ms": 43.33784799999921
+          },
+          {
+            "block": 2,
+            "arm": "global",
+            "ms": 48.608713999999964,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 3,
+            "arm": "clean",
+            "ms": 31.339162000000215
+          },
+          {
+            "block": 3,
+            "arm": "global",
+            "ms": 47.311681000001045,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 3,
+            "arm": "precise",
+            "ms": 10.659712000000582,
+            "stats": {
+              "reused": 76,
+              "rebuilt": 6
+            }
+          },
+          {
+            "block": 4,
+            "arm": "global",
+            "ms": 25.62214700000004,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 4,
+            "arm": "precise",
+            "ms": 12.946411999999327,
+            "stats": {
+              "reused": 76,
+              "rebuilt": 6
+            }
+          },
+          {
+            "block": 4,
+            "arm": "clean",
+            "ms": 23.472061000000394
+          },
+          {
+            "block": 5,
+            "arm": "precise",
+            "ms": 10.90332699999999,
+            "stats": {
+              "reused": 76,
+              "rebuilt": 6
+            }
+          },
+          {
+            "block": 5,
+            "arm": "clean",
+            "ms": 38.81962500000009
+          },
+          {
+            "block": 5,
+            "arm": "global",
+            "ms": 53.630653000000166,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 6,
+            "arm": "clean",
+            "ms": 64.2891810000001
+          },
+          {
+            "block": 6,
+            "arm": "global",
+            "ms": 63.33498399999917,
+            "stats": {
+              "reused": 0,
+              "rebuilt": 82
+            }
+          },
+          {
+            "block": 6,
+            "arm": "precise",
+            "ms": 36.48850999999922,
+            "stats": {
+              "reused": 76,
+              "rebuilt": 6
+            }
+          }
+        ],
+        "rebuilt": [
+          "chessNewGame",
+          "chessPlay",
+          "chessControl",
+          "chessAppendTile",
+          "chessRenderTree",
+          "chessRender"
+        ]
+      },
+      "bad": {
+        "error": "SyntaxError: 146:32: expected ,",
+        "rows": [
+          {
+            "block": 0,
+            "arm": "clean"
+          },
+          {
+            "block": 0,
+            "arm": "global",
+            "stats": {
+              "reused": 0,
+              "rebuilt": 22
+            }
+          },
+          {
+            "block": 0,
+            "arm": "precise",
+            "stats": {
+              "reused": 20,
+              "rebuilt": 2
+            }
+          }
+        ]
+      }
+    }
+  },
+  "development": [
+    {
+      "name": "reverse declaration order",
+      "artifact": {
+        "hash": "0c35c0bd1f5aa07eba51529b5c5c612ecd0409e6df64c06712533f3b48920c72",
+        "meta": "13669a0276f7df111fdda45bdad71b23a25ca4828ad0fcef3099ecc6e8269602",
+        "bytes": 128
+      },
+      "stats": {
+        "reused": 3,
+        "rebuilt": 0
+      },
+      "events": [
+        [
+          "leaf",
+          true
+        ],
+        [
+          "spare",
+          true
+        ],
+        [
+          "using",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "insert field after used field",
+      "artifact": {
+        "hash": "1659fe4777e4b0b5c24aca0a51ae2ec5a90a7dc0eb25a76d34b64b72668e7dcf",
+        "meta": "41684fbd69025a26e6fee9d610c855f9263ad0755163cf2569cd74ec5a50d05b",
+        "bytes": 128
+      },
+      "stats": {
+        "reused": 3,
+        "rebuilt": 0
+      },
+      "events": [
+        [
+          "spare",
+          true
+        ],
+        [
+          "leaf",
+          true
+        ],
+        [
+          "using",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "move used field",
+      "artifact": {
+        "hash": "b01a3ab7677e1758b463be7c522df76907f799c4a546e16d98bdd231e913490e",
+        "meta": "01209813a619f7d371c3d65973109d4648434d0ca6dcfe66aed801beb1c8d529",
+        "bytes": 128
+      },
+      "stats": {
+        "reused": 2,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "spare",
+          true
+        ],
+        [
+          "leaf",
+          false
+        ],
+        [
+          "using",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "change enum ordinal",
+      "artifact": {
+        "hash": "f24329d584cb479b2140f328a4b75cb2a5b7a20fef87deb2464dc6bbd51c08a5",
+        "meta": "7d244944c461eb282a52b381c442ca191bc425862f7bedf11bcc79555ad2a7c1",
+        "bytes": 128
+      },
+      "stats": {
+        "reused": 2,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "spare",
+          true
+        ],
+        [
+          "leaf",
+          true
+        ],
+        [
+          "using",
+          false
+        ]
+      ]
+    },
+    {
+      "name": "change used signature",
+      "artifact": {
+        "hash": "0ccc06b6dc7c73b91609e200defd55f3afd31b8570876e455558181a4c8f1954",
+        "meta": "88be3838754520c772fbb26a8202720d1d3dc149e75ee48666772197f56802f8",
+        "bytes": 140
+      },
+      "stats": {
+        "reused": 1,
+        "rebuilt": 2
+      },
+      "events": [
+        [
+          "spare",
+          true
+        ],
+        [
+          "leaf",
+          false
+        ],
+        [
+          "using",
+          false
+        ]
+      ]
+    },
+    {
+      "name": "remove used field",
+      "error": "SyntaxError: 1:145: unknown field Pair.a",
+      "stats": {
+        "reused": 1,
+        "rebuilt": 1
+      }
+    },
+    {
+      "name": "rename parameter only",
+      "error": "SyntaxError: 1:95: unknown local x",
+      "stats": {
+        "reused": 0,
+        "rebuilt": 1
+      }
+    },
+    {
+      "name": "cycle",
+      "error": "SyntaxError: recursive call cycle: leaf -> using -> leaf",
+      "stats": {
+        "reused": 2,
+        "rebuilt": 1
+      }
+    },
+    {
+      "name": "longer intervening body",
+      "artifact": {
+        "hash": "fd5c8a08b1a8bcaf5fe072ec0bfd08d9f684d713f92a45cfaa8165ddef1c700e",
+        "meta": "e2304a137773b0559f162487a7d3eec07da6fe968af119433b6cc19cc1e44198",
+        "bytes": 160
+      },
+      "stats": {
+        "reused": 2,
+        "rebuilt": 1
+      },
+      "events": [
+        [
+          "spare",
+          true
+        ],
+        [
+          "leaf",
+          false
+        ],
+        [
+          "using",
+          true
+        ]
+      ]
+    }
+  ]
+}

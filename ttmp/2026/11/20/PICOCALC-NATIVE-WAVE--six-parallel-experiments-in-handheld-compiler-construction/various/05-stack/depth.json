@@ -1,0 +1,146 @@
+[
+  {
+    "entry": "f0",
+    "x": 0,
+    "observed": 16,
+    "certified": 16
+  },
+  {
+    "entry": "f0",
+    "x": 9,
+    "observed": 16,
+    "certified": 16
+  },
+  {
+    "entry": "f1",
+    "x": 0,
+    "observed": 16,
+    "certified": 32
+  },
+  {
+    "entry": "f1",
+    "x": 9,
+    "observed": 32,
+    "certified": 32
+  },
+  {
+    "entry": "f2",
+    "x": 0,
+    "observed": 16,
+    "certified": 48
+  },
+  {
+    "entry": "f2",
+    "x": 9,
+    "observed": 48,
+    "certified": 48
+  },
+  {
+    "entry": "f3",
+    "x": 0,
+    "observed": 16,
+    "certified": 64
+  },
+  {
+    "entry": "f3",
+    "x": 9,
+    "observed": 64,
+    "certified": 64
+  },
+  {
+    "entry": "f4",
+    "x": 0,
+    "observed": 16,
+    "certified": 80
+  },
+  {
+    "entry": "f4",
+    "x": 9,
+    "observed": 80,
+    "certified": 80
+  },
+  {
+    "entry": "f5",
+    "x": 0,
+    "observed": 16,
+    "certified": 96
+  },
+  {
+    "entry": "f5",
+    "x": 9,
+    "observed": 96,
+    "certified": 96
+  },
+  {
+    "entry": "f6",
+    "x": 0,
+    "observed": 16,
+    "certified": 112
+  },
+  {
+    "entry": "f6",
+    "x": 9,
+    "observed": 112,
+    "certified": 112
+  },
+  {
+    "entry": "f7",
+    "x": 0,
+    "observed": 16,
+    "certified": 128
+  },
+  {
+    "entry": "f7",
+    "x": 9,
+    "observed": 128,
+    "certified": 128
+  },
+  {
+    "entry": "f8",
+    "x": 0,
+    "observed": 16,
+    "certified": 144
+  },
+  {
+    "entry": "f8",
+    "x": 9,
+    "observed": 144,
+    "certified": 144
+  },
+  {
+    "entry": "f9",
+    "x": 0,
+    "observed": 16,
+    "certified": 160
+  },
+  {
+    "entry": "f9",
+    "x": 9,
+    "observed": 160,
+    "certified": 160
+  },
+  {
+    "entry": "f10",
+    "x": 0,
+    "observed": 16,
+    "certified": 176
+  },
+  {
+    "entry": "f10",
+    "x": 9,
+    "observed": 176,
+    "certified": 176
+  },
+  {
+    "entry": "f11",
+    "x": 0,
+    "observed": 16,
+    "certified": 192
+  },
+  {
+    "entry": "f11",
+    "x": 9,
+    "observed": 192,
+    "certified": 192
+  }
+]
