@@ -1,0 +1,98 @@
+[
+  {
+    "name": "mixed",
+    "arm": "stock",
+    "trapped": false,
+    "result": 124130,
+    "minima": 0,
+    "hitSpillWrites": 0,
+    "imageSHA256": "cd0f7714e3ccfdc0b03214823bc5722f79c7ea17a76a415f30e0ab34db824dfa",
+    "changedBytes": 20
+  },
+  {
+    "name": "mixed",
+    "arm": "pie-empty",
+    "trapped": false,
+    "result": 124130,
+    "minima": 3,
+    "hitSpillWrites": 50,
+    "imageSHA256": "888a27b458d3f60ffcfdbb0fda555299e7b0272951ea2b76f75e94193d7f8c78",
+    "changedBytes": 20
+  },
+  {
+    "name": "alignment-and-tail",
+    "arm": "stock",
+    "trapped": false,
+    "result": 68302,
+    "minima": 0,
+    "hitSpillWrites": 0,
+    "imageSHA256": "cd0f7714e3ccfdc0b03214823bc5722f79c7ea17a76a415f30e0ab34db824dfa",
+    "changedBytes": 26
+  },
+  {
+    "name": "alignment-and-tail",
+    "arm": "pie-empty",
+    "trapped": false,
+    "result": 68302,
+    "minima": 3,
+    "hitSpillWrites": 50,
+    "imageSHA256": "888a27b458d3f60ffcfdbb0fda555299e7b0272951ea2b76f75e94193d7f8c78",
+    "changedBytes": 26
+  },
+  {
+    "name": "store-before-trap",
+    "arm": "stock",
+    "trapped": true,
+    "minima": 0,
+    "hitSpillWrites": 0,
+    "imageSHA256": "cd0f7714e3ccfdc0b03214823bc5722f79c7ea17a76a415f30e0ab34db824dfa",
+    "changedBytes": 2
+  },
+  {
+    "name": "store-before-trap",
+    "arm": "pie-empty",
+    "trapped": true,
+    "minima": 2,
+    "hitSpillWrites": 5,
+    "imageSHA256": "888a27b458d3f60ffcfdbb0fda555299e7b0272951ea2b76f75e94193d7f8c78",
+    "changedBytes": 2
+  },
+  {
+    "name": "divide-trap",
+    "arm": "stock",
+    "trapped": true,
+    "minima": 0,
+    "hitSpillWrites": 0,
+    "imageSHA256": "cd0f7714e3ccfdc0b03214823bc5722f79c7ea17a76a415f30e0ab34db824dfa",
+    "changedBytes": 0
+  },
+  {
+    "name": "divide-trap",
+    "arm": "pie-empty",
+    "trapped": true,
+    "minima": 2,
+    "hitSpillWrites": 3,
+    "imageSHA256": "888a27b458d3f60ffcfdbb0fda555299e7b0272951ea2b76f75e94193d7f8c78",
+    "changedBytes": 0
+  },
+  {
+    "name": "zero-trip",
+    "arm": "stock",
+    "trapped": false,
+    "result": 0,
+    "minima": 0,
+    "hitSpillWrites": 0,
+    "imageSHA256": "cd0f7714e3ccfdc0b03214823bc5722f79c7ea17a76a415f30e0ab34db824dfa",
+    "changedBytes": 0
+  },
+  {
+    "name": "zero-trip",
+    "arm": "pie-empty",
+    "trapped": false,
+    "result": 0,
+    "minima": 0,
+    "hitSpillWrites": 0,
+    "imageSHA256": "888a27b458d3f60ffcfdbb0fda555299e7b0272951ea2b76f75e94193d7f8c78",
+    "changedBytes": 0
+  }
+]

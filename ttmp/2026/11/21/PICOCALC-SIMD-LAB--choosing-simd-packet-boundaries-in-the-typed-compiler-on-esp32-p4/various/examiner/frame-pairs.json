@@ -1,0 +1,393 @@
+{
+  "source": {
+    "path": "director/frame-device-rows.json",
+    "sha256": "6b86560f295b049d3eeb71bbbca84e074c270593f26dfd66b56077935268dc36"
+  },
+  "rows": 432,
+  "results": [
+    {
+      "fixture": "default",
+      "phase": 0,
+      "medianUs": 508.5,
+      "medianPct": 0.9039910458733007,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        595,
+        502,
+        465,
+        561,
+        515,
+        467
+      ]
+    },
+    {
+      "fixture": "default",
+      "phase": 1,
+      "medianUs": 546.5,
+      "medianPct": 3.3458838355108513,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        525,
+        547,
+        567,
+        503,
+        546,
+        564
+      ]
+    },
+    {
+      "fixture": "lamp-only",
+      "phase": 0,
+      "medianUs": 518,
+      "medianPct": 0.9288311429628815,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        474,
+        521,
+        565,
+        462,
+        515,
+        550
+      ]
+    },
+    {
+      "fixture": "lamp-only",
+      "phase": 1,
+      "medianUs": 536.5,
+      "medianPct": 3.279123922666461,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        565,
+        547,
+        516,
+        571,
+        526,
+        506
+      ]
+    },
+    {
+      "fixture": "near-corner",
+      "phase": 0,
+      "medianUs": 508,
+      "medianPct": 0.8906655755819918,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        577,
+        507,
+        474,
+        571,
+        509,
+        457
+      ]
+    },
+    {
+      "fixture": "near-corner",
+      "phase": 1,
+      "medianUs": 542,
+      "medianPct": 3.304576943836865,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        511,
+        540,
+        568,
+        503,
+        544,
+        568
+      ]
+    },
+    {
+      "fixture": "far-corner",
+      "phase": 0,
+      "medianUs": 521.5,
+      "medianPct": 0.9055506961383942,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        475,
+        537,
+        567,
+        472,
+        506,
+        556
+      ]
+    },
+    {
+      "fixture": "far-corner",
+      "phase": 1,
+      "medianUs": 538.5,
+      "medianPct": 3.2771401368160245,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        571,
+        544,
+        526,
+        567,
+        533,
+        511
+      ]
+    },
+    {
+      "fixture": "left-bottom",
+      "phase": 0,
+      "medianUs": 503.5,
+      "medianPct": 0.9095840854749598,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        558,
+        518,
+        489,
+        541,
+        440,
+        472
+      ]
+    },
+    {
+      "fixture": "left-bottom",
+      "phase": 1,
+      "medianUs": 548,
+      "medianPct": 3.34613651003074,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        524,
+        539,
+        568,
+        511,
+        557,
+        565
+      ]
+    },
+    {
+      "fixture": "right-top",
+      "phase": 0,
+      "medianUs": 520.5,
+      "medianPct": 0.9625038062309086,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        489,
+        532,
+        560,
+        464,
+        509,
+        577
+      ]
+    },
+    {
+      "fixture": "right-top",
+      "phase": 1,
+      "medianUs": 545,
+      "medianPct": 3.325286143204692,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        571,
+        548,
+        518,
+        573,
+        532,
+        542
+      ]
+    },
+    {
+      "fixture": "blue-overlap",
+      "phase": 0,
+      "medianUs": 502,
+      "medianPct": 0.9278510944189511,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        576,
+        493,
+        473,
+        561,
+        511,
+        448
+      ]
+    },
+    {
+      "fixture": "blue-overlap",
+      "phase": 1,
+      "medianUs": 546,
+      "medianPct": 3.3632014228739022,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        516,
+        539,
+        568,
+        504,
+        553,
+        570
+      ]
+    },
+    {
+      "fixture": "gold-overlap",
+      "phase": 0,
+      "medianUs": 525,
+      "medianPct": 0.9754797758042868,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        476,
+        537,
+        565,
+        458,
+        513,
+        566
+      ]
+    },
+    {
+      "fixture": "gold-overlap",
+      "phase": 1,
+      "medianUs": 532.5,
+      "medianPct": 3.2686759560493526,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        566,
+        537,
+        516,
+        574,
+        528,
+        503
+      ]
+    },
+    {
+      "fixture": "left-lamp",
+      "phase": 0,
+      "medianUs": 509.5,
+      "medianPct": 0.9207804489870456,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        569,
+        504,
+        473,
+        565,
+        515,
+        458
+      ]
+    },
+    {
+      "fixture": "left-lamp",
+      "phase": 1,
+      "medianUs": 548,
+      "medianPct": 3.36537023323329,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        517,
+        546,
+        567,
+        503,
+        550,
+        573
+      ]
+    },
+    {
+      "fixture": "right-lamp",
+      "phase": 0,
+      "medianUs": 520.5,
+      "medianPct": 0.9424987311613349,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        473,
+        525,
+        563,
+        471,
+        516,
+        571
+      ]
+    },
+    {
+      "fixture": "right-lamp",
+      "phase": 1,
+      "medianUs": 534.5,
+      "medianPct": 3.2780337995360354,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        567,
+        541,
+        516,
+        574,
+        528,
+        502
+      ]
+    },
+    {
+      "fixture": "bottom-lamp",
+      "phase": 0,
+      "medianUs": 511.5,
+      "medianPct": 0.9309985432938983,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        577,
+        514,
+        473,
+        565,
+        509,
+        474
+      ]
+    },
+    {
+      "fixture": "bottom-lamp",
+      "phase": 1,
+      "medianUs": 543.5,
+      "medianPct": 3.3431758277935613,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        515,
+        542,
+        566,
+        503,
+        545,
+        571
+      ]
+    },
+    {
+      "fixture": "top-lamp-wide",
+      "phase": 0,
+      "medianUs": 540,
+      "medianPct": 0.9909893376887926,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        513,
+        541,
+        566,
+        500,
+        539,
+        564
+      ]
+    },
+    {
+      "fixture": "top-lamp-wide",
+      "phase": 1,
+      "medianUs": 535.5,
+      "medianPct": 3.1942476011627514,
+      "wins": 6,
+      "emptyBeatsFull": 6,
+      "pairedUs": [
+        564,
+        533,
+        515,
+        557,
+        538,
+        515
+      ]
+    }
+  ]
+}

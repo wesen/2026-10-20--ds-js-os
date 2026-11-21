@@ -1,0 +1,13 @@
+function probe(data: buffer, out: buffer, first: i32, n: i32, divisor: i32): i32 {
+    let total = 0;
+    for (let i = 0; i < n; i = i + 1) {
+        let diff = 80 - data.charCodeAt(first + i);
+        if (diff >= 0) {
+            if (diff > 0) {
+                out.setCharCodeAt(i, total + (i + (first + (n + (diff + (diff / divisor))))));
+            }
+            total = total + out.charCodeAt(i);
+        }
+    }
+    return total;
+}
