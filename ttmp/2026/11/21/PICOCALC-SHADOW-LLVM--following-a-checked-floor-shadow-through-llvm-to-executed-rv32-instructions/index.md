@@ -1,7 +1,7 @@
 ---
 Title: Following a checked floor shadow through LLVM to executed RV32 instructions
 Ticket: PICOCALC-SHADOW-LLVM
-Status: active
+Status: complete
 Topics:
     - compiler
     - performance
@@ -11,8 +11,8 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: "Verified LLVM pass transitions, six matched P4 compiler configurations and a persistent query workbook"
-LastUpdated: 2026-11-21T18:16:18.571060494-05:00
+Summary: Verified LLVM pass transitions, six matched P4 compiler configurations and a persistent query workbook
+LastUpdated: 2026-11-21T18:28:08.569884777-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

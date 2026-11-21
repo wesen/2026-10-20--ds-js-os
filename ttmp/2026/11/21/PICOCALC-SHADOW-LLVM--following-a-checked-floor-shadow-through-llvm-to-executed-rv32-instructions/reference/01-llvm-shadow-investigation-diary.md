@@ -120,3 +120,51 @@ Read the report, then run scripts/06-repl.py against the dedicated server. Each 
 ### Technical details
 
 The six kernels verified the same 19,477 opening calls in QEMU. The board independently verified natural inputs for all twelve fixtures plus four single-sphere strata and recorded 576 batches. The board image digest is recorded in various/device/receipt.json, the compiled kernel digests and exact linked addresses in various/native/pcs.json. The full REPL session ID is recorded in various/repl.json.
+
+## Step 3. Verify the student article and portable REPL capture
+
+I read the article as a standalone explanation, checked its code snippets in the final session, and verified every packaged input against the original evidence. The published archive contains 19 entries and is 117,148 bytes.
+
+### Prompt context
+
+See Step 1, including the request to use the REPL. The continuing lab workflow calls for a pedagogical vault article and durable access to the queries.
+
+### What I did
+
+Ran the exact JavaScript blocks from the staged article in session-b9e87186-b8e8-44b1-b4a9-cb7b6657fe3f on port 3795. Verified the portable ZIP byte-for-byte against the ticket. Published the article and the portable archive in go-go-parc.
+
+### Why
+
+The portable version should still support reconstruction after the temporary compiler and QEMU files disappear. The in-memory session remains accessible for immediate follow-up questions.
+
+### What worked
+
+The second example returned [264928,19477] for Typed and LLVM capacity reads. The event query cited the expected EarlyCSE stream digest and byte offset. Git confirmed vault main at af1caedef0fddda5db346101a4fa0087451326d6.
+
+### What didn't work
+
+The first push returned “main -> main (fetch first)”. I fetched the other author's unrelated Inkling report, rebased the single unpublished article commit on top of it, pushed without a force option and verified the remote head.
+
+### What I learned
+
+The portable replay can use the project's original trace service with a distinct pass archive. Its saved results are also readable independently as JSON.
+
+### What was tricky to build
+
+The reader’s session needs both the pass archive and the native and board tables. The distribution includes their original relative paths so the same loader works.
+
+### What warrants a second pair of eyes
+
+Check the physical comparison denominator and the caveat concerning the fast allocation pipeline, and verify that each timing claim concerns the isolated predicate.
+
+### What should be done in the future
+
+The ticket conclusion lays out two separate implementation experiments. No production compiler change was part of this investigation.
+
+### Code review instructions
+
+Start at the ticket analysis, the published vault note and scripts/05-cells.js. Capture/REPL checkpoint 38d3b75 and physical evidence checkpoint 5406b7b are the main repo references.
+
+### Technical details
+
+The diagnostic was removed and the original playable firmware verified. The vault article and its portable REPL bundle share commit af1caed.
