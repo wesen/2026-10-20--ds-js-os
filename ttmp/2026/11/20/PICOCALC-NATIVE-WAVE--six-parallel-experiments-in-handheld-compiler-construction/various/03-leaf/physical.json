@@ -1,0 +1,740 @@
+{
+  "benchmarkSha256": "eaa93069cc41afb6ab7a2bd3d0313d7c1394747fac84018d23a4baac3746ace2",
+  "releaseSha256": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "partitionSha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "engineSourceSha256": "dd0acd9536d41d2c4ff033ba79c252749744aef2510cc0f3c6bcbe515332e44f",
+  "rv32Sha256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+  "releaseBefore": true,
+  "cpuHz": 360000000,
+  "observations": 45,
+  "oracleDigest": "f204dc1ad6f54df3b72cc7ac61871b73ac75db6c412d870d52cd44bd77bfd860",
+  "rows": [
+    {
+      "case": 0,
+      "fixture": "opening",
+      "depthRequested": 3,
+      "budget": 30000,
+      "arms": {
+        "stock": [
+          {
+            "bestMove": 3690,
+            "score": 30,
+            "completed": 3,
+            "nodes": 871,
+            "slices": 41,
+            "wallUs": 122441
+          },
+          {
+            "bestMove": 3690,
+            "score": 30,
+            "completed": 3,
+            "nodes": 871,
+            "slices": 41,
+            "wallUs": 121139
+          },
+          {
+            "bestMove": 3690,
+            "score": 30,
+            "completed": 3,
+            "nodes": 871,
+            "slices": 41,
+            "wallUs": 121142
+          }
+        ],
+        "leaf": [
+          {
+            "bestMove": 3690,
+            "score": 30,
+            "completed": 3,
+            "nodes": 871,
+            "slices": 41,
+            "wallUs": 113811
+          },
+          {
+            "bestMove": 3690,
+            "score": 30,
+            "completed": 3,
+            "nodes": 871,
+            "slices": 41,
+            "wallUs": 112528
+          },
+          {
+            "bestMove": 3690,
+            "score": 30,
+            "completed": 3,
+            "nodes": 871,
+            "slices": 41,
+            "wallUs": 112530
+          }
+        ],
+        "inline": [
+          {
+            "bestMove": 3690,
+            "score": 30,
+            "completed": 3,
+            "nodes": 871,
+            "slices": 41,
+            "wallUs": 113429
+          },
+          {
+            "bestMove": 3690,
+            "score": 30,
+            "completed": 3,
+            "nodes": 871,
+            "slices": 41,
+            "wallUs": 112155
+          },
+          {
+            "bestMove": 3690,
+            "score": 30,
+            "completed": 3,
+            "nodes": 871,
+            "slices": 41,
+            "wallUs": 112150
+          }
+        ]
+      }
+    },
+    {
+      "case": 4,
+      "fixture": "after-e2e4",
+      "depthRequested": 4,
+      "budget": 30000,
+      "arms": {
+        "stock": [
+          {
+            "bestMove": 82,
+            "score": -18,
+            "completed": 4,
+            "nodes": 14868,
+            "slices": 835,
+            "wallUs": 2288423
+          },
+          {
+            "bestMove": 82,
+            "score": -18,
+            "completed": 4,
+            "nodes": 14868,
+            "slices": 835,
+            "wallUs": 2288501
+          },
+          {
+            "bestMove": 82,
+            "score": -18,
+            "completed": 4,
+            "nodes": 14868,
+            "slices": 835,
+            "wallUs": 2288232
+          }
+        ],
+        "leaf": [
+          {
+            "bestMove": 82,
+            "score": -18,
+            "completed": 4,
+            "nodes": 14868,
+            "slices": 835,
+            "wallUs": 2125593
+          },
+          {
+            "bestMove": 82,
+            "score": -18,
+            "completed": 4,
+            "nodes": 14868,
+            "slices": 835,
+            "wallUs": 2125654
+          },
+          {
+            "bestMove": 82,
+            "score": -18,
+            "completed": 4,
+            "nodes": 14868,
+            "slices": 835,
+            "wallUs": 2125732
+          }
+        ],
+        "inline": [
+          {
+            "bestMove": 82,
+            "score": -18,
+            "completed": 4,
+            "nodes": 14868,
+            "slices": 835,
+            "wallUs": 2117157
+          },
+          {
+            "bestMove": 82,
+            "score": -18,
+            "completed": 4,
+            "nodes": 14868,
+            "slices": 835,
+            "wallUs": 2117254
+          },
+          {
+            "bestMove": 82,
+            "score": -18,
+            "completed": 4,
+            "nodes": 14868,
+            "slices": 835,
+            "wallUs": 2117134
+          }
+        ]
+      }
+    },
+    {
+      "case": 6,
+      "fixture": "kiwipete",
+      "depthRequested": 3,
+      "budget": 30000,
+      "arms": {
+        "stock": [
+          {
+            "bestMove": 3344,
+            "score": 149,
+            "completed": 3,
+            "nodes": 7194,
+            "slices": 453,
+            "wallUs": 1333500
+          },
+          {
+            "bestMove": 3344,
+            "score": 149,
+            "completed": 3,
+            "nodes": 7194,
+            "slices": 453,
+            "wallUs": 1333264
+          },
+          {
+            "bestMove": 3344,
+            "score": 149,
+            "completed": 3,
+            "nodes": 7194,
+            "slices": 453,
+            "wallUs": 1333487
+          }
+        ],
+        "leaf": [
+          {
+            "bestMove": 3344,
+            "score": 149,
+            "completed": 3,
+            "nodes": 7194,
+            "slices": 453,
+            "wallUs": 1242053
+          },
+          {
+            "bestMove": 3344,
+            "score": 149,
+            "completed": 3,
+            "nodes": 7194,
+            "slices": 453,
+            "wallUs": 1242014
+          },
+          {
+            "bestMove": 3344,
+            "score": 149,
+            "completed": 3,
+            "nodes": 7194,
+            "slices": 453,
+            "wallUs": 1242052
+          }
+        ],
+        "inline": [
+          {
+            "bestMove": 3344,
+            "score": 149,
+            "completed": 3,
+            "nodes": 7194,
+            "slices": 453,
+            "wallUs": 1238338
+          },
+          {
+            "bestMove": 3344,
+            "score": 149,
+            "completed": 3,
+            "nodes": 7194,
+            "slices": 453,
+            "wallUs": 1238105
+          },
+          {
+            "bestMove": 3344,
+            "score": 149,
+            "completed": 3,
+            "nodes": 7194,
+            "slices": 453,
+            "wallUs": 1238172
+          }
+        ]
+      }
+    },
+    {
+      "case": 14,
+      "fixture": "pawn-ending",
+      "depthRequested": 5,
+      "budget": 30000,
+      "arms": {
+        "stock": [
+          {
+            "bestMove": 2851,
+            "score": 141,
+            "completed": 5,
+            "nodes": 1729,
+            "slices": 91,
+            "wallUs": 142058
+          },
+          {
+            "bestMove": 2851,
+            "score": 141,
+            "completed": 5,
+            "nodes": 1729,
+            "slices": 91,
+            "wallUs": 142057
+          },
+          {
+            "bestMove": 2851,
+            "score": 141,
+            "completed": 5,
+            "nodes": 1729,
+            "slices": 91,
+            "wallUs": 142056
+          }
+        ],
+        "leaf": [
+          {
+            "bestMove": 2851,
+            "score": 141,
+            "completed": 5,
+            "nodes": 1729,
+            "slices": 91,
+            "wallUs": 130988
+          },
+          {
+            "bestMove": 2851,
+            "score": 141,
+            "completed": 5,
+            "nodes": 1729,
+            "slices": 91,
+            "wallUs": 130983
+          },
+          {
+            "bestMove": 2851,
+            "score": 141,
+            "completed": 5,
+            "nodes": 1729,
+            "slices": 91,
+            "wallUs": 131010
+          }
+        ],
+        "inline": [
+          {
+            "bestMove": 2851,
+            "score": 141,
+            "completed": 5,
+            "nodes": 1729,
+            "slices": 91,
+            "wallUs": 131172
+          },
+          {
+            "bestMove": 2851,
+            "score": 141,
+            "completed": 5,
+            "nodes": 1729,
+            "slices": 91,
+            "wallUs": 131153
+          },
+          {
+            "bestMove": 2851,
+            "score": 141,
+            "completed": 5,
+            "nodes": 1729,
+            "slices": 91,
+            "wallUs": 131177
+          }
+        ]
+      }
+    },
+    {
+      "case": 15,
+      "fixture": "after-e2e4",
+      "depthRequested": 4,
+      "budget": 1600,
+      "arms": {
+        "stock": [
+          {
+            "bestMove": 82,
+            "score": 12,
+            "completed": 3,
+            "nodes": 1600,
+            "slices": 78,
+            "wallUs": 239168
+          },
+          {
+            "bestMove": 82,
+            "score": 12,
+            "completed": 3,
+            "nodes": 1600,
+            "slices": 78,
+            "wallUs": 239137
+          },
+          {
+            "bestMove": 82,
+            "score": 12,
+            "completed": 3,
+            "nodes": 1600,
+            "slices": 78,
+            "wallUs": 239159
+          }
+        ],
+        "leaf": [
+          {
+            "bestMove": 82,
+            "score": 12,
+            "completed": 3,
+            "nodes": 1600,
+            "slices": 78,
+            "wallUs": 221538
+          },
+          {
+            "bestMove": 82,
+            "score": 12,
+            "completed": 3,
+            "nodes": 1600,
+            "slices": 78,
+            "wallUs": 221526
+          },
+          {
+            "bestMove": 82,
+            "score": 12,
+            "completed": 3,
+            "nodes": 1600,
+            "slices": 78,
+            "wallUs": 221519
+          }
+        ],
+        "inline": [
+          {
+            "bestMove": 82,
+            "score": 12,
+            "completed": 3,
+            "nodes": 1600,
+            "slices": 78,
+            "wallUs": 220748
+          },
+          {
+            "bestMove": 82,
+            "score": 12,
+            "completed": 3,
+            "nodes": 1600,
+            "slices": 78,
+            "wallUs": 220732
+          },
+          {
+            "bestMove": 82,
+            "score": 12,
+            "completed": 3,
+            "nodes": 1600,
+            "slices": 78,
+            "wallUs": 220738
+          }
+        ]
+      }
+    }
+  ],
+  "armBuilds": {
+    "stock": {
+      "arm": "stock",
+      "sourceSha256": "dd0acd9536d41d2c4ff033ba79c252749744aef2510cc0f3c6bcbe515332e44f",
+      "rv32Sha256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+      "bytes": 26580,
+      "entries": {
+        "chessOnBoard": 0,
+        "chessSquare": 116,
+        "chessDense": 208,
+        "chessMove": 300,
+        "chessFrom": 416,
+        "chessTo": 520,
+        "chessPromotion": 580,
+        "chessSide": 660,
+        "chessPawnStep": 752,
+        "chessRearPiece": 800,
+        "chessResetPosition": 1072,
+        "chessCopyPosition": 2076,
+        "chessRay": 2292,
+        "chessKnight": 2508,
+        "chessIsPiece": 2724,
+        "chessAttacked": 2868,
+        "chessInCheck": 3800,
+        "chessRight": 3940,
+        "chessRemoveRight": 4048,
+        "chessRookRight": 4136,
+        "chessPromotedKind": 4396,
+        "chessMake": 4436,
+        "chessUnmake": 7428,
+        "chessAdd": 8668,
+        "chessPawnAdd": 8912,
+        "chessPawnMoves": 9296,
+        "chessCastle": 10472,
+        "chessPieceMoves": 11932,
+        "chessPseudoMoves": 12852,
+        "chessLegal": 13208,
+        "chessLegalMoves": 13364,
+        "chessPerft": 13740,
+        "chessValue": 15440,
+        "chessAbs": 15652,
+        "chessCenter": 15724,
+        "chessEvaluate": 15848,
+        "chessCapture": 17360,
+        "chessTactical": 17864,
+        "chessPriority": 17976,
+        "chessTacticalMoves": 18448,
+        "chessOrder": 18748,
+        "chessFirstLegal": 19600,
+        "chessFrame": 19824,
+        "chessUndo": 19872,
+        "chessList": 19920,
+        "chessInitNode": 19968,
+        "chessStartSearch": 20412,
+        "chessStopSearch": 21092,
+        "chessAcceptScore": 21352,
+        "chessCompleteNode": 22056,
+        "chessPrepareNode": 22724,
+        "chessSearchStep": 24588,
+        "chessSearchSlice": 26436
+      },
+      "imports": 0,
+      "stats": null
+    },
+    "leaf": {
+      "arm": "leaf",
+      "sourceSha256": "dd0acd9536d41d2c4ff033ba79c252749744aef2510cc0f3c6bcbe515332e44f",
+      "rv32Sha256": "10572a89ca9a26f144b6a2d46f21484bca4faae9f3d62d8a341f5ec2d657361e",
+      "bytes": 26276,
+      "entries": {
+        "chessOnBoard": 0,
+        "chessSquare": 96,
+        "chessDense": 168,
+        "chessMove": 240,
+        "chessFrom": 356,
+        "chessTo": 460,
+        "chessPromotion": 520,
+        "chessSide": 580,
+        "chessPawnStep": 672,
+        "chessRearPiece": 700,
+        "chessResetPosition": 952,
+        "chessCopyPosition": 1956,
+        "chessRay": 2172,
+        "chessKnight": 2368,
+        "chessIsPiece": 2564,
+        "chessAttacked": 2708,
+        "chessInCheck": 3640,
+        "chessRight": 3780,
+        "chessRemoveRight": 3864,
+        "chessRookRight": 3952,
+        "chessPromotedKind": 4212,
+        "chessMake": 4232,
+        "chessUnmake": 7224,
+        "chessAdd": 8464,
+        "chessPawnAdd": 8708,
+        "chessPawnMoves": 9092,
+        "chessCastle": 10268,
+        "chessPieceMoves": 11728,
+        "chessPseudoMoves": 12648,
+        "chessLegal": 13004,
+        "chessLegalMoves": 13160,
+        "chessPerft": 13536,
+        "chessValue": 15236,
+        "chessAbs": 15428,
+        "chessCenter": 15480,
+        "chessEvaluate": 15604,
+        "chessCapture": 17116,
+        "chessTactical": 17620,
+        "chessPriority": 17732,
+        "chessTacticalMoves": 18204,
+        "chessOrder": 18504,
+        "chessFirstLegal": 19356,
+        "chessFrame": 19580,
+        "chessUndo": 19608,
+        "chessList": 19636,
+        "chessInitNode": 19664,
+        "chessStartSearch": 20108,
+        "chessStopSearch": 20788,
+        "chessAcceptScore": 21048,
+        "chessCompleteNode": 21752,
+        "chessPrepareNode": 22420,
+        "chessSearchStep": 24284,
+        "chessSearchSlice": 26132
+      },
+      "imports": 0,
+      "stats": {
+        "leaves": [
+          "chessOnBoard",
+          "chessSquare",
+          "chessDense",
+          "chessPromotion",
+          "chessPawnStep",
+          "chessRearPiece",
+          "chessRay",
+          "chessKnight",
+          "chessRight",
+          "chessPromotedKind",
+          "chessValue",
+          "chessAbs",
+          "chessFrame",
+          "chessUndo",
+          "chessList"
+        ],
+        "sites": [],
+        "addedWords": 0
+      }
+    },
+    "inline": {
+      "arm": "inline",
+      "sourceSha256": "dd0acd9536d41d2c4ff033ba79c252749744aef2510cc0f3c6bcbe515332e44f",
+      "rv32Sha256": "b3b3a270f86ee6d732f434ab9f0d515ff950717f734943a9ed1b3c7ccf5f65fe",
+      "bytes": 26660,
+      "entries": {
+        "chessOnBoard": 0,
+        "chessSquare": 96,
+        "chessDense": 168,
+        "chessMove": 240,
+        "chessFrom": 484,
+        "chessTo": 652,
+        "chessPromotion": 776,
+        "chessSide": 836,
+        "chessPawnStep": 928,
+        "chessRearPiece": 956,
+        "chessResetPosition": 1208,
+        "chessCopyPosition": 2212,
+        "chessRay": 2428,
+        "chessKnight": 2624,
+        "chessIsPiece": 2820,
+        "chessAttacked": 2964,
+        "chessInCheck": 3916,
+        "chessRight": 4056,
+        "chessRemoveRight": 4140,
+        "chessRookRight": 4304,
+        "chessPromotedKind": 4564,
+        "chessMake": 4584,
+        "chessUnmake": 7608,
+        "chessAdd": 8848,
+        "chessPawnAdd": 9092,
+        "chessPawnMoves": 9476,
+        "chessCastle": 10652,
+        "chessPieceMoves": 12112,
+        "chessPseudoMoves": 13032,
+        "chessLegal": 13388,
+        "chessLegalMoves": 13544,
+        "chessPerft": 13920,
+        "chessValue": 15620,
+        "chessAbs": 15812,
+        "chessCenter": 15864,
+        "chessEvaluate": 15988,
+        "chessCapture": 17500,
+        "chessTactical": 18004,
+        "chessPriority": 18116,
+        "chessTacticalMoves": 18588,
+        "chessOrder": 18888,
+        "chessFirstLegal": 19740,
+        "chessFrame": 19964,
+        "chessUndo": 19992,
+        "chessList": 20020,
+        "chessInitNode": 20048,
+        "chessStartSearch": 20492,
+        "chessStopSearch": 21172,
+        "chessAcceptScore": 21432,
+        "chessCompleteNode": 22136,
+        "chessPrepareNode": 22804,
+        "chessSearchStep": 24668,
+        "chessSearchSlice": 26516
+      },
+      "imports": 0,
+      "stats": {
+        "leaves": [
+          "chessOnBoard",
+          "chessSquare",
+          "chessDense",
+          "chessPromotion",
+          "chessPawnStep",
+          "chessRearPiece",
+          "chessRay",
+          "chessKnight",
+          "chessRight",
+          "chessPromotedKind",
+          "chessValue",
+          "chessAbs",
+          "chessFrame",
+          "chessUndo",
+          "chessList"
+        ],
+        "sites": [
+          {
+            "caller": "chessMove",
+            "callee": "chessDense",
+            "addedWords": 16
+          },
+          {
+            "caller": "chessMove",
+            "callee": "chessDense",
+            "addedWords": 16
+          },
+          {
+            "caller": "chessFrom",
+            "callee": "chessSquare",
+            "addedWords": 16
+          },
+          {
+            "caller": "chessTo",
+            "callee": "chessSquare",
+            "addedWords": 16
+          },
+          {
+            "caller": "chessAttacked",
+            "callee": "chessPawnStep",
+            "addedWords": 5
+          },
+          {
+            "caller": "chessRemoveRight",
+            "callee": "chessRight",
+            "addedWords": 19
+          },
+          {
+            "caller": "chessMake",
+            "callee": "chessPawnStep",
+            "addedWords": 5
+          },
+          {
+            "caller": "chessMake",
+            "callee": "chessPromotedKind",
+            "addedWords": 3
+          }
+        ],
+        "addedWords": 96
+      }
+    }
+  },
+  "restoreReadback": true,
+  "restoredWorlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "restoredPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 1364596,
+    "relocate_us": 1191,
+    "native_us": 2918,
+    "raster_us": 0,
+    "image_bytes": 33840
+  }
+}

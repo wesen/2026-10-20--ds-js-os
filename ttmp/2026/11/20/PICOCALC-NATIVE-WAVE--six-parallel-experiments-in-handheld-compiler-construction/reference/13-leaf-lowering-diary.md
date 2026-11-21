@@ -106,3 +106,57 @@ Review `images.mjs` for exact hashes and entry maps, `check.mjs` for the indepen
 ### Technical details
 
 The standalone three-arm images have no imports. Register checks use the ticket's independent RV32 instruction model and preserve whole output arenas, not just unboxed return values. The director separately measured held-out telemetry on the PicoCalc in 11 rotated blocks. [Independent physical measurements](../various/director/paired-results.json)
+
+## Step 3. Measure the three native images on the PicoCalc
+
+After the first lane completed and explicitly released the serial lock, I flashed the private three-arm app. It links the stock, leaf and inline images into separate text sections of the same ESP-IDF image. Each test begins from the same root scratch and state, and each repetition changes arm order. The fixed work is the complete release oracle for five selected configurations.
+
+### Prompt context
+
+See Step 1. The physical window was limited to isolated compute timing and release restoration. The standalone measurement covers the maintained Chess search over fixed positions and budgets, ending before any UI or display activity.
+
+### What I did
+
+I built the app using `prepare-board.py` and the SDK configuration from the earlier release lab. I verified that its partition matched the installed one. The capture wrapper reused the shared release restore runner. I collected three measurements per arm for each of the opening at depth three, Black's position after e2–e4 at depth four, Kiwipete at depth three, the pawn ending at depth five, and the shipped 1,600-node reply configuration. It ended with 45 rows in one 360 MHz boot.
+
+### Why
+
+Rotating target order avoids giving one arm the same first-run cache state every time. Exact result and root checks on each observation gate comparisons of elapsed time. Separate images in one firmware give all arms the same board, timer and standalone execution environment.
+
+### What worked
+
+All 45 observations matched the expected move, score, completed depth, cumulative nodes, slices and 135 starting cells. The shipped-budget case's median search times were 239.159 ms for stock, 221.526 ms for leaf and 220.738 ms for inline. Median paired elapsed reduction versus stock ranged from 6.857% to 7.793% for leaf and 7.137% to 7.702% for inline. In the pawn ending, the inline median of 131.172 ms was slightly above the leaf median of 130.988 ms. [Physical receipt](../various/03-leaf/physical.json)
+
+### What didn't work
+
+No case failed the physical oracle. The within-boot results cannot estimate between-boot variance. Each image occupies its own flash placement, so an instruction-count improvement does not uniquely predict a time improvement.
+
+### What I learned
+
+Most of the Chess improvement in this policy comes from the leaf rewrite. Eight inline sites add a small gain in most sampled positions and can cost code bytes without improving every position. The result is consistent with the model's instruction reductions in broad magnitude. It measures the native kernel with its timer loop rather than key-to-response latency.
+
+### What was tricky to build
+
+I preserved the original fixed-work generated C header and verified the control binary against its release-lab digest. The experiment stages only the native code aliases for each arm and uses the exact same ABI to call them. The clock excludes buffer clearing and serial records.
+
+### What warrants a second pair of eyes
+
+Check the median paired reductions against the raw three repetitions, not by subtracting overall arm medians. Check restoration independently of search correctness. The experimental app and the release have different runtime scope.
+
+### What should be done in the future
+
+Include boot-to-boot and instruction-placement controls if an optimizer is considered for the released compiler. Expand the evaluation to another nontrivial native application before changing defaults.
+
+### Code review instructions
+
+Read `scripts/03-leaf/device.py` and the earlier release lab's restore runner. Compare `physical.json` with the modeled receipts and recompute the table through `aggregate.py`.
+
+### Technical details
+
+The release app digest remains pinned to `134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1` and partition `72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30`.
+
+App and partition readback matched both published digests. The release booted all eight monitored native worlds and installed its ordinary painter with one compile and zero rejects. The runner exited zero and I explicitly handed the lock to the dependency study. [Restore verification](../various/03-leaf/release-restore-verified.log)
+
+## Step 4. Review the Opus-authored report
+
+I supplied aggregate host and sealed telemetry evidence to Claude Opus High and used a separate aggregate prompt for the completed physical Chess results. I checked the authored text against the actual register guard, recipe offsets, output sizes, model counts and physical timing rows. I removed a tentative future-results note and connected the reported timings to the verified restoration receipt. No raw UART was included in either writing prompt. [Writing provenance](../various/03-leaf/opus-provenance.json)

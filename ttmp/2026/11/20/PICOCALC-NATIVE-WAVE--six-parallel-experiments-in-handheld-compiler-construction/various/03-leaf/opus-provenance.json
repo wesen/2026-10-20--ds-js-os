@@ -1,0 +1,17 @@
+{
+  "design": {
+    "promptSha256": "4f3e69f81ccc7e3d143413d0bfb54fac7269d3ce3bcc6a493b848322f2240ca1",
+    "responseSha256": "7d31f78347dd40a4a7448f8b35b6b8e6791ddb4b07fc0afcf756e2c71c078bea"
+  },
+  "article": {
+    "promptSha256": "c09dd061e0b431e9580f07ce81e230f2a9aa12e0f2030ac2cac8225bffe8fd4a",
+    "responseSha256": "c953de572b8671c3f8884d0551234cbf623a6f2b48d6b55c517c0b90409266d6"
+  },
+  "boardSection": {
+    "promptSha256": "8b7b12fbfe8cde8899465408becff8709e02943a718bdd25466eb2eb1c011e36",
+    "responseSha256": "ec98a170a217b4e618117ced9f62dcad5831b1433bee1b3d083a5ca150de8fda"
+  },
+  "reviewedArticleSHA256": "7de21062b20d553e6067af03fadc83876c942c412172e1fa5ba7b3d1c7d9353b",
+  "command": "claude -p --model opus --effort high --tools ''",
+  "review": "Verified sizes, model counts, board timings and source guards. Clarified stock register use, inline exit rebasing and hardware scopes. Inserted the second Opus-authored physical section into the marker in the first output."
+}
