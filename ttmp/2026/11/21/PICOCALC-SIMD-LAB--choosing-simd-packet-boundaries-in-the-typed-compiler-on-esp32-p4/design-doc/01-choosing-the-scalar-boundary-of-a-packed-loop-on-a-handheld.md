@@ -60,7 +60,7 @@ else:
     visit eight lanes in order with their original hit predicate
 ```
 
-The minimum and maximum instructions reduce all eight lanes to one scalar. A full packet with maximum at most the row term has eight exact nonnegative differences in the admitted range. The full-hit recipe emits eight continuation copies because the lane selector is an immediate in the extraction instruction. This trades image bytes and instruction fetches for fewer scratch operations. The partial packet path and the invalid-input fallback remain available in both candidate builds. The trial patch and vendor assembly live under `scripts/director/`. Only the selection API is integrated in the ordinary compiler. Default application compilation has no research policy enabled.
+The minimum and maximum instructions reduce all eight lanes to one scalar. A full packet with maximum at most the row term has eight exact nonnegative differences in the admitted range. The full-hit recipe emits eight continuation copies because the lane selector is an immediate in the extraction instruction. This trades image bytes and instruction fetches for fewer scratch operations. The partial packet path and the invalid-input fallback remain available in both candidate builds. The trial patch and vendor assembly live under `scripts/director/`. The optional backend accepts `pieLoops: "pie-empty"` and the per-loop callback can return `{plan:"pie-empty"}`. Both emit the complete image measured on the board. The full-hit experiment remains reproducible from the trial patch. Default application compilation retains its original behavior.
 
 ## Six controls
 
@@ -98,3 +98,21 @@ Inspect the scripts/evidence workbook for the complete runnable research sequenc
 - `various/` separates kernel identity, host differential evidence, physical observations and independent review. Each article identifies which measurements support its conclusion.
 
 LLVM's VPlan describes planning and costing the operations that will be emitted. The small experiment here borrows that separation while retaining the single-function lifecycle. Espressif documents instruction and data layout constraints. Catto explains why a conflict-free batch lets several contacts update disjoint bodies concurrently and why gathering those bodies can dominate the arithmetic. [LLVM VPlan](https://llvm.org/docs/VectorizationPlan.html) · [Espressif PIE](https://developer.espressif.com/blog/2024/12/pie-introduction/) · [Box2D SIMD Matters](https://box2d.org/posts/2024/08/simd-matters/)
+
+## Implemented interface and verified outcome
+
+```js
+// Load typed-wasm.js, typed-rv32.js and typed-pie-loops.js into the same realm.
+const rc = typedRv32.compile(source, [], undefined, {
+    pieLoops(region) {
+        if (region.constantTrips !== null && region.constantTrips < 16) {
+            return {plan: "stock"};
+        }
+        return {plan: "pie-empty"};
+    }
+});
+```
+
+The snippet demonstrates the interface. The policy measured in the blind experiment lives in `scripts/director/selector.js` and is separately identified by its Git revision. The optional lowerer first recognizes a region and verifies its source operations. If it cannot do so, it emits the stock function. A recognized region receives its number of output streams, packet width and either a constant iteration count or null. A forced `pie-empty` or a callback selection emits a guarded eight-input load, a horizontal unsigned minimum and the ordinary scalar hit continuation. The test verifies the SHA-256 of the entire image from the unchanged raytracer in both frontend streaming modes. The negative all-hit result and its original bytes remain in the research ticket.
+
+Use `scripts/director/09-open-lab-session.py --keep` against the merged service on port 3794 to open a private session with all trial rows. `lab.frame("default","clean","baseline","empty")` compares device microseconds. `lab.packetPrediction()` compares the predicted number of avoided scratch loads to dynamically executed loads from this same image pair. The complete-frame and primary-only comparisons on twelve poses and the costs of the collision selection policy are analyzed in the director's report.

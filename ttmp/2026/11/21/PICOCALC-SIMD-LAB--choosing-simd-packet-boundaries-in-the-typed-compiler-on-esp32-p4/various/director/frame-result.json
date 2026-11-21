@@ -1,0 +1,602 @@
+[
+  {
+    "pose": "default",
+    "phase": "clean",
+    "empty": {
+      "before": 56243.5,
+      "after": 55737.5,
+      "saved": 508.5,
+      "pct": 0.9039910458733007,
+      "wins": 6
+    },
+    "full": {
+      "before": 56243.5,
+      "after": 55861.0,
+      "saved": 391.0,
+      "pct": 0.6950070322372168,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 55737.5,
+      "after": 55861.0,
+      "saved": -126.0,
+      "pct": -0.22605970293250166,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "default",
+    "phase": "primary",
+    "empty": {
+      "before": 16337.5,
+      "after": 15791.0,
+      "saved": 546.5,
+      "pct": 3.3458838355108513,
+      "wins": 6
+    },
+    "full": {
+      "before": 16337.5,
+      "after": 15930.5,
+      "saved": 415.5,
+      "pct": 2.543387784047425,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15791.0,
+      "after": 15930.5,
+      "saved": -131.0,
+      "pct": -0.8295916900709861,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "lamp-only",
+    "phase": "clean",
+    "empty": {
+      "before": 55775.0,
+      "after": 55252.5,
+      "saved": 518.0,
+      "pct": 0.9288311429628815,
+      "wins": 6
+    },
+    "full": {
+      "before": 55775.0,
+      "after": 55379.0,
+      "saved": 392.0,
+      "pct": 0.7028853279331542,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 55252.5,
+      "after": 55379.0,
+      "saved": -128.5,
+      "pct": -0.2325906714592264,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "lamp-only",
+    "phase": "primary",
+    "empty": {
+      "before": 16358.0,
+      "after": 15819.0,
+      "saved": 536.5,
+      "pct": 3.279123922666461,
+      "wins": 6
+    },
+    "full": {
+      "before": 16358.0,
+      "after": 15949.5,
+      "saved": 407.5,
+      "pct": 2.4909063986222337,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15819.0,
+      "after": 15949.5,
+      "saved": -126.5,
+      "pct": -0.7993550077497613,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "near-corner",
+    "phase": "clean",
+    "empty": {
+      "before": 57035.5,
+      "after": 56527.5,
+      "saved": 508.0,
+      "pct": 0.8906655755819918,
+      "wins": 6
+    },
+    "full": {
+      "before": 57035.5,
+      "after": 56644.5,
+      "saved": 386.5,
+      "pct": 0.6776240245954828,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 56527.5,
+      "after": 56644.5,
+      "saved": -120.5,
+      "pct": -0.21315966712978812,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "near-corner",
+    "phase": "primary",
+    "empty": {
+      "before": 16402.0,
+      "after": 15862.0,
+      "saved": 542.0,
+      "pct": 3.304576943836865,
+      "wins": 6
+    },
+    "full": {
+      "before": 16402.0,
+      "after": 16011.5,
+      "saved": 398.5,
+      "pct": 2.429805179934002,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15862.0,
+      "after": 16011.5,
+      "saved": -150.5,
+      "pct": -0.9489565553450864,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "far-corner",
+    "phase": "clean",
+    "empty": {
+      "before": 57596.5,
+      "after": 57071.5,
+      "saved": 521.5,
+      "pct": 0.9055506961383942,
+      "wins": 6
+    },
+    "full": {
+      "before": 57596.5,
+      "after": 57210.0,
+      "saved": 382.0,
+      "pct": 0.6633085520664059,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 57071.5,
+      "after": 57210.0,
+      "saved": -138.5,
+      "pct": -0.2427022171411794,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "far-corner",
+    "phase": "primary",
+    "empty": {
+      "before": 16427.0,
+      "after": 15886.0,
+      "saved": 538.5,
+      "pct": 3.2771401368160245,
+      "wins": 6
+    },
+    "full": {
+      "before": 16427.0,
+      "after": 16025.0,
+      "saved": 397.0,
+      "pct": 2.416659519823441,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15886.0,
+      "after": 16025.0,
+      "saved": -138.5,
+      "pct": -0.871632786570378,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "left-bottom",
+    "phase": "clean",
+    "empty": {
+      "before": 55347.5,
+      "after": 54849.5,
+      "saved": 503.5,
+      "pct": 0.9095840854749598,
+      "wins": 6
+    },
+    "full": {
+      "before": 55347.5,
+      "after": 54982.0,
+      "saved": 365.5,
+      "pct": 0.6603701705793721,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 54849.5,
+      "after": 54982.0,
+      "saved": -134.0,
+      "pct": -0.24430485400100613,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "left-bottom",
+    "phase": "primary",
+    "empty": {
+      "before": 16379.5,
+      "after": 15831.5,
+      "saved": 548.0,
+      "pct": 3.34613651003074,
+      "wins": 6
+    },
+    "full": {
+      "before": 16379.5,
+      "after": 15978.0,
+      "saved": 401.5,
+      "pct": 2.451834000231208,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15831.5,
+      "after": 15978.0,
+      "saved": -148.5,
+      "pct": -0.9382820811298517,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "right-top",
+    "phase": "clean",
+    "empty": {
+      "before": 54088.0,
+      "after": 53561.0,
+      "saved": 520.5,
+      "pct": 0.9625038062309086,
+      "wins": 6
+    },
+    "full": {
+      "before": 54088.0,
+      "after": 53682.0,
+      "saved": 399.5,
+      "pct": 0.7387049929202998,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 53561.0,
+      "after": 53682.0,
+      "saved": -126.0,
+      "pct": -0.23527906038011617,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "right-top",
+    "phase": "primary",
+    "empty": {
+      "before": 16401.0,
+      "after": 15847.5,
+      "saved": 545.0,
+      "pct": 3.325286143204692,
+      "wins": 6
+    },
+    "full": {
+      "before": 16401.0,
+      "after": 15993.5,
+      "saved": 409.5,
+      "pct": 2.4958820852095203,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15847.5,
+      "after": 15993.5,
+      "saved": -149.5,
+      "pct": -0.9435234580520512,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "blue-overlap",
+    "phase": "clean",
+    "empty": {
+      "before": 54102.0,
+      "after": 53597.0,
+      "saved": 502.0,
+      "pct": 0.9278510944189511,
+      "wins": 6
+    },
+    "full": {
+      "before": 54102.0,
+      "after": 53707.0,
+      "saved": 397.5,
+      "pct": 0.7346256706220464,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 53597.0,
+      "after": 53707.0,
+      "saved": -102.0,
+      "pct": -0.19028173287433303,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "blue-overlap",
+    "phase": "primary",
+    "empty": {
+      "before": 16234.5,
+      "after": 15690.5,
+      "saved": 546.0,
+      "pct": 3.3632014228739022,
+      "wins": 6
+    },
+    "full": {
+      "before": 16234.5,
+      "after": 15814.5,
+      "saved": 420.0,
+      "pct": 2.587639045910697,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15690.5,
+      "after": 15814.5,
+      "saved": -120.0,
+      "pct": -0.764994496604736,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "gold-overlap",
+    "phase": "clean",
+    "empty": {
+      "before": 53829.5,
+      "after": 53299.0,
+      "saved": 525.0,
+      "pct": 0.9754797758042868,
+      "wins": 6
+    },
+    "full": {
+      "before": 53829.5,
+      "after": 53422.0,
+      "saved": 398.0,
+      "pct": 0.7394971092541649,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 53299.0,
+      "after": 53422.0,
+      "saved": -122.5,
+      "pct": -0.229848341795706,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "gold-overlap",
+    "phase": "primary",
+    "empty": {
+      "before": 16291.0,
+      "after": 15753.5,
+      "saved": 532.5,
+      "pct": 3.2686759560493526,
+      "wins": 6
+    },
+    "full": {
+      "before": 16291.0,
+      "after": 15880.0,
+      "saved": 406.5,
+      "pct": 2.495242772082745,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15753.5,
+      "after": 15880.0,
+      "saved": -126.5,
+      "pct": -0.8027932927549634,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "left-lamp",
+    "phase": "clean",
+    "empty": {
+      "before": 55333.5,
+      "after": 54822.0,
+      "saved": 509.5,
+      "pct": 0.9207804489870456,
+      "wins": 6
+    },
+    "full": {
+      "before": 55333.5,
+      "after": 54938.0,
+      "saved": 397.5,
+      "pct": 0.7183453742179062,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 54822.0,
+      "after": 54938.0,
+      "saved": -113.0,
+      "pct": -0.20610283261457218,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "left-lamp",
+    "phase": "primary",
+    "empty": {
+      "before": 16283.5,
+      "after": 15738.5,
+      "saved": 548.0,
+      "pct": 3.36537023323329,
+      "wins": 6
+    },
+    "full": {
+      "before": 16283.5,
+      "after": 15871.5,
+      "saved": 416.0,
+      "pct": 2.554966423437534,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15738.5,
+      "after": 15871.5,
+      "saved": -130.0,
+      "pct": -0.826142097965757,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "right-lamp",
+    "phase": "clean",
+    "empty": {
+      "before": 55231.5,
+      "after": 54705.0,
+      "saved": 520.5,
+      "pct": 0.9424987311613349,
+      "wins": 6
+    },
+    "full": {
+      "before": 55231.5,
+      "after": 54828.5,
+      "saved": 400.5,
+      "pct": 0.7251941698528823,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 54705.0,
+      "after": 54828.5,
+      "saved": -128.5,
+      "pct": -0.23491776682508583,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "right-lamp",
+    "phase": "primary",
+    "empty": {
+      "before": 16305.0,
+      "after": 15765.5,
+      "saved": 534.5,
+      "pct": 3.2780337995360354,
+      "wins": 6
+    },
+    "full": {
+      "before": 16305.0,
+      "after": 15896.0,
+      "saved": 406.5,
+      "pct": 2.4930242988162643,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15765.5,
+      "after": 15896.0,
+      "saved": -127.5,
+      "pct": -0.8084258778905291,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "bottom-lamp",
+    "phase": "clean",
+    "empty": {
+      "before": 54940.0,
+      "after": 54428.5,
+      "saved": 511.5,
+      "pct": 0.9309985432938983,
+      "wins": 6
+    },
+    "full": {
+      "before": 54940.0,
+      "after": 54544.0,
+      "saved": 400.5,
+      "pct": 0.7289037281269829,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 54428.5,
+      "after": 54544.0,
+      "saved": -115.0,
+      "pct": -0.21127531297225577,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "bottom-lamp",
+    "phase": "primary",
+    "empty": {
+      "before": 16257.5,
+      "after": 15716.0,
+      "saved": 543.5,
+      "pct": 3.3431758277935613,
+      "wins": 6
+    },
+    "full": {
+      "before": 16257.5,
+      "after": 15844.0,
+      "saved": 419.0,
+      "pct": 2.5775072033423756,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 15716.0,
+      "after": 15844.0,
+      "saved": -126.5,
+      "pct": -0.8050478661248944,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "top-lamp-wide",
+    "phase": "clean",
+    "empty": {
+      "before": 54496.5,
+      "after": 53953.5,
+      "saved": 540.0,
+      "pct": 0.9909893376887926,
+      "wins": 6
+    },
+    "full": {
+      "before": 54496.5,
+      "after": 54077.5,
+      "saved": 422.0,
+      "pct": 0.7743685683640024,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 53953.5,
+      "after": 54077.5,
+      "saved": -122.5,
+      "pct": -0.22706115128813056,
+      "wins": 0
+    }
+  },
+  {
+    "pose": "top-lamp-wide",
+    "phase": "primary",
+    "empty": {
+      "before": 16762.0,
+      "after": 16228.5,
+      "saved": 535.5,
+      "pct": 3.1942476011627514,
+      "wins": 6
+    },
+    "full": {
+      "before": 16762.0,
+      "after": 16357.0,
+      "saved": 404.5,
+      "pct": 2.413051675126935,
+      "wins": 6
+    },
+    "incrementalFull": {
+      "before": 16228.5,
+      "after": 16357.0,
+      "saved": -129.5,
+      "pct": -0.7979787701755012,
+      "wins": 0
+    }
+  }
+]

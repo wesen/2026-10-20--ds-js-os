@@ -1,0 +1,3458 @@
+[
+  {
+    "block": 0,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 0,
+    "us": 56274,
+    "cycles": 20258269
+  },
+  {
+    "block": 0,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 1,
+    "us": 16339,
+    "cycles": 5881463
+  },
+  {
+    "block": 0,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 1,
+    "us": 15814,
+    "cycles": 5693010
+  },
+  {
+    "block": 0,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 0,
+    "us": 55679,
+    "cycles": 20044309
+  },
+  {
+    "block": 0,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 0,
+    "us": 55861,
+    "cycles": 20109617
+  },
+  {
+    "block": 0,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 1,
+    "us": 15927,
+    "cycles": 5733215
+  },
+  {
+    "block": 0,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 1,
+    "us": 16360,
+    "cycles": 5889289
+  },
+  {
+    "block": 0,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 0,
+    "us": 55778,
+    "cycles": 20079620
+  },
+  {
+    "block": 0,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 0,
+    "us": 55304,
+    "cycles": 19909221
+  },
+  {
+    "block": 0,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 1,
+    "us": 15795,
+    "cycles": 5685715
+  },
+  {
+    "block": 0,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 1,
+    "us": 15947,
+    "cycles": 5740473
+  },
+  {
+    "block": 0,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 0,
+    "us": 55380,
+    "cycles": 19936383
+  },
+  {
+    "block": 0,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57039,
+    "cycles": 20533651
+  },
+  {
+    "block": 0,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16400,
+    "cycles": 5903359
+  },
+  {
+    "block": 0,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15889,
+    "cycles": 5719466
+  },
+  {
+    "block": 0,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 56462,
+    "cycles": 20326077
+  },
+  {
+    "block": 0,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 56645,
+    "cycles": 20391891
+  },
+  {
+    "block": 0,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 15995,
+    "cycles": 5757983
+  },
+  {
+    "block": 0,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16432,
+    "cycles": 5915359
+  },
+  {
+    "block": 0,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57595,
+    "cycles": 20733860
+  },
+  {
+    "block": 0,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 57120,
+    "cycles": 20563145
+  },
+  {
+    "block": 0,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15861,
+    "cycles": 5709431
+  },
+  {
+    "block": 0,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16023,
+    "cycles": 5768307
+  },
+  {
+    "block": 0,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 57206,
+    "cycles": 20593035
+  },
+  {
+    "block": 0,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 0,
+    "us": 55368,
+    "cycles": 19931853
+  },
+  {
+    "block": 0,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 1,
+    "us": 16375,
+    "cycles": 5894569
+  },
+  {
+    "block": 0,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 1,
+    "us": 15851,
+    "cycles": 5705900
+  },
+  {
+    "block": 0,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 0,
+    "us": 54810,
+    "cycles": 19731145
+  },
+  {
+    "block": 0,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 0,
+    "us": 54987,
+    "cycles": 19794563
+  },
+  {
+    "block": 0,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 1,
+    "us": 15971,
+    "cycles": 5749245
+  },
+  {
+    "block": 0,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 1,
+    "us": 16410,
+    "cycles": 5907115
+  },
+  {
+    "block": 0,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 0,
+    "us": 54089,
+    "cycles": 19471542
+  },
+  {
+    "block": 0,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 0,
+    "us": 53600,
+    "cycles": 19295695
+  },
+  {
+    "block": 0,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 1,
+    "us": 15839,
+    "cycles": 5701789
+  },
+  {
+    "block": 0,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 1,
+    "us": 15997,
+    "cycles": 5758259
+  },
+  {
+    "block": 0,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 0,
+    "us": 53683,
+    "cycles": 19325547
+  },
+  {
+    "block": 0,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 54117,
+    "cycles": 19481811
+  },
+  {
+    "block": 0,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16232,
+    "cycles": 5843375
+  },
+  {
+    "block": 0,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15716,
+    "cycles": 5657416
+  },
+  {
+    "block": 0,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53541,
+    "cycles": 19274521
+  },
+  {
+    "block": 0,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53710,
+    "cycles": 19335449
+  },
+  {
+    "block": 0,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15807,
+    "cycles": 5690127
+  },
+  {
+    "block": 0,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16291,
+    "cycles": 5864557
+  },
+  {
+    "block": 0,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 53832,
+    "cycles": 19379154
+  },
+  {
+    "block": 0,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53356,
+    "cycles": 19208015
+  },
+  {
+    "block": 0,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15725,
+    "cycles": 5660685
+  },
+  {
+    "block": 0,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15880,
+    "cycles": 5716439
+  },
+  {
+    "block": 0,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53422,
+    "cycles": 19231419
+  },
+  {
+    "block": 0,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55335,
+    "cycles": 19920313
+  },
+  {
+    "block": 0,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16283,
+    "cycles": 5861693
+  },
+  {
+    "block": 0,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15766,
+    "cycles": 5675390
+  },
+  {
+    "block": 0,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54766,
+    "cycles": 19715515
+  },
+  {
+    "block": 0,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54937,
+    "cycles": 19776703
+  },
+  {
+    "block": 0,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15861,
+    "cycles": 5709797
+  },
+  {
+    "block": 0,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16305,
+    "cycles": 5869717
+  },
+  {
+    "block": 0,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55233,
+    "cycles": 19883900
+  },
+  {
+    "block": 0,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54760,
+    "cycles": 19713353
+  },
+  {
+    "block": 0,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15738,
+    "cycles": 5665485
+  },
+  {
+    "block": 0,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15896,
+    "cycles": 5722103
+  },
+  {
+    "block": 0,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54827,
+    "cycles": 19737441
+  },
+  {
+    "block": 0,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 54950,
+    "cycles": 19781651
+  },
+  {
+    "block": 0,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16257,
+    "cycles": 5852465
+  },
+  {
+    "block": 0,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15742,
+    "cycles": 5666836
+  },
+  {
+    "block": 0,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54373,
+    "cycles": 19574135
+  },
+  {
+    "block": 0,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54547,
+    "cycles": 19636781
+  },
+  {
+    "block": 0,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15831,
+    "cycles": 5698869
+  },
+  {
+    "block": 0,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 1,
+    "us": 16764,
+    "cycles": 6034869
+  },
+  {
+    "block": 0,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 0,
+    "us": 54502,
+    "cycles": 19620260
+  },
+  {
+    "block": 0,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 0,
+    "us": 53989,
+    "cycles": 19435781
+  },
+  {
+    "block": 0,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 1,
+    "us": 16200,
+    "cycles": 5831951
+  },
+  {
+    "block": 0,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 1,
+    "us": 16357,
+    "cycles": 5888457
+  },
+  {
+    "block": 0,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 0,
+    "us": 54079,
+    "cycles": 19468313
+  },
+  {
+    "block": 1,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 1,
+    "us": 15818,
+    "cycles": 5694259
+  },
+  {
+    "block": 1,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 0,
+    "us": 55251,
+    "cycles": 19889907
+  },
+  {
+    "block": 1,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 0,
+    "us": 55434,
+    "cycles": 19956077
+  },
+  {
+    "block": 1,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 1,
+    "us": 15926,
+    "cycles": 5733201
+  },
+  {
+    "block": 1,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 1,
+    "us": 16365,
+    "cycles": 5890833
+  },
+  {
+    "block": 1,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 0,
+    "us": 55772,
+    "cycles": 20077676
+  },
+  {
+    "block": 1,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 56530,
+    "cycles": 20350401
+  },
+  {
+    "block": 1,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15863,
+    "cycles": 5710537
+  },
+  {
+    "block": 1,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16026,
+    "cycles": 5768907
+  },
+  {
+    "block": 1,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 56603,
+    "cycles": 20376785
+  },
+  {
+    "block": 1,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57037,
+    "cycles": 20533003
+  },
+  {
+    "block": 1,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16403,
+    "cycles": 5904767
+  },
+  {
+    "block": 1,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15889,
+    "cycles": 5719756
+  },
+  {
+    "block": 1,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 57061,
+    "cycles": 20541789
+  },
+  {
+    "block": 1,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 57241,
+    "cycles": 20606187
+  },
+  {
+    "block": 1,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 15998,
+    "cycles": 5759035
+  },
+  {
+    "block": 1,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16433,
+    "cycles": 5915331
+  },
+  {
+    "block": 1,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57598,
+    "cycles": 20735248
+  },
+  {
+    "block": 1,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 0,
+    "us": 54853,
+    "cycles": 19746527
+  },
+  {
+    "block": 1,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 1,
+    "us": 15832,
+    "cycles": 5699333
+  },
+  {
+    "block": 1,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 1,
+    "us": 15990,
+    "cycles": 5755999
+  },
+  {
+    "block": 1,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 0,
+    "us": 54952,
+    "cycles": 19781571
+  },
+  {
+    "block": 1,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 0,
+    "us": 55371,
+    "cycles": 19933473
+  },
+  {
+    "block": 1,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 1,
+    "us": 16371,
+    "cycles": 5893329
+  },
+  {
+    "block": 1,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 1,
+    "us": 15856,
+    "cycles": 5707620
+  },
+  {
+    "block": 1,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 0,
+    "us": 53555,
+    "cycles": 19279549
+  },
+  {
+    "block": 1,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 0,
+    "us": 53727,
+    "cycles": 19341261
+  },
+  {
+    "block": 1,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 1,
+    "us": 15964,
+    "cycles": 5746517
+  },
+  {
+    "block": 1,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 1,
+    "us": 16404,
+    "cycles": 5904911
+  },
+  {
+    "block": 1,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 0,
+    "us": 54087,
+    "cycles": 19471108
+  },
+  {
+    "block": 1,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53610,
+    "cycles": 19299427
+  },
+  {
+    "block": 1,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15693,
+    "cycles": 5649169
+  },
+  {
+    "block": 1,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15836,
+    "cycles": 5700619
+  },
+  {
+    "block": 1,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53669,
+    "cycles": 19320545
+  },
+  {
+    "block": 1,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 54103,
+    "cycles": 19477109
+  },
+  {
+    "block": 1,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16232,
+    "cycles": 5843339
+  },
+  {
+    "block": 1,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15754,
+    "cycles": 5671020
+  },
+  {
+    "block": 1,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53290,
+    "cycles": 19184263
+  },
+  {
+    "block": 1,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53466,
+    "cycles": 19247289
+  },
+  {
+    "block": 1,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15846,
+    "cycles": 5704233
+  },
+  {
+    "block": 1,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16291,
+    "cycles": 5864503
+  },
+  {
+    "block": 1,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 53827,
+    "cycles": 19377350
+  },
+  {
+    "block": 1,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54830,
+    "cycles": 19738581
+  },
+  {
+    "block": 1,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15738,
+    "cycles": 5665593
+  },
+  {
+    "block": 1,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15897,
+    "cycles": 5722463
+  },
+  {
+    "block": 1,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54888,
+    "cycles": 19759537
+  },
+  {
+    "block": 1,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55334,
+    "cycles": 19919929
+  },
+  {
+    "block": 1,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16284,
+    "cycles": 5861809
+  },
+  {
+    "block": 1,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15765,
+    "cycles": 5675350
+  },
+  {
+    "block": 1,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54705,
+    "cycles": 19693485
+  },
+  {
+    "block": 1,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54872,
+    "cycles": 19753431
+  },
+  {
+    "block": 1,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15857,
+    "cycles": 5708037
+  },
+  {
+    "block": 1,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16306,
+    "cycles": 5869747
+  },
+  {
+    "block": 1,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55230,
+    "cycles": 19882402
+  },
+  {
+    "block": 1,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54429,
+    "cycles": 19594035
+  },
+  {
+    "block": 1,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15716,
+    "cycles": 5657193
+  },
+  {
+    "block": 1,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15864,
+    "cycles": 5710785
+  },
+  {
+    "block": 1,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54498,
+    "cycles": 19619021
+  },
+  {
+    "block": 1,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 54943,
+    "cycles": 19778805
+  },
+  {
+    "block": 1,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16258,
+    "cycles": 5852585
+  },
+  {
+    "block": 1,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 1,
+    "us": 16229,
+    "cycles": 5842098
+  },
+  {
+    "block": 1,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 0,
+    "us": 53950,
+    "cycles": 19421651
+  },
+  {
+    "block": 1,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 0,
+    "us": 54114,
+    "cycles": 19480939
+  },
+  {
+    "block": 1,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 1,
+    "us": 16321,
+    "cycles": 5875275
+  },
+  {
+    "block": 1,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 1,
+    "us": 16762,
+    "cycles": 6033813
+  },
+  {
+    "block": 1,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 0,
+    "us": 54491,
+    "cycles": 19616334
+  },
+  {
+    "block": 1,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 0,
+    "us": 55744,
+    "cycles": 20067481
+  },
+  {
+    "block": 1,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 1,
+    "us": 15789,
+    "cycles": 5683747
+  },
+  {
+    "block": 1,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 1,
+    "us": 15956,
+    "cycles": 5743761
+  },
+  {
+    "block": 1,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 0,
+    "us": 55815,
+    "cycles": 20093015
+  },
+  {
+    "block": 1,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 0,
+    "us": 56246,
+    "cycles": 20248079
+  },
+  {
+    "block": 1,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 1,
+    "us": 16336,
+    "cycles": 5880583
+  },
+  {
+    "block": 2,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 56658,
+    "cycles": 20396898
+  },
+  {
+    "block": 2,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16014,
+    "cycles": 5764827
+  },
+  {
+    "block": 2,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16429,
+    "cycles": 5914243
+  },
+  {
+    "block": 2,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57003,
+    "cycles": 20520722
+  },
+  {
+    "block": 2,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 56529,
+    "cycles": 20350299
+  },
+  {
+    "block": 2,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15861,
+    "cycles": 5709813
+  },
+  {
+    "block": 2,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16027,
+    "cycles": 5769657
+  },
+  {
+    "block": 2,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 57210,
+    "cycles": 20594861
+  },
+  {
+    "block": 2,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57630,
+    "cycles": 20746469
+  },
+  {
+    "block": 2,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16409,
+    "cycles": 5906703
+  },
+  {
+    "block": 2,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15883,
+    "cycles": 5717730
+  },
+  {
+    "block": 2,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 57063,
+    "cycles": 20542497
+  },
+  {
+    "block": 2,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 0,
+    "us": 54982,
+    "cycles": 19792589
+  },
+  {
+    "block": 2,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 1,
+    "us": 15972,
+    "cycles": 5749529
+  },
+  {
+    "block": 2,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 1,
+    "us": 16399,
+    "cycles": 5903349
+  },
+  {
+    "block": 2,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 0,
+    "us": 55338,
+    "cycles": 19921506
+  },
+  {
+    "block": 2,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 0,
+    "us": 54849,
+    "cycles": 19745369
+  },
+  {
+    "block": 2,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 1,
+    "us": 15831,
+    "cycles": 5698901
+  },
+  {
+    "block": 2,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 1,
+    "us": 16000,
+    "cycles": 5759847
+  },
+  {
+    "block": 2,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 0,
+    "us": 53681,
+    "cycles": 19324689
+  },
+  {
+    "block": 2,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 0,
+    "us": 54123,
+    "cycles": 19483849
+  },
+  {
+    "block": 2,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 1,
+    "us": 16376,
+    "cycles": 5894987
+  },
+  {
+    "block": 2,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 1,
+    "us": 15858,
+    "cycles": 5708392
+  },
+  {
+    "block": 2,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 0,
+    "us": 53563,
+    "cycles": 19282209
+  },
+  {
+    "block": 2,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53710,
+    "cycles": 19335275
+  },
+  {
+    "block": 2,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15799,
+    "cycles": 5687029
+  },
+  {
+    "block": 2,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16256,
+    "cycles": 5851817
+  },
+  {
+    "block": 2,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 54074,
+    "cycles": 19466414
+  },
+  {
+    "block": 2,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53601,
+    "cycles": 19296033
+  },
+  {
+    "block": 2,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15688,
+    "cycles": 5647601
+  },
+  {
+    "block": 2,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15880,
+    "cycles": 5716619
+  },
+  {
+    "block": 2,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53415,
+    "cycles": 19229117
+  },
+  {
+    "block": 2,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 53858,
+    "cycles": 19388617
+  },
+  {
+    "block": 2,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16269,
+    "cycles": 5856355
+  },
+  {
+    "block": 2,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15753,
+    "cycles": 5670656
+  },
+  {
+    "block": 2,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53293,
+    "cycles": 19185301
+  },
+  {
+    "block": 2,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54939,
+    "cycles": 19777781
+  },
+  {
+    "block": 2,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15860,
+    "cycles": 5709295
+  },
+  {
+    "block": 2,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16306,
+    "cycles": 5869899
+  },
+  {
+    "block": 2,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55299,
+    "cycles": 19907562
+  },
+  {
+    "block": 2,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54826,
+    "cycles": 19736775
+  },
+  {
+    "block": 2,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15739,
+    "cycles": 5665579
+  },
+  {
+    "block": 2,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15896,
+    "cycles": 5722249
+  },
+  {
+    "block": 2,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54827,
+    "cycles": 19737343
+  },
+  {
+    "block": 2,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55261,
+    "cycles": 19893837
+  },
+  {
+    "block": 2,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16282,
+    "cycles": 5861271
+  },
+  {
+    "block": 2,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15766,
+    "cycles": 5675372
+  },
+  {
+    "block": 2,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54698,
+    "cycles": 19690979
+  },
+  {
+    "block": 2,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54545,
+    "cycles": 19635837
+  },
+  {
+    "block": 2,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15835,
+    "cycles": 5700419
+  },
+  {
+    "block": 2,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16282,
+    "cycles": 5861303
+  },
+  {
+    "block": 2,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 54908,
+    "cycles": 19766486
+  },
+  {
+    "block": 2,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54435,
+    "cycles": 19596149
+  },
+  {
+    "block": 2,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15716,
+    "cycles": 5657631
+  },
+  {
+    "block": 2,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 1,
+    "us": 16357,
+    "cycles": 5888459
+  },
+  {
+    "block": 2,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 0,
+    "us": 54076,
+    "cycles": 19466865
+  },
+  {
+    "block": 2,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 0,
+    "us": 54512,
+    "cycles": 19624081
+  },
+  {
+    "block": 2,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 1,
+    "us": 16743,
+    "cycles": 6027137
+  },
+  {
+    "block": 2,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 1,
+    "us": 16228,
+    "cycles": 5842050
+  },
+  {
+    "block": 2,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 0,
+    "us": 53946,
+    "cycles": 19420179
+  },
+  {
+    "block": 2,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 0,
+    "us": 55866,
+    "cycles": 20111553
+  },
+  {
+    "block": 2,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 1,
+    "us": 15910,
+    "cycles": 5727219
+  },
+  {
+    "block": 2,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 1,
+    "us": 16359,
+    "cycles": 5889153
+  },
+  {
+    "block": 2,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 0,
+    "us": 56202,
+    "cycles": 20232530
+  },
+  {
+    "block": 2,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 0,
+    "us": 55737,
+    "cycles": 20065105
+  },
+  {
+    "block": 2,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 1,
+    "us": 15792,
+    "cycles": 5684781
+  },
+  {
+    "block": 2,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 1,
+    "us": 15952,
+    "cycles": 5742339
+  },
+  {
+    "block": 2,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 0,
+    "us": 55374,
+    "cycles": 19934343
+  },
+  {
+    "block": 2,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 0,
+    "us": 55806,
+    "cycles": 20090045
+  },
+  {
+    "block": 2,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 1,
+    "us": 16336,
+    "cycles": 5880573
+  },
+  {
+    "block": 2,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 1,
+    "us": 15820,
+    "cycles": 5694938
+  },
+  {
+    "block": 2,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 0,
+    "us": 55241,
+    "cycles": 19886321
+  },
+  {
+    "block": 3,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16038,
+    "cycles": 5773351
+  },
+  {
+    "block": 3,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 57210,
+    "cycles": 20594825
+  },
+  {
+    "block": 3,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 57113,
+    "cycles": 20560429
+  },
+  {
+    "block": 3,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15856,
+    "cycles": 5707743
+  },
+  {
+    "block": 3,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16423,
+    "cycles": 5911991
+  },
+  {
+    "block": 3,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57585,
+    "cycles": 20730464
+  },
+  {
+    "block": 3,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 0,
+    "us": 54982,
+    "cycles": 19792433
+  },
+  {
+    "block": 3,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 1,
+    "us": 15977,
+    "cycles": 5751073
+  },
+  {
+    "block": 3,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 1,
+    "us": 15865,
+    "cycles": 5711321
+  },
+  {
+    "block": 3,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 0,
+    "us": 54816,
+    "cycles": 19732891
+  },
+  {
+    "block": 3,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 0,
+    "us": 55357,
+    "cycles": 19927569
+  },
+  {
+    "block": 3,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 1,
+    "us": 16376,
+    "cycles": 5894257
+  },
+  {
+    "block": 3,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 1,
+    "us": 15998,
+    "cycles": 5758650
+  },
+  {
+    "block": 3,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 0,
+    "us": 53680,
+    "cycles": 19323851
+  },
+  {
+    "block": 3,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 0,
+    "us": 53609,
+    "cycles": 19298349
+  },
+  {
+    "block": 3,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 1,
+    "us": 15831,
+    "cycles": 5698855
+  },
+  {
+    "block": 3,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 1,
+    "us": 16404,
+    "cycles": 5904575
+  },
+  {
+    "block": 3,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 0,
+    "us": 54073,
+    "cycles": 19465876
+  },
+  {
+    "block": 3,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53713,
+    "cycles": 19335811
+  },
+  {
+    "block": 3,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15815,
+    "cycles": 5692627
+  },
+  {
+    "block": 3,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15726,
+    "cycles": 5660979
+  },
+  {
+    "block": 3,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53540,
+    "cycles": 19273383
+  },
+  {
+    "block": 3,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 54101,
+    "cycles": 19475789
+  },
+  {
+    "block": 3,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16230,
+    "cycles": 5841947
+  },
+  {
+    "block": 3,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15889,
+    "cycles": 5719220
+  },
+  {
+    "block": 3,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53422,
+    "cycles": 19231113
+  },
+  {
+    "block": 3,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53350,
+    "cycles": 19205343
+  },
+  {
+    "block": 3,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15717,
+    "cycles": 5658053
+  },
+  {
+    "block": 3,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16291,
+    "cycles": 5864003
+  },
+  {
+    "block": 3,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 53808,
+    "cycles": 19370410
+  },
+  {
+    "block": 3,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54939,
+    "cycles": 19776997
+  },
+  {
+    "block": 3,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15871,
+    "cycles": 5712911
+  },
+  {
+    "block": 3,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15778,
+    "cycles": 5679551
+  },
+  {
+    "block": 3,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54771,
+    "cycles": 19716891
+  },
+  {
+    "block": 3,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55336,
+    "cycles": 19920105
+  },
+  {
+    "block": 3,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16281,
+    "cycles": 5860317
+  },
+  {
+    "block": 3,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15902,
+    "cycles": 5724056
+  },
+  {
+    "block": 3,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54825,
+    "cycles": 19736289
+  },
+  {
+    "block": 3,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54749,
+    "cycles": 19708741
+  },
+  {
+    "block": 3,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15732,
+    "cycles": 5662975
+  },
+  {
+    "block": 3,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16306,
+    "cycles": 5869399
+  },
+  {
+    "block": 3,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55220,
+    "cycles": 19879106
+  },
+  {
+    "block": 3,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54543,
+    "cycles": 19634475
+  },
+  {
+    "block": 3,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15843,
+    "cycles": 5702745
+  },
+  {
+    "block": 3,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15752,
+    "cycles": 5670415
+  },
+  {
+    "block": 3,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54376,
+    "cycles": 19574701
+  },
+  {
+    "block": 3,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 54941,
+    "cycles": 19778011
+  },
+  {
+    "block": 3,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16255,
+    "cycles": 5851139
+  },
+  {
+    "block": 3,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 1,
+    "us": 16360,
+    "cycles": 5888562
+  },
+  {
+    "block": 3,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 0,
+    "us": 54069,
+    "cycles": 19464203
+  },
+  {
+    "block": 3,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 0,
+    "us": 53990,
+    "cycles": 19435543
+  },
+  {
+    "block": 3,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 1,
+    "us": 16205,
+    "cycles": 5833349
+  },
+  {
+    "block": 3,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 1,
+    "us": 16762,
+    "cycles": 6033711
+  },
+  {
+    "block": 3,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 0,
+    "us": 54490,
+    "cycles": 19616138
+  },
+  {
+    "block": 3,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 0,
+    "us": 55872,
+    "cycles": 20113277
+  },
+  {
+    "block": 3,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 1,
+    "us": 15915,
+    "cycles": 5728603
+  },
+  {
+    "block": 3,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 1,
+    "us": 15831,
+    "cycles": 5698827
+  },
+  {
+    "block": 3,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 0,
+    "us": 55680,
+    "cycles": 20043947
+  },
+  {
+    "block": 3,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 0,
+    "us": 56241,
+    "cycles": 20245709
+  },
+  {
+    "block": 3,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 1,
+    "us": 16334,
+    "cycles": 5879551
+  },
+  {
+    "block": 3,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 1,
+    "us": 15957,
+    "cycles": 5743696
+  },
+  {
+    "block": 3,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 0,
+    "us": 55376,
+    "cycles": 19934353
+  },
+  {
+    "block": 3,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 0,
+    "us": 55300,
+    "cycles": 19907119
+  },
+  {
+    "block": 3,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 1,
+    "us": 15788,
+    "cycles": 5683233
+  },
+  {
+    "block": 3,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 1,
+    "us": 16359,
+    "cycles": 5888329
+  },
+  {
+    "block": 3,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 0,
+    "us": 55762,
+    "cycles": 20074080
+  },
+  {
+    "block": 3,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 56657,
+    "cycles": 20395683
+  },
+  {
+    "block": 3,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16009,
+    "cycles": 5762339
+  },
+  {
+    "block": 3,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15898,
+    "cycles": 5722887
+  },
+  {
+    "block": 3,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 56465,
+    "cycles": 20326591
+  },
+  {
+    "block": 3,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57036,
+    "cycles": 20531969
+  },
+  {
+    "block": 3,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16401,
+    "cycles": 5903613
+  },
+  {
+    "block": 4,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 0,
+    "us": 55297,
+    "cycles": 19906594
+  },
+  {
+    "block": 4,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 1,
+    "us": 16383,
+    "cycles": 5897155
+  },
+  {
+    "block": 4,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 1,
+    "us": 16002,
+    "cycles": 5760076
+  },
+  {
+    "block": 4,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 0,
+    "us": 54946,
+    "cycles": 19779539
+  },
+  {
+    "block": 4,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 0,
+    "us": 54857,
+    "cycles": 19747529
+  },
+  {
+    "block": 4,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 1,
+    "us": 15826,
+    "cycles": 5697141
+  },
+  {
+    "block": 4,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 1,
+    "us": 16398,
+    "cycles": 5902537
+  },
+  {
+    "block": 4,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 0,
+    "us": 54068,
+    "cycles": 19464096
+  },
+  {
+    "block": 4,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 0,
+    "us": 53733,
+    "cycles": 19342919
+  },
+  {
+    "block": 4,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 1,
+    "us": 15975,
+    "cycles": 5750195
+  },
+  {
+    "block": 4,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 1,
+    "us": 15866,
+    "cycles": 5711517
+  },
+  {
+    "block": 4,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 0,
+    "us": 53559,
+    "cycles": 19280357
+  },
+  {
+    "block": 4,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 54104,
+    "cycles": 19476661
+  },
+  {
+    "block": 4,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16237,
+    "cycles": 5844483
+  },
+  {
+    "block": 4,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15842,
+    "cycles": 5702190
+  },
+  {
+    "block": 4,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53665,
+    "cycles": 19318369
+  },
+  {
+    "block": 4,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53593,
+    "cycles": 19292623
+  },
+  {
+    "block": 4,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15684,
+    "cycles": 5645619
+  },
+  {
+    "block": 4,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16291,
+    "cycles": 5864063
+  },
+  {
+    "block": 4,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 53812,
+    "cycles": 19371934
+  },
+  {
+    "block": 4,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53465,
+    "cycles": 19246803
+  },
+  {
+    "block": 4,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15861,
+    "cycles": 5709211
+  },
+  {
+    "block": 4,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15763,
+    "cycles": 5674411
+  },
+  {
+    "block": 4,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53299,
+    "cycles": 19187009
+  },
+  {
+    "block": 4,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55333,
+    "cycles": 19918919
+  },
+  {
+    "block": 4,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16283,
+    "cycles": 5861119
+  },
+  {
+    "block": 4,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15902,
+    "cycles": 5723960
+  },
+  {
+    "block": 4,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54884,
+    "cycles": 19757361
+  },
+  {
+    "block": 4,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54818,
+    "cycles": 19733717
+  },
+  {
+    "block": 4,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15733,
+    "cycles": 5663571
+  },
+  {
+    "block": 4,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16305,
+    "cycles": 5868949
+  },
+  {
+    "block": 4,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55221,
+    "cycles": 19879274
+  },
+  {
+    "block": 4,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54877,
+    "cycles": 19754891
+  },
+  {
+    "block": 4,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15872,
+    "cycles": 5712987
+  },
+  {
+    "block": 4,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15777,
+    "cycles": 5679387
+  },
+  {
+    "block": 4,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54705,
+    "cycles": 19692689
+  },
+  {
+    "block": 4,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 54939,
+    "cycles": 19777129
+  },
+  {
+    "block": 4,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16256,
+    "cycles": 5851367
+  },
+  {
+    "block": 4,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15871,
+    "cycles": 5712794
+  },
+  {
+    "block": 4,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54503,
+    "cycles": 19620275
+  },
+  {
+    "block": 4,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54430,
+    "cycles": 19593953
+  },
+  {
+    "block": 4,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15711,
+    "cycles": 5655617
+  },
+  {
+    "block": 4,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 1,
+    "us": 16767,
+    "cycles": 6034955
+  },
+  {
+    "block": 4,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 0,
+    "us": 54491,
+    "cycles": 19616250
+  },
+  {
+    "block": 4,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 0,
+    "us": 54116,
+    "cycles": 19481001
+  },
+  {
+    "block": 4,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 1,
+    "us": 16326,
+    "cycles": 5876489
+  },
+  {
+    "block": 4,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 1,
+    "us": 16229,
+    "cycles": 5842233
+  },
+  {
+    "block": 4,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 0,
+    "us": 53952,
+    "cycles": 19421701
+  },
+  {
+    "block": 4,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 0,
+    "us": 56255,
+    "cycles": 20250821
+  },
+  {
+    "block": 4,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 1,
+    "us": 16331,
+    "cycles": 5878127
+  },
+  {
+    "block": 4,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 1,
+    "us": 15958,
+    "cycles": 5744152
+  },
+  {
+    "block": 4,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 0,
+    "us": 55816,
+    "cycles": 20092971
+  },
+  {
+    "block": 4,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 0,
+    "us": 55740,
+    "cycles": 20065431
+  },
+  {
+    "block": 4,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 1,
+    "us": 15785,
+    "cycles": 5682067
+  },
+  {
+    "block": 4,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 1,
+    "us": 16357,
+    "cycles": 5887925
+  },
+  {
+    "block": 4,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 0,
+    "us": 55766,
+    "cycles": 20075576
+  },
+  {
+    "block": 4,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 0,
+    "us": 55425,
+    "cycles": 19952307
+  },
+  {
+    "block": 4,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 1,
+    "us": 15932,
+    "cycles": 5734835
+  },
+  {
+    "block": 4,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 1,
+    "us": 15831,
+    "cycles": 5698925
+  },
+  {
+    "block": 4,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 0,
+    "us": 55251,
+    "cycles": 19889341
+  },
+  {
+    "block": 4,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57035,
+    "cycles": 20531897
+  },
+  {
+    "block": 4,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16400,
+    "cycles": 5903277
+  },
+  {
+    "block": 4,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16035,
+    "cycles": 5771700
+  },
+  {
+    "block": 4,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 56604,
+    "cycles": 20376855
+  },
+  {
+    "block": 4,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 56526,
+    "cycles": 20348661
+  },
+  {
+    "block": 4,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15856,
+    "cycles": 5708023
+  },
+  {
+    "block": 4,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16431,
+    "cycles": 5914373
+  },
+  {
+    "block": 4,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57580,
+    "cycles": 20728510
+  },
+  {
+    "block": 4,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 57242,
+    "cycles": 20606329
+  },
+  {
+    "block": 4,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16006,
+    "cycles": 5761109
+  },
+  {
+    "block": 4,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15898,
+    "cycles": 5723325
+  },
+  {
+    "block": 4,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 57074,
+    "cycles": 20545729
+  },
+  {
+    "block": 5,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 1,
+    "us": 15833,
+    "cycles": 5699559
+  },
+  {
+    "block": 5,
+    "fixture": "right-top",
+    "arm": 1,
+    "phase": 0,
+    "us": 53545,
+    "cycles": 19275285
+  },
+  {
+    "block": 5,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 0,
+    "us": 54122,
+    "cycles": 19483101
+  },
+  {
+    "block": 5,
+    "fixture": "right-top",
+    "arm": 0,
+    "phase": 1,
+    "us": 16375,
+    "cycles": 5894483
+  },
+  {
+    "block": 5,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 1,
+    "us": 15990,
+    "cycles": 5755370
+  },
+  {
+    "block": 5,
+    "fixture": "right-top",
+    "arm": 2,
+    "phase": 0,
+    "us": 53679,
+    "cycles": 19323219
+  },
+  {
+    "block": 5,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53609,
+    "cycles": 19298603
+  },
+  {
+    "block": 5,
+    "fixture": "blue-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15685,
+    "cycles": 5646239
+  },
+  {
+    "block": 5,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16255,
+    "cycles": 5851053
+  },
+  {
+    "block": 5,
+    "fixture": "blue-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 54057,
+    "cycles": 19459990
+  },
+  {
+    "block": 5,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53704,
+    "cycles": 19332315
+  },
+  {
+    "block": 5,
+    "fixture": "blue-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15814,
+    "cycles": 5692093
+  },
+  {
+    "block": 5,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 1,
+    "us": 15762,
+    "cycles": 5674091
+  },
+  {
+    "block": 5,
+    "fixture": "gold-overlap",
+    "arm": 1,
+    "phase": 0,
+    "us": 53299,
+    "cycles": 19186837
+  },
+  {
+    "block": 5,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 0,
+    "us": 53865,
+    "cycles": 19390421
+  },
+  {
+    "block": 5,
+    "fixture": "gold-overlap",
+    "arm": 0,
+    "phase": 1,
+    "us": 16265,
+    "cycles": 5854547
+  },
+  {
+    "block": 5,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 1,
+    "us": 15888,
+    "cycles": 5718744
+  },
+  {
+    "block": 5,
+    "fixture": "gold-overlap",
+    "arm": 2,
+    "phase": 0,
+    "us": 53422,
+    "cycles": 19231305
+  },
+  {
+    "block": 5,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54828,
+    "cycles": 19737187
+  },
+  {
+    "block": 5,
+    "fixture": "left-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15733,
+    "cycles": 5663831
+  },
+  {
+    "block": 5,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16306,
+    "cycles": 5869247
+  },
+  {
+    "block": 5,
+    "fixture": "left-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55286,
+    "cycles": 19902564
+  },
+  {
+    "block": 5,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54941,
+    "cycles": 19777779
+  },
+  {
+    "block": 5,
+    "fixture": "left-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15872,
+    "cycles": 5713039
+  },
+  {
+    "block": 5,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15777,
+    "cycles": 5679435
+  },
+  {
+    "block": 5,
+    "fixture": "right-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54702,
+    "cycles": 19691885
+  },
+  {
+    "block": 5,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 55273,
+    "cycles": 19897243
+  },
+  {
+    "block": 5,
+    "fixture": "right-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16279,
+    "cycles": 5859631
+  },
+  {
+    "block": 5,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15902,
+    "cycles": 5723884
+  },
+  {
+    "block": 5,
+    "fixture": "right-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54830,
+    "cycles": 19737977
+  },
+  {
+    "block": 5,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 0,
+    "us": 54428,
+    "cycles": 19593223
+  },
+  {
+    "block": 5,
+    "fixture": "bottom-lamp",
+    "arm": 1,
+    "phase": 1,
+    "us": 15711,
+    "cycles": 5655689
+  },
+  {
+    "block": 5,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 1,
+    "us": 16282,
+    "cycles": 5860709
+  },
+  {
+    "block": 5,
+    "fixture": "bottom-lamp",
+    "arm": 0,
+    "phase": 0,
+    "us": 54902,
+    "cycles": 19764582
+  },
+  {
+    "block": 5,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 0,
+    "us": 54548,
+    "cycles": 19636231
+  },
+  {
+    "block": 5,
+    "fixture": "bottom-lamp",
+    "arm": 2,
+    "phase": 1,
+    "us": 15845,
+    "cycles": 5703275
+  },
+  {
+    "block": 5,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 1,
+    "us": 16229,
+    "cycles": 5842063
+  },
+  {
+    "block": 5,
+    "fixture": "top-lamp-wide",
+    "arm": 1,
+    "phase": 0,
+    "us": 53955,
+    "cycles": 19422889
+  },
+  {
+    "block": 5,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 0,
+    "us": 54519,
+    "cycles": 19625771
+  },
+  {
+    "block": 5,
+    "fixture": "top-lamp-wide",
+    "arm": 0,
+    "phase": 1,
+    "us": 16744,
+    "cycles": 6026929
+  },
+  {
+    "block": 5,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 1,
+    "us": 16359,
+    "cycles": 5888544
+  },
+  {
+    "block": 5,
+    "fixture": "top-lamp-wide",
+    "arm": 2,
+    "phase": 0,
+    "us": 54070,
+    "cycles": 19464479
+  },
+  {
+    "block": 5,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 0,
+    "us": 55738,
+    "cycles": 20064937
+  },
+  {
+    "block": 5,
+    "fixture": "default",
+    "arm": 1,
+    "phase": 1,
+    "us": 15790,
+    "cycles": 5683955
+  },
+  {
+    "block": 5,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 1,
+    "us": 16354,
+    "cycles": 5886483
+  },
+  {
+    "block": 5,
+    "fixture": "default",
+    "arm": 0,
+    "phase": 0,
+    "us": 56205,
+    "cycles": 20233582
+  },
+  {
+    "block": 5,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 0,
+    "us": 55861,
+    "cycles": 20109179
+  },
+  {
+    "block": 5,
+    "fixture": "default",
+    "arm": 2,
+    "phase": 1,
+    "us": 15934,
+    "cycles": 5735193
+  },
+  {
+    "block": 5,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 1,
+    "us": 15831,
+    "cycles": 5699053
+  },
+  {
+    "block": 5,
+    "fixture": "lamp-only",
+    "arm": 1,
+    "phase": 0,
+    "us": 55254,
+    "cycles": 19890717
+  },
+  {
+    "block": 5,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 0,
+    "us": 55804,
+    "cycles": 20088437
+  },
+  {
+    "block": 5,
+    "fixture": "lamp-only",
+    "arm": 0,
+    "phase": 1,
+    "us": 16337,
+    "cycles": 5880573
+  },
+  {
+    "block": 5,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 1,
+    "us": 15952,
+    "cycles": 5741838
+  },
+  {
+    "block": 5,
+    "fixture": "lamp-only",
+    "arm": 2,
+    "phase": 0,
+    "us": 55378,
+    "cycles": 19935345
+  },
+  {
+    "block": 5,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 56532,
+    "cycles": 20350439
+  },
+  {
+    "block": 5,
+    "fixture": "near-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15858,
+    "cycles": 5708375
+  },
+  {
+    "block": 5,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16426,
+    "cycles": 5912507
+  },
+  {
+    "block": 5,
+    "fixture": "near-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 56989,
+    "cycles": 20515924
+  },
+  {
+    "block": 5,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 56644,
+    "cycles": 20390935
+  },
+  {
+    "block": 5,
+    "fixture": "near-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16006,
+    "cycles": 5761335
+  },
+  {
+    "block": 5,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 1,
+    "us": 15897,
+    "cycles": 5722527
+  },
+  {
+    "block": 5,
+    "fixture": "far-corner",
+    "arm": 1,
+    "phase": 0,
+    "us": 57069,
+    "cycles": 20543963
+  },
+  {
+    "block": 5,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 0,
+    "us": 57625,
+    "cycles": 20744231
+  },
+  {
+    "block": 5,
+    "fixture": "far-corner",
+    "arm": 0,
+    "phase": 1,
+    "us": 16408,
+    "cycles": 5905947
+  },
+  {
+    "block": 5,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 1,
+    "us": 16030,
+    "cycles": 5769804
+  },
+  {
+    "block": 5,
+    "fixture": "far-corner",
+    "arm": 2,
+    "phase": 0,
+    "us": 57199,
+    "cycles": 20590757
+  },
+  {
+    "block": 5,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 0,
+    "us": 54850,
+    "cycles": 19745035
+  },
+  {
+    "block": 5,
+    "fixture": "left-bottom",
+    "arm": 1,
+    "phase": 1,
+    "us": 15823,
+    "cycles": 5696189
+  },
+  {
+    "block": 5,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 1,
+    "us": 16388,
+    "cycles": 5899067
+  },
+  {
+    "block": 5,
+    "fixture": "left-bottom",
+    "arm": 0,
+    "phase": 0,
+    "us": 55322,
+    "cycles": 19915506
+  },
+  {
+    "block": 5,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 0,
+    "us": 54985,
+    "cycles": 19793623
+  },
+  {
+    "block": 5,
+    "fixture": "left-bottom",
+    "arm": 2,
+    "phase": 1,
+    "us": 15979,
+    "cycles": 5751663
+  }
+]

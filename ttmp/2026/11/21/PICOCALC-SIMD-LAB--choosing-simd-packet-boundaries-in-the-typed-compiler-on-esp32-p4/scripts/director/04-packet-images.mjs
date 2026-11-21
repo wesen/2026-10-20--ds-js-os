@@ -1,4 +1,4 @@
-import {readFileSync as read,writeFileSync as write,mkdirSync,copyFileSync} from "node:fs";
+import {readFileSync as read,writeFileSync as write,mkdirSync} from "node:fs";
 import {resolve,dirname,join} from "node:path";
 import {fileURLToPath} from "node:url";
 import {execFileSync} from "node:child_process";
@@ -7,13 +7,17 @@ import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
 const here=dirname(fileURLToPath(import.meta.url)),root=resolve(here,"../../../../../../..");
 const out=resolve(process.argv[2]);
-const os=join(root,"picocalc-os"),base=join(os,"compiler"),name="typedRayComputeRow";
+const os=join(root,"picocalc-os"),name="typedRayComputeRow";
 const source=read(join(os,"worlds/raytrace/raytrace.typed"),"utf8");
 const realm=vm.createContext({});
 mkdirSync(out,{recursive:true});
-copyFileSync(join(base,"typed-pie-loops.js"),join(out,"packet-candidate.js"));
+// Freeze the historical treatment so a later integrated option cannot alter this comparison.
+write(join(out,"packet-candidate.js"),execFileSync("git",["show","9a1ff99:picocalc-os/compiler/typed-pie-loops.js"],{cwd:root}));
 execFileSync("patch",["--batch",join(out,"packet-candidate.js"),join(here,"packet-emitter.patch")]);
-for(const f of [join(base,"typed-wasm.js"),join(base,"typed-rv32.js"),join(out,"packet-candidate.js")])vm.runInContext(read(f,"utf8"),realm);
+for(const f of ["typed-wasm.js","typed-rv32.js"]) {
+    vm.runInContext(execFileSync("git",["show","9a1ff99:picocalc-os/compiler/"+f],{cwd:root,encoding:"utf8"}),realm);
+}
+vm.runInContext(read(join(out,"packet-candidate.js"),"utf8"),realm);
 let asm=".section .text.simd_packet_trials,\"ax\",@progbits\n.option push\n.option norvc\n";
 const sha=b=>createHash("sha256").update(b).digest("hex"), result={sourceSHA:sha(source),arms:{}};
 for(const v of ["baseline","empty","full"]) {

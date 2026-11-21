@@ -1,0 +1,956 @@
+{
+  "unit": "P4 cycle-counter delta per call across a 12-call batch; setup and validation excluded",
+  "arms": [
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "aos-scalar",
+      "medianCyclesPerCall": 94.45833333333334
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "aos-pie",
+      "medianCyclesPerCall": 99.41666666666666
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "soa-scalar",
+      "medianCyclesPerCall": 107.79166666666667
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "soa-pie",
+      "medianCyclesPerCall": 111.45833333333334
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "typed-aos",
+      "medianCyclesPerCall": 801.125
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "typed-soa",
+      "medianCyclesPerCall": 729.1666666666666
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "convert-roundtrip",
+      "medianCyclesPerCall": 134.08333333333331
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "convert-pie-roundtrip",
+      "medianCyclesPerCall": 238.29166666666669
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "guarded-aos-scalar",
+      "medianCyclesPerCall": 114.625
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "guarded-aos-pie",
+      "medianCyclesPerCall": 114.0
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "guarded-soa-scalar",
+      "medianCyclesPerCall": 130.08333333333331
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "arm": "guarded-soa-pie",
+      "medianCyclesPerCall": 132.20833333333331
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "aos-scalar",
+      "medianCyclesPerCall": 104.91666666666667
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "aos-pie",
+      "medianCyclesPerCall": 95.20833333333334
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "soa-scalar",
+      "medianCyclesPerCall": 115.70833333333334
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "soa-pie",
+      "medianCyclesPerCall": 39.66666666666667
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "typed-aos",
+      "medianCyclesPerCall": 909.75
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "typed-soa",
+      "medianCyclesPerCall": 827.0833333333334
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "convert-roundtrip",
+      "medianCyclesPerCall": 150.08333333333334
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "convert-pie-roundtrip",
+      "medianCyclesPerCall": 181.58333333333334
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "guarded-aos-scalar",
+      "medianCyclesPerCall": 124.5
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "guarded-aos-pie",
+      "medianCyclesPerCall": 112.29166666666666
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "guarded-soa-scalar",
+      "medianCyclesPerCall": 139.33333333333334
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "arm": "guarded-soa-pie",
+      "medianCyclesPerCall": 65.70833333333334
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "aos-scalar",
+      "medianCyclesPerCall": 771.25
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "aos-pie",
+      "medianCyclesPerCall": 518.0833333333334
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "soa-scalar",
+      "medianCyclesPerCall": 837.0
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "soa-pie",
+      "medianCyclesPerCall": 90.33333333333334
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "typed-aos",
+      "medianCyclesPerCall": 7003.0
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "typed-soa",
+      "medianCyclesPerCall": 6353.458333333334
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "convert-roundtrip",
+      "medianCyclesPerCall": 1053.0833333333333
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "convert-pie-roundtrip",
+      "medianCyclesPerCall": 1141.5416666666667
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "guarded-aos-scalar",
+      "medianCyclesPerCall": 791.9166666666666
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "guarded-aos-pie",
+      "medianCyclesPerCall": 538.5
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "guarded-soa-scalar",
+      "medianCyclesPerCall": 858.5833333333333
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "arm": "guarded-soa-pie",
+      "medianCyclesPerCall": 114.16666666666666
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "aos-scalar",
+      "medianCyclesPerCall": 1508.3333333333335
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "aos-pie",
+      "medianCyclesPerCall": 1036.75
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "soa-scalar",
+      "medianCyclesPerCall": 1638.5
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "soa-pie",
+      "medianCyclesPerCall": 1068.25
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "typed-aos",
+      "medianCyclesPerCall": 13844.458333333334
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "typed-soa",
+      "medianCyclesPerCall": 12548.916666666666
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "convert-roundtrip",
+      "medianCyclesPerCall": 2061.0833333333335
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "convert-pie-roundtrip",
+      "medianCyclesPerCall": 3141.875
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "guarded-aos-scalar",
+      "medianCyclesPerCall": 1528.5833333333335
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "guarded-aos-pie",
+      "medianCyclesPerCall": 1051.25
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "guarded-soa-scalar",
+      "medianCyclesPerCall": 1659.2083333333335
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "arm": "guarded-soa-pie",
+      "medianCyclesPerCall": 1089.625
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "aos-scalar",
+      "medianCyclesPerCall": 1516.7916666666665
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "aos-pie",
+      "medianCyclesPerCall": 1002.4583333333333
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "soa-scalar",
+      "medianCyclesPerCall": 1650.25
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "soa-pie",
+      "medianCyclesPerCall": 150.375
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "typed-aos",
+      "medianCyclesPerCall": 13944.041666666668
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "typed-soa",
+      "medianCyclesPerCall": 12645.166666666666
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "convert-roundtrip",
+      "medianCyclesPerCall": 2076.3333333333335
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "convert-pie-roundtrip",
+      "medianCyclesPerCall": 2233.0833333333335
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "guarded-aos-scalar",
+      "medianCyclesPerCall": 1540.75
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "guarded-aos-pie",
+      "medianCyclesPerCall": 1019.4583333333333
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "guarded-soa-scalar",
+      "medianCyclesPerCall": 1673.2083333333335
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "arm": "guarded-soa-pie",
+      "medianCyclesPerCall": 179.125
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "arm": "original-scalar",
+      "medianCyclesPerCall": 2198.6666666666665
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "arm": "grouped-scalar",
+      "medianCyclesPerCall": 2262.0
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "arm": "grouped-pie",
+      "medianCyclesPerCall": 3255.375
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "arm": "original-typed",
+      "medianCyclesPerCall": 20786.916666666664
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "arm": "grouped-typed",
+      "medianCyclesPerCall": 20669.625
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "arm": "generate-color-scatter",
+      "medianCyclesPerCall": 10174.375
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "arm": "generate-color-pie",
+      "medianCyclesPerCall": 13417.416666666666
+    }
+  ],
+  "comparisons": [
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "aos-scalar",
+      "candidate": "aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": -4.833333333333336,
+      "medianSavedPct": -5.121413801814505,
+      "favorableBlocks": 1
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "soa-scalar",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": -3.5833333333333357,
+      "medianSavedPct": -3.365073767119264,
+      "favorableBlocks": 1
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "guarded-aos-scalar",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 1.124999999999993,
+      "medianSavedPct": 0.9834119131416367,
+      "favorableBlocks": 10
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "guarded-soa-scalar",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": -2.5833333333333286,
+      "medianSavedPct": -1.987063561625594,
+      "favorableBlocks": 1
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "aos-scalar",
+      "candidate": "soa-scalar",
+      "pairs": 12,
+      "medianSavedCycles": -13.0,
+      "medianSavedPct": -13.708641182139417,
+      "favorableBlocks": 1
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "aos-pie",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": -11.041666666666664,
+      "medianSavedPct": -11.071795301661808,
+      "favorableBlocks": 1
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "aos-scalar",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -143.5,
+      "medianSavedPct": -152.05293180180826,
+      "favorableBlocks": 1
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "aos-pie",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -138.95833333333331,
+      "medianSavedPct": -139.22992878949162,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "typed-aos",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 687.5,
+      "medianSavedPct": 85.7707509881423,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 7,
+      "baseline": "typed-soa",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 597.25,
+      "medianSavedPct": 81.90900226498721,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "aos-scalar",
+      "candidate": "aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 9.916666666666664,
+      "medianSavedPct": 9.451945988880068,
+      "favorableBlocks": 11
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "soa-scalar",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 75.91666666666667,
+      "medianSavedPct": 65.8860158267613,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "guarded-aos-scalar",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 12.291666666666664,
+      "medianSavedPct": 9.869511490779168,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "guarded-soa-scalar",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 73.79166666666666,
+      "medianSavedPct": 52.81841502291293,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "aos-scalar",
+      "candidate": "soa-scalar",
+      "pairs": 12,
+      "medianSavedCycles": -10.416666666666671,
+      "medianSavedPct": -9.86189561434852,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "aos-pie",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 55.875,
+      "medianSavedPct": 58.62940496822645,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "aos-scalar",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -76.66666666666667,
+      "medianSavedPct": -73.10291181711077,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "aos-pie",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -86.54166666666666,
+      "medianSavedPct": -90.94116295104574,
+      "favorableBlocks": 1
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "typed-aos",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 797.3333333333333,
+      "medianSavedPct": 87.6545471196996,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 8,
+      "baseline": "typed-soa",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 761.5416666666666,
+      "medianSavedPct": 92.06221221624465,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "aos-scalar",
+      "candidate": "aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 252.5,
+      "medianSavedPct": 32.74092480553155,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "soa-scalar",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 746.4583333333333,
+      "medianSavedPct": 89.21396704281679,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "guarded-aos-scalar",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 253.74999999999994,
+      "medianSavedPct": 32.03239049981691,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "guarded-soa-scalar",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 744.4166666666666,
+      "medianSavedPct": 86.69871115576734,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "aos-scalar",
+      "candidate": "soa-scalar",
+      "pairs": 12,
+      "medianSavedCycles": -65.95833333333331,
+      "medianSavedPct": -8.551210025929123,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "aos-pie",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 428.0,
+      "medianSavedPct": 82.53588024945331,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "aos-scalar",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -370.29166666666674,
+      "medianSavedPct": -47.991746259240216,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "aos-pie",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -623.4166666666667,
+      "medianSavedPct": -120.28306079160544,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "typed-aos",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 6465.625,
+      "medianSavedPct": 92.31638291274311,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 64,
+      "baseline": "typed-soa",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 6239.791666666667,
+      "medianSavedPct": 98.20283086933136,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "aos-scalar",
+      "candidate": "aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 471.79166666666674,
+      "medianSavedPct": 31.280378139503537,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "soa-scalar",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 570.1666666666667,
+      "medianSavedPct": 34.79808768182281,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "guarded-aos-scalar",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 477.29166666666674,
+      "medianSavedPct": 31.22324554832918,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "guarded-soa-scalar",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 569.5,
+      "medianSavedPct": 34.32532189884528,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "aos-scalar",
+      "candidate": "soa-scalar",
+      "pairs": 12,
+      "medianSavedCycles": -130.16666666666663,
+      "medianSavedPct": -8.629834585726424,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "aos-pie",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": -31.583333333333258,
+      "medianSavedPct": -3.0463789084478665,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "aos-scalar",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -1633.5416666666665,
+      "medianSavedPct": -108.26409238191297,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "aos-pie",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -2105.583333333333,
+      "medianSavedPct": -203.09207758956816,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "typed-aos",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 12793.625,
+      "medianSavedPct": 92.41389066130529,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 127,
+      "baseline": "typed-soa",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 11460.208333333332,
+      "medianSavedPct": 91.32029989308506,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "aos-scalar",
+      "candidate": "aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 514.3333333333333,
+      "medianSavedPct": 33.90929306478709,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "soa-scalar",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 1499.9166666666667,
+      "medianSavedPct": 90.88774428116952,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "guarded-aos-scalar",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 521.375,
+      "medianSavedPct": 33.83080676332749,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "guarded-soa-scalar",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 1494.2083333333335,
+      "medianSavedPct": 89.29531837089212,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "aos-scalar",
+      "candidate": "soa-scalar",
+      "pairs": 12,
+      "medianSavedCycles": -133.41666666666674,
+      "medianSavedPct": -8.795736732227233,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "aos-pie",
+      "candidate": "soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 852.2916666666667,
+      "medianSavedPct": 85.00124014683288,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "aos-scalar",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -716.0416666666665,
+      "medianSavedPct": -47.18432030006184,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "aos-pie",
+      "candidate": "convert-pie-roundtrip",
+      "pairs": 12,
+      "medianSavedCycles": -1230.6250000000002,
+      "medianSavedPct": -122.76071363144501,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "typed-aos",
+      "candidate": "guarded-aos-pie",
+      "pairs": 12,
+      "medianSavedCycles": 12925.0,
+      "medianSavedPct": 92.68173915121676,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "particle",
+      "n": 128,
+      "baseline": "typed-soa",
+      "candidate": "guarded-soa-pie",
+      "pairs": 12,
+      "medianSavedCycles": 12467.375,
+      "medianSavedPct": 98.58340418369738,
+      "favorableBlocks": 12
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "baseline": "original-scalar",
+      "candidate": "grouped-scalar",
+      "pairs": 14,
+      "medianSavedCycles": -63.41666666666674,
+      "medianSavedPct": -2.884269558206155,
+      "favorableBlocks": 1
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "baseline": "grouped-scalar",
+      "candidate": "grouped-pie",
+      "pairs": 14,
+      "medianSavedCycles": -992.7916666666667,
+      "medianSavedPct": -43.891611096783706,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "baseline": "original-scalar",
+      "candidate": "generate-color-pie",
+      "pairs": 14,
+      "medianSavedCycles": -11218.333333333334,
+      "medianSavedPct": -510.2134030778561,
+      "favorableBlocks": 0
+    },
+    {
+      "kind": "contact",
+      "n": 128,
+      "baseline": "original-typed",
+      "candidate": "grouped-typed",
+      "pairs": 14,
+      "medianSavedCycles": 117.29166666666788,
+      "medianSavedPct": 0.5642583141010395,
+      "favorableBlocks": 10
+    }
+  ],
+  "captureSHA": "77d3d84b0c60e95fe0efa23a3f9a91d9235f948eb4c615da6e50095c32f4c6eb",
+  "batchSizes": [
+    57,
+    41,
+    30
+  ],
+  "rowCount": 818
+}

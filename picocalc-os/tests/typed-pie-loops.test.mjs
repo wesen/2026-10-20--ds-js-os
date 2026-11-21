@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import {createHash} from "node:crypto";
 import {readFileSync} from "node:fs";
 import test from "node:test";
 import "../compiler/typed-wasm.js";
@@ -57,7 +58,7 @@ test("a per-loop policy sees proved facts and selects the forced image exactly",
         return total;
     }`;
     for (const streamFunctions of [true, false]) {
-        for (const arm of ["stock", "scalar", "pie"]) {
+        for (const arm of ["stock", "scalar", "pie", "pie-empty"]) {
             const facts = [];
             const result = observe(program, "f", region => {
                 facts.push(region);
@@ -70,4 +71,14 @@ test("a per-loop policy sees proved facts and selects the forced image exactly",
         }
     }
     assert.throws(() => observe(program, "f", () => ({plan:"typo"})), /policy decision/);
+});
+
+test("empty-packet bypass emits the exact P4-qualified ray image in both frontend modes", () => {
+    for (const streaming of [true,false]) {
+        const result=observe(source, "typedRayComputeRow", "pie-empty", streaming);
+        assert.equal(createHash("sha256").update(Buffer.from(result.program.image)).digest("hex"),
+            "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f");
+        assert(result.fn.ranges.some(r=>r.segment==="advance past eight misses"));
+        assert(result.fn.ranges.some(r=>r.segment==="packet minimum and all-miss test"));
+    }
 });

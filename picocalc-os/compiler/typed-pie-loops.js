@@ -116,8 +116,9 @@ function analyze(fn) {
     return ops.flatMap((o,i)=>is(o,0x03)?[analyzeLoop(ops,i,matching)]:[]);
 }
 
-// The four ESP words use fixed operands. scripts/01-reference-words.S is the
+// The ESP words use fixed operands. scripts/01-reference-words.S is the
 // independent assembly source; host qualification decodes the final image.
+const minInputU16=0x919057db; // esp.min.u16.a q1,t6
 const broadcast=0x8607203b, packetLoad=0x0203a63b, subtract=0x06a406df, packetStore=0x82072a3b;
 const zero=0, sp=2, a0=10, x=12, lanes=13, uniform=14, input=15, lanePtr=16, limit=17, t5=30,t6=31;
 
@@ -146,7 +147,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
         if (typeof mode === "function") {
             const decision=mode({constantTrips:p.constantTrips, writeStreams:p.stores.length, lanes:p.lanes});
             selected=decision?.plan;
-            if (!["stock","scalar","pie"].includes(selected)) throw new TypeError("invalid PIE policy decision");
+            if (!["stock","scalar","pie","pie-empty"].includes(selected)) throw new TypeError("invalid PIE policy decision");
             if (fn.nativeInspection) p.policyDecision=decision;
             p.selectedMode=selected;
         }
@@ -176,6 +177,9 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
 
         grouped(p) {
             const selectedMode=p.selectedMode ?? mode;
+            const vectorProducer=selectedMode!=="scalar";
+            const skipEmpty=selectedMode==="pie-empty";
+            const empty={};
             const saved=this.at, ordinary={}, group={}, single={}, got={}, lane={}, advance={};
             const regions=[];
             let start=this.words.length*4;
@@ -214,7 +218,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
                 this.immediate(lanePtr,a0,4); this.branch(6,t5,lanePtr,ordinary);
                 this.mark(headerSafe); this.mark(safe);
             }
-            if(selectedMode==="pie") {
+            if(vectorProducer) {
                 this.store(uniform,this.packet+16,sp,1);
                 this.immediate(t5,sp,this.packet+16); this.emit(broadcast);
             }
@@ -224,8 +228,16 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             this.emit(ins.i(0x13,t5,7,input,15)); this.branch(1,t5,zero,single);
             note("admission and packet control",p.loop,p.loop+2);
             this.immediate(t5,sp,this.packet);
-            if(selectedMode==="pie") {
-                this.emit(packetLoad); this.emit(subtract); this.emit(packetStore);
+            if(vectorProducer) {
+                this.emit(packetLoad); // post-increments the input pointer by one packet
+                if(skipEmpty) {
+                    // If the smallest input exceeds the uniform row term, every
+                    // signed difference is negative. No hit continuation can run.
+                    this.emit(minInputU16);
+                    this.branch(6,uniform,t6,empty);
+                    note("packet minimum and all-miss test",p.loop,p.consumerStart);
+                }
+                this.emit(subtract); this.emit(packetStore);
             } else {
                 for(let i=0;i<8;i++) {
                     this.load(t6,2*i,input,5); this.minus(t6,uniform,t6); this.store(t6,2*i,t5,1);
@@ -251,8 +263,15 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             this.mark(advance);
             this.immediate(x,x,1); this.store(x,4*p.iv);
             this.immediate(lanePtr,lanePtr,2); this.immediate(lanes,lanes,-1);
-            this.branch(1,lanes,zero,lane); this.jump(group); this.mark(ordinary);
+            this.branch(1,lanes,zero,lane); this.jump(group);
             note("packet backedge",p.loop,p.loop+2);
+            if(skipEmpty) {
+                this.mark(empty);
+                this.immediate(x,x,8); this.store(x,4*p.iv);
+                this.jump(group);
+                note("advance past eight misses",p.loop,p.loop+2);
+            }
+            this.mark(ordinary);
             this.at=saved;
             if(this.inspection) this.loopRanges=regions;
         }

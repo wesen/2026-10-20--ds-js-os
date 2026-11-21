@@ -1,0 +1,223 @@
+[
+  {
+    "n": 0,
+    "medians": {
+      "stock": 36.16145833333333,
+      "pie": 42.125,
+      "gated": 39.21875
+    },
+    "gateOverBestFixedPct": 8.454558548178026,
+    "pieOverBestFixedPct": 16.49143021748525,
+    "gateVsPie": {
+      "before": 42.125,
+      "after": 39.21875,
+      "saved": 2.924479166666668,
+      "pct": 6.9443873381994,
+      "wins": 6
+    }
+  },
+  {
+    "n": 1,
+    "medians": {
+      "stock": 74.13541666666667,
+      "pie": 110.38802083333334,
+      "gated": 77.1796875
+    },
+    "gateOverBestFixedPct": 4.106365041450033,
+    "pieOverBestFixedPct": 48.90051988197275,
+    "gateVsPie": {
+      "before": 110.38802083333334,
+      "after": 77.1796875,
+      "saved": 33.268229166666664,
+      "pct": 30.129705609385937,
+      "wins": 6
+    }
+  },
+  {
+    "n": 3,
+    "medians": {
+      "stock": 157.17708333333334,
+      "pie": 193.38020833333334,
+      "gated": 160.19791666666666
+    },
+    "gateOverBestFixedPct": 1.921929882695994,
+    "pieOverBestFixedPct": 23.03333554244813,
+    "gateVsPie": {
+      "before": 193.38020833333334,
+      "after": 160.19791666666666,
+      "saved": 33.1640625,
+      "pct": 17.152211902105694,
+      "wins": 6
+    }
+  },
+  {
+    "n": 5,
+    "medians": {
+      "stock": 233.109375,
+      "pie": 269.2734375,
+      "gated": 236.15104166666666
+    },
+    "gateOverBestFixedPct": 1.3048238264405487,
+    "pieOverBestFixedPct": 15.513774381660973,
+    "gateVsPie": {
+      "before": 269.2734375,
+      "after": 236.15104166666666,
+      "saved": 33.078125,
+      "pct": 12.285739921398186,
+      "wins": 6
+    }
+  },
+  {
+    "n": 7,
+    "medians": {
+      "stock": 320.59895833333337,
+      "pie": 352.2395833333333,
+      "gated": 322.1640625
+    },
+    "gateOverBestFixedPct": 0.48818130127528114,
+    "pieOverBestFixedPct": 9.869222646413768,
+    "gateVsPie": {
+      "before": 352.2395833333333,
+      "after": 322.1640625,
+      "saved": 30.059895833333314,
+      "pct": 8.534123423680477,
+      "wins": 6
+    }
+  },
+  {
+    "n": 8,
+    "medians": {
+      "stock": 364.15364583333337,
+      "pie": 210.625,
+      "gated": 210.98958333333331
+    },
+    "gateOverBestFixedPct": 0.17309594460928057,
+    "pieOverBestFixedPct": 0.0,
+    "gateVsPie": {
+      "before": 210.625,
+      "after": 210.98958333333331,
+      "saved": -0.3359375,
+      "pct": -0.15954236506335367,
+      "wins": 0
+    }
+  },
+  {
+    "n": 9,
+    "medians": {
+      "stock": 405.16666666666663,
+      "pie": 251.75260416666666,
+      "gated": 252.4921875
+    },
+    "gateOverBestFixedPct": 0.2937738561956227,
+    "pieOverBestFixedPct": 0.0,
+    "gateVsPie": {
+      "before": 251.75260416666666,
+      "after": 252.4921875,
+      "saved": -0.7734375,
+      "pct": -0.3072606438146198,
+      "wins": 0
+    }
+  },
+  {
+    "n": 15,
+    "medians": {
+      "stock": 650.1302083333334,
+      "pie": 492.8098958333333,
+      "gated": 493.59114583333337
+    },
+    "gateOverBestFixedPct": 0.15852968996878936,
+    "pieOverBestFixedPct": 0.0,
+    "gateVsPie": {
+      "before": 492.8098958333333,
+      "after": 493.59114583333337,
+      "saved": -0.7500000000000284,
+      "pct": -0.15217756436884725,
+      "wins": 0
+    }
+  },
+  {
+    "n": 16,
+    "medians": {
+      "stock": 695.0677083333333,
+      "pie": 352.0520833333333,
+      "gated": 351.0833333333333
+    },
+    "gateOverBestFixedPct": -0.27517235257566997,
+    "pieOverBestFixedPct": 0.0,
+    "gateVsPie": {
+      "before": 352.0520833333333,
+      "after": 351.0833333333333,
+      "saved": 0.953125,
+      "pct": 0.270746499782743,
+      "wins": 6
+    }
+  },
+  {
+    "n": 17,
+    "medians": {
+      "stock": 736.0416666666666,
+      "pie": 394.0885416666667,
+      "gated": 393.0859375
+    },
+    "gateOverBestFixedPct": -0.25441089010771467,
+    "pieOverBestFixedPct": 0.0,
+    "gateVsPie": {
+      "before": 394.0885416666667,
+      "after": 393.0859375,
+      "saved": 1.0026041666666856,
+      "pct": 0.2544108133730786,
+      "wins": 6
+    }
+  },
+  {
+    "n": 33,
+    "medians": {
+      "stock": 1389.1145833333333,
+      "pie": 655.0520833333334,
+      "gated": 652.2890625
+    },
+    "gateOverBestFixedPct": -0.4218017015186537,
+    "pieOverBestFixedPct": 0.0,
+    "gateVsPie": {
+      "before": 655.0520833333334,
+      "after": 652.2890625,
+      "saved": 1.9635416666666856,
+      "pct": 0.2997229383107212,
+      "wins": 5
+    }
+  },
+  {
+    "n": 96,
+    "medians": {
+      "stock": 3974.083333333333,
+      "pie": 1646.1302083333335,
+      "gated": 1655.6223958333333
+    },
+    "gateOverBestFixedPct": 0.5766364927845213,
+    "pieOverBestFixedPct": 0.0,
+    "gateVsPie": {
+      "before": 1646.1302083333335,
+      "after": 1655.6223958333333,
+      "saved": -9.450520833333258,
+      "pct": -0.5740893983816245,
+      "wins": 0
+    }
+  },
+  {
+    "n": 127,
+    "medians": {
+      "stock": 5245.138020833334,
+      "pie": 2346.088541666667,
+      "gated": 2352.192708333333
+    },
+    "gateOverBestFixedPct": 0.2601848377951521,
+    "pieOverBestFixedPct": 0.0,
+    "gateVsPie": {
+      "before": 2346.088541666667,
+      "after": 2352.192708333333,
+      "saved": -6.1458333333332575,
+      "pct": -0.2619654916016486,
+      "wins": 0
+    }
+  }
+]

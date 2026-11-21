@@ -1,0 +1,106 @@
+{
+  "openingFrame": {
+    "js": "lab.frame(\"default\",\"clean\",\"baseline\",\"empty\")",
+    "value": {
+      "blocks": 6,
+      "baselineMedian": 56243.5,
+      "candidateMedian": 55737.5,
+      "pairedMedianSavedPct": 0.9039910458733007,
+      "winningBlocks": 6
+    }
+  },
+  "openingPrimary": {
+    "js": "lab.frame(\"default\",\"primary\",\"baseline\",\"empty\")",
+    "value": {
+      "blocks": 6,
+      "baselineMedian": 16337.5,
+      "candidateMedian": 15791,
+      "pairedMedianSavedPct": 3.3458838355108513,
+      "winningBlocks": 6
+    }
+  },
+  "packetPrediction": {
+    "js": "lab.packetPrediction()",
+    "value": {
+      "packets": 3135,
+      "predicted": 16888,
+      "observed": 16888
+    }
+  },
+  "heldOutShort": {
+    "js": "lab.collisionCosts(2,35)",
+    "value": [
+      {
+        "arm": "stock",
+        "cycles": 157.21875
+      },
+      {
+        "arm": "scalar",
+        "cycles": 190.453125
+      },
+      {
+        "arm": "pie",
+        "cycles": 193.4765625
+      }
+    ]
+  },
+  "physicsParticle": {
+    "js": "lab.physicsPair(\"particle\",128,\"guarded-soa-scalar\",\"guarded-soa-pie\")",
+    "value": {
+      "blocks": 12,
+      "baselineMedian": 1673.2083333333335,
+      "candidateMedian": 179.125,
+      "pairedMedianSavedPct": 89.29531837089212,
+      "winningBlocks": 12
+    }
+  },
+  "physicsContact": {
+    "js": "lab.physicsPair(\"contact\",128,\"grouped-scalar\",\"grouped-pie\")",
+    "value": {
+      "blocks": 14,
+      "baselineMedian": 2262,
+      "candidateMedian": 3255.375,
+      "pairedMedianSavedPct": -43.891611096783706,
+      "winningBlocks": 0
+    }
+  },
+  "gateN3": {
+    "js": "lab.gateCosts(3)",
+    "value": [
+      {
+        "arm": "stock",
+        "cycles": 157.17708333333334
+      },
+      {
+        "arm": "pie",
+        "cycles": 193.38020833333334
+      },
+      {
+        "arm": "gated",
+        "cycles": 160.19791666666666
+      }
+    ]
+  },
+  "sources": {
+    "frames": {
+      "path": "director/frame-device-rows.json",
+      "sha256": "6b86560f295b049d3eeb71bbbca84e074c270593f26dfd66b56077935268dc36"
+    },
+    "lengthGate": {
+      "path": "director/gate-device-rows.json",
+      "sha256": "2a2901734940cf8570c451462c3203ff720a644df55ebc68de18b442116962c5"
+    },
+    "collision": {
+      "path": "director/selector-device-rows.json",
+      "sha256": "d13995f58bc4331b5ad8eff134bc925e396181cf1d5b6bee68db06ceb932f809"
+    },
+    "cold": {
+      "path": "director/selector-cold-rows.json",
+      "sha256": "a263e0590a29008f5e4f63a70a66e71a957d29767384dc89ff22a3670fafa040"
+    },
+    "physics": {
+      "path": "physics/board-results.json",
+      "sha256": "1a774818bfa343c018df5c454b26ee9139424d549318e8c0d85b905c51793d89"
+    }
+  }
+}
