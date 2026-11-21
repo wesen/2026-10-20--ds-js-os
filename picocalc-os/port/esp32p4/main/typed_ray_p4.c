@@ -33,8 +33,8 @@ static buffer *new_buffer(uint32_t capacity) {
 
 static bool install(int program) {
     static const char *sources[] = {"typed-ray/main.typed","typed-ray/main.typed","typed-ray/SPAN","typed-ray/SPAN",
-                                    "typed-ray/main.typed","typed-ray/main.typed"};
-    static const char *backends[] = {NULL,"typed-ray/DIV",NULL,"typed-ray/DIV","typed-ray/PACKED","typed-ray/INFERRED"};
+                                    "typed-ray/main.typed","typed-ray/main.typed","typed-ray/SHADOW","typed-ray/SHADOW"};
+    static const char *backends[] = {NULL,"typed-ray/DIV",NULL,"typed-ray/DIV","typed-ray/PACKED","typed-ray/INFERRED",NULL,"typed-ray/DIV"};
     if (program < 0 || program >= (int)(sizeof(sources)/sizeof(sources[0]))) return false;
     const p4_compile_limits limits = {.heap_bytes=4*1024*1024,.duration_us=8000000,.rv32_backend=backends[program]};
     size_t ns=0, nt=0, ni=0;
