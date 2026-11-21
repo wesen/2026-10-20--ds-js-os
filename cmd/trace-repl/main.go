@@ -25,6 +25,7 @@ import (
 	"github.com/go-go-golems/picocalc-trace/pkg/tracearchive"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracehardware"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracerepl"
+	"github.com/go-go-golems/picocalc-trace/pkg/tracesimd"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
@@ -37,6 +38,7 @@ type settings struct {
 	Addr        string `glazed:"addr"`
 	Archive     string `glazed:"archive"`
 	DeviceStudy string `glazed:"device-study"`
+	SIMDStudy   string `glazed:"simd-study"`
 	Session     string `glazed:"session"`
 	Code        string `glazed:"code"`
 	LogLevel    string `glazed:"log-level"`
@@ -71,11 +73,12 @@ func root() (*cobra.Command, error) {
 	session := fields.New("session", fields.TypeString, fields.WithRequired(true), fields.WithHelp("ID printed by open"))
 	archive := fields.New("archive", fields.TypeString, fields.WithRequired(true), fields.WithHelp("Path to the PICOCALC-ROW-IR ticket directory"))
 	device := fields.New("device-study", fields.TypeString, fields.WithHelp("Optional PICOCALC-PIE-LOOPS ticket directory containing measured physical trials"))
+	simd := fields.New("simd-study", fields.TypeString, fields.WithHelp("Optional p4-simd-evidence-v1 JSON file of SIMD decisions, RV32 images and per-PC traces"))
 	level := fields.New("log-level", fields.TypeString, fields.WithDefault("info"), fields.WithHelp("Server log level (debug, info, warn, error)"))
 	code := fields.New("code", fields.TypeString, fields.WithHelp("JavaScript cell; omit to read stdin"))
 	defs := []*command{
 		{
-			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, level)),
+			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, simd, level)),
 			serve,
 		},
 		{
@@ -146,11 +149,25 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 	} else {
 		logger.Info().Msg("no --device-study: hardware.* reports device timings as unavailable")
 	}
+	var simd *tracesimd.Study
+	if cfg.SIMDStudy != "" {
+		simd, err = tracesimd.Open(cfg.SIMDStudy)
+		if err != nil {
+			return nil, errors.Wrap(err, "open SIMD study")
+		}
+		logger.Info().Str("sha256", simd.SHA256()).Bool("empty", simd.Empty()).Int("decisions", len(simd.Decisions())).
+			Int("traces", len(simd.Traces())).Msg("SIMD study verified")
+	} else {
+		logger.Info().Msg("no --simd-study: simd.* reports SIMD attribution as unavailable")
+	}
 	return tracerepl.New(ctx, func(vm *goja.Runtime) error {
 		if err := traceapi.Install(vm, archive); err != nil {
 			return err
 		}
-		return traceapi.InstallHardware(vm, hardware)
+		if err := traceapi.InstallHardware(vm, hardware); err != nil {
+			return err
+		}
+		return traceapi.InstallSIMD(vm, simd)
 	}, logger)
 }
 

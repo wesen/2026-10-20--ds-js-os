@@ -30,22 +30,29 @@ func evidenceRoot(t *testing.T, pattern string) string {
 // device study, the loopback HTTP protocol and an orderly shutdown.
 func TestServeWiresVerifiedEvidenceAndOptionalDevice(t *testing.T) {
 	archive := evidenceRoot(t, "PICOCALC-ROW-IR--*")
+	emptySIMD := filepath.Join(t.TempDir(), "empty-simd.json")
+	if err := os.WriteFile(emptySIMD, []byte(`{"format":"p4-simd-evidence-v1","images":[],"decisions":[],"traces":[],"packetSets":[]}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
 	for _, tc := range []struct {
-		device string
-		checks map[string]string
+		device, simd string
+		checks       map[string]string
 	}{
-		{"", map[string]string{
-			"hardware.help().available":                      "false",
-			"typeof require + typeof __trace + typeof fetch": `"undefinedundefinedundefined"`,
+		{"", "", map[string]string{
+			"hardware.help().available":                         "false",
+			"simd.help().available":                             "false",
+			"simd.help().absent.startsWith('missingSIMDStudy')": "true",
+			"typeof require + typeof __trace + typeof fetch":    `"undefinedundefinedundefined"`,
 		}},
-		{evidenceRoot(t, "PICOCALC-PIE-LOOPS--*"), map[string]string{
-			"hardware.help().available":                    "true",
-			"hardware.pairs('stock','pie','clean').length": "72",
-			"hardware.loads('pie').length":                 "6",
+		{evidenceRoot(t, "PICOCALC-PIE-LOOPS--*"), emptySIMD, map[string]string{
+			"hardware.help().available":                       "true",
+			"hardware.pairs('stock','pie','clean').length":    "72",
+			"hardware.loads('pie').length":                    "6",
+			"simd.help().absent.startsWith('emptySIMDStudy')": "true",
 		}},
 	} {
 		ctx, cancel := context.WithCancel(context.Background())
-		service, err := newService(ctx, settings{Archive: archive, DeviceStudy: tc.device}, zerolog.Nop())
+		service, err := newService(ctx, settings{Archive: archive, DeviceStudy: tc.device, SIMDStudy: tc.simd}, zerolog.Nop())
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -133,6 +140,18 @@ func TestServeRefusesUnverifiableArchive(t *testing.T) {
 	}
 }
 
+// A malformed SIMD study stops startup before any listener exists.
+func TestServeRefusesMalformedSIMDStudy(t *testing.T) {
+	bad := filepath.Join(t.TempDir(), "simd.json")
+	if err := os.WriteFile(bad, []byte(`{"format":"p4-simd-evidence-v1","images":[],"decisions":[],"traces":[{"id":"t","imageSHA":"`+strings.Repeat("0", 64)+`","workload":"w","steps":0,"counts":[]}],"packetSets":[]}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	_, err := newService(context.Background(), settings{Archive: evidenceRoot(t, "PICOCALC-ROW-IR--*"), SIMDStudy: bad}, zerolog.Nop())
+	if err == nil || !strings.Contains(err.Error(), "open SIMD study") || !strings.Contains(err.Error(), "unknownImage") {
+		t.Fatalf("malformed SIMD study accepted: %v", err)
+	}
+}
+
 func TestPublicCommandGrammar(t *testing.T) {
 	for _, tc := range []struct {
 		args       []string
@@ -140,6 +159,7 @@ func TestPublicCommandGrammar(t *testing.T) {
 		wantOutput string
 	}{
 		{[]string{"serve", "--help"}, "", "--archive"},
+		{[]string{"serve", "--help"}, "", "--simd-study"},
 		{[]string{"eval", "--help"}, "", "--session"},
 		{[]string{"serve", "--archive", ".", "--addr", "0.0.0.0:3791"}, "loopback", ""},
 		{[]string{"eval", "--code", "1+1"}, "session", ""},

@@ -17,7 +17,20 @@ go run ./cmd/trace-repl eval --session "$sid" --code 'doubled(21)'
 go run ./cmd/trace-repl close --session "$sid"
 ```
 
-Before it listens, the server inflates every pass-dump stream once and checks it against the manifest digest and each index header; a damaged capture stops startup, and every reference a session hands out cites verified bytes. It then writes a readiness record with its address. To choose another port, give every command the same `--addr 127.0.0.1:PORT`. To query the independent ESP32-P4 timing captures as well, pass `--device-study ttmp/2026/11/21/PICOCALC-PIE-LOOPS--infer-and-lower-packed-loop-regions-in-unchanged-typed-programs` when starting the server. `hardware.pairs(baseline, candidate, phase)` gives within-block paired device times and `hardware.loads(treatment?)` gives the on-device cold compile cost of each treatment. Without `--device-study`, `hardware.help().available` is false and every data call fails with `missingDeviceStudy`; guest instruction counts in `profiles` are not a substitute for device time. Server logs support `--log-level debug`. The CLI also reads multi-line programs from stdin when `--code` is absent.
+Before it listens, the server inflates every pass-dump stream once and checks it against the manifest digest and each index header; a damaged capture stops startup, and every reference a session hands out cites verified bytes. It then writes a readiness record with its address. To choose another port, give every command the same `--addr 127.0.0.1:PORT`. To query the independent ESP32-P4 timing captures as well, pass `--device-study ttmp/2026/11/21/PICOCALC-PIE-LOOPS--infer-and-lower-packed-loop-regions-in-unchanged-typed-programs` when starting the server. `hardware.pairs(baseline, candidate, phase)` gives within-block paired device times and `hardware.loads(treatment?)` gives the on-device cold compile cost of each treatment. Without `--device-study`, `hardware.help().available` is false and every data call fails with `missingDeviceStudy`; guest instruction counts in `profiles` are not a substitute for device time. To join compiler SIMD decisions to per-PC execution counts, pass `--simd-study FILE`, one `p4-simd-evidence-v1` JSON file holding RV32 images, decisions with byte ranges, complete per-PC traces and packet sets. The server verifies image digests, ranges, PCs and exact step sums before listening and refuses a malformed file. `simd.executions(decisionID, traceID, role)` sums executions inside one role's ranges and refuses a decision and trace from different images. Without the flag, or with a file that records nothing, `simd.help().available` is false and every data call fails with `missingSIMDStudy` or `emptySIMDStudy`. Server logs support `--log-level debug`. The CLI also reads multi-line programs from stdin when `--code` is absent.
+
+## Inspect SIMD decisions by emitted image
+
+The SIMD lab service on `127.0.0.1:3794` mounts the ray packet experiments and physics reference. Use the same address for each request. From the project checkout:
+
+```sh
+sid=$(go run ./cmd/trace-repl open --addr 127.0.0.1:3794)
+go run ./cmd/trace-repl eval --addr 127.0.0.1:3794 --session "$sid" \
+  --code "simd.executions('empty-row','empty-opening','scalar-lane-load')"
+go run ./cmd/trace-repl close --addr 127.0.0.1:3794 --session "$sid"
+```
+
+The query counts 9,182 dynamic instructions on the captured opening-scene workload and returns the image digest, the static byte intervals and contributing instruction addresses. The prior packed producer executed 26,070 lane loads on the same fixture. Cross-image address joins fail explicitly. To start an equivalent study or replay its example cells, see the [capture and launch scripts](../../ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/evidence).
 
 ## HTTP protocol
 

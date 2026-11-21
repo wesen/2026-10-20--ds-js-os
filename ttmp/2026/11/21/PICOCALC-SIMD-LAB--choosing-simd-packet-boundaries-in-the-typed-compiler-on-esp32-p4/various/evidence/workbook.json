@@ -1,0 +1,113 @@
+{
+  "cellSHA": "066eefa365641014906d2e0aebe0c3f0da9ad2bc857007e02d91f6412d5e3179",
+  "result": {
+    "traces": [
+      {
+        "id": "stock-opening",
+        "workload": "opening-160-rows",
+        "steps": 3608697,
+        "imageSHA": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4"
+      },
+      {
+        "id": "scalar-opening",
+        "workload": "opening-160-rows",
+        "steps": 3199910,
+        "imageSHA": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187"
+      },
+      {
+        "id": "pie-opening",
+        "workload": "opening-160-rows",
+        "steps": 3131435,
+        "imageSHA": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a"
+      }
+    ],
+    "boardIdentity": [
+      {
+        "arm": "pie",
+        "imageSHA": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+        "elfCRC": "ab91b817"
+      },
+      {
+        "arm": "scalar",
+        "imageSHA": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187",
+        "elfCRC": "bd9a8467"
+      },
+      {
+        "arm": "stock",
+        "imageSHA": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+        "elfCRC": "0d2e18b8"
+      }
+    ],
+    "refusals": [
+      {
+        "id": "scalar-rejected-6",
+        "source": {
+          "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+          "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+          "lineStart": 100,
+          "lineEnd": 104
+        },
+        "reason": "no contiguous checked u16 subtraction producer"
+      },
+      {
+        "id": "scalar-rejected-75",
+        "source": {
+          "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+          "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+          "lineStart": 105,
+          "lineEnd": 124
+        },
+        "reason": "no contiguous checked u16 subtraction producer"
+      },
+      {
+        "id": "pie-rejected-6",
+        "source": {
+          "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+          "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+          "lineStart": 100,
+          "lineEnd": 104
+        },
+        "reason": "no contiguous checked u16 subtraction producer"
+      },
+      {
+        "id": "pie-rejected-75",
+        "source": {
+          "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+          "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+          "lineStart": 105,
+          "lineEnd": 124
+        },
+        "reason": "no contiguous checked u16 subtraction producer"
+      }
+    ],
+    "groups": 3135,
+    "mix": {
+      "empty": 2111,
+      "mixed": 282,
+      "full": 742
+    },
+    "avoidedLaneVisitUpperBound": 16888,
+    "arms": [
+      {
+        "arm": "scalar",
+        "packetScratchStores": 25080,
+        "prefixStores": 990,
+        "scalarLaneLoads": 26070,
+        "hitContinuation": 399200,
+        "packetControl": 34845,
+        "producerAndSign": 175065
+      },
+      {
+        "arm": "pie",
+        "packetScratchStores": 3135,
+        "prefixStores": 990,
+        "scalarLaneLoads": 26070,
+        "hitContinuation": 399200,
+        "packetControl": 35340,
+        "producerAndSign": 106095
+      }
+    ],
+    "gap": 68475,
+    "wrongImage": "TypeError: crossImageJoin: decision \"pie-row\" describes image 8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a but trace \"scalar-opening\" executed image 119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187; byte offsets are not comparable across images"
+  }
+}
