@@ -1,0 +1,10 @@
+// Fixed-point penalty in squared distance units. Every accepted contact
+// contributes the square of positive overlap, with ordinary i32 arithmetic.
+function penalty(distances: buffer, first: i32, count: i32, reach: i32): i32 {
+    let energy = 0;
+    for (let body = 0; body < count; body = body + 1) {
+        let overlap = reach - distances.charCodeAt(first + body);
+        if (overlap >= 0) { energy = energy + overlap * overlap; }
+    }
+    return energy;
+}

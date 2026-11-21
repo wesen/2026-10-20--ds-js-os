@@ -403,7 +403,7 @@ function compile(source, imports = [], maxSourceLength, options) {
             fn.nativeInspection = {leafDecision: "eligible for frameless lowering"};
         const mode = options?.pieLoops;
         if (mode !== undefined) {
-            if (mode !== "scalar" && mode !== "pie") throw new TypeError("unknown PIE loop compilation mode");
+            if (mode !== "scalar" && mode !== "pie" && typeof mode !== "function") throw new TypeError("unknown PIE loop compilation mode");
             if (!globalThis.typedPieLoops) throw new Error("load typed-pie-loops.js for PIE loop compilation");
             const selected = typedPieLoops.lower(fn, callables, targets, mode, FunctionCode, instruction);
             if (selected) {

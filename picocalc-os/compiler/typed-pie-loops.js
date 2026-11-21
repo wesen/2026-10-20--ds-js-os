@@ -83,8 +83,9 @@ function analyzeLoop(ops, loop, matching) {
     const pins=[iv,buffer,row.local,base.local,bound.local];
     if (pins.some(n=>seen.has(n)) || [row,base,bound].some(v=>v.local===iv))
         return reject("a supposedly invariant input changes in the loop");
-    if (bound.constant!==undefined && is(ops[loop-2],set,iv) && is(ops[loop-3],literal) &&
-        bound.constant-ops[loop-3].operands[0]<8) return reject("trip count cannot fill eight lanes");
+    const constantTrips = bound.constant !== undefined && is(ops[loop-2],set,iv) && is(ops[loop-3],literal)
+        ? Math.max(0, bound.constant - ops[loop-3].operands[0]) : null;
+    if (constantTrips !== null && constantTrips < 8) return reject("trip count cannot fill eight lanes");
     // A skipped miss must have no observable uses. The index temporary is
     // omitted by the fast path, so require it to have exactly its original use.
     for (let j=0;j<ops.length;j++) {
@@ -102,7 +103,7 @@ function analyzeLoop(ops, loop, matching) {
         return reject("store base varies across iterations");
     return {loop:ops[loop].offset, iv, bound, row, buffer, base, difference, indexSlot,
         consumerStart:ops[condition+1].offset,consumerEnd:ops[end-6].offset,
-        stores:effects.writes, lanes:8};
+        stores:effects.writes, constantTrips, lanes:8};
 }
 
 function analyze(fn) {
@@ -138,7 +139,20 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
     if (!fn.nativeInspection && !mayContainProducer(fn.code)) return null;
     const decisions=analyze(fn);
     if (fn.nativeInspection) fn.loopDecisions=decisions;
-    const plans=new Map(decisions.filter(p=>!p.reason).map(p=>[p.loop,p]));
+    const plans=new Map();
+    for (const p of decisions) {
+        if (p.reason) continue;
+        let selected=mode;
+        if (typeof mode === "function") {
+            const decision=mode({constantTrips:p.constantTrips, writeStreams:p.stores.length, lanes:p.lanes});
+            selected=decision?.plan;
+            if (!["stock","scalar","pie"].includes(selected)) throw new TypeError("invalid PIE policy decision");
+            if (fn.nativeInspection) p.policyDecision=decision;
+            p.selectedMode=selected;
+        }
+        if (selected === "stock") continue;
+        plans.set(p.loop,p);
+    }
     if (!plans.size) return null;
     class PackedFunction extends FunctionCode {
         constructor() {
@@ -161,6 +175,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
         twice(to,from) {this.emit(ins.i(0x13,to,1,from,1));}
 
         grouped(p) {
+            const selectedMode=p.selectedMode ?? mode;
             const saved=this.at, ordinary={}, group={}, single={}, got={}, lane={}, advance={};
             const regions=[];
             let start=this.words.length*4;
@@ -199,7 +214,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
                 this.immediate(lanePtr,a0,4); this.branch(6,t5,lanePtr,ordinary);
                 this.mark(headerSafe); this.mark(safe);
             }
-            if(mode==="pie") {
+            if(selectedMode==="pie") {
                 this.store(uniform,this.packet+16,sp,1);
                 this.immediate(t5,sp,this.packet+16); this.emit(broadcast);
             }
@@ -209,7 +224,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             this.emit(ins.i(0x13,t5,7,input,15)); this.branch(1,t5,zero,single);
             note("admission and packet control",p.loop,p.loop+2);
             this.immediate(t5,sp,this.packet);
-            if(mode==="pie") {
+            if(selectedMode==="pie") {
                 this.emit(packetLoad); this.emit(subtract); this.emit(packetStore);
             } else {
                 for(let i=0;i<8;i++) {

@@ -1,0 +1,235 @@
+{
+  "bundleSHA": "aa97b92698fd53f6379d936a0b07e1b32ac4010004e6f83af8bed4aa4955c926",
+  "compiled": {
+    "short": {
+      "stock": {
+        "sha": "0bb6c8d5f8acbce374dcebcafcbb80af989fcd4fabbb0ed2054b4fdf7764e982",
+        "len": 212,
+        "fn": 0,
+        "calls": []
+      },
+      "scalar": {
+        "sha": "c4afa700926d5aa24095f149d201a2e952b37dd7d09cd862073c4ad38a9c5066",
+        "len": 580,
+        "fn": 0,
+        "calls": []
+      },
+      "pie": {
+        "sha": "c97932d24b35fc21ced01c33649a47799984753e2bb8b05a685fbd0008784b20",
+        "len": 504,
+        "fn": 0,
+        "calls": []
+      },
+      "auto": {
+        "sha": "c97932d24b35fc21ced01c33649a47799984753e2bb8b05a685fbd0008784b20",
+        "len": 504,
+        "fn": 0,
+        "calls": [
+          {
+            "facts": {
+              "constantTrips": 8,
+              "writeStreams": 0,
+              "lanes": 8
+            },
+            "plan": "pie",
+            "scores": {
+              "stock": 144,
+              "scalar": 109,
+              "pie": 91
+            },
+            "assumedTrips": 8
+          }
+        ]
+      }
+    },
+    "long": {
+      "stock": {
+        "sha": "6d827e2d2d40328f06ea0841785e67daf8753f7ab13c64ee1ac401330c9d6e62",
+        "len": 212,
+        "fn": 0,
+        "calls": []
+      },
+      "scalar": {
+        "sha": "f450b2830b81973bf9bcbb168caf62e6df001221425a03107393a89ccddb0f14",
+        "len": 580,
+        "fn": 0,
+        "calls": []
+      },
+      "pie": {
+        "sha": "566b375aafc0efa8b03066bfe4e271e7fc5a84ef06c745db15d3841f2ff24e58",
+        "len": 504,
+        "fn": 0,
+        "calls": []
+      },
+      "auto": {
+        "sha": "566b375aafc0efa8b03066bfe4e271e7fc5a84ef06c745db15d3841f2ff24e58",
+        "len": 504,
+        "fn": 0,
+        "calls": [
+          {
+            "facts": {
+              "constantTrips": 96,
+              "writeStreams": 0,
+              "lanes": 8
+            },
+            "plan": "pie",
+            "scores": {
+              "stock": 1728,
+              "scalar": 1154,
+              "pie": 905
+            },
+            "assumedTrips": 96
+          }
+        ]
+      }
+    },
+    "dynamic": {
+      "stock": {
+        "sha": "af1ba2b4219ada9bb78b929f037a0b405bf4533921f3e4fdbf73164377a828a9",
+        "len": 212,
+        "fn": 0,
+        "calls": []
+      },
+      "scalar": {
+        "sha": "27f782c2974a966599279b6610a4db3e27fc908381654f3ef77613a800cabbcf",
+        "len": 580,
+        "fn": 0,
+        "calls": []
+      },
+      "pie": {
+        "sha": "286666fb945573bea34c044f0d39a64240a6c264dcf9fe86ce7758f5b3478aca",
+        "len": 504,
+        "fn": 0,
+        "calls": []
+      },
+      "auto": {
+        "sha": "286666fb945573bea34c044f0d39a64240a6c264dcf9fe86ce7758f5b3478aca",
+        "len": 504,
+        "fn": 0,
+        "calls": [
+          {
+            "facts": {
+              "constantTrips": null,
+              "writeStreams": 0,
+              "lanes": 8
+            },
+            "plan": "pie",
+            "scores": {
+              "stock": 576,
+              "scalar": 394,
+              "pie": 313
+            },
+            "assumedTrips": 32
+          }
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "label": "short",
+      "n": 8,
+      "reach": 0,
+      "expected": 0,
+      "plan": "pie"
+    },
+    {
+      "label": "short",
+      "n": 8,
+      "reach": 35,
+      "expected": 1170,
+      "plan": "pie"
+    },
+    {
+      "label": "short",
+      "n": 8,
+      "reach": 96,
+      "expected": 25052,
+      "plan": "pie"
+    },
+    {
+      "label": "long",
+      "n": 96,
+      "reach": 0,
+      "expected": 0,
+      "plan": "pie"
+    },
+    {
+      "label": "long",
+      "n": 96,
+      "reach": 35,
+      "expected": 13821,
+      "plan": "pie"
+    },
+    {
+      "label": "long",
+      "n": 96,
+      "reach": 96,
+      "expected": 290700,
+      "plan": "pie"
+    },
+    {
+      "label": "dynamic",
+      "n": 3,
+      "reach": 0,
+      "expected": 0,
+      "plan": "pie"
+    },
+    {
+      "label": "dynamic",
+      "n": 3,
+      "reach": 35,
+      "expected": 361,
+      "plan": "pie"
+    },
+    {
+      "label": "dynamic",
+      "n": 3,
+      "reach": 96,
+      "expected": 10049,
+      "plan": "pie"
+    },
+    {
+      "label": "dynamic",
+      "n": 17,
+      "reach": 0,
+      "expected": 0,
+      "plan": "pie"
+    },
+    {
+      "label": "dynamic",
+      "n": 17,
+      "reach": 35,
+      "expected": 1895,
+      "plan": "pie"
+    },
+    {
+      "label": "dynamic",
+      "n": 17,
+      "reach": 96,
+      "expected": 48613,
+      "plan": "pie"
+    },
+    {
+      "label": "dynamic",
+      "n": 96,
+      "reach": 0,
+      "expected": 0,
+      "plan": "pie"
+    },
+    {
+      "label": "dynamic",
+      "n": 96,
+      "reach": 35,
+      "expected": 13821,
+      "plan": "pie"
+    },
+    {
+      "label": "dynamic",
+      "n": 96,
+      "reach": 96,
+      "expected": 290700,
+      "plan": "pie"
+    }
+  ]
+}
