@@ -763,7 +763,7 @@ class FunctionEmitter {
         if (counted) {
             { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
             const loopCode = this.code;
-            this.code = [];
+            this.code = this.inspection ? this.inspection.tape() : [];
             this.assignment(lex.ident());
             update = this.code;
             this.code = loopCode;
@@ -771,7 +771,8 @@ class FunctionEmitter {
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         this.block(result);
         if (update) {
-            for (const cell of update) this.code.push(cell);
+            if (this.inspection) this.code.append(update);
+            else for (const cell of update) this.code.push(cell);
         }
         this.code.push(0x0c, 0, OP.end, OP.end);
         this.controls -= 2;
@@ -991,6 +992,122 @@ class NumericFunctionEmitter extends FunctionEmitter {
     }
 }
 
+const inspectedWasmRanges = Symbol("Wasm inspection ranges");
+
+class InspectionCallbackError extends Error {
+    constructor(cause) { super("Typed inspection callback failed", {cause}); }
+}
+
+function emitInspection(inspect, event) {
+    try {
+        inspect.emit(event);
+    } catch (error) {
+        // Async syntax recovery should see compiler diagnostics only.
+        throw new InspectionCallbackError(error);
+    }
+}
+
+class InspectionTape extends Array {
+    constructor(source) {
+        super();
+        this.source = source;
+        this.spans = [];
+    }
+
+    push(...cells) {
+        const span = this.source();
+        for (let i = 0; i < cells.length; i++) this.spans.push(span);
+        return super.push(...cells);
+    }
+
+    append(other) {
+        for (let i = 0; i < other.length; i++) {
+            super.push(other[i]);
+            this.spans.push(other.spans[i]);
+        }
+    }
+}
+
+let inspectedOpcodes;
+function inspectOperations(tape, numeric) {
+    const specs = inspectedOpcodes ??= {
+        0x00:["unreachable"], 0x02:["block","byte"], 0x03:["loop","byte"], 0x04:["if","byte"],
+        0x05:["else"], 0x0b:["end"], 0x0c:["br","u"], 0x0d:["br_if","u"], 0x0f:["return"],
+        0x10:["call","u"], 0x1a:["drop"], 0x20:["local.get","u"], 0x21:["local.set","u"],
+        0x28:["i32.load","u","u"], 0x2f:["i32.load16_u","u","u"],
+        0x36:["i32.store","u","u"], 0x3b:["i32.store16","u","u"], 0x41:["i32.const","s"],
+        0x45:["i32.eqz"], 0x46:["i32.eq"], 0x47:["i32.ne"], 0x48:["i32.lt_s"], 0x4a:["i32.gt_s"],
+        0x4c:["i32.le_s"], 0x4e:["i32.ge_s"], 0x4f:["i32.ge_u"], 0x6a:["i32.add"], 0x6b:["i32.sub"],
+        0x6c:["i32.mul"], 0x6d:["i32.div_s"], 0x6f:["i32.rem_s"], 0x74:["i32.shl"], 0x75:["i32.shr_s"],
+        0xf1:["text.checked_address","u","u"], 0xf2:["text.literal_stores","u","u"],
+    };
+    const operations = [];
+    let at = 0;
+    function operand(format) {
+        if (numeric || format === "byte") return tape[at++];
+        let value = 0;
+        for (let bits = 0; bits <= 28; bits += 7) {
+            const part = tape[at++];
+            if (part === undefined) break;
+            value += (part & 127) * 2 ** bits;
+            if (!(part & 128)) return format === "s" && (part & 64) ? value - 2 ** (bits + 7) : value;
+        }
+        throw new Error("invalid Typed inspection operand");
+    }
+    while (at < tape.length) {
+        const offset = at;
+        const opcode = tape[at++];
+        const spec = specs[opcode];
+        if (!spec) throw new Error("unknown Typed inspection opcode " + opcode);
+        const [op, ...formats] = spec;
+        const operands = formats.map(operand);
+        if (at > tape.length) throw new Error("truncated Typed inspection operation");
+        operations.push({ordinal: operations.length, offset, length: at - offset,
+            op, opcode, operands, source: {...tape.spans[offset]}});
+    }
+    return operations;
+}
+
+function inspectFunction(emitter, fn, numeric, inspect, origin) {
+    const lex = emitter.lex;
+    const unit = origin ? "generated" : "original";
+    const source = () => {
+        const {at, value} = lex.token;
+        return {unit, start: at, end: at + value.length, precision: "emission-token",
+            ...(origin && {origin})};
+    };
+    const locals = [];
+    const local = emitter.local;
+    emitter.local = function (name, type, mutable = false) {
+        const index = local.call(this, name, type, mutable);
+        const parameter = index < fn.params.length;
+        // Parameters are installed before the emitter seeks to the body.
+        locals.push({index, name, type, mutable, parameter, source: parameter ? null : source()});
+        return index;
+    };
+    emitter.inspection = {tape: () => new InspectionTape(source)};
+    emitter.code = emitter.inspection.tape();
+    emitter.function(fn);
+    const operations = inspectOperations(fn.code, numeric);
+    if (!numeric) {
+        // Do not let the callback mutate the internal placement information.
+        fn[inspectedWasmRanges] = operations.map(({ordinal, offset, length}) => ({ordinal, offset, length}));
+    }
+    fn.code = Array.from(fn.code);
+    emitInspection(inspect, {
+        kind: "frontend", target: numeric ? "rv32" : "wasm", function: fn.name, index: fn.index,
+        params: fn.params.slice(), result: fn.result, locals, localCount: emitter.nextLocal, operations,
+        ...(origin && {sourceText: lex.source}),
+    });
+}
+
+function finishFunction(emitter, fn, numeric, inspect, origin) {
+    if (inspect && (inspect.function === undefined || inspect.function === fn.name))
+        inspectFunction(emitter, fn, numeric, inspect, origin);
+    else
+        emitter.function(fn);
+}
+
 function scanSignatures(lex, records, declared, functionBase, enums, distinct, asyncSpans = false) {
     const functions = [];
     while (lex.token.kind !== "eof") {
@@ -1185,18 +1302,21 @@ function parseDeclarations(lex, recordEnds) {
 
 function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction, onSignatures, options) {
     if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
+    const inspect = options?.inspect;
+    if (inspect && typeof inspect.emit !== "function") throw new TypeError("Typed inspection needs an emit callback");
     return withLexIndices(() => {
         const lowered = globalThis.typedAsync?.rewrite(source, imported);
         try {
             const program = lowered
-                ? emitSpanFunctions(lowered, functionBase, imported, numericOperands, onFunction, onSignatures)
-                : emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures);
+                ? emitSpanFunctions(lowered, functionBase, imported, numericOperands, onFunction, onSignatures, inspect)
+                : emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures, undefined, inspect);
             if (lowered) {
                 program.asyncLayout = lowered.layout;
                 if (options?.asyncSource) program.asyncSource = lowered.source;
             }
             return program;
         } catch (error) {
+            if (error instanceof InspectionCallbackError) throw error.cause;
             if (!lowered || !(error instanceof SyntaxError)) throw error;
             lexicalScope?.sources.clear();
             try {
@@ -1218,7 +1338,7 @@ function configureGeneratedLexer(lex, lowered) {
     return lex;
 }
 
-function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onFunction, onSignatures) {
+function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onFunction, onSignatures, inspect) {
     const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
     const {original, declarations, fields, bodies, generated} = lowered.plan;
     const {enums, distinct, aliases} = declarations;
@@ -1260,7 +1380,10 @@ function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onF
             fn.bodyAt = body.at;
         }
         try {
-            new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases).function(fn);
+            const emitter = new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+            if (inspect) finishFunction(emitter, fn, numericOperands, inspect,
+                lex === originalLex ? undefined : lex === generatedLex ? "synthetic-source" : "rewritten-body");
+            else emitter.function(fn);
         } finally {
             fn.bodyAt = virtualAt;
         }
@@ -1269,7 +1392,7 @@ function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onF
     return {functions, records, enums, distinct, edges, order: checkAcyclic(functions, edges)};
 }
 
-function emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures, lowered) {
+function emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures, lowered, inspect) {
     const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
     const lex = new Lexer(source, 0, source.length, true);
     if (lowered) {
@@ -1288,7 +1411,9 @@ function emitFunctions(source, functionBase, imported, numericOperands, onFuncti
     if (onSignatures) onSignatures(functions);
     const edges = functions.map(() => []);
     for (const [i, fn] of functions.entries()) {
-        new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases).function(fn);
+        const emitter = new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+        if (inspect) finishFunction(emitter, fn, numericOperands, inspect);
+        else emitter.function(fn);
         if (onFunction) onFunction(fn);
     }
 
@@ -1323,6 +1448,14 @@ function compile(source, options) {
         ...section(7, vec([...names, [...vec([109,101,109,111,114,121]), 2, 0]])),
         ...section(10, vec(functions.map(fn => fn.body))),
     ]);
+    if (options?.inspect && functions.some(fn => fn[inspectedWasmRanges])) {
+        try {
+            inspectWasmEmission(bytes, functions, options.inspect);
+        } catch (error) {
+            if (error instanceof InspectionCallbackError) throw error.cause;
+            throw error;
+        }
+    }
     return {
         bytes,
         records: recordLayouts(records),
@@ -1369,6 +1502,41 @@ class WasmReader {
     }
 
     end() { return this.offset === this.bytes.length; }
+}
+
+function inspectWasmEmission(bytes, functions, inspect) {
+    const reader = new WasmReader(bytes);
+    reader.take(8);
+    while (!reader.end()) {
+        const id = reader.byte();
+        const size = reader.uint();
+        if (id !== 10) {
+            reader.take(size);
+            continue;
+        }
+        const sectionEnd = reader.offset + size;
+        if (reader.uint() !== functions.length) throw new Error("unexpected Wasm code section count");
+        for (const fn of functions) {
+            const bodySize = reader.uint();
+            const start = reader.offset;
+            const end = start + bodySize;
+            const instructionsStart = end - fn.code.length;
+            const operations = fn[inspectedWasmRanges];
+            if (operations) {
+                const ranges = operations.map(({ordinal, offset, length}) => {
+                    const from = instructionsStart + offset;
+                    const to = from + length;
+                    return {ordinal, start: from, end: to, bytes: Array.from(bytes.subarray(from, to))};
+                });
+                emitInspection(inspect, {kind: "emission", target: "wasm", function: fn.name, index: fn.index,
+                    start, end, instructionsStart, ranges});
+            }
+            reader.take(bodySize);
+        }
+        if (reader.offset !== sectionEnd) throw new Error("unexpected Wasm code section size");
+        return;
+    }
+    throw new Error("missing Wasm code section for Typed inspection");
 }
 
 function readSection(sections, id, read) {

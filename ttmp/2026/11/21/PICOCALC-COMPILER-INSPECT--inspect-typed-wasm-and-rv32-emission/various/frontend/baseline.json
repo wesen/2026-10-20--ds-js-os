@@ -1,0 +1,142 @@
+{
+  "baselineRevision": "abc02eb",
+  "corpora": {
+    "ray": {
+      "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+      "wasm": {
+        "bytes": 4650,
+        "sha256": "e41e83909a29a4e7ece05f6ec9a82d69a26e6f9291082aafb5160f43293378b9",
+        "namedLocals": 18,
+        "operations": 312,
+        "sourceUnit": "original",
+        "offsetRange": [
+          2489,
+          3028
+        ]
+      },
+      "rv32": {
+        "bytes": 9564,
+        "sha256": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+        "namedLocals": 18,
+        "operations": 180,
+        "sourceUnit": "original"
+      }
+    },
+    "painter": {
+      "sourceSHA256": "6ff9dc8a9e3ad3cc9a877c4ed9ebbb6b535941acba7c63e29e87edc4c5337214",
+      "wasm": {
+        "bytes": 8367,
+        "sha256": "6d4eff85a46b055274378ec8afd22f9f630c3359a8e49ac51937739f179655e5",
+        "namedLocals": 35,
+        "operations": 1132,
+        "sourceUnit": "original",
+        "offsetRange": [
+          5864,
+          8072
+        ]
+      },
+      "rv32": {
+        "bytes": 21572,
+        "sha256": "fd63f82d262b4868d45577543ec42fa8c3b0ecb3067835478fe70bc5b428db8a",
+        "namedLocals": 35,
+        "operations": 625,
+        "sourceUnit": "original"
+      }
+    },
+    "files": {
+      "sourceSHA256": "df59c45a5852408b4753f1cc23046c8f5c1762892e48a23b55c1b46746b4de26",
+      "wasm": {
+        "bytes": 1342,
+        "sha256": "a3dab60f135d66fad3b2726c12327e9abc5a9a19337315a270f61ea3975d4d9a",
+        "namedLocals": 6,
+        "operations": 95,
+        "sourceUnit": "original",
+        "offsetRange": [
+          834,
+          996
+        ]
+      },
+      "rv32": {
+        "bytes": 2980,
+        "sha256": "b96f9877c7027590305807fec600224a7b88803d25eb5ebbd3c5e6e9107f350a",
+        "namedLocals": 6,
+        "operations": 73,
+        "sourceUnit": "original"
+      }
+    },
+    "materials": {
+      "sourceSHA256": "9eff2cc73b84569f8ecdf9d26394961038d84ae3e9f113b14618023e6fd65b02",
+      "wasm": {
+        "bytes": 6988,
+        "sha256": "8e73ae80a13899a3aea1cf5f75e66f55852053fae536b64474ec682c075419af",
+        "namedLocals": 19,
+        "operations": 359,
+        "sourceUnit": "original",
+        "offsetRange": [
+          5946,
+          6585
+        ]
+      },
+      "rv32": {
+        "bytes": 14604,
+        "sha256": "e636f1e443b46e887973106bf16adfb14a37504cb454f2f8173488cc88ef7198",
+        "namedLocals": 19,
+        "operations": 271,
+        "sourceUnit": "original"
+      }
+    },
+    "async": {
+      "sourceSHA256": "d0ea3d08d5c0242f4861fef73b32e868ae14ec05609a06922505c856d798b9f3",
+      "wasm": {
+        "bytes": 201,
+        "sha256": "8381d244b4f2107579b9a160163da97e5fada2a793e6aee8c59ad9f12648b958",
+        "namedLocals": 1,
+        "operations": 6,
+        "sourceUnit": "generated",
+        "offsetRange": [
+          149,
+          159
+        ]
+      },
+      "rv32": {
+        "bytes": 216,
+        "sha256": "ab60427d4b37ef9edd6011339f4c76f2b10ca3b1d4a928501c36d6f6896f2b8e",
+        "namedLocals": 1,
+        "operations": 6,
+        "sourceUnit": "generated"
+      }
+    }
+  },
+  "diagnostics": [
+    {
+      "wasm": [
+        "SyntaxError",
+        "1:44: expected bool, got i32"
+      ],
+      "rv32": [
+        "SyntaxError",
+        "1:44: expected bool, got i32"
+      ]
+    },
+    {
+      "wasm": [
+        "SyntaxError",
+        "1:35: unknown function absent"
+      ],
+      "rv32": [
+        "SyntaxError",
+        "1:35: unknown function absent"
+      ]
+    },
+    {
+      "wasm": [
+        "SyntaxError",
+        "3:81: expected bool, got i32"
+      ],
+      "rv32": [
+        "SyntaxError",
+        "3:81: expected bool, got i32"
+      ]
+    }
+  ]
+}
