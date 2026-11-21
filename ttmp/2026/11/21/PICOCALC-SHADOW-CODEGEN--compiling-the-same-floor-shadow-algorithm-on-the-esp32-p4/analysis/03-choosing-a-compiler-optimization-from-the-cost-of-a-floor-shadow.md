@@ -32,7 +32,7 @@ The ceiling was large. Subtracting one return-address restore per invocation lea
 - Each `s`-register home costs two instructions every time the function is called.
 - Correctness needs a complete lowering contract covering block joins, calls, and returns, plus a differential test on held-out code.
 
-The scorer had only been run on synthetic instruction sequences. It had never seen the compiler's real decoded output.
+I ran the scorer on synthetic operation sequences. The experiment assigned no register homes in the actual shadow function. Its proposed ranking still needs validation on that function's checked tape.
 
 ## Why the Group Chose the Pure Helper Rule
 

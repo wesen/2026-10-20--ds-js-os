@@ -28,6 +28,7 @@ edits = {
     "The helper body then runs about nine more instructions before `jalr` returns.": "In the shadow path the helper averages 9.31 instructions per call, including the return.",
     "Named variables, called locals, are not kept in registers. Each one lives in a memory slot": "In the framed shadow body each named variable, called a local, lives in a memory slot",
     "Nearly every stack load in the shadow routine could in principle be removed.": "Subtracting one return-address restore per invocation leaves an upper bound of 1,268,781 other stack loads. Identifying which are removable requires classifying spills and caller state.",
+    "The scorer had only been run on synthetic instruction sequences. It had never seen the compiler's real decoded output.": "I ran the scorer on synthetic operation sequences. The experiment assigned no register homes in the actual shadow function. Its proposed ranking still needs validation on that function's checked tape.",
     "That pass remains available, and its gains would add to this one.": "A future experiment needs to measure whether the savings combine, because eliminating calls changes register pressure.",
     "The proof checks the helper's body.": "For this example the proof checks the absolute-value helper's complete body. More generally the same matcher admits all six signed/equality relations against a literal and can either negate the argument or return a literal on its taken path.",
 }
