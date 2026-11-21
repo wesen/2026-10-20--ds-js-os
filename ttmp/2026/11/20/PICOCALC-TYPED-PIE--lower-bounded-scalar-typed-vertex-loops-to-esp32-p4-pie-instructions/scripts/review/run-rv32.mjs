@@ -9,7 +9,7 @@ const preserved = [2, 3, 4, 8, 9, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27];
 const volatile = [5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17, 28, 29, 30, 31];
 const signed12 = n => (n << 20) >> 20;
 
-export function runRv32(program, name, args, imports, handlers, initialBytes, decoded, instructionLimit = 100_000) {
+export function runRv32(program, name, args, imports, handlers, initialBytes, decoded, instructionLimit = 100_000, onFetch) {
     const code = new DataView(program.image.buffer, program.image.byteOffset, program.image.byteLength);
     const relocations = new Map(program.relocations.map(({offset, index}) => [offset, index]));
     const memory = new DataView(new ArrayBuffer(stackTop));
@@ -29,6 +29,7 @@ export function runRv32(program, name, args, imports, handlers, initialBytes, de
         assert(Number.isInteger(at) && at % 4 === 0 && at >= 0 && at < code.byteLength,
             'RV32 instruction address outside program');
         const w = code.getUint32(at, true);
+        if (onFetch) onFetch(at, w);
         const op = w & 0x7f, rd = (w >>> 7) & 31, f3 = (w >>> 12) & 7;
         const a = x[(w >>> 15) & 31], b = x[(w >>> 20) & 31];
         const f7 = w >>> 25;

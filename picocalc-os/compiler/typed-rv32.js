@@ -31,6 +31,7 @@ class FunctionCode {
         this.control = [];
         this.depth = this.spillDepth = this.at = 0;
         this.exit = {};
+        if (program.nativeInspection) observeSteps(this);
     }
 
     cell() { return this.program.code[this.at++]; }
@@ -303,19 +304,79 @@ class LeafCode extends FunctionCode {
     }
 }
 
+// Wrap only the selected instance. The ordinary emitter and the leaf emitter
+// keep their real instruction loop, including lookahead and zero-word ops.
+function observeSteps(fn) {
+    const step = fn.step;
+    const ranges = [];
+    fn.inspection = {ranges, trackedWords: fn.words};
+    fn.step = function(op) {
+        const inputStart = this.at - 1;
+        const start = this.words.length * 4;
+        const live = this.depth;
+        const done = step.call(this, op);
+        const decisions = [];
+        if (op === 0x10) {
+            const args = this.functions[this.program.code[inputStart + 1]].params.length;
+            decisions.push("preserve " + Math.min(Math.max(0, live - args), STACK_REGISTERS.length) +
+                " register-held operands across call");
+        }
+        ranges.push({inputStart, inputEnd: this.at, start, end: this.words.length * 4,
+            role: "operation", decisions});
+        return done;
+    };
+}
+
+// Ranges use byte offsets in the final image; tape offsets stay function-local.
+// Research lowerings may supply multiple segments when an admitted fast path
+// precedes a fallback. Never attach the old positions to replacement words.
+function nativeEmission(fn, start, inspect) {
+    const ranges = [];
+    const length = fn.words.length * 4;
+    const ordinary = fn.inspection && fn.inspection.trackedWords === fn.words;
+    const segments = fn.inspectionSegments ?? (ordinary ?
+        [{offset: 0, ranges: fn.inspection.ranges}] : []);
+    let cursor = 0;
+    function gap(end, role) {
+        if (end > cursor) ranges.push({start: start + cursor, end: start + end, role});
+        cursor = end;
+    }
+    for (const segment of segments) {
+        for (const r of segment.ranges) {
+            const lo = segment.offset + r.start, hi = segment.offset + r.end;
+            if (lo < cursor || hi < lo || hi > length) throw new Error("invalid RV32 inspection segment");
+            gap(lo, ordinary && !fn.inspectionSegments ? "prologue" : "specialized code");
+            ranges.push({...r, start: start + lo, end: start + hi, segment: segment.label});
+            cursor = hi;
+        }
+    }
+    gap(length, ordinary && !fn.inspectionSegments ? "epilogue" : "specialized code");
+    inspect.emit({kind: "emission", target: "rv32", function: fn.program.name,
+        start, end: start + length, localCount: fn.locals, frame: fn.frameless ? "leaf" : "framed",
+        leafDecision: fn.program.nativeInspection.leafDecision, ranges});
+}
+
+function declineLeaf(fn, reason) {
+    if (fn.nativeInspection) fn.nativeInspection.leafDecision = reason;
+    return null;
+}
+
 function lowerLeaf(fn, callables, targets) {
-    if (fn.nlocals || fn.code.length > 128 || fn.params.length > 8 ||
-        !fn.params.every(type => type === "i32" || type === "bool")) return null;
+    if (fn.nlocals) return declineLeaf(fn, "function declares frame locals");
+    if (fn.code.length > 128) return declineLeaf(fn, "operation tape exceeds 128 cells");
+    if (fn.params.length > 8 || !fn.params.every(type => type === "i32" || type === "bool"))
+        return declineLeaf(fn, "argument list outside leaf convention");
     for (let at = 0; at < fn.code.length;) {
         const operands = LEAF_OPERANDS.get(fn.code[at++]);
-        if (operands === undefined || at + operands > fn.code.length) return null;
+        if (operands === undefined || at + operands > fn.code.length)
+            return declineLeaf(fn, "operation outside frameless allowlist");
         at += operands;
     }
     try {
         return new LeafCode(fn, callables, targets).lower();
     } catch (error) {
         if (error !== LEAF_SPILL) throw error;
-        return null;
+        return declineLeaf(fn, "leaf requires frame storage");
     }
 }
 
@@ -331,7 +392,10 @@ function compile(source, imports = [], maxSourceLength, options) {
         }
     }
 
+    const inspect = options?.inspect;
     function lower(fn) {
+        if (inspect && (inspect.function === undefined || inspect.function === fn.name))
+            fn.nativeInspection = {leafDecision: "eligible for frameless lowering"};
         code.push(lowerLeaf(fn, callables, targets) ?? new FunctionCode(fn, callables, targets).lower());
         // The lowered code retains the descriptor, so release the function-local literal table.
         if (fn.literals) fn.literals = null;
@@ -378,6 +442,7 @@ function compile(source, imports = [], maxSourceLength, options) {
             fn.words[from] = instruction.j(rd, delta) >>> 0;
         }
         for (let j = 0; j < fn.words.length; j++) view.setUint32(4 * (start + j), fn.words[j], true);
+        if (fn.program.nativeInspection) nativeEmission(fn, start * 4, inspect);
     }
     return {image, entries, records: typedWasm.recordLayouts(records), enums: typedWasm.enumLayouts(enums),
         distinct: [...distinct], relocations, importCount: imports.length,
