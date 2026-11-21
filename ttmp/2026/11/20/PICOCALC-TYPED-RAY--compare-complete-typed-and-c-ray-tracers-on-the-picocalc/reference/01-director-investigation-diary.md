@@ -25,7 +25,7 @@ The commission says “My first milestone would be one complete all-Typed scalar
 
 ### Prompt Context
 
-The user asked to launch another research lab comparing the C implementation with Typed and exploring compiler improvements. The expected output is a complete renderer and measured physical comparison, with individual research diaries and published reports.
+The [verbatim commission](../sources/commission.txt) records the complete original request. The user asked to launch another research lab comparing the C implementation with Typed and exploring compiler improvements. The expected output is a complete renderer and measured physical comparison, with individual research diaries and published reports.
 
 ### What I did
 
@@ -114,3 +114,51 @@ From the project root, compile `scripts/director/row-domain.c` inside this ticke
 ### Technical details
 
 For row y and sphere center (cx, cy), let h = r² − (y − cy)². Skip negative h. For nonnegative h iterate from cx − floor(sqrt(h)) through cx + floor(sqrt(h)), clipped to the frame. Keep sphere order, strict depth ordering and integer rounding. The experiment includes the production implementation in the test translation unit so private routines stay private.
+
+## Step 3. Profile the generated frame and port programmable rendering
+
+The host scalar port at 223e017 allowed me to measure the generated program at instruction granularity. I implemented a separate complete programmable renderer and used the profile to choose a second traversal experiment. The compiler researcher independently reduced redundant division guards and built a matched scalar/packed primary row.
+
+### Prompt Context
+
+See Step 1. The scientific question is how close compiled Typed can get to C on a P4 while retaining the rendering decisions in Typed.
+
+### What I did
+
+Added the fourth ordinary UI scene at a396e31. I reused the existing Candela scanline shader, added the complete Typed frame and created six exact independent oracle images. In 669f242 I wrote two independent traversal candidates. I subsequently cross-compiled a hardware comparison TU and linked the real generated programmable shader in the existing four-entry ELF slot (4776158).
+
+### Why
+
+The profile identified floor shadows as a larger consumer of guest instructions than primary sphere intersections. Reordering shadow queries by sphere and scanline lets the program reject whole rows and move invariant calculations out of the innermost loop.
+
+### What worked
+
+The default clean scalar frame executed 15,532,624 instructions and matched C RGB565 FNV 2f75a8a5. Exact primary spans plus a shadow mask reduced it to 8,729,318. Adding the literal-divisor compiler reduced it further to 7,918,645. All 12 scalar oracle cases with all four rendering boundaries passed separately for spans, shadows, and both. Six independent material images matched both Wasm and real emulated RV32, including the entire caller memory after each frame at stride 163. The four-entry programmable ELF occupied 66,816 bytes in the preallocated slot container.
+
+### What didn't work
+
+The first version of the material harness called `api.memory.grow(1)` whenever the module had fewer than 70,000 bytes. Node reported `RangeError: WebAssembly.Memory.grow(): Maximum memory size exceeded`. Adding the actual allocation sizes showed that all six buffers already fit in one 65,536-byte page. Removing the unnecessary growth operation preserved the compiled module without expanding its memory type. The physical builder also tried to run an uncommitted traversal generator from an earlier archived revision. I committed the dependency and the operator selected the complete source revision.
+
+### What I learned
+
+Changing the primary intersection domain removes 90.9% of candidate visits but only 13.6% of full-frame instructions. The baseline also spends 5,115,562 instructions on loads/stores addressed from the stack pointer. Guard removal cuts control flow without changing those accesses. Whole-frame instruction counts by function and opcode class make these distinctions visible.
+
+### What was tricky to build
+
+The projected horizontal shadow bounds use ceiling division at the left and floor at the right. Typed uses truncation toward zero for signed division. The variant first clamps the lower bound to zero and rejects negative upper bounds, so only nonnegative numerators are divided. Equality at the right edge stays inclusive. Each projected sphere may mark the same shadow cell; the union operation remains idempotent. The mask occupies cells 1865 through 2024 in preexisting scratch.
+
+### What warrants a second pair of eyes
+
+Check mixed versus Typed frame setup, the cost of input validation in each public entry, PSRAM placement, and the effect of installing different variants. The profile is exact guest instruction count on one scene. A clock result requires the board.
+
+### What should be done in the future
+
+Finish controlled physical timings and summarize the accelerator's marginal value separately from scalar scheduling, image semantics, and ordinary screen presentation.
+
+### Code review instructions
+
+Run the director profiler with baseline, both source generators, and the positive-divisor backend. Compare `various/director/profile-*.json`. Use `material-oracle.py SCRATCH`, then `material-check.mjs SCRATCH [SOURCE]` against all material fixtures. Inspect the exact sample images by SHA-256 in the JSON.
+
+### Technical details
+
+The programmable interface takes six buffer pointers and two integers, which exhaust the target's eight direct argument registers. The native mixed reference uses C geometry with PIE and the same material graph semantics. Both arms warm up outside each recorded pair. The qualitative Opus High design inputs are in various/commission, with the exact public-topic prompts under scripts/commission.

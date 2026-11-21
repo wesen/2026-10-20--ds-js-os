@@ -14,4 +14,5 @@ models=', '.join(event['modelUsage'])
 ticket=Path(__file__).resolve().parents[2]
 out=ticket/'various'/'commission'
 out.mkdir(exist_ok=True)
-(out/(args.lane+'.md')).write_text(f'---\nTitle: Opus {args.lane} research consultation\nTicket: PICOCALC-TYPED-RAY\nDocType: reference\nTopics: [compiler, performance]\nStatus: complete\n---\n\nIndependent research memo. Model: {models}. Effort: high. The author received the public-topic prompt under scripts/commission/{args.lane}.txt and no project sources or raw measurements. Treat proposed methods and examples as hypotheses until checked in the project.\n\n'+event['result']+'\n')
+number = ['scalar','compiler','measurement'].index(args.lane)+1
+(out/f'{number:02d}-{args.lane}-design.md').write_text(f'---\nTitle: Opus {args.lane} research consultation\nTicket: PICOCALC-TYPED-RAY\nDocType: reference\nTopics: [compiler, performance]\nStatus: complete\n---\n\nIndependent research memo. Model: {models}. Effort: high. The author received the public-topic prompt under scripts/commission/{args.lane}.txt and no project sources or raw measurements. Treat proposed methods and examples as hypotheses until checked in the project.\n\n'+event['result']+'\n')

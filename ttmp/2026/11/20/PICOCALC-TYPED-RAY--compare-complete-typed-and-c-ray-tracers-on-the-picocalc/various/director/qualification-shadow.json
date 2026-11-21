@@ -1,0 +1,284 @@
+{
+  "sourceBytes": 12381,
+  "sourceSHA256": "fcc209fe583c1f818db27e4824cec7807abeffcdbf7633b70ff8b6e91a85525e",
+  "wasmBytes": 5440,
+  "wasmSHA256": "f3b85f8261ed3fe361df3e65b8481455ab492c02c5d15ddc62017a32bd503381",
+  "testWasmSHA256": "b167a5f2708c5fd7097e133a3ea74618414ad1202840640009088033381dfdbf",
+  "testMemoryPages": 8,
+  "rv32Bytes": 11100,
+  "rv32SHA256": "c050a22a4d8f458386371426042d2724493e6dde71215f7a361b1a0a0cf9199f",
+  "invalid": 10,
+  "landmarks": {
+    "sphereCenter": {
+      "color": 51751,
+      "depth": 30,
+      "id": 1
+    },
+    "leftTangent": {
+      "depth": 56,
+      "id": 1
+    },
+    "firstMiss": {
+      "depth": 0,
+      "id": 0
+    },
+    "equalDepthTie": {
+      "depth": 30,
+      "id": 1
+    }
+  },
+  "rows": [
+    {
+      "name": "default",
+      "stride": 160,
+      "scene": [
+        68,
+        61,
+        31,
+        25
+      ],
+      "checksum": "2f75a8a5",
+      "winnerCounts": [
+        19477,
+        2121,
+        2349,
+        1653
+      ],
+      "shadowPixels": 4793,
+      "colorSHA256": "91c57537d0e43eedaf26a359908d1bcad56150cb48ca1974a7467a7f8453c2d9",
+      "depthSHA256": "78630a7c46d0fe957975a43c99e2f5bd0f2686f55077c59627d4757add6663da",
+      "idSHA256": "0bf09ace13c4d5fcde3d547a41eaa46eab1f0152e38c960dd30e6de4cf98568b"
+    },
+    {
+      "name": "lamp-only",
+      "stride": 160,
+      "scene": [
+        68,
+        61,
+        128,
+        25
+      ],
+      "checksum": "97296759",
+      "winnerCounts": [
+        19477,
+        2121,
+        2349,
+        1653
+      ],
+      "shadowPixels": 3923,
+      "colorSHA256": "b557ebe62abe538e5e45f966a0ad9b692680c609ba3788d944e8678c49da7c49",
+      "depthSHA256": "78630a7c46d0fe957975a43c99e2f5bd0f2686f55077c59627d4757add6663da",
+      "idSHA256": "0bf09ace13c4d5fcde3d547a41eaa46eab1f0152e38c960dd30e6de4cf98568b"
+    },
+    {
+      "name": "near-corner",
+      "stride": 160,
+      "scene": [
+        32,
+        32,
+        0,
+        0
+      ],
+      "checksum": "75c96e1e",
+      "winnerCounts": [
+        18617,
+        2121,
+        3209,
+        1653
+      ],
+      "shadowPixels": 5221,
+      "colorSHA256": "4d2486b00dba84579f7fc9162be296314ba3375278b91c034a40fb3cea078dd5",
+      "depthSHA256": "1c4457d654eedcc5abf72ea9a4b198b0b3394ac9fadd4c47e416b27d3e81ec0d",
+      "idSHA256": "50a4d18887f5802bc2f2286cd408917a2447597c03e12491c952b4901613b5a2"
+    },
+    {
+      "name": "far-corner",
+      "stride": 160,
+      "scene": [
+        127,
+        127,
+        159,
+        159
+      ],
+      "checksum": "f5e76cb3",
+      "winnerCounts": [
+        18617,
+        2121,
+        3209,
+        1653
+      ],
+      "shadowPixels": 5974,
+      "colorSHA256": "7a9827499c08bbdbcec422476b4270d623071d6e1d78402d53e55620a190dfbb",
+      "depthSHA256": "489b050df98387a98abc00724e2733df7d9b0f718162c47075dcdc7ecf119327",
+      "idSHA256": "edeeea55424ff16b8acc663e79485d7567ffb24821b2852aedcdc4be6df1c7c3"
+    },
+    {
+      "name": "left-bottom",
+      "stride": 165,
+      "scene": [
+        32,
+        127,
+        159,
+        0
+      ],
+      "checksum": "8f52db52",
+      "winnerCounts": [
+        19063,
+        2121,
+        3209,
+        1207
+      ],
+      "shadowPixels": 1976,
+      "colorSHA256": "0276b88e13f47f09b9383adb543d95c40dc1172fc996c9bb2cd67b71346988bd",
+      "depthSHA256": "978bac6d5e2407e7f647de485bac4163bb49a3470c0cce1ddffe71bf366539c7",
+      "idSHA256": "15d9d0edd4c57aa7253c7968059f1afc27dcf16622353a8a40ab5d887379c1de"
+    },
+    {
+      "name": "right-top",
+      "stride": 165,
+      "scene": [
+        127,
+        32,
+        0,
+        159
+      ],
+      "checksum": "404bb0b9",
+      "winnerCounts": [
+        19026,
+        2121,
+        2800,
+        1653
+      ],
+      "shadowPixels": 1011,
+      "colorSHA256": "6b929b1b3e6f363139f956cf7647761f894c84a7ffde8b3761b71d4de6be18de",
+      "depthSHA256": "f40f88d806af23e5461014b516fa5f3611a2eb0abd4a505aca42064a4c04fe09",
+      "idSHA256": "ae6ec17405f59a075f399d269a2ddf6e9aec0006db9ef4e971edf863a9ed4e10"
+    },
+    {
+      "name": "blue-overlap",
+      "stride": 160,
+      "scene": [
+        100,
+        65,
+        80,
+        80
+      ],
+      "checksum": "d6d1c0de",
+      "winnerCounts": [
+        20738,
+        2121,
+        1088,
+        1653
+      ],
+      "shadowPixels": 0,
+      "colorSHA256": "b1bcefc6638e97b7a42ccc0ea827bb846a79eed4791806e7fbb2c1ed77fdf2c5",
+      "depthSHA256": "6edf67a58c71fc71c4260e705f86ca3450b83252aeb97b7c441d9cee0c4b0683",
+      "idSHA256": "674e3dd5d9eeda8bcab66388046656e6ce1bead4e7a3868b294b5ca5c042abfa"
+    },
+    {
+      "name": "gold-overlap",
+      "stride": 160,
+      "scene": [
+        58,
+        109,
+        79,
+        79
+      ],
+      "checksum": "b69b46b9",
+      "winnerCounts": [
+        20270,
+        2121,
+        3209,
+        0
+      ],
+      "shadowPixels": 0,
+      "colorSHA256": "a2eccbec0aa2ec47d8611d82e29ebbd7800890f55a30639d4e54c0f08616311f",
+      "depthSHA256": "30ec488939477724140082da0a30a6b333963e729bf7769687ad88d5084914dc",
+      "idSHA256": "46bf5759dac0f166247bf741c1307bf6dc3c070481e410fca6bae468ecf3af32"
+    },
+    {
+      "name": "left-lamp",
+      "stride": 160,
+      "scene": [
+        80,
+        80,
+        0,
+        80
+      ],
+      "checksum": "db9a2b3c",
+      "winnerCounts": [
+        20114,
+        2121,
+        1993,
+        1372
+      ],
+      "shadowPixels": 3887,
+      "colorSHA256": "a5cd37f6a168616432b1e8d7c7c804a1844432a753eef4195d7d8b98856ffd98",
+      "depthSHA256": "a1e057a2561a75cc68f6b4e018c90107431ab60a25bdf8cf93ef1a526c710c94",
+      "idSHA256": "ec21c189f8235cfc01d7a8421330ef23971d8ae7ecdc07e0cf047fa02442e1fe"
+    },
+    {
+      "name": "right-lamp",
+      "stride": 160,
+      "scene": [
+        80,
+        80,
+        159,
+        80
+      ],
+      "checksum": "69acee82",
+      "winnerCounts": [
+        20114,
+        2121,
+        1993,
+        1372
+      ],
+      "shadowPixels": 4246,
+      "colorSHA256": "9f7e51b621a125982be286a3688cc2de2d97333d88e033b0f392896466594cfe",
+      "depthSHA256": "a1e057a2561a75cc68f6b4e018c90107431ab60a25bdf8cf93ef1a526c710c94",
+      "idSHA256": "ec21c189f8235cfc01d7a8421330ef23971d8ae7ecdc07e0cf047fa02442e1fe"
+    },
+    {
+      "name": "bottom-lamp",
+      "stride": 160,
+      "scene": [
+        95,
+        52,
+        80,
+        159
+      ],
+      "checksum": "061c35c4",
+      "winnerCounts": [
+        20407,
+        2121,
+        1419,
+        1653
+      ],
+      "shadowPixels": 3612,
+      "colorSHA256": "bb89016973dccc410f8b1cda9a7b7cf35535adeb980ed6964549814d8693e03d",
+      "depthSHA256": "f6ec82e356b4d33e88efca0a47a2867c5b6f7bca4125bb9799c2066da0cd15c8",
+      "idSHA256": "6d199d83082372c5fa890ddd00888955835efe1860ae23fb46451926836a5b30"
+    },
+    {
+      "name": "top-lamp-wide",
+      "stride": 320,
+      "scene": [
+        85,
+        97,
+        80,
+        0
+      ],
+      "checksum": "3b0e6bef",
+      "winnerCounts": [
+        19862,
+        2121,
+        2491,
+        1126
+      ],
+      "shadowPixels": 3027,
+      "colorSHA256": "fb3d4bfd7e56b9b100e4a978b7539c38ed2f0126916423805797e22fb52943b4",
+      "depthSHA256": "f90c5a2995b62d0df812bcffd23cd227f47f4a51f1e87ae03c4bf182963ce972",
+      "idSHA256": "fe786e47c6f929715f01d4ed162b04739e5417cbdf542fb0319d999de9991c7d"
+    }
+  ]
+}

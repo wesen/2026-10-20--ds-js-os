@@ -1,0 +1,39 @@
+Launch another research lab on the task to compare the C implementation of the raytracer wth a typed JS and explore the different optimization and compier improvement. Typed is already expressive enough to write the entire current ray-tracing algorithm: sphere intersections, nearest-depth selection, hard shadows, diffuse lighting, material evaluation and RGB565 output. I’d make all rendering decisions live in Typed and keep a small native interface for allocating the framebuffer, loading generated code into executable memory and presenting the finished image. Rewriting the ESP-IDF loader and display driver would be a separate systems project.
+
+What’s uncertain is how close the generated code can get to optimized C on the P4. We have a measured baseline, but we don’t yet have an all-Typed frame time.
+
+### What it would take
+
+| Part | Can Typed do it today? | What I’d change |
+|---|---|---|
+| Scene construction and materials | Already implemented. The builders, captured patterns, scalar material evaluator and scanline shader are Typed. | Reuse these directly. |
+| Sphere intersections and visibility | Yes. The current algorithm uses bounded integer arithmetic, loops, comparisons and a square-root lookup table. | Write a Typed traceRow that produces nearest depth and material ID for each pixel. Compare every depth and ID against the C reference. |
+| Lighting, shadows and pixel packing | Yes. The existing renderer computes these with integers. Floating point is unnecessary for this scene. | Move them into Typed and give renderFrame one output buffer and reusable scratch storage. Call Typed once per frame; its own functions can process rows internally. |
+| Eight-lane PIE acceleration | This is the main compiler gap. The current fast path invokes hand-written assembly. The previous Typed vectorization experiment recognized a narrower vertex loop. | Teach RV32 lowering to recognize this actual row loop, with a scalar fallback. An explicit Typed intrinsic would give us a useful comparison. |
+| Framebuffer and device services | Typed can call a native interface. | Let the OS supply a writable buffer with a defined stride and lifetime, then present it when Typed returns. |
+
+The language feature I’d prioritize is bounded numeric arrays, especially signed i16, unsigned u16 and i32, with ordinary indexing. Today’s buffer can store a 16-bit pixel, but a read returns an unsigned code unit. The ray tracer’s intermediate discriminant is signed: negative means a ray missed the sphere. A straightforward implementation can compute it in i32 and consume it immediately. If it stores that value in a buffer first, it has to recover the sign correctly on read. Typed numeric arrays would make that distinction explicit and give the compiler the element width, bounds and access pattern it needs for PIE. General closures, garbage collection and full JavaScript semantics are unnecessary for this port. Current intersection loop (picocalc-os/nucleus/raytrace_demo.c:101) · Typed material evaluator (picocalc-os/worlds/candela/materials.typed)
+
+### What performance can we expect?
+
+These are the measured P4 medians for the original fixed-material, 160×160 renderer, across 18 paired trials. Frame time ends when the image is ready in memory.
+
+| Implementation | Primary intersections and nearest depth | Complete frame |
+|---|---:|---:|
+| Optimized scalar C | 4.107 ms | 8.562 ms |
+| C with the PIE row kernel | 2.990 ms | 7.448 ms |
+| All-Typed, compiled to RV32 | Unmeasured | Unmeasured |
+
+PIE saved about 1.1 ms per frame in that implementation. The comparison I’d make first is scalar Typed against scalar C. That tells us the cost of our compiler’s instruction selection, bounds checks and register use. Comparing scalar Typed directly with C+PIE would mix that cost with the benefit of eight-lane hardware. Programmable Candela materials also add work, so both versions need to render the same material graph for that comparison. Physical timing results (ttmp/2026/11/20/PICOCALC-RAYTRACE--a-playable-packet-ray-tracer-for-the-esp32-p4/various/device/summary.json)
+
+My first milestone would be one complete all-Typed scalar frame on the board, before adding any language feature. Use today’s buffers, keep scratch allocation outside the timed loop, and require exact agreement on all 25,600 depths and pixels. Then measure intersections, shadows, material evaluation and the whole frame separately. That gives us a working renderer immediately and tells us whether the next compiler investment should be numeric arrays and bounds-check elimination, better scalar code generation, or PIE lowering.
+
+
+---
+
+ 
+  Everybody (you included): Keep a detailed diary as you work, with the format according to the diary skill
+  Chose opus high for researchers
+  Each researchers  when done, and you once you have all the results: write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no
+  analogies, see skill).
+   Commit and push the bsidian vault when done (go-go-parc vault).   Make it pedagogical to explain your research in detail and with all the context necessary for newcomers.

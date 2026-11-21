@@ -3,6 +3,7 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import vm from "node:vm";
+import {createHash} from "node:crypto";
 const interpreter = new URL("../../../PICOCALC-TYPED-PIE--lower-bounded-scalar-typed-vertex-loops-to-esp32-p4-pie-instructions/scripts/review/run-rv32.mjs",import.meta.url);
 const scalar = process.argv[2] || "picocalc-os/worlds/raytrace/raytrace.typed";
 const compiler = process.argv[3] || "picocalc-os/compiler/typed-rv32.js";
@@ -10,7 +11,8 @@ const ctx = vm.createContext({});
 for (const file of ["picocalc-os/compiler/typed-wasm.js",compiler]) {
     vm.runInContext(fs.readFileSync(file,"utf8"),ctx,{filename:file});
 }
-const program = ctx.typedRv32.compile(fs.readFileSync(scalar,"utf8"));
+const source = fs.readFileSync(scalar,"utf8");
+const program = ctx.typedRv32.compile(source);
 let machine = fs.readFileSync(interpreter,"utf8");
 const fetch = "const w = code.getUint32(at, true);";
 assert.equal(machine.split(fetch).length,2);
@@ -45,5 +47,6 @@ let hash = 2166136261;
 for (const b of result.bytes.subarray(pixels+4,pixels+4+51200)) hash = Math.imul(hash^b,16777619)>>>0;
 assert.equal(hash.toString(16),"2f75a8a5","physical scene's C image");
 assert.equal(counts.reduce((sum,r)=>sum+r.instructions,0),result.steps);
-console.log(JSON.stringify({frameFnv:hash.toString(16),instructions:result.steps,bytes:program.image.length,
+console.log(JSON.stringify({frameFnv:hash.toString(16),sourceSha256:createHash("sha256").update(source).digest("hex"),
+    imageSha256:createHash("sha256").update(program.image).digest("hex"),instructions:result.steps,bytes:program.image.length,
     functions:counts.filter(r=>r.instructions).sort((a,b)=>b.instructions-a.instructions)},null,2));

@@ -4,6 +4,7 @@ import path from "node:path";
 import vm from "node:vm";
 import {createHash} from "node:crypto";
 
+import {runRv32} from "../../../PICOCALC-TYPED-PIE--lower-bounded-scalar-typed-vertex-loops-to-esp32-p4-pie-instructions/scripts/review/run-rv32.mjs";
 const [oracle, variant] = process.argv.slice(2);
 const ctx = vm.createContext({});
 for (const name of ["typed-wasm", "typed-rv32"]) {
@@ -35,8 +36,14 @@ const results = [];
 for (const sample of cases) {
     for (let i = 0; i < sample.graph.length; i++) cell(graph, i, sample.graph[i]);
     for (let i = 0; i < stride*160; i++) cell(pixels, i, 0xa55a);
+    const before = new Uint8Array(api.memory.buffer).slice(0,base);
+    const args = [pixels,work,graph,shader,ids,colors,...sample.light];
+    const native = runRv32(rv,"typedRayMaterialFrame",args,[],{},before,undefined,200_000_000);
+    assert(!native.trap && native.result===1);
     const code = api.typedRayMaterialFrame(pixels,work,graph,shader,ids,colors,...sample.light);
     assert.equal(code,1);
+    assert.deepEqual(native.bytes,new Uint8Array(api.memory.buffer).slice(0,base),
+        "RV32 and Wasm entire caller memory after return");
     const expected = fs.readFileSync(path.join(oracle,sample.pixels));
     for (let y = 0; y < 160; y++) {
         const row = pixels + 4 + 2*stride*y;
@@ -44,8 +51,8 @@ for (const sample of cases) {
             sample.scene + " row " + y);
         for (let x = 160; x < stride; x++) assert.equal(data.getUint16(row+2*x,true),0xa55a);
     }
-    results.push({scene:sample.scene, weight:sample.weight, light:sample.light, pixels:25600,
+    results.push({scene:sample.scene, weight:sample.weight, light:sample.light, pixels:25600, rv32Instructions:native.steps,
         sha256:createHash("sha256").update(expected).digest("hex")});
 }
-console.log(JSON.stringify({executed:"WebAssembly",compiledRv32Bytes:rv.image.length,
+console.log(JSON.stringify({executed:["WebAssembly","emulated RV32"],sourceSha256:createHash("sha256").update(source).digest("hex"),compiledRv32Bytes:rv.image.length,
     wasmBytes:wasm.bytes.length, stride, cases:results},null,2));

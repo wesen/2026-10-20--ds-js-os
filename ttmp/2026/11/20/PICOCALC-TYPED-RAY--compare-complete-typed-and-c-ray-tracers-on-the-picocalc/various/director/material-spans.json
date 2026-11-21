@@ -1,7 +1,11 @@
 {
-  "executed": "WebAssembly",
-  "compiledRv32Bytes": 24808,
-  "wasmBytes": 12160,
+  "executed": [
+    "WebAssembly",
+    "emulated RV32"
+  ],
+  "sourceSha256": "5cfc5842639a47af7b325779303ac55d477b50d88613a72a6042e545709a7b00",
+  "compiledRv32Bytes": 24836,
+  "wasmBytes": 12172,
   "stride": 163,
   "cases": [
     {
@@ -12,6 +16,7 @@
         25
       ],
       "pixels": 25600,
+      "rv32Instructions": 16927987,
       "sha256": "6e4e632198afa69a93308d4f09f14bb2446433809da469007e1ff2aae0776163"
     },
     {
@@ -22,6 +27,7 @@
         25
       ],
       "pixels": 25600,
+      "rv32Instructions": 16927987,
       "sha256": "89237a4470b5bcf2245e80f889be8ff04716cdaf5d090ae875161f1557a559f7"
     },
     {
@@ -32,6 +38,7 @@
         25
       ],
       "pixels": 25600,
+      "rv32Instructions": 16927987,
       "sha256": "5d43eccb343c8d89a59df1036a8c26c649c15c55af843fd4c7050846e9eeac55"
     },
     {
@@ -42,6 +49,7 @@
         25
       ],
       "pixels": 25600,
+      "rv32Instructions": 15059313,
       "sha256": "edac9ed52fbbe66d0dbd8f52d06dcbb319400f344526135314f300bf82f74632"
     },
     {
@@ -52,6 +60,7 @@
         17
       ],
       "pixels": 25600,
+      "rv32Instructions": 15121381,
       "sha256": "95bea3750cc45f8cd4d6693b7c0a0f41887e9afc89dbdb28b4fd47c600fed24c"
     },
     {
@@ -62,6 +71,7 @@
         25
       ],
       "pixels": 25600,
+      "rv32Instructions": 15010506,
       "sha256": "4ded2d1aad0fd93a7e19b6d7d144f997053057ab1bfbcf9ff9ffcd9632c307f0"
     }
   ]

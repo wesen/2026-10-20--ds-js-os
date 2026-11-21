@@ -1,7 +1,9 @@
 {
   "frameFnv": "2f75a8a5",
+  "sourceSha256": "d665237823a6e725373fb36a48da6d44c8021bcc18e8b4b1c89ecc89810a7745",
+  "imageSha256": "cd1c7b501a41017aeba420b10652636c38a8b493b117f70896423c7d68dbbb93",
   "instructions": 13416422,
-  "bytes": 9660,
+  "bytes": 9688,
   "functions": [
     {
       "name": "typedRayInShadow",

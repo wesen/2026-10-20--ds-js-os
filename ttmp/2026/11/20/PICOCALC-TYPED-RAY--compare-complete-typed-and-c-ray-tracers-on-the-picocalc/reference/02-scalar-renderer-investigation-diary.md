@@ -165,4 +165,4 @@ To test a variant while keeping the archived receipt unchanged, pass a Typed sou
 
 - [Complete host receipt](../various/renderer/host.json)
 - [Scalar renderer textbook article](../analysis/02-a-complete-ray-tracer-in-typed.md)
-- [Independent public methodology memo](../various/commission/scalar.md)
+- [Independent public methodology memo](../various/commission/01-scalar-design.md)
