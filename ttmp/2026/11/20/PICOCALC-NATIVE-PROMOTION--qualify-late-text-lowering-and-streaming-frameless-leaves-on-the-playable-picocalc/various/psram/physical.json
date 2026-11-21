@@ -1,0 +1,444 @@
+{
+  "candidateSHA256": "4742920ed99fee450ff10755c73c64025ad9a578abdd216557ff4244da10b7c0",
+  "ordinarySHA256": "33b439d0a7bcdf85f01b373ed1ec71d654ce60d7079f2569fce4de859f29e813",
+  "partitionSHA256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "oracleDigest": "f204dc1ad6f54df3b72cc7ac61871b73ac75db6c412d870d52cd44bd77bfd860",
+  "sliceSteps": 48,
+  "arms": [
+    {
+      "name": "stock",
+      "rev": "5f77855",
+      "linkedSHA256": "5fc5de534a532017a9cc975cb2ce23db0807204d24bf2003d2c3fa2069702685",
+      "linkedSize": 274892,
+      "codeBytes": 256400,
+      "addresses": {
+        "chessStartSearch": 27924,
+        "chessSearchSlice": 33948
+      }
+    },
+    {
+      "name": "promoted",
+      "rev": "8052db721eda91720010867915b70064b33912f0",
+      "linkedSHA256": "8487d9b66d6370e2dd83668904bb493172cee2ab36b5137b8bd3b1b89b87b132",
+      "linkedSize": 274892,
+      "codeBytes": 180860,
+      "addresses": {
+        "chessStartSearch": 24932,
+        "chessSearchSlice": 30092
+      }
+    }
+  ],
+  "cpuHz": 360000000,
+  "core": 0,
+  "blocks": 6,
+  "psramAllocationsChecked": true,
+  "loads": [
+    {
+      "block": 0,
+      "arm": 0,
+      "segment": "0x48008fc0",
+      "begin": "0x4800fcd4",
+      "slice": "0x4801145c"
+    },
+    {
+      "block": 0,
+      "arm": 1,
+      "segment": "0x48008fc0",
+      "begin": "0x4800f124",
+      "slice": "0x4801054c"
+    },
+    {
+      "block": 1,
+      "arm": 1,
+      "segment": "0x48008fc0",
+      "begin": "0x4800f124",
+      "slice": "0x4801054c"
+    },
+    {
+      "block": 1,
+      "arm": 0,
+      "segment": "0x48008fc0",
+      "begin": "0x4800fcd4",
+      "slice": "0x4801145c"
+    },
+    {
+      "block": 2,
+      "arm": 0,
+      "segment": "0x48008fc0",
+      "begin": "0x4800fcd4",
+      "slice": "0x4801145c"
+    },
+    {
+      "block": 2,
+      "arm": 1,
+      "segment": "0x48008fc0",
+      "begin": "0x4800f124",
+      "slice": "0x4801054c"
+    },
+    {
+      "block": 3,
+      "arm": 1,
+      "segment": "0x48008fc0",
+      "begin": "0x4800f124",
+      "slice": "0x4801054c"
+    },
+    {
+      "block": 3,
+      "arm": 0,
+      "segment": "0x48008fc0",
+      "begin": "0x4800fcd4",
+      "slice": "0x4801145c"
+    },
+    {
+      "block": 4,
+      "arm": 0,
+      "segment": "0x48008fc0",
+      "begin": "0x4800fcd4",
+      "slice": "0x4801145c"
+    },
+    {
+      "block": 4,
+      "arm": 1,
+      "segment": "0x48008fc0",
+      "begin": "0x4800f124",
+      "slice": "0x4801054c"
+    },
+    {
+      "block": 5,
+      "arm": 1,
+      "segment": "0x48008fc0",
+      "begin": "0x4800f124",
+      "slice": "0x4801054c"
+    },
+    {
+      "block": 5,
+      "arm": 0,
+      "segment": "0x48008fc0",
+      "begin": "0x4800fcd4",
+      "slice": "0x4801145c"
+    }
+  ],
+  "rows": [
+    {
+      "block": 0,
+      "arm": 0,
+      "case": 0,
+      "us": 122257
+    },
+    {
+      "block": 0,
+      "arm": 0,
+      "case": 6,
+      "us": 1344016
+    },
+    {
+      "block": 0,
+      "arm": 0,
+      "case": 15,
+      "us": 240989
+    },
+    {
+      "block": 0,
+      "arm": 1,
+      "case": 0,
+      "us": 104979
+    },
+    {
+      "block": 0,
+      "arm": 1,
+      "case": 6,
+      "us": 1154278
+    },
+    {
+      "block": 0,
+      "arm": 1,
+      "case": 15,
+      "us": 206725
+    },
+    {
+      "block": 1,
+      "arm": 1,
+      "case": 6,
+      "us": 1154411
+    },
+    {
+      "block": 1,
+      "arm": 1,
+      "case": 15,
+      "us": 206709
+    },
+    {
+      "block": 1,
+      "arm": 1,
+      "case": 0,
+      "us": 104817
+    },
+    {
+      "block": 1,
+      "arm": 0,
+      "case": 6,
+      "us": 1344212
+    },
+    {
+      "block": 1,
+      "arm": 0,
+      "case": 15,
+      "us": 240951
+    },
+    {
+      "block": 1,
+      "arm": 0,
+      "case": 0,
+      "us": 122107
+    },
+    {
+      "block": 2,
+      "arm": 0,
+      "case": 15,
+      "us": 241195
+    },
+    {
+      "block": 2,
+      "arm": 0,
+      "case": 0,
+      "us": 122123
+    },
+    {
+      "block": 2,
+      "arm": 0,
+      "case": 6,
+      "us": 1343990
+    },
+    {
+      "block": 2,
+      "arm": 1,
+      "case": 15,
+      "us": 206869
+    },
+    {
+      "block": 2,
+      "arm": 1,
+      "case": 0,
+      "us": 104787
+    },
+    {
+      "block": 2,
+      "arm": 1,
+      "case": 6,
+      "us": 1154291
+    },
+    {
+      "block": 3,
+      "arm": 1,
+      "case": 0,
+      "us": 104973
+    },
+    {
+      "block": 3,
+      "arm": 1,
+      "case": 6,
+      "us": 1154355
+    },
+    {
+      "block": 3,
+      "arm": 1,
+      "case": 15,
+      "us": 206714
+    },
+    {
+      "block": 3,
+      "arm": 0,
+      "case": 0,
+      "us": 122289
+    },
+    {
+      "block": 3,
+      "arm": 0,
+      "case": 6,
+      "us": 1344106
+    },
+    {
+      "block": 3,
+      "arm": 0,
+      "case": 15,
+      "us": 241023
+    },
+    {
+      "block": 4,
+      "arm": 0,
+      "case": 6,
+      "us": 1344060
+    },
+    {
+      "block": 4,
+      "arm": 0,
+      "case": 15,
+      "us": 240998
+    },
+    {
+      "block": 4,
+      "arm": 0,
+      "case": 0,
+      "us": 122120
+    },
+    {
+      "block": 4,
+      "arm": 1,
+      "case": 6,
+      "us": 1154410
+    },
+    {
+      "block": 4,
+      "arm": 1,
+      "case": 15,
+      "us": 206720
+    },
+    {
+      "block": 4,
+      "arm": 1,
+      "case": 0,
+      "us": 104847
+    },
+    {
+      "block": 5,
+      "arm": 1,
+      "case": 15,
+      "us": 206856
+    },
+    {
+      "block": 5,
+      "arm": 1,
+      "case": 0,
+      "us": 104838
+    },
+    {
+      "block": 5,
+      "arm": 1,
+      "case": 6,
+      "us": 1154283
+    },
+    {
+      "block": 5,
+      "arm": 0,
+      "case": 15,
+      "us": 241275
+    },
+    {
+      "block": 5,
+      "arm": 0,
+      "case": 0,
+      "us": 122136
+    },
+    {
+      "block": 5,
+      "arm": 0,
+      "case": 6,
+      "us": 1344156
+    }
+  ],
+  "cases": {
+    "0": {
+      "fixture": "opening",
+      "expected": {
+        "bestMove": 3690,
+        "score": 30,
+        "completed": 3,
+        "nodes": 871,
+        "slices": 41,
+        "uci": "b1c3"
+      },
+      "requestedDepth": 3,
+      "nodeBudget": 30000,
+      "stockMedianUs": 122129.5,
+      "promotedMedianUs": 104842.5,
+      "medianOfPairedReductionsPct": 14.159806146316427,
+      "reductionFromArmMediansPct": 14.154647321081315,
+      "reductionsByBlockPct": [
+        14.132524109048973,
+        14.159712383401446,
+        14.195524184633523,
+        14.15989990923141,
+        14.144284310514244,
+        14.162900373354292
+      ]
+    },
+    "6": {
+      "fixture": "kiwipete",
+      "expected": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 7194,
+        "slices": 453,
+        "uci": "e2a6"
+      },
+      "requestedDepth": 3,
+      "nodeBudget": 30000,
+      "stockMedianUs": 1344083.0,
+      "promotedMedianUs": 1154323.0,
+      "medianOfPairedReductionsPct": 14.117253606426384,
+      "reductionFromArmMediansPct": 14.118175737659055,
+      "reductionsByBlockPct": [
+        14.117242651873196,
+        14.119870972733473,
+        14.114613948020448,
+        14.11726456097957,
+        14.110233174114251,
+        14.125815753528602
+      ]
+    },
+    "15": {
+      "fixture": "after-e2e4",
+      "expected": {
+        "bestMove": 82,
+        "score": 12,
+        "completed": 3,
+        "nodes": 1600,
+        "slices": 78,
+        "uci": "b8c6"
+      },
+      "requestedDepth": 4,
+      "nodeBudget": 1600,
+      "stockMedianUs": 241010.5,
+      "promotedMedianUs": 206722.5,
+      "medianOfPairedReductionsPct": 14.227496425809989,
+      "reductionFromArmMediansPct": 14.226766053761143,
+      "reductionsByBlockPct": [
+        14.218076343733532,
+        14.2111881668887,
+        14.231638300959803,
+        14.234741082801229,
+        14.223354550660172,
+        14.265464718681997
+      ]
+    }
+  },
+  "rootCellsChecked": 135,
+  "probePassed": true,
+  "restoredReadback": true,
+  "restoredNativeWorlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "restoredPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 1318659,
+    "relocate_us": 1188,
+    "native_us": 2707,
+    "raster_us": 0,
+    "image_bytes": 33840
+  },
+  "keyboardPolling": true
+}
