@@ -1,0 +1,31 @@
+{
+  "cold": {
+    "stock": {
+      "compilerUs": 454095.0,
+      "peakJSBytes": 679988.0,
+      "segmentBytes": 66092.0
+    },
+    "unfilteredPie": {
+      "compilerUs": 657834.5,
+      "peakJSBytes": 773806.0,
+      "segmentBytes": 66092.0
+    },
+    "filteredPie": {
+      "compilerUs": 523692.0,
+      "peakJSBytes": 746388.0,
+      "segmentBytes": 66092.0
+    }
+  },
+  "pairedCompilerUs": {
+    "savedByFilter": {
+      "median": 134625.0,
+      "min": 129450,
+      "max": 136843
+    },
+    "filteredOverStock": {
+      "median": 70324.0,
+      "min": 67246,
+      "max": 73560
+    }
+  }
+}

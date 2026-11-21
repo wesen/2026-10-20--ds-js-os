@@ -15,7 +15,12 @@ const rows=modes.map(mode=>{
 });
 const wasm=execFileSync(process.execPath,['picocalc-os/tools/typed-inspect.mjs',source,'--target','wasm','--function','typedRayComputeRow','--jsonl'],{encoding:'utf8'}).trim().split('\n').map(JSON.parse)[1];
 const fs=rows[0].fn,plan=rows[2].fn.loops.find(l=>l.lanes);
-const text=['# An unchanged ray subtraction through four compiler stages','',
+const text=['---','Title: An unchanged ray subtraction through four compiler stages',
+    'Ticket: PICOCALC-PIE-LOOPS','Status: complete','Topics: [picocalc, compiler, performance]',
+    'DocType: reference','Intent: long-term','Owners: []','RelatedFiles: []','ExternalSources: []',
+    'Summary: Source, numeric operations, inferred facts and emitted native instructions for the same loop.',
+    'LastUpdated: 2026-11-21','WhatFor: Compare generated schedules','WhenToUse: Reviewing the packed loop transformation','---','',
+    '# An unchanged ray subtraction through four compiler stages','',
     'Generated from the live inspector. The rows cover the same Typed source and use byte offsets within their own final target images.','',
     '## Source and frontend','','```js',readFileSync(source,'utf8').split('\n').slice(111,120).join('\n'),'```','',
     'The Wasm body has '+wasm.operations.length+' operations and '+(wasm.end-wasm.start)+' bytes. The native input tape below uses cell offsets.','',

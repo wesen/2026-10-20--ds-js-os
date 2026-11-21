@@ -159,3 +159,5 @@ The Candela material study independently qualifies fluent builders, captured mat
 ## Inspecting emitted code and separating scalar runtime costs
 
 The host [Typed inspector](../../../21/PICOCALC-COMPILER-INSPECT--inspect-typed-wasm-and-rv32-emission/design-doc/01-experimental-design-and-implementation-guide.md) maps final Wasm and RV32 bytes to source-associated operations and joins exact native PC counts. The [scalar breakdown](../../../21/PICOCALC-SCALAR-BREAKDOWN--factor-the-typed-ray-scalar-row/index.md) compares bounds hoisting and register retention at fixed coverage, separates empty-row rejection and tests a prediction on shadow rays. Each ticket includes source-controlled reproduction scripts and a director’s diary.
+
+The [inferred PIE loop study](../../../21/PICOCALC-PIE-LOOPS--infer-and-lower-packed-loop-regions-in-unchanged-typed-programs/index.md) compiles the unchanged scalar ray tracer, qualifies an eight-lane producer against a matched scalar schedule, and measures its cold compilation cost and frame time separately on the P4.

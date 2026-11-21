@@ -219,3 +219,56 @@ Read scripts/06-board.py and scripts/09-paired-results.py together. The latter u
 ### Technical details
 
 Implementation 74456f2, host qualification b0aa7d3. Initial trial firmware 5dbcfe59, playable restore e7b771aa. The raw measurements and restore receipt are in various/device.
+
+## Step 5. Reduce cold compiler cost and publish the chapter
+
+The first trial showed a sizable cold cost for running the proof across a module. I implemented a fast necessary-condition test and compared both compiler revisions on the P4. The final chapter follows the same example from scalar source and signed saturation through emitted instructions, exact-frame tests, physical timing and break-even analysis.
+
+### Prompt Context
+
+See Steps 1–2. Additional user request (verbatim):
+
+> when finished,  write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no analogies, see skill).
+>  Commit and push the bsidian vault when done (go-go-parc vault).
+
+### What I did
+
+Added a raw-tape rejection filter to the optional pass. Functions explicitly selected by the diagnostic inspector still receive full decisions. I rebuilt both revised compiler schedules, reran the 78 app tests, the row and transfer cases, and the twelve-pose complete clean and audit frame differentials. I compared the complete native image and linked ELF for the original and filtered PIE arms. On the board I compiled the frozen and filtered compilers beside stock in all six possible orders. I then personally wrote the Obsidian chapter and generated its figure from the original six blocks for all twelve poses.
+
+### Why
+
+The pass only needs to allocate decoded operations if the original tape might contain the target load, difference and sign guard. A necessary condition allows false positives safely because the full proof still runs. Keeping the older compiler binary as the comparator separates a change to compile cost from a change to emitted code. The article's chart shows the full observed range, including the narrower matched-versus-PIE difference.
+
+### What worked
+
+The revised guest images, linked ELF identities and host frame records matched their frozen counterparts. The board reported the expected ELF CRC at each load. Medians from this run were 454.095 ms stock, 657.835 ms unfiltered PIE and 523.692 ms filtered PIE. The median saving within paired filtered-versus-unfiltered blocks was 134.625 ms. The final compiler needed 746,388 peak JS bytes. I verified all internal vault references and the chart path.
+
+### What didn't work
+
+The initial cold remeasurement lost its serial connection during the preflight health query. Both prior flash regions had matched and the runner had not written a trial image. I repeated the complete verified preflight and trial in a different output directory. One approval review timed out before starting the retry; the scoped board command succeeded on resubmission.
+
+### What I learned
+
+A compiler pass that saves 1.616 ms per frame can reasonably incur some cold cost for animation. For the opening pose, the additional 70.324 ms paired cold cost is recovered after about 44 completed frames. Very short runs and loops that never fill a group have a different trade-off.
+
+### What was tricky to build
+
+The earlier firmware selected matched scalar with program 8. The second selected the frozen unfiltered PIE compiler in that slot. I recorded the selector change in the build manifest and validated that ids 5 and 8 generated the same native and ELF bytes for this comparison.
+
+### What warrants a second pair of eyes
+
+The initial researcher commitment has no revealed fixture. The writer-selected post-freeze transfer remains a narrower test. The physical study covers one device. Further applications should report captured vector group counts, complete workload times, and compiler costs.
+
+### What should be done in the future
+
+Profile scalar shade and shadow work and test a generally useful change to local retention or checked addressing. Compare any future expanded packed consumer against a matched scalar program.
+
+### Code review instructions
+
+Review prefilter revision 725b6d5, first device-data commit 0b49301 and scripts/10-compare-cold.py. Compare the two device manifests, check the selected ELF digests and reproduce the percentages from the per-block data. The full frame replay after filtering used scripts/03-qualify.mjs in frames mode followed by cmp against the original frames.json.
+
+### Technical details
+
+go-go-parc main advanced from 2b35364 to 9eab52d, publishing the chapter “Inferring eight-lane subtraction in a scalar ray tracer” and its twelve-pose figure. The reMarkable delivery receipt was “OK: uploaded PicoCalc Inferred PIE Loops - Measured Results.pdf -> /ai/2026/11/21/PICOCALC-PIE-LOOPS”. The intern guide was delivered separately before implementation.
+
+The follow-up restore also matched the playable application and partition readback. Its health receipt reports eight expected worlds and zero bus errors. Docmgr identified missing frontmatter in the generated side-by-side listing. I updated its generator and regenerated the artifact. The remaining doctor notice concerns the unnumbered filename of that generated artifact, whose path is already cited in the published article.

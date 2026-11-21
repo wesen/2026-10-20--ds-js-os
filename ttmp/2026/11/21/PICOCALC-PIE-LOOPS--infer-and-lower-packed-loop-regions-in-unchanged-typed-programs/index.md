@@ -1,7 +1,7 @@
 ---
 Title: Infer and lower packed loop regions in unchanged Typed programs
 Ticket: PICOCALC-PIE-LOOPS
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -9,48 +9,24 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/compiler/typed-pie-loops.js
+      Note: Optional inferred loop transformation
+    - Path: repo://picocalc-os/tools/typed-inspect.mjs
+      Note: Inspect loop decisions and final native instructions
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-21T07:13:00.660735591-05:00
+LastUpdated: 2026-11-21T07:47:19.811905159-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
 
 # Infer and lower packed loop regions in unchanged Typed programs
 
-## Overview
+An opt-in RV32 compiler pass infers a packed subtraction region from ordinary Typed source, retains the scalar hit continuation, and emits matched scalar and ESP32-P4 PIE schedules.
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
-
-## Key Links
-
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- picocalc
-- compiler
-- performance
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+- [Intern design and implementation guide](design-doc/01-inferring-packed-halfword-subtraction-inside-scalar-typed-loops.md)
+- [Experimental results, limitations and replay instructions](analysis/01-what-an-inferred-packed-subtraction-buys-on-the-esp32-p4.md)
+- [Source, intermediate tape and native code side by side](various/host/comparison.md)
+- [Personal implementation diary](reference/01-implementation-and-qualification-diary.md)
+- [Scripts](scripts/) and [measurement evidence](various/)
