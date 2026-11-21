@@ -1,5 +1,6 @@
 // Closed, complete Typed ray tracer. Only allocation, invocation and presentation live here.
 #include "esp_elf.h"
+#include "esp_cpu.h"
 #include "esp_rom_crc.h"
 #include "p4.h"
 #include "raytrace_demo.h"
@@ -35,8 +36,8 @@ static buffer *new_buffer(uint32_t capacity) {
 
 static bool install(int program) {
     static const char *sources[] = {"typed-ray/main.typed","typed-ray/main.typed","typed-ray/SPAN","typed-ray/SPAN",
-                                    "typed-ray/main.typed","typed-ray/main.typed","typed-ray/SHADOW","typed-ray/SHADOW"};
-    static const char *backends[] = {NULL,"typed-ray/DIV",NULL,"typed-ray/DIV","typed-ray/PACKED","typed-ray/INFERRED",NULL,"typed-ray/DIV"};
+                                    "typed-ray/main.typed","typed-ray/main.typed","typed-ray/SHADOW","typed-ray/SHADOW","typed-ray/main.typed"};
+    static const char *backends[] = {NULL,"typed-ray/DIV",NULL,"typed-ray/DIV","typed-ray/PACKED","typed-ray/INFERRED",NULL,"typed-ray/DIV","typed-ray/MATCHED"};
     if (program < 0 || program >= (int)(sizeof(sources)/sizeof(sources[0]))) return false;
     const p4_compile_limits limits = {.heap_bytes=4*1024*1024,.duration_us=8000000,.rv32_backend=backends[program]};
     size_t ns=0, nt=0, ni=0;
@@ -128,13 +129,16 @@ static void measure(raytrace_demo_scene scene,int stride,int rotation) {
     if(!run(0,AUDIT,expected,stride,&scene)){puts("typedray: oracle rejected scene");goto done;}
     observed.work->cells[0]=stride;
     int64_t times[3][4];
+    uint32_t cycles[3][4];
     for(int n=0;n<3;n++){
         const int arm=(n+rotation)%3;
         for(int phase=CLEAN;phase<=SHADE;phase++){
             poison(observed.rgb,0x55);
             if(phase!=SHADE){poison(observed.id,0x55);poison(observed.depth,0x55);}
             const int64_t begin=port_clock();
+            const uint32_t cycle_start=esp_cpu_get_cycle_count();
             bool ok=run(arm,phase,observed,stride,&scene);
+            cycles[arm][phase]=esp_cpu_get_cycle_count()-cycle_start;
             times[arm][phase]=port_clock()-begin;
             if(!ok || (phase!=PRIMARY && !same(expected.rgb,observed.rgb,stride)) ||
                (phase!=CLEAN && (!same(expected.depth,observed.depth,stride) || !same(expected.id,observed.id,stride))) ||
@@ -147,6 +151,9 @@ static void measure(raytrace_demo_scene scene,int stride,int rotation) {
            installed->program,scene.sphere_x,scene.sphere_y,scene.light_x,scene.light_y,stride,rotation);
     for(int arm=0;arm<3;arm++)printf("%s[%" PRId64 ",%" PRId64 ",%" PRId64 ",%" PRId64 "]", arm?",":"",
                                      times[arm][0],times[arm][1],times[arm][2],times[arm][3]);
+    printf("],\"cycles\":[");
+    for(int arm=0;arm<3;arm++)printf("%s[%" PRIu32 ",%" PRIu32 ",%" PRIu32 ",%" PRIu32 "]", arm?",":"",
+                                     cycles[arm][0],cycles[arm][1],cycles[arm][2],cycles[arm][3]);
     printf("],\"crc\":[\"%08" PRIx32 "\",\"%08" PRIx32 "\",\"%08" PRIx32 "\"]}\n",
            esp_rom_crc32_le(0,(uint8_t*)expected.rgb->cells,2*capacity),
            esp_rom_crc32_le(0,(uint8_t*)expected.depth->cells,2*capacity),

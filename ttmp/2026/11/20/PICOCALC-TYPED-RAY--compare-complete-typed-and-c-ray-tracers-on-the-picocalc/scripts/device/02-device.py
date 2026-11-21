@@ -14,7 +14,7 @@ p.add_argument('--previous-sha',default='f3dc689a28dc1db1d3e91a44a288a87144b63e7
 p.add_argument('--programs',default='0,1,2,3')
 p.add_argument('--port',default='/dev/ttyACM0')
 a=p.parse_args()
-programs=list(map(int,a.programs.split(',')));assert len(set(programs))==len(programs) and all(0<=x<=7 for x in programs)
+programs=list(map(int,a.programs.split(',')));assert len(set(programs))==len(programs) and all(0<=x<=8 for x in programs)
 check_build(a.build,a.sha);check_build(a.previous,a.previous_sha)
 assert a.sha!=a.previous_sha
 a.out.mkdir(parents=True,exist_ok=False)
@@ -76,6 +76,10 @@ with acquire(),(a.out/'uart.log').open('wb',buffering=0) as log:
                     assert (row['program'],row['pose'],row['stride'],row['rotation'])==(program,pose,stride,rotation)
                     assert row['crc']==checks[case['name']],(case,row)
                     assert all(i>0 for arm in row['timesUs'] for i in arm)
+                    for arm in range(3):
+                        for i in range(4):
+                            mhz=row['cycles'][arm][i]/row['timesUs'][arm][i]
+                            assert 346 < mhz < 374,(arm,i,mhz)
                     rows.append(row|{'rep':rep,'fixture':case['name']});save(a.out/'rows.json',rows)
                 print(rep,program,'poses',len(rows),flush=True)
         load(c,0)

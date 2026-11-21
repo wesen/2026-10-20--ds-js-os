@@ -7,6 +7,7 @@ repo=next(p for p in here.parents if (p/'.git').is_dir())
 p=argparse.ArgumentParser(description=__doc__)
 p.add_argument('revision');p.add_argument('stage',type=Path);p.add_argument('managed',type=Path)
 p.add_argument('--idf',type=Path,default=Path('/home/manuel/esp/esp-idf-5.4.2/export.sh'))
+p.add_argument('--matched-backend',type=Path)
 p.add_argument('--packed-backend',type=Path);p.add_argument('--inferred-backend',type=Path)
 
 a=p.parse_args()
@@ -26,7 +27,7 @@ subprocess.run(['python3',scripts/'director/make-spans.py',span],cwd=tree,check=
 shadow=experiments/'spans-and-shadow.typed'
 subprocess.run(['python3',scripts/'director/make-shadow.py',span,shadow],cwd=tree,check=True)
 files={'DIV':div,'SPAN':span,'SHADOW':shadow}
-for name,path in [('PACKED',a.packed_backend),('INFERRED',a.inferred_backend)]:
+for name,path in [('PACKED',a.packed_backend),('INFERRED',a.inferred_backend),('MATCHED',a.matched_backend)]:
     if path:
         dest=experiments/name;shutil.copyfile(path,dest);files[name]=dest
 # Preserve each ordinary profile switch; add only paths to bundled comparison inputs.

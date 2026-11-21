@@ -89,7 +89,7 @@ The first archived build named a newly created generator file that existed in th
 
 ### What I learned
 
-The proposed independent [Opus High research design](../various/commission/measurement.md) explains that terminal checks and differing buffer traffic are central measurement confounders. The physical protocol takes its matched-input, independent intermediate and rotated-order suggestions. It records elapsed microseconds on a pinned kernel task and a single memory layout; it does not sample hardware cycle counters or a distribution of linked layouts.
+The proposed independent [Opus High research design](../various/commission/measurement.md) explains that terminal checks and differing buffer traffic are central measurement confounders. The physical protocol takes its matched-input, independent intermediate and rotated-order suggestions. It records hardware core-cycle deltas and elapsed microseconds on a pinned kernel task. All variants share a fixed data layout within a block. The study samples a single binary placement per configuration.
 
 ### What was tricky to build
 
