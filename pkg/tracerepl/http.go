@@ -1,7 +1,9 @@
 package tracerepl
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"mime"
 	"net"
@@ -25,7 +27,8 @@ func Handler(s *Service, logger zerolog.Logger) http.Handler {
 		mu.Lock()
 		defer mu.Unlock()
 		if len(live) >= MaxSessions {
-			response(w, http.StatusTooManyRequests, Result{Error: "session limit reached; close an unused session"})
+			// Name only paths a client may take: it can close sessions it opened.
+			response(w, http.StatusTooManyRequests, Result{Error: fmt.Sprintf("session limit (%d) reached; close a session you opened (trace-repl close --session ID) or ask the operator to restart the service", MaxSessions)})
 			return
 		}
 		id, err := s.Open(r.Context())
@@ -78,6 +81,10 @@ func Handler(s *Service, logger zerolog.Logger) http.Handler {
 		mu.Lock()
 		defer mu.Unlock()
 		if err := s.Release(r.Context(), id); err != nil {
+			// A session that no longer exists must not keep holding capacity.
+			if errors.Is(err, replsession.ErrSessionNotFound) || errors.Is(err, replsession.ErrSessionClosed) {
+				delete(live, id)
+			}
 			failure(w, err)
 			return
 		}
@@ -113,11 +120,17 @@ func ValidateAddress(addr string) error {
 
 func failure(w http.ResponseWriter, err error) {
 	status := http.StatusInternalServerError
+	if errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
+		status = http.StatusRequestTimeout
+	}
 	if errors.Is(err, replsession.ErrSessionNotFound) {
 		status = http.StatusNotFound
 	}
 	if errors.Is(err, replsession.ErrSessionClosing) || errors.Is(err, replsession.ErrSessionClosed) {
 		status = http.StatusGone
+	}
+	if errors.Is(err, replsession.ErrServiceClosing) || errors.Is(err, replsession.ErrServiceClosed) {
+		status = http.StatusServiceUnavailable
 	}
 	response(w, status, Result{Error: err.Error()})
 }

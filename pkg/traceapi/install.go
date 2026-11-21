@@ -14,30 +14,16 @@ import (
 var library string
 
 // Install binds one session's query functions to the shared read-only archive.
-// Install must run on the VM's owner goroutine before evaluating user input.
+// It must finish before the VM evaluates user input and must not race with any
+// other use of the VM; tracerepl runs it in the runtime initializer, before the
+// session is published. Every later call into the VM goes through its owner.
 func Install(vm *goja.Runtime, archive *tracearchive.Archive) error {
 	if vm == nil || archive == nil {
 		return fmt.Errorf("query runtime and evidence archive are required")
 	}
-	// Materialize plain JS values. A caller may edit a result without changing
-	// any Go slice, map, or record shared with another session.
-	parse, ok := goja.AssertFunction(vm.Get("JSON").ToObject(vm).Get("parse"))
-	if !ok {
-		return fmt.Errorf("query runtime requires JSON.parse")
-	}
-	copyJSON := func(value any, err error) goja.Value {
-		if err != nil {
-			panic(vm.NewTypeError("%s", err.Error()))
-		}
-		data, err := json.Marshal(value)
-		if err != nil {
-			panic(vm.NewTypeError("encoding archive result: %s", err))
-		}
-		out, err := parse(goja.Undefined(), vm.ToValue(string(data)))
-		if err != nil {
-			panic(vm.NewTypeError("importing archive result: %s", err))
-		}
-		return out
+	copyJSON, err := importer(vm)
+	if err != nil {
+		return err
 	}
 	bridge := vm.NewObject()
 	methods := map[string]any{
@@ -73,9 +59,32 @@ func Install(vm *goja.Runtime, archive *tracearchive.Archive) error {
 	if err := vm.Set("__trace", bridge); err != nil {
 		return err
 	}
-	_, err := vm.RunScript("trace/query.js", library)
+	_, err = vm.RunScript("trace/query.js", library)
 	if err != nil {
 		return fmt.Errorf("installing query language: %w", err)
 	}
 	return vm.GlobalObject().Delete("__trace")
+}
+
+func importer(vm *goja.Runtime) (func(any, error) goja.Value, error) {
+	// Materialize plain JS values. A caller may edit a result without changing
+	// any Go slice, map, or record shared with another session.
+	parse, ok := goja.AssertFunction(vm.Get("JSON").ToObject(vm).Get("parse"))
+	if !ok {
+		return nil, fmt.Errorf("query runtime requires JSON.parse")
+	}
+	return func(value any, err error) goja.Value {
+		if err != nil {
+			panic(vm.NewTypeError("%s", err.Error()))
+		}
+		data, err := json.Marshal(value)
+		if err != nil {
+			panic(vm.NewTypeError("encoding archive result: %s", err))
+		}
+		out, err := parse(goja.Undefined(), vm.ToValue(string(data)))
+		if err != nil {
+			panic(vm.NewTypeError("importing archive result: %s", err))
+		}
+		return out
+	}, nil
 }

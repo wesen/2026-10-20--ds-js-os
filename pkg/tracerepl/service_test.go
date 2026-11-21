@@ -154,3 +154,36 @@ func TestHTTPProtocol(t *testing.T) {
 		t.Fatal(w.Code)
 	}
 }
+
+func TestClosingSessionInterruptsActiveCell(t *testing.T) {
+	started := make(chan struct{})
+	s, err := New(context.Background(), func(vm *goja.Runtime) error {
+		return vm.Set("markStarted", func() { close(started) })
+	}, zerolog.Nop())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.Close(context.Background())
+	id := newSession(t, s)
+	var group errgroup.Group
+	group.Go(func() error {
+		result, err := s.Evaluate(context.Background(), id, "markStarted(); while (true) {}")
+		if result.OK {
+			t.Errorf("interrupted cell reported success")
+		}
+		return err
+	})
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	select {
+	case <-started:
+	case <-ctx.Done():
+		t.Fatal("cell did not start")
+	}
+	if err := s.Release(ctx, id); err != nil {
+		t.Fatal(err)
+	}
+	if err := group.Wait(); err != nil {
+		t.Fatal(err)
+	}
+}

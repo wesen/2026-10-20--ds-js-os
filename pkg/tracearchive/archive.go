@@ -91,7 +91,9 @@ type Archive struct {
 
 // Open reads the manifest and validates the indexes. Event bodies are inflated,
 // checked against the manifest digest and cross-checked with the index upon the
-// first Text call for each stream. No filesystem paths come from query code.
+// first Text call for each stream, or all at once by Verify. Until then, Events
+// and their Refs repeat what the index and manifest claim. No filesystem paths
+// come from query code.
 func Open(dir string) (*Archive, error) {
 	pipeline := filepath.Join(dir, "various", "llvm-pipeline")
 	manifest, err := os.ReadFile(filepath.Join(pipeline, "manifest.json"))
@@ -232,8 +234,11 @@ func (a *Archive) Events(variant, phase string) ([]Event, error) {
 	return out, nil
 }
 
-// Text returns the full indexed dump, including its printed header and any
-// printer diagnostics before the next header. Go string slicing here uses bytes.
+// Text returns the full indexed dump: its printed header, the IR, and whatever
+// the tools wrote before the next header. In middle-end streams that tail is
+// -debug-pass-manager output for the following pass ("Running pass: <next>
+// on row", "Running analysis: ..."), so a text search for a pass name must
+// stop at the first such line. Go string slicing here uses bytes.
 func (a *Archive) Text(variant, phase string, ordinal int) (string, error) {
 	s := a.streams[streamID{variant, phase}]
 	if s == nil {
@@ -242,20 +247,43 @@ func (a *Archive) Text(variant, phase string, ordinal int) (string, error) {
 	if ordinal < 0 || ordinal >= len(s.events) {
 		return "", errors.Errorf("ordinal %d outside %s/%s: choose 0..%d", ordinal, variant, phase, len(s.events)-1)
 	}
+	text, err := a.verified(streamID{variant, phase}, s)
+	if err != nil {
+		return "", err
+	}
+	a.textReads.Add(1)
+	ref := s.events[ordinal].Ref
+	return text[ref.Start:ref.End], nil
+}
+
+// verified returns the stream's bytes after they have matched the manifest
+// digest and every index header once. Failures are not cached.
+func (a *Archive) verified(id streamID, s *stream) (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if s.text == "" {
 		data, err := s.inflate()
 		if err != nil {
-			return "", errors.Wrapf(err, "verify %s/%s", variant, phase)
+			return "", errors.Wrapf(err, "verify %s/%s", id.variant, id.phase)
 		}
 		s.text = string(data)
 		a.streamInflations.Add(1)
 		a.inflatedBytes.Add(uint64(len(data)))
 	}
-	a.textReads.Add(1)
-	ref := s.events[ordinal].Ref
-	return s.text[ref.Start:ref.End], nil
+	return s.text, nil
+}
+
+// Verify inflates every stream and checks it against the manifest digest and
+// its index, as the first Text call would. A service calls it before serving
+// so that each Ref it hands out cites bytes that were actually checked, and so
+// the first query does not pay for decompression. It is idempotent.
+func (a *Archive) Verify() error {
+	for _, id := range a.order {
+		if _, err := a.verified(id, a.streams[id]); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (s *stream) inflate() ([]byte, error) {
@@ -396,6 +424,7 @@ func (a *Archive) InitialModule(variant string) (text, digest string, err error)
 
 // Stats describes successful operations since Open, across all sessions.
 // Byte counts refer to retained decompressed streams, excluding metadata.
+// streamInflations equals the number of streams whose bytes have been verified.
 func (a *Archive) Stats() map[string]interface{} {
 	return map[string]interface{}{
 		"streamInflations": a.streamInflations.Load(), "inflatedBytes": a.inflatedBytes.Load(),

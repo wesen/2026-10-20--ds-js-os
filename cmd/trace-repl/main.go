@@ -23,6 +23,7 @@ import (
 	"github.com/go-go-golems/glazed/pkg/cmds/values"
 	"github.com/go-go-golems/picocalc-trace/pkg/traceapi"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracearchive"
+	"github.com/go-go-golems/picocalc-trace/pkg/tracehardware"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracerepl"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -33,11 +34,12 @@ import (
 const defaultAddr = "127.0.0.1:3791"
 
 type settings struct {
-	Addr     string `glazed:"addr"`
-	Archive  string `glazed:"archive"`
-	Session  string `glazed:"session"`
-	Code     string `glazed:"code"`
-	LogLevel string `glazed:"log-level"`
+	Addr        string `glazed:"addr"`
+	Archive     string `glazed:"archive"`
+	DeviceStudy string `glazed:"device-study"`
+	Session     string `glazed:"session"`
+	Code        string `glazed:"code"`
+	LogLevel    string `glazed:"log-level"`
 }
 
 type command struct {
@@ -59,17 +61,35 @@ func (c *command) Run(ctx context.Context, vals *values.Values) error {
 }
 
 func root() (*cobra.Command, error) {
-	root := &cobra.Command{Use: "trace-repl", Short: "Explore compiler traces in persistent JavaScript sessions", SilenceUsage: true, SilenceErrors: true}
+	root := &cobra.Command{
+		Use:           "trace-repl",
+		Short:         "Explore compiler traces in persistent JavaScript sessions",
+		SilenceUsage:  true,
+		SilenceErrors: true,
+	}
 	addr := fields.New("addr", fields.TypeString, fields.WithDefault(defaultAddr), fields.WithHelp("Loopback host:port of the trace service"))
 	session := fields.New("session", fields.TypeString, fields.WithRequired(true), fields.WithHelp("ID printed by open"))
+	archive := fields.New("archive", fields.TypeString, fields.WithRequired(true), fields.WithHelp("Path to the PICOCALC-ROW-IR ticket directory"))
+	device := fields.New("device-study", fields.TypeString, fields.WithHelp("Optional PICOCALC-PIE-LOOPS ticket directory containing measured physical trials"))
+	level := fields.New("log-level", fields.TypeString, fields.WithDefault("info"), fields.WithHelp("Server log level (debug, info, warn, error)"))
+	code := fields.New("code", fields.TypeString, fields.WithHelp("JavaScript cell; omit to read stdin"))
 	defs := []*command{
-		{cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr,
-			fields.New("archive", fields.TypeString, fields.WithRequired(true), fields.WithHelp("Path to the PICOCALC-ROW-IR ticket directory")),
-			fields.New("log-level", fields.TypeString, fields.WithDefault("info"), fields.WithHelp("Server log level (debug, info, warn, error)")))), serve},
-		{cmds.NewCommandDescription("open", cmds.WithShort("Allocate a session and print its ID"), cmds.WithFlags(addr)), func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "open") }},
-		{cmds.NewCommandDescription("eval", cmds.WithShort("Evaluate JavaScript from --code or stdin in an open session"), cmds.WithFlags(addr, session,
-			fields.New("code", fields.TypeString, fields.WithHelp("JavaScript cell; omit to read stdin")))), func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "eval") }},
-		{cmds.NewCommandDescription("close", cmds.WithShort("Release a session and its JavaScript bindings"), cmds.WithFlags(addr, session)), func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "close") }},
+		{
+			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, level)),
+			serve,
+		},
+		{
+			cmds.NewCommandDescription("open", cmds.WithShort("Allocate a session and print its ID"), cmds.WithFlags(addr)),
+			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "open") },
+		},
+		{
+			cmds.NewCommandDescription("eval", cmds.WithShort("Evaluate JavaScript from --code or stdin in an open session"), cmds.WithFlags(addr, session, code)),
+			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "eval") },
+		},
+		{
+			cmds.NewCommandDescription("close", cmds.WithShort("Release a session and its JavaScript bindings"), cmds.WithFlags(addr, session)),
+			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "close") },
+		},
 	}
 	for _, def := range defs {
 		sub, err := cli.BuildCobraCommand(def)
@@ -87,11 +107,7 @@ func serve(ctx context.Context, cfg settings) error {
 		return err
 	}
 	logger := zerolog.New(os.Stderr).Level(level).With().Timestamp().Logger()
-	archive, err := tracearchive.Open(cfg.Archive)
-	if err != nil {
-		return errors.Wrap(err, "open evidence archive")
-	}
-	service, err := tracerepl.New(ctx, func(vm *goja.Runtime) error { return traceapi.Install(vm, archive) }, logger)
+	service, err := newService(ctx, cfg, logger)
 	if err != nil {
 		return err
 	}
@@ -103,8 +119,50 @@ func serve(ctx context.Context, cfg settings) error {
 	return serveListener(ctx, ln, service, logger)
 }
 
+// newService opens the evidence once for all sessions. It verifies every
+// stream before serving, so a damaged capture fails here rather than after a
+// researcher has cited one of its references, and no first query pays for
+// decompression. The device study stays optional and visibly absent.
+func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*tracerepl.Service, error) {
+	archive, err := tracearchive.Open(cfg.Archive)
+	if err != nil {
+		return nil, errors.Wrap(err, "open evidence archive")
+	}
+	started := time.Now()
+	if err := archive.Verify(); err != nil {
+		return nil, errors.Wrap(err, "verify evidence archive")
+	}
+	stats := archive.Stats()
+	logger.Info().Interface("streams", stats["streamInflations"]).Interface("bytes", stats["inflatedBytes"]).
+		Dur("elapsed", time.Since(started)).Msg("verified pass-dump streams against the manifest and indexes")
+	var hardware *tracehardware.Study
+	if cfg.DeviceStudy != "" {
+		hardware, err = tracehardware.Open(cfg.DeviceStudy)
+		if err != nil {
+			return nil, errors.Wrap(err, "open physical trial study")
+		}
+		meta := hardware.Metadata()
+		logger.Info().Str("sourceSHA", meta.SourceSHA).Int("pairs", len(hardware.Rows())).Int("loads", len(hardware.Loads())).Msg("device study available")
+	} else {
+		logger.Info().Msg("no --device-study: hardware.* reports device timings as unavailable")
+	}
+	return tracerepl.New(ctx, func(vm *goja.Runtime) error {
+		if err := traceapi.Install(vm, archive); err != nil {
+			return err
+		}
+		return traceapi.InstallHardware(vm, hardware)
+	}, logger)
+}
+
 func serveListener(ctx context.Context, ln net.Listener, service *tracerepl.Service, logger zerolog.Logger) error {
-	srv := &http.Server{Handler: tracerepl.Handler(service, logger), ReadHeaderTimeout: 4 * time.Second, ReadTimeout: 10 * time.Second, WriteTimeout: 25 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 16 << 10}
+	srv := &http.Server{
+		Handler:           tracerepl.Handler(service, logger),
+		ReadHeaderTimeout: 4 * time.Second,
+		ReadTimeout:       10 * time.Second,
+		WriteTimeout:      25 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    16 << 10,
+	}
 	logger.Info().Str("addr", ln.Addr().String()).Msg("trace REPL ready")
 	group, groupCtx := errgroup.WithContext(ctx)
 	group.Go(func() error {

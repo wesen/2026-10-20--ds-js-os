@@ -245,6 +245,69 @@ func TestIndexIntegrityAndInflatedByteAddressing(t *testing.T) {
 			t.Fatalf("retry: %q %v", got, err)
 		}
 	})
+	// A service verifies before it serves, so a damaged log fails at startup
+	// instead of after a researcher has already cited one of its Refs.
+	t.Run("verify before serving", func(t *testing.T) {
+		dir, path := newFixture(t, nil)
+		writeGzip(t, path, []byte(strings.Replace(raw, "ret", "RET", 1)))
+		a, err := Open(dir)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = a.Verify(); err == nil || !strings.Contains(err.Error(), "checked/middle") || !strings.Contains(err.Error(), "SHA-256") {
+			t.Fatalf("damaged stream passed verification: %v", err)
+		}
+		if a.Stats()["streamInflations"] != uint64(0) {
+			t.Fatal("cached an unverified stream")
+		}
+	})
+}
+
+// An indexed range runs to the next header. In the middle end it ends with the
+// pass manager announcing the next pass, so the SROA snapshot's bytes mention
+// EarlyCSEPass. Text consumers must not attribute that name to this snapshot.
+func TestMiddleEndRangesEndWithTheNextPassAnnouncement(t *testing.T) {
+	a := actualArchive(t)
+	body, err := a.Text("checked", "middle", 73)
+	if err != nil {
+		t.Fatal(err)
+	}
+	lines := strings.Split(strings.TrimRight(body, "\n"), "\n")
+	ir, tail, _ := strings.Cut(body, "\nRunning pass: ")
+	if !strings.HasPrefix(lines[0], "; *** IR Dump After SROAPass on row") ||
+		!strings.HasPrefix(tail, "EarlyCSEPass on row") || strings.Contains(ir, "EarlyCSEPass") ||
+		!strings.HasPrefix(lines[len(lines)-1], "Running analysis: ") {
+		t.Fatalf("unexpected range layout: first %q, last %q", lines[0], lines[len(lines)-1])
+	}
+	events, err := a.Events("checked", "middle")
+	if err != nil {
+		t.Fatal(err)
+	}
+	// The 50-byte preamble before the first dump announces its pass and
+	// belongs to no event; the manifest digest still covers it.
+	if events[0].Ref.Start != len("Running pass: Annotation2MetadataPass on [module]\n") {
+		t.Fatal(events[0].Ref)
+	}
+}
+
+func TestVerifyCertifiesAndWarmsEveryStream(t *testing.T) {
+	a := actualArchive(t)
+	if err := a.Verify(); err != nil {
+		t.Fatal(err)
+	}
+	// The manifest's rawBytes for the six streams sum to 30,912,391.
+	if s := a.Stats(); s["streamInflations"] != uint64(6) || s["inflatedBytes"] != uint64(30912391) {
+		t.Fatal(s)
+	}
+	if err := a.Verify(); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.Text("firmware", "backend", 0); err != nil {
+		t.Fatal(err)
+	}
+	if s := a.Stats(); s["streamInflations"] != uint64(6) || s["textReads"] != uint64(1) {
+		t.Fatalf("verification was repeated or not reused: %v", s)
+	}
 }
 
 func writeGzip(t *testing.T, path string, data []byte) {
