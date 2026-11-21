@@ -1,0 +1,1574 @@
+{
+  "sourceSHA256": "2931cb22790b7eebf1a29e9071b7e3b17a0ff31dd6e41bedbea7a68e7ed4626f",
+  "sourceBytes": 71045,
+  "originalCurrent": {
+    "bytes": 64856,
+    "sha256": "b54bf4d2a445a0144202239acbd05a5d307f5509203e8f31942f14b29c599dec"
+  },
+  "originalAlways": {
+    "bytes": 64840,
+    "sha256": "31c735244aab03adc01165475232d2439aad5dfa5b3924016fe1ef099b9e0a8d"
+  },
+  "arms": {
+    "never": {
+      "bytes": 64856,
+      "sha256": "b54bf4d2a445a0144202239acbd05a5d307f5509203e8f31942f14b29c599dec",
+      "functions": 120,
+      "accepted": 0,
+      "charged": 0,
+      "candidates": 116,
+      "attempted": 0,
+      "examined": 0,
+      "proven": 0,
+      "exhausted": 0,
+      "rows": {
+        "editorNext": {
+          "size": 74,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPrevious": {
+          "size": 65,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorWrapEnd": {
+          "size": 127,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdSpace": {
+          "size": 44,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdSuffix": {
+          "size": 97,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdFence": {
+          "size": 66,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdHeading": {
+          "size": 113,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdColor": {
+          "size": 80,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdMarker": {
+          "size": 172,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdListEnd": {
+          "size": 50,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdNextMarker": {
+          "size": 313,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdOpen": {
+          "size": 256,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdBold": {
+          "size": 191,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdLink": {
+          "size": 226,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorQuoteContent": {
+          "size": 327,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFrameRow": {
+          "size": 154,
+          "reads": 9,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorInvalidateRows": {
+          "size": 89,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorSaveError": {
+          "size": 392,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindMatch": {
+          "size": 105,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorSetFound": {
+          "size": 108,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindStep": {
+          "size": 456,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindStatus": {
+          "size": 371,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindMarks": {
+          "size": 290,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewAppend": {
+          "size": 263,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewWord": {
+          "size": 222,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewUpper": {
+          "size": 252,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewSource": {
+          "size": 701,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewFrame": {
+          "size": 1752,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorStatus": {
+          "size": 2477,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionDict": {
+          "size": 117,
+          "reads": 8,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionKeyEnd": {
+          "size": 167,
+          "reads": 5,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionNumberStop": {
+          "size": 61,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionNumber": {
+          "size": 81,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionTuple": {
+          "size": 319,
+          "reads": 5,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionKeyEqual": {
+          "size": 69,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionNewer": {
+          "size": 113,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionRank": {
+          "size": 255,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionCopy": {
+          "size": 73,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionAppend": {
+          "size": 210,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorEqual": {
+          "size": 63,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorContinueList": {
+          "size": 390,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorInput": {
+          "size": 802,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorNormalize": {
+          "size": 173,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorRefuseOpen": {
+          "size": 587,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorOpen": {
+          "size": 1106,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorOpened": {
+          "size": 323,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorReadDone": {
+          "size": 188,
+          "reads": 7,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        }
+      }
+    },
+    "always": {
+      "bytes": 64840,
+      "sha256": "31c735244aab03adc01165475232d2439aad5dfa5b3924016fe1ef099b9e0a8d",
+      "functions": 120,
+      "accepted": 120,
+      "charged": 33195,
+      "candidates": 116,
+      "attempted": 116,
+      "examined": 32,
+      "proven": 1,
+      "exhausted": 0,
+      "rows": {
+        "editorNext": {
+          "size": 74,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPrevious": {
+          "size": 65,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorWrapEnd": {
+          "size": 127,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 2,
+          "exhausted": 0
+        },
+        "editorMdSpace": {
+          "size": 44,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorMdSuffix": {
+          "size": 97,
+          "reads": 3,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdFence": {
+          "size": 66,
+          "reads": 3,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdHeading": {
+          "size": 113,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorMdColor": {
+          "size": 80,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorMdMarker": {
+          "size": 172,
+          "reads": 4,
+          "accepted": true,
+          "proven": 0,
+          "examined": 2,
+          "exhausted": 0
+        },
+        "editorMdListEnd": {
+          "size": 50,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdNextMarker": {
+          "size": 313,
+          "reads": 4,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorMdOpen": {
+          "size": 256,
+          "reads": 3,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdBold": {
+          "size": 191,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorMdLink": {
+          "size": 226,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorQuoteContent": {
+          "size": 327,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorFrameRow": {
+          "size": 154,
+          "reads": 9,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorInvalidateRows": {
+          "size": 89,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorSaveError": {
+          "size": 392,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorFindMatch": {
+          "size": 105,
+          "reads": 3,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorSetFound": {
+          "size": 108,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 2,
+          "exhausted": 0
+        },
+        "editorFindStep": {
+          "size": 456,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorFindStatus": {
+          "size": 371,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindMarks": {
+          "size": 290,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewAppend": {
+          "size": 263,
+          "reads": 2,
+          "accepted": true,
+          "proven": 1,
+          "examined": 5,
+          "exhausted": 0
+        },
+        "editorPreviewWord": {
+          "size": 222,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorPreviewUpper": {
+          "size": 252,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewSource": {
+          "size": 701,
+          "reads": 3,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorPreviewFrame": {
+          "size": 1752,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorStatus": {
+          "size": 2477,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionDict": {
+          "size": 117,
+          "reads": 8,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionKeyEnd": {
+          "size": 167,
+          "reads": 5,
+          "accepted": true,
+          "proven": 0,
+          "examined": 2,
+          "exhausted": 0
+        },
+        "editorPositionNumberStop": {
+          "size": 61,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 2,
+          "exhausted": 0
+        },
+        "editorPositionNumber": {
+          "size": 81,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorPositionTuple": {
+          "size": 319,
+          "reads": 5,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionKeyEqual": {
+          "size": 69,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorPositionNewer": {
+          "size": 113,
+          "reads": 4,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionRank": {
+          "size": 255,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionCopy": {
+          "size": 73,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorPositionAppend": {
+          "size": 210,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorEqual": {
+          "size": 63,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 2,
+          "exhausted": 0
+        },
+        "editorContinueList": {
+          "size": 390,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorInput": {
+          "size": 802,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorNormalize": {
+          "size": 173,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorRefuseOpen": {
+          "size": 587,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorOpen": {
+          "size": 1106,
+          "reads": 4,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorOpened": {
+          "size": 323,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorReadDone": {
+          "size": 188,
+          "reads": 7,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        }
+      }
+    },
+    "order": {
+      "bytes": 64856,
+      "sha256": "b54bf4d2a445a0144202239acbd05a5d307f5509203e8f31942f14b29c599dec",
+      "functions": 120,
+      "accepted": 11,
+      "charged": 638,
+      "candidates": 116,
+      "attempted": 9,
+      "examined": 3,
+      "proven": 0,
+      "exhausted": 0,
+      "rows": {
+        "editorNext": {
+          "size": 74,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPrevious": {
+          "size": 65,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorWrapEnd": {
+          "size": 127,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 2,
+          "exhausted": 0
+        },
+        "editorMdSpace": {
+          "size": 44,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorMdSuffix": {
+          "size": 97,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdFence": {
+          "size": 66,
+          "reads": 3,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdHeading": {
+          "size": 113,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdColor": {
+          "size": 80,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdMarker": {
+          "size": 172,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdListEnd": {
+          "size": 50,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdNextMarker": {
+          "size": 313,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdOpen": {
+          "size": 256,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdBold": {
+          "size": 191,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdLink": {
+          "size": 226,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorQuoteContent": {
+          "size": 327,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFrameRow": {
+          "size": 154,
+          "reads": 9,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorInvalidateRows": {
+          "size": 89,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorSaveError": {
+          "size": 392,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindMatch": {
+          "size": 105,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorSetFound": {
+          "size": 108,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindStep": {
+          "size": 456,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindStatus": {
+          "size": 371,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindMarks": {
+          "size": 290,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewAppend": {
+          "size": 263,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewWord": {
+          "size": 222,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewUpper": {
+          "size": 252,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewSource": {
+          "size": 701,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewFrame": {
+          "size": 1752,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorStatus": {
+          "size": 2477,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionDict": {
+          "size": 117,
+          "reads": 8,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionKeyEnd": {
+          "size": 167,
+          "reads": 5,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionNumberStop": {
+          "size": 61,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionNumber": {
+          "size": 81,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionTuple": {
+          "size": 319,
+          "reads": 5,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionKeyEqual": {
+          "size": 69,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionNewer": {
+          "size": 113,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionRank": {
+          "size": 255,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionCopy": {
+          "size": 73,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionAppend": {
+          "size": 210,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorEqual": {
+          "size": 63,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorContinueList": {
+          "size": 390,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorInput": {
+          "size": 802,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorNormalize": {
+          "size": 173,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorRefuseOpen": {
+          "size": 587,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorOpen": {
+          "size": 1106,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorOpened": {
+          "size": 323,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorReadDone": {
+          "size": 188,
+          "reads": 7,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        }
+      }
+    },
+    "selected": {
+      "bytes": 64856,
+      "sha256": "b54bf4d2a445a0144202239acbd05a5d307f5509203e8f31942f14b29c599dec",
+      "functions": 120,
+      "accepted": 8,
+      "charged": 619,
+      "candidates": 116,
+      "attempted": 12,
+      "examined": 3,
+      "proven": 0,
+      "exhausted": 0,
+      "rows": {
+        "editorNext": {
+          "size": 74,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPrevious": {
+          "size": 65,
+          "reads": 2,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorWrapEnd": {
+          "size": 127,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 2,
+          "exhausted": 0
+        },
+        "editorMdSpace": {
+          "size": 44,
+          "reads": 1,
+          "accepted": true,
+          "proven": 0,
+          "examined": 1,
+          "exhausted": 0
+        },
+        "editorMdSuffix": {
+          "size": 97,
+          "reads": 3,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdFence": {
+          "size": 66,
+          "reads": 3,
+          "accepted": true,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdHeading": {
+          "size": 113,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdColor": {
+          "size": 80,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdMarker": {
+          "size": 172,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdListEnd": {
+          "size": 50,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdNextMarker": {
+          "size": 313,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdOpen": {
+          "size": 256,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdBold": {
+          "size": 191,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorMdLink": {
+          "size": 226,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorQuoteContent": {
+          "size": 327,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFrameRow": {
+          "size": 154,
+          "reads": 9,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorInvalidateRows": {
+          "size": 89,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorSaveError": {
+          "size": 392,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindMatch": {
+          "size": 105,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorSetFound": {
+          "size": 108,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindStep": {
+          "size": 456,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindStatus": {
+          "size": 371,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorFindMarks": {
+          "size": 290,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewAppend": {
+          "size": 263,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewWord": {
+          "size": 222,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewUpper": {
+          "size": 252,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewSource": {
+          "size": 701,
+          "reads": 3,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPreviewFrame": {
+          "size": 1752,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorStatus": {
+          "size": 2477,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionDict": {
+          "size": 117,
+          "reads": 8,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionKeyEnd": {
+          "size": 167,
+          "reads": 5,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionNumberStop": {
+          "size": 61,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionNumber": {
+          "size": 81,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionTuple": {
+          "size": 319,
+          "reads": 5,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionKeyEqual": {
+          "size": 69,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionNewer": {
+          "size": 113,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionRank": {
+          "size": 255,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionCopy": {
+          "size": 73,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorPositionAppend": {
+          "size": 210,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorEqual": {
+          "size": 63,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorContinueList": {
+          "size": 390,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorInput": {
+          "size": 802,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorNormalize": {
+          "size": 173,
+          "reads": 2,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorRefuseOpen": {
+          "size": 587,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorOpen": {
+          "size": 1106,
+          "reads": 4,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorOpened": {
+          "size": 323,
+          "reads": 1,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        },
+        "editorReadDone": {
+          "size": 188,
+          "reads": 7,
+          "accepted": false,
+          "proven": 0,
+          "examined": 0,
+          "exhausted": 0
+        }
+      }
+    }
+  }
+}

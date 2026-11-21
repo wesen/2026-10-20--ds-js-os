@@ -1,0 +1,1106 @@
+{
+  "control": {
+    "sourceBytes": 2473,
+    "sourceSHA256": "d675a45e225d49366c1244bb19fa260e31eb70c398b006051518bdbbc2c78f0d",
+    "arms": {
+      "stock": {
+        "bytes": 3268,
+        "functions": 9,
+        "sha256": "ed124b40b79143c12b09420393e1aeae0510907e8998eb1504fc7bed737d616a",
+        "hostCompileMillis": [
+          1.042310999999998,
+          1.0523779999999974,
+          1.1027490000000029,
+          1.131415000000004,
+          1.2003820000000047,
+          1.3775350000000017,
+          3.6973920000000007
+        ],
+        "options": {},
+        "correctness": {
+          "repeated": {
+            "cases": 9,
+            "steps": 347,
+            "traps": 4
+          },
+          "branch": {
+            "cases": 18,
+            "steps": 537,
+            "traps": 8
+          },
+          "reassigned": {
+            "cases": 81,
+            "steps": 2426,
+            "traps": 56
+          },
+          "rhsOrder": {
+            "cases": 81,
+            "steps": 3441,
+            "traps": 56
+          },
+          "called": {
+            "cases": 18,
+            "steps": 638,
+            "traps": 12
+          },
+          "stored": {
+            "cases": 18,
+            "steps": 518,
+            "traps": 12
+          },
+          "literals": {
+            "cases": 18,
+            "steps": 541,
+            "traps": 15
+          }
+        }
+      },
+      "bounds-never": {
+        "bytes": 3268,
+        "functions": 9,
+        "sha256": "ed124b40b79143c12b09420393e1aeae0510907e8998eb1504fc7bed737d616a",
+        "hostCompileMillis": [
+          0.9797980000000024,
+          1.0161779999999965,
+          1.017787999999996,
+          1.0346159999999998,
+          1.083869000000007,
+          1.1298510000000022,
+          2.3666399999999967
+        ],
+        "options": {
+          "boundsPolicy": "never",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 9,
+              "accepted": 0,
+              "charged": 0,
+              "visited": 0,
+              "guards": 0,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        },
+        "correctness": {
+          "repeated": {
+            "cases": 9,
+            "steps": 347,
+            "traps": 4
+          },
+          "branch": {
+            "cases": 18,
+            "steps": 537,
+            "traps": 8
+          },
+          "reassigned": {
+            "cases": 81,
+            "steps": 2426,
+            "traps": 56
+          },
+          "rhsOrder": {
+            "cases": 81,
+            "steps": 3441,
+            "traps": 56
+          },
+          "called": {
+            "cases": 18,
+            "steps": 638,
+            "traps": 12
+          },
+          "stored": {
+            "cases": 18,
+            "steps": 518,
+            "traps": 12
+          },
+          "literals": {
+            "cases": 18,
+            "steps": 541,
+            "traps": 15
+          }
+        }
+      },
+      "bounds-always": {
+        "bytes": 3204,
+        "functions": 9,
+        "sha256": "5b831c3e97a908dadfec2bce13784de41f18489b4f64f3621cdfd43d85489465",
+        "hostCompileMillis": [
+          1.1219290000000086,
+          1.1491549999999933,
+          1.2183320000000037,
+          1.2668439999999919,
+          1.4718500000000034,
+          1.6674110000000013,
+          1.6996970000000005
+        ],
+        "options": {
+          "boundsPolicy": "always",
+          "boundsStats": {
+            "changedFunctions": [
+              "repeated"
+            ],
+            "bounds": {
+              "functions": 9,
+              "accepted": 9,
+              "charged": 1153,
+              "visited": 1153,
+              "guards": 16,
+              "removed": 2,
+              "bailed": 0
+            }
+          }
+        },
+        "correctness": {
+          "repeated": {
+            "cases": 9,
+            "steps": 277,
+            "traps": 4
+          },
+          "branch": {
+            "cases": 18,
+            "steps": 537,
+            "traps": 8
+          },
+          "reassigned": {
+            "cases": 81,
+            "steps": 2426,
+            "traps": 56
+          },
+          "rhsOrder": {
+            "cases": 81,
+            "steps": 3441,
+            "traps": 56
+          },
+          "called": {
+            "cases": 18,
+            "steps": 638,
+            "traps": 12
+          },
+          "stored": {
+            "cases": 18,
+            "steps": 518,
+            "traps": 12
+          },
+          "literals": {
+            "cases": 18,
+            "steps": 541,
+            "traps": 15
+          }
+        }
+      },
+      "bounds-order": {
+        "bytes": 3204,
+        "functions": 9,
+        "sha256": "5b831c3e97a908dadfec2bce13784de41f18489b4f64f3621cdfd43d85489465",
+        "hostCompileMillis": [
+          1.127209999999991,
+          1.1290830000000085,
+          1.1570299999999918,
+          1.1809259999999995,
+          1.192537999999999,
+          1.2178310000000039,
+          1.548326000000003
+        ],
+        "options": {
+          "boundsPolicy": "order",
+          "boundsStats": {
+            "changedFunctions": [
+              "repeated"
+            ],
+            "bounds": {
+              "functions": 9,
+              "accepted": 3,
+              "charged": 600,
+              "visited": 600,
+              "guards": 3,
+              "removed": 2,
+              "bailed": 0
+            }
+          }
+        },
+        "correctness": {
+          "repeated": {
+            "cases": 9,
+            "steps": 277,
+            "traps": 4
+          },
+          "branch": {
+            "cases": 18,
+            "steps": 537,
+            "traps": 8
+          },
+          "reassigned": {
+            "cases": 81,
+            "steps": 2426,
+            "traps": 56
+          },
+          "rhsOrder": {
+            "cases": 81,
+            "steps": 3441,
+            "traps": 56
+          },
+          "called": {
+            "cases": 18,
+            "steps": 638,
+            "traps": 12
+          },
+          "stored": {
+            "cases": 18,
+            "steps": 518,
+            "traps": 12
+          },
+          "literals": {
+            "cases": 18,
+            "steps": 541,
+            "traps": 15
+          }
+        }
+      },
+      "bounds-selected": {
+        "bytes": 3204,
+        "functions": 9,
+        "sha256": "5b831c3e97a908dadfec2bce13784de41f18489b4f64f3621cdfd43d85489465",
+        "hostCompileMillis": [
+          1.071076000000005,
+          1.0899980000000085,
+          1.1308779999999956,
+          1.137504000000007,
+          1.16749200000001,
+          1.2477119999999928,
+          1.678845999999993
+        ],
+        "options": {
+          "boundsPolicy": "selected",
+          "boundsStats": {
+            "changedFunctions": [
+              "repeated"
+            ],
+            "bounds": {
+              "functions": 9,
+              "accepted": 6,
+              "charged": 447,
+              "visited": 447,
+              "guards": 14,
+              "removed": 2,
+              "bailed": 0
+            }
+          }
+        },
+        "correctness": {
+          "repeated": {
+            "cases": 9,
+            "steps": 277,
+            "traps": 4
+          },
+          "branch": {
+            "cases": 18,
+            "steps": 537,
+            "traps": 8
+          },
+          "reassigned": {
+            "cases": 81,
+            "steps": 2426,
+            "traps": 56
+          },
+          "rhsOrder": {
+            "cases": 81,
+            "steps": 3441,
+            "traps": 56
+          },
+          "called": {
+            "cases": 18,
+            "steps": 638,
+            "traps": 12
+          },
+          "stored": {
+            "cases": 18,
+            "steps": 518,
+            "traps": 12
+          },
+          "literals": {
+            "cases": 18,
+            "steps": 541,
+            "traps": 15
+          }
+        }
+      },
+      "semantics-early": {
+        "bytes": 3268,
+        "functions": 9,
+        "sha256": "ed124b40b79143c12b09420393e1aeae0510907e8998eb1504fc7bed737d616a",
+        "hostCompileMillis": [
+          1.0215769999999793,
+          1.0468480000000113,
+          1.0618530000000135,
+          1.0803129999999896,
+          1.0842690000000061,
+          1.183811999999989,
+          6.016074000000003
+        ],
+        "options": {
+          "semanticPolicy": "early",
+          "semanticStats": {
+            "addresses": 0,
+            "literals": 0
+          }
+        },
+        "correctness": {
+          "repeated": {
+            "cases": 9,
+            "steps": 347,
+            "traps": 4
+          },
+          "branch": {
+            "cases": 18,
+            "steps": 537,
+            "traps": 8
+          },
+          "reassigned": {
+            "cases": 81,
+            "steps": 2426,
+            "traps": 56
+          },
+          "rhsOrder": {
+            "cases": 81,
+            "steps": 3441,
+            "traps": 56
+          },
+          "called": {
+            "cases": 18,
+            "steps": 638,
+            "traps": 12
+          },
+          "stored": {
+            "cases": 18,
+            "steps": 518,
+            "traps": 12
+          },
+          "literals": {
+            "cases": 18,
+            "steps": 541,
+            "traps": 15
+          }
+        }
+      },
+      "semantics-late": {
+        "bytes": 2832,
+        "functions": 9,
+        "sha256": "75de4ea36ff597aaeeb8737c52986a3b88aa4a9008ff470f438be36283424730",
+        "hostCompileMillis": [
+          0.9633999999999787,
+          0.98733900000002,
+          1.0060670000000016,
+          1.008989999999983,
+          1.0174799999999777,
+          1.039463000000012,
+          1.0646509999999978
+        ],
+        "options": {
+          "semanticPolicy": "late",
+          "semanticStats": {
+            "addresses": 16,
+            "literals": 2
+          }
+        },
+        "correctness": {
+          "repeated": {
+            "cases": 9,
+            "steps": 249,
+            "traps": 4
+          },
+          "branch": {
+            "cases": 18,
+            "steps": 431,
+            "traps": 8
+          },
+          "reassigned": {
+            "cases": 81,
+            "steps": 1894,
+            "traps": 56
+          },
+          "rhsOrder": {
+            "cases": 81,
+            "steps": 2423,
+            "traps": 56
+          },
+          "called": {
+            "cases": 18,
+            "steps": 518,
+            "traps": 12
+          },
+          "stored": {
+            "cases": 18,
+            "steps": 398,
+            "traps": 12
+          },
+          "literals": {
+            "cases": 18,
+            "steps": 446,
+            "traps": 15
+          }
+        }
+      },
+      "semantics-selected": {
+        "bytes": 2952,
+        "functions": 9,
+        "sha256": "f3e524ec8ce6386857bcfa6d8248200f1c6be74a445e4debf2dd59a193872668",
+        "hostCompileMillis": [
+          1.0563380000000109,
+          1.056506999999982,
+          1.076675000000023,
+          1.086465000000004,
+          1.1393899999999917,
+          1.1947630000000231,
+          1.9058279999999854
+        ],
+        "options": {
+          "semanticPolicy": "selected",
+          "semanticStats": {
+            "addresses": 12,
+            "literals": 1
+          }
+        },
+        "correctness": {
+          "repeated": {
+            "cases": 9,
+            "steps": 249,
+            "traps": 4
+          },
+          "branch": {
+            "cases": 18,
+            "steps": 431,
+            "traps": 8
+          },
+          "reassigned": {
+            "cases": 81,
+            "steps": 1894,
+            "traps": 56
+          },
+          "rhsOrder": {
+            "cases": 81,
+            "steps": 3251,
+            "traps": 56
+          },
+          "called": {
+            "cases": 18,
+            "steps": 518,
+            "traps": 12
+          },
+          "stored": {
+            "cases": 18,
+            "steps": 398,
+            "traps": 12
+          },
+          "literals": {
+            "cases": 18,
+            "steps": 534,
+            "traps": 15
+          }
+        }
+      }
+    }
+  },
+  "editor": {
+    "sourceBytes": 69884,
+    "sourceSHA256": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0",
+    "arms": {
+      "stock": {
+        "bytes": 89168,
+        "functions": 119,
+        "sha256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+        "hostCompileMillis": [
+          17.86481600000002,
+          18.12945000000002,
+          18.979578000000004,
+          19.945255999999972,
+          20.136172999999985,
+          21.322356000000013,
+          23.143971000000022
+        ],
+        "options": {}
+      },
+      "bounds-never": {
+        "bytes": 89168,
+        "functions": 119,
+        "sha256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+        "hostCompileMillis": [
+          16.29605700000002,
+          16.682399999999973,
+          18.340101000000004,
+          18.468335000000025,
+          19.446834000000024,
+          19.720170999999993,
+          21.89905600000003
+        ],
+        "options": {
+          "boundsPolicy": "never",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 119,
+              "accepted": 0,
+              "charged": 0,
+              "visited": 0,
+              "guards": 0,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "bounds-always": {
+        "bytes": 89168,
+        "functions": 119,
+        "sha256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+        "hostCompileMillis": [
+          19.03745499999991,
+          19.178544999999986,
+          20.61351000000002,
+          21.387489999999957,
+          22.353647999999964,
+          22.401351999999974,
+          23.326032000000055
+        ],
+        "options": {
+          "boundsPolicy": "always",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 119,
+              "accepted": 119,
+              "charged": 35883,
+              "visited": 35883,
+              "guards": 204,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "bounds-order": {
+        "bytes": 89168,
+        "functions": 119,
+        "sha256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+        "hostCompileMillis": [
+          16.44465600000001,
+          18.312420999999972,
+          18.489195999999993,
+          18.61133899999993,
+          19.547563000000082,
+          23.125044000000003,
+          32.41342000000009
+        ],
+        "options": {
+          "boundsPolicy": "order",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 119,
+              "accepted": 10,
+              "charged": 636,
+              "visited": 636,
+              "guards": 2,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "bounds-selected": {
+        "bytes": 89168,
+        "functions": 119,
+        "sha256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+        "hostCompileMillis": [
+          16.646253,
+          17.72369900000001,
+          18.137219000000073,
+          20.492406000000074,
+          20.620312000000013,
+          20.90893600000004,
+          23.26793900000007
+        ],
+        "options": {
+          "boundsPolicy": "selected",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 119,
+              "accepted": 8,
+              "charged": 633,
+              "visited": 633,
+              "guards": 3,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "semantics-early": {
+        "bytes": 89168,
+        "functions": 119,
+        "sha256": "06de33310bcf5f10013e7e6eb605105c5b334063b37197d503444358ade1f9a4",
+        "hostCompileMillis": [
+          18.58550600000001,
+          18.975629000000026,
+          19.088077,
+          20.403587000000016,
+          20.57767100000001,
+          21.11723900000004,
+          23.261978
+        ],
+        "options": {
+          "semanticPolicy": "early",
+          "semanticStats": {
+            "addresses": 0,
+            "literals": 0
+          }
+        }
+      },
+      "semantics-late": {
+        "bytes": 75932,
+        "functions": 119,
+        "sha256": "b8a067e9d83edea375127ea1ed98c6eb07e879dc87e59fda437f13067d3ec914",
+        "hostCompileMillis": [
+          19.901864999999816,
+          19.920571999999993,
+          20.112227000000075,
+          20.335103000000117,
+          20.392687999999907,
+          20.41935599999988,
+          20.453484000000117
+        ],
+        "options": {
+          "semanticPolicy": "late",
+          "semanticStats": {
+            "addresses": 268,
+            "literals": 107
+          }
+        }
+      },
+      "semantics-selected": {
+        "bytes": 80444,
+        "functions": 119,
+        "sha256": "92018520fec484f6cccbd4b8c72840c51ac528d5a2a1dc644960ee53ab22aab3",
+        "hostCompileMillis": [
+          17.308316000000104,
+          17.330314999999928,
+          17.623205999999982,
+          19.376651000000038,
+          19.915060999999923,
+          20.253370999999788,
+          22.16534499999989
+        ],
+        "options": {
+          "semanticPolicy": "selected",
+          "semanticStats": {
+            "addresses": 109,
+            "literals": 52
+          }
+        }
+      }
+    }
+  },
+  "chess": {
+    "sourceBytes": 61022,
+    "sourceSHA256": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c",
+    "arms": {
+      "stock": {
+        "bytes": 256400,
+        "functions": 82,
+        "sha256": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+        "hostCompileMillis": [
+          13.309843,
+          13.407732000000124,
+          14.206873000000087,
+          15.51955299999986,
+          15.834492999999839,
+          16.50243300000011,
+          19.734359999999924
+        ],
+        "options": {}
+      },
+      "bounds-never": {
+        "bytes": 256400,
+        "functions": 82,
+        "sha256": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+        "hostCompileMillis": [
+          13.062631999999894,
+          14.531240000000025,
+          14.731216000000131,
+          15.758786999999984,
+          16.345559999999978,
+          17.18328500000007,
+          19.844466999999895
+        ],
+        "options": {
+          "boundsPolicy": "never",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 82,
+              "accepted": 0,
+              "charged": 0,
+              "visited": 0,
+              "guards": 0,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "bounds-always": {
+        "bytes": 256368,
+        "functions": 82,
+        "sha256": "61cb9f856ce59c45b8ee9783c0e1eadf7214b522fd1a9bfd042b1f7388f1af35",
+        "hostCompileMillis": [
+          17.123039000000063,
+          17.30328399999985,
+          17.348944999999958,
+          17.4971230000001,
+          17.5128229999998,
+          20.09097500000007,
+          20.457885000000033
+        ],
+        "options": {
+          "boundsPolicy": "always",
+          "boundsStats": {
+            "changedFunctions": [
+              "chessMake"
+            ],
+            "bounds": {
+              "functions": 82,
+              "accepted": 82,
+              "charged": 137531,
+              "visited": 137531,
+              "guards": 141,
+              "removed": 1,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "bounds-order": {
+        "bytes": 256400,
+        "functions": 82,
+        "sha256": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+        "hostCompileMillis": [
+          12.689490000000205,
+          12.922790999999961,
+          12.930303999999978,
+          12.944336000000021,
+          13.001618999999891,
+          13.270253000000139,
+          15.052029000000175
+        ],
+        "options": {
+          "boundsPolicy": "order",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 82,
+              "accepted": 11,
+              "charged": 639,
+              "visited": 639,
+              "guards": 10,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "bounds-selected": {
+        "bytes": 256400,
+        "functions": 82,
+        "sha256": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+        "hostCompileMillis": [
+          12.573629999999866,
+          12.956773999999996,
+          12.969777000000022,
+          13.003439000000071,
+          13.024631999999883,
+          13.041278000000148,
+          13.562433000000055
+        ],
+        "options": {
+          "boundsPolicy": "selected",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 82,
+              "accepted": 9,
+              "charged": 637,
+              "visited": 637,
+              "guards": 5,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "semantics-early": {
+        "bytes": 256400,
+        "functions": 82,
+        "sha256": "156f8cd6d77c4fa5107e20dc975219de3eb966003271e6cf740dc5ba9b7f4822",
+        "hostCompileMillis": [
+          13.265116000000035,
+          13.51221099999998,
+          13.587795000000142,
+          13.682857000000013,
+          13.773991999999907,
+          14.45937200000003,
+          17.819866000000047
+        ],
+        "options": {
+          "semanticPolicy": "early",
+          "semanticStats": {
+            "addresses": 0,
+            "literals": 0
+          }
+        }
+      },
+      "semantics-late": {
+        "bytes": 181184,
+        "functions": 82,
+        "sha256": "0357284144e4e010d7a00dcde6dd6fb239822d781870ac84fc1171518eae0575",
+        "hostCompileMillis": [
+          9.8847209999999,
+          10.29940600000009,
+          10.443485999999893,
+          10.500247999999829,
+          11.064538999999968,
+          12.195272999999816,
+          12.784527000000253
+        ],
+        "options": {
+          "semanticPolicy": "late",
+          "semanticStats": {
+            "addresses": 256,
+            "literals": 80
+          }
+        }
+      },
+      "semantics-selected": {
+        "bytes": 185820,
+        "functions": 82,
+        "sha256": "77a8d2ee87f4e3691bcfaa5cfadcaa744c1d15e6cc8c8ee74e6d698ca4c81a26",
+        "hostCompileMillis": [
+          11.124319000000014,
+          11.217971000000034,
+          11.43571299999985,
+          11.473721000000296,
+          11.992039000000204,
+          12.040953000000172,
+          16.575936000000183
+        ],
+        "options": {
+          "semanticPolicy": "selected",
+          "semanticStats": {
+            "addresses": 84,
+            "literals": 52
+          }
+        }
+      }
+    }
+  },
+  "painter": {
+    "sourceBytes": 16316,
+    "sourceSHA256": "6ff9dc8a9e3ad3cc9a877c4ed9ebbb6b535941acba7c63e29e87edc4c5337214",
+    "arms": {
+      "stock": {
+        "bytes": 23848,
+        "functions": 24,
+        "sha256": "da8e33f9d0cd37fe446ad7a4398c142b92df58da048efd16e974aaf7845f4364",
+        "hostCompileMillis": [
+          5.2371900000002825,
+          5.465448000000379,
+          5.550235000000157,
+          5.737161999999898,
+          5.9026590000003125,
+          5.939131999999972,
+          6.44876400000021
+        ],
+        "options": {}
+      },
+      "bounds-never": {
+        "bytes": 23848,
+        "functions": 24,
+        "sha256": "da8e33f9d0cd37fe446ad7a4398c142b92df58da048efd16e974aaf7845f4364",
+        "hostCompileMillis": [
+          4.623106999999891,
+          4.640655000000152,
+          4.650784999999814,
+          4.720684000000347,
+          5.450930999999855,
+          5.4557700000000295,
+          5.839680999999928
+        ],
+        "options": {
+          "boundsPolicy": "never",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 24,
+              "accepted": 0,
+              "charged": 0,
+              "visited": 0,
+              "guards": 0,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "bounds-always": {
+        "bytes": 23848,
+        "functions": 24,
+        "sha256": "da8e33f9d0cd37fe446ad7a4398c142b92df58da048efd16e974aaf7845f4364",
+        "hostCompileMillis": [
+          5.680477000000337,
+          6.282065999999759,
+          6.327527999999802,
+          6.452193999999963,
+          6.499453999999787,
+          6.7909450000001925,
+          9.956462000000101
+        ],
+        "options": {
+          "boundsPolicy": "always",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 24,
+              "accepted": 24,
+              "charged": 7332,
+              "visited": 7332,
+              "guards": 28,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "bounds-order": {
+        "bytes": 23848,
+        "functions": 24,
+        "sha256": "da8e33f9d0cd37fe446ad7a4398c142b92df58da048efd16e974aaf7845f4364",
+        "hostCompileMillis": [
+          4.629672000000028,
+          4.636155000000144,
+          4.735063000000082,
+          4.741909999999734,
+          4.759187000000111,
+          4.76337999999987,
+          4.783183000000008
+        ],
+        "options": {
+          "boundsPolicy": "order",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 24,
+              "accepted": 6,
+              "charged": 640,
+              "visited": 640,
+              "guards": 1,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "bounds-selected": {
+        "bytes": 23848,
+        "functions": 24,
+        "sha256": "da8e33f9d0cd37fe446ad7a4398c142b92df58da048efd16e974aaf7845f4364",
+        "hostCompileMillis": [
+          5.317925000000287,
+          5.469045999999707,
+          5.496262999999999,
+          5.664879999999812,
+          5.7155619999998635,
+          5.726604999999836,
+          5.835315999999693
+        ],
+        "options": {
+          "boundsPolicy": "selected",
+          "boundsStats": {
+            "changedFunctions": [],
+            "bounds": {
+              "functions": 24,
+              "accepted": 7,
+              "charged": 497,
+              "visited": 497,
+              "guards": 0,
+              "removed": 0,
+              "bailed": 0
+            }
+          }
+        }
+      },
+      "semantics-early": {
+        "bytes": 23848,
+        "functions": 24,
+        "sha256": "da8e33f9d0cd37fe446ad7a4398c142b92df58da048efd16e974aaf7845f4364",
+        "hostCompileMillis": [
+          5.207672999999886,
+          5.217261000000235,
+          5.309647000000041,
+          5.438709999999901,
+          5.580363999999918,
+          5.605762000000141,
+          5.754649999999856
+        ],
+        "options": {
+          "semanticPolicy": "early",
+          "semanticStats": {
+            "addresses": 0,
+            "literals": 0
+          }
+        }
+      },
+      "semantics-late": {
+        "bytes": 21644,
+        "functions": 24,
+        "sha256": "7b4a31e2f737eba5c8b24ca7796e3f7c641da24faa56b3b17837ecb3c5d0d97a",
+        "hostCompileMillis": [
+          4.614491000000271,
+          5.021490999999969,
+          5.035578999999871,
+          5.155443999999989,
+          5.326235999999881,
+          5.348254999999881,
+          5.433687000000191
+        ],
+        "options": {
+          "semanticPolicy": "late",
+          "semanticStats": {
+            "addresses": 52,
+            "literals": 12
+          }
+        }
+      },
+      "semantics-selected": {
+        "bytes": 22644,
+        "functions": 24,
+        "sha256": "e1794b7ac40e8202cab7e91f5b52d76096bef0bee4d36acca808c6c89d4c9869",
+        "hostCompileMillis": [
+          5.248359000000164,
+          5.2679840000000695,
+          5.436153000000104,
+          5.519689999999628,
+          5.824837000000116,
+          5.923597999999856,
+          6.02332400000023
+        ],
+        "options": {
+          "semanticPolicy": "selected",
+          "semanticStats": {
+            "addresses": 11,
+            "literals": 11
+          }
+        }
+      }
+    }
+  }
+}
