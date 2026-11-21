@@ -1,0 +1,1377 @@
+{
+  "receipts": {
+    "implementation": {
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "effortRequested": "high",
+      "turns": 41,
+      "durationMs": 566352,
+      "stopReason": "end_turn"
+    },
+    "report": {
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "effortRequested": "high",
+      "turns": 29,
+      "durationMs": 330125,
+      "stopReason": "end_turn"
+    }
+  },
+  "cells": [
+    {
+      "room": "3792",
+      "cell": "request-1",
+      "source": "({globals: ['q','hardware','simd','profiles'].map(n => n + ':' + typeof globalThis[n]), hw: hardware.help().available, simd: typeof simd === 'object' ? simd.help() : null})",
+      "value": {
+        "globals": [
+          "q:object",
+          "hardware:object",
+          "simd:undefined",
+          "profiles:object"
+        ],
+        "hw": true,
+        "simd": null
+      }
+    },
+    {
+      "room": "3792",
+      "cell": "request-2",
+      "source": "const pie = profiles.arm('typed-pie'); ({describe: pie.describe(), instr: q.run(pie.region('row').workload('opening-160-rows').total('instructions')), packets: q.run(pie.region('row').workload('opening-160-rows').total('packets')), hwImages: hardware.metadata().images})",
+      "value": {
+        "describe": {
+          "arm": "typed-pie",
+          "source": {
+            "profile": "typed",
+            "entry": "pie",
+            "digest": "119750babce5ea574a6c729514790f7e6ab8708c12c3144fb9a66b8a1faca984"
+          },
+          "totals": {
+            "instructions": 3131435,
+            "packets": 3135,
+            "stackLoads": 729553,
+            "stackStores": 309776
+          },
+          "units": {
+            "instructions": "executed guest instructions",
+            "packets": "executed packets",
+            "stackLoads": "executed direct stack loads",
+            "stackStores": "executed direct stack stores"
+          },
+          "rowsVerified": 160,
+          "rowBytes": null,
+          "sampleKeys": [
+            "0",
+            "61",
+            "109"
+          ],
+          "sampleCount": 3,
+          "sampleKeysTruncated": false,
+          "contract": {
+            "value": null,
+            "evidence": "the summary does not state a checked/unchecked contract for this arm"
+          },
+          "otherFields": [],
+          "treatment": {
+            "id": "typed-pie",
+            "status": "described",
+            "role": "packed-producer treatment",
+            "design": "same region lowering as typed-scalar, but the producer is one 16-byte load, one eight-lane signed saturating subtraction and one 16-byte scratch store; it targets the discriminant subtraction of the inner pixel loop",
+            "build": "typedRv32.compile(src, [], undefined, { pieLoops: \"pie\" })",
+            "notA": "an intervention targeted at stack traffic; the hit continuation (lookup, depth compare, stores) stays ordinary scalar code",
+            "provenance": {
+              "kind": "study/capture metadata",
+              "measured": false,
+              "catalog": "picocalc-row-treatments.v1",
+              "basis": [
+                "typed-counts.mjs (build options, workload, counters)",
+                "study.md (treatment design)",
+                "evidence.md \u00a74"
+              ],
+              "note": "curated from the attached study and capture sources; not read from the profile entry and not covered by source.digest"
+            }
+          },
+          "countsCover": {
+            "treatment": "typed-pie",
+            "role": "packed-producer treatment",
+            "verifiedBy": "rowsVerified",
+            "workload": "one runRv32 call of typedRayComputeRow per fixture row; each must not trap, must return 1 and must reproduce fixtures/<y>.gold",
+            "counter": "runRv32 per-PC hook over the whole call; the script applies no symbol-range filter"
+          },
+          "fields": {
+            "totals.instructions": {
+              "scope": "dynamic",
+              "meaning": "RV32 interpreter steps (r.steps): one decoded instruction per step, a packed instruction counts once",
+              "isNot": "ESP32-P4 cycles or board time"
+            },
+            "totals.packets": {
+              "scope": "dynamic",
+              "meaning": "r.packed.stores: executed 16-byte packed scratch stores",
+              "isNot": "a separately counted number of packed groups"
+            },
+            "totals.stackLoads": {
+              "scope": "dynamic",
+              "meaning": "executed PCs whose 32-bit word has rs1 = sp and major opcode LOAD (any integer width), summed over the workload",
+              "isNot": "a stack-slot or spill count; compressed and vendor encodings are not decoded"
+            },
+            "totals.stackStores": {
+              "scope": "dynamic",
+              "meaning": "executed PCs whose 32-bit word has rs1 = sp and major opcode STORE (any integer width), summed over the workload",
+              "isNot": "a stack-slot or spill count; compressed and vendor encodings are not decoded"
+            },
+            "rowBytes": {
+              "scope": "static",
+              "meaning": "absent from this summary: typed-counts.mjs records no code size",
+              "isNot": "a Typed image size; image bytes are a study figure (study.md)"
+            },
+            "samples": {
+              "scope": "dynamic",
+              "meaning": "per-row totals for a few fixture rows, keyed by row index",
+              "isNot": "PC samples"
+            },
+            "rowsVerified": {
+              "scope": "workload",
+              "meaning": "row inputs whose output equalled fixtures/<y>.gold",
+              "isNot": "a count of output bytes"
+            }
+          },
+          "comparisons": [
+            {
+              "before": "typed-scalar",
+              "after": "typed-pie",
+              "isolates": "the packet producer only (scalar lane fill vs packed subtraction)",
+              "heldEqual": "source, workload, counters, admission, memory intervals, iteration domain, lane consumer, fallback"
+            },
+            {
+              "before": "typed-stock",
+              "after": "typed-pie",
+              "isolates": "no single change: region lowering plus packed producer",
+              "heldEqual": "source, workload, counters"
+            }
+          ],
+          "cannotAttribute": [
+            "an individual stack slot, frame offset or PC: totals and row samples carry no addresses (see q.joinPCs)",
+            "spill vs prologue/epilogue save vs local stack home vs scratch: the predicate sees only the base register sp",
+            "an individual optimization inside a treatment that bundles several changes",
+            "cycles or ESP32-P4 board time: these are emulator counts",
+            "trap-path behaviour: every workload input is a valid row"
+          ],
+          "timing": "emulator counts only; ESP32-P4 timings are a separate study layer, not loaded as a profile"
+        },
+        "instr": {
+          "kind": "total",
+          "status": "available",
+          "reason": null,
+          "arm": "typed-pie",
+          "metric": "instructions",
+          "value": 3131435,
+          "unit": "executed guest instructions",
+          "dimension": "executed guest instructions",
+          "category": null,
+          "scope": "dynamic (executed work, summed over the workload)",
+          "region": {
+            "name": "row",
+            "requested": true,
+            "evidence": "the measured row symbol (summary totals are collected inside it)"
+          },
+          "workload": {
+            "label": "opening-160-rows",
+            "rowsVerified": 160,
+            "verified": true,
+            "evidence": "rowsVerified=160"
+          },
+          "contract": {
+            "value": null,
+            "evidence": "the summary does not state a checked/unchecked contract for this arm"
+          },
+          "source": {
+            "profile": "typed",
+            "entry": "pie",
+            "digest": "119750babce5ea574a6c729514790f7e6ab8708c12c3144fb9a66b8a1faca984",
+            "path": "typed[\"pie\"].totals.instructions"
+          }
+        },
+        "packets": {
+          "kind": "total",
+          "status": "available",
+          "reason": null,
+          "arm": "typed-pie",
+          "metric": "packets",
+          "value": 3135,
+          "unit": "executed packets",
+          "dimension": "executed packets",
+          "category": null,
+          "scope": "dynamic (executed work, summed over the workload)",
+          "region": {
+            "name": "row",
+            "requested": true,
+            "evidence": "the measured row symbol (summary totals are collected inside it)"
+          },
+          "workload": {
+            "label": "opening-160-rows",
+            "rowsVerified": 160,
+            "verified": true,
+            "evidence": "rowsVerified=160"
+          },
+          "contract": {
+            "value": null,
+            "evidence": "the summary does not state a checked/unchecked contract for this arm"
+          },
+          "source": {
+            "profile": "typed",
+            "entry": "pie",
+            "digest": "119750babce5ea574a6c729514790f7e6ab8708c12c3144fb9a66b8a1faca984",
+            "path": "typed[\"pie\"].totals.packets"
+          }
+        },
+        "hwImages": {
+          "pie": {
+            "program": 5,
+            "imageSHA": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+            "elfSHA": "149759d71de003452abf87086d71a91033facba2a92b94bde1e59dfb24a4d0cf",
+            "elfCRC": "ab91b817"
+          },
+          "scalar": {
+            "program": 8,
+            "imageSHA": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187",
+            "elfSHA": "e47c40a80dddf0237fa60268e2d6b228070389331d0238807574f291e69e41c5",
+            "elfCRC": "bd9a8467"
+          },
+          "stock": {
+            "program": 0,
+            "imageSHA": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+            "elfSHA": "084832b9a2c735b111799c7ba4c5b844dd7db6c9290a5f8683b58982a1764e9f",
+            "elfCRC": "0d2e18b8"
+          }
+        }
+      }
+    },
+    {
+      "room": "3794",
+      "cell": "request-candidate-1",
+      "source": "const h = simd.help(); ({available: h.available, absent: h.absent, studySHA: h.studySHA, images: h.images, methods: h.methods, executionFields: h.executionFields, unit: h.unit, omission: h.omission, decisions: simd.decisions().map(d => ({id: d.id, function: d.function, imageSHA: d.imageSHA.slice(0, 12), source: d.source, roles: [...new Set(d.ranges.map(r => r.role))], alternatives: d.alternatives.length})), traces: simd.traces().map(t => [t.id, t.imageSHA.slice(0, 12), t.workload, t.steps, t.listedPCs].join(' '))})",
+      "value": {
+        "available": true,
+        "absent": null,
+        "studySHA": "4548c1192cfd1f660947fe1387ed1b9ea8f2ccd2a7094c2183d87cb3c5fbc203",
+        "images": [
+          {
+            "sha256": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+            "bytes": 9564
+          },
+          {
+            "sha256": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187",
+            "bytes": 10384
+          },
+          {
+            "sha256": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+            "bytes": 10308
+          },
+          {
+            "sha256": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+            "bytes": 10332
+          },
+          {
+            "sha256": "55b350ea2753e506adcae0aeee6d609a7c59905f1b6ae17952fc9911c99372fa",
+            "bytes": 12684
+          },
+          {
+            "sha256": "48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03",
+            "bytes": 1652
+          },
+          {
+            "sha256": "ced49a3994f4bc23ba5eae2c85db7c92bfe7f741200c90ec1463b440ce9ca04f",
+            "bytes": 1476
+          },
+          {
+            "sha256": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+            "bytes": 3400
+          }
+        ],
+        "methods": [
+          "simd.decisions()",
+          "simd.traces()",
+          "simd.counts(traceID)",
+          "simd.packets(workload)",
+          "simd.executions(decisionID, traceID, role)"
+        ],
+        "executionFields": [
+          "decision",
+          "function",
+          "source",
+          "trace",
+          "workload",
+          "imageSHA",
+          "role",
+          "ranges",
+          "staticInstructions",
+          "executedPCs",
+          "executions",
+          "unit",
+          "traceSteps",
+          "witnesses",
+          "omittedPCsMean"
+        ],
+        "unit": "guest instruction executions: retired RV32 instructions whose PC lies in the role's byte ranges, summed over the trace's complete per-PC histogram",
+        "omission": "the histogram is complete for this trace: a PC inside its image that is not listed executed zero times in this trace; it says nothing about other traces, workloads or images",
+        "decisions": [
+          {
+            "id": "stock-row",
+            "function": "typedRayComputeRow",
+            "imageSHA": "813974db340e",
+            "source": {
+              "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+              "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+              "lineStart": 99,
+              "lineEnd": 125
+            },
+            "roles": [
+              "function"
+            ],
+            "alternatives": 3
+          },
+          {
+            "id": "scalar-row",
+            "function": "typedRayComputeRow",
+            "imageSHA": "119637d1aefe",
+            "source": {
+              "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+              "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+              "lineStart": 112,
+              "lineEnd": 122
+            },
+            "roles": [
+              "function",
+              "full-packet-scratch-store",
+              "single-prefix-scratch-store",
+              "scalar-lane-load",
+              "admission and packet control",
+              "halfword producer and sign guard",
+              "scalar hit continuation",
+              "packet backedge"
+            ],
+            "alternatives": 3
+          },
+          {
+            "id": "scalar-rejected-6",
+            "function": "typedRayComputeRow",
+            "imageSHA": "119637d1aefe",
+            "source": {
+              "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+              "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+              "lineStart": 100,
+              "lineEnd": 104
+            },
+            "roles": [
+              "mapped-loop-instructions"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "scalar-rejected-75",
+            "function": "typedRayComputeRow",
+            "imageSHA": "119637d1aefe",
+            "source": {
+              "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+              "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+              "lineStart": 105,
+              "lineEnd": 124
+            },
+            "roles": [
+              "mapped-loop-instructions"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "pie-row",
+            "function": "typedRayComputeRow",
+            "imageSHA": "8420b7361973",
+            "source": {
+              "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+              "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+              "lineStart": 112,
+              "lineEnd": 122
+            },
+            "roles": [
+              "function",
+              "full-packet-scratch-store",
+              "single-prefix-scratch-store",
+              "scalar-lane-load",
+              "admission and packet control",
+              "halfword producer and sign guard",
+              "scalar hit continuation",
+              "packet backedge"
+            ],
+            "alternatives": 3
+          },
+          {
+            "id": "pie-rejected-6",
+            "function": "typedRayComputeRow",
+            "imageSHA": "8420b7361973",
+            "source": {
+              "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+              "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+              "lineStart": 100,
+              "lineEnd": 104
+            },
+            "roles": [
+              "mapped-loop-instructions"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "pie-rejected-75",
+            "function": "typedRayComputeRow",
+            "imageSHA": "8420b7361973",
+            "source": {
+              "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+              "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+              "lineStart": 105,
+              "lineEnd": 124
+            },
+            "roles": [
+              "mapped-loop-instructions"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "empty-row",
+            "function": "typedRayComputeRow",
+            "imageSHA": "9a4a2356a86b",
+            "source": {
+              "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+              "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+              "lineStart": 112,
+              "lineEnd": 122
+            },
+            "roles": [
+              "function",
+              "admission and packet control",
+              "halfword producer and sign guard",
+              "scalar hit continuation",
+              "packet backedge",
+              "packet-input-load",
+              "min-reduction",
+              "packed-subtraction",
+              "full-packet-scratch-store",
+              "scalar-lane-load"
+            ],
+            "alternatives": 3
+          },
+          {
+            "id": "full-row",
+            "function": "typedRayComputeRow",
+            "imageSHA": "55b350ea2753",
+            "source": {
+              "path": "picocalc-os/worlds/raytrace/raytrace.typed",
+              "sha256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+              "lineStart": 112,
+              "lineEnd": 122
+            },
+            "roles": [
+              "function",
+              "admission and packet control",
+              "halfword producer and sign guard",
+              "scalar hit continuation",
+              "packet backedge",
+              "packet-input-load",
+              "min-reduction",
+              "packed-subtraction",
+              "max-reduction",
+              "full-packet-scratch-store",
+              "scalar-lane-load",
+              "extract-full-hit-lane"
+            ],
+            "alternatives": 3
+          },
+          {
+            "id": "physics-contact_pie",
+            "function": "contact_pie",
+            "imageSHA": "48f9254ba658",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/physics.S",
+              "sha256": "8203fcf7518c7446dd5f1b579ab42f426d2510136c8780ad87d21e9b9c1a6892",
+              "lineStart": 317,
+              "lineEnd": 317
+            },
+            "roles": [
+              "entry-body",
+              "packed-load",
+              "packed-arithmetic",
+              "packed-store"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-contact_scalar",
+            "function": "contact_scalar",
+            "imageSHA": "48f9254ba658",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/physics.S",
+              "sha256": "8203fcf7518c7446dd5f1b579ab42f426d2510136c8780ad87d21e9b9c1a6892",
+              "lineStart": 258,
+              "lineEnd": 258
+            },
+            "roles": [
+              "entry-body"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-particle_aos_pie",
+            "function": "particle_aos_pie",
+            "imageSHA": "48f9254ba658",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/physics.S",
+              "sha256": "8203fcf7518c7446dd5f1b579ab42f426d2510136c8780ad87d21e9b9c1a6892",
+              "lineStart": 50,
+              "lineEnd": 50
+            },
+            "roles": [
+              "entry-body",
+              "packed-load",
+              "packed-arithmetic",
+              "packed-store"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-particle_aos_scalar",
+            "function": "particle_aos_scalar",
+            "imageSHA": "48f9254ba658",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/physics.S",
+              "sha256": "8203fcf7518c7446dd5f1b579ab42f426d2510136c8780ad87d21e9b9c1a6892",
+              "lineStart": 21,
+              "lineEnd": 21
+            },
+            "roles": [
+              "entry-body"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-particle_soa_pie",
+            "function": "particle_soa_pie",
+            "imageSHA": "48f9254ba658",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/physics.S",
+              "sha256": "8203fcf7518c7446dd5f1b579ab42f426d2510136c8780ad87d21e9b9c1a6892",
+              "lineStart": 158,
+              "lineEnd": 158
+            },
+            "roles": [
+              "entry-body",
+              "packed-load",
+              "packed-arithmetic",
+              "packed-store"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-particle_soa_scalar",
+            "function": "particle_soa_scalar",
+            "imageSHA": "48f9254ba658",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/physics.S",
+              "sha256": "8203fcf7518c7446dd5f1b579ab42f426d2510136c8780ad87d21e9b9c1a6892",
+              "lineStart": 124,
+              "lineEnd": 124
+            },
+            "roles": [
+              "entry-body"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-physics_typed_contacts",
+            "function": "physics_typed_contacts",
+            "imageSHA": "ced49a3994f4",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/physics.typed",
+              "sha256": "70652a517c2eba13399509ce175599bfb8694235b809e05e6c56de8dc9869af0",
+              "lineStart": 31,
+              "lineEnd": 31
+            },
+            "roles": [
+              "entry-body"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-physics_typed_particleAoS",
+            "function": "physics_typed_particleAoS",
+            "imageSHA": "ced49a3994f4",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/physics.typed",
+              "sha256": "70652a517c2eba13399509ce175599bfb8694235b809e05e6c56de8dc9869af0",
+              "lineStart": 3,
+              "lineEnd": 3
+            },
+            "roles": [
+              "entry-body"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-physics_typed_particleSoA",
+            "function": "physics_typed_particleSoA",
+            "imageSHA": "ced49a3994f4",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/physics.typed",
+              "sha256": "70652a517c2eba13399509ce175599bfb8694235b809e05e6c56de8dc9869af0",
+              "lineStart": 17,
+              "lineEnd": 17
+            },
+            "roles": [
+              "entry-body"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-guarded_aos_pie",
+            "function": "guarded_aos_pie",
+            "imageSHA": "79809bfa90fc",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/board/physics_checked.S",
+              "sha256": "939ed0076fafbc60fa394db2ff841696f68a8d291233e986f416ba6cf29cf0f2",
+              "lineStart": 33,
+              "lineEnd": 33
+            },
+            "roles": [
+              "native-helper",
+              "packed-load",
+              "packed-arithmetic",
+              "packed-store"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-guarded_aos_scalar",
+            "function": "guarded_aos_scalar",
+            "imageSHA": "79809bfa90fc",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/board/physics_checked.S",
+              "sha256": "939ed0076fafbc60fa394db2ff841696f68a8d291233e986f416ba6cf29cf0f2",
+              "lineStart": 32,
+              "lineEnd": 32
+            },
+            "roles": [
+              "native-helper"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-guarded_soa_pie",
+            "function": "guarded_soa_pie",
+            "imageSHA": "79809bfa90fc",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/board/physics_checked.S",
+              "sha256": "939ed0076fafbc60fa394db2ff841696f68a8d291233e986f416ba6cf29cf0f2",
+              "lineStart": 35,
+              "lineEnd": 35
+            },
+            "roles": [
+              "native-helper",
+              "packed-load",
+              "packed-arithmetic",
+              "packed-store"
+            ],
+            "alternatives": 1
+          },
+          {
+            "id": "physics-guarded_soa_scalar",
+            "function": "guarded_soa_scalar",
+            "imageSHA": "79809bfa90fc",
+            "source": {
+              "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/board/physics_checked.S",
+              "sha256": "939ed0076fafbc60fa394db2ff841696f68a8d291233e986f416ba6cf29cf0f2",
+              "lineStart": 34,
+              "lineEnd": 34
+            },
+            "roles": [
+              "native-helper"
+            ],
+            "alternatives": 1
+          }
+        ],
+        "traces": [
+          "stock-opening 813974db340e opening-160-rows 3608697 225",
+          "scalar-opening 119637d1aefe opening-160-rows 3199910 337",
+          "pie-opening 8420b7361973 opening-160-rows 3131435 318",
+          "empty-opening 9a4a2356a86b opening-160-rows 2983602 324",
+          "full-opening 55b350ea2753 opening-160-rows 2954486 880",
+          "physics-particle_aos_scalar-particle-n7 48f9254ba658 particle-n7 75 18",
+          "physics-particle_aos_pie-particle-n7 48f9254ba658 particle-n7 77 20",
+          "physics-particle_soa_scalar-particle-n7 48f9254ba658 particle-n7 85 22",
+          "physics-particle_soa_pie-particle-n7 48f9254ba658 particle-n7 92 29",
+          "physics-particle_aos_scalar-particle-n8 48f9254ba658 particle-n8 84 18",
+          "physics-particle_aos_pie-particle-n8 48f9254ba658 particle-n8 68 68",
+          "physics-particle_soa_scalar-particle-n8 48f9254ba658 particle-n8 95 22",
+          "physics-particle_soa_pie-particle-n8 48f9254ba658 particle-n8 21 21",
+          "physics-particle_aos_scalar-particle-n64 48f9254ba658 particle-n64 633 18",
+          "physics-particle_aos_pie-particle-n64 48f9254ba658 particle-n64 467 68",
+          "physics-particle_soa_scalar-particle-n64 48f9254ba658 particle-n64 700 22",
+          "physics-particle_soa_pie-particle-n64 48f9254ba658 particle-n64 63 21",
+          "physics-particle_aos_scalar-particle-n127 48f9254ba658 particle-n127 1248 18",
+          "physics-particle_aos_pie-particle-n127 48f9254ba658 particle-n127 942 84",
+          "physics-particle_soa_scalar-particle-n127 48f9254ba658 particle-n127 1378 22",
+          "physics-particle_soa_pie-particle-n127 48f9254ba658 particle-n127 973 95",
+          "physics-particle_aos_scalar-particle-n128 48f9254ba658 particle-n128 1257 18",
+          "physics-particle_aos_pie-particle-n128 48f9254ba658 particle-n128 923 68",
+          "physics-particle_soa_scalar-particle-n128 48f9254ba658 particle-n128 1388 22",
+          "physics-particle_soa_pie-particle-n128 48f9254ba658 particle-n128 111 21",
+          "physics-contact_scalar-chain16-original-scalar 48f9254ba658 chain16:original-scalar 260 20",
+          "physics-contact_scalar-chain16-scheduled-scalar 48f9254ba658 chain16:scheduled-scalar 264 20",
+          "physics-contact_pie-chain16-scheduled-pie 48f9254ba658 chain16:scheduled-pie 414 207",
+          "physics-contact_scalar-star16-original-scalar 48f9254ba658 star16:original-scalar 260 20",
+          "physics-contact_scalar-star16-scheduled-scalar 48f9254ba658 star16:scheduled-scalar 320 20",
+          "physics-contact_pie-star16-scheduled-pie 48f9254ba658 star16:scheduled-pie 400 25",
+          "physics-contact_scalar-disjoint16-original-scalar 48f9254ba658 disjoint16:original-scalar 260 20",
+          "physics-contact_scalar-disjoint16-scheduled-scalar 48f9254ba658 disjoint16:scheduled-scalar 260 20",
+          "physics-contact_pie-disjoint16-scheduled-pie 48f9254ba658 disjoint16:scheduled-pie 403 207",
+          "physics-contact_scalar-mesh128-original-scalar 48f9254ba658 mesh128:original-scalar 2052 20",
+          "physics-contact_scalar-mesh128-scheduled-scalar 48f9254ba658 mesh128:scheduled-scalar 2060 20",
+          "physics-contact_pie-mesh128-scheduled-pie 48f9254ba658 mesh128:scheduled-pie 3107 225",
+          "physics-physics_typed_particleAoS-particle-n7 ced49a3994f4 particle-n7 611 110",
+          "physics-physics_typed_particleSoA-particle-n7 ced49a3994f4 particle-n7 569 104",
+          "physics-physics_typed_particleAoS-particle-n8 ced49a3994f4 particle-n8 695 110",
+          "physics-physics_typed_particleSoA-particle-n8 ced49a3994f4 particle-n8 647 104",
+          "physics-physics_typed_particleAoS-particle-n64 ced49a3994f4 particle-n64 5451 110",
+          "physics-physics_typed_particleSoA-particle-n64 ced49a3994f4 particle-n64 5067 104",
+          "physics-physics_typed_particleAoS-particle-n127 ced49a3994f4 particle-n127 10785 110",
+          "physics-physics_typed_particleSoA-particle-n127 ced49a3994f4 particle-n127 10023 104",
+          "physics-physics_typed_particleAoS-particle-n128 ced49a3994f4 particle-n128 10869 110",
+          "physics-physics_typed_particleSoA-particle-n128 ced49a3994f4 particle-n128 10101 104",
+          "physics-physics_typed_contacts-chain16-original-typed ced49a3994f4 chain16:original-typed 1871 138",
+          "physics-physics_typed_contacts-chain16-scheduled-typed ced49a3994f4 chain16:scheduled-typed 1866 138",
+          "physics-physics_typed_contacts-star16-original-typed ced49a3994f4 star16:original-typed 1875 138",
+          "physics-physics_typed_contacts-star16-scheduled-typed ced49a3994f4 star16:scheduled-typed 2145 138",
+          "physics-physics_typed_contacts-disjoint16-original-typed ced49a3994f4 disjoint16:original-typed 1870 138",
+          "physics-physics_typed_contacts-disjoint16-scheduled-typed ced49a3994f4 disjoint16:scheduled-typed 1870 138",
+          "physics-physics_typed_contacts-mesh128-original-typed ced49a3994f4 mesh128:original-typed 14957 138",
+          "physics-physics_typed_contacts-mesh128-scheduled-typed ced49a3994f4 mesh128:scheduled-typed 14936 138",
+          "physics-guarded_aos_scalar-particle-n7 79809bfa90fc particle-n7 90 33",
+          "physics-guarded_aos_pie-particle-n7 79809bfa90fc particle-n7 92 35",
+          "physics-guarded_soa_scalar-particle-n7 79809bfa90fc particle-n7 100 37",
+          "physics-guarded_soa_pie-particle-n7 79809bfa90fc particle-n7 107 44",
+          "physics-guarded_aos_scalar-particle-n8 79809bfa90fc particle-n8 99 33",
+          "physics-guarded_aos_pie-particle-n8 79809bfa90fc particle-n8 83 83",
+          "physics-guarded_soa_scalar-particle-n8 79809bfa90fc particle-n8 110 37",
+          "physics-guarded_soa_pie-particle-n8 79809bfa90fc particle-n8 36 36",
+          "physics-guarded_aos_scalar-particle-n64 79809bfa90fc particle-n64 648 33",
+          "physics-guarded_aos_pie-particle-n64 79809bfa90fc particle-n64 482 83",
+          "physics-guarded_soa_scalar-particle-n64 79809bfa90fc particle-n64 715 37",
+          "physics-guarded_soa_pie-particle-n64 79809bfa90fc particle-n64 78 36",
+          "physics-guarded_aos_scalar-particle-n127 79809bfa90fc particle-n127 1263 33",
+          "physics-guarded_aos_pie-particle-n127 79809bfa90fc particle-n127 957 99",
+          "physics-guarded_soa_scalar-particle-n127 79809bfa90fc particle-n127 1393 37",
+          "physics-guarded_soa_pie-particle-n127 79809bfa90fc particle-n127 988 110",
+          "physics-guarded_aos_scalar-particle-n128 79809bfa90fc particle-n128 1272 33",
+          "physics-guarded_aos_pie-particle-n128 79809bfa90fc particle-n128 938 83",
+          "physics-guarded_soa_scalar-particle-n128 79809bfa90fc particle-n128 1403 37",
+          "physics-guarded_soa_pie-particle-n128 79809bfa90fc particle-n128 126 36"
+        ]
+      }
+    },
+    {
+      "room": "3794",
+      "cell": "request-candidate-2",
+      "source": "const rayArms = ['stock','scalar','pie','empty','full']; const rayRoles = ['function','admission and packet control','halfword producer and sign guard','scalar hit continuation','packet backedge','packet-input-load','packed-subtraction','min-reduction','max-reduction','full-packet-scratch-store','single-prefix-scratch-store','scalar-lane-load','extract-full-hit-lane']; const rayJoin = (arm, role) => { try { const e = simd.executions(arm + '-row', arm + '-opening', role); return {x: e.executions, s: e.staticInstructions, pcs: e.executedPCs} } catch (err) { return String(err).split(':')[1].trim() } }; const rayTable = rayArms.map(arm => { const t = simd.traces().find(t => t.id === arm + '-opening'); return {arm, steps: t.steps, imageBytes: t.imageBytes, listedPCs: t.listedPCs, imageSHA: t.imageSHA, roles: Object.fromEntries(rayRoles.map(r => [r, rayJoin(arm, r)]))} }); rayTable",
+      "value": [
+        {
+          "arm": "stock",
+          "steps": 3608697,
+          "imageBytes": 9564,
+          "listedPCs": 225,
+          "imageSHA": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+          "roles": {
+            "function": {
+              "x": 3608697,
+              "s": 236,
+              "pcs": 225
+            },
+            "admission and packet control": "unknownRole",
+            "halfword producer and sign guard": "unknownRole",
+            "scalar hit continuation": "unknownRole",
+            "packet backedge": "unknownRole",
+            "packet-input-load": "unknownRole",
+            "packed-subtraction": "unknownRole",
+            "min-reduction": "unknownRole",
+            "max-reduction": "unknownRole",
+            "full-packet-scratch-store": "unknownRole",
+            "single-prefix-scratch-store": "unknownRole",
+            "scalar-lane-load": "unknownRole",
+            "extract-full-hit-lane": "unknownRole"
+          }
+        },
+        {
+          "arm": "scalar",
+          "steps": 3199910,
+          "imageBytes": 10384,
+          "listedPCs": 337,
+          "imageSHA": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187",
+          "roles": {
+            "function": {
+              "x": 3199910,
+              "s": 441,
+              "pcs": 337
+            },
+            "admission and packet control": {
+              "x": 34845,
+              "s": 91,
+              "pcs": 67
+            },
+            "halfword producer and sign guard": {
+              "x": 175065,
+              "s": 38,
+              "pcs": 38
+            },
+            "scalar hit continuation": {
+              "x": 399200,
+              "s": 69,
+              "pcs": 65
+            },
+            "packet backedge": {
+              "x": 156420,
+              "s": 7,
+              "pcs": 7
+            },
+            "packet-input-load": "unknownRole",
+            "packed-subtraction": "unknownRole",
+            "min-reduction": "unknownRole",
+            "max-reduction": "unknownRole",
+            "full-packet-scratch-store": {
+              "x": 25080,
+              "s": 8,
+              "pcs": 8
+            },
+            "single-prefix-scratch-store": {
+              "x": 990,
+              "s": 1,
+              "pcs": 1
+            },
+            "scalar-lane-load": {
+              "x": 26070,
+              "s": 1,
+              "pcs": 1
+            },
+            "extract-full-hit-lane": "unknownRole"
+          }
+        },
+        {
+          "arm": "pie",
+          "steps": 3131435,
+          "imageBytes": 10308,
+          "listedPCs": 318,
+          "imageSHA": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+          "roles": {
+            "function": {
+              "x": 3131435,
+              "s": 422,
+              "pcs": 318
+            },
+            "admission and packet control": {
+              "x": 35340,
+              "s": 94,
+              "pcs": 70
+            },
+            "halfword producer and sign guard": {
+              "x": 106095,
+              "s": 16,
+              "pcs": 16
+            },
+            "scalar hit continuation": {
+              "x": 399200,
+              "s": 69,
+              "pcs": 65
+            },
+            "packet backedge": {
+              "x": 156420,
+              "s": 7,
+              "pcs": 7
+            },
+            "packet-input-load": "unknownRole",
+            "packed-subtraction": "unknownRole",
+            "min-reduction": "unknownRole",
+            "max-reduction": "unknownRole",
+            "full-packet-scratch-store": {
+              "x": 3135,
+              "s": 1,
+              "pcs": 1
+            },
+            "single-prefix-scratch-store": {
+              "x": 990,
+              "s": 1,
+              "pcs": 1
+            },
+            "scalar-lane-load": {
+              "x": 26070,
+              "s": 1,
+              "pcs": 1
+            },
+            "extract-full-hit-lane": "unknownRole"
+          }
+        },
+        {
+          "arm": "empty",
+          "steps": 2983602,
+          "imageBytes": 10332,
+          "listedPCs": 324,
+          "imageSHA": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+          "roles": {
+            "function": {
+              "x": 2983602,
+              "s": 428,
+              "pcs": 324
+            },
+            "admission and packet control": {
+              "x": 35340,
+              "s": 94,
+              "pcs": 70
+            },
+            "halfword producer and sign guard": {
+              "x": 53257,
+              "s": 19,
+              "pcs": 19
+            },
+            "scalar hit continuation": {
+              "x": 399200,
+              "s": 69,
+              "pcs": 65
+            },
+            "packet backedge": {
+              "x": 61425,
+              "s": 10,
+              "pcs": 10
+            },
+            "packet-input-load": {
+              "x": 3135,
+              "s": 1,
+              "pcs": 1
+            },
+            "packed-subtraction": {
+              "x": 1024,
+              "s": 1,
+              "pcs": 1
+            },
+            "min-reduction": {
+              "x": 3135,
+              "s": 1,
+              "pcs": 1
+            },
+            "max-reduction": "unknownRole",
+            "full-packet-scratch-store": {
+              "x": 1024,
+              "s": 1,
+              "pcs": 1
+            },
+            "single-prefix-scratch-store": "unknownRole",
+            "scalar-lane-load": {
+              "x": 9182,
+              "s": 1,
+              "pcs": 1
+            },
+            "extract-full-hit-lane": "unknownRole"
+          }
+        },
+        {
+          "arm": "full",
+          "steps": 2954486,
+          "imageBytes": 12684,
+          "listedPCs": 880,
+          "imageSHA": "55b350ea2753e506adcae0aeee6d609a7c59905f1b6ae17952fc9911c99372fa",
+          "roles": {
+            "function": {
+              "x": 2954486,
+              "s": 1016,
+              "pcs": 880
+            },
+            "admission and packet control": {
+              "x": 35340,
+              "s": 94,
+              "pcs": 70
+            },
+            "halfword producer and sign guard": {
+              "x": 35271,
+              "s": 22,
+              "pcs": 22
+            },
+            "scalar hit continuation": {
+              "x": 60106,
+              "s": 69,
+              "pcs": 65
+            },
+            "packet backedge": {
+              "x": 389389,
+              "s": 595,
+              "pcs": 563
+            },
+            "packet-input-load": {
+              "x": 3135,
+              "s": 1,
+              "pcs": 1
+            },
+            "packed-subtraction": {
+              "x": 1024,
+              "s": 1,
+              "pcs": 1
+            },
+            "min-reduction": {
+              "x": 3135,
+              "s": 1,
+              "pcs": 1
+            },
+            "max-reduction": {
+              "x": 1024,
+              "s": 1,
+              "pcs": 1
+            },
+            "full-packet-scratch-store": {
+              "x": 282,
+              "s": 1,
+              "pcs": 1
+            },
+            "single-prefix-scratch-store": "unknownRole",
+            "scalar-lane-load": {
+              "x": 3246,
+              "s": 1,
+              "pcs": 1
+            },
+            "extract-full-hit-lane": {
+              "x": 5936,
+              "s": 8,
+              "pcs": 8
+            }
+          }
+        }
+      ]
+    },
+    {
+      "room": "3794",
+      "cell": "request-candidate-3",
+      "source": "const physics = simd.executions('physics-guarded_soa_pie','physics-guarded_soa_pie-particle-n128','packed-arithmetic'); const err = f => { try { return f() } catch (e) { return String(e) } }; const pj = (d, t, r) => err(() => { const e = simd.executions(d, t, r); return [e.executions, e.executedPCs, e.staticInstructions, e.traceSteps].join('/') }); const sizes = ['n7','n8','n64','n127','n128']; const guarded = ['guarded_soa_pie','guarded_aos_pie','guarded_soa_scalar','guarded_aos_scalar'].map(f => ({f, rows: Object.fromEntries(sizes.map(n => [n, Object.fromEntries((f.endsWith('pie') ? ['native-helper','packed-load','packed-arithmetic','packed-store'] : ['native-helper']).map(r => [r, pj('physics-' + f, 'physics-' + f + '-particle-' + n, r)]))]))})); const n7 = simd.executions('physics-guarded_soa_pie','physics-guarded_soa_pie-particle-n7','packed-arithmetic'); const n7pcs = n7.ranges.map(r => r.start); const n7listed = simd.counts('physics-guarded_soa_pie-particle-n7').counts.filter(c => n7pcs.some(p => c.pc >= p && c.pc < p + 4)); ({physics, guarded, zero: {executions: n7.executions, executedPCs: n7.executedPCs, staticInstructions: n7.staticInstructions, ranges: n7.ranges, listedInHistogram: n7listed, traceSteps: n7.traceSteps}, absentRole: err(() => simd.executions('empty-row','empty-opening','single-prefix-scratch-store')), absentRole2: err(() => simd.executions('empty-row','empty-opening','extract-full-hit-lane')), crossImagePhysics: err(() => simd.executions('physics-guarded_soa_pie','physics-particle_soa_pie-particle-n128','packed-arithmetic')), crossImageRay: err(() => simd.executions('pie-row','full-opening','scalar-lane-load')), sameImageOtherFunction: pj('physics-guarded_soa_pie','physics-guarded_aos_pie-particle-n128','packed-arithmetic'), unknownTrace: err(() => simd.counts('pie-opening-sha'))})",
+      "value": {
+        "physics": {
+          "decision": "physics-guarded_soa_pie",
+          "function": "guarded_soa_pie",
+          "source": {
+            "path": "ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/scripts/physics/board/physics_checked.S",
+            "sha256": "939ed0076fafbc60fa394db2ff841696f68a8d291233e986f416ba6cf29cf0f2",
+            "lineStart": 35,
+            "lineEnd": 35
+          },
+          "trace": "physics-guarded_soa_pie-particle-n128",
+          "workload": "particle-n128",
+          "imageSHA": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+          "role": "packed-arithmetic",
+          "ranges": [
+            {
+              "start": 740,
+              "end": 744,
+              "role": "packed-arithmetic"
+            },
+            {
+              "start": 924,
+              "end": 928,
+              "role": "packed-arithmetic"
+            }
+          ],
+          "staticInstructions": 2,
+          "executedPCs": 1,
+          "executions": 16,
+          "unit": "guest instruction executions: retired RV32 instructions whose PC lies in the role's byte ranges, summed over the trace's complete per-PC histogram",
+          "traceSteps": 126,
+          "witnesses": [
+            {
+              "pc": 740,
+              "executions": 16
+            }
+          ],
+          "omittedPCsMean": "the histogram is complete for this trace: a PC inside its image that is not listed executed zero times in this trace; it says nothing about other traces, workloads or images"
+        },
+        "guarded": [
+          {
+            "f": "guarded_soa_pie",
+            "rows": {
+              "n7": {
+                "native-helper": "10/10/82/107",
+                "packed-load": "0/0/4/107",
+                "packed-arithmetic": "0/0/2/107",
+                "packed-store": "0/0/2/107"
+              },
+              "n8": {
+                "native-helper": "19/19/82/36",
+                "packed-load": "2/2/4/36",
+                "packed-arithmetic": "1/1/2/36",
+                "packed-store": "1/1/2/36"
+              },
+              "n64": {
+                "native-helper": "61/19/82/78",
+                "packed-load": "16/2/4/78",
+                "packed-arithmetic": "8/1/2/78",
+                "packed-store": "8/1/2/78"
+              },
+              "n127": {
+                "native-helper": "888/76/82/988",
+                "packed-load": "30/2/4/988",
+                "packed-arithmetic": "15/1/2/988",
+                "packed-store": "15/1/2/988"
+              },
+              "n128": {
+                "native-helper": "109/19/82/126",
+                "packed-load": "32/2/4/126",
+                "packed-arithmetic": "16/1/2/126",
+                "packed-store": "16/1/2/126"
+              }
+            }
+          },
+          {
+            "f": "guarded_aos_pie",
+            "rows": {
+              "n7": {
+                "native-helper": "2/2/66/92",
+                "packed-load": "0/0/2/92",
+                "packed-arithmetic": "0/0/1/92",
+                "packed-store": "0/0/1/92"
+              },
+              "n8": {
+                "native-helper": "66/66/66/83",
+                "packed-load": "2/2/2/83",
+                "packed-arithmetic": "1/1/1/83",
+                "packed-store": "1/1/1/83"
+              },
+              "n64": {
+                "native-helper": "465/66/66/482",
+                "packed-load": "16/2/2/482",
+                "packed-arithmetic": "8/1/1/482",
+                "packed-store": "8/1/1/482"
+              },
+              "n127": {
+                "native-helper": "864/66/66/957",
+                "packed-load": "30/2/2/957",
+                "packed-arithmetic": "15/1/1/957",
+                "packed-store": "15/1/1/957"
+              },
+              "n128": {
+                "native-helper": "921/66/66/938",
+                "packed-load": "32/2/2/938",
+                "packed-arithmetic": "16/1/1/938",
+                "packed-store": "16/1/1/938"
+              }
+            }
+          },
+          {
+            "f": "guarded_soa_scalar",
+            "rows": {
+              "n7": {
+                "native-helper": "85/22/22/100"
+              },
+              "n8": {
+                "native-helper": "95/22/22/110"
+              },
+              "n64": {
+                "native-helper": "700/22/22/715"
+              },
+              "n127": {
+                "native-helper": "1378/22/22/1393"
+              },
+              "n128": {
+                "native-helper": "1388/22/22/1403"
+              }
+            }
+          },
+          {
+            "f": "guarded_aos_scalar",
+            "rows": {
+              "n7": {
+                "native-helper": "75/18/18/90"
+              },
+              "n8": {
+                "native-helper": "84/18/18/99"
+              },
+              "n64": {
+                "native-helper": "633/18/18/648"
+              },
+              "n127": {
+                "native-helper": "1248/18/18/1263"
+              },
+              "n128": {
+                "native-helper": "1257/18/18/1272"
+              }
+            }
+          }
+        ],
+        "zero": {
+          "executions": 0,
+          "executedPCs": 0,
+          "staticInstructions": 2,
+          "ranges": [
+            {
+              "start": 740,
+              "end": 744,
+              "role": "packed-arithmetic"
+            },
+            {
+              "start": 924,
+              "end": 928,
+              "role": "packed-arithmetic"
+            }
+          ],
+          "listedInHistogram": [],
+          "traceSteps": 107
+        },
+        "absentRole": "TypeError: unknownRole: decision \"empty-row\" has no role \"single-prefix-scratch-store\"; choose one of [\"function\" \"admission and packet control\" \"halfword producer and sign guard\" \"scalar hit continuation\" \"packet backedge\" \"packet-input-load\" \"min-reduction\" \"packed-subtraction\" \"full-packet-scratch-store\" \"scalar-lane-load\"]",
+        "absentRole2": "TypeError: unknownRole: decision \"empty-row\" has no role \"extract-full-hit-lane\"; choose one of [\"function\" \"admission and packet control\" \"halfword producer and sign guard\" \"scalar hit continuation\" \"packet backedge\" \"packet-input-load\" \"min-reduction\" \"packed-subtraction\" \"full-packet-scratch-store\" \"scalar-lane-load\"]",
+        "crossImagePhysics": "TypeError: crossImageJoin: decision \"physics-guarded_soa_pie\" describes image 79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac but trace \"physics-particle_soa_pie-particle-n128\" executed image 48f9254ba6580dbe310de6513975a62c2e80f3701cbda31db9fecd4ba6219c03; byte offsets are not comparable across images",
+        "crossImageRay": "TypeError: crossImageJoin: decision \"pie-row\" describes image 8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a but trace \"full-opening\" executed image 55b350ea2753e506adcae0aeee6d609a7c59905f1b6ae17952fc9911c99372fa; byte offsets are not comparable across images",
+        "sameImageOtherFunction": "0/0/2/938",
+        "unknownTrace": "TypeError: unknownTrace: no trace \"pie-opening-sha\"; choose one of [\"stock-opening\" \"scalar-opening\" \"pie-opening\" \"empty-opening\" \"full-opening\" \"physics-particle_aos_scalar-particle-n7\" \"physics-particle_aos_pie-particle-n7\" \"physics-particle_soa_scalar-particle-n7\" \"physics-particle_soa_pie-particle-n7\" \"physics-particle_aos_scalar-particle-n8\" \"physics-particle_aos_pie-particle-n8\" \"physics-particle_soa_scalar-particle-n8\" \"physics-particle_soa_pie-particle-n8\" \"physics-particle_aos_scalar-particle-n64\" \"physics-particle_aos_pie-particle-n64\" \"physics-particle_soa_scalar-particle-n64\" \"physics-particle_soa_pie-particle-n64\" \"physics-particle_aos_scalar-particle-n127\" \"physics-particle_aos_pie-particle-n127\" \"physics-particle_soa_scalar-particle-n127\" \"physics-particle_soa_pie-particle-n127\" \"physics-particle_aos_scalar-particle-n128\" \"physics-particle_aos_pie-particle-n128\" \"physics-particle_soa_scalar-particle-n128\" \"physics-particle_soa_pie-particle-n128\" \"physics-contact_scalar-chain16-original-scalar\" \"physics-contact_scalar-chain16-scheduled-scalar\" \"physics-contact_pie-chain16-scheduled-pie\" \"physics-contact_scalar-star16-original-scalar\" \"physics-contact_scalar-star16-scheduled-scalar\" \"physics-contact_pie-star16-scheduled-pie\" \"physics-contact_scalar-disjoint16-original-scalar\" \"physics-contact_scalar-disjoint16-scheduled-scalar\" \"physics-contact_pie-disjoint16-scheduled-pie\" \"physics-contact_scalar-mesh128-original-scalar\" \"physics-contact_scalar-mesh128-scheduled-scalar\" \"physics-contact_pie-mesh128-scheduled-pie\" \"physics-physics_typed_particleAoS-particle-n7\" \"physics-physics_typed_particleSoA-particle-n7\" \"physics-physics_typed_particleAoS-particle-n8\" \"physics-physics_typed_particleSoA-particle-n8\" \"physics-physics_typed_particleAoS-particle-n64\" \"physics-physics_typed_particleSoA-particle-n64\" \"physics-physics_typed_particleAoS-particle-n127\" \"physics-physics_typed_particleSoA-particle-n127\" \"physics-physics_typed_particleAoS-particle-n128\" \"physics-physics_typed_particleSoA-particle-n128\" \"physics-physics_typed_contacts-chain16-original-typed\" \"physics-physics_typed_contacts-chain16-scheduled-typed\" \"physics-physics_typed_contacts-star16-original-typed\" \"physics-physics_typed_contacts-star16-scheduled-typed\" \"physics-physics_typed_contacts-disjoint16-original-typed\" \"physics-physics_typed_contacts-disjoint16-scheduled-typed\" \"physics-physics_typed_contacts-mesh128-original-typed\" \"physics-physics_typed_contacts-mesh128-scheduled-typed\" \"physics-guarded_aos_scalar-particle-n7\" \"physics-guarded_aos_pie-particle-n7\" \"physics-guarded_soa_scalar-particle-n7\" \"physics-guarded_soa_pie-particle-n7\" \"physics-guarded_aos_scalar-particle-n8\" \"physics-guarded_aos_pie-particle-n8\" \"physics-guarded_soa_scalar-particle-n8\" \"physics-guarded_soa_pie-particle-n8\" \"physics-guarded_aos_scalar-particle-n64\" \"physics-guarded_aos_pie-particle-n64\" \"physics-guarded_soa_scalar-particle-n64\" \"physics-guarded_soa_pie-particle-n64\" \"physics-guarded_aos_scalar-particle-n127\" \"physics-guarded_aos_pie-particle-n127\" \"physics-guarded_soa_scalar-particle-n127\" \"physics-guarded_soa_pie-particle-n127\" \"physics-guarded_aos_scalar-particle-n128\" \"physics-guarded_aos_pie-particle-n128\" \"physics-guarded_soa_scalar-particle-n128\" \"physics-guarded_soa_pie-particle-n128\"]"
+      }
+    },
+    {
+      "room": "3794",
+      "cell": "request-candidate-4",
+      "source": "const segs = ['admission and packet control','halfword producer and sign guard','scalar hit continuation','packet backedge']; const segCheck = ['scalar','pie','empty','full'].map(arm => { const d = simd.decisions().find(d => d.id === arm + '-row'); const rs = d.ranges.filter(r => segs.includes(r.role)).sort((a, b) => a.start - b.start); let overlaps = 0; for (let i = 1; i < rs.length; i++) if (rs[i].start < rs[i - 1].end) overlaps++; const fn = d.ranges.find(r => r.role === 'function'); const c = simd.counts(arm + '-opening'); const inSeg = pc => rs.some(r => pc >= r.start && pc < r.end); const segX = c.counts.filter(x => inSeg(x.pc)).reduce((n, x) => n + x.executions, 0); const outsideFn = c.counts.filter(x => x.pc < fn.start || x.pc >= fn.end).length; return {arm, segRanges: rs.length, overlaps, fn: [fn.start, fn.end], inSegments: segX, outsideSegments: c.steps - segX, pcsOutsideFunction: outsideFn, steps: c.steps} }); const ps = simd.packets('opening-160-rows'); const mix = {}; for (const p of ps.packets) { const k = p.hitMask === 0 ? 'allMiss' : p.hitMask === 255 ? 'allHit' : 'mixed'; mix[k] = (mix[k] || 0) + 1 } const lanes = [...new Set(ps.packets.map(p => p.lanes))]; const rows = new Set(ps.packets.map(p => p.row)).size; const hitLanes = ps.packets.reduce((n, p) => { let m = p.hitMask, k = 0; while (m) { k += m & 1; m >>= 1 } return n + k }, 0); let noPhysicsPackets; try { simd.packets('particle-n128') } catch (e) { noPhysicsPackets = String(e) } ({segCheck, packets: {workload: ps.workload, sourceSHA: ps.sourceSHA, n: ps.packets.length, lanes, rowsWithPackets: rows, mix, hitLanes, poses: [...new Set(ps.packets.map(p => p.pose))]}, sourceSHAsOfRayDecisions: [...new Set(simd.decisions().filter(d => d.function === 'typedRayComputeRow').map(d => d.source.sha256))], noPhysicsPackets})",
+      "value": {
+        "segCheck": [
+          {
+            "arm": "scalar",
+            "segRanges": 45,
+            "overlaps": 0,
+            "fn": [
+              3056,
+              4820
+            ],
+            "inSegments": 765530,
+            "outsideSegments": 2434380,
+            "pcsOutsideFunction": 0,
+            "steps": 3199910
+          },
+          {
+            "arm": "pie",
+            "segRanges": 45,
+            "overlaps": 0,
+            "fn": [
+              3056,
+              4744
+            ],
+            "inSegments": 697055,
+            "outsideSegments": 2434380,
+            "pcsOutsideFunction": 0,
+            "steps": 3131435
+          },
+          {
+            "arm": "empty",
+            "segRanges": 45,
+            "overlaps": 0,
+            "fn": [
+              3056,
+              4768
+            ],
+            "inSegments": 549222,
+            "outsideSegments": 2434380,
+            "pcsOutsideFunction": 0,
+            "steps": 2983602
+          },
+          {
+            "arm": "full",
+            "segRanges": 45,
+            "overlaps": 0,
+            "fn": [
+              3056,
+              7120
+            ],
+            "inSegments": 520106,
+            "outsideSegments": 2434380,
+            "pcsOutsideFunction": 0,
+            "steps": 2954486
+          }
+        ],
+        "packets": {
+          "workload": "opening-160-rows",
+          "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+          "n": 3135,
+          "lanes": [
+            8
+          ],
+          "rowsWithPackets": 100,
+          "mix": {
+            "allMiss": 2111,
+            "mixed": 282,
+            "allHit": 742
+          },
+          "hitLanes": 6983,
+          "poses": [
+            "default"
+          ]
+        },
+        "sourceSHAsOfRayDecisions": [
+          "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f"
+        ],
+        "noPhysicsPackets": "TypeError: unknownWorkload: no packet set for \"particle-n128\"; choose one of [\"opening-160-rows\"]"
+      }
+    },
+    {
+      "room": "3794",
+      "cell": "request-candidate-5",
+      "source": "const hwAvail = hardware.help().available; const med = xs => { const a = [...xs].sort((l, r) => l - r); const i = Math.floor(a.length / 2); return a.length % 2 ? a[i] : (a[i - 1] + a[i]) / 2 }; const tr = simd.traces(); const board = hwAvail ? Object.entries(hardware.metadata().images).map(([arm, b]) => ({arm, boardImageSHA: b.imageSHA, elfCRC: b.elfCRC, emulatorTraceWithSameImage: (tr.find(t => t.imageSHA === b.imageSHA) || {}).id || null})) : null; const pairs = hwAvail ? ['clean','primary'].map(phase => { const rows = hardware.pairs('scalar','pie',phase).filter(r => r.pose === 'default'); return {phase, n: rows.length, medianSavedUs: med(rows.map(r => r.savedUs)), medianSavedPct: med(rows.map(r => r.savedPct)), min: Math.min(...rows.map(r => r.savedUs)), max: Math.max(...rows.map(r => r.savedUs))} }) : null; const candidateOnBoard = hwAvail ? ['empty','full'].map(a => ({arm: a, imageSHA: tr.find(t => t.id === a + '-opening').imageSHA, onBoard: Object.values(hardware.metadata().images).some(b => b.imageSHA === tr.find(t => t.id === a + '-opening').imageSHA)})) : null; ({hwAvail, hardwareSourceSHA: hwAvail ? hardware.metadata().sourceSHA : null, board, pairs, candidateOnBoard, hwUnit: hardware.help().unit})",
+      "value": {
+        "hwAvail": true,
+        "hardwareSourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+        "board": [
+          {
+            "arm": "pie",
+            "boardImageSHA": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+            "elfCRC": "ab91b817",
+            "emulatorTraceWithSameImage": "pie-opening"
+          },
+          {
+            "arm": "scalar",
+            "boardImageSHA": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187",
+            "elfCRC": "bd9a8467",
+            "emulatorTraceWithSameImage": "scalar-opening"
+          },
+          {
+            "arm": "stock",
+            "boardImageSHA": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+            "elfCRC": "0d2e18b8",
+            "emulatorTraceWithSameImage": "stock-opening"
+          }
+        ],
+        "pairs": [
+          {
+            "phase": "clean",
+            "n": 6,
+            "medianSavedUs": 242,
+            "medianSavedPct": 0.4295228146712761,
+            "min": 217,
+            "max": 307
+          },
+          {
+            "phase": "primary",
+            "n": 6,
+            "medianSavedUs": 251,
+            "medianSavedPct": 1.527177131352655,
+            "min": 202,
+            "max": 271
+          }
+        ],
+        "candidateOnBoard": [
+          {
+            "arm": "empty",
+            "imageSHA": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+            "onBoard": false
+          },
+          {
+            "arm": "full",
+            "imageSHA": "55b350ea2753e506adcae0aeee6d609a7c59905f1b6ae17952fc9911c99372fa",
+            "onBoard": false
+          }
+        ],
+        "hwUnit": "P4 microseconds; savedUs = baselineUs - candidateUs; savedPct is relative to baselineUs"
+      }
+    }
+  ]
+}

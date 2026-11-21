@@ -16,8 +16,14 @@ const sourcePath='picocalc-os/worlds/raytrace/raytrace.typed',source=read(source
 const receipt=JSON.parse(read(join(stage,'packet-images.json')));
 assert.equal(sha(source),receipt.sourceSHA);
 const context=createContext({});
-for(const f of ['picocalc-os/compiler/typed-wasm.js','picocalc-os/compiler/typed-rv32.js',join(stage,'packet-candidate.js')])
-    runInContext(read(f,'utf8'),context);
+// Reproduce the vintage that generated the board row bodies even after new
+// experimental lowering modes have been added to the production compiler.
+const compilerRevision='9a1ff99d2e11c9f3618fc42e979b643c1023521d';
+for (const f of ['picocalc-os/compiler/typed-wasm.js','picocalc-os/compiler/typed-rv32.js']) {
+    const contents=execFileSync('git',['show',compilerRevision+':'+f],{encoding:'utf8'});
+    runInContext(contents,context,{filename:f});
+}
+runInContext(read(join(stage,'packet-candidate.js'),'utf8'),context,{filename:'packet-candidate.js'});
 const name='typedRayComputeRow',workload='opening-160-rows';
 const baseline=JSON.parse(read(new URL('../../various/evidence/ray.json',import.meta.url)));
 const emittedMasks=baseline.packetSets.find(s=>s.workload===workload).packets;
