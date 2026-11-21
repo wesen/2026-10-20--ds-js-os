@@ -1,0 +1,36 @@
+{
+  "headers": 4133,
+  "firstObservedDrop": [
+    73,
+    74,
+    11,
+    6
+  ],
+  "headerLoadSites": [
+    11,
+    11,
+    6
+  ],
+  "allocasAndPhis": [
+    [
+      16,
+      0
+    ],
+    [
+      0,
+      3
+    ]
+  ],
+  "rewriters": [
+    false,
+    true
+  ],
+  "checked": {
+    "checked-gcc": 1136142,
+    "checked-llvm": 1233611,
+    "checked-llc": 1233611,
+    "checked-llc-nolsr": 1275560
+  },
+  "savedWithLSR": 41949,
+  "typedStack": 1290106
+}

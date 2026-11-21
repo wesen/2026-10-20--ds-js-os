@@ -19,38 +19,4 @@ WhenToUse: ""
 
 # Design a composable JavaScript query API for compiler traces
 
-## Overview
-
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
-
-## Key Links
-
-- **Related Files**: See frontmatter RelatedFiles field
-- **External Sources**: See frontmatter ExternalSources field
-
-## Status
-
-Current status: **active**
-
-## Topics
-
-- compiler
-- picocalc
-- performance
-
-## Tasks
-
-See [tasks.md](./tasks.md) for the current task list.
-
-## Changelog
-
-See [changelog.md](./changelog.md) for recent changes and decisions.
-
-## Structure
-
-- design/ - Architecture and design documents
-- reference/ - Prompt packs, API contracts, context summaries
-- playbooks/ - Command sequences and test procedures
-- scripts/ - Temporary code and tooling
-- various/ - Working notes and research
-- archive/ - Deprecated or reference-only artifacts
+Start with the [intern design and implementation guide](design-doc/01-a-query-language-for-compiler-evidence-in-javascript.md), then work through the [26-example workbook](design-doc/02-a-worked-query-workbook-for-the-picocalc-llvm-row-archive.md). The ticket specifies a proposed library. The [evidence verifier](scripts/01-check-evidence.mjs) runs today against the committed PicoCalc research data. The [example modules](scripts/examples/) correspond to the numbered workbook examples. The [diary](reference/01-design-and-verification-diary.md) records the verification and delivery.

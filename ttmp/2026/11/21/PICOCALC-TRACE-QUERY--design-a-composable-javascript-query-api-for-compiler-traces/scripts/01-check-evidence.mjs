@@ -38,6 +38,17 @@ const count = (s, re) => [...s.matchAll(re)].length;
 const facts = {};
 facts.headers = [...streams.values()].reduce((n,x) => n+x.length, 0);
 assert.equal(facts.headers, 4133);
+let previous;
+for (const [i, state] of streams.get("checked-middle").entries()) {
+    const fn = /^define [^\n]*@row\(.*?^}/ms.exec(state.text);
+    const current = fn ? count(fn[0], /load i32, ptr %work,/g) : undefined;
+    if (current < previous) {
+        facts.firstObservedDrop = [i-1, i, previous, current];
+        break;
+    }
+    previous = current;
+}
+assert.deepEqual(facts.firstObservedDrop, [73,74,11,6]);
 facts.headerLoadSites = [70,73,74].map(i => count(body(i), /load i32, ptr %work,/g));
 assert.deepEqual(facts.headerLoadSites, [11,11,6]);
 facts.allocasAndPhis = [5,6].map(i => [count(body(i), / = alloca /g), count(body(i), / = phi /g)]);
