@@ -210,7 +210,7 @@ test("Ray Tracer accepts its own bounded integral scene", () => {
   publish(scene);
   const accepted = state.apps.raytrace;
   assert.equal(accepted.tree, scene);
-  for (const diff of [{ sx: 31 }, { sy: 128 }, { lx: -1 }, { ly: 160 }, { sx: 32.5 }, { lx: "0" }, { t: "text" }]) {
+  for (const diff of [{ scene: 4 }, { sx: 31 }, { sy: 128 }, { lx: -1 }, { ly: 160 }, { sx: 32.5 }, { lx: "0" }, { t: "text" }]) {
     publish({ ...scene, ...diff });
     assert.equal(state.apps.raytrace, accepted);
   }

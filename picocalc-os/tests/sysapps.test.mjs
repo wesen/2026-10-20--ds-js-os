@@ -432,5 +432,9 @@ test("Ray Tracer selects distinct Candela scenes and edits their parameter", () 
   assert.equal(h.s.scene, 1); assert.equal(h.s.weight, 144);
   h.type("g"); h.key("left");
   assert.equal(h.s.scene, 2); assert.equal(h.s.weight, 48);
+  h.type("g"); assert.equal(h.s.scene, 3);
+  h.key("right"); h.type("d");
+  assert.equal(h.s.sx, 76); assert.equal(h.s.lx, 39);
+  assert.equal(h.s.weight, 128);
   h.type("g"); assert.equal(h.s.scene, 0);
 });

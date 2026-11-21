@@ -15,9 +15,9 @@ app("raytrace")
   .on("key", (s, k, msg) => {
     if (msg.from !== "compositor" || k.state === "up") return;
     switch ((k.ch || k.key).toLowerCase()) {
-      case "g":     s.scene = (s.scene + 1) % 3; s.weight = s.scene === 2 ? 64 : 128; break;
-      case "left":  if (s.scene) { s.weight = Math.max(0, s.weight - 16); break; } s.sx = sphere(s.sx - step); break;
-      case "right": if (s.scene) { s.weight = Math.min(256, s.weight + 16); break; } s.sx = sphere(s.sx + step); break;
+      case "g":     s.scene = (s.scene + 1) % 4; s.weight = s.scene === 2 ? 64 : 128; break;
+      case "left":  if (s.scene === 1 || s.scene === 2) { s.weight = Math.max(0, s.weight - 16); break; } s.sx = sphere(s.sx - step); break;
+      case "right": if (s.scene === 1 || s.scene === 2) { s.weight = Math.min(256, s.weight + 16); break; } s.sx = sphere(s.sx + step); break;
       case "up":    s.sy = sphere(s.sy - step); break;
       case "down":  s.sy = sphere(s.sy + step); break;
       case "a": s.lx = light(s.lx - step); break;
