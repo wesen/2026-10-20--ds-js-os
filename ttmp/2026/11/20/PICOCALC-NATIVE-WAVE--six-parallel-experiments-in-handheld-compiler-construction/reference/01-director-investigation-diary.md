@@ -123,3 +123,49 @@ Start with scripts/director/heldout/01-burst-oracle.mjs and the receipt it produ
 ### Technical details
 
 The standalone binary runs on a single 360 MHz core. Each timed sample replays its input set 48 times. Eleven rotated blocks include a warm call before timing. This measures guest execution with the machine image in linked flash text. It excludes cold compilation, normal native ELF loading, window compositing and SPI transfer.
+
+## Step 3: Time three guest operations and return the ordinary device
+
+### Prompt Context
+
+**User prompt:** See Step 1. **Assistant interpretation:** Measure native programs in parallel with the researchers' host investigations. **Inferred user intent:** Distinguish device execution gains from elapsed compilation and code size. **Earlier commit:** 182167d — Qualify the independent program and stage a common RV32 execution experiment.
+
+### What I did
+
+Checked the six RV32 images byte by byte against the final linked program, ran seven arms (including the repeat control) in eleven rotated physical blocks, returned the ordinary application and handed the board to the bounds and semantic-lowering operator. Graphed the paired reductions beside instruction counts.
+
+### Why
+
+The same change need not accelerate every operation within a program. The three exported functions test the costs of helper calls, repeated text access and a literal write separately. An extra copy of the stock code at a different address and a repeat at the original entry serve as controls.
+
+### What worked
+
+All 231 timings have their expected workload checksums. Selected proofs produced identical code and zero median timing change across all three endpoints. Across blocks the median parse reduction was 11.277% for frameless leaves and 15.942% for the inlining arm. All-late semantic lowering reduced parse, count and label time by 4.982%, 15.901% and 21.267%. The full release and partition digests matched flash before and after the trial. All eight expected native worlds started and the painter installed with zero rejects.
+
+### What didn't work
+
+The first leaf exporter used different capitalization for two identity fields. I checked the bytes against both digests before staging a normalized copy. Its researcher then updated the exporter to match the shared field names. A pilot built before all arms arrived did not serve as the measured candidate.
+
+### What I learned
+
+The most effective arm depends on which work the guest performs. Inlining saved time in the parse entry while count and label were unchanged. Retaining semantic operations saved time in all three on this program. The numbers describe single changes against stock. Combining their percentages would have no experimental basis.
+
+### What was tricky to build
+
+ESP-IDF can transform section placement. Comparing compiler outputs alone would not establish that they are the machine code at the entry addresses the driver calls. The linked-image receipt binds sizes, entry points and bytes to the tested firmware.
+
+### What warrants a second pair of eyes
+
+The warm loop executes linked probe code at measured addresses. Normal native ELF relocation, flash placement, asynchronous UI work, interrupts and user-visible latency may have different costs. The primary evidence is the full per-block receipt. Eleven blocks constitute repeated measurements on one board.
+
+### What should be done in the future
+
+Compare these cross-study results with the independent Chess search probes and the fresh-engine compile timings, and publish the mode-dependent outcomes together.
+
+### Code review instructions
+
+Inspect scripts/director/07-verify-flash-images.py, then run scripts/director/08-summarize.py with various/director/physical.json, various/director/rv32-model.json and an empty output directory. Compare paired-results.json against the supplied summary.
+
+### Technical details
+
+360 MHz, one core, eleven blocks, 48 repetitions per endpoint, seven arms. Stock median times were 2,208 µs for parse, 893 µs for count and 221 µs for label per timed batch. The measured image starts with SHA-256 419817c7; the ordinary release starts with 134f3a24. Device logs remained local.

@@ -1,0 +1,41 @@
+{
+  "firmwareSHA256": "419817c792a8cc3a23127ec8d617050384b9d2fac2385ad39c6d6236705be84d",
+  "arms": [
+    {
+      "name": "stock",
+      "addr": 1073786752,
+      "section": ".flash.text",
+      "imageSHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e"
+    },
+    {
+      "name": "bounds-selected",
+      "addr": 1073789632,
+      "section": ".flash.text",
+      "imageSHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e"
+    },
+    {
+      "name": "semantics-late",
+      "addr": 1073792512,
+      "section": ".flash.text",
+      "imageSHA256": "554be22d57c3df914858ce9dd4c242270e54b9a4b12b80ce9eb96cb1828f2f5e"
+    },
+    {
+      "name": "semantics-selected",
+      "addr": 1073794912,
+      "section": ".flash.text",
+      "imageSHA256": "9f1625aeb72961ab71fcfc2a36a3e1321bb2c2028f93c94f0136b49102d301e3"
+    },
+    {
+      "name": "burst-leaf",
+      "addr": 1073797408,
+      "section": ".flash.text",
+      "imageSHA256": "03cc90a712bfdc960508e1c8dc37b2e78b964c91d9d3a27aef55929f1c3e5707"
+    },
+    {
+      "name": "burst-inline",
+      "addr": 1073800224,
+      "section": ".flash.text",
+      "imageSHA256": "21fab97772d854ccafd0bbddcaae2c0117cc93e58bb5dffabdecd2673c3a3973"
+    }
+  ]
+}

@@ -1,0 +1,1781 @@
+{
+  "inputs": {
+    "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+    "arms": [
+      {
+        "arm": "stock",
+        "imageBytes": 2876,
+        "imageSHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 564,
+          "uncheckedRequest": 772,
+          "readBurst": 868,
+          "label": 1480
+        }
+      },
+      {
+        "arm": "bounds-selected",
+        "imageBytes": 2876,
+        "imageSHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 564,
+          "uncheckedRequest": 772,
+          "readBurst": 868,
+          "label": 1480
+        }
+      },
+      {
+        "arm": "semantics-late",
+        "imageBytes": 2396,
+        "imageSHA256": "554be22d57c3df914858ce9dd4c242270e54b9a4b12b80ce9eb96cb1828f2f5e",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 540,
+          "uncheckedRequest": 724,
+          "readBurst": 796,
+          "label": 1384
+        }
+      },
+      {
+        "arm": "semantics-selected",
+        "imageBytes": 2468,
+        "imageSHA256": "9f1625aeb72961ab71fcfc2a36a3e1321bb2c2028f93c94f0136b49102d301e3",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 540,
+          "uncheckedRequest": 724,
+          "readBurst": 796,
+          "label": 1384
+        }
+      },
+      {
+        "arm": "burst-leaf",
+        "imageBytes": 2812,
+        "imageSHA256": "03cc90a712bfdc960508e1c8dc37b2e78b964c91d9d3a27aef55929f1c3e5707",
+        "entries": {
+          "codeValue": 0,
+          "digit": 20,
+          "corrected": 76,
+          "dropped": 136,
+          "checksum": 172,
+          "countEvents": 220,
+          "inspect": 500,
+          "uncheckedRequest": 708,
+          "readBurst": 804,
+          "label": 1416
+        }
+      },
+      {
+        "arm": "burst-inline",
+        "imageBytes": 2952,
+        "imageSHA256": "21fab97772d854ccafd0bbddcaae2c0117cc93e58bb5dffabdecd2673c3a3973",
+        "entries": {
+          "codeValue": 0,
+          "digit": 20,
+          "corrected": 76,
+          "dropped": 136,
+          "checksum": 172,
+          "countEvents": 220,
+          "inspect": 500,
+          "uncheckedRequest": 708,
+          "readBurst": 804,
+          "label": 1556
+        }
+      },
+      {
+        "arm": "stock_repeat",
+        "imageBytes": 2876,
+        "imageSHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 564,
+          "uncheckedRequest": 772,
+          "readBurst": 868,
+          "label": 1480
+        }
+      }
+    ]
+  },
+  "candidateSHA256": "419817c792a8cc3a23127ec8d617050384b9d2fac2385ad39c6d6236705be84d",
+  "ordinarySHA256": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "partitionSHA256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "runs": [
+    {
+      "block": 0,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2210,
+      "sum": 545280
+    },
+    {
+      "block": 0,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 0,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2098,
+      "sum": 545280
+    },
+    {
+      "block": 0,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2105,
+      "sum": 545280
+    },
+    {
+      "block": 0,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1960,
+      "sum": 545280
+    },
+    {
+      "block": 0,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1857,
+      "sum": 545280
+    },
+    {
+      "block": 0,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 0,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 0,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 0,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 750,
+      "sum": 2256
+    },
+    {
+      "block": 0,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 0,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 894,
+      "sum": 2256
+    },
+    {
+      "block": 0,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 0,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 892,
+      "sum": 2256
+    },
+    {
+      "block": 0,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 0,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 0,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 174,
+      "sum": 13968
+    },
+    {
+      "block": 0,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 184,
+      "sum": 13968
+    },
+    {
+      "block": 0,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 0,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 0,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 228,
+      "sum": 13968
+    },
+    {
+      "block": 1,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 1,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2209,
+      "sum": 545280
+    },
+    {
+      "block": 1,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1857,
+      "sum": 545280
+    },
+    {
+      "block": 1,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1959,
+      "sum": 545280
+    },
+    {
+      "block": 1,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2104,
+      "sum": 545280
+    },
+    {
+      "block": 1,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2098,
+      "sum": 545280
+    },
+    {
+      "block": 1,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 1,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 1,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 1,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 1,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 1,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 750,
+      "sum": 2256
+    },
+    {
+      "block": 1,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 750,
+      "sum": 2256
+    },
+    {
+      "block": 1,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 1,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 1,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 1,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 1,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 1,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 184,
+      "sum": 13968
+    },
+    {
+      "block": 1,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 174,
+      "sum": 13968
+    },
+    {
+      "block": 1,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 2,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2098,
+      "sum": 545280
+    },
+    {
+      "block": 2,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2098,
+      "sum": 545280
+    },
+    {
+      "block": 2,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1959,
+      "sum": 545280
+    },
+    {
+      "block": 2,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1856,
+      "sum": 545280
+    },
+    {
+      "block": 2,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2215,
+      "sum": 545280
+    },
+    {
+      "block": 2,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 2,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2209,
+      "sum": 545280
+    },
+    {
+      "block": 2,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 2,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 2,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 2,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 2,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 2,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 2,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 2,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 174,
+      "sum": 13968
+    },
+    {
+      "block": 2,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 184,
+      "sum": 13968
+    },
+    {
+      "block": 2,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 222,
+      "sum": 13968
+    },
+    {
+      "block": 2,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 2,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 2,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 2,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 3,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 3,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2209,
+      "sum": 545280
+    },
+    {
+      "block": 3,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 3,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2209,
+      "sum": 545280
+    },
+    {
+      "block": 3,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1863,
+      "sum": 545280
+    },
+    {
+      "block": 3,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1959,
+      "sum": 545280
+    },
+    {
+      "block": 3,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 3,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 3,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 3,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 3,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 3,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 3,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 3,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 3,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 174,
+      "sum": 13968
+    },
+    {
+      "block": 3,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 3,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 3,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 3,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 3,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 222,
+      "sum": 13968
+    },
+    {
+      "block": 3,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 183,
+      "sum": 13968
+    },
+    {
+      "block": 4,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1959,
+      "sum": 545280
+    },
+    {
+      "block": 4,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1856,
+      "sum": 545280
+    },
+    {
+      "block": 4,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 4,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 4,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2214,
+      "sum": 545280
+    },
+    {
+      "block": 4,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 4,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2098,
+      "sum": 545280
+    },
+    {
+      "block": 4,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 4,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 4,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 4,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 4,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 4,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 4,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 750,
+      "sum": 2256
+    },
+    {
+      "block": 4,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 4,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 4,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 4,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 4,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 4,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 174,
+      "sum": 13968
+    },
+    {
+      "block": 4,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 184,
+      "sum": 13968
+    },
+    {
+      "block": 5,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1959,
+      "sum": 545280
+    },
+    {
+      "block": 5,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 5,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 5,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2209,
+      "sum": 545280
+    },
+    {
+      "block": 5,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2215,
+      "sum": 545280
+    },
+    {
+      "block": 5,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 5,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1857,
+      "sum": 545280
+    },
+    {
+      "block": 5,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 5,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 5,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 5,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 892,
+      "sum": 2256
+    },
+    {
+      "block": 5,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 5,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 5,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 5,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 5,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 184,
+      "sum": 13968
+    },
+    {
+      "block": 5,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 174,
+      "sum": 13968
+    },
+    {
+      "block": 5,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 5,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 5,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 5,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 6,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 6,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 6,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 6,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2098,
+      "sum": 545280
+    },
+    {
+      "block": 6,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2104,
+      "sum": 545280
+    },
+    {
+      "block": 6,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1959,
+      "sum": 545280
+    },
+    {
+      "block": 6,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1857,
+      "sum": 545280
+    },
+    {
+      "block": 6,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 6,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 892,
+      "sum": 2256
+    },
+    {
+      "block": 6,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 6,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 6,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 6,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 6,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 892,
+      "sum": 2256
+    },
+    {
+      "block": 6,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 6,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 6,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 6,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 174,
+      "sum": 13968
+    },
+    {
+      "block": 6,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 183,
+      "sum": 13968
+    },
+    {
+      "block": 6,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 6,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 7,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 7,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1856,
+      "sum": 545280
+    },
+    {
+      "block": 7,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1959,
+      "sum": 545280
+    },
+    {
+      "block": 7,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2098,
+      "sum": 545280
+    },
+    {
+      "block": 7,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2105,
+      "sum": 545280
+    },
+    {
+      "block": 7,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2209,
+      "sum": 545280
+    },
+    {
+      "block": 7,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 7,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 7,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 7,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 7,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 7,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 750,
+      "sum": 2256
+    },
+    {
+      "block": 7,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 894,
+      "sum": 2256
+    },
+    {
+      "block": 7,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 7,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 7,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 7,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 7,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 183,
+      "sum": 13968
+    },
+    {
+      "block": 7,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 173,
+      "sum": 13968
+    },
+    {
+      "block": 7,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 222,
+      "sum": 13968
+    },
+    {
+      "block": 7,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 8,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 8,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 8,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 8,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1959,
+      "sum": 545280
+    },
+    {
+      "block": 8,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1862,
+      "sum": 545280
+    },
+    {
+      "block": 8,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2209,
+      "sum": 545280
+    },
+    {
+      "block": 8,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 8,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 8,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 750,
+      "sum": 2256
+    },
+    {
+      "block": 8,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 750,
+      "sum": 2256
+    },
+    {
+      "block": 8,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 8,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 8,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 892,
+      "sum": 2256
+    },
+    {
+      "block": 8,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 8,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 8,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 173,
+      "sum": 13968
+    },
+    {
+      "block": 8,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 184,
+      "sum": 13968
+    },
+    {
+      "block": 8,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 8,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 222,
+      "sum": 13968
+    },
+    {
+      "block": 8,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 8,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 222,
+      "sum": 13968
+    },
+    {
+      "block": 9,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 9,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 9,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 9,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1856,
+      "sum": 545280
+    },
+    {
+      "block": 9,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1965,
+      "sum": 545280
+    },
+    {
+      "block": 9,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 9,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 9,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 9,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 9,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 9,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 9,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 9,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 9,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 9,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 9,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 9,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 9,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 9,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 9,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 184,
+      "sum": 13968
+    },
+    {
+      "block": 9,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 174,
+      "sum": 13968
+    },
+    {
+      "block": 10,
+      "endpoint": 0,
+      "arm": 3,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 10,
+      "endpoint": 0,
+      "arm": 4,
+      "us": 1959,
+      "sum": 545280
+    },
+    {
+      "block": 10,
+      "endpoint": 0,
+      "arm": 5,
+      "us": 1857,
+      "sum": 545280
+    },
+    {
+      "block": 10,
+      "endpoint": 0,
+      "arm": 6,
+      "us": 2208,
+      "sum": 545280
+    },
+    {
+      "block": 10,
+      "endpoint": 0,
+      "arm": 0,
+      "us": 2215,
+      "sum": 545280
+    },
+    {
+      "block": 10,
+      "endpoint": 0,
+      "arm": 1,
+      "us": 2209,
+      "sum": 545280
+    },
+    {
+      "block": 10,
+      "endpoint": 0,
+      "arm": 2,
+      "us": 2099,
+      "sum": 545280
+    },
+    {
+      "block": 10,
+      "endpoint": 1,
+      "arm": 3,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 10,
+      "endpoint": 1,
+      "arm": 4,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 10,
+      "endpoint": 1,
+      "arm": 5,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 10,
+      "endpoint": 1,
+      "arm": 6,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 10,
+      "endpoint": 1,
+      "arm": 0,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 10,
+      "endpoint": 1,
+      "arm": 1,
+      "us": 893,
+      "sum": 2256
+    },
+    {
+      "block": 10,
+      "endpoint": 1,
+      "arm": 2,
+      "us": 751,
+      "sum": 2256
+    },
+    {
+      "block": 10,
+      "endpoint": 2,
+      "arm": 3,
+      "us": 184,
+      "sum": 13968
+    },
+    {
+      "block": 10,
+      "endpoint": 2,
+      "arm": 4,
+      "us": 222,
+      "sum": 13968
+    },
+    {
+      "block": 10,
+      "endpoint": 2,
+      "arm": 5,
+      "us": 222,
+      "sum": 13968
+    },
+    {
+      "block": 10,
+      "endpoint": 2,
+      "arm": 6,
+      "us": 221,
+      "sum": 13968
+    },
+    {
+      "block": 10,
+      "endpoint": 2,
+      "arm": 0,
+      "us": 222,
+      "sum": 13968
+    },
+    {
+      "block": 10,
+      "endpoint": 2,
+      "arm": 1,
+      "us": 222,
+      "sum": 13968
+    },
+    {
+      "block": 10,
+      "endpoint": 2,
+      "arm": 2,
+      "us": 174,
+      "sum": 13968
+    }
+  ],
+  "config": {
+    "arms": 7,
+    "blocks": 11,
+    "repeats": 48,
+    "hz": 360000000,
+    "core": 0
+  },
+  "qualified": true,
+  "restoredReadback": true,
+  "healthyNativeWorlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "restoredPainter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 2070232,
+    "relocate_us": 1179,
+    "native_us": 2918,
+    "raster_us": 0,
+    "image_bytes": 33840
+  }
+}

@@ -1,0 +1,254 @@
+{
+  "inputs": {
+    "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+    "arms": [
+      {
+        "arm": "stock",
+        "imageBytes": 2876,
+        "imageSHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 564,
+          "uncheckedRequest": 772,
+          "readBurst": 868,
+          "label": 1480
+        }
+      },
+      {
+        "arm": "bounds-selected",
+        "imageBytes": 2876,
+        "imageSHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 564,
+          "uncheckedRequest": 772,
+          "readBurst": 868,
+          "label": 1480
+        }
+      },
+      {
+        "arm": "semantics-late",
+        "imageBytes": 2396,
+        "imageSHA256": "554be22d57c3df914858ce9dd4c242270e54b9a4b12b80ce9eb96cb1828f2f5e",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 540,
+          "uncheckedRequest": 724,
+          "readBurst": 796,
+          "label": 1384
+        }
+      },
+      {
+        "arm": "semantics-selected",
+        "imageBytes": 2468,
+        "imageSHA256": "9f1625aeb72961ab71fcfc2a36a3e1321bb2c2028f93c94f0136b49102d301e3",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 540,
+          "uncheckedRequest": 724,
+          "readBurst": 796,
+          "label": 1384
+        }
+      },
+      {
+        "arm": "burst-leaf",
+        "imageBytes": 2812,
+        "imageSHA256": "03cc90a712bfdc960508e1c8dc37b2e78b964c91d9d3a27aef55929f1c3e5707",
+        "entries": {
+          "codeValue": 0,
+          "digit": 20,
+          "corrected": 76,
+          "dropped": 136,
+          "checksum": 172,
+          "countEvents": 220,
+          "inspect": 500,
+          "uncheckedRequest": 708,
+          "readBurst": 804,
+          "label": 1416
+        }
+      },
+      {
+        "arm": "burst-inline",
+        "imageBytes": 2952,
+        "imageSHA256": "21fab97772d854ccafd0bbddcaae2c0117cc93e58bb5dffabdecd2673c3a3973",
+        "entries": {
+          "codeValue": 0,
+          "digit": 20,
+          "corrected": 76,
+          "dropped": 136,
+          "checksum": 172,
+          "countEvents": 220,
+          "inspect": 500,
+          "uncheckedRequest": 708,
+          "readBurst": 804,
+          "label": 1556
+        }
+      },
+      {
+        "arm": "stock_repeat",
+        "imageBytes": 2876,
+        "imageSHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+        "entries": {
+          "codeValue": 0,
+          "digit": 40,
+          "corrected": 116,
+          "dropped": 176,
+          "checksum": 212,
+          "countEvents": 284,
+          "inspect": 564,
+          "uncheckedRequest": 772,
+          "readBurst": 868,
+          "label": 1480
+        }
+      }
+    ]
+  },
+  "rows": [
+    {
+      "arm": "stock",
+      "endpoint": "parse",
+      "instructions": 13498,
+      "value": 11360
+    },
+    {
+      "arm": "stock",
+      "endpoint": "count",
+      "instructions": 5424,
+      "value": 47
+    },
+    {
+      "arm": "stock",
+      "endpoint": "label",
+      "instructions": 1495,
+      "value": 291
+    },
+    {
+      "arm": "bounds-selected",
+      "endpoint": "parse",
+      "instructions": 13498,
+      "value": 11360
+    },
+    {
+      "arm": "bounds-selected",
+      "endpoint": "count",
+      "instructions": 5424,
+      "value": 47
+    },
+    {
+      "arm": "bounds-selected",
+      "endpoint": "label",
+      "instructions": 1495,
+      "value": 291
+    },
+    {
+      "arm": "semantics-late",
+      "endpoint": "parse",
+      "instructions": 12610,
+      "value": 11360
+    },
+    {
+      "arm": "semantics-late",
+      "endpoint": "count",
+      "instructions": 4518,
+      "value": 47
+    },
+    {
+      "arm": "semantics-late",
+      "endpoint": "label",
+      "instructions": 1149,
+      "value": 291
+    },
+    {
+      "arm": "semantics-selected",
+      "endpoint": "parse",
+      "instructions": 12610,
+      "value": 11360
+    },
+    {
+      "arm": "semantics-selected",
+      "endpoint": "count",
+      "instructions": 4518,
+      "value": 47
+    },
+    {
+      "arm": "semantics-selected",
+      "endpoint": "label",
+      "instructions": 1215,
+      "value": 291
+    },
+    {
+      "arm": "burst-leaf",
+      "endpoint": "parse",
+      "instructions": 11982,
+      "value": 11360
+    },
+    {
+      "arm": "burst-leaf",
+      "endpoint": "count",
+      "instructions": 5424,
+      "value": 47
+    },
+    {
+      "arm": "burst-leaf",
+      "endpoint": "label",
+      "instructions": 1495,
+      "value": 291
+    },
+    {
+      "arm": "burst-inline",
+      "endpoint": "parse",
+      "instructions": 11394,
+      "value": 11360
+    },
+    {
+      "arm": "burst-inline",
+      "endpoint": "count",
+      "instructions": 5424,
+      "value": 47
+    },
+    {
+      "arm": "burst-inline",
+      "endpoint": "label",
+      "instructions": 1495,
+      "value": 291
+    },
+    {
+      "arm": "stock_repeat",
+      "endpoint": "parse",
+      "instructions": 13498,
+      "value": 11360
+    },
+    {
+      "arm": "stock_repeat",
+      "endpoint": "count",
+      "instructions": 5424,
+      "value": 47
+    },
+    {
+      "arm": "stock_repeat",
+      "endpoint": "label",
+      "instructions": 1495,
+      "value": 291
+    }
+  ]
+}
