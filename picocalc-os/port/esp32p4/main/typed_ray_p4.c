@@ -50,6 +50,7 @@ static bool install(int program) {
         {"typed-ray/main.typed", "typed-ray/CHECK_REG"},
         {"typed-ray/main.typed", "typed-ray/HOIST_REG"},
         {"typed-ray/main.typed", "typed-ray/SKIP_REG"},
+        {"typed-ray/main.typed", "typed-ray/SHADOW_HOIST"},
     };
     if (program < 0 || program >= (int)(sizeof(programs)/sizeof(programs[0]))) return false;
     const char *source_name = programs[program].source;

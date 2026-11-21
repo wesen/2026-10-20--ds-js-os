@@ -13,6 +13,8 @@ const slot=readFileSync(join(stage,'build/esp-idf/main/candela-slot.elf'));
 const arms=[[0,'stock',join(compiler,'typed-rv32.js')],[8,'prior-matched',join(stage,'arms/MATCHED')]];
 for (const [i,key] of ['CHECK_STACK','HOIST_STACK','CHECK_REG','HOIST_REG','SKIP_REG'].entries())
     arms.push([9+i,key,join(stage,'factor-backends',key+'.js')]);
+const inputs=JSON.parse(readFileSync(join(stage,'factor-build.json'),'utf8')).sources;
+if(inputs.SHADOW_HOIST)arms.push([14,'SHADOW_HOIST',join(stage,'factor-backends/SHADOW_HOIST.js')]);
 const results=[];
 for (const [id,name,path] of arms) {
     const ctx=createContext({});

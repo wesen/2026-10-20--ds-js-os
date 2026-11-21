@@ -9,6 +9,7 @@ parser=argparse.ArgumentParser(description=__doc__)
 parser.add_argument('revision')
 parser.add_argument('stage',type=Path)
 parser.add_argument('backends',nargs=5,type=Path,metavar='CHECK_STACK,HOIST_STACK,CHECK_REG,HOIST_REG,SKIP_REG')
+parser.add_argument('--shadow-backend',type=Path,help='additional held-out shadow-region compiler')
 parser.add_argument('--idf',type=Path,default=Path('/home/manuel/esp/esp-idf-5.4.2/export.sh'))
 a=parser.parse_args()
 revision=subprocess.check_output(['git','rev-parse','--verify',a.revision+'^{commit}'],text=True).strip()
@@ -17,12 +18,14 @@ assert stage!=repo and (stage/'revision').is_file()
 subprocess.run(['python3',prior/'scripts/device/03-rebuild-stage.py',stage,revision],check=True)
 keys=['CHECK_STACK','HOIST_STACK','CHECK_REG','HOIST_REG','SKIP_REG']
 folder=stage/'factor-backends';folder.mkdir(exist_ok=True)
+if a.shadow_backend:keys.append('SHADOW_HOIST')
+inputs=list(a.backends)+([a.shadow_backend] if a.shadow_backend else [])
 paths=[]
-for key,src in zip(keys,a.backends,strict=True):
+for key,src in zip(keys,inputs,strict=True):
     dest=folder/(key+'.js')
     shutil.copyfile(src,dest);paths.append(dest)
 def sha(path):return hashlib.sha256(path.read_bytes()).hexdigest()
-assert len({sha(x) for x in paths})==5
+assert len({sha(x) for x in paths})==len(keys)
 port=stage/'tree/picocalc-os/port/esp32p4'
 shell=(port/'build-smooth-chess.sh').read_text();anchor='-D PICOCALC_CHESS_3D=ON build'
 assert shell.count(anchor)==1
@@ -41,6 +44,6 @@ receipt=dict(revision=revision,appSHA=sha(app),appBytes=app.stat().st_size,parti
 (stage/'factor-build.json').write_text(json.dumps(receipt,indent=2)+'\n')
 image_rows=subprocess.check_output(['node',Path(__file__).with_name('03-images.mjs'),stage],text=True)
 images=json.loads(image_rows)
-assert len(images)==len(set(x['nativeSHA'] for x in images))==7
+assert len(images)==len(set(x['nativeSHA'] for x in images))==len(keys)+2
 (stage/'factor-images.json').write_text(image_rows)
 print('FACTOR_BUILD',sha(app))
