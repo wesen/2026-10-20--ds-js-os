@@ -1,0 +1,107 @@
+{
+  "checkedStreamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+  "states": [
+    {
+      "ordinal": 73,
+      "start": 231496,
+      "end": 240363,
+      "header": "IR Dump After SROAPass on row",
+      "directI32Loads": 11
+    },
+    {
+      "ordinal": 74,
+      "start": 240363,
+      "end": 248127,
+      "header": "IR Dump After EarlyCSEPass on row",
+      "directI32Loads": 6
+    }
+  ],
+  "c": {
+    "checked-gcc": {
+      "verifiedRows": 160,
+      "codeBytes": 318,
+      "instructions": 1136142,
+      "stackLoads": 1120,
+      "stackStores": 1120
+    },
+    "checked-llc": {
+      "verifiedRows": 160,
+      "codeBytes": 296,
+      "instructions": 1233611,
+      "stackLoads": 320,
+      "stackStores": 320
+    },
+    "checked-llc-nolsr": {
+      "verifiedRows": 160,
+      "codeBytes": 268,
+      "instructions": 1275560,
+      "stackLoads": 0,
+      "stackStores": 0
+    }
+  },
+  "typed": {
+    "stock": {
+      "instructions": 3608697,
+      "stackLoads": 936328,
+      "stackStores": 353778,
+      "packets": 0
+    },
+    "scalar": {
+      "instructions": 3199910,
+      "stackLoads": 729553,
+      "stackStores": 309611,
+      "packets": 0
+    },
+    "pie": {
+      "instructions": 3131435,
+      "stackLoads": 729553,
+      "stackStores": 309776,
+      "packets": 3135
+    }
+  },
+  "defaultClean": {
+    "stockToScalar": {
+      "savedUs": {
+        "median": 1356.5,
+        "min": 1322,
+        "max": 1432
+      },
+      "savedPct": {
+        "median": 2.351505744708235,
+        "min": 2.292353043176695,
+        "max": 2.4821465714483812
+      }
+    },
+    "scalarToPie": {
+      "savedUs": {
+        "median": 242.0,
+        "min": 217,
+        "max": 307
+      },
+      "savedPct": {
+        "median": 0.4295228146712761,
+        "min": 0.38535987640070324,
+        "max": 0.5448479040215809
+      }
+    },
+    "stockToPie": {
+      "savedUs": {
+        "median": 1616.0,
+        "min": 1579,
+        "max": 1653
+      },
+      "savedPct": {
+        "median": 2.8014239567202264,
+        "min": 2.7378496003329116,
+        "max": 2.865215281148166
+      }
+    }
+  },
+  "physicalMedianGroups": 144,
+  "scalarToPieCleanPctAcrossPoseMedians": {
+    "min": 0.40951050493363267,
+    "median": 0.429949888795671,
+    "max": 0.46632366035079786
+  },
+  "physicalRowsSHA": "263cfa046e8a315cc3d81423f9115a4d312453717321e8d8554584899aee9f85"
+}
