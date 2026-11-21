@@ -36,7 +36,7 @@ This workbench hosts a JavaScript query language in Go with go-go-goja. The oper
 
 ## Study results
 
-The release replays all 26 original workbook programs. The [raw-evidence study](analysis/02-evidence-from-compiler-passes-to-physical-frames.md) connects LLVM and Typed observations to paired ESP32-P4 measurements. The [runtime study](analysis/03-persistent-investigations-in-a-goja-runtime.md) measures what persists when a query is repeated. The [blind evaluation](analysis/01-what-compiler-engineers-found-in-the-trace-repl.md) records which conclusions changed when the interface changed. The director's [synthesis and next compiler experiment](analysis/05-designing-and-validating-compiler-optimizations-with-a-trace-repl.md) walks through the findings for newcomers.
+The release replays all 26 original workbook programs. The [raw-evidence study](analysis/02-evidence-from-compiler-passes-to-physical-frames.md) connects LLVM and Typed observations to paired ESP32-P4 measurements. The [runtime study](analysis/03-persistent-investigations-in-a-goja-runtime.md) measures what persists when a query is repeated. The [usability researcher’s textbook case study](analysis/04-using-blind-compiler-engineers-to-qualify-an-evidence-api.md) explains how to qualify such an interface. The [blind evaluation](analysis/01-what-compiler-engineers-found-in-the-trace-repl.md) records which conclusions changed when the interface changed. The director's [synthesis and next compiler experiment](analysis/05-designing-and-validating-compiler-optimizations-with-a-trace-repl.md) walks through the findings for newcomers.
 
 ## Ownership and evaluation
 

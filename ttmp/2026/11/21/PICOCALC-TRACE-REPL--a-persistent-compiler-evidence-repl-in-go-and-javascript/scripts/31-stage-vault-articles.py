@@ -2,6 +2,7 @@
 """Stage the four reviewed manuscripts as vault notes, each with the source revision."""
 import argparse
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -33,6 +34,18 @@ def main():
         if committed != src.read_bytes():
             raise ValueError("article differs from reviewed commit: " + relative)
         body = src.read_text().split("---\n", 2)[2].strip()
+        # Sources also run inside docmgr. Point ticket-relative links back at the
+        # research checkout when this copy is placed in a different repository.
+        def relocate_link(match):
+            target = match.group(1).strip("<>")
+            if target.startswith(("/", "#")) or "://" in target or target.startswith("mailto:"):
+                return match.group()
+            path, separator, anchor = target.partition("#")
+            resolved = (src.parent / path).resolve(strict=True)
+            resolved.relative_to(repo)
+            address = str(resolved) + (separator + anchor if separator else "")
+            return "](" + ("<" + address + ">" if " " in address else address) + ")"
+        body = re.sub(r"\]\(([^)\n]+)\)", relocate_link, body)
         title = next(line[2:].strip() for line in body.splitlines() if line.startswith("# "))
         front = ["---", "title: "+json.dumps(title,ensure_ascii=False),
                  "tags: [project, compiler, llvm, picocalc, research]",
