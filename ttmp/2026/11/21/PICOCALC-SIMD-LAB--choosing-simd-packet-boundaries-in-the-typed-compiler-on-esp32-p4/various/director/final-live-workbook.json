@@ -81,6 +81,37 @@
       }
     ]
   },
+  "blindPrediction": {
+    "js": "lab.selection(\"dynamic\",3,35)",
+    "value": {
+      "family": "dynamic",
+      "n": 3,
+      "reach": 35,
+      "decision": {
+        "facts": {
+          "constantTrips": null,
+          "writeStreams": 0,
+          "lanes": 8
+        },
+        "plan": "pie",
+        "scores": {
+          "stock": 576,
+          "scalar": 394,
+          "pie": 313
+        },
+        "assumedTrips": 32
+      },
+      "imageSHA256": "286666fb945573bea34c044f0d39a64240a6c264dcf9fe86ce7758f5b3478aca",
+      "codeBytes": 504,
+      "unit": "physical P4 cycles per call",
+      "measured": {
+        "stock": 157.21875,
+        "scalar": 190.453125,
+        "pie": 193.4765625
+      },
+      "regretPct": 23.062015503875966
+    }
+  },
   "sources": {
     "frames": {
       "path": "director/frame-device-rows.json",
@@ -101,6 +132,14 @@
     "physics": {
       "path": "physics/board-results.json",
       "sha256": "1a774818bfa343c018df5c454b26ee9139424d549318e8c0d85b905c51793d89"
+    },
+    "images": {
+      "path": "director/host-images.json",
+      "sha256": "5b5e38085857f7fc4b9ebfd08d32b42e759bd806aae5e64fa35c99e07b401ed5"
+    },
+    "scores": {
+      "path": "director/selector-result.json",
+      "sha256": "5baea910c8ad2f9a49087cd587dbf43e1b72293b9e040ae5c85ea771e27f01e2"
     }
   }
 }

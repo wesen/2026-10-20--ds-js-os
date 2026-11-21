@@ -33,4 +33,16 @@ lab.packetPrediction = () => {
     return {packets:masks.length, predicted:8*masks.filter(r=>r.hitMask===0).length,
             observed:reads("pie")-reads("empty")};
 };
+
+// Link each blind prediction to actual physical costs by source family and fixture.
+lab.selection = (family,n,reach) => {
+    const trial = lab.scores.cases.find(x=>x.family===family && x.n===n && x.reach===reach);
+    if (!trial) throw Error("no measured input with that family, length and reach");
+    const build=lab.images.compiled[family].auto;
+    const decision=build.calls[0];
+    if (decision.plan!==trial.predicted || build.sha!==lab.images.compiled[family][decision.plan].sha)
+        throw Error("selected and forced compiler images differ");
+    return {family, n, reach, decision, imageSHA256:build.sha, codeBytes:build.len,
+            unit:"physical P4 cycles per call", measured:trial.medianCycles, regretPct:trial.regretPct};
+};
 undefined
