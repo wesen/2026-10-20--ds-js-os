@@ -218,10 +218,11 @@ function diff(before,after) {
             const changed=x.encoding.join(",")!==y.encoding.join(",");
             const counted=a.executions!==undefined && b.executions!==undefined;
             if (x.bytes===y.bytes && !changed && (!counted || x.hits===y.hits) && whyX===whyY) continue;
-            console.log("  "+(labels.get(k)??k),"bytes",x.bytes,"->",y.bytes,
-                counted?"executions "+x.hits+" -> "+y.hits:"",
-                whyX===whyY?"":whyX+" -> "+whyY,
-                x.bytes===y.bytes && changed?"different encoding":"");
+            const changes=["  "+(labels.get(k)??k), "bytes", x.bytes, "->", y.bytes];
+            if (counted) changes.push("executions", x.hits, "->", y.hits);
+            if (whyX!==whyY) changes.push(whyX||"no recorded decision", "->", whyY||"no recorded decision");
+            if (x.bytes===y.bytes && changed) changes.push("different encoding");
+            console.log(...changes);
         }
     }
 }

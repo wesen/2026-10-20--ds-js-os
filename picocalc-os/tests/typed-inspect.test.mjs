@@ -92,3 +92,37 @@ test("CLI reconciles real bytes, source locations, profile identity and diff",t=
     const wrong=spawnSync(process.execPath,[cli,file,"--target","rv32","--profile",profile],{encoding:"utf8"});
     assert.equal(wrong.status,1);assert.match(wrong.stderr,/digest differs/);
 });
+
+test("diff reconciles fusion across fast and fallback copies and accounts for synthetic work",t=>{
+    const dir=fs.mkdtempSync(path.join(os.tmpdir(),"typed-inspect-diff-"));
+    t.after(()=>fs.rmSync(dir,{recursive:true,force:true}));
+    const ops=["local.get","i32.const","i32.add"].map((op,ordinal)=>({op,ordinal,operands:[]}));
+    function save(name,groups) {
+        let pc=0,executions=0;
+        const ranges=groups.map(([role,ordinals,hits])=>{
+            const pos=pc;
+            const words=hits.map(n=>{
+                const address=pc; pc+=4; executions+=n;
+                return {pc:address,word:19,executions:n};
+            });
+            return {start:pos,end:pc,role,ordinals,words};
+        });
+        const file=path.join(dir,name+".jsonl");
+        const header={kind:"module",format:"typed-inspect/1",target:"rv32"};
+        const row={kind:"function",name:"row",target:"rv32",start:0,end:pc,
+            executions,operations:ops,ranges};
+        fs.writeFileSync(file,[header,row].map(r=>JSON.stringify(r)).join("\n"));
+        return file;
+    }
+    const before=save("control",[
+        ["operation",[0],[10]],["operation",[1],[10]],["operation",[2],[10]]
+    ]);
+    const after=save("candidate",[
+        ["specialized code",[],[1]],["operation",[0,1],[10]],["operation",[2],[10]],
+        ["operation",[0],[0]],["operation",[1,2],[0]]
+    ]);
+    const output=execFileSync(process.execPath,[cli,"diff",before,after],{encoding:"utf8"});
+    assert.match(output,/executions 30 -> 21 delta -9/);
+    assert.match(output,/#0 local.get \+ i32.const \+ i32.add bytes 12 -> 16 executions 30 -> 20/);
+    assert.match(output,/specialized code bytes 0 -> 4 executions 0 -> 1/);
+});

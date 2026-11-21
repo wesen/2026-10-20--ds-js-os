@@ -139,3 +139,24 @@ The resident device compiler can run without the host tools. Profiles for this s
 ### Remaining requirements and next action
 
 The companion scalar ticket records physical clocks, controls and the independent shadow trial. The inspector ticket is complete.
+
+## Step 4. Retain a regression for overlapping fused ranges
+
+The scalar experiment emits two copies of an admitted function on opposite sides of an entry guard. I added a small regression to make the accounting verifiable even when the fast and fallback copies fuse different adjacent operations. The example's whole-function execution delta is −9, consisting of −10 in the shared frontend group and +1 in a synthetic guard.
+
+### Prompt Context
+
+See Step 1. This follow-up protects the requested native emission comparison through its CLI entry point.
+
+### Evidence and commits
+
+- Ran `make -C picocalc-os test-apps` after adding the dual-copy fixture. All 76 tests passed.
+- Replayed the archived color-packer diff and checked the output for trailing whitespace. The operations, counts and byte ranges match the original evidence.
+
+### Noteworthy decisions or failures
+
+The diff groups a cut only when every emitted copy permits it. A boundary present in the slow copy can still bisect a fused operation in the fast copy.
+
+### Remaining requirements and next action
+
+The full native and Wasm guides and research articles remain valid. No further inspector work is pending.
