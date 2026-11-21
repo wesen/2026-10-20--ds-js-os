@@ -68,3 +68,49 @@ Begin at typedRayInShadow in the Typed ray tracer and in_shadow in raytrace_demo
 ### Technical details
 
 Source revision at freeze is 57b2d9f. The Type-to-machine pipeline streams one function at a time. The initial research baseline uses the previous public pie-empty option. The first prediction will distinguish guest instructions, P4 cycles per call and complete-frame time to PSRAM.
+
+## Step 2. Establish a baseline that can distinguish language, layout and code generation
+
+### Prompt Context
+
+The [commission and staffing correction](../sources/commission.txt) apply. I took responsibility for measurements after closing two research lanes.
+
+### What I did
+
+Generated twelve Wasm frame streams, pinned their native source image and derived the expected shadow return for every visible floor pixel. Independently classified each visited sphere using its projected bounds and exact intersection. On the opening pose, 7,811 full predicate calls rejected all three spheres on X alone. The researcher reproduced 74,226 calls from the shadow loop into the same arithmetic helper and found GCC computes its result inline. I accepted one candidate for implementation.
+
+### Why
+
+A fast path taken thousands of times can matter more than the exact intersection arithmetic. Comparing complete C and Typed renderers mixes scratch representation, checks, code generation, and hosting. Three C/Typed layout controls can separate some of those effects on valid inputs.
+
+### What worked
+
+The opening native image matches the previous study's complete 10,332-byte binary by SHA-256. The twelve captures match an independent arithmetic classifier per pixel. The frozen Chess scorer agrees with the independently executed six-function Wasm module on three positions in both evaluation modes.
+
+### What didn't work
+
+The initial fixture generator invoked a nested git process in the restricted environment, which reported EPERM and printed the command's captured output. Repeating the same generator in the host execution environment produced the pinned inputs. An initial register-assignment candidate was superseded when the helper-call counts became available.
+
+### What I learned
+
+One short-circuit expression can call the same helper once or twice per sphere. A helper removed from the caller changes costs throughout the caller's hot route. A high count of stack references alone cannot identify the fastest transformation.
+
+### What was tricky to build
+
+The stride applies to the output plane, while the oracle masks index a fixed 160 by 160 grid. The harness preserves padding, uses C scalar RGB as a bytewise comparison, tests depth and IDs independently, and supplies the shade-only entry with previously computed planes. Native and halfword predicate inputs share PSRAM placement. Every predicate return is checked outside the timed batch.
+
+### What warrants a second pair of eyes
+
+Confirm the timing units and phase names, the common indirect-call loop in the isolated tests, and the absence of candidate calls in the shadow-only primary pass. Account for placement-sensitive effects when interpreting tiny differences.
+
+### What should be done in the future
+
+Capture the control first, then rotate the baseline, selected caller and all callers in a single diagnostic image. A separately prepared Chess position measures transfer.
+
+### Code review instructions
+
+Start with scripts/board/01-images.mjs for input contracts, scripts/board/bench.c for timer boundaries, and scripts/board/layout.inc for both C layout controls. Inspect the source and native image digests in various/board/baseline-images.json.
+
+### Technical details
+
+The previous comparison used pie-empty. Both candidate arms preserve that setting. A P4 cycle count is taken around a whole sequence of indirect calls; its denominator is the number of calls in that particular fixture and route.

@@ -1,0 +1,50 @@
+{
+  "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "chessSHA": "6c0540bacfc15ca68c12b9d158ed7f6aa5b39bf13a86db85fbb18cded2518b5f",
+  "bundleSHA": "148b6118dced3f10170978c1a4efc716aa006c0af465112e3459a057f8dc1faf",
+  "records": [
+    {
+      "family": "ray",
+      "mode": "({pieLoops:'pie-empty'})",
+      "sha": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+      "bytes": 10332,
+      "entries": {
+        "typedRayStride": 0,
+        "typedRaySphereFits": 212,
+        "typedRayLampFits": 332,
+        "typedRayAbs": 444,
+        "typedRaySetObject": 496,
+        "typedRaySetObjects": 828,
+        "typedRayBuildGeometry": 1128,
+        "typedRayBuildLight": 1664,
+        "typedRayBuildTables": 2864,
+        "typedRayPrepare": 2948,
+        "typedRayComputeRow": 3056,
+        "typedRayInShadow": 4768,
+        "typedRaySphereScale": 5836,
+        "typedRayPack": 6444,
+        "typedRayPixel": 6836,
+        "typedRayLitRow": 7440,
+        "typedRaySaveAudit": 7764,
+        "typedRayFrame": 8072,
+        "typedRayRender": 8480,
+        "typedRayTrace": 9016,
+        "typedRayShade": 9424
+      }
+    },
+    {
+      "family": "chess",
+      "mode": "({pieLoops:'pie-empty'})",
+      "sha": "e010ceca904ce8b41f0e65570314067c2421e805f773b2ff0162003746dd253c",
+      "bytes": 1948,
+      "entries": {
+        "chessSquare": 0,
+        "chessSide": 72,
+        "chessValue": 140,
+        "chessAbs": 332,
+        "chessCenter": 384,
+        "chessEvaluate": 508
+      }
+    }
+  ]
+}
