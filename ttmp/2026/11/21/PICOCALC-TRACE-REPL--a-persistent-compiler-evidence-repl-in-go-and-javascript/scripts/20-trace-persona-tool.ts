@@ -1,4 +1,5 @@
 // Only the host supplies a session endpoint. Evaluated JS cannot select a URL.
+import {createHash} from "node:crypto";
 import {Type} from "@earendil-works/pi-ai";
 import type {ExtensionAPI} from "@earendil-works/pi-coding-agent";
 
@@ -24,7 +25,8 @@ export default function (pi: ExtensionAPI) {
       // Mark excerpts explicitly. An omitted tail must never look like a complete table.
       const text = body.length <= 4000 ? body : body.slice(0, 4000) +
         "\n[OUTPUT ABBREVIATED: inspect a smaller projection or a single row]";
-      return {content: [{type: "text", text}], details: {httpStatus: response.status, bytes: Buffer.byteLength(body)}};
+      return {content: [{type: "text", text}], details: {httpStatus: response.status, bytes: Buffer.byteLength(body),
+        fullReplySHA256: createHash("sha256").update(body).digest("hex"), abbreviated: text !== body}};
     }
   });
   pi.on("before_agent_start", () => { pi.setActiveTools(["trace_eval"]); });

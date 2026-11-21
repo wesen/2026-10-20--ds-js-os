@@ -70,3 +70,9 @@ The three discovery cards and the reserved register-rewriter card remain frozen.
 | Refutation | The proposal identifies a concrete outcome that would reverse the recommendation or narrow its applicability. |
 
 A claim about a prospective change stays a hypothesis until that change is executed in an appropriate matched experiment. A tool can help a researcher design such an experiment even when its current captures cannot validate the change. Report these two achievements separately.
+
+## Amendments from the independent protocol review
+
+Opus High reviewed the plan before the first scored session. Persistence is explicitly cued in the common brief, so a successful second query demonstrates that the session works, while leaving unaided discoverability open. Inspect public help for expected numerical answers. An arm name, pass name or worked example can guide a user to an actual query. Mark a value disclosed directly by help separately from a value computed from a real capture. Keep the measured observations, derived arithmetic and new proposals in separate rows of the grading notes.
+
+A session with a shortened response retains exactly the text shown to the researcher, the full reply's byte count and its SHA-256. For a scientific claim depending on a missing tail, replay the sequence locally and inspect the necessary projection before scoring it. This keeps raw IR bodies out of the provider prompt and bounds committed evidence. The supervisor independently replays the strongest scientific claim outside the persona room. These exploratory runs support a qualitative interface assessment. A controlled population estimate would also need repeated runs and independently blinded graders.

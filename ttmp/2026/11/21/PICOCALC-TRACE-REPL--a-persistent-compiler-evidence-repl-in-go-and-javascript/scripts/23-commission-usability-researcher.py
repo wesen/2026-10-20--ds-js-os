@@ -39,11 +39,24 @@ def main():
             cwd=work,input=prompt,text=True,capture_output=True,timeout=1200)
     if proc.returncode:
         raise SystemExit((proc.stderr or proc.stdout)[-2000:])
-    result = json.loads(proc.stdout)
+    envelope = json.loads(proc.stdout)
+    if isinstance(envelope, list):
+        result = next((event for event in reversed(envelope)
+                       if event.get("type") == "result"), {})
+    else:
+        result = envelope
+    if result.get("is_error") or not result.get("result"):
+        raise SystemExit("Claude did not complete the authoring task: " +
+                         str(result.get("result") or result.get("subtype") or "missing result"))
     payload = result["result"].strip()
     if payload.startswith("```"):
         payload = payload.split("\n",1)[1].rsplit("```",1)[0]
-    docs = json.loads(payload)
+    try:
+        docs = json.loads(payload)
+    except json.JSONDecodeError:
+        # Preserve the user-visible response for reconstruction without retaining thought events.
+        (T/"various"/f"usability-researcher-{stage}-response.txt").write_text(payload)
+        raise
     if stage == "protocol":
         DIARY.write_text(frontmatter("Lead usability researcher diary", "reference") +
                          "# Lead usability researcher diary\n\n"+docs["diary"].strip()+"\n")

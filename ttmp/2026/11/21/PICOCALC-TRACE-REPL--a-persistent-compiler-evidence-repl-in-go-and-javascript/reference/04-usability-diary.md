@@ -118,3 +118,53 @@ Run the preceding ticket's `scripts/01-check-evidence.mjs` with Node and compare
 ### Technical details
 
 The independent static verifier counts the literal capacity pointer in this known C fixture. That spelling is a fixture-level oracle and does not generalize to arbitrary LLVM IR.
+
+## Step 3: Commission a methodological reviewer and separate optimization design from evidence retrieval
+
+The lab director requested an explicit test of whether researchers could design and validate compiler improvements. I retained the original baseline tasks and the register-allocation holdout word for word. A separately identified fifth card asks the researcher to propose and falsify a temporary-register-cache optimization.
+
+### Prompt Context
+
+See Step 1. The study supervisor instructed this lane to retain DeepSeek Flash high as the actual participants and commission a separate Opus High methodological researcher and textbook author. The experiment scripts/briefs belong to this study; the separate Opus xhigh implementer owns product fixes.
+
+### What I did
+
+- Pre-registered `scripts/personas/optimization.md` and added the five scientific-decision dimensions to the playbook at `ec61d4b`.
+- Prepared a two-stage tool-free Claude Code commission at `ea22e97`. The first stage receives the task cards, operator methodology, both requested vault playbooks, and the diary and writing guidance. The publication stage additionally requires real completed trials and an independent grade.
+- Restricted retained model output to the user-facing result and the model/effort identity. Filtered private model stream events out of the response before interpreting it.
+
+### Why
+
+Finding the right number exercises lookup. Designing a compiler intervention also requires proposing a code-generation mechanism, understanding the missing variable, and specifying a matched correctness and performance experiment that can reject the hypothesis.
+
+### What worked
+
+The new card and independent truth checks were committed before any participant saw the final service. Its rubric separates measurements the archive validates from proposals the current evidence can only motivate.
+
+### What didn't work
+
+The initial Opus protocol wrapper failed after the provider returned. The local error was `TypeError: list indices must be integers or slices, not str` at `result["result"].strip()`. This CLI returned an event list. I updated the reader to select its terminal result event, detect an error result, and keep only the public response when a structured document needs repair. I reissued the same protocol brief.
+
+### What I learned
+
+A methodological lead, participant and product implementer require distinct records and permissions. The lead may read the answer key after participants finish. The participants need only a public API. The product implementer receives concrete reproduced failures.
+
+### What was tricky to build
+
+If an outcome dimension was never asked for by an original task, assigning it a failure after changing the rubric would give a misleading comparison. The report records those cells as not elicited and uses a fresh decision task for the new question.
+
+### What warrants a second pair of eyes
+
+Inspect whether the independent scientific grade gives credit only for evidence the participant actually obtained and whether the proposed control preserves the algorithm and input.
+
+### What should be done in the future
+
+Complete the two-stage reviewer commission using the same written protocol. Publish the article only after its claims can be checked against the observed trials.
+
+### Code review instructions
+
+Review the stable earlier task cards with `git show c5e3f69`, the decision rubric with `git show ec61d4b`, then compare the final public action receipts to the findings table.
+
+### Technical details
+
+Claude used `--model opus --effort high` with no agent tools. Pi uses a separate provider and `--thinking high`. These settings label different roles.
