@@ -16,6 +16,61 @@ I started a separate Anthropic Claude CLI with `-p --model opus --effort high --
 
 The first source inspection identified the emitted-program functions and the ELF slot linker in `picocalc-os/compiler/typed-rv32.js`. The current frontend may lower async Editor tasks before streaming ordinary and generated bodies through different lexers. The release application inputs are the exact CMake products used in the preceding release study. I will preserve a hash for each and rerun fresh control measurements.
 
+### Prompt context
+
+**User prompt (verbatim).** “do it, as before.
+  Everybody (you included): Keep a detailed diary as you work, with the format according to the diary skill
+  Chose opus high for researchers
+  Each researchers  when done, and you once you have all the results: write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no
+  analogies, see skill).
+   Commit and push the bsidian vault when done (go-go-parc vault).   Make it pedagogical to explain your research in detail and with all the context necessary for newcomers.”
+
+**Assistant interpretation.** Translate a broad compiler wave into a measurable edit question.
+
+**Inferred user intent.** Let a separate Opus High researcher determine how to evaluate dependency precision and uncertainty.
+
+**Code checkpoint.** `c07464e`.
+
+### What I did
+
+Commissioned the design with the previous cache source, edit generator and release backend excerpt. Preserved the authored design and model identity.
+
+### Why
+
+The earlier global descriptor made every structural edit a cold miss. A comparison with clean alone would conflate a new speedup with that earlier result.
+
+### What worked
+
+The returned design named symbolic relocations, read-set invalidation and a clean prepatch-word oracle before the implementation.
+
+### What didn’t work
+
+No commission failure. The original design proposed more physical repetitions than the shared board window eventually allowed.
+
+### What I learned
+
+An unchanged function may depend on an absent name or a physical field offset as well as on declarations it names directly.
+
+### What was tricky to build
+
+The design had to account for both ordinary and async-generated lexers while still promising one externally visible output.
+
+### What warrants a second pair of eyes
+
+Check whether any path uses declarations without passing its observation through the body emitter.
+
+### What should be done in the future
+
+Keep new language constructs opt-in, with a new cache identity or instrumented observations before reuse.
+
+### Code review instructions
+
+Read design-doc/04-precise-fragment-dependencies.md and the exact commissioned input in scripts/04-deps/01-design-prompt.txt.
+
+### Technical details
+
+The original release baseline includes 119 Editor functions and 82 Chess functions. Code and measurements are ticket-private.
+
 ## Step 2. Freeze read-set validation and qualify the training set
 
 The commissioned lead proposed observing the compiler's semantic lookups and replacing index-based cached relocations. I implemented the recording at the shared emitter interface used by both original and async-generated bodies. A missing call, record, enum or distinct name is a dependency when its absence chooses a typing path. An enum used for an exhaustive match records the complete member table. A field records its exact type and byte position. Distinct integer literals use an internal JavaScript Symbol, which cannot be the name of a declaration. The checker preserves nominal membership for every ordinary identifier spelling.
@@ -26,6 +81,56 @@ I staged exact shipped inputs with `python3 04-stage.py /tmp/native-wave-deps /t
 
 The design proposes 30 timing samples and bootstrap confidence gates. The physical window is shared between studies. Its bounded trial will explicitly identify the sample count and omit preregistered confidence claims if it does not reach that target. No selective pointer persistence or file format is implemented.
 
+### Prompt context
+
+**User prompt (verbatim).** See Step 1 for the verbatim user request.
+
+**Assistant interpretation.** Implement narrowly observed declaration dependencies.
+
+**Inferred user intent.** Recover unaffected functions across signature/layout edits and prove agreement with the real clean compiler.
+
+**Code checkpoint.** `c07464e`.
+
+### What I did
+
+Intercepted semantic map lookups and replaced cached global ordinals by symbol names. Stored own bindings, recovered graph edges and exact-body identity.
+
+### Why
+
+A signature edit changes every descriptor string even when most individual compiled words and assumptions remain unchanged.
+
+### What worked
+
+Seven rotated host blocks produced the clean images and diagnostics. Primary signature/layout misses were 4/10 Editor and 10/6 Chess.
+
+### What didn’t work
+
+The first design overlooked import-to-internal promotion as a change of graph membership. I included namespace in call facts before locking.
+
+### What I learned
+
+For the current backend, comparing an observed field type and offset is enough to distinguish a changed instruction from an unchanged record handle.
+
+### What was tricky to build
+
+Both a local jump label and a global callee have machine offsets. Their symbolic representations must retain that distinction before final placement.
+
+### What warrants a second pair of eyes
+
+Review the duplicated frontend entry anchors and emitted-function order. Verify that a rejected function cannot publish a root with missing words.
+
+### What should be done in the future
+
+Test extensions with alternate backends independently; the shipped scalar backend remains the identity covered here.
+
+### Code review instructions
+
+Run scripts/04-deps/04-stage.py, then 05-host.mjs. Inspect clean, global and precise rows in various/04-deps/host.json.
+
+### Technical details
+
+The candidate keeps previous and new roots separately. A successful host call returns the new immutable-generation reference; an error result contains no root.
+
 ## Step 3. Open the independent holdout and audit clean fragment shape
 
 The director supplied the sealed ten-function telemetry source after the implementation freeze in c07464e. The first attempt, `node 06-holdout.mjs /tmp/native-wave-deps /tmp/native-wave-heldout ../../various/04-deps/held-out.json`, passed unchanged. Four independent valid edits rebuilt one function each. A changed signature without repaired callers produced the exact stock diagnostic after seven earlier hits. Replaying the untouched baseline after rejection hit all ten functions. The source lengthening a literal increased the local instruction sequence. The release frontend's `bufferLiteral` loop emits an immediate narrowed to UTF-16 and a store per code unit; no data pool or inter-function literal references exist in this backend. This resolves a mistaken inference from image growth alone in the lead's received critique.
@@ -34,14 +139,164 @@ The independent clean comparison now captures every prepatch word plus symbolic 
 
 The substantive Opus High critique ran in the original design session. Its snapshot included only one representative host row per cell. Its concerns led me to supply complete seven-block evidence, the independent fragment-shape oracle, the six sensitivity controls and direct compiler source showing immediate literal lowering. Some proposed gates, including a data-pool case, changing the base type of `distinct i32`, an embedding layout whose size shifts outer fields, and an independent jump-overflow study, are inapplicable to this frontend or unmeasured. The final editorial record distinguishes them.
 
+### Prompt context
+
+**User prompt (verbatim).** See Step 1 for the verbatim user request.
+
+**Assistant interpretation.** Open the independent tests without adjusting code.
+
+**Inferred user intent.** Compare each held-out edit with a fresh compile and identify which stored assumptions the tests can falsify.
+
+**Code checkpoint.** `153bae9`.
+
+### What I did
+
+Ran all five director edits, an independent raw-fragment oracle, a complete public-program metadata oracle, six knockout controls and import/async/nominal tests.
+
+### Why
+
+The count of reused functions alone cannot establish byte agreement or show that the cache reuses every eligible clean fragment.
+
+### What worked
+
+All held-out valid states agreed with stock, with nine hits each. The invalid signature produced the same error after seven hits; baseline replay hit ten.
+
+### What didn’t work
+
+The first exhaustive-enum fixture emitted “unknown case case in T”. A handwritten async edit initially emitted “expected i32, got bool”. Correcting the fixture syntax restored the intended positive case.
+
+### What I learned
+
+The editor-generated async continuation changed on the layout edit. The independent oracle identified exactly the same ten rebuilt Editor functions as the candidate.
+
+### What was tricky to build
+
+The clean oracle must hash unresolved symbolic local/global call records together with words. Comparing laid-out function bytes would mix in placement changes.
+
+### What warrants a second pair of eyes
+
+The raw-fragment oracle was written retrospectively. Record that ordering and check the independent producer does not call the treatment.
+
+### What should be done in the future
+
+Further mutation controls could isolate async-prefix and every negative membership fact; six successful knockouts do not exhaust the model.
+
+### Code review instructions
+
+Run 06-holdout.mjs, 13-knockouts.mjs, 14-fragment-oracle.mjs, 15-full-program.mjs and 17-declaration-controls.mjs. Compare the saved JSON receipts.
+
+### Technical details
+
+The held-out clean source hash is 98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f. The base emitted image has 2,876 bytes.
+
 ## Step 4. Build and preflight the physical treatment
 
 The benchmark uses three separate bundled code trees, ordinary JS roots retained in RAM, release QuickJS plus its native token index and a PSRAM allocator. It performs five interleaved measurements per arm, and checks each complete linked board image bytewise against a fresh stock board image and by CRC against host gold. The isolated image does not mount or modify flash storage. Fresh paired first builds measure clean and precise; warmed measurements also include the complete earlier global comparator. The default release entry supplies the artifact and does not execute the edited program.
 
 The physical shell is reused from the last study. The first host-only preflight, pointing at the source-stage directory for the recovery image, correctly raised `AssertionError` on the known ordinary application hash before touching serial. With `/tmp/chess-camera-release/build` for the release image and partition, the preflight passed for candidate b3ad52ac6eae03f82a6e20e575d00818d37fcb1e7990e396b73d6d775cc3714f. I independently located all four exact input byte strings inside the canonical firmware; their offsets/digests live in `various/04-deps/release-inputs.json`. I also corrected the analogous recovery example in the earlier report in commit 3f1c42a and informed its publisher. Current shell remained off serial awaiting the designated operator's explicit handoff.
 
+### Prompt context
+
+**User prompt (verbatim).** See Step 1 for the verbatim user request.
+
+**Assistant interpretation.** Prepare an actual P4 measurement and mandatory playable recovery.
+
+**Inferred user intent.** Time real application edits at a common endpoint while keeping the device usable after the trial.
+
+**Code checkpoint.** `153bae9`.
+
+### What I did
+
+Built the ESP-IDF image with separate compiler arms, checked four input byte strings against the published firmware, and ran a serial-free image preflight.
+
+### Why
+
+The production app and the source-stage directory contain different firmware binaries even though the source-stage inputs are embedded in the production image.
+
+### What worked
+
+Preflight verified candidate b3ad52ac… and the canonical application/partition. The 90 planned JS response rows also pass in a host-side payload replay.
+
+### What didn’t work
+
+The first recovery-directory argument failed the explicit hash guard with AssertionError before serial access. Using /tmp/chess-camera-release/build passed.
+
+### What I learned
+
+Full-application identity, reactor identity and Typed source identity are distinct, and a correct report must name the corresponding paths separately.
+
+### What was tricky to build
+
+The previous runner parses specific marker counts. I reused its device lock and restoration path while changing validation to the exact 90-row factorial design.
+
+### What warrants a second pair of eyes
+
+Check all 90 app/edit/arm/block tuples and the board-produced CRCs, plus the released painter and eight healthy native worlds after restore.
+
+### What should be done in the future
+
+Do not infer a single-session heap peak from the research harness that intentionally keeps the stock, global and precise backends resident.
+
+### Code review instructions
+
+Read 09-board.js, 10-board-stage.py and 12-device.py. Use --preflight to verify both firmware hashes without opening the serial device.
+
+### Technical details
+
+The physical JS context uses the release native lexical index, aligned PSRAM allocator, 56 KiB JS stack allowance and an 80 KiB task stack.
+
 ## Step 5. Resolve the lead’s timing and literal critiques before the board window
 
 I measured an additional 30 rotated host blocks per treatment and split RV32 compile and ELF-link clocks without changing the frozen candidate. A seeded 10,000-resample paired bootstrap of the within-run median precise-minus-global time placed all four signature and layout difference intervals below zero. The median paired ratio on Chess local edits was 1.143, beyond the lead’s 1.10 allowance. The winning structural cells do not erase that adverse local result. This interval describes this single host run; the separate physical experiment has five blocks, and its confidence gate is deliberately unfilled.
 
 The host executed the exact C-embedded device JavaScript payloads after staging. All 90 planned results passed their clean byte/CRC oracle on the host. Another control moved a literal in a non-final function ahead of retained helpers, verifying that final relative calls are rebound. Nested records were tested as one-word handles: appending a field to an inner record preserved an outer field’s offset. These observations distinguish the shipped word-layout rules from hypothetical inlined records or pooled constants. The optional data-pool compiler in the earlier release study is a different backend with no shared cache identity.
+
+### Prompt context
+
+**User prompt (verbatim).** See Step 1 for the verbatim user request.
+
+**Assistant interpretation.** Separate compiler and linker timing on the host and test more layout cases.
+
+**Inferred user intent.** Find out whether precise validation imposes a local-edit tax even when structural edits improve.
+
+**Code checkpoint.** `79f32cc`.
+
+### What I did
+
+Ran 30 rotated host blocks for every primary arm/edit, retained raw compile/link elapsed times and computed a seeded paired bootstrap.
+
+### Why
+
+The first seven host blocks tested byte identity. Clock splits and additional repetitions answer a different performance question and make the sampling method visible.
+
+### What worked
+
+All four signature/layout bootstrap intervals for precise-minus-global within this run were below zero. The Chess body median paired ratio was 1.143.
+
+### What didn’t work
+
+The proposed ten-percent body-overhead allowance failed for Chess on this host. Earlier single-row aggregates sent for critique could not establish this.
+
+### What I learned
+
+The linker took a small fraction of host end-to-end time. Most structural savings occurred before the final reactor copy and import relocation.
+
+### What was tricky to build
+
+The host wrappers keep the actual pristine and precise compiler functions separate and time the link independently from clean-oracle hashing.
+
+### What warrants a second pair of eyes
+
+Inspect whether host JIT warm-up or the fixed round-robin order could distort a comparison with on-board QuickJS.
+
+### What should be done in the future
+
+Use separate boots and an attributable resident-compiler budget before any deployment claim.
+
+### Code review instructions
+
+Run 19-host-phases.mjs followed by 20-host-summary.py and inspect per-cell block observations and paired ratios.
+
+### Technical details
+
+The bootstrap resamples 30 paired differences 10,000 times with a fixed seed; it does not represent variation between computers or boots.
