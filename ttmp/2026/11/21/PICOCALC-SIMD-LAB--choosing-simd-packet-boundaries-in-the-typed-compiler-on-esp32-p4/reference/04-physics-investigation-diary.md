@@ -294,3 +294,9 @@ Read the chapter and then the stored authorship, workload and capture receipts i
 ### Technical details
 
 The external source and article bodies were provided as public CLI responses. Only deliverables, bounded authorship receipts and explicit query/result records are retained.
+
+## Step 6: Pin the firmware reproduction and normalize the research diary name
+
+The physical operator requested a compiler pin after the research branch integrated a production change. The standalone loader now reads the exact measured compiler from git revision `9a1ff99d2e11c9f3618fc42e979b643c1023521d` for both the ordinary emitter and the recognizer. Its assembly reproduces `297d07e6ab2e65b6261a72139b1b04219286660aaa9d4b7488d7f2931acf6d01`. The researcher's diary uses the docmgr-compatible path [04-opus-physics-researcher-diary.md](04-opus-physics-researcher-diary.md).
+
+**Validation.** The local sandbox initially returned `spawnSync git EPERM` while the Node compiler loader invoked `git show`. The approved local command reran the same compiler and qualification against that commit. The current stock firmware source can now evolve without silently changing the physics evidence.

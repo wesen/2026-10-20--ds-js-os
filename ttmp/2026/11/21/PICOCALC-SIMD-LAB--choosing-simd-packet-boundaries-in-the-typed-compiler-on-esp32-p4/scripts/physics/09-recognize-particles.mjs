@@ -1,6 +1,6 @@
 // Match numerical semantics on one bounded Typed numeric operation tape at a time.
 import {readFileSync, writeFileSync, mkdirSync} from "node:fs";
-import {createContext,runInContext} from "node:vm";
+import {compilerRevision,loadCompiler} from "./13-measured-compiler.mjs";
 import {dirname, resolve} from "node:path";
 import {fileURLToPath} from "node:url";
 import {execFileSync} from "node:child_process";
@@ -123,8 +123,7 @@ const [input,destination,policy = "pie"] = process.argv.slice(2);
 if (!input || !destination || !["pie","scalar","stock"].includes(policy))
     throw Error("usage: node 09-recognize-particles.mjs SOURCE OUTDIR [pie|scalar|stock]");
 mkdirSync(destination,{recursive:true});
-const vm = createContext({});
-runInContext(readFileSync("picocalc-os/compiler/typed-wasm.js","utf8"),vm);
+const vm = loadCompiler(["typed-wasm"]);
 const decisions = [], counts = new Map();
 const manual = readFileSync(resolve(here,"board/physics_checked.S"),"utf8");
 const guardMacro = manual.slice(manual.indexOf(".section"),manual.indexOf(".endm")+5);
@@ -146,7 +145,7 @@ vm.typedWasm.compileFunctions(readFileSync(input,"utf8"),0,[],undefined,true,fn 
 });
 declarations.push(".option pop");
 writeFileSync(resolve(destination,"physics-auto-checked.S"),declarations.join("\n")+"\n");
-writeFileSync(resolve(destination,"physics-auto.json"),JSON.stringify({policy,maximumTapeWords,decisions},null,2)+"\n");
+writeFileSync(resolve(destination,"physics-auto.json"),JSON.stringify({compilerRevision,policy,maximumTapeWords,decisions},null,2)+"\n");
 // An experiment-only link step leaves unmatched entry points in the ordinary
 // compiled module. Internal calls in that module continue to target its stock bodies.
 execFileSync(process.execPath,[resolve(here,"02-build-typed.mjs"),input,destination],{stdio:"inherit"});
