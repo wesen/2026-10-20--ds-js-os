@@ -200,3 +200,53 @@ Read `tracehardware.Open`, `validateLoads` and `(*Study).pair`, then run `go tes
 Phase indexes are 0 clean, 1 audit, 2 primary and 3 shade. Program IDs 0, 8 and 5 mean stock, matched scalar and inferred PIE for this original run. `savedUs = baselineUs − candidateUs` and `savedPct = 100 × savedUs / baselineUs`. Each pair owns value fields and a session receives a fresh result slice. Each group has six independently reusable block-level observations.
 
 The supervisor relayed the subsequent instruction that Opus xhigh owns all implementation. I stopped editing source and tests and returned the uncommitted physical reader draft to the supervisor for Opus. The observed test result above is a qualification of that draft. The prior archive reader had already been committed at `f7447b1`.
+
+## Step 4. Supervise and verify an independent evidence scientist
+
+I commissioned an Opus High author through Claude Code using a frozen reading packet. The research question was whether evidence from checked C, the Typed guest interpreter and the ESP32-P4 justifies a particular next optimization. The assignment was limited to research and writing. The author had Read and Write tools in the packet, and the second editorial session had Read and Edit tools. Neither session changed product code.
+
+### Prompt Context
+
+**User prompt.** See Step 1 and the supervisor's diary for the subsequent explicit publication and Opus researcher instructions. **Assistant interpretation.** Produce an independently authored, evidence-checked article and its own diary for group publication by the supervisor. **Inferred user intent.** A newcomer should be able to audit the next compiler recommendation from the exact observations.
+
+**Commits.** `313021c` froze the prompt, staging script, independent numerical checker and its results. `594c004` recorded the corrected article, author's investigation diary, review brief and two model receipts.
+
+### What I did
+
+Staged the two requested vault playbooks, teaching and diary guidelines, original measurement scripts, both whole LLVM dump ranges, the default physical trial records, and the published studies. Recorded only the provider's requested/resolved model, effort, result status, turn counts and document digests in the ticket. Replayed `scripts/13-verify-evidence-article.py` against the original files and compared its output byte for byte with `various/opus-evidence-oracle.json`.
+
+### Why
+
+The host interpreter and device have related workloads and different time boundaries. An author who confuses static sites, dynamic instructions and physical time can produce a technically convincing but incorrect explanation of a compiler change. The independent numerical script and second pass over the IR and physical protocol provide complementary checks.
+
+### What worked
+
+Both model receipts identify `claude-opus-5-5` with requested effort high, 30 and 35 turns, and zero permission denials. The article and its research diary were written through the model's file tools. The corrected article has seven sections and 19 repository links verified against the cited local Git objects. The author's diary describes the order of its reads and records which tests it did not run personally.
+
+### What didn't work
+
+The first draft called a 1,103-byte difference the change in function text and claimed that paired treatments had the same load position. Direct inspection found the full function shrank by 1,008 bytes; 1,103 is the change in the complete dump range. Load positions intentionally differ. I commissioned an Opus High correction with the exact counterexamples and reproducibility checks. An initial link checker also treated a quoted URL prefix in the diary as a complete target. Restricting that check to actual Markdown links found all 19 article targets in Git.
+
+### What I learned
+
+The static trap count is eleven in both states. In the later state a branch to a trap folded to a constant true success path. Counting traps alone would have missed this intermediate form of bounds-check elimination. By contrast, quantifying the final guest or physical effect of the pass still requires a matched ablation.
+
+### What was tricky to build
+
+A document citing a frozen revision must also run its commands at an appropriate revision. The original checkout contained the archive reader, while the physical pairing source was still a separate draft. The article now pins numerical replay to the immutable later oracle and distinguishes its scope from public API qualification. The service release candidate eagerly verifies streams at startup, whereas direct library callers can load streams lazily.
+
+### What warrants a second pair of eyes
+
+The links address locally verified Git objects. The repository's tracked remote branch had not reached the frozen checkpoint at review time. The article contains an alternate local checkout path. The publication editor owns the requested vault commit and push.
+
+### What should be done in the future
+
+Follow the article's per-scene falsifier if the lab tests loop register residency. Preserve invalid-index cases, per-PC access counts and trap prefixes. Those data would answer questions the archived positive fixtures cannot resolve.
+
+### Code review instructions
+
+Start with `analysis/02-evidence-from-compiler-passes-to-physical-frames.md` and the review record `scripts/commission/evidence-corrections.md`. Compare the independent oracle against the recorded output using `python3 scripts/13-verify-evidence-article.py` from the ticket directory. Read `reference/06-evidence-researcher-diary.md` for the author's historical account.
+
+### Technical details
+
+On the opening clean frame, the six within-block stock-to-PIE differences had a median of 1,616 µs, while matched scalar to PIE had a median of 242 µs. Over twelve scenes the matched-scalar-to-PIE median percentages ranged from 0.4095% to 0.4663%. Every scene falsifies a 1% minimum clean-frame gain for that treatment pair.
