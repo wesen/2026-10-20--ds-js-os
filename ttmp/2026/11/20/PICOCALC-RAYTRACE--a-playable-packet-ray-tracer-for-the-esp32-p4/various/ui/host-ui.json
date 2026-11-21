@@ -1,0 +1,67 @@
+{
+  "target": "Linux PicoCalc simulator, QuickJS, scalar RGB565",
+  "viewport_xywh": [
+    40,
+    32,
+    240,
+    240
+  ],
+  "input_sequence": [
+    "f1",
+    "v",
+    "right",
+    "w",
+    "r",
+    "f1"
+  ],
+  "launcher_title_restored": true,
+  "frames": {
+    "start": {
+      "scene": [
+        68,
+        61,
+        31,
+        25
+      ],
+      "compared_pixels": 57600,
+      "mismatches": 0,
+      "viewport_rgb888_sha256": "9c1926540bf1c8df1f75b1816081ea62666a6bdb3ff05133ddf0768f4e44e02e"
+    },
+    "sphere": {
+      "scene": [
+        76,
+        61,
+        31,
+        25
+      ],
+      "compared_pixels": 57600,
+      "mismatches": 0,
+      "viewport_rgb888_sha256": "11231ccca1425b9bc03232da37006f94cf9a8e3152052cbdeb5bbfbb806feb19",
+      "changed_pixels_from_previous": 6156
+    },
+    "light": {
+      "scene": [
+        76,
+        61,
+        31,
+        17
+      ],
+      "compared_pixels": 57600,
+      "mismatches": 0,
+      "viewport_rgb888_sha256": "31b978b1bd17a63ff9ae9ea6d26b08bb82e481280eaa3efb5b985f0689544739",
+      "changed_pixels_from_previous": 8885
+    },
+    "reset": {
+      "scene": [
+        68,
+        61,
+        31,
+        25
+      ],
+      "compared_pixels": 57600,
+      "mismatches": 0,
+      "viewport_rgb888_sha256": "9c1926540bf1c8df1f75b1816081ea62666a6bdb3ff05133ddf0768f4e44e02e",
+      "changed_pixels_from_previous": 12257
+    }
+  }
+}
