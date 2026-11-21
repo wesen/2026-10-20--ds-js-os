@@ -1,0 +1,29 @@
+{
+  "repo": "548348be6609d8702ac8eb12f71838ebe574e511",
+  "mode": "pie-empty",
+  "imageSHA256": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+  "bytes": 10332,
+  "entries": {
+    "clean": 8072,
+    "primary": 9016
+  },
+  "fixtureSHA256": "250444c0c4c7b178d234bb817f168367a6f52a521c052ccd8d7f0d0b0991737a",
+  "files": {
+    "picocalc-os/compiler/typed-wasm.js": "f96790be276dd8a63e4b7492dcf715e2e800787d0e180080b18ef89722b1914a",
+    "picocalc-os/compiler/typed-rv32.js": "498d15ecfe8a1ea1e7fd8a84aa796b830a5df7ce7f3927067e899d6060541a69",
+    "picocalc-os/compiler/typed-pie-loops.js": "ced7888502681c3cbf46894b89a9b73ddde1f4230fedba0619f7ecdceea6b727",
+    "picocalc-os/worlds/raytrace/raytrace.typed": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+    "picocalc-os/nucleus/raytrace_demo.c": "af69b2a8bc4a79134df5cae826990959c2ff19762fdaee0b37dbef140b858098",
+    "picocalc-os/nucleus/raytrace_demo.h": "4af9a2581b82daddddc9352fc3f6f3170f9ddc11f877a8f17d233a1d53b5396b",
+    "picocalc-os/nucleus/raytrace_demo_pie.S": "dacac86d28a719e30dd49147f1fa4c5baafdc12fd7a59f2cb24f5c215e7a7fc2"
+  },
+  "cCompiler": "/home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20241119/riscv32-esp-elf/bin/riscv32-esp-elf-gcc",
+  "cOptimizationFlags": [
+    "-O2",
+    "-O3"
+  ],
+  "cObjectSHA256": {
+    "raytrace_demo.c.obj": "aa4304471c95c514ba6a59f899d871eec98228a3d901a5b57cf306667d8085c6",
+    "raytrace_demo_pie.S.obj": "e3dde22b86efb4d26f259767448e83a04267d3fa19696993e69744d061cded41"
+  }
+}

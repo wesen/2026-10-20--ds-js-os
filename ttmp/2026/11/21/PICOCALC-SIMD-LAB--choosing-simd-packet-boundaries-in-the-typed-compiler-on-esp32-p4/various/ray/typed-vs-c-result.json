@@ -1,0 +1,626 @@
+[
+  {
+    "fixture": "default",
+    "stride": 160,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7901.5,
+      "pieC": 6806.0,
+      "typed": 55718.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 7.05227265228404,
+      "typed_elapsed_pct_higher": 605.227265228404,
+      "typed_frames_per_second_pct_of_control": 14.179833193005972,
+      "typed_extra_us": 47813.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.187410608696329,
+      "typed_elapsed_pct_higher": 718.7410608696327,
+      "typed_frames_per_second_pct_of_control": 12.213876948436305,
+      "typed_extra_us": 48917.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.1610420840256674
+  },
+  {
+    "fixture": "default",
+    "stride": 160,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4772.0,
+      "pieC": 3672.5,
+      "typed": 15770.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.3062839434244156,
+      "typed_elapsed_pct_higher": 230.62839434244154,
+      "typed_frames_per_second_pct_of_control": 30.245466856579434,
+      "typed_extra_us": 11007.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.295045801064685,
+      "typed_elapsed_pct_higher": 329.5045801064685,
+      "typed_frames_per_second_pct_of_control": 23.282639214555907,
+      "typed_extra_us": 12108.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.2996192996403138
+  },
+  {
+    "fixture": "lamp-only",
+    "stride": 160,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7823.0,
+      "pieC": 6721.0,
+      "typed": 55240.5
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 7.0624563839396775,
+      "typed_elapsed_pct_higher": 606.2456383939677,
+      "typed_frames_per_second_pct_of_control": 14.159380337322961,
+      "typed_extra_us": 47415.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.221648565229353,
+      "typed_elapsed_pct_higher": 722.1648565229352,
+      "typed_frames_per_second_pct_of_control": 12.163019612243037,
+      "typed_extra_us": 48523.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.1640134343704625
+  },
+  {
+    "fixture": "lamp-only",
+    "stride": 160,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4764.5,
+      "pieC": 3664.5,
+      "typed": 15793.5
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.3138106583227773,
+      "typed_elapsed_pct_higher": 231.38106583227773,
+      "typed_frames_per_second_pct_of_control": 30.17697962881178,
+      "typed_extra_us": 11027.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.310283962578183,
+      "typed_elapsed_pct_higher": 331.0283962578182,
+      "typed_frames_per_second_pct_of_control": 23.200379867046536,
+      "typed_extra_us": 12130.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.299791869660278
+  },
+  {
+    "fixture": "near-corner",
+    "stride": 160,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 8148.0,
+      "pieC": 7043.0,
+      "typed": 56500.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 6.9363048179867395,
+      "typed_elapsed_pct_higher": 593.6304817986738,
+      "typed_frames_per_second_pct_of_control": 14.416900680704355,
+      "typed_extra_us": 48366.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.022646599460458,
+      "typed_elapsed_pct_higher": 702.2646599460458,
+      "typed_frames_per_second_pct_of_control": 12.464715638120822,
+      "typed_extra_us": 49460.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.1561246976817077
+  },
+  {
+    "fixture": "near-corner",
+    "stride": 160,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4777.5,
+      "pieC": 3671.0,
+      "typed": 15839.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.316383885922037,
+      "typed_elapsed_pct_higher": 231.63838859220368,
+      "typed_frames_per_second_pct_of_control": 30.153326018227084,
+      "typed_extra_us": 11070.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.315345171438935,
+      "typed_elapsed_pct_higher": 331.53451714389354,
+      "typed_frames_per_second_pct_of_control": 23.17311797501373,
+      "typed_extra_us": 12174.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.3021263810716694
+  },
+  {
+    "fixture": "far-corner",
+    "stride": 160,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 8250.5,
+      "pieC": 7144.5,
+      "typed": 57053.5
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 6.916409980696008,
+      "typed_elapsed_pct_higher": 591.6409980696008,
+      "typed_frames_per_second_pct_of_control": 14.458369365710475,
+      "typed_extra_us": 48801.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 7.988872162103357,
+      "typed_elapsed_pct_higher": 698.8872162103357,
+      "typed_frames_per_second_pct_of_control": 12.517412167715378,
+      "typed_extra_us": 49911.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.154552524754465
+  },
+  {
+    "fixture": "far-corner",
+    "stride": 160,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4762.5,
+      "pieC": 3663.0,
+      "typed": 15864.5
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.331151281344723,
+      "typed_elapsed_pct_higher": 233.11512813447231,
+      "typed_frames_per_second_pct_of_control": 30.01985319908793,
+      "typed_extra_us": 11096.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.331152236323147,
+      "typed_elapsed_pct_higher": 333.11522363231467,
+      "typed_frames_per_second_pct_of_control": 23.088559722659944,
+      "typed_extra_us": 12202.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.2994005799040929
+  },
+  {
+    "fixture": "left-bottom",
+    "stride": 165,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7851.0,
+      "pieC": 6752.5,
+      "typed": 54825.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 6.98511605551975,
+      "typed_elapsed_pct_higher": 598.511605551975,
+      "typed_frames_per_second_pct_of_control": 14.316335627195194,
+      "typed_extra_us": 46977.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.12128120734678,
+      "typed_elapsed_pct_higher": 712.1281207346781,
+      "typed_frames_per_second_pct_of_control": 12.313439214660857,
+      "typed_extra_us": 48077.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.1643434102450496
+  },
+  {
+    "fixture": "left-bottom",
+    "stride": 165,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4484.5,
+      "pieC": 3380.0,
+      "typed": 15811.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.526433192058889,
+      "typed_elapsed_pct_higher": 252.64331920588893,
+      "typed_frames_per_second_pct_of_control": 28.35726530298991,
+      "typed_extra_us": 11333.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.681804009594906,
+      "typed_elapsed_pct_higher": 368.1804009594905,
+      "typed_frames_per_second_pct_of_control": 21.359289416562735,
+      "typed_extra_us": 12439.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.3281464321156995
+  },
+  {
+    "fixture": "right-top",
+    "stride": 165,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7634.5,
+      "pieC": 6527.0,
+      "typed": 53549.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 7.014539443266833,
+      "typed_elapsed_pct_higher": 601.4539443266833,
+      "typed_frames_per_second_pct_of_control": 14.256103701182653,
+      "typed_extra_us": 45918.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.203846050563959,
+      "typed_elapsed_pct_higher": 720.3846050563959,
+      "typed_frames_per_second_pct_of_control": 12.189406570236773,
+      "typed_extra_us": 47019.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.1701162637758982
+  },
+  {
+    "fixture": "right-top",
+    "stride": 165,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4475.0,
+      "pieC": 3364.5,
+      "typed": 15835.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.5388897924550435,
+      "typed_elapsed_pct_higher": 253.88897924550434,
+      "typed_frames_per_second_pct_of_control": 28.257513078644244,
+      "typed_extra_us": 11361.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.707240261225984,
+      "typed_elapsed_pct_higher": 370.7240261225984,
+      "typed_frames_per_second_pct_of_control": 21.243884874257496,
+      "typed_extra_us": 12473.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.328172897717737
+  },
+  {
+    "fixture": "blue-overlap",
+    "stride": 160,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7287.5,
+      "pieC": 6184.5,
+      "typed": 53584.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 7.353489142796888,
+      "typed_elapsed_pct_higher": 635.3489142796888,
+      "typed_frames_per_second_pct_of_control": 13.598998706044274,
+      "typed_extra_us": 46297.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.664972931932162,
+      "typed_elapsed_pct_higher": 766.4972931932161,
+      "typed_frames_per_second_pct_of_control": 11.540721732704682,
+      "typed_extra_us": 47404.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.1777104148136295
+  },
+  {
+    "fixture": "blue-overlap",
+    "stride": 160,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4765.0,
+      "pieC": 3663.0,
+      "typed": 15665.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.2933916177560842,
+      "typed_elapsed_pct_higher": 229.3391617756084,
+      "typed_frames_per_second_pct_of_control": 30.363856496527113,
+      "typed_extra_us": 10916.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.284193284193284,
+      "typed_elapsed_pct_higher": 328.4193284193284,
+      "typed_frames_per_second_pct_of_control": 23.34161728159052,
+      "typed_extra_us": 12018.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.3008463008463007
+  },
+  {
+    "fixture": "gold-overlap",
+    "stride": 160,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7337.5,
+      "pieC": 6232.5,
+      "typed": 53291.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 7.266370830384722,
+      "typed_elapsed_pct_higher": 626.6370830384722,
+      "typed_frames_per_second_pct_of_control": 13.762028839531492,
+      "typed_extra_us": 45964.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.555397875081228,
+      "typed_elapsed_pct_higher": 755.5397875081228,
+      "typed_frames_per_second_pct_of_control": 11.688528682047192,
+      "typed_extra_us": 47067.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.1781013670574554
+  },
+  {
+    "fixture": "gold-overlap",
+    "stride": 160,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4757.5,
+      "pieC": 3655.5,
+      "typed": 15729.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.3058293778067394,
+      "typed_elapsed_pct_higher": 230.58293778067394,
+      "typed_frames_per_second_pct_of_control": 30.249856952126645,
+      "typed_extra_us": 10967.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.302841090651929,
+      "typed_elapsed_pct_higher": 330.28410906519287,
+      "typed_frames_per_second_pct_of_control": 23.240511157734122,
+      "typed_extra_us": 12073.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.2996719254413238
+  },
+  {
+    "fixture": "left-lamp",
+    "stride": 160,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7574.5,
+      "pieC": 6467.5,
+      "typed": 54810.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 7.236720114099647,
+      "typed_elapsed_pct_higher": 623.6720114099647,
+      "typed_frames_per_second_pct_of_control": 13.818423076797501,
+      "typed_extra_us": 47235.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.47538474591758,
+      "typed_elapsed_pct_higher": 747.5384745917581,
+      "typed_frames_per_second_pct_of_control": 11.798884437458026,
+      "typed_extra_us": 48346.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.170632909374371
+  },
+  {
+    "fixture": "left-lamp",
+    "stride": 160,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4761.5,
+      "pieC": 3657.5,
+      "typed": 15719.5
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.3025528366421164,
+      "typed_elapsed_pct_higher": 230.25528366421165,
+      "typed_frames_per_second_pct_of_control": 30.279606964536974,
+      "typed_extra_us": 10961.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.297881733120516,
+      "typed_elapsed_pct_higher": 329.7881733120515,
+      "typed_frames_per_second_pct_of_control": 23.26727921364511,
+      "typed_extra_us": 12065.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.3023934045305392
+  },
+  {
+    "fixture": "right-lamp",
+    "stride": 160,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7626.0,
+      "pieC": 6521.5,
+      "typed": 54690.5
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 7.173268731599581,
+      "typed_elapsed_pct_higher": 617.326873159958,
+      "typed_frames_per_second_pct_of_control": 13.940646170644671,
+      "typed_extra_us": 47069.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.389016847164154,
+      "typed_elapsed_pct_higher": 738.9016847164153,
+      "typed_frames_per_second_pct_of_control": 11.920348092379804,
+      "typed_extra_us": 48174.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.169519927578906
+  },
+  {
+    "fixture": "right-lamp",
+    "stride": 160,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4759.5,
+      "pieC": 3659.0,
+      "typed": 15741.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.306958013024513,
+      "typed_elapsed_pct_higher": 230.6958013024513,
+      "typed_frames_per_second_pct_of_control": 30.239507306266532,
+      "typed_extra_us": 10979.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.302279947819898,
+      "typed_elapsed_pct_higher": 330.2279947819897,
+      "typed_frames_per_second_pct_of_control": 23.243552280523442,
+      "typed_extra_us": 12083.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.3013583429224536
+  },
+  {
+    "fixture": "bottom-lamp",
+    "stride": 160,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7532.5,
+      "pieC": 6434.0,
+      "typed": 54418.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 7.224848010272554,
+      "typed_elapsed_pct_higher": 622.4848010272553,
+      "typed_frames_per_second_pct_of_control": 13.841162507909772,
+      "typed_extra_us": 46884.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.458506455560034,
+      "typed_elapsed_pct_higher": 745.8506455560034,
+      "typed_frames_per_second_pct_of_control": 11.822424284163432,
+      "typed_extra_us": 47988.0,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.170004808806764
+  },
+  {
+    "fixture": "bottom-lamp",
+    "stride": 160,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 4768.5,
+      "pieC": 3660.0,
+      "typed": 15695.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.2929639618847113,
+      "typed_elapsed_pct_higher": 229.29639618847114,
+      "typed_frames_per_second_pct_of_control": 30.367798786264068,
+      "typed_extra_us": 10934.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 4.290363551579601,
+      "typed_elapsed_pct_higher": 329.0363551579601,
+      "typed_frames_per_second_pct_of_control": 23.308060472133725,
+      "typed_extra_us": 12043.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.3022642151473847
+  },
+  {
+    "fixture": "top-lamp-wide",
+    "stride": 320,
+    "phase": "clean",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 7740.5,
+      "pieC": 6628.0,
+      "typed": 53922.0
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 6.968025519279474,
+      "typed_elapsed_pct_higher": 596.8025519279474,
+      "typed_frames_per_second_pct_of_control": 14.351267818682736,
+      "typed_extra_us": 46179.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 8.138731275822684,
+      "typed_elapsed_pct_higher": 713.8731275822684,
+      "typed_frames_per_second_pct_of_control": 12.286928737838407,
+      "typed_extra_us": 47298.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.168518005028098
+  },
+  {
+    "fixture": "top-lamp-wide",
+    "stride": 320,
+    "phase": "primary",
+    "pairs": 6,
+    "median_us": {
+      "scalarC": 5215.0,
+      "pieC": 4108.5,
+      "typed": 16193.5
+    },
+    "typed_vs_scalarC": {
+      "typed_over_control_elapsed_ratio": 3.105177542294107,
+      "typed_elapsed_pct_higher": 210.51775422941066,
+      "typed_frames_per_second_pct_of_control": 32.20428034319869,
+      "typed_extra_us": 10978.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "typed_vs_pieC": {
+      "typed_over_control_elapsed_ratio": 3.941828443160067,
+      "typed_elapsed_pct_higher": 294.1828443160067,
+      "typed_frames_per_second_pct_of_control": 25.368941031182466,
+      "typed_extra_us": 12086.5,
+      "pairs_with_typed_higher_elapsed": 6
+    },
+    "scalarC_vs_pieC_elapsed_ratio": 1.2689245777500024
+  }
+]

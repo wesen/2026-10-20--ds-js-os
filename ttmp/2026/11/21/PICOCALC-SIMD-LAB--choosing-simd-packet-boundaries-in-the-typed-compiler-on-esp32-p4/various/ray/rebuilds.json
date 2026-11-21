@@ -77,5 +77,34 @@
         196576
       ]
     ]
+  },
+  "c-frame": {
+    "flashed_sha256": "749fe515732b22bdbdb8b4379f9f8eb7e5ae5e3d0ee473db1b0734c6e42783df",
+    "rebuilt_sha256": "894a52d37f211b7b472cf7ec4b8160b490923d032b84244ccf0b555eed1b6a45",
+    "flashed_bytes": 197360,
+    "rebuilt_bytes": 197360,
+    "differing_bytes": 70,
+    "differing_ranges": [
+      [
+        113,
+        114
+      ],
+      [
+        115,
+        117
+      ],
+      [
+        118,
+        120
+      ],
+      [
+        176,
+        208
+      ],
+      [
+        197327,
+        197360
+      ]
+    ]
   }
 }

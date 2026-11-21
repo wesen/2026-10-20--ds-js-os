@@ -336,3 +336,60 @@ Run scripts/ray/09-opus-exhaustive-lanes.mjs and compare various/ray/opus-exhaus
 ### Technical details
 
 research-receipts: various/ray/opus-research-receipts.json. The completed author, experiment and diary calls used Claude Opus 5.5 at high effort. The decision to split and cap the calls was made by the operator.
+
+## Step 7: Measure the current Typed renderer and both C controls in one firmware
+
+The user asked how fast Typed is compared with C. Prior here-and-there measurements used different firmware and experimental controls. I returned to the same board and measured the three real renderers side by side.
+
+### Prompt Context
+
+**User prompt (reported by the director):** “how fast our raytracer is compared with C.”
+
+**Assistant interpretation:** Compare current supported Typed packet lowering with production scalar C and C with its handwritten P4 kernel, in equivalent physical trials.
+
+**Inferred user intent:** Quantify the remaining performance gap in familiar frame times and percentages.
+
+### What I did
+
+- Reused exactly the C render and trace APIs called by picocalc-os/port/esp32p4/main/typed_ray_p4.c. Added a capture for the public current compiler and proved the emitted binary matches the qualified empty-packet candidate.
+- Compiled the actual production C source and PIE assembly into the same flash image as native Typed. Staged the identity, fixture hashes, optimization flags and compiled C object identities.
+- Rotated the six treatment permutations on the actual P4 for each of twelve historical pose/stride fixtures. Measured both a clean RGB565 frame and a primary trace with depth/ID writes. Confirmed the physical output byte for byte including padding and checked end sentinels after timing.
+- Recorded and validated 432 measurement rows. Scored ratios within each physical block, then took the median across the six matched observations.
+
+### Why
+
+A ratio assembled from separate historical medians could confound code changes, clock, memory placement, geometry, startup or measurement boundaries. A clean frame in memory answers the user’s renderer question.
+
+### What worked
+
+Current Typed measured 55.718 ms on the default frame. Scalar C measured 7.9015 ms and hand-PIE C 6.806 ms, giving paired ratios 7.052× and 8.187×. Primary-only measured 15.770 ms, 4.772 ms and 3.6725 ms in the same order. All 432 rows passed their output and sentinel checks.
+
+### What didn't work
+
+No build, correctness or timing gate failed. Comparing the isolated per-packet or whole-row microbenchmark directly with these complete C frames would answer a different question. The C implementation places its native scratch on the task stack; Typed receives its real PSRAM work object.
+
+### What I learned
+
+The complete-render gap is much larger than the primary-only gap. Primary writes a diagnostic depth/ID surface, so subtracting the phase timings does not isolate shading exactly. Full-frame data should continue to decide product priorities.
+
+### What was tricky to build
+
+The comparison must call each renderer's correct public entry rather than mixing diagnostic and clean outputs. Reference planes have the actual requested stride and unchanged padding, and the reference's own correctness is independently checked against Wasm. Only the callable rendering path and the timer instrumentation are in the timed window.
+
+### What warrants a second pair of eyes
+
+Check that `pie-empty` is the actual 10,332-byte image with SHA 9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f. The hand-coded C PIE arm is the existing raytrace_demo_pie_row routine. It has a different schedule from the hand packet classification microbenchmark earlier in the ticket.
+
+### What should be done in the future
+
+If assigning the remaining C gap to compiler passes, compare shading or matched inner regions separately with their actual input layouts; the total frame ratio alone cannot decide the next pass.
+
+### Code review instructions
+
+Review scripts/ray/10-current-frame.mjs, board/c_frame.c and 11-score-c-frames.py. Match the public calls to typed_ray_p4.c. Check various/ray/typed-vs-c-{inputs,rows,result,firmware}.json and the final restoration receipt.
+
+### Technical details
+
+Diagnostic app 749fe515732b22bdbdb8b4379f9f8eb7e5ae5e3d0ee473db1b0734c6e42783df, 197,360 bytes. Firmware CPU 360 MHz, common P4 board, RGB/depth/ID outputs shared in PSRAM, GCC final optimization -O3.
+
+The independent clean build matched the benchmark binary throughout the executable payload; its 70 differing metadata and checksum bytes are listed in various/ray/rebuilds.json. After the fourth trial, esptool verified both the 4,804,016-byte playable app and the partition table. A fresh console session returned all eight worlds and an installed native painter. See various/ray/typed-vs-c-restoration.json.
