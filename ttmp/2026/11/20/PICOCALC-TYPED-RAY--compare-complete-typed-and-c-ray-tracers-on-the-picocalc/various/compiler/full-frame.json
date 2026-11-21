@@ -1,0 +1,1537 @@
+{
+  "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "poses": [
+    [
+      68,
+      61,
+      31,
+      25
+    ],
+    [
+      76,
+      61,
+      31,
+      17
+    ],
+    [
+      127,
+      32,
+      159,
+      0
+    ]
+  ],
+  "arms": {
+    "stock": {
+      "imageBytes": 9564,
+      "imageSHA256": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+      "static": {
+        "typedRayStride": {
+          "offset": 0,
+          "bytes": 212,
+          "div": 0,
+          "rem": 0,
+          "trap": 1,
+          "branch": 5,
+          "load": 11,
+          "store": 4
+        },
+        "typedRaySphereFits": {
+          "offset": 212,
+          "bytes": 120,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 3,
+          "load": 0,
+          "store": 0
+        },
+        "typedRayLampFits": {
+          "offset": 332,
+          "bytes": 112,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 3,
+          "load": 0,
+          "store": 0
+        },
+        "typedRayAbs": {
+          "offset": 444,
+          "bytes": 52,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 1,
+          "load": 0,
+          "store": 0
+        },
+        "typedRaySetObject": {
+          "offset": 496,
+          "bytes": 332,
+          "div": 0,
+          "rem": 0,
+          "trap": 5,
+          "branch": 5,
+          "load": 27,
+          "store": 19
+        },
+        "typedRaySetObjects": {
+          "offset": 828,
+          "bytes": 300,
+          "div": 0,
+          "rem": 0,
+          "trap": 1,
+          "branch": 1,
+          "load": 15,
+          "store": 12
+        },
+        "typedRayBuildGeometry": {
+          "offset": 1128,
+          "bytes": 536,
+          "div": 0,
+          "rem": 0,
+          "trap": 4,
+          "branch": 8,
+          "load": 37,
+          "store": 22
+        },
+        "typedRayBuildLight": {
+          "offset": 1664,
+          "bytes": 1200,
+          "div": 2,
+          "rem": 0,
+          "trap": 17,
+          "branch": 21,
+          "load": 86,
+          "store": 43
+        },
+        "typedRayBuildTables": {
+          "offset": 2864,
+          "bytes": 84,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 0,
+          "load": 5,
+          "store": 4
+        },
+        "typedRayPrepare": {
+          "offset": 2948,
+          "bytes": 108,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 0,
+          "load": 7,
+          "store": 6
+        },
+        "typedRayComputeRow": {
+          "offset": 3056,
+          "bytes": 944,
+          "div": 0,
+          "rem": 0,
+          "trap": 11,
+          "branch": 17,
+          "load": 74,
+          "store": 34
+        },
+        "typedRayInShadow": {
+          "offset": 4000,
+          "bytes": 1068,
+          "div": 0,
+          "rem": 0,
+          "trap": 12,
+          "branch": 17,
+          "load": 86,
+          "store": 32
+        },
+        "typedRaySphereScale": {
+          "offset": 5068,
+          "bytes": 608,
+          "div": 1,
+          "rem": 0,
+          "trap": 9,
+          "branch": 12,
+          "load": 45,
+          "store": 19
+        },
+        "typedRayPack": {
+          "offset": 5676,
+          "bytes": 392,
+          "div": 6,
+          "rem": 0,
+          "trap": 12,
+          "branch": 18,
+          "load": 10,
+          "store": 8
+        },
+        "typedRayPixel": {
+          "offset": 6068,
+          "bytes": 604,
+          "div": 3,
+          "rem": 1,
+          "trap": 7,
+          "branch": 15,
+          "load": 19,
+          "store": 10
+        },
+        "typedRayLitRow": {
+          "offset": 6672,
+          "bytes": 324,
+          "div": 0,
+          "rem": 0,
+          "trap": 3,
+          "branch": 4,
+          "load": 27,
+          "store": 16
+        },
+        "typedRaySaveAudit": {
+          "offset": 6996,
+          "bytes": 308,
+          "div": 0,
+          "rem": 0,
+          "trap": 4,
+          "branch": 5,
+          "load": 25,
+          "store": 15
+        },
+        "typedRayFrame": {
+          "offset": 7304,
+          "bytes": 408,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 5,
+          "load": 23,
+          "store": 10
+        },
+        "typedRayRender": {
+          "offset": 7712,
+          "bytes": 536,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 7,
+          "load": 35,
+          "store": 13
+        },
+        "typedRayTrace": {
+          "offset": 8248,
+          "bytes": 408,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 5,
+          "load": 25,
+          "store": 10
+        },
+        "typedRayShade": {
+          "offset": 8656,
+          "bytes": 908,
+          "div": 0,
+          "rem": 0,
+          "trap": 3,
+          "branch": 17,
+          "load": 59,
+          "store": 24
+        }
+      },
+      "poses": [
+        {
+          "entry": "audit",
+          "pose": [
+            68,
+            61,
+            31,
+            25
+          ],
+          "pixelsSHA256": "1e1a7ee5a3cafe118efc35cadef36cdec8b408a160ccf273fd3cfc6cddbb57d7",
+          "typedInstructions": 16920800,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 5528397,
+              "entries": 19477
+            },
+            "typedRayComputeRow": {
+              "instructions": 3608697,
+              "entries": 160
+            },
+            "typedRayPack": {
+              "instructions": 1740800,
+              "entries": 25600
+            },
+            "typedRayPixel": {
+              "instructions": 1564356,
+              "entries": 25600
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRaySaveAudit": {
+              "instructions": 1386240,
+              "entries": 160
+            },
+            "typedRaySphereScale": {
+              "instructions": 810424,
+              "entries": 6123
+            },
+            "typedRayAbs": {
+              "instructions": 691244,
+              "entries": 74232
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayRender": {
+              "instructions": 6168,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 691,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          },
+          "depthsSHA256": "c022501816986be92be8fed809d219ba2077232e6dd8e2ca138e90e1cc89656b",
+          "idsSHA256": "ad801b30c4ef529fffb3c7b47e2c7615b8f9ddf5a7eea30e9a5b19861c67bbf6"
+        },
+        {
+          "entry": "audit",
+          "pose": [
+            76,
+            61,
+            31,
+            17
+          ],
+          "pixelsSHA256": "d1b344a702d9917f44b8bd9dce6743750844aca1f660f25562cebb5a8e3a28eb",
+          "typedInstructions": 17037112,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 5685065,
+              "entries": 19869
+            },
+            "typedRayComputeRow": {
+              "instructions": 3599681,
+              "entries": 160
+            },
+            "typedRayPack": {
+              "instructions": 1740800,
+              "entries": 25600
+            },
+            "typedRayPixel": {
+              "instructions": 1569127,
+              "entries": 25600
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRaySaveAudit": {
+              "instructions": 1386240,
+              "entries": 160
+            },
+            "typedRaySphereScale": {
+              "instructions": 756950,
+              "entries": 5731
+            },
+            "typedRayAbs": {
+              "instructions": 708590,
+              "entries": 75412
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayRender": {
+              "instructions": 6168,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 708,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          },
+          "depthsSHA256": "7e2ac87e41bbb4d71ccbe6d19289ed2e89423c180d596bd06b8a8bbb7150d139",
+          "idsSHA256": "1459a84e60726f969c965793a2c193ec1258e1437accf8d5efc6d32d1c76df19"
+        },
+        {
+          "entry": "audit",
+          "pose": [
+            127,
+            32,
+            159,
+            0
+          ],
+          "pixelsSHA256": "55a15fe2e11acdedf44d37120762d62b806b83fe2bbbf1a62522e7dce1af70be",
+          "typedInstructions": 17705066,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 6217972,
+              "entries": 19026
+            },
+            "typedRayComputeRow": {
+              "instructions": 3619070,
+              "entries": 160
+            },
+            "typedRayPack": {
+              "instructions": 1740800,
+              "entries": 25600
+            },
+            "typedRayPixel": {
+              "instructions": 1547838,
+              "entries": 25600
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRaySaveAudit": {
+              "instructions": 1386240,
+              "entries": 160
+            },
+            "typedRaySphereScale": {
+              "instructions": 863178,
+              "entries": 6574
+            },
+            "typedRayAbs": {
+              "instructions": 739190,
+              "entries": 82737
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayRender": {
+              "instructions": 6168,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 827,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          },
+          "depthsSHA256": "0a5b98d2a8b3aac1e730f4e12d44dd64826181446fa62fac7356b539023bef2a",
+          "idsSHA256": "2d77258a3cfe22db3b4c9a809309bfd5c304ba23ac7d53b43a08d3a7ee8ce5b7"
+        },
+        {
+          "entry": "clean",
+          "pose": [
+            68,
+            61,
+            31,
+            25
+          ],
+          "pixelsSHA256": "1e1a7ee5a3cafe118efc35cadef36cdec8b408a160ccf273fd3cfc6cddbb57d7",
+          "typedInstructions": 15532624,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 5528397,
+              "entries": 19477
+            },
+            "typedRayComputeRow": {
+              "instructions": 3608697,
+              "entries": 160
+            },
+            "typedRayPack": {
+              "instructions": 1740800,
+              "entries": 25600
+            },
+            "typedRayPixel": {
+              "instructions": 1564356,
+              "entries": 25600
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRaySphereScale": {
+              "instructions": 810424,
+              "entries": 6123
+            },
+            "typedRayAbs": {
+              "instructions": 691244,
+              "entries": 74232
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayFrame": {
+              "instructions": 4232,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 691,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          }
+        },
+        {
+          "entry": "clean",
+          "pose": [
+            76,
+            61,
+            31,
+            17
+          ],
+          "pixelsSHA256": "d1b344a702d9917f44b8bd9dce6743750844aca1f660f25562cebb5a8e3a28eb",
+          "typedInstructions": 15648936,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 5685065,
+              "entries": 19869
+            },
+            "typedRayComputeRow": {
+              "instructions": 3599681,
+              "entries": 160
+            },
+            "typedRayPack": {
+              "instructions": 1740800,
+              "entries": 25600
+            },
+            "typedRayPixel": {
+              "instructions": 1569127,
+              "entries": 25600
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRaySphereScale": {
+              "instructions": 756950,
+              "entries": 5731
+            },
+            "typedRayAbs": {
+              "instructions": 708590,
+              "entries": 75412
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayFrame": {
+              "instructions": 4232,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 708,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          }
+        },
+        {
+          "entry": "clean",
+          "pose": [
+            127,
+            32,
+            159,
+            0
+          ],
+          "pixelsSHA256": "55a15fe2e11acdedf44d37120762d62b806b83fe2bbbf1a62522e7dce1af70be",
+          "typedInstructions": 16316890,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 6217972,
+              "entries": 19026
+            },
+            "typedRayComputeRow": {
+              "instructions": 3619070,
+              "entries": 160
+            },
+            "typedRayPack": {
+              "instructions": 1740800,
+              "entries": 25600
+            },
+            "typedRayPixel": {
+              "instructions": 1547838,
+              "entries": 25600
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRaySphereScale": {
+              "instructions": 863178,
+              "entries": 6574
+            },
+            "typedRayAbs": {
+              "instructions": 739190,
+              "entries": 82737
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayFrame": {
+              "instructions": 4232,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 827,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          }
+        }
+      ]
+    },
+    "positive": {
+      "imageBytes": 9160,
+      "imageSHA256": "a09dfa960349225b74c07964dccbc69d41a26c6b08574d269f2a99e0e08d842d",
+      "static": {
+        "typedRayStride": {
+          "offset": 0,
+          "bytes": 212,
+          "div": 0,
+          "rem": 0,
+          "trap": 1,
+          "branch": 5,
+          "load": 11,
+          "store": 4
+        },
+        "typedRaySphereFits": {
+          "offset": 212,
+          "bytes": 120,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 3,
+          "load": 0,
+          "store": 0
+        },
+        "typedRayLampFits": {
+          "offset": 332,
+          "bytes": 112,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 3,
+          "load": 0,
+          "store": 0
+        },
+        "typedRayAbs": {
+          "offset": 444,
+          "bytes": 52,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 1,
+          "load": 0,
+          "store": 0
+        },
+        "typedRaySetObject": {
+          "offset": 496,
+          "bytes": 332,
+          "div": 0,
+          "rem": 0,
+          "trap": 5,
+          "branch": 5,
+          "load": 27,
+          "store": 19
+        },
+        "typedRaySetObjects": {
+          "offset": 828,
+          "bytes": 300,
+          "div": 0,
+          "rem": 0,
+          "trap": 1,
+          "branch": 1,
+          "load": 15,
+          "store": 12
+        },
+        "typedRayBuildGeometry": {
+          "offset": 1128,
+          "bytes": 536,
+          "div": 0,
+          "rem": 0,
+          "trap": 4,
+          "branch": 8,
+          "load": 37,
+          "store": 22
+        },
+        "typedRayBuildLight": {
+          "offset": 1664,
+          "bytes": 1128,
+          "div": 2,
+          "rem": 0,
+          "trap": 13,
+          "branch": 15,
+          "load": 86,
+          "store": 43
+        },
+        "typedRayBuildTables": {
+          "offset": 2792,
+          "bytes": 84,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 0,
+          "load": 5,
+          "store": 4
+        },
+        "typedRayPrepare": {
+          "offset": 2876,
+          "bytes": 108,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 0,
+          "load": 7,
+          "store": 6
+        },
+        "typedRayComputeRow": {
+          "offset": 2984,
+          "bytes": 944,
+          "div": 0,
+          "rem": 0,
+          "trap": 11,
+          "branch": 17,
+          "load": 74,
+          "store": 34
+        },
+        "typedRayInShadow": {
+          "offset": 3928,
+          "bytes": 1068,
+          "div": 0,
+          "rem": 0,
+          "trap": 12,
+          "branch": 17,
+          "load": 86,
+          "store": 32
+        },
+        "typedRaySphereScale": {
+          "offset": 4996,
+          "bytes": 608,
+          "div": 1,
+          "rem": 0,
+          "trap": 9,
+          "branch": 12,
+          "load": 45,
+          "store": 19
+        },
+        "typedRayPack": {
+          "offset": 5604,
+          "bytes": 176,
+          "div": 6,
+          "rem": 0,
+          "trap": 0,
+          "branch": 0,
+          "load": 10,
+          "store": 8
+        },
+        "typedRayPixel": {
+          "offset": 5780,
+          "bytes": 488,
+          "div": 3,
+          "rem": 1,
+          "trap": 0,
+          "branch": 5,
+          "load": 19,
+          "store": 10
+        },
+        "typedRayLitRow": {
+          "offset": 6268,
+          "bytes": 324,
+          "div": 0,
+          "rem": 0,
+          "trap": 3,
+          "branch": 4,
+          "load": 27,
+          "store": 16
+        },
+        "typedRaySaveAudit": {
+          "offset": 6592,
+          "bytes": 308,
+          "div": 0,
+          "rem": 0,
+          "trap": 4,
+          "branch": 5,
+          "load": 25,
+          "store": 15
+        },
+        "typedRayFrame": {
+          "offset": 6900,
+          "bytes": 408,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 5,
+          "load": 23,
+          "store": 10
+        },
+        "typedRayRender": {
+          "offset": 7308,
+          "bytes": 536,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 7,
+          "load": 35,
+          "store": 13
+        },
+        "typedRayTrace": {
+          "offset": 7844,
+          "bytes": 408,
+          "div": 0,
+          "rem": 0,
+          "trap": 0,
+          "branch": 5,
+          "load": 25,
+          "store": 10
+        },
+        "typedRayShade": {
+          "offset": 8252,
+          "bytes": 908,
+          "div": 0,
+          "rem": 0,
+          "trap": 3,
+          "branch": 17,
+          "load": 59,
+          "store": 24
+        }
+      },
+      "poses": [
+        {
+          "entry": "audit",
+          "pose": [
+            68,
+            61,
+            31,
+            25
+          ],
+          "pixelsSHA256": "1e1a7ee5a3cafe118efc35cadef36cdec8b408a160ccf273fd3cfc6cddbb57d7",
+          "typedInstructions": 16111927,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 5528397,
+              "entries": 19477
+            },
+            "typedRayComputeRow": {
+              "instructions": 3608697,
+              "entries": 160
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRaySaveAudit": {
+              "instructions": 1386240,
+              "entries": 160
+            },
+            "typedRayPixel": {
+              "instructions": 1369891,
+              "entries": 25600
+            },
+            "typedRayPack": {
+              "instructions": 1126400,
+              "entries": 25600
+            },
+            "typedRaySphereScale": {
+              "instructions": 810424,
+              "entries": 6123
+            },
+            "typedRayAbs": {
+              "instructions": 691244,
+              "entries": 74232
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayRender": {
+              "instructions": 6168,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 683,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          },
+          "depthsSHA256": "c022501816986be92be8fed809d219ba2077232e6dd8e2ca138e90e1cc89656b",
+          "idsSHA256": "ad801b30c4ef529fffb3c7b47e2c7615b8f9ddf5a7eea30e9a5b19861c67bbf6"
+        },
+        {
+          "entry": "audit",
+          "pose": [
+            76,
+            61,
+            31,
+            17
+          ],
+          "pixelsSHA256": "d1b344a702d9917f44b8bd9dce6743750844aca1f660f25562cebb5a8e3a28eb",
+          "typedInstructions": 16224135,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 5685065,
+              "entries": 19869
+            },
+            "typedRayComputeRow": {
+              "instructions": 3599681,
+              "entries": 160
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRaySaveAudit": {
+              "instructions": 1386240,
+              "entries": 160
+            },
+            "typedRayPixel": {
+              "instructions": 1370558,
+              "entries": 25600
+            },
+            "typedRayPack": {
+              "instructions": 1126400,
+              "entries": 25600
+            },
+            "typedRaySphereScale": {
+              "instructions": 756950,
+              "entries": 5731
+            },
+            "typedRayAbs": {
+              "instructions": 708590,
+              "entries": 75412
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayRender": {
+              "instructions": 6168,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 700,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          },
+          "depthsSHA256": "7e2ac87e41bbb4d71ccbe6d19289ed2e89423c180d596bd06b8a8bbb7150d139",
+          "idsSHA256": "1459a84e60726f969c965793a2c193ec1258e1437accf8d5efc6d32d1c76df19"
+        },
+        {
+          "entry": "audit",
+          "pose": [
+            127,
+            32,
+            159,
+            0
+          ],
+          "pixelsSHA256": "55a15fe2e11acdedf44d37120762d62b806b83fe2bbbf1a62522e7dce1af70be",
+          "typedInstructions": 16907216,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 6217972,
+              "entries": 19026
+            },
+            "typedRayComputeRow": {
+              "instructions": 3619070,
+              "entries": 160
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRaySaveAudit": {
+              "instructions": 1386240,
+              "entries": 160
+            },
+            "typedRayPixel": {
+              "instructions": 1364396,
+              "entries": 25600
+            },
+            "typedRayPack": {
+              "instructions": 1126400,
+              "entries": 25600
+            },
+            "typedRaySphereScale": {
+              "instructions": 863178,
+              "entries": 6574
+            },
+            "typedRayAbs": {
+              "instructions": 739190,
+              "entries": 82737
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayRender": {
+              "instructions": 6168,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 819,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          },
+          "depthsSHA256": "0a5b98d2a8b3aac1e730f4e12d44dd64826181446fa62fac7356b539023bef2a",
+          "idsSHA256": "2d77258a3cfe22db3b4c9a809309bfd5c304ba23ac7d53b43a08d3a7ee8ce5b7"
+        },
+        {
+          "entry": "clean",
+          "pose": [
+            68,
+            61,
+            31,
+            25
+          ],
+          "pixelsSHA256": "1e1a7ee5a3cafe118efc35cadef36cdec8b408a160ccf273fd3cfc6cddbb57d7",
+          "typedInstructions": 14723751,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 5528397,
+              "entries": 19477
+            },
+            "typedRayComputeRow": {
+              "instructions": 3608697,
+              "entries": 160
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRayPixel": {
+              "instructions": 1369891,
+              "entries": 25600
+            },
+            "typedRayPack": {
+              "instructions": 1126400,
+              "entries": 25600
+            },
+            "typedRaySphereScale": {
+              "instructions": 810424,
+              "entries": 6123
+            },
+            "typedRayAbs": {
+              "instructions": 691244,
+              "entries": 74232
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayFrame": {
+              "instructions": 4232,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 683,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          }
+        },
+        {
+          "entry": "clean",
+          "pose": [
+            76,
+            61,
+            31,
+            17
+          ],
+          "pixelsSHA256": "d1b344a702d9917f44b8bd9dce6743750844aca1f660f25562cebb5a8e3a28eb",
+          "typedInstructions": 14835959,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 5685065,
+              "entries": 19869
+            },
+            "typedRayComputeRow": {
+              "instructions": 3599681,
+              "entries": 160
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRayPixel": {
+              "instructions": 1370558,
+              "entries": 25600
+            },
+            "typedRayPack": {
+              "instructions": 1126400,
+              "entries": 25600
+            },
+            "typedRaySphereScale": {
+              "instructions": 756950,
+              "entries": 5731
+            },
+            "typedRayAbs": {
+              "instructions": 708590,
+              "entries": 75412
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayFrame": {
+              "instructions": 4232,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 700,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          }
+        },
+        {
+          "entry": "clean",
+          "pose": [
+            127,
+            32,
+            159,
+            0
+          ],
+          "pixelsSHA256": "55a15fe2e11acdedf44d37120762d62b806b83fe2bbbf1a62522e7dce1af70be",
+          "typedInstructions": 15519040,
+          "byFunction": {
+            "typedRayInShadow": {
+              "instructions": 6217972,
+              "entries": 19026
+            },
+            "typedRayComputeRow": {
+              "instructions": 3619070,
+              "entries": 160
+            },
+            "typedRayLitRow": {
+              "instructions": 1539680,
+              "entries": 160
+            },
+            "typedRayPixel": {
+              "instructions": 1364396,
+              "entries": 25600
+            },
+            "typedRayPack": {
+              "instructions": 1126400,
+              "entries": 25600
+            },
+            "typedRaySphereScale": {
+              "instructions": 863178,
+              "entries": 6574
+            },
+            "typedRayAbs": {
+              "instructions": 739190,
+              "entries": 82737
+            },
+            "typedRayBuildGeometry": {
+              "instructions": 43670,
+              "entries": 1
+            },
+            "typedRayFrame": {
+              "instructions": 4232,
+              "entries": 1
+            },
+            "typedRayBuildLight": {
+              "instructions": 819,
+              "entries": 1
+            },
+            "typedRaySetObject": {
+              "instructions": 234,
+              "entries": 3
+            },
+            "typedRaySetObjects": {
+              "instructions": 74,
+              "entries": 1
+            },
+            "typedRayStride": {
+              "instructions": 31,
+              "entries": 1
+            },
+            "typedRayPrepare": {
+              "instructions": 27,
+              "entries": 1
+            },
+            "typedRaySphereFits": {
+              "instructions": 24,
+              "entries": 1
+            },
+            "typedRayLampFits": {
+              "instructions": 22,
+              "entries": 1
+            },
+            "typedRayBuildTables": {
+              "instructions": 21,
+              "entries": 1
+            }
+          }
+        }
+      ]
+    }
+  },
+  "reductions": [
+    {
+      "entry": "audit",
+      "pose": [
+        68,
+        61,
+        31,
+        25
+      ],
+      "instructionsSaved": 808873,
+      "percent": 4.78
+    },
+    {
+      "entry": "audit",
+      "pose": [
+        76,
+        61,
+        31,
+        17
+      ],
+      "instructionsSaved": 812977,
+      "percent": 4.772
+    },
+    {
+      "entry": "audit",
+      "pose": [
+        127,
+        32,
+        159,
+        0
+      ],
+      "instructionsSaved": 797850,
+      "percent": 4.506
+    },
+    {
+      "entry": "clean",
+      "pose": [
+        68,
+        61,
+        31,
+        25
+      ],
+      "instructionsSaved": 808873,
+      "percent": 5.208
+    },
+    {
+      "entry": "clean",
+      "pose": [
+        76,
+        61,
+        31,
+        17
+      ],
+      "instructionsSaved": 812977,
+      "percent": 5.195
+    },
+    {
+      "entry": "clean",
+      "pose": [
+        127,
+        32,
+        159,
+        0
+      ],
+      "instructionsSaved": 797850,
+      "percent": 4.89
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "sourceSHA256": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "images": {
+    "stock": {
+      "bytes": 9564,
+      "sha256": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4",
+      "backendSHA256": "e54c13e78e9e095b2cff687ea505d8ae621486e2ff486e30e3308cc6e971a11a"
+    },
+    "explicit": {
+      "bytes": 9944,
+      "sha256": "886680c7c8aebaacd1ccacf330214cc68cead69a04cdd73aaa4b2655569f7203",
+      "backendSHA256": "d676fd9d5b3fb03ee9c57ebdcd65670a9e2c7768a569c4ceeb09beccc9dbaf41"
+    },
+    "inferred": {
+      "bytes": 9944,
+      "sha256": "886680c7c8aebaacd1ccacf330214cc68cead69a04cdd73aaa4b2655569f7203",
+      "backendSHA256": "3ea303e1fd011ae505f700627e98e9bd039bb5441d748e3247e3883a51cf50f8"
+    },
+    "matched": {
+      "bytes": 10072,
+      "sha256": "8dad00e30c9b1496dec7b8ab322f33e27d4162f78d467ca599941e26c9f4251b",
+      "backendSHA256": "c43fd2e832e0e99524b7d69d53fd51c0a1e20328b2599c3542cbe3c28e9b3d0f"
+    }
+  },
+  "scenes": [
+    {
+      "pose": [
+        68,
+        61,
+        31,
+        25
+      ],
+      "stock": 3608697,
+      "matched": 540274,
+      "explicit": 431044,
+      "packets": 3135
+    },
+    {
+      "pose": [
+        76,
+        61,
+        31,
+        17
+      ],
+      "stock": 3599681,
+      "matched": 539882,
+      "explicit": 430652,
+      "packets": 3135
+    },
+    {
+      "pose": [
+        127,
+        32,
+        159,
+        0
+      ],
+      "stock": 3619070,
+      "matched": 540725,
+      "explicit": 431495,
+      "packets": 3135
+    }
+  ],
+  "edges": [
+    {
+      "name": "zero-count",
+      "stock": 5475,
+      "matched": 824,
+      "explicit": 824,
+      "packets": 0,
+      "trap": false
+    },
+    {
+      "name": "short-trap-after-writes",
+      "stock": 202,
+      "matched": 205,
+      "explicit": 205,
+      "packets": 0,
+      "trap": true
+    },
+    {
+      "name": "negative-y",
+      "stock": 20103,
+      "matched": 20108,
+      "explicit": 20108,
+      "packets": 0,
+      "trap": false
+    },
+    {
+      "name": "i32-min-y",
+      "stock": 20103,
+      "matched": 20108,
+      "explicit": 20108,
+      "packets": 0,
+      "trap": false
+    },
+    {
+      "name": "large-count",
+      "stock": 26437,
+      "matched": 26445,
+      "explicit": 26445,
+      "packets": 0,
+      "trap": true
+    },
+    {
+      "name": "large-center",
+      "stock": 5563,
+      "matched": 5577,
+      "explicit": 5577,
+      "packets": 0,
+      "trap": true
+    },
+    {
+      "name": "large-radius",
+      "stock": 23820,
+      "matched": 23837,
+      "explicit": 23837,
+      "packets": 0,
+      "trap": false
+    },
+    {
+      "name": "u16-squares-and-roots",
+      "stock": 26408,
+      "matched": 5956,
+      "explicit": 4632,
+      "packets": 38,
+      "trap": false
+    },
+    {
+      "name": "payload-already-aligned",
+      "stock": 26349,
+      "matched": 5842,
+      "explicit": 4448,
+      "packets": 40,
+      "trap": false
+    },
+    {
+      "name": "alternate-alignment",
+      "stock": 26349,
+      "matched": 5948,
+      "explicit": 4624,
+      "packets": 38,
+      "trap": false
+    }
+  ],
+  "pie": [
+    "esp.vldbc.16.ip",
+    "esp.vld.128.ip",
+    "esp.vsub.s16",
+    "esp.vst.128.ip"
+  ]
+}
