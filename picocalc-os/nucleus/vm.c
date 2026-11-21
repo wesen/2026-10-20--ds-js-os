@@ -427,6 +427,17 @@ static dmabuf_t *fb_arg(JSContext *ctx, world_t *W, JSValueConst *argv, int argc
   if (!b) fail(ctx, "the framebuffer is gone");
   return b;
 }
+#if PICOCALC_RAYTRACE
+static JSValue op_gfx_raytrace(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
+  dmabuf_t *b = fb_arg(ctx, W, argv, argc);
+  if (!b) return JS_EXCEPTION;
+  if (strcmp(W->name, "compositor")) return fail(ctx, "raytrace requires the compositor");
+  if (!gfx_raytrace(b, iarg(ctx, argv, argc, 1, -1), iarg(ctx, argv, argc, 2, -1),
+                    iarg(ctx, argv, argc, 3, -1), iarg(ctx, argv, argc, 4, -1)))
+    return fail(ctx, "invalid raytrace viewport or scene");
+  return JS_UNDEFINED;
+}
+#endif
 static JSValue op_gfx_fill(JSContext *ctx, world_t *W, int argc, JSValueConst *argv) {
   dmabuf_t *b = fb_arg(ctx, W, argv, argc); if (!b) return JS_EXCEPTION;
   gfx_fill(b, iarg(ctx, argv, argc, 1, 0), iarg(ctx, argv, argc, 2, 0), iarg(ctx, argv, argc, 3, 0), iarg(ctx, argv, argc, 4, 0), color_arg(ctx, argv, argc, 5));
@@ -744,6 +755,9 @@ static JSValue op_agent_cancel(JSContext *ctx, world_t *W, int argc, JSValueCons
 }
 
 static const struct { const char *name; op_fn fn; } SYNC_OPS[] = {
+#if PICOCALC_RAYTRACE
+  { "gfx.raytrace", op_gfx_raytrace },
+#endif
   { "gfx.text", op_gfx_text }, { "gfx.fill", op_gfx_fill }, { "gfx.rect", op_gfx_rect }, { "gfx.line", op_gfx_line },
   { "gfx.commit", op_gfx_commit }, { "gfx.fonts", op_gfx_fonts }, { "gfx.invalidate", op_gfx_invalidate },
   { "now", op_now }, { "clock.wall", op_clock_wall }, { "clock.zone", op_clock_zone }, { "clock.setzone", op_clock_setzone }, { "send", op_send }, { "publish", op_publish }, { "log", op_log }, { "self", op_self }, { "seed", op_seed },

@@ -407,6 +407,18 @@ function paintSnakeMove(fb, previous, next) {
   return true;
 }
 
+function rayCoord(v, lo, hi) { return (v | 0) === v && v >= lo && v <= hi; }
+function validRayScene(n) {
+  return n && n.t === "raytrace" && rayCoord(n.sx, 32, 127) && rayCoord(n.sy, 32, 127) &&
+    rayCoord(n.lx, 0, 159) && rayCoord(n.ly, 0, 159);
+}
+function drawRayScene(fb, n) {
+  fb.raytrace(n.sx, n.sy, n.lx, n.ly);
+  fb.rect(39, 31, 242, 242, C.ink);
+  fb.text(40, 279, "Sphere " + n.sx + ", " + n.sy, "s", C.ink);
+  fb.text(172, 279, "Light " + n.lx + ", " + n.ly, "s", C.ink);
+}
+
 function paint(s) {
   const fb = s.fb;
   const app = s.apps[s.focus];
@@ -434,6 +446,7 @@ function paint(s) {
   if (app && (app.tree || app.mobile)) {
     try {
       if (app.mobile) app.hints = fb.paintView(s.chessPhase);
+      else if (s.focus === "raytrace") drawRayScene(fb, app.tree);
       else if (snake) {
         drawSnake(fb, app.tree);
         if (!s.banner) { s.paintedSnake = app; s.snakeClock = time; }
@@ -545,6 +558,7 @@ service("compositor")
     // prompt with misleading text while the real focused app still receives the user's keys.
     if (!f || f.app !== msg.from || !f.frame) return;
     const tree = f.frame.tree;
+    if (f.app === "raytrace" && !validRayScene(tree)) return;
     if (f.app === "snake" && (!tree || !validSnake(tree) || tree.t !== "snake")) return;
     s.frames++;
     s.apps[f.app] = { title: f.title, tree, hints: f.frame.hints };

@@ -49,9 +49,10 @@ else
   ENG     := third_party/quickjs
   ENG_SRC := quickjs.c libregexp.c libunicode.c cutils.c dtoa.c
   CFLAGS  += -I$(ENG) -DCONFIG_VERSION=\"2026-06-04\"
-  OS_SRC  := nucleus/agent_transport.c nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
+  CFLAGS  += -DPICOCALC_RAYTRACE=1
+  OS_SRC  := nucleus/raytrace_demo.c nucleus/agent_transport.c nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
              sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/agent_host.c host/net_host.c host/main_host.c host/native_proc.c
-  HDRS    := nucleus/nucleus.h sdk/nw_wire.h nucleus/font_data.h sim/picocalc.h host/board.h
+  HDRS    := nucleus/nucleus.h nucleus/raytrace_demo.h sdk/nw_wire.h nucleus/font_data.h sim/picocalc.h host/board.h
   BIN     := $(BUILD)/picocalc-host
   SCRIPTS := scripts
   JSROOT  := js

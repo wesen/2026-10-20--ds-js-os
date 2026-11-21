@@ -407,3 +407,21 @@ test("loader: apps named in autostart.txt start at boot, without being opened", 
   assert.equal(h.sent.filter((m) => m.type === "open").length, 0);
   assert.equal(h.s.note, "Started at boot: a, b");
 });
+
+test("Ray Tracer moves each control within its bounds, then resets", () => {
+  const h = load("raytrace.js", {});
+  const scene = () => plain(h.def.screen(h.s));
+  const start = scene();
+  assert.deepEqual(start, { t: "raytrace", sx: 68, sy: 61, lx: 31, ly: 25 });
+  h.key("right"); h.key("up"); h.type("DS");
+  assert.deepEqual(scene(), { t: "raytrace", sx: 76, sy: 53, lx: 39, ly: 33 });
+  for (let i = 0; i < 30; i++) { h.key("left"); h.key("down"); h.type("aw"); }
+  assert.deepEqual(scene(), { t: "raytrace", sx: 32, sy: 127, lx: 0, ly: 0 });
+  for (let i = 0; i < 30; i++) { h.key("right"); h.key("up"); h.type("ds"); }
+  assert.deepEqual(scene(), { t: "raytrace", sx: 127, sy: 32, lx: 159, ly: 159 });
+  h.key("r", "r", "up");
+  h.def.handlers.key(h.s, { key: "r", ch: "r", state: "down" }, { from: "logs" });
+  assert.equal(scene().sx, 127);
+  h.type("R");
+  assert.deepEqual(scene(), start);
+});

@@ -69,6 +69,7 @@
     rect(x, y, w, h, c) { k("gfx.rect", this.id, x, y, w, h, c); }
     line(x0, y0, x1, y1, c) { k("gfx.line", this.id, x0, y0, x1, y1, c); }
     text(x, y, s, font, c, maxw) { return k("gfx.text", this.id, x, y, String(s), font || "m", c, maxw || 0); }
+    raytrace(sx, sy, lx, ly) { k("gfx.raytrace", this.id, sx, sy, lx, ly); }
     commit() { return k("gfx.commit", this.id); }
     invalidate() { k("gfx.invalidate", this.id); }
   }

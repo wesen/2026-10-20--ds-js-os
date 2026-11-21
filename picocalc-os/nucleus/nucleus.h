@@ -360,7 +360,7 @@ enum {
 enum {
   CJI_HANDLE_INFO = 1001, CJI_FS_OPEN, CJI_FS_AT, CJI_FS_OP, CJI_REVOKE,
   CJI_DMA = 1010, CJI_NARROW, CJI_SPI, CJI_CMD, CJI_PIXELS, CJI_FILL, CJI_RECT, CJI_LINE,
-  CJI_TEXT, CJI_COMMIT, CJI_INVALIDATE, CJI_FONTS, CJI_PAINTER_DRAW,
+  CJI_TEXT, CJI_COMMIT, CJI_INVALIDATE, CJI_FONTS, CJI_PAINTER_DRAW, CJI_RAYTRACE,
   CJI_WORLDS = 1030, CJI_STATS, CJI_STORE_STATUS, CJI_AGENT_STATUS, CJI_AGENT_START, CJI_AGENT_POLL,
   CJI_AGENT_CANCEL, CJI_AGENT_BODY
 };
@@ -448,6 +448,9 @@ char *hw_handles_json(void);
 char *hw_buses_json(void);
 
 // gfx.c
+#if PICOCALC_RAYTRACE
+bool gfx_raytrace(dmabuf_t *b, int sx, int sy, int lx, int ly);
+#endif
 void gfx_fill(dmabuf_t *b, int x, int y, int w, int h, pixel_t c);
 void gfx_rect(dmabuf_t *b, int x, int y, int w, int h, pixel_t c);
 int gfx_text(dmabuf_t *b, int x, int y, const char *s, int font, pixel_t fg, int max_w);

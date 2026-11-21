@@ -26,7 +26,7 @@ export const NW = { LOG: 1, NOW: 2, SELF: 3, SEND: 4, PUBLISH: 5, REPLY: 6, REJE
 const CJI = {
   HANDLE_INFO: 1001, FS_OPEN: 1002, FS_AT: 1003, FS_OP: 1004, REVOKE: 1005,
   DMA: 1010, NARROW: 1011, SPI: 1012, CMD: 1013, PIXELS: 1014, FILL: 1015, RECT: 1016,
-  LINE: 1017, TEXT: 1018, COMMIT: 1019, INVALIDATE: 1020, FONTS: 1021, PAINTER_DRAW: 1022,
+  LINE: 1017, TEXT: 1018, COMMIT: 1019, INVALIDATE: 1020, FONTS: 1021, PAINTER_DRAW: 1022, RAYTRACE: 1023,
   WORLDS: 1030, STATS: 1031, STORE_STATUS: 1032, AGENT_STATUS: 1033, AGENT_START: 1034,
   AGENT_POLL: 1035, AGENT_CANCEL: 1036, AGENT_BODY: 1037
 };
@@ -223,6 +223,9 @@ function $handle(h /*: Any */, type /*: Any */, rights /*: Any */, path /*: Any 
     text: (x /*: Any */, y /*: Any */, t /*: Any */, font /*: Any */, c /*: Any */, maxw /*: Any */) => {
       $coords(x, y, maxw || 0, 0); $hostArg(1, String(t)); $hostArg(2, font || 'm');
       return $check($hostCall(${CJI.TEXT}, h, $ink(c)));
+    },
+    raytrace: (sx /*: Any */, sy /*: Any */, lx /*: Any */, ly /*: Any */) => {
+      $coords(sx, sy, lx, ly); return $check($hostCall(${CJI.RAYTRACE}, h, 0));
     },
     paintView: (yaw /*: Any */) => $check($call(${CJI.PAINTER_DRAW}, h, yaw | 0, undefined, undefined, undefined)),
     commit: () => JSON.parse($check($call(${CJI.COMMIT}, h, 0, undefined, undefined, undefined))),

@@ -1,0 +1,20 @@
+# Open Ray Tracer by its launcher key, move the sphere and light, then reset.
+wait 3000
+key f1
+wait 120
+capture raytrace-launcher.png 1
+key v
+wait 400
+capture raytrace-start.png 1
+key right
+wait 400
+capture raytrace-sphere.png 1
+key w
+wait 400
+capture raytrace-light.png 1
+key r
+wait 400
+capture raytrace-reset.png 1
+key f1
+wait 400
+capture raytrace-home.png 1

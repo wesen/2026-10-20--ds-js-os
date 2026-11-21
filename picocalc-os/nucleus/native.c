@@ -363,6 +363,14 @@ static int64_t cji_graphics(world_t *W, const nw_call_t *c, char *out, size_t ca
     return strlen(out);
   }
 #endif
+#if PICOCALC_RAYTRACE
+  if (op == CJI_RAYTRACE) {
+    if (strcmp(W->name, "compositor") || c->n[0] != sizeof rect) return fail(W, "invalid raytrace request");
+    memcpy(rect, c->s[0], sizeof rect);
+    if (!gfx_raytrace(b, rect[0], rect[1], rect[2], rect[3])) return fail(W, "invalid raytrace viewport or scene");
+    return 0;
+  }
+#endif
   if (op == CJI_INVALIDATE) { gfx_invalidate(b); return 0; }
   if (op == CJI_COMMIT) {
     int rs[64 * 4], count = gfx_commit(b, rs, 64);
@@ -404,6 +412,9 @@ int64_t nat_syscall(world_t *W, const nw_call_t *c, char *out, size_t out_n) {
   if (c->op >= CJI_HANDLE_INFO && !W->nat->cji_handles) return fail(W, "operation requires a bundled CJI module");
 #if PICOCALC_MOBILE_PAINTER
   if (c->op == CJI_PAINTER_DRAW) return cji_graphics(W, c, out, out_n);
+#endif
+#if PICOCALC_RAYTRACE
+  if (c->op == CJI_RAYTRACE) return cji_graphics(W, c, out, out_n);
 #endif
   if (c->op >= CJI_DMA && c->op <= CJI_FONTS) return cji_graphics(W, c, out, out_n);
   switch (c->op) {

@@ -199,3 +199,19 @@ test("only the compositor may switch the screen, set the backlight, attach a fra
   assert.equal(d.state.fb, fb); assert.equal(fb.released, 0);
   assert.deepEqual(JSON.parse(JSON.stringify(await d.def.handlers.flush(d.state, { rects: [[0, 0, 320, 320]] }, { from: "u-hello" }))), { px: 0, skipped: true });
 });
+
+test("Ray Tracer accepts its own bounded integral scene", () => {
+  const { def, state } = setup();
+  const scene = { t: "raytrace", sx: 32, sy: 127, lx: 0, ly: 159 };
+  const publish = (tree, from = "raytrace") => def.handlers.frames(state,
+    { app: "raytrace", title: "Ray Tracer", frame: { tree, hints: "" } }, { from });
+  publish(scene, "snake");
+  assert.equal(state.apps.raytrace, undefined);
+  publish(scene);
+  const accepted = state.apps.raytrace;
+  assert.equal(accepted.tree, scene);
+  for (const diff of [{ sx: 31 }, { sy: 128 }, { lx: -1 }, { ly: 160 }, { sx: 32.5 }, { lx: "0" }, { t: "text" }]) {
+    publish({ ...scene, ...diff });
+    assert.equal(state.apps.raytrace, accepted);
+  }
+});
