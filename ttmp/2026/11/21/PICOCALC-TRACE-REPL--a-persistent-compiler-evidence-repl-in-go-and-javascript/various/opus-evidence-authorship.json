@@ -1,0 +1,37 @@
+{
+  "study": "Compiler evidence from static IR through physical P4 frames",
+  "authoring": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "duration_ms": 498542,
+    "num_turns": 30,
+    "stop_reason": "end_turn",
+    "permission_denials": [],
+    "requestedModel": "opus",
+    "requestedEffort": "high",
+    "resolvedModels": [
+      "claude-opus-5-5"
+    ],
+    "articleSHA": "07f3b54ef20b00606634c7229756473de7e7b0d8386382f1c0aba665a7c69b01",
+    "diarySHA": "b0b87722491886e7c6fc5ad51c86043026f7730b06613358b2c45628c5b2e030"
+  },
+  "correction": {
+    "type": "result",
+    "subtype": "success",
+    "is_error": false,
+    "duration_ms": 281230,
+    "num_turns": 35,
+    "stop_reason": "end_turn",
+    "permission_denials": [],
+    "requestedModel": "opus",
+    "requestedEffort": "high",
+    "resolvedModels": [
+      "claude-opus-5-5"
+    ],
+    "articleSHA": "9004c83f6455eb4eb749f939a3bfadf035633c05483d7d4f064d71cb5da8dfba",
+    "diarySHA": "5174179dbfa334e658de3f4a2a365e3b28d7af780454c13eb974d119912665b3"
+  },
+  "productCodeChangedByAuthor": false,
+  "editorialIntegration": "Docmgr frontmatter, local checkout source note, and direct-library versus served startup clarification. Numeric comparisons were replayed separately in scripts/13-verify-evidence-article.py."
+}
