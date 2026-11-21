@@ -1,0 +1,175 @@
+;; Function in_shadow (in_shadow, funcdef_no=11, decl_uid=3466, cgraph_uid=12, symbol_order=11)
+
+Removing basic block 10
+Removing basic block 11
+Removing basic block 12
+Removing basic block 13
+Removing basic block 14
+Removing basic block 15
+Removing basic block 16
+Removing basic block 17
+_Bool in_shadow (const struct trace * work, const struct light * lamp, int x, int y)
+{
+  unsigned int ivtmp.119;
+  unsigned int ivtmp.117;
+  const int distance;
+  const int dot;
+  const int dz;
+  const int dy;
+  const int dx;
+  size_t s;
+  int _1;
+  int _2;
+  int _3;
+  int _4;
+  int _5;
+  int _6;
+  int _7;
+  int _8;
+  int _9;
+  int _10;
+  int _11;
+  int _12;
+  int _13;
+  int _14;
+  int _15;
+  int _16;
+  int _17;
+  int _18;
+  int _19;
+  int _20;
+  int _21;
+  int _22;
+  int _23;
+  int _24;
+  int _25;
+  int _26;
+  int _27;
+  int _28;
+  int _29;
+  unsigned int _30;
+  unsigned int _31;
+  _Bool _32;
+  unsigned int _45;
+  void * _80;
+  void * _84;
+  const struct light * _88;
+
+  <bb 2> [local count: 73836532]:
+  # DEBUG BEGIN_STMT
+  # DEBUG BEGIN_STMT
+  # DEBUG s => 0
+  # DEBUG BEGIN_STMT
+  _45 = work_34(D)->object_count;
+  if (_45 != 0)
+    goto <bb 3>; [94.50%]
+  else
+    goto <bb 9>; [5.50%]
+
+  <bb 3> [local count: 69775523]:
+  _1 = x_35(D) * 32;
+  _30 = (unsigned int) y_37(D);
+  _31 = _30 * 32;
+  _6 = (int) _31;
+  _88 = lamp_36(D) + 16;
+  ivtmp.117_89 = (unsigned int) _88;
+  ivtmp.119_85 = (unsigned int) work_34(D);
+
+  <bb 4> [local count: 1014686024]:
+  # s_46 = PHI <s_43(8), 0(3)>
+  # ivtmp.117_91 = PHI <ivtmp.117_90(8), ivtmp.117_89(3)>
+  # ivtmp.119_87 = PHI <ivtmp.119_86(8), ivtmp.119_85(3)>
+  # DEBUG s => s_46
+  # DEBUG BEGIN_STMT
+  _84 = (void *) ivtmp.117_91;
+  _2 = MEM[(int *)_84];
+  _3 = _1 - _2;
+  _4 = ABS_EXPR <_3>;
+  _5 = MEM[(int *)_84 + 24B];
+  if (_4 > _5)
+    goto <bb 8>; [33.00%]
+  else
+    goto <bb 5>; [67.00%]
+
+  <bb 5> [local count: 679839638]:
+  _7 = MEM[(int *)_84 + 12B];
+  _8 = _6 - _7;
+  _9 = ABS_EXPR <_8>;
+  _10 = MEM[(int *)_84 + 36B];
+  if (_9 > _10)
+    goto <bb 8>; [33.00%]
+  else
+    goto <bb 6>; [67.00%]
+
+  <bb 6> [local count: 455492559]:
+  # DEBUG BEGIN_STMT
+  # DEBUG object => &work_34(D)->objects[s_46]
+  # DEBUG BEGIN_STMT
+  _80 = (void *) ivtmp.119_87;
+  _11 = MEM[(int *)_80];
+  dx_38 = _11 - x_35(D);
+  # DEBUG dx => dx_38
+  _12 = MEM[(int *)_80 + 4B];
+  dy_39 = _12 - y_37(D);
+  # DEBUG dy => dy_39
+  _13 = MEM[(int *)_80 + 8B];
+  dz_40 = 156 - _13;
+  # DEBUG dz => dz_40
+  # DEBUG BEGIN_STMT
+  _14 = lamp_36(D)->x;
+  _15 = _14 * dx_38;
+  _16 = lamp_36(D)->y;
+  _17 = _16 * dy_39;
+  _18 = _15 + _17;
+  _19 = dz_40 * 32;
+  dot_41 = _18 + _19;
+  # DEBUG dot => dot_41
+  # DEBUG BEGIN_STMT
+  # DEBUG D#9 => dx_38 * dx_38
+  # DEBUG D#8 => dy_39 * dy_39
+  # DEBUG D#7 => D#9 + D#8
+  # DEBUG D#6 => dz_40 * dz_40
+  # DEBUG D#5 => D#7 + D#6
+  # DEBUG D#4 => MEM <const struct trace> [(const struct sphere *)work_34(D)].objects[s_46].radius
+  # DEBUG D#3 => D#4 * D#4
+  # DEBUG distance => D#5 - D#3
+  # DEBUG BEGIN_STMT
+  if (dot_41 > 0)
+    goto <bb 7>; [59.00%]
+  else
+    goto <bb 8>; [41.00%]
+
+  <bb 7> [local count: 268740611]:
+  _25 = MEM[(int *)_80 + 12B];
+  _27 = lamp_36(D)->norm_squared;
+  _26 = _25 * _25;
+  _23 = dz_40 * dz_40;
+  _21 = dy_39 * dy_39;
+  _20 = dx_38 * dx_38;
+  _22 = _20 + _21;
+  _24 = _22 + _23;
+  distance_42 = _24 - _26;
+  _28 = _27 * distance_42;
+  _29 = dot_41 * dot_41;
+  if (_28 <= _29)
+    goto <bb 9>; [5.50%]
+  else
+    goto <bb 8>; [94.50%]
+
+  <bb 8> [local count: 999905292]:
+  # DEBUG BEGIN_STMT
+  s_43 = s_46 + 1;
+  # DEBUG s => s_43
+  # DEBUG BEGIN_STMT
+  ivtmp.117_90 = ivtmp.117_91 + 4;
+  ivtmp.119_86 = ivtmp.119_87 + 28;
+  if (s_43 != _45)
+    goto <bb 4>; [94.50%]
+  else
+    goto <bb 9>; [5.50%]
+
+  <bb 9> [local count: 73836534]:
+  # _32 = PHI <1(7), 0(2), 0(8)>
+  return _32;
+
+}

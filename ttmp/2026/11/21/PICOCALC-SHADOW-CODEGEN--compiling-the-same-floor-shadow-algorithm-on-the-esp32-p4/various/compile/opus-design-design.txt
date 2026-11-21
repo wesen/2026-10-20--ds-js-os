@@ -1,0 +1,35 @@
+# Scalar-local register promotion (RV32)
+
+## Measured ceiling
+- Upper bound: 1,268,781 removable stack loads, or 8.17% of the full frame. The entry guard predicts 2.66%.
+- This is a ceiling, not a forecast. Turning `lw` into `mv` saves no instructions, so real savings need **forwarding**:
+  - `pop()` returns the local's home register directly.
+  - `local.set` makes the producer write straight into the home.
+  - `0xf1`/`0xf2` use homes instead of T5/T6.
+- Saves: each s-register costs 2 instructions per invocation (≥38,954 in total). It must win about 2 forwarded uses per call to pay off.
+- Stores: `local.set` and parameter-prologue `sw` go away. Operand spills, call saves and the `ra` save stay.
+
+## ABI / reserved registers (ilp32f reactor)
+- Never allocated: zero, ra, sp, gp, tp (linked SDK), s0/fp.
+- Also off-limits: t0–t4 (operand stack), t5/t6 (scratch), and a0 (result, `0x6d` check, `0xf1` capacity).
+- Call-free functions: homes go in a1–a7, with parameter i≥1 kept in a_i. These are free (no save), and the function can stay frameless when spillDepth is 0.
+- Functions with calls: homes go in s1–s11. They are saved in frame slots above the operand spills, the frame ≤2032 check is kept, and each saved register's `lw` is placed before `exit`.
+
+## Lowering contract
+- Homes cover the whole function and are never split, so block joins, `br`, `else` and `end` need no merge moves.
+- Pending forwarded gets are materialized into their stack home:
+  - before `local.set` of the same local (WAR),
+  - at `0x02/0x03/0x04/0x05/0x0c/0x0d/0x0b`,
+  - before `call()` and before `return`.
+- `call()` keeps its t0–t4 spill loop unchanged.
+
+## Streaming budget
+- Scoring runs inside `lower(fn)` before `consume` nulls `fn.code`.
+- It is a single O(ops) pass with O(locals) state, capped at maxOps = 65536, and drops the decoded array afterwards.
+- When `pieLoops` is selected, promotion is declined until typed-pie-loops declares which registers it uses.
+
+## Correctness and execution controls on held-out code
+- `promoteLocals: "off" | "score" | "on" | fn`. Each decision is recorded in the inspection `decisions`.
+- Freeze loopWeight=8 before measuring. Hold out workloads other than `opening-160-rows`.
+- Differential check: compile with off and with score, then run on identical inputs, including div-zero, INT_MIN/−1 and out-of-range positions. Compare results, memory hash and trap kind.
+- Gates: no correctness diffs, no function whose retired count goes up, and a measured stackLoads drop that correlates with `estimate`.

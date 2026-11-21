@@ -1,0 +1,8 @@
+{
+  "objectSHA": "7a3e6a4cf7933f82bb7eb3e8612040c5b253db8321f815ee28e6336a571e110f",
+  "sourcePreprocessedSHA": "3522edb31c8bd3849ee8a05dd259e35aade028a60073b3137fe202042becd7a0",
+  "objdumpVersion": "GNU objdump (crosstool-NG esp-14.2.0_20260121) 2.43.1",
+  "instructionLines": 84,
+  "calls": 0,
+  "gimpleAbs": 2
+}

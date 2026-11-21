@@ -1,0 +1,146 @@
+{
+  "mode": "baseline",
+  "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "imageSHA": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+  "imageBytes": 10332,
+  "shadeBytes": 1068,
+  "shadow": {
+    "steps": 5528397,
+    "directStackLoads": 1288258,
+    "directStackStores": 647710,
+    "absCalls": 74226,
+    "boundsTests": 264928
+  },
+  "shadowCalls": 19477,
+  "shadowSlotByteOffsets": {
+    "0": {
+      "loads": 264928,
+      "stores": 19477
+    },
+    "4": {
+      "loads": 29119,
+      "stores": 19477
+    },
+    "8": {
+      "loads": 29119,
+      "stores": 19477
+    },
+    "12": {
+      "loads": 19477,
+      "stores": 19477
+    },
+    "16": {
+      "loads": 9642,
+      "stores": 19477
+    },
+    "20": {
+      "loads": 19477,
+      "stores": 19477
+    },
+    "24": {
+      "loads": 9642,
+      "stores": 19477
+    },
+    "28": {
+      "loads": 19477,
+      "stores": 19477
+    },
+    "32": {
+      "loads": 9642,
+      "stores": 19477
+    },
+    "36": {
+      "loads": 19477,
+      "stores": 19477
+    },
+    "40": {
+      "loads": 67601,
+      "stores": 19477
+    },
+    "44": {
+      "loads": 52917,
+      "stores": 19477
+    },
+    "48": {
+      "loads": 21309,
+      "stores": 19477
+    },
+    "52": {
+      "loads": 178284,
+      "stores": 67601
+    },
+    "56": {
+      "loads": 148452,
+      "stores": 52917
+    },
+    "60": {
+      "loads": 52917,
+      "stores": 52917
+    },
+    "64": {
+      "loads": 52917,
+      "stores": 52917
+    },
+    "68": {
+      "loads": 21309,
+      "stores": 21309
+    },
+    "72": {
+      "loads": 21309,
+      "stores": 21309
+    },
+    "76": {
+      "loads": 38568,
+      "stores": 9642
+    },
+    "80": {
+      "loads": 9642,
+      "stores": 9642
+    },
+    "84": {
+      "loads": 28926,
+      "stores": 9642
+    },
+    "88": {
+      "loads": 9642,
+      "stores": 9642
+    },
+    "92": {
+      "loads": 28926,
+      "stores": 9642
+    },
+    "96": {
+      "loads": 9642,
+      "stores": 9642
+    },
+    "100": {
+      "loads": 28926,
+      "stores": 9642
+    },
+    "104": {
+      "loads": 9642,
+      "stores": 9642
+    },
+    "108": {
+      "loads": 19284,
+      "stores": 9642
+    },
+    "112": {
+      "loads": 28926,
+      "stores": 9642
+    },
+    "116": {
+      "loads": 9642,
+      "stores": 9642
+    },
+    "124": {
+      "loads": 19477,
+      "stores": 19477
+    }
+  },
+  "localCount": 30,
+  "absTotalSteps": 691244,
+  "fullFrameSteps": 14879359,
+  "outputSHA": "430f0d5016593f5b5232593107f198e92f6ecdfd88c946b59d0af364e2117625",
+  "ret": 1
+}

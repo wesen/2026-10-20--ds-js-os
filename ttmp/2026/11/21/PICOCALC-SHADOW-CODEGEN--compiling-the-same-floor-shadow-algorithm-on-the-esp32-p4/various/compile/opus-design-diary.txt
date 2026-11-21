@@ -1,0 +1,47 @@
+## Step 1: Bound stack-load removal and build a static local scorer
+
+I measured how much local promotion could gain using `measured.observed`, then wrote and tested a static scorer in the private REPL. The scorer has only been run on synthetic tapes, because `typedWasm` is not loaded in this session.
+
+### Prompt Context
+**User prompt (verbatim):** "Supply an independent substantive contribution to a Typed RV32 scalar-local register promotion pass. ... Return JSON {code:string, diary:string, design:string}. Limit response to 1300 words."
+**Assistant interpretation:** Estimate an upper bound from the observed counters, then write an executable scoring function and a design.
+**Inferred user intent:** Decide whether local promotion is worth more than the 2.66% entry-guard idea.
+**Commit (code):** N/A (no repository changes)
+
+### What I did
+- Listed the REPL globals. Found `measured`, `profiles`, `q`, `a`, `simd`. `typedWasm` is undefined.
+- Read `measured`. It matches `shadow-forecast.json`. Called `profiles.help()` and `profiles.arms()`. I did not query arm totals.
+- Computed the bounds: stackLoads − calls; 2×boundsTests; 2×calls for each s-register.
+- Evaluated `scoreLocals` on a synthetic loop tape, with and without a call. I also tested an out-of-range local and an oversized tape.
+
+### Why
+- Every executed callee restores `ra` with one `lw`, so that load cannot be removed. Each `0xf1` loads two locals relative to sp.
+
+### What worked
+- Upper bound: 1,268,781 loads (98.49% of 1,288,258). Removing all of them outright would cut 22.95% of shadow retired instructions, or 8.17% of the full frame.
+- The scorer gave homes a1/a2/a3/a4 in call-free code and s1/s2/s3/s4 (4 saves) when a call is present. It threw `local 9 out of range` and returned `tape outside scoring budget` as expected.
+
+### What didn't work
+- First eval: `ReferenceError: PROMOTE is not defined at scoreLocals (<eval>:10:37(3))`. Indirect eval did not expose `const`. I fixed it by wrapping the source in `new Function(SRC + "; return scoreLocals;")()`.
+- The second test gave a2 to parameter 0 and a1 to a plain local, which would overwrite parameter 1 in a1. I fixed it by pinning parameters i≥1 to a_i. I also added 0x28/0x2f to PRODUCES, because local 3 was being under-scored.
+
+### What I learned
+- Changing lw to mv does not change the instruction count. Savings need operand forwarding.
+- If boundsTests counts executed `0xf1`, then 529,856 loads (41.1%) come from bounds checks, and all of them can be forwarded.
+- One s-register costs at least 38,954 retired instructions (19,477 calls × 2).
+
+### What was tricky to build
+- Pinning parameter registers in call-free code while keeping a0 reserved.
+
+### What warrants a second pair of eyes
+- What boundsTests actually counts. Whether calls equals the number of invocations.
+- The upper bound includes post-call reloads of t0–t4, which promoting locals does not remove.
+
+### What should be done in the future
+- Run the scorer on real `decodeNumericOperations` output, then run the held-out differential plan.
+
+### Code review instructions
+- Review `scoreLocals`, especially POPS/PRODUCES and the `fixed`/`pool` logic.
+
+### Technical details
+- Loads per call: 66.1. Stores per call: 33.3. Store bound: ≤628,233 (647,710 − 19,477 `ra` saves).

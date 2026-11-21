@@ -1,0 +1,54 @@
+// Static local-promotion scorer for typedWasm.decodeNumericOperations(fn.code).
+// Items: {opcode, operands}. Score unit: retired instructions saved per entry, weighted 8^loopDepth.
+const PROMOTE = Object.freeze({
+  callFree: [11,12,13,14,15,16,17],              // a1-a7; a0 = result, div check, 0xf1 scratch
+  callSaved: [9,18,19,20,21,22,23,24,25,26,27],  // s1-s11; never zero, ra, sp, gp, tp, s0/fp, t0-t6
+  loopWeight: 8, maxLoopDepth: 3, maxOps: 1 << 16,
+});
+const POPS = new Set([0x04,0x0d,0x0f,0x1a,0x21,0x28,0x2f,0x36,0x3b,0x45,0x46,0x47,0x48,0x4a,0x4c,0x4e,0x4f,0x6a,0x6b,0x6c,0x6d,0x6f,0x74,0x75]);
+const PRODUCES = new Set([0x28,0x2f,0x41,0x45,0x46,0x47,0x48,0x4a,0x4c,0x4e,0x4f,0x6a,0x6b,0x6c,0x6d,0x6f,0x74,0x75]);
+function scoreLocals(fn, ops, cfg = PROMOTE) {
+  const n = fn.params.length + fn.nlocals;
+  if (!Array.isArray(ops) || ops.length > cfg.maxOps) return {decline: "tape outside scoring budget", homes: []};
+  const s = Array.from({length: n}, (_, i) => ({local: i, param: i < fn.params.length,
+    loads: 0, forwardLoads: 0, stores: 0, forwardStores: 0, weight: 0}));
+  let depth = 0, calls = 0; const stack = [];
+  const w = () => cfg.loopWeight ** Math.min(depth, cfg.maxLoopDepth);
+  const use = (i, f) => { const r = s[i]; if (!r) throw new RangeError("local " + i + " out of range"); f(r); };
+  for (let k = 0; k < ops.length; k++) {
+    const {opcode, operands = []} = ops[k], next = ops[k + 1], prev = ops[k - 1], x = w();
+    switch (opcode) {
+    case 0x02: case 0x04: stack.push(false); break;
+    case 0x03: stack.push(true); depth++; break;
+    case 0x0b: if (stack.pop()) depth--; break;
+    case 0x10: calls++; break;
+    case 0x20: use(operands[0], r => { r.loads += x;
+      if (next && POPS.has(next.opcode)) r.forwardLoads += x; }); break;   // pop returns the home register
+    case 0x21: use(operands[0], r => { r.stores += x;
+      if (prev && PRODUCES.has(prev.opcode)) r.forwardStores += x; }); break; // producer targets the home
+    case 0xf1: use(operands[0], r => { r.loads += x; r.forwardLoads += x; });
+               use(operands[1], r => { r.loads += x; r.forwardLoads += x; }); break;
+    case 0xf2: use(operands[0], r => { r.loads += x; r.forwardLoads += x; }); break;
+    }
+  }
+  // Call-free code keeps parameter i>=1 in a_i (no copy needed). a0 stays reserved.
+  const fixed = new Map();
+  if (!calls) for (let i = 1; i < fn.params.length; i++) fixed.set(i, 10 + i);
+  const pool = (calls ? cfg.callSaved : cfg.callFree).filter(reg => ![...fixed.values()].includes(reg));
+  for (const r of s) {
+    // Replacing lw with mv, or sw with mv, does not change the count. Savings come from
+    // forwarded uses and dropped prologue stores. An s-register costs a save and a restore.
+    r.score = r.forwardLoads + r.forwardStores + (r.param && !calls ? 1 : 0) - (calls ? 2 : 0);
+    r.weight = r.loads + r.stores;
+  }
+  const ranked = s.filter(r => r.score > 0).sort((p, q) => q.score - p.score || q.weight - p.weight || p.local - q.local);
+  const homes = []; let next = 0;
+  for (const r of ranked) {
+    const reg = fixed.get(r.local) ?? pool[next];
+    if (reg === undefined) continue;
+    if (!fixed.has(r.local)) next++;
+    homes.push({local: r.local, reg, score: r.score});
+  }
+  return {calls, homes, saves: calls ? homes.length : 0, scored: s,
+    estimate: homes.reduce((t, h) => t + h.score, 0)};
+}
