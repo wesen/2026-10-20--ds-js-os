@@ -114,3 +114,59 @@ Run scripts/callbacks/verify.mjs from the repository root. Review FunctionEmitte
 ### Technical details
 
 The callback is expression-only and available when the named function pattern is unbound. The frontend lowers the parameter to the construction-time SurfacePoint sentinel. Calls in the body still use normal Typed resolution, argument checking and result checking.
+
+## Step 3. Compare integrated source stages and independently replay the device result
+
+I integrated the two frontend features and real material evaluator, then compared all three assembled sources on both targets. An independent researcher qualified the material graph, geometry, numeric model, application UI and physical performance. Each lane's project article and diary are in this ticket.
+
+### Prompt Context
+
+See Step 1 and the original commission in sources/commission.txt. The comparison requires the same authored meanings and a stage-by-stage integration.
+
+### What I did
+
+The stage checker at 6a05083 compared full retained graph storage, parameter edits and material samples after each invocation. Commit 39c57eb brought the builder article and regressions into the shared branch. I reviewed the seven oracle frames, validation cases, fractional predicate disagreements and physical receipts, then computed medians directly from the 108 row records.
+
+### Why
+
+A matching image alone can hide two distinct types of error. Different graphs can yield the same quantized result on today's inputs, and two targets can share the same lowering bug. The test layers isolate graph structure, unlit colors, final RGB565 and the ordinary displayed viewport.
+
+### What worked
+
+The direct, fluent and captured fixtures agreed at every tested weight on both targets. Independent C and Python agreed on 38 validation cases and seven whole frames. Nine cold installs and 108 paired per-pixel/row measurements qualified on the board. The five ordinary screen captures each matched the reference on 57,600 viewport pixels. The release was verified by a final readback. The original classic frame also survived reset.
+
+### What didn't work
+
+A historical compiler experiment assumes generated code exceeds 300,000 bytes. The current and control compilers both generated 248,108 bytes for that workload. The builder researcher preserved the stale size expectation in the regression diary. It did not differentiate the two compilers. Decimal tile frequencies also disproved a broad assumption about fixed-point agreement. A one-tenth tile frequency changed 8,516 of 25,600 predicates against exact arithmetic.
+
+### What I learned
+
+The unit of material execution matters. Across callback-stage observations the paired reduction was 81.24% for shared materials and 89.17% for the captured tile shape. The row shader both amortizes calls and specializes common expression shapes. The experiment does not identify the independent contribution of dispatch alone.
+
+### What was tricky to build
+
+The verification crosses an ABI that passes 16-bit cells, stores unpacked color in two cells per sample, and finally quantizes RGB565. Preserving the shader's unlit samples in a separate receipt avoids attributing lighting or packing errors to graph construction. Keeping geometry on the C side for this commission held the reference constant.
+
+### What warrants a second pair of eyes
+
+Peak QuickJS allocations, monitor-observed PSRAM high-water changes, code image bytes and resident relocated storage are different quantities. Inspect the per-install rows before adding any of them together.
+
+### What should be done in the future
+
+The new PICOCALC-TYPED-RAY ticket compares a complete Typed scalar renderer to the same C image and investigates the cost of its generated instructions.
+
+### Code review instructions
+
+Read the director article and follow its links to the independent evaluator and physical report. Recompute medians from various/review/rows.json grouped by stage and fixture. Read various/review/final.json for the qualified application and partition hashes.
+
+### Technical details
+
+Final Candela image f3dc689a28dc1db1d3e91a44a288a87144b63e7b3005c3eefbec71d844008951. The ordinary stage compiles once. The setter batches contain 1,024 edits per measurement. Hardware capture data, controls and summaries were committed by the physical reviewer in 598a781.
+
+## Step 4. Publish all five studies
+
+I staged the five articles and two linked physical figures using the research archive publisher. It validated local links, wrote each vault note, committed only the seven commissioned files and pushed them. It then compared remote main and every committed blob with the expected content.
+
+- Vault revision: 8f6d2e2621c20b11788d61f3eade412060a2ec34.
+- Receipt: various/director/publication.json.
+- Review: open the director article and follow its four companion study links in the vault.

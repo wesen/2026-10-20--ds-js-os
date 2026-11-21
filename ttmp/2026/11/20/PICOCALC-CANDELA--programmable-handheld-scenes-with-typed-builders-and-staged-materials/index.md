@@ -1,7 +1,7 @@
 ---
 Title: Programmable handheld scenes with Typed builders and staged materials
 Ticket: PICOCALC-CANDELA
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-20T23:38:16.064646394-05:00
+LastUpdated: 2026-11-21T00:01:27.749823673-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
@@ -21,7 +21,9 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+Typed source now builds and edits two programmable scenes on the ESP32-P4. Three source styles agree on Wasm and RV32. C retains visibility and lighting, and Typed evaluates the material graph. The callback stage's scanline path took 28.877 ms for the shared scene and 18.202 ms for the tile scene. The physical review includes 108 paired measurements and five complete viewport comparisons.
+
+Start with the [director report](analysis/02-from-a-typed-scene-description-to-pixels-on-the-picocalc.md), [researcher measurements](analysis/05-what-does-it-cost-to-change-a-material-on-a-handheld.md) and [director diary](reference/01-director-investigation-diary.md). The five articles and figures were published in go-go-parc main at `8f6d2e2621c20b11788d61f3eade412060a2ec34`.
 
 ## Key Links
 
@@ -30,7 +32,7 @@ WhenToUse: ""
 
 ## Status
 
-Current status: **active**
+Current status: **complete**
 
 ## Topics
 

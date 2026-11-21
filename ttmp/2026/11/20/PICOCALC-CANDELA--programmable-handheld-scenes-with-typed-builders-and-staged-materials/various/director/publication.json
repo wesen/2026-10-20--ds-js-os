@@ -1,0 +1,14 @@
+{
+  "remote": "go-go-golems/go-go-parc",
+  "branch": "main",
+  "commit": "8f6d2e2621c20b11788d61f3eade412060a2ec34",
+  "sha256": {
+    "Projects/2026/11/20/ARTICLE - PicoCalc Candela Compiler Lab - When a callback builds a material before the first pixel.md": "0422fdc84b47a163669c3a3de3c01370bb026ac88ebce32193ff4f640acfff43",
+    "Projects/2026/11/20/_assets/candela-compiler-lab-tiles-edited.png": "7ac6c129d81a80d4097c50fda17d1593e230589aa74a5e4ac4e0e68ebf47cc16",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Candela Compiler Lab - From a Typed scene description to pixels on the PicoCalc.md": "a8630ff96c4971e717d25b8bc9d659c88ae262f994428c722aa9a0deb22b70a9",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Candela Compiler Lab - How a sphere handle acquires a method.md": "535bb34f37a2f0efdfa2e129f63c54206ee26afcbc021cdf08743f73de57093c",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Candela Compiler Lab - Validating and evaluating Candela material graphs.md": "8814d6ce38738d1a8825c526af2e1d0a44881b57dfe6fb00e12a0cf1f4105ebe",
+    "Projects/2026/11/20/_assets/candela-compiler-lab-tiles.png": "8749907218c7108416711220f23339d272136305b22c126c6864edca3fa422b5",
+    "Projects/2026/11/20/ARTICLE - PicoCalc Candela Compiler Lab - What does it cost to change a material on a handheld.md": "2a7d21d91ed579541a78ecdd071fb618ff34948636fe22b2ebf0d9ba2de77299"
+  }
+}
