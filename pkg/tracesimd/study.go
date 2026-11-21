@@ -203,8 +203,9 @@ func datasetPath(p string) bool {
 		path.Clean(p) == p && p != ".." && !strings.HasPrefix(p, "../")
 }
 
-// isInstruction reports whether the aligned word at off is a 32-bit RISC-V
-// encoding (low two bits 11). Compressed or data halfwords fail.
+// isInstruction checks the low two bits used by this compiler’s fixed-width
+// RV32 and PIE words. The emitting compiler supplies the instruction ranges.
+// Data with the same low bits would pass this prefix check.
 func isInstruction(code []byte, off int64) bool { return code[off]&3 == 3 }
 
 // Open reads and verifies one study file. It reads no other path.

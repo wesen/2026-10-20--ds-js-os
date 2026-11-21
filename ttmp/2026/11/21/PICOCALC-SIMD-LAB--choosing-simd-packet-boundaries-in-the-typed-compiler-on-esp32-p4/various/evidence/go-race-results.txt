@@ -1,0 +1,6 @@
+ok  	github.com/go-go-golems/picocalc-trace/cmd/trace-repl	4.332s
+ok  	github.com/go-go-golems/picocalc-trace/pkg/traceapi	67.709s
+ok  	github.com/go-go-golems/picocalc-trace/pkg/tracearchive	3.438s
+ok  	github.com/go-go-golems/picocalc-trace/pkg/tracehardware	1.743s
+ok  	github.com/go-go-golems/picocalc-trace/pkg/tracerepl	1.793s
+ok  	github.com/go-go-golems/picocalc-trace/pkg/tracesimd	1.070s

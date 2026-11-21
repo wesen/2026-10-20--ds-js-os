@@ -25,6 +25,20 @@ export function packedMachine(memory,x) {
             x[gpr] += Number(second);
             return;
         }
+        if (['esp.min.u16.a','esp.max.u16.a','esp.movi.16.a'].includes(op)) {
+            assert.match(first,/^x\d+$/);
+            const gpr = Number(first.slice(1));
+            const unsigned = n => n & 65535;
+            if (op === 'esp.movi.16.a') {
+                const lane = Number(second);
+                assert(Number.isInteger(lane) && lane >= 0 && lane < 8);
+                x[gpr] = unsigned(target[lane]);
+            } else {
+                const combine = op === 'esp.min.u16.a' ? Math.min : Math.max;
+                x[gpr] = target.reduce((a,b) => combine(a,unsigned(b)),unsigned(target[0]));
+            }
+            return;
+        }
         assert.match(first,/^q[0-7]$/);
         assert.match(second,/^q[0-7]$/);
         const left = q[Number(first.slice(1))], right = q[Number(second.slice(1))];

@@ -1,0 +1,49 @@
+{
+  "cellSHA": "f1f6a6460eb58206fb9b479c3b1a7e533cc8a702defd9a87802f5d6ec1695588",
+  "result": {
+    "workload": "opening-160-rows",
+    "unit": "executed guest instructions",
+    "predicted": [
+      16888,
+      5936
+    ],
+    "observed": [
+      16888,
+      5936
+    ],
+    "metrics": [
+      {
+        "arm": "pie",
+        "steps": 3131435,
+        "rawImageBytes": 10308,
+        "imageSHA": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a",
+        "packetStores": 3135,
+        "laneLoads": 26070,
+        "extracts": null
+      },
+      {
+        "arm": "empty",
+        "steps": 2983602,
+        "rawImageBytes": 10332,
+        "imageSHA": "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f",
+        "packetStores": 1024,
+        "laneLoads": 9182,
+        "extracts": null
+      },
+      {
+        "arm": "full",
+        "steps": 2954486,
+        "rawImageBytes": 12684,
+        "imageSHA": "55b350ea2753e506adcae0aeee6d609a7c59905f1b6ae17952fc9911c99372fa",
+        "packetStores": 282,
+        "laneLoads": 3246,
+        "extracts": 5936
+      }
+    ],
+    "stepChangePctFromBaseline": [
+      0,
+      -4.720934651365908,
+      -5.650732012639573
+    ]
+  }
+}
