@@ -207,7 +207,7 @@ The acceptance test should distinguish three achievements. **Correctness** requi
 
 The project checkout is `/home/manuel/code/wesen/2026-10-20--ds-js-os`. The new ticket is `ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes`. Its scripts build from the firmware compile database, generate the fixtures, execute RV32 code, capture pass output and regenerate the figure. The analysis directory contains the commands and local evidence links.
 
-For a first reading, open `picocalc-os/worlds/raytrace/raytrace.typed` at `typedRayComputeRow`, then open `picocalc-os/nucleus/raytrace_demo.c` at `trace_row`. Read `scripts/01-row.c` in the new ticket to see the checked control. In `various/passes/`, follow `checked-gcc-ssa.txt` to `checked-gcc-ivs.txt`, then to `checked-gcc.asm`. On the LLVM side, follow `checked-llvm-optimized.ll` through `checked-llvm-strength-reduction.txt`, `checked-finalize-isel.txt` and `checked-virtregrewriter.txt`. The matching JSON files distinguish static IR counts from measured dynamic instructions. The earlier tickets PICOCALC-TYPED-RAY, PICOCALC-SCALAR-BREAKDOWN and PICOCALC-PIE-LOOPS contain the physical timings and source variants.
+For a first reading, open `picocalc-os/worlds/raytrace/raytrace.typed` at `typedRayComputeRow`, then open `picocalc-os/nucleus/raytrace_demo.c` at `trace_row`. Read `scripts/01-row.c` in the new ticket to see the checked control. In `various/passes/`, follow `checked-gcc-ssa.txt` to `checked-gcc-ivs.txt`, then to `checked-gcc.asm`. On the LLVM side, follow `checked-llvm-optimized.ll` through `checked-llvm-strength-reduction.txt`, `checked-finalize-isel.txt` and `checked-virtregrewriter-final.txt`. The matching JSON files distinguish static IR counts from measured dynamic instructions. The earlier tickets PICOCALC-TYPED-RAY, PICOCALC-SCALAR-BREAKDOWN and PICOCALC-PIE-LOOPS contain the physical timings and source variants.
 
 ### Laboratory commands and source artifacts
 
@@ -226,4 +226,6 @@ cp "$work/typed-counts.json" "$work/evidence/"
 python3 "$t/scripts/08-figure.py" "$work/evidence" "$work/counts.png"
 ```
 
-[Pass and toolchain metrics](../various/passes/pass-metrics.json) · [C execution counts and ablations](../various/passes/execution.json) · [Typed execution counts](../various/passes/typed-counts.json) · [Production GCC disassembly](../various/passes/firmware-gcc.asm) · [Checked LLVM optimized IR](../various/passes/checked-llvm-optimized.ll) · [LLVM after register assignment](../various/passes/checked-virtregrewriter.txt)
+[Pass and toolchain metrics](../various/passes/pass-metrics.json) · [C execution counts and ablations](../various/passes/execution.json) · [Typed execution counts](../various/passes/typed-counts.json) · [Production GCC disassembly](../various/passes/firmware-gcc.asm) · [Checked LLVM optimized IR](../various/passes/checked-llvm-optimized.ll) · [LLVM after register assignment](../various/passes/checked-virtregrewriter-final.txt)
+
+The RISC-V pipeline runs register rewriting twice. The first occurrence still has virtual GPRs. Use the second snapshot (`virtregrewriter,1`) to see the final physical assignments. The source companion traces this and the preceding optimizations through LLVM 18.1.3. [LLVM source and pass reader](02-reading-llvm-18-source-alongside-the-ray-row-pass-dumps.md)

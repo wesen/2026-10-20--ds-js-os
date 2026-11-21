@@ -214,3 +214,51 @@ Run scripts/09-archive-llvm.py on the full experiment directory. Check various/l
 ### Technical details
 
 The firmware TU produced 2,061 opt and 1,450 llc dump headers. Both controlled kernels each produced 195 opt and 116 llc headers. These are emitted snapshots for the chosen O2/target configurations.
+
+## Step 5. Read the upstream implementation and correct the rewriter boundary
+
+The tagged source showed why it was important to inspect the RISC-V target configuration alongside the generic allocator. The first rewriter snapshot retained virtual general-purpose registers. I added the second occurrence and corrected the reading path in the final project report.
+
+### Prompt Context
+
+See Step 4. The upstream source investigation extends the final comparative chapter and preserves its original measurements.
+
+### What I did
+
+Read the implementation of promotion, inlining, early CSE, scalar evolution, loop strength reduction, vector planning and register allocation at the release tag. Matched function names and line anchors to the local checkout. Captured the second register rewrite for all three modules. Published a separate vault chapter and corrected the existing chapter.
+
+### Why
+
+A pass name alone can be ambiguous when a target schedules it multiple times. An algorithm in upstream code establishes a possible decision path. A specific pass trace or experiment supplies the evidence about this program.
+
+### What worked
+
+Checked backend entry 74 retains virtual general-purpose registers. Entry 78 advertises NoVRegs. LLVM's RISCVTargetMachine.cpp explains the earlier RVV-specific allocator stage. All 14 code links resolve to locations in the verified sparse checkout. Both vault notes were pushed on go-go-parc main at f45cea8.
+
+### What didn't work
+
+The original selected virtregrewriter artifact was the first occurrence, making it insufficient as final-assignment evidence. I retained it for comparison and added checked-virtregrewriter-final.txt and its counterparts. The final assembly and execution results never depended on that printed snapshot.
+
+### What I learned
+
+The source and data support a compact compiler experiment centered on selecting induction representations, reusing proved values and carrying hot locals across a backedge. LLVM's search, memory-generation rules and target allocator offer distinct checkpoints for comparing the implementation.
+
+### What was tricky to build
+
+The LLVM machine printer and middle-end printer use different header formats. The helper takes an ordinal to disambiguate repeated pass names. The upstream source release matches the installed version number; distro patches are possible.
+
+### What warrants a second pair of eyes
+
+The retained full logs document pass outputs and the compiler version. Internal choices such as a particular virtual register eviction or a particular failed vectorizer legality test require more detailed instrumentation before attributing them to a function.
+
+### What should be done in the future
+
+Use the new artifact indices when evaluating register assignment changes in Typed. The earlier open question about physically timing the checked C controls remains.
+
+### Code review instructions
+
+Read analysis/02-reading-llvm-18-source-alongside-the-ray-row-pass-dumps.md. Compare entries 74 and 78 with scripts/10-read-pass.py. The previous archive commit was 8704930.
+
+### Technical details
+
+Permanent local upstream checkout: /home/manuel/code/llvm-project-18.1.3-picocalc. Private local backup: /home/manuel/.local/share/picocalc-research/2026-11-21-row-ir/current-lab.tar.gz. SHA-256: 34cc64636ae4746e99de7e191d8f7af7c682dc1586463a1f30b1209381224e2a. It contains the p4-row-ir work directory at backup time, the warm SDK and verified restore build, both compiler treatment directories, and the three recent serial trial directories. Study source, later final-rewriter snapshots and selected measurements are separately committed in Git.

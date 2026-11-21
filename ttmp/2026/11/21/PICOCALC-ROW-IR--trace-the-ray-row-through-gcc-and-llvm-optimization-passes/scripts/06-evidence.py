@@ -49,10 +49,10 @@ for form in ('firmware','checked','unchecked'):
              [r' = alloca ',r' = phi ',r'call [^\n]*?@element\(',r'call void @llvm.trap',r'load i32, ptr %work[, ]']])
     results['passColumns']=['alloca','phi','elementCalls','trapCallSites','headerLoadSites']
     results['llvmSnapshots']=snapshots
-    for machine in ['finalize-isel','virtregrewriter']:
+    for machine in ['finalize-isel','virtregrewriter','virtregrewriter,1']:
         mir=(d/(machine+'.mir')).read_text()
         section=re.search(r'^name:\s+'+f+r'\s*\n.*?^body:\s*\|\s*\n(.*?)^\.\.\.',mir,re.M|re.S)[1]
-        save(form+'-'+machine+'.txt',section)
+        save(form+'-'+machine.replace(',1','-final')+'.txt',section)
     lsr=subprocess.run(['llc-18','-O2','-print-after=loop-reduce','-filter-print-funcs='+f,
                         str(d/'opt.ll'),'-o',str(d/'lsr.s')],capture_output=True,text=True,check=True)
     save(form+'-llvm-strength-reduction.txt',lsr.stderr)

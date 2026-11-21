@@ -34,7 +34,7 @@ def llvm(name,src,base,fn,folder):
     run(['opt-18','-passes=default<O2>','-S','raw.ll','-o','opt.ll','-filter-print-funcs='+fn,'-print-after-all','-pass-remarks-missed=loop-vectorize'],folder,stderr='llvm-passes.txt')
     run(['opt-18','-passes=default<O2>','-S','raw.ll','-o','opt.ll'],folder,stderr='opt.log')
     run(['llc-18','-O2','opt.ll','-o','llvm.s'],folder,stderr='llc.log')
-    for phase in ['finalize-isel','virtregrewriter']:
+    for phase in ['finalize-isel','virtregrewriter','virtregrewriter,1']:
         run(['llc-18','-O2','-stop-after='+phase,'opt.ll','-o',phase+'.mir'],folder,stderr='llc.log')
     run([clang,*base,'-O2','-c',src,'-o','llvm.o','-Rpass-missed=loop-vectorize','-Rpass-analysis=loop-vectorize'],folder,stderr='remarks.txt')
 dumpflags=['-fdump-tree-ssa','-fdump-tree-lim2-details','-fdump-tree-ivopts-details','-fdump-tree-vect-details','-fdump-tree-optimized','-fdump-rtl-ira','-fdump-rtl-final']

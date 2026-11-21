@@ -19,8 +19,8 @@ for case in ['firmware','checked','unchecked']:
         (dest/(name+'.log.gz')).write_bytes(gzip.compress(data,compresslevel=6,mtime=0))
         (dest/(name+'.index.json.gz')).write_bytes(gzip.compress(json.dumps(offsets).encode(),mtime=0))
         records[phase]={'command':args,'sha256':hashlib.sha256(data).hexdigest(),'rawBytes':len(data),'dumps':len(offsets)}
-    for file in ['raw.ll','opt.ll','finalize-isel.mir','virtregrewriter.mir']:
-        (dest/(case+'-'+file+'.gz')).write_bytes(gzip.compress((src/file).read_bytes(),mtime=0))
+    for file in ['raw.ll','opt.ll','finalize-isel.mir','virtregrewriter.mir','virtregrewriter,1.mir']:
+        (dest/(case+'-'+file.replace(',1','-final')+'.gz')).write_bytes(gzip.compress((src/file).read_bytes(),mtime=0))
     summary[case]=records
 (dest/'manifest.json').write_text(json.dumps(summary,indent=2)+'\n')
 print(json.dumps({case:{key:v['dumps'] for key,v in info.items()} for case,info in summary.items()}))

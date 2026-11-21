@@ -1,0 +1,120 @@
+  bb.0.entry:
+    successors: %bb.3(0x80000000)
+    liveins: $x10, $x11
+
+    renamable $x13 = ADDI renamable $x10, 2047
+    renamable $x16 = ADDI renamable $x13, 1047
+    renamable $x12 = ADDI renamable $x13, 1367
+    renamable $x13 = ADDI killed renamable $x13, 1687
+    PseudoBR %bb.3
+
+  bb.1.for.cond.cleanup:
+    successors: %bb.4(0x30000000), %bb.2(0x50000000)
+    liveins: $x10, $x11, $x16
+
+    renamable $x17 = LHU renamable $x10, 36 :: (load (s16) from %ir.add.ptr.i)
+    BEQ renamable $x17, $x0, %bb.4
+    PseudoBR %bb.2
+
+  bb.2.for.body8.lr.ph:
+    successors: %bb.5(0x80000000)
+    liveins: $x10, $x11, $x16, $x17
+
+    renamable $x31 = COPY $x0
+    renamable $x5 = ADDI renamable $x10, 8
+    renamable $x6 = ADDI renamable $x10, 10
+    renamable $x29 = ADDI renamable $x10, 12
+    renamable $x30 = ADDI renamable $x10, 84
+    renamable $x18 = ADDI renamable $x10, 1044
+    renamable $x7 = ADDI $x0, 320
+    renamable $x28 = ADDI $x0, 10
+    PseudoBR %bb.5
+
+  bb.3.for.body:
+    successors: %bb.1(0x04000000), %bb.3(0x7c000000)
+    liveins: $x10, $x11, $x12, $x13, $x16
+
+    SH $x0, renamable $x12, -320 :: (store (s16) into %ir.scevgep10)
+    SH $x0, renamable $x12, 0 :: (store (s16) into %ir.lsr.iv8)
+    renamable $x12 = ADDI killed renamable $x12, 2
+    BEQ renamable $x12, renamable $x13, %bb.1
+    PseudoBR %bb.3
+
+  bb.4.for.cond.cleanup7:
+    $x10 = ADDI $x0, 1
+    PseudoRET implicit $x10
+
+  bb.5.for.body8:
+    successors: %bb.7(0x80000000)
+    liveins: $x5, $x6, $x7, $x10, $x11, $x16, $x17, $x18, $x28, $x29, $x30, $x31
+
+    renamable $x12 = nuw nsw MUL renamable $x31, renamable $x7
+    renamable $x12 = ADD killed renamable $x12, renamable $x10
+    renamable $x14 = MUL renamable $x31, renamable $x28
+    renamable $x13 = ADD renamable $x5, renamable $x14
+    renamable $x15 = LHU killed renamable $x13, 0 :: (load (s16) from %ir.gep64)
+    renamable $x13 = ADDI killed renamable $x12, 404
+    renamable $x12 = ADD renamable $x29, renamable $x14
+    renamable $x12 = LHU killed renamable $x12, 0 :: (load (s16) from %ir.gep68)
+    renamable $x15 = SUB renamable $x11, killed renamable $x15
+    renamable $x14 = ADD renamable $x6, killed renamable $x14
+    renamable $x19 = LHU killed renamable $x14, 0 :: (load (s16) from %ir.gep66)
+    renamable $x14 = ADD renamable $x15, renamable $x12
+    renamable $x12 = SUB killed renamable $x12, killed renamable $x15
+    renamable $x14 = MUL killed renamable $x14, killed renamable $x12
+    renamable $x31 = ADDI killed renamable $x31, 1
+    renamable $x8 = COPY renamable $x30
+    renamable $x9 = COPY renamable $x16
+    PseudoBR %bb.7
+
+  bb.6.for.cond.cleanup28:
+    successors: %bb.4(0x04000000), %bb.5(0x7c000000)
+    liveins: $x5, $x6, $x7, $x10, $x11, $x16, $x17, $x18, $x28, $x29, $x30, $x31
+
+    renamable $x30 = ADDI killed renamable $x30, 320
+    BEQ renamable $x31, renamable $x17, %bb.4
+    PseudoBR %bb.5
+
+  bb.7.for.body29:
+    successors: %bb.8(0x50000000), %bb.11(0x30000000)
+    liveins: $x5, $x6, $x7, $x8, $x9, $x10, $x11, $x13, $x14, $x16, $x17, $x18, $x19, $x28, $x29, $x30, $x31
+
+    renamable $x12 = LHU renamable $x8, 0 :: (load (s16) from %ir.lsr.iv5)
+    renamable $x12 = SUB renamable $x14, killed renamable $x12
+    BLT renamable $x12, $x0, %bb.11
+    PseudoBR %bb.8
+
+  bb.8.if.then:
+    successors: %bb.10(0x20000000), %bb.9(0x60000000)
+    liveins: $x5, $x6, $x7, $x8, $x9, $x10, $x11, $x12, $x13, $x14, $x16, $x17, $x18, $x19, $x28, $x29, $x30, $x31
+
+    renamable $x12 = SLLI killed renamable $x12, 1
+    renamable $x12 = ADD renamable $x18, killed renamable $x12
+    renamable $x12 = LHU killed renamable $x12, 0 :: (load (s16) from %ir.gep57)
+    renamable $x15 = LHU renamable $x9, 0 :: (load (s16) from %ir.lsr.iv1)
+    renamable $x12 = nsw SUB renamable $x19, killed renamable $x12
+    BEQ renamable $x15, $x0, %bb.10
+    PseudoBR %bb.9
+
+  bb.9.if.then:
+    successors: %bb.10(0x2aaaaaab), %bb.11(0x55555555)
+    liveins: $x5, $x6, $x7, $x8, $x9, $x10, $x11, $x12, $x13, $x14, $x15, $x16, $x17, $x18, $x19, $x28, $x29, $x30, $x31
+
+    BGE renamable $x12, killed renamable $x15, %bb.11
+    PseudoBR %bb.10
+
+  bb.10.if.then45:
+    successors: %bb.11(0x80000000)
+    liveins: $x5, $x6, $x7, $x8, $x9, $x10, $x11, $x12, $x13, $x14, $x16, $x17, $x18, $x19, $x28, $x29, $x30, $x31
+
+    SH killed renamable $x12, renamable $x9, 0 :: (store (s16) into %ir.lsr.iv1)
+    SH renamable $x31, renamable $x9, 320 :: (store (s16) into %ir.scevgep2)
+
+  bb.11.if.end53:
+    successors: %bb.6(0x04000000), %bb.7(0x7c000000)
+    liveins: $x5, $x6, $x7, $x8, $x9, $x10, $x11, $x13, $x14, $x16, $x17, $x18, $x19, $x28, $x29, $x30, $x31
+
+    renamable $x8 = ADDI killed renamable $x8, 2
+    renamable $x9 = ADDI killed renamable $x9, 2
+    BEQ renamable $x8, renamable $x13, %bb.6
+    PseudoBR %bb.7
