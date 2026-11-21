@@ -1,0 +1,639 @@
+# Design: bounded Typed RV32 optimizer study comparing a framed baseline, frameless leaves and selective leaf inlining on the ESP32-P4 PicoCalc
+
+**Status:** Design only. I had no source access and ran nothing, so every number here is a proposed threshold or a `TBD-measure` placeholder. All function and option names are hypothetical until the source audit in §0 maps them to the real Typed compiler.
+
+---
+
+## 0. Source audit to finish before writing code
+
+Several design choices depend on facts about the current `FunctionCode` lowerer that I can't see. Answer each one from the source and write the answer into the ticket diary. For each, the design below says what changes if the answer is unexpected.
+
+| # | Question | Why it matters | If the answer is unexpected |
+|---|---|---|---|
+| A1 | Which registers does each opcode handler write as scratch (large immediates, address computation, bounds checks, compares)? | The register pool for leaves must exclude every scratch register. | Build an exact per-opcode clobber table (§3.2) and shrink the pool. |
+| A2 | How is a Wasm trap delivered: `jal ra, trap`, `j trap`, `ebreak`/illegal instruction, or a return code? Does the trap handler walk frames, or use `s0` as a frame pointer? | A leaf has no saved RA and no frame. | If the handler walks frames or uses `s0`, a function that can trap is not a frameless leaf (it may still use L1, see §2). |
+| A3 | Which register holds the linear-memory base (and any limit or globals base)? Is it callee-saved, and does it stay fixed for the whole program? | Leaves must read it and never write it. | If it is reloaded from a context through a helper, treat that as a call. |
+| A4 | Is the prologue emitted before the body, with frame size patched later or prescanned? Is output streamed to its final buffer or buffered per function? | The leaf decision must be made before the first prologue byte. | If the prologue is patched later, a prescan is still needed for leaf/inline selection, but frame sizing comes free. |
+| A5 | The exact call sequence: how arguments move from the stack slots into `a0..a7`, how the result is stored, and whether more than 8 parameters are supported. | Needed to estimate call cost in the inline budget, and to bound leaf parameters. | v1 rule: more than 8 parameters means not L2. |
+| A6 | Does Typed emit `i64`, `f32`, multi-value, `memory.grow`, bulk memory, or `call_indirect`? Which of these are lowered as helper calls? | Any helper call means the function is not a leaf. | Add those opcodes to the reject list. |
+| A7 | Does the backend insert fuel, yield or preemption checks (for example at loop headers) that call a helper? | If it does, almost every loop contains a call. | Leaves with loops are impossible. Restrict the leaf class to loop-free functions and say so in the report. |
+| A8 | In what order does Typed emit function definitions (bottom-up, top-down, or source order)? | Streaming inlining only sees callees whose bodies came earlier. | Measure the share of calls that point backward (§5.1) before building the inliner. |
+| A9 | Does the validator already compute the exact maximum operand-stack height per function? | Reuse it rather than writing a second stack counter. | If not, the prescan implements Wasm validation's stack-height rule (§4.1). |
+| A10 | Is function-level recompilation (from the first study program) active in the Files, Agenda or Editor edit loop? | Inlining makes callers depend on callee bodies. | Inlining needs dependency invalidation (§5.5) or must be off in incremental mode. |
+| A11 | How does branch lowering handle out-of-range B-type (±4 KiB) and J-type (±1 MiB) targets (see the branch-fusion studies)? | Inlining makes functions longer. | Add a long-branch adverse fixture (§7.3, F17). |
+| A12 | Does the emitter produce compressed (RVC) instructions? | Byte estimates for the inline budget. | Use the emitter's real encoded sizes, never a flat 4 bytes per instruction, if RVC is used. |
+| A13 | How are Chess "slices" bounded: by node count or by time? | The oracle needs the slice count to be identical across arms. | If slices are time-based, the fixed-work harness must switch to node-count slicing, or `slices` cannot be in the exact oracle. |
+
+---
+
+## 1. The arms
+
+All options are off by default. Every arm compiles **the same Wasm module bytes** (record sha256). The optimization lives entirely in Wasm→RV32 lowering, so the frontend output must be byte-identical across arms. Check that, don't assume it.
+
+```js
+// Off by default. Record the frozen object (and its hash) in every output line.
+const RV32_OPT_DEFAULTS = Object.freeze({
+  framelessLeaf: false,        // enables L1 (RA-elide) and L2 (register leaf)
+  leafTier: 2,                 // 0: straight-line expression leaves; 1: + structured control; 2: + div/rem/trap paths
+  inline: false,               // inline call sites whose callee is a cached L2 leaf
+  inlineMaxCalleeOps: 16,      // frozen after the training split, see §8
+  inlineSlackBytes: 8,         // tier A: "size-neutral" sites
+  inlineCallerGrowthBytes: 256,// tier B: per-caller budget
+  inlineModuleGrowthPct: 10,   // tier B: running module budget
+  inlineCacheBytes: 4096,      // retained callee Wasm bytes plus summaries (device heap)
+  inlineAllowIf: true,
+  inlineAllowLoop: false,
+  inlineAllowBrTable: false,
+});
+```
+
+| Arm | Options | Where it runs | Purpose |
+|---|---|---|---|
+| **A: FRAMED CONTROL** | all off | host and P4 | Today's lowerer, unchanged. |
+| **B: FRAMELESS LEAF** | `framelessLeaf` | host and P4 | Leaf-only effect; ABI-transparent. |
+| **C: INLINE-over-LEAF** | `framelessLeaf` + `inline` | host and P4 | Inlining on top of B, same inputs. |
+| A′ (A/A control) | all off, a second run in another boot | P4 | Noise floor and layout drift. |
+| B1 (diagnostic) | L1 only (RA-elide, frame kept) | host | Separates "no RA save" from "no stack traffic". |
+| C0 (diagnostic) | `inline` with callers forced framed | host | Separates inlining's gain from leaf promotion. |
+| C-A (diagnostic) | tier A sites only | host | Shows how much of C's gain needs code growth. |
+
+The three physical arms plus A′ use **one firmware image** that selects the arm at runtime. Using separate images would change the layout of everything else in the firmware, which is a confound.
+
+---
+
+## 2. Candidate classes and their exact bounds
+
+I propose three conservative levels, applied per function and decided before any byte of the function is emitted.
+
+**L2: register leaf (frameless).** The function is lowered with no `sp` adjustment, no RA save or restore, and no memory traffic below or relative to `sp`. All of the following must hold:
+
+1. Zero remaining calls (`call` to an import, a non-inlined function, `call_indirect`) and zero helper calls (per A2/A6/A7).
+2. `nParams ≤ 8` and `nResults ≤ 1`. All values are `i32`. Any `i64`, `f32` or `f64` means not L2 in v1.
+3. Exact register count: `nNonParamLocals + inlineExtraLocals + maxDepth ≤ |POOL| − nParams`. Here `maxDepth` is the exact maximum operand height, including the expansions of inlined sites.
+4. Every opcode is on the tier's whitelist:
+   - **Tier 0, simple expression leaves:** `local.get/set/tee`, `i32.const`, i32 ALU and compare ops, `select`, `drop`, `nop`, `i32.load*`/`i32.store*`, `global.get/set` if they compile to base-relative memory (A3), and a single final `end`. No control flow.
+   - **Tier 1:** adds `block`, `loop`, `if`, `else`, `br`, `br_if`, `return`, `unreachable`, and `br_table` when every target has arity 0.
+   - **Tier 2:** adds `div_s`, `div_u`, `rem_s`, `rem_u`, with explicit trap checks, provided the trap mechanism is leaf-safe (A2).
+5. ABI bounds: the function writes only volatile registers (`t0–t6`, `a0–a7`). It never writes `sp`, `gp`, `tp`, `ra`, `s0–s11` or the memory base register.
+
+**L1: RA-elide.** The function has no calls but fails condition 3 or 2 (for example, register pressure is too high). It keeps the baseline frame and spill slots and only drops the RA store and load. This level is cheap and almost risk-free, but small.
+
+**FRAMED.** Everything else, unchanged.
+
+Out of scope for v1: a register shadow stack in **non-leaf** functions. Caching values in registers across calls requires spilling at every call and adds callee-saved register management. That is a much larger blast radius and belongs in the next study, if this one shows that register-resident stacks pay off.
+
+Why L2 is safe for callers: framelessness is invisible across the ABI, so callers need no change. That makes B compatible with function-level recompilation (A10). Inlining (C) is not, which is a structural difference worth stating in the report.
+
+---
+
+## 3. Register model for L2
+
+### 3.1 Pool
+
+```js
+const ARG = ['a0','a1','a2','a3','a4','a5','a6','a7'];
+const TMP = ['t0','t1','t2','t3','t4','t5','t6'];
+// SCRATCH = union of temporaries any whitelisted handler writes (audit A1). Placeholder guess:
+const SCRATCH = ['t5','t6'];
+// Prefer t-registers for locals and stack so a-registers stay free for params.
+const POOL = [...TMP.filter(r => !SCRATCH.includes(r)), ...ARG];   // ≤ 13 if SCRATCH has 2
+
+function assignRegisters(nParams, nLocals, inlineExtraLocals, maxDepth) {
+  const local = ARG.slice(0, nParams);                 // params stay where they arrive
+  const free = POOL.filter(r => !local.includes(r));
+  for (let i = 0; i < nLocals; i++) local.push(free.shift());
+  const inl = free.splice(0, inlineExtraLocals);       // shared by all inlined sites (sequential, never nested)
+  const R = free.splice(0, maxDepth);                  // R[d] = register for operand depth d
+  if (local.includes(undefined) || inl.length !== inlineExtraLocals || R.length !== maxDepth)
+    throw new Error('prescan/pool mismatch: compiler bug, not a fallback');  // the count was supposed to be exact
+  return { local, inl, R };
+}
+```
+
+The key property is that each operand depth `d` always lives in the same register `R[d]`. Wasm guarantees a fixed stack height at every label, so control-flow merges need no reconciliation: both arms of an `if` leave their result in `R[h]`. Only branches that carry values need moves (§4.3).
+
+### 3.2 Clobber assertion (debug and test builds)
+
+For each whitelisted handler, declare `writes(op) = {dst} ∪ SCRATCH_used(op)`. In the host simulator, single-step each emitted handler sequence and assert that it writes nothing else. This is how a guess about A1 gets proven or corrected.
+
+---
+
+## 4. Executable pseudocode
+
+### 4.1 Prescan: one decode pass with exact counts and inline-site expansion
+
+```js
+function prescan(fn, decls, inlineCache, opts) {
+  const s = { calls: 0, sites: [], maxDepth: 0, nParams: fn.type.params.length,
+              nLocals: fn.locals.length, nResults: fn.type.results.length,
+              inlineExtraLocals: 0, ops: 0, tierNeeded: 0, reject: null };
+  let d = 0;
+  const ctl = [{ height: 0, arity: s.nResults, unreachable: false }];
+  const top = () => ctl[ctl.length - 1];
+  const bump = (h) => { s.maxDepth = Math.max(s.maxDepth, h); };
+
+  for (const ins of decodeOps(fn.body)) {
+    s.ops++;
+    // In unreachable code Wasm's stack is polymorphic: skip height accounting but keep control nesting.
+    if (top().unreachable && !['block','loop','if','else','end'].includes(ins.op)) continue;
+    switch (ins.op) {
+      case 'call': {
+        const t = decls.typeOf(ins.func);
+        const c = opts.inline ? inlineCache.get(ins.func) : undefined;
+        if (c && eligibleCallee(c, opts)) {
+          s.sites.push({ op: s.ops, callee: ins.func, depthAtCall: d });
+          bump(d + c.maxDepth);   // callee's stack sits above its params, see §5.3
+          s.inlineExtraLocals = Math.max(s.inlineExtraLocals, c.nLocals);
+        } else s.calls++;
+        d += t.results.length - t.params.length; break;
+      }
+      case 'call_indirect': s.calls++; d += callIndirectDelta(ins, decls); break;
+      case 'block': case 'loop':
+        s.tierNeeded = Math.max(s.tierNeeded, 1);
+        if (ins.op === 'loop') s.hasLoop = true;
+        ctl.push({ height: d - blockParams(ins), arity: labelArity(ins), unreachable: false }); break;
+      case 'if':
+        s.tierNeeded = Math.max(s.tierNeeded, 1); d--;  // pop the condition
+        ctl.push({ height: d - blockParams(ins), arity: labelArity(ins), unreachable: false }); break;
+      case 'else':
+        d = top().height + blockParams(...); top().unreachable = false; break;
+      case 'end': {
+        const f = ctl.pop(); d = f.height + blockResults(f);
+        if (ctl.length === 0) break; break;
+      }
+      case 'br': case 'return': case 'unreachable':
+        s.tierNeeded = Math.max(s.tierNeeded, 1); top().unreachable = true; break;
+      case 'br_if': s.tierNeeded = Math.max(s.tierNeeded, 1); d--; break;
+      case 'br_table':
+        s.tierNeeded = Math.max(s.tierNeeded, 1);
+        if (ins.targets.concat([ins.default]).some(l => labelArityAt(ctl, l) > 0)) s.reject ??= 'br_table-arity';
+        d--; top().unreachable = true; break;
+      case 'i32.div_s': case 'i32.div_u': case 'i32.rem_s': case 'i32.rem_u':
+        s.tierNeeded = Math.max(s.tierNeeded, 2); d--; break;
+      default: {
+        const e = OP_EFFECT[ins.op];                    // {pop, push} or undefined
+        if (!e) { s.reject ??= `op:${ins.op}`; break; } // anything not whitelisted, including helper-lowered ops
+        d += e.push - e.pop;
+      }
+    }
+    bump(d);
+  }
+  // Cross-check against the validator's own max height (A9) when it exists; a disagreement is a bug.
+  return s;
+}
+```
+
+Pseudocode caveat: `blockParams`, `blockResults` and `labelArity` follow Wasm's block-type rules. A `loop` label's arity is its parameter count, not its result count. If Typed only emits MVP block types (no parameters), assert that and simplify.
+
+### 4.2 Classify
+
+```js
+function classify(s, opts) {
+  if (!opts.framelessLeaf) return { kind: 'FRAMED', why: 'opt-off' };
+  if (s.calls > 0)        return { kind: 'FRAMED', why: 'call' };
+  if (s.reject)           return { kind: 'L1', why: s.reject };   // still call-free
+  if (s.tierNeeded > opts.leafTier) return { kind: 'L1', why: 'tier' };
+  if (s.nParams > 8 || s.nResults > 1) return { kind: 'L1', why: 'abi' };
+  const need = s.nLocals + s.inlineExtraLocals + s.maxDepth;
+  if (need > POOL.length - s.nParams) return { kind: 'L1', why: `pressure:${need}` };
+  return { kind: 'L2' };
+}
+```
+
+`s.reject` can also mean a helper-lowered op that **is** a call (for example `memory.grow`). The prescan must count those as `calls`, not as `reject`, so that L1 never drops RA in a function that calls a helper. Keep two lists: `CALLING_OPS` (adds to calls) and `UNSUPPORTED_IN_L2_OPS` (reject only).
+
+### 4.3 L2 body emitter, parameterized by a view so it can also lower inlined callees
+
+```js
+// view = { local: reg[], R: reg[], endLabel, nResults, isInline }
+function emitLeafBody(asm, body, view, inlineCache, sitesSelected) {
+  let d = 0;
+  const ctl = [{ kind: 'func', height: 0, arity: view.nResults, label: view.endLabel }];
+  const labelOf = (depth) => ctl[ctl.length - 1 - depth];
+
+  for (const ins of decodeOps(body)) {
+    switch (ins.op) {
+      case 'local.get': asm.mv(view.R[d++], view.local[ins.idx]); break;
+      case 'local.set': asm.mv(view.local[ins.idx], view.R[--d]); break;
+      case 'local.tee': asm.mv(view.local[ins.idx], view.R[d - 1]); break;
+      case 'i32.const': asm.li(view.R[d++], ins.imm); break;
+      case 'i32.add':   d--; asm.add(view.R[d - 1], view.R[d - 1], view.R[d]); break;
+      case 'i32.lt_s':  d--; asm.slt(view.R[d - 1], view.R[d - 1], view.R[d]); break;
+      case 'i32.load':  asm.wasmLoad32(view.R[d - 1], view.R[d - 1], ins.offset /*, uses SCRATCH + MEMBASE */); break;
+      case 'i32.store': d -= 2; asm.wasmStore32(view.R[d], view.R[d + 1], ins.offset); break;
+      case 'select': { // [a b c] -> c ? a : b
+        d -= 2; const L = asm.newLabel();
+        asm.bnez(view.R[d + 1], L); asm.mv(view.R[d - 1], view.R[d]); asm.bind(L); break;
+      }
+      case 'i32.div_s': d--; emitDivS(asm, view.R[d - 1], view.R[d]); break;
+      case 'i32.rem_s': d--; emitRemS(asm, view.R[d - 1], view.R[d]); break;
+      case 'block': ctl.push({ kind: 'block', height: d, arity: blockResults(ins), label: asm.newLabel() }); break;
+      case 'loop': {
+        const L = asm.newLabel(); asm.bind(L);
+        ctl.push({ kind: 'loop', height: d, arity: 0 /*MVP*/, label: L }); break;
+      }
+      case 'if': {
+        d--; const elseL = asm.newLabel();
+        asm.beqz(view.R[d], elseL);
+        ctl.push({ kind: 'if', height: d, arity: blockResults(ins), label: asm.newLabel(), elseL }); break;
+      }
+      case 'else': { const f = ctl[ctl.length - 1]; asm.j(f.label); asm.bind(f.elseL); f.elseL = null; d = f.height; break; }
+      case 'end': {
+        const f = ctl.pop();
+        if (f.elseL) asm.bind(f.elseL);
+        if (f.kind !== 'loop') asm.bind(f.label);
+        d = f.height + f.arity;
+        if (f.kind === 'func') return finishFunc(asm, view, d);
+        break;
+      }
+      case 'br':     { const t = labelOf(ins.depth); branchMoves(asm, view, t, d); asm.j(t.label); d = skipToUnreachable(); break; }
+      case 'br_if':  {
+        d--; const t = labelOf(ins.depth);
+        if (t.arity === 0 || noMovesNeeded(view, t, d)) asm.bnez(view.R[d], t.label);
+        else {        // pitfall P4: moves must happen only on the taken path
+          const skip = asm.newLabel(); asm.beqz(view.R[d], skip);
+          branchMoves(asm, view, t, d); asm.j(t.label); asm.bind(skip);
+        }
+        break;
+      }
+      case 'return': { branchMoves(asm, view, ctl[0], d); asm.j(view.endLabel); d = skipToUnreachable(); break; }
+      case 'unreachable': asm.trap(TRAP_UNREACHABLE); d = skipToUnreachable(); break;
+      case 'call': { // reached only for selected inline sites; prescan guaranteed this
+        const c = inlineCache.get(ins.func);
+        d = emitInlineSiteLeaf(asm, view, c, d, inlineCache);
+        break;
+      }
+      default: emitWhitelisted(asm, ins, view, () => d, (nd) => { d = nd; });
+    }
+  }
+}
+
+function branchMoves(asm, view, target, d) {
+  // Destinations sit at or below their sources, so ascending order never overwrites a pending source.
+  for (let i = 0; i < target.arity; i++) {
+    const src = view.R[d - target.arity + i], dst = view.R[target.height + i];
+    if (src !== dst) asm.mv(dst, src);
+  }
+}
+
+function finishFunc(asm, view, d) {
+  if (view.isInline) return d;                          // result stays in view.R[0]; the caller moves it
+  if (view.nResults === 1 && view.R[0] !== 'a0') asm.mv('a0', view.R[0]);
+  asm.ret();                                            // jalr x0, 0(ra); ra was never touched
+}
+
+function emitL2Function(asm, fn, s, inlineCache, sites) {
+  const { local, inl, R } = assignRegisters(s.nParams, s.nLocals, s.inlineExtraLocals, s.maxDepth);
+  for (let i = s.nParams; i < local.length; i++) asm.li(local[i], 0);   // Wasm zero-initializes locals
+  const end = asm.newLabel();
+  emitLeafBody(asm, fn.body, { local, R, inl, endLabel: end, nResults: s.nResults, isInline: false }, inlineCache, sites);
+}
+```
+
+An L2 function has one epilogue: every `return` branches to `end`, and the code at `end` is a move into `a0` followed by `ret`. As an option, a `return` can emit `mv a0, R[top]; ret` in place instead of the branch. Keep that as a separately counted micro-variant, so its effect isn't mixed into B.
+
+### 4.4 Division and remainder with exact Wasm semantics on RV32M
+
+```js
+// RV32M never traps: x/0 = -1 (divu: 2^32-1), x%0 = x, INT_MIN/-1 = INT_MIN, INT_MIN%-1 = 0.
+function emitDivS(asm, lhs, rhs) {
+  asm.beqz(rhs, TRAP_DIV_ZERO);               // must use the baseline's trap entry (A2)
+  const ok = asm.newLabel();
+  asm.li(SCRATCH[0], -1);   asm.bne(rhs, SCRATCH[0], ok);
+  asm.lui(SCRATCH[0], 0x80000); asm.beq(lhs, SCRATCH[0], TRAP_INT_OVERFLOW);
+  asm.bind(ok); asm.div(lhs, lhs, rhs);
+}
+function emitRemS(asm, lhs, rhs) { asm.beqz(rhs, TRAP_DIV_ZERO); asm.rem(lhs, lhs, rhs); } // INT_MIN % -1 = 0 already
+function emitDivU(asm, lhs, rhs) { asm.beqz(rhs, TRAP_DIV_ZERO); asm.divu(lhs, lhs, rhs); }
+function emitRemU(asm, lhs, rhs) { asm.beqz(rhs, TRAP_DIV_ZERO); asm.remu(lhs, lhs, rhs); }
+```
+
+If the baseline already drops checks using range facts from bounded analysis, B and C must consume the **same** facts. Otherwise the arms differ in more than framing.
+
+### 4.5 L1 (RA-elide)
+
+This is the baseline framed emitter with one guarded change: skip `sw ra` in the prologue and `lw ra` in every epilogue, and reuse that slot or leave it unused. The precondition is `s.calls === 0` with helper ops counted as calls (§4.2).
+
+---
+
+## 5. Selective direct-call inlining under streaming
+
+### 5.1 What streaming permits
+
+When function `f` is lowered, every declaration is known but only bodies `< f` have been seen. Inlining is therefore restricted to **backward call sites into callees that are already cached**. Before building any inlining code, Phase 1 measures:
+
+- `backRefStatic`: the fraction of static direct-call sites whose callee index is lower than the caller's.
+- `backRefDyn`: the same fraction, weighted by dynamic call counts from a framed host run.
+- `backRefLeafDyn`: the dynamic share of calls whose callee is earlier **and** would classify as L2 with `ops ≤ inlineMaxCalleeOps`.
+
+If `backRefLeafDyn` is small but most hot callees are forward references, do not work around it in the backend. Propose a separate, frontend-only sub-study that emits functions bottom-up (callees before callers), renumbering every index reference, and keep it out of this study's three arms.
+
+### 5.2 The inline cache (bounded device memory)
+
+```js
+// After a function finishes lowering:
+function maybeCache(cache, idx, fn, s, cls, emittedLeafBytes, opts) {
+  if (!opts.inline || cls.kind !== 'L2') return;
+  if (s.ops > opts.inlineMaxCalleeOps) return;
+  if (s.hasLoop && !opts.inlineAllowLoop) return;
+  if (s.tierNeeded >= 1 && !opts.inlineAllowIf && usesIf(s)) return;
+  if (s.sites.length > 0) return;   // inlined bodies never contain calls: depth stays 1
+  const entry = { bodyBytes: fn.body.slice(), nParams: s.nParams, nLocals: s.nLocals,
+                  nResults: s.nResults, maxDepth: s.maxDepth, ops: s.ops,
+                  leafNativeBytes: emittedLeafBytes };
+  const cost = entry.bodyBytes.length + ENTRY_OVERHEAD;
+  if (cache.bytes + cost > opts.inlineCacheBytes) { counters.cacheFull++; return; } // first come, first kept; deterministic
+  cache.set(idx, entry); cache.bytes += cost;
+}
+```
+
+The cache stores **Wasm bytes, not native code**. Each site re-lowers the callee in the caller's mode: L2 view or framed-slot view.
+
+### 5.3 Mapping a callee onto the caller's operand stack
+
+At `call c` with caller height `d` and `n = c.nParams`, the arguments occupy depths `d−n … d−1`. Wasm consumes them, so they are dead after the call and can **be** the callee's parameter storage.
+
+- Callee parameter `i` maps to caller depth `d−n+i` (register `R[d−n+i]` or the matching spill slot). A callee `local.set` on a parameter writes a dead caller slot, which is safe.
+- Callee non-parameter local `j` maps to `inl[j]` (registers, or extra frame slots for framed callers), zeroed at each site entry.
+- Callee operand depth `k` maps to caller depth `d+k`. This is why the prescan bumps the maximum to `d + c.maxDepth`.
+- Callee result: callee depth 0 (caller depth `d`) moves to caller depth `d−n`.
+- Callee `return`, or a `br` to its outermost label, moves the result to callee depth 0 and jumps to the site's `endLabel`.
+
+```js
+function emitInlineSiteLeaf(asm, callerView, c, d, cache) {
+  const n = c.nParams, base = d - n;
+  const view = { local: [...callerView.R.slice(base, base + n), ...callerView.inl.slice(0, c.nLocals)],
+                 R: callerView.R.slice(d), inl: [], endLabel: asm.newLabel(),
+                 nResults: c.nResults, isInline: true };
+  for (let j = 0; j < c.nLocals; j++) asm.li(callerView.inl[j], 0);
+  emitLeafBody(asm, c.bodyBytes, view, cache, null);
+  asm.bind(view.endLabel);
+  if (c.nResults === 1 && view.R[0] !== callerView.R[base]) asm.mv(callerView.R[base], view.R[0]);
+  return base + c.nResults;
+}
+// The framed caller uses the same mapping with slot offsets: emitFramedBody(body, slotView).
+// That requires the baseline framed emitter to accept a {localSlot(i), stackSlot(d)} view;
+// refactoring it to do so is the main engineering risk of arm C.
+```
+
+**Leaf promotion.** If every call in a caller is a selected inline site and the pool still fits, the caller itself becomes L2. This is the most valuable case and must be reported separately (counter `promotedToL2`).
+
+### 5.4 Site selection and code-growth limits (deterministic and static)
+
+```js
+function selectSites(sites, cache, callerKind, opts, mod /* running module totals */) {
+  const chosen = []; let growth = 0;
+  for (const site of sites) {                                       // source order
+    const c = cache.get(site.callee);
+    const inl = c.leafNativeBytes - RET_BYTES + zeroInitBytes(c) + resultMoveBytes(c, callerKind);
+    const call = callSequenceBytes(c, callerKind);                  // from A5: arg moves/loads + jal + result store
+    const delta = inl - call;
+    if (delta <= opts.inlineSlackBytes) { chosen.push({ ...site, tier: 'A', delta }); growth += Math.max(0, delta); continue; }
+    if (growth + delta > opts.inlineCallerGrowthBytes) { reject(site, 'caller-budget'); continue; }
+    // Running module cap: the final total size is unknown while streaming, so bound the cumulative ratio.
+    const cap = (opts.inlineModuleGrowthPct / 100) * (mod.baselineEstBytes + estBaselineBytes(currentFn));
+    if (mod.growth + growth + delta > cap) { reject(site, 'module-budget'); continue; }
+    chosen.push({ ...site, tier: 'B', delta }); growth += delta;
+  }
+  mod.growth += growth;
+  return chosen;
+}
+```
+
+Order of the per-function steps:
+
+1. Prescan, which lists candidate sites.
+2. `selectSites`.
+3. Re-run the pressure arithmetic with only the chosen sites (the prescan's `maxDepth` and `inlineExtraLocals` must be recomputed from chosen sites only; store per-site depth bumps so this is arithmetic, not a second decode).
+4. Classify.
+5. Emit.
+
+If pressure fails for an L2 caller, the caller stays framed and **keeps** its inline sites. Do not drop sites just to stay a leaf: the selection rule stays monotone and predictable.
+
+There is no profile, so the study does not weight sites by loop depth. Weighting would add a tuning knob that the held-out split has to defend. It can be added in a follow-up if tier B under-selects hot sites.
+
+### 5.5 Incremental recompilation
+
+Record `inlinedInto[callee] → Set(caller)`. On a function-level edit of `callee`, also recompile every caller in that set, and evict and re-cache the callee. Adverse fixture F18 tests this. If A10 shows recompilation is per-function with no hook, ship v1 as: `inline` forces whole-module compilation, and the study reports the edit-to-native-return cost of that.
+
+---
+
+## 6. ABI canaries and simulator checks
+
+### 6.1 Host RV32 simulator (ticket-local, RV32IM)
+
+```js
+function callCompiled(sim, fnAddr, args, { poisonSeed, strictStack, allowedFrame }) {
+  const SENT = 0xFFFF_FFF0;
+  const snap = {};
+  for (const r of ['sp','gp','tp','s0','s1','s2','s3','s4','s5','s6','s7','s8','s9','s10','s11']) snap[r] = sim.reg(r);
+  const rng = xorshift(poisonSeed);
+  for (const r of [...TMP, ...ARG]) sim.setReg(r, rng());        // volatile poison: catches reads of uninitialized registers
+  args.forEach((v, i) => sim.setReg(ARG[i], v | 0));
+  sim.setReg('ra', SENT);
+  const spEntry = sim.reg('sp');
+  sim.onStore = (addr) => {                                       // stack-discipline check
+    if (inStackRegion(addr) && strictStack) {
+      if (allowedFrame === 0) throw new Error(`L2 stored to stack @${hex(addr)}`);
+      if (addr < spEntry - allowedFrame || addr >= spEntry) throw new Error(`store outside frame @${hex(addr)}`);
+    }
+  };
+  sim.runUntilPc(SENT, { maxInstr: 1e9 });
+  for (const r in snap) if (sim.reg(r) !== snap[r]) throw new Error(`ABI: ${r} clobbered`);
+  return sim.reg('a0') | 0;
+}
+```
+
+- Run every fixture with at least 3 poison seeds. Results must be identical across seeds.
+- `allowedFrame` comes from the compiler's own metadata: 0 for L2, the frame size for L1 and FRAMED.
+- **Stores below `sp` are forbidden for every class.** The RISC-V psABI has no red zone, and on the ESP32-P4 interrupts can push onto the current task's stack.
+
+### 6.2 Device trampoline (assembly, because C code uses the s-registers)
+
+```
+# canary_call(fn, args_ptr, out_ptr): fill s1..s10 with patterns, call fn, then verify.
+# Don't poison the memory-base or other runtime-owned s-registers (A3): set them to their real values and verify they are unchanged.
+canary_call:
+    addi sp, sp, -64
+    sw   ra, 60(sp);  sw s0, 56(sp); ... sw s11, 12(sp)   # save callee-saved
+    mv   t0, a0                     # fn
+    mv   t1, a2                     # out_ptr, kept in a callee-saved register below
+    mv   s11, t1
+    sw   sp, 8(sp)                  # record sp
+    li   s1, 0x5A5A0001 ... li s10, 0x5A5A000A           # canaries (skip runtime-owned regs)
+    lw   a7, 28(a1) ... lw a0, 0(a1)                      # args
+    jalr ra, 0(t0)
+    sw   a0, 0(s11)                 # result
+    # verify: sp == 8(sp) value; s1..s10 == patterns; gp/tp unchanged (compare to values read at entry)
+    # write a bitmask of failures to 4(s11)
+    ...restore and ret
+```
+
+Run it on the P4 for every exported or harness-reachable function of each adverse fixture, per arm. Record pass/fail bitmasks.
+
+---
+
+## 7. Workloads and fixtures
+
+### 7.1 Chess, the exact oracle
+
+There are 17 FEN and configuration entries. Each run produces one record:
+
+```
+ORACLE v1 wl=chess arm=<A|B|C|A'> cfg=<00..16> mod=<sha256> opts=<sha256> code=<sha256-of-emitted>
+       move=<packed u32 hex> score=<i32 decimal, sign-extended> depth=<completed> nodes=<u32>
+       slices=<u32> root=<ok|BAD> roothash=<hex>
+```
+
+- The golden fixture is **H0**, a Wasm reference interpreter on the host.
+- Other fixtures that must match: **H1**, any existing host execution path of the Typed module; **H2-A/B/C**, emitted RV32 under the ticket simulator; **P-A/B/C/A′**, physical P4 runs.
+- Every field must match H0 exactly. `score` is compared as `x | 0` on both sides, because printing it as unsigned is a classic false mismatch.
+- `root` is checked by recomputing the root position hash after search and comparing it to the input. This catches make/unmake asymmetry that only shows up when the register lowering is wrong on one path.
+- Fixed work means a fixed depth or fixed node budget with **node-count slicing** (A13). Time-based cutoffs are disabled in every oracle run.
+
+### 7.2 A second meaningful workload (held out entirely)
+
+Choose it **before** any B or C compilation, by rule: use the first of Editor, Agenda or Files that already has, or can cheaply get, a deterministic headless replay. Its oracle record is a final-state digest (for example a CRC32 or FNV-1a over the buffer or store, plus counters such as cursor or item count) and a completion flag. Its inline constants and thresholds are the ones frozen on Chess training. It is never tuned against.
+
+### 7.3 Adverse fixtures
+
+These are hand-written Typed or WAT functions, each with a host-computed expected value over an input table. **Before compiling, write down each fixture's expected class and inline decision**; this is the static predict-before-test.
+
+| ID | Shape | Tests | Predicted class (write before compiling) |
+|---|---|---|---|
+| F1 | `(a,b) → a+b` | tier 0, result in `a0` | L2 |
+| F2 | 8 params, uses all of them | parameter-register edge | L2 |
+| F3 | 9 params | ABI bound | L1 or FRAMED per A5 |
+| F4 | many locals plus deep expression, over the pool by exactly 1 | exact pressure boundary (also run "pool minus 1" and "exact fit") | L1 |
+| F5 | non-param local read before write | zero-init (poison seeds) | L2 |
+| F6 | `if/else` with result, nested 3 levels | merge registers | L2 |
+| F7 | `br_if` carrying a value out of a block while lower stack values stay live | taken-path-only moves | L2 |
+| F8 | `br_table` with arity-0 targets; another with arity-1 targets | per-target moves and the v1 reject | L2 / L1 |
+| F9 | loop whose locals are carried across iterations, with an early `return` from the loop | loop label arity 0, return path | L2, or FRAMED per A7 |
+| F10 | `div_s`, `rem_s`, `div_u`, `rem_u` over {0, 1, −1, INT_MIN, INT_MAX, random}² | trap exactness | L2 (tier 2) |
+| F11 | `INT_MIN / −1` | overflow trap (RV32 would silently return INT_MIN) | trap in every arm |
+| F12 | `unreachable` in a dead arm, then live code at the label | polymorphic-stack prescan | L2 |
+| F13 | loads and stores at offset boundaries, sub-word sign extension | memory-base register never written | L2 |
+| F14 | small helper that mutates its own parameter, called with an argument that the caller reads afterwards | param-slot aliasing (Wasm copies arguments) | callee L2; site inlined |
+| F15 | helper with a `return` in the middle while values are on its stack | inline return translation | inlined |
+| F16 | helper called from a framed recursive function | inlining into a framed caller | inlined, caller stays FRAMED |
+| F17 | caller crossing 4 KiB after inlining, with a conditional branch spanning it | branch range | inlined, correct |
+| F18 | edit fixture: change F14's helper body, recompile function-level | stale-inline invalidation | caller recompiled |
+| F19 | forward call to a small leaf (callee defined later) | streaming restriction | not inlined (`not-cached`) |
+| F20 | callee whose bytes exceed the remaining `inlineCacheBytes` | cache bound | not inlined (`cache-full`) |
+| F21 | self-recursive small function | never a leaf | FRAMED |
+| F22 | call to an import | never inlined | FRAMED |
+
+Every fixture runs on H0, H2-A/B/C (3 poison seeds, strict stack) and the device canary trampoline for arms A, B and C.
+
+---
+
+## 8. Metrics and predict-before-test
+
+### 8.1 Metrics, all per arm
+
+| Group | Metric | Source |
+|---|---|---|
+| Compile | prescan time, lowering time, total cold compile (host ns; P4 cycles via `esp_cpu_get_cycle_count`), number of body decodes | compiler counters |
+| Compile memory | peak heap delta (`heap_caps_get_minimum_free_size`), retained inline-cache bytes | device |
+| Edit loop | edit-to-native-return for a helper edit, with inlining on and off (reuse the earlier studies' method) | device |
+| Code | total native bytes, per-function bytes, prologue and epilogue bytes, call-sequence bytes, inline growth (tier A vs B) | emitter |
+| Classification | count of FRAMED, L1 and L2; fallback-reason histogram; `promotedToL2`; sites taken and rejected by reason; `backRef*` shares | prescan and selection counters |
+| Dynamic (host) | retired instructions; loads; stores; `sp`-relative loads and stores; `jal`/`jalr`; taken branches; per-function attribution by PC range | simulator |
+| Physical | cycles of the timed native region per config (median, min, IQR over repetitions); A/A spread | P4 |
+| Layout | native buffer base address, alignment mod 64 and mod 128, memory region (internal RAM vs PSRAM via cache), CPU frequency | P4 log |
+
+### 8.2 Split and freezing
+
+- **Chess training set T** is the 9 configurations with even index (0, 2, …, 16). **Held-out set H** is the 8 with odd index. This rule is fixed now, before any measurement.
+- Tuning on T alone, freeze `leafTier`, `inlineMaxCalleeOps`, `inlineSlackBytes`, `inlineCallerGrowthBytes`, `inlineModuleGrowthPct` and `inlineCacheBytes`. Allowed tuning is only a small grid (for example ops ∈ {8, 16, 24}) judged on host dynamic instructions plus code bytes.
+- **The second workload is held out entirely.**
+
+### 8.3 Predictions, committed (git hash plus timestamp in the diary) before running any B or C on H or on the second workload
+
+1. **Static.** The class and inline decisions for F1–F22 (table above). Also the second workload's code bytes for B and C, predicted from its A compile plus the selection rule run in dry-run mode, which counts but doesn't emit.
+2. **Host dynamic instructions (accounting check).** From an **A-arm** basic-block profile of each H config and of the second workload, predict B and C counts as `Σ_blocks execCount(block) × instrs_arm(block)`, using the static per-block instruction counts each arm reports. This should be exact. Any mismatch beyond rounding is a bug in accounting or codegen and must be explained before going on.
+3. **Physical (the real test).** Fit `cycles ≈ α·instr + β·(loads+stores) + γ·taken_branches` on T, using A and B together, or use a pure ratio model if the fit is unstable. Then predict the P4 cycle ratios B/A and C/A for every H config and for the second workload. Publish the training residual and use **2× the maximum training residual** (or the A/A spread, whichever is larger) as the stated tolerance.
+4. **Compile overhead.** Predict the prescan cost as `k × bodyBytes`, with `k` from T, for the second workload on device.
+
+The report gives each prediction, the measured value, the error and whether it fell inside the tolerance. Misses are reported, not refit.
+
+### 8.4 Qualification criteria (proposed; freeze them with the predictions)
+
+- **Correctness gate, absolute:** every oracle field equals H0 for every fixture, arm and config. All canaries and poison-seed runs pass. Any failure means the arm is disqualified, regardless of speed.
+- **Performance:** the median P4 cycle ratio, as a geometric mean over H, has a 95% bootstrap confidence interval below 1.0 **and** an effect larger than 3× the A/A spread. No single config may regress by more than the A/A spread plus 1%. The second workload must not regress.
+- **Cost:** module code growth ≤ `inlineModuleGrowthPct` (C), on-device cold compile overhead ≤ 5% (proposed), and the heap increase stays within the inline cache bound.
+- **Default:** both optimizations stay **off by default** even if they qualify. Recommend turning on B, which is ABI-transparent, only after the second workload replicates the gain. C additionally needs F18 to pass under the real edit loop.
+
+---
+
+## 9. Physical P4 protocol
+
+1. Build one firmware with runtime arm selection, following the project's build and installation recipe. Record the firmware sha256, ESP-IDF version and CPU frequency.
+2. For each boot: compile the Chess module (and later the second workload) cold under one arm, logging compile cycles and the heap. Then run each config R = 5 times, timing **only** the native search call. Emit one `ORACLE` line plus `cycles=` per run.
+3. Arm order across boots follows a balanced Latin square, ABC, BCA, CAB, repeated 3 times, with an A′ boot added in each block (12 or more boots per workload). Repeating boots also varies heap layout. Record the code address and alignment so layout effects can be checked afterward.
+4. Pin the measurement task to one HP core at high priority. During timed regions, keep the display idle, Wi-Fi off and logging buffered.
+5. Sensitivity check, host-guided: if C's gain is near the noise floor, re-run A and C with the native buffer deliberately offset by 32 and 64 bytes. If the ranking flips, report the result as layout-sensitive.
+6. **When finished, reinstall the current playable firmware** and record its hash in the diary.
+
+---
+
+## 10. Phases and stop rules
+
+| Phase | Work | Gate to continue |
+|---|---|---|
+| P0 | Source audit (§0) and diary entries | All 13 questions answered |
+| P1 | Instrument arm A only: classification dry-run, `backRef*`, dynamic share of prologue/epilogue plus `sp` traffic in would-be L2 functions | If the upper bound on host instruction savings is < 2% for both workloads, stop and report the null result, with no physical runs |
+| P2 | Arm B on host: L2/L1 emission, F1–F13, F21–F22, canaries, Chess T | Correctness gate on T plus fixtures |
+| P3 | Arm C on host: cache, selection, leaf and framed views, F14–F20 | Correctness gate; accounting check (§8.3 #2) on T exact |
+| P4 | Freeze options; commit predictions (§8.3) | Commit hash in the diary |
+| P5 | Chess H and the second workload on host and P4 | — |
+| P6 | Report; reinstall the playable firmware | — |
+
+---
+
+## 11. Pitfalls
+
+1. **Interrupts below `sp`.** On the P4 an ISR can use the current stack. Never store below `sp`, in any class. L2 must not touch the stack at all.
+2. **Scratch-register collisions.** One handler that silently uses `t0` breaks every L2 function that assigned `t0` to a local. Use the clobber table plus single-step assertion (§3.2).
+3. **Zero-initialized locals.** Spill slots may already be zeroed today; registers are not. F5 and poison seeds catch it.
+4. **`br_if` with values.** Moves executed before the condition clobber values that the fall-through path still needs. Moves must go only on the taken path.
+5. **`br_table` targets with differing arity** need per-target move stubs. v1 rejects them.
+6. **Polymorphic stack after `br`, `return` or `unreachable`.** A naive depth counter goes negative or over the real maximum, giving out-of-range `R[d]`. Count only reachable code and reset at `else`/`end`. Cross-check with the validator.
+7. **"Exact" counts must really be exact.** A prescan/emitter mismatch is a bug and must fail hard in the prototype, not silently fall back. Silent fallbacks hide wrong codegen.
+8. **RV32M division never traps.** Explicit zero and `INT_MIN/−1` checks are required. `rem_s(INT_MIN, −1) = 0` already matches.
+9. **Hidden calls.** Trap entry through `jal ra`, bounds-check helpers, `memory.grow`, bulk memory, i64 or float helpers and fuel or yield checks all clobber `ra` and volatile registers. They count as calls unless proven non-returning and frame-agnostic (A2, A6, A7).
+10. **Frame-walking trap or panic handlers.** These break when there is no frame, and backtraces of L2 or inlined code change. Record this as a debuggability cost.
+11. **Streaming order.** The leaf decision is needed before the prologue, hence the prescan. That prescan's compile-time cost belongs to arms B and C.
+12. **Forward references** cannot be inlined; F19 checks this. Don't confuse "few inline sites" with "inlining doesn't help" when the real cause is function order (§5.1).
+13. **Parameter aliasing in inlined code.** This is safe only because Wasm consumes the argument slots. A future lazy `local.get` optimization would break this assumption.
+14. **Lazy `local.get` forwarding** (reading the local's register directly instead of `mv`) is tempting but needs materialization on `local.set`/`tee` of an aliased local and at merges. Keep it out of v1, or make it a separately counted variant.
+15. **Branch range** after inlining (F17), and interaction with branch-fusion changes, if those are enabled in the baseline. Pin the baseline's branch-lowering configuration in every arm.
+16. **Stale inlined bodies** under function-level recompilation (F18).
+17. **Device module cap in streaming.** The total size is unknown, so use the running ratio (§5.4), and log the final ratio.
+18. **Performance cliffs.** A one-local edit can flip a hot function from L2 to L1. Report the per-function pressure margin so this is visible.
+19. **Code growth vs. instruction cache.** If native code runs from PSRAM through the cache, C can lose on the P4 while winning on host instruction counts. This is exactly what the physical arm exists to catch; don't explain it away afterward.
+20. **Layout confounds.** Heap fragmentation changes buffer alignment across arms. Use the Latin square, A′, recorded alignment and the offset sensitivity check.
+21. **Non-determinism in the oracle.** Time-based slicing or cutoffs, an uncleared transposition table between configs, or a stale linear-memory state between repetitions. Reset the module instance, or verify the reset, before each config.
+22. **Signed score formatting.** Sign-extend on both sides.
+23. **Range facts.** All arms must consume identical bounded-analysis facts (§4.4).
+24. **RVC encodings.** Byte estimates must use real encoded sizes (A12).
+25. **Runtime-owned registers** (memory base, `gp` relaxation, `tp`). The canary harness must set them to real values, not patterns, and check they are unchanged.
+26. **Accounting model drift.** If §8.3 #2 isn't exact, fix the model or the bug before reading anything into the physical predictions.
+
+---
+
+## 12. Report skeleton (fill only with measured values)
+
+```
+Arms: A / B / C / A′  · module sha · opts sha per arm · firmware sha · CPU MHz · code region
+Correctness: oracle 17×{H0,H1,H2-A,B,C,P-A,B,C,A′} = <match/mismatch table>; fixtures F1–F22; canaries; poison seeds
+Classification: FRAMED/L1/L2 counts; fallback reasons; inline sites taken/rejected; promotedToL2; backRef*
+Code: bytes per arm (Chess, second workload); growth tier A/B
+Compile: host and P4 cold compile, prescan share, heap, cache bytes; edit-to-native-return
+Host dynamic: instr, loads/stores, sp-ops, calls per arm; accounting-check residuals
+Physical: per-config cycle ratios B/A, C/A (median, CI), A/A spread; layout sensitivity
+Predictions: committed hash · predicted vs measured · within tolerance?
+Decision: qualify / not, per the frozen criteria; default stays off; next study
+Firmware restored: <playable build hash>
+```

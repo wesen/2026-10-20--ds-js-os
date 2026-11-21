@@ -1,0 +1,24 @@
+{
+  "rv32Sha256": "10572a89ca9a26f144b6a2d46f21484bca4faae9f3d62d8a341f5ec2d657361e",
+  "digest": "f204dc1ad6f54df3b72cc7ac61871b73ac75db6c412d870d52cd44bd77bfd860",
+  "scopes": "RV32 instructions during start-to-final-slice plus freestanding loop/accounting",
+  "instructions": [
+    29319104,
+    154434054,
+    1045065986,
+    52576274,
+    552936111,
+    1116042610,
+    325506570,
+    1394959697,
+    1394959697,
+    22800245,
+    159514428,
+    749107837,
+    3011302,
+    8225773,
+    35474442,
+    57953030,
+    457942
+  ]
+}

@@ -1,0 +1,423 @@
+{
+  "heldOut": {
+    "stock": {
+      "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+      "rv32SHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+      "imageBytes": 2876,
+      "wasmBytes": 1500,
+      "functions": 10,
+      "checks": {
+        "uncheckedRequest": 70,
+        "inspect": 456,
+        "countEvents": 456,
+        "readBurst": 456,
+        "label": 165
+      },
+      "total": 1603,
+      "traps": 101,
+      "rv32Steps": 158570,
+      "orderedDigest": "66d52400302aab0c4c7ef90095ae0167d72deccb0046da99657106ec2e86917d"
+    },
+    "leaf": {
+      "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+      "rv32SHA256": "03cc90a712bfdc960508e1c8dc37b2e78b964c91d9d3a27aef55929f1c3e5707",
+      "imageBytes": 2812,
+      "wasmBytes": 1500,
+      "functions": 10,
+      "checks": {
+        "uncheckedRequest": 70,
+        "inspect": 456,
+        "countEvents": 456,
+        "readBurst": 456,
+        "label": 165
+      },
+      "total": 1603,
+      "traps": 101,
+      "rv32Steps": 149879,
+      "orderedDigest": "090ee7181f28bf7fdc5fc4b4583d933ed545afeb206c234ab24d6217b5a82776"
+    },
+    "inline": {
+      "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+      "rv32SHA256": "21fab97772d854ccafd0bbddcaae2c0117cc93e58bb5dffabdecd2673c3a3973",
+      "imageBytes": 2952,
+      "wasmBytes": 1500,
+      "functions": 10,
+      "checks": {
+        "uncheckedRequest": 70,
+        "inspect": 456,
+        "countEvents": 456,
+        "readBurst": 456,
+        "label": 165
+      },
+      "total": 1603,
+      "traps": 101,
+      "rv32Steps": 146509,
+      "orderedDigest": "bb0071af393b869a45b71956609d4bf624c973894a474a38c154102e5c8d3918"
+    }
+  },
+  "adversarialChecks": 39,
+  "adverseArm": {
+    "leaves": [
+      "div",
+      "rem",
+      "branch",
+      "wide"
+    ],
+    "inline": {
+      "leaves": [
+        "div",
+        "rem",
+        "branch",
+        "wide"
+      ],
+      "sites": [
+        {
+          "caller": "chain",
+          "callee": "branch",
+          "addedWords": 11
+        },
+        {
+          "caller": "chain",
+          "callee": "div",
+          "addedWords": 14
+        }
+      ],
+      "addedWords": 25
+    }
+  },
+  "painter": {
+    "render": [
+      {
+        "phase": 0,
+        "words": 7890,
+        "modelInstructions": {
+          "stock": 768445,
+          "leaf": 761749,
+          "leaf-buffered": 761749,
+          "inline": 761749
+        }
+      },
+      {
+        "phase": 5,
+        "words": 8634,
+        "modelInstructions": {
+          "stock": 786077,
+          "leaf": 779285,
+          "leaf-buffered": 779285,
+          "inline": 779285
+        }
+      },
+      {
+        "phase": 8,
+        "words": 7986,
+        "modelInstructions": {
+          "stock": 771064,
+          "leaf": 764332,
+          "leaf-buffered": 764332,
+          "inline": 764332
+        }
+      },
+      {
+        "phase": 23,
+        "words": 8202,
+        "modelInstructions": {
+          "stock": 776203,
+          "leaf": 769489,
+          "leaf-buffered": 769489,
+          "inline": 769489
+        }
+      }
+    ],
+    "compiles": {
+      "stock": {
+        "imageSha256": "da8e33f9d0cd37fe446ad7a4398c142b92df58da048efd16e974aaf7845f4364",
+        "bytes": 23848,
+        "stats": null,
+        "compileMs": [
+          3.041897000000006,
+          2.2842150000000174,
+          1.7205540000000497,
+          1.5018689999999992,
+          1.5923479999999586,
+          1.6527560000000108,
+          1.35158899999999,
+          2.002857000000006,
+          1.3321360000000482,
+          1.2442179999999894,
+          1.2820689999999786,
+          1.142561999999998,
+          1.1222769999999969
+        ]
+      },
+      "leaf": {
+        "imageSha256": "5b6d77ed6f34ac37bb2d0479551565721e70e3425bc93e17ac029accfe86f72b",
+        "bytes": 23776,
+        "stats": {
+          "leaves": [
+            "meshColor",
+            "outlineTable",
+            "capTable"
+          ],
+          "sites": [],
+          "addedWords": 0
+        },
+        "compileMs": [
+          4.211146999999983,
+          2.191978000000006,
+          1.7858620000000087,
+          1.5058760000000007,
+          1.4609119999999507,
+          1.4940050000000156,
+          1.4139749999999935,
+          1.469538,
+          1.3067389999999932,
+          1.249161000000015,
+          1.2027940000000399,
+          2.215494000000035,
+          1.2077879999999936
+        ]
+      },
+      "leaf-buffered": {
+        "imageSha256": "5b6d77ed6f34ac37bb2d0479551565721e70e3425bc93e17ac029accfe86f72b",
+        "bytes": 23776,
+        "stats": {
+          "leaves": [
+            "meshColor",
+            "outlineTable",
+            "capTable"
+          ],
+          "sites": [],
+          "addedWords": 0
+        },
+        "compileMs": [
+          2.972342000000026,
+          2.068263999999999,
+          1.565396000000021,
+          1.5747669999999516,
+          1.8760149999999953,
+          1.4937009999999873,
+          1.807929999999999,
+          1.342897999999991,
+          1.3003290000000334,
+          1.26099099999999,
+          1.6196640000000002,
+          1.1377160000000117,
+          1.2146129999999857
+        ]
+      },
+      "inline": {
+        "imageSha256": "5b6d77ed6f34ac37bb2d0479551565721e70e3425bc93e17ac029accfe86f72b",
+        "bytes": 23776,
+        "stats": {
+          "leaves": [
+            "meshColor",
+            "outlineTable",
+            "capTable"
+          ],
+          "sites": [],
+          "addedWords": 0
+        },
+        "compileMs": [
+          2.978954999999985,
+          2.210825,
+          1.6821390000000065,
+          2.431680999999969,
+          1.5814100000000053,
+          1.7274079999999685,
+          1.4134880000000294,
+          1.2591470000000413,
+          2.0377809999999954,
+          1.2608089999999947,
+          1.1426910000000134,
+          1.2171130000000403,
+          1.7989900000000034
+        ]
+      }
+    }
+  },
+  "chess": {
+    "compiles": {
+      "stock": {
+        "imageSha256": "d576c3fd4a8ba1846e01345a6b8597f9ee058895a4a1bc2f59bb6ea2473d5fa4",
+        "bytes": 26580,
+        "stats": null,
+        "compileMs": [
+          2.8803419999999846,
+          2.127112000000011,
+          3.763576999999998,
+          2.0258320000000367,
+          2.251311000000044,
+          2.1155519999999797,
+          3.1747669999999744,
+          1.5815870000000132,
+          1.659776000000079,
+          1.6562159999999722,
+          2.763930999999957,
+          1.6792329999999538,
+          1.865513999999962
+        ]
+      },
+      "leaf": {
+        "imageSha256": "10572a89ca9a26f144b6a2d46f21484bca4faae9f3d62d8a341f5ec2d657361e",
+        "bytes": 26276,
+        "stats": {
+          "leaves": [
+            "chessOnBoard",
+            "chessSquare",
+            "chessDense",
+            "chessPromotion",
+            "chessPawnStep",
+            "chessRearPiece",
+            "chessRay",
+            "chessKnight",
+            "chessRight",
+            "chessPromotedKind",
+            "chessValue",
+            "chessAbs",
+            "chessFrame",
+            "chessUndo",
+            "chessList"
+          ],
+          "sites": [],
+          "addedWords": 0
+        },
+        "compileMs": [
+          2.149968000000001,
+          2.8236779999999726,
+          2.981933999999967,
+          2.057688999999982,
+          3.1173239999999396,
+          1.6215760000000046,
+          1.7167680000000018,
+          1.6444810000000416,
+          1.9969640000000481,
+          1.8050200000000132,
+          1.727166000000011,
+          1.5718540000000303,
+          1.6992079999999987
+        ]
+      },
+      "leaf-buffered": {
+        "imageSha256": "10572a89ca9a26f144b6a2d46f21484bca4faae9f3d62d8a341f5ec2d657361e",
+        "bytes": 26276,
+        "stats": {
+          "leaves": [
+            "chessOnBoard",
+            "chessSquare",
+            "chessDense",
+            "chessPromotion",
+            "chessPawnStep",
+            "chessRearPiece",
+            "chessRay",
+            "chessKnight",
+            "chessRight",
+            "chessPromotedKind",
+            "chessValue",
+            "chessAbs",
+            "chessFrame",
+            "chessUndo",
+            "chessList"
+          ],
+          "sites": [],
+          "addedWords": 0
+        },
+        "compileMs": [
+          2.010789999999986,
+          2.183567000000039,
+          3.9687250000000063,
+          2.341752999999983,
+          1.6093529999999419,
+          1.6523739999998952,
+          2.119699999999966,
+          1.6671310000000403,
+          1.9334609999999657,
+          1.759572999999932,
+          1.5141120000000683,
+          1.580316000000039,
+          1.5612969999999677
+        ]
+      },
+      "inline": {
+        "imageSha256": "b3b3a270f86ee6d732f434ab9f0d515ff950717f734943a9ed1b3c7ccf5f65fe",
+        "bytes": 26660,
+        "stats": {
+          "leaves": [
+            "chessOnBoard",
+            "chessSquare",
+            "chessDense",
+            "chessPromotion",
+            "chessPawnStep",
+            "chessRearPiece",
+            "chessRay",
+            "chessKnight",
+            "chessRight",
+            "chessPromotedKind",
+            "chessValue",
+            "chessAbs",
+            "chessFrame",
+            "chessUndo",
+            "chessList"
+          ],
+          "sites": [
+            {
+              "caller": "chessMove",
+              "callee": "chessDense",
+              "addedWords": 16
+            },
+            {
+              "caller": "chessMove",
+              "callee": "chessDense",
+              "addedWords": 16
+            },
+            {
+              "caller": "chessFrom",
+              "callee": "chessSquare",
+              "addedWords": 16
+            },
+            {
+              "caller": "chessTo",
+              "callee": "chessSquare",
+              "addedWords": 16
+            },
+            {
+              "caller": "chessAttacked",
+              "callee": "chessPawnStep",
+              "addedWords": 5
+            },
+            {
+              "caller": "chessRemoveRight",
+              "callee": "chessRight",
+              "addedWords": 19
+            },
+            {
+              "caller": "chessMake",
+              "callee": "chessPawnStep",
+              "addedWords": 5
+            },
+            {
+              "caller": "chessMake",
+              "callee": "chessPromotedKind",
+              "addedWords": 3
+            }
+          ],
+          "addedWords": 96
+        },
+        "compileMs": [
+          2.2712769999999978,
+          2.242084000000034,
+          3.359080000000006,
+          2.2914350000000354,
+          1.7290179999999964,
+          2.5201849999999695,
+          2.1480470000000196,
+          1.7305270000000519,
+          2.480841000000055,
+          1.9396409999999378,
+          2.0592880000000378,
+          2.085048000000029,
+          1.65266100000008
+        ]
+      }
+    }
+  }
+}

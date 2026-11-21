@@ -1,0 +1,613 @@
+{
+  "oracleDigest": "f204dc1ad6f54df3b72cc7ac61871b73ac75db6c412d870d52cd44bd77bfd860",
+  "heldOut": {
+    "stock": {
+      "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+      "rv32SHA256": "28224c378dd49295228aa40cfb6a9e3d8456ff629ee71e23f3a72eb0a1cc925e",
+      "imageBytes": 2876,
+      "wasmBytes": 1500,
+      "functions": 10,
+      "checks": {
+        "uncheckedRequest": 70,
+        "inspect": 456,
+        "countEvents": 456,
+        "readBurst": 456,
+        "label": 165
+      },
+      "total": 1603,
+      "traps": 101,
+      "rv32Steps": 158570,
+      "orderedDigest": "66d52400302aab0c4c7ef90095ae0167d72deccb0046da99657106ec2e86917d"
+    },
+    "leaf": {
+      "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+      "rv32SHA256": "03cc90a712bfdc960508e1c8dc37b2e78b964c91d9d3a27aef55929f1c3e5707",
+      "imageBytes": 2812,
+      "wasmBytes": 1500,
+      "functions": 10,
+      "checks": {
+        "uncheckedRequest": 70,
+        "inspect": 456,
+        "countEvents": 456,
+        "readBurst": 456,
+        "label": 165
+      },
+      "total": 1603,
+      "traps": 101,
+      "rv32Steps": 149879,
+      "orderedDigest": "090ee7181f28bf7fdc5fc4b4583d933ed545afeb206c234ab24d6217b5a82776"
+    },
+    "inline": {
+      "sourceSHA256": "98321148a3451e5574001fbc15d0e95ea161e66def826f421d67addf857a9d7f",
+      "rv32SHA256": "21fab97772d854ccafd0bbddcaae2c0117cc93e58bb5dffabdecd2673c3a3973",
+      "imageBytes": 2952,
+      "wasmBytes": 1500,
+      "functions": 10,
+      "checks": {
+        "uncheckedRequest": 70,
+        "inspect": 456,
+        "countEvents": 456,
+        "readBurst": 456,
+        "label": 165
+      },
+      "total": 1603,
+      "traps": 101,
+      "rv32Steps": 146509,
+      "orderedDigest": "bb0071af393b869a45b71956609d4bf624c973894a474a38c154102e5c8d3918"
+    }
+  },
+  "adversarialChecks": 39,
+  "compile": {
+    "chess": {
+      "stock": {
+        "bytes": 26580,
+        "compileMsMinMedianMax": [
+          1.582,
+          2.116,
+          3.764
+        ],
+        "stats": null
+      },
+      "leaf": {
+        "bytes": 26276,
+        "compileMsMinMedianMax": [
+          1.572,
+          1.805,
+          3.117
+        ],
+        "stats": {
+          "leaves": [
+            "chessOnBoard",
+            "chessSquare",
+            "chessDense",
+            "chessPromotion",
+            "chessPawnStep",
+            "chessRearPiece",
+            "chessRay",
+            "chessKnight",
+            "chessRight",
+            "chessPromotedKind",
+            "chessValue",
+            "chessAbs",
+            "chessFrame",
+            "chessUndo",
+            "chessList"
+          ],
+          "sites": [],
+          "addedWords": 0
+        }
+      },
+      "leaf-buffered": {
+        "bytes": 26276,
+        "compileMsMinMedianMax": [
+          1.514,
+          1.76,
+          3.969
+        ],
+        "stats": {
+          "leaves": [
+            "chessOnBoard",
+            "chessSquare",
+            "chessDense",
+            "chessPromotion",
+            "chessPawnStep",
+            "chessRearPiece",
+            "chessRay",
+            "chessKnight",
+            "chessRight",
+            "chessPromotedKind",
+            "chessValue",
+            "chessAbs",
+            "chessFrame",
+            "chessUndo",
+            "chessList"
+          ],
+          "sites": [],
+          "addedWords": 0
+        }
+      },
+      "inline": {
+        "bytes": 26660,
+        "compileMsMinMedianMax": [
+          1.653,
+          2.148,
+          3.359
+        ],
+        "stats": {
+          "leaves": [
+            "chessOnBoard",
+            "chessSquare",
+            "chessDense",
+            "chessPromotion",
+            "chessPawnStep",
+            "chessRearPiece",
+            "chessRay",
+            "chessKnight",
+            "chessRight",
+            "chessPromotedKind",
+            "chessValue",
+            "chessAbs",
+            "chessFrame",
+            "chessUndo",
+            "chessList"
+          ],
+          "sites": [
+            {
+              "caller": "chessMove",
+              "callee": "chessDense",
+              "addedWords": 16
+            },
+            {
+              "caller": "chessMove",
+              "callee": "chessDense",
+              "addedWords": 16
+            },
+            {
+              "caller": "chessFrom",
+              "callee": "chessSquare",
+              "addedWords": 16
+            },
+            {
+              "caller": "chessTo",
+              "callee": "chessSquare",
+              "addedWords": 16
+            },
+            {
+              "caller": "chessAttacked",
+              "callee": "chessPawnStep",
+              "addedWords": 5
+            },
+            {
+              "caller": "chessRemoveRight",
+              "callee": "chessRight",
+              "addedWords": 19
+            },
+            {
+              "caller": "chessMake",
+              "callee": "chessPawnStep",
+              "addedWords": 5
+            },
+            {
+              "caller": "chessMake",
+              "callee": "chessPromotedKind",
+              "addedWords": 3
+            }
+          ],
+          "addedWords": 96
+        }
+      }
+    },
+    "painter": {
+      "stock": {
+        "bytes": 23848,
+        "compileMsMinMedianMax": [
+          1.122,
+          1.502,
+          3.042
+        ],
+        "stats": null
+      },
+      "leaf": {
+        "bytes": 23776,
+        "compileMsMinMedianMax": [
+          1.203,
+          1.47,
+          4.211
+        ],
+        "stats": {
+          "leaves": [
+            "meshColor",
+            "outlineTable",
+            "capTable"
+          ],
+          "sites": [],
+          "addedWords": 0
+        }
+      },
+      "leaf-buffered": {
+        "bytes": 23776,
+        "compileMsMinMedianMax": [
+          1.138,
+          1.565,
+          2.972
+        ],
+        "stats": {
+          "leaves": [
+            "meshColor",
+            "outlineTable",
+            "capTable"
+          ],
+          "sites": [],
+          "addedWords": 0
+        }
+      },
+      "inline": {
+        "bytes": 23776,
+        "compileMsMinMedianMax": [
+          1.143,
+          1.682,
+          2.979
+        ],
+        "stats": {
+          "leaves": [
+            "meshColor",
+            "outlineTable",
+            "capTable"
+          ],
+          "sites": [],
+          "addedWords": 0
+        }
+      }
+    }
+  },
+  "painterPhases": [
+    {
+      "phase": 0,
+      "words": 7890,
+      "modelInstructions": {
+        "stock": 768445,
+        "leaf": 761749,
+        "leaf-buffered": 761749,
+        "inline": 761749
+      }
+    },
+    {
+      "phase": 5,
+      "words": 8634,
+      "modelInstructions": {
+        "stock": 786077,
+        "leaf": 779285,
+        "leaf-buffered": 779285,
+        "inline": 779285
+      }
+    },
+    {
+      "phase": 8,
+      "words": 7986,
+      "modelInstructions": {
+        "stock": 771064,
+        "leaf": 764332,
+        "leaf-buffered": 764332,
+        "inline": 764332
+      }
+    },
+    {
+      "phase": 23,
+      "words": 8202,
+      "modelInstructions": {
+        "stock": 776203,
+        "leaf": 769489,
+        "leaf-buffered": 769489,
+        "inline": 769489
+      }
+    }
+  ],
+  "chessModel": [
+    {
+      "position": "opening",
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3690,
+        "score": 30,
+        "completed": 3,
+        "nodes": 871,
+        "slices": 41,
+        "uci": "b1c3"
+      },
+      "instructions": {
+        "stock": 31850741,
+        "leaf": 29319104,
+        "inline": 29217042
+      }
+    },
+    {
+      "position": "opening",
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3690,
+        "score": 0,
+        "completed": 4,
+        "nodes": 4438,
+        "slices": 243,
+        "uci": "b1c3"
+      },
+      "instructions": {
+        "stock": 167379205,
+        "leaf": 154434054,
+        "inline": 153797882
+      }
+    },
+    {
+      "position": "opening",
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3690,
+        "score": 0,
+        "completed": 4,
+        "nodes": 30000,
+        "slices": 1604,
+        "uci": "b1c3"
+      },
+      "instructions": {
+        "stock": 1132975226,
+        "leaf": 1045065986,
+        "inline": 1040967064
+      }
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 82,
+        "score": 12,
+        "completed": 3,
+        "nodes": 1458,
+        "slices": 70,
+        "uci": "b8c6"
+      },
+      "instructions": {
+        "stock": 57084113,
+        "leaf": 52576274,
+        "inline": 52351632
+      }
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 82,
+        "score": -18,
+        "completed": 4,
+        "nodes": 14868,
+        "slices": 835,
+        "uci": "b8c6"
+      },
+      "instructions": {
+        "stock": 599378306,
+        "leaf": 552936111,
+        "inline": 550525553
+      }
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 82,
+        "score": -18,
+        "completed": 4,
+        "nodes": 30000,
+        "slices": 1674,
+        "uci": "b8c6"
+      },
+      "instructions": {
+        "stock": 1209371942,
+        "leaf": 1116042610,
+        "inline": 1111013262
+      }
+    },
+    {
+      "position": "kiwipete",
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 7194,
+        "slices": 453,
+        "uci": "e2a6"
+      },
+      "instructions": {
+        "stock": 351896816,
+        "leaf": 325506570,
+        "inline": 323807662
+      }
+    },
+    {
+      "position": "kiwipete",
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 30000,
+        "slices": 2072,
+        "uci": "e2a6"
+      },
+      "instructions": {
+        "stock": 1503799725,
+        "leaf": 1394959697,
+        "inline": 1387640567
+      }
+    },
+    {
+      "position": "kiwipete",
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3344,
+        "score": 149,
+        "completed": 3,
+        "nodes": 30000,
+        "slices": 2072,
+        "uci": "e2a6"
+      },
+      "instructions": {
+        "stock": 1503799725,
+        "leaf": 1394959697,
+        "inline": 1387640567
+      }
+    },
+    {
+      "position": "rook-ending",
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3429,
+        "score": 6,
+        "completed": 3,
+        "nodes": 905,
+        "slices": 49,
+        "uci": "f2f4"
+      },
+      "instructions": {
+        "stock": 24665359,
+        "leaf": 22800245,
+        "inline": 22684903
+      }
+    },
+    {
+      "position": "rook-ending",
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3592,
+        "score": -5,
+        "completed": 4,
+        "nodes": 6313,
+        "slices": 374,
+        "uci": "a1a7"
+      },
+      "instructions": {
+        "stock": 172312580,
+        "leaf": 159514428,
+        "inline": 158702770
+      }
+    },
+    {
+      "position": "rook-ending",
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3592,
+        "score": -5,
+        "completed": 4,
+        "nodes": 30000,
+        "slices": 1680,
+        "uci": "a1a7"
+      },
+      "instructions": {
+        "stock": 810038073,
+        "leaf": 749107837,
+        "inline": 745457753
+      }
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 3,
+      "budget": 30000,
+      "result": {
+        "bestMove": 2851,
+        "score": 141,
+        "completed": 3,
+        "nodes": 148,
+        "slices": 9,
+        "uci": "e3d4"
+      },
+      "instructions": {
+        "stock": 3262534,
+        "leaf": 3011302,
+        "inline": 3001236
+      }
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 4,
+      "budget": 30000,
+      "result": {
+        "bestMove": 2851,
+        "score": 141,
+        "completed": 4,
+        "nodes": 406,
+        "slices": 24,
+        "uci": "e3d4"
+      },
+      "instructions": {
+        "stock": 8906448,
+        "leaf": 8225773,
+        "inline": 8197621
+      }
+    },
+    {
+      "position": "pawn-ending",
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 2851,
+        "score": 141,
+        "completed": 5,
+        "nodes": 1729,
+        "slices": 91,
+        "uci": "e3d4"
+      },
+      "instructions": {
+        "stock": 38445538,
+        "leaf": 35474442,
+        "inline": 35356542
+      }
+    },
+    {
+      "position": "after-e2e4",
+      "depth": 4,
+      "budget": 1600,
+      "result": {
+        "bestMove": 82,
+        "score": 12,
+        "completed": 3,
+        "nodes": 1600,
+        "slices": 78,
+        "uci": "b8c6"
+      },
+      "instructions": {
+        "stock": 62911885,
+        "leaf": 57953030,
+        "inline": 57704294
+      }
+    },
+    {
+      "position": "mate-in-one",
+      "depth": 5,
+      "budget": 30000,
+      "result": {
+        "bestMove": 3844,
+        "score": 29999,
+        "completed": 1,
+        "nodes": 21,
+        "slices": 2,
+        "uci": "e1e8"
+      },
+      "instructions": {
+        "stock": 495973,
+        "leaf": 457942,
+        "inline": 456438
+      }
+    }
+  ]
+}
