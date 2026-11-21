@@ -1,0 +1,8 @@
+Ok, do the attached stuff. Use the traditional researcher / reviewer / research lab agent structure. Give them all access to the REPL and all the necessary documentation (each gets their own sandbox).
+
+ 
+  Everybody (you included): Keep a detailed diary as you work, with the format according to the diary skill
+  Chose opus high for researchers
+  Each researchers  when done, and you once you have all the results: write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no
+  analogies, see skill).
+   Commit and push the bsidian vault when done (go-go-parc vault).   Make it pedagogical to explain your research in detail and with all the context necessary for newcomers.
