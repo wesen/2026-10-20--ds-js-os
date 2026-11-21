@@ -1,0 +1,13 @@
+{
+  "model": [
+    "claude-opus-5-5"
+  ],
+  "effort": "high",
+  "tools": [],
+  "method": "isolated design consultation",
+  "designSHA256": "51efcc15d91e931ab6c4f5cca7224e36fd51cc7018960cca37707d3c30cacdd4",
+  "articleModel": [
+    "claude-opus-5-5"
+  ],
+  "articleResearchTextSHA256": "e41516ae0a689e79b3e52571eee47a6eabd534f18ee350fd367c40910a7a67eb"
+}
