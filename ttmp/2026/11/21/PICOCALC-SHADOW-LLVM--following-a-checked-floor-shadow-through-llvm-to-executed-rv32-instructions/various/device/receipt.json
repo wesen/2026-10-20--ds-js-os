@@ -1,0 +1,20 @@
+{
+  "rows": 576,
+  "image": {
+    "sha256": "33145577c680451e92fe79402c1672b4b0e2bec57ad9a08d7ce928e269c43fa9",
+    "bytes": 530032,
+    "port": "/dev/ttyACM0"
+  },
+  "restored": "e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5",
+  "worlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "benchSHA": "2b6b9db1d8bc2b1ea6f17df8061eb367bf497fa4b95fc5510c7a5503b0078a90"
+}

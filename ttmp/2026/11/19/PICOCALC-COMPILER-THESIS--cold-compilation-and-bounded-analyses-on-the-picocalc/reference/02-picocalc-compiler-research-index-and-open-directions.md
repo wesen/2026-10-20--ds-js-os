@@ -171,3 +171,5 @@ The optional native compiler now accepts `pie-empty` for a proved eight-lane pro
 ## Scalar shadow code generation on the ESP32-P4
 
 The same Typed frame dropped from 55.6635 to 53.0440 ms with optional guarded-return lowering. Single-caller attribution, two GCC representation controls, 744 semantic cases and a held-out Chess evaluation accompany the twelve-scene physical comparison. Default compilation still follows the earlier backend path. [Shadow study, code, REPL and reports](../../../21/PICOCALC-SHADOW-CODEGEN--compiling-the-same-floor-shadow-algorithm-on-the-esp32-p4/index.md)
+
+On the checked shadow predicate the follow-up measured GCC at 136.66, LLVM at 144.31 and Typed at 382.25 cycles per query in one P4 image. The JS trace REPL links 18 promoted stack objects and twelve-to-one capacity-load reuse to the physical comparison and exact guest instruction counts. [LLVM shadow investigation](../../../21/PICOCALC-SHADOW-LLVM--following-a-checked-floor-shadow-through-llvm-to-executed-rv32-instructions/index.md)

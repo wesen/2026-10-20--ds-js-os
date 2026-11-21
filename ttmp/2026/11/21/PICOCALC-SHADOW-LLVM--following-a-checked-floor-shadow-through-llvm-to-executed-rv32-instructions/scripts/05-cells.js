@@ -20,7 +20,8 @@ q.run(run.events("middle").where(e=>[5,6,17,73,77,78,79,80,171].includes(e.ordin
 // %% Compare emitted work on the verified sequence of real opening floor pixels.
 Object.entries(census).map(([arm,r])=>({arm,bytes:r.kernelBytes,calls:r.calls,
     instructions:r.totals.instructions,stack:r.totals.stackLW+r.totals.stackSW,
-    capacityLoads:r.totals.dataLW,elementReads:r.totals.dataLHU}));
+    capacityLoads:r.totals.dataLW,elementReads:r.totals.dataLHU,
+    boundsBranchSites:r.totals.boundsBranchSites,boundsBranches:r.totals.boundsBranches}));
 // %% Ask the board what each alternative costs on one route.
 const labels=["gcc","llvm","nolsr","fastreg","wrap","typed"];
 const med = a => {const b=a.slice().sort((u,v)=>u-v);if(!b.length)throw Error("empty");return (b[(b.length-1)>>1]+b[b.length>>1])/2;};

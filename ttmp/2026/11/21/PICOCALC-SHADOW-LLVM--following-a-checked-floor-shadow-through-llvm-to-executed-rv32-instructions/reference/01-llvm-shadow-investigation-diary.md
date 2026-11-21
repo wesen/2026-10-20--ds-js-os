@@ -72,3 +72,51 @@ Start with scripts/01-capture.py, scripts/05-cells.js and various/ir-session.jso
 ### Technical details
 
 Each compilation has 172 middle-end and 112 backend snapshots. The same target calling convention is used by the hardware experiments. The checked-source wrapper uses __builtin_abs and a symbol alias solely to make the previously internal predicate available to the driver.
+
+## Step 2. Compare linked functions across six treatments and join the results in the REPL
+
+I tested the checked arm with LLVM on the device, then ran the same linked instruction bytes on the host and checked each predicate return. The compiler alternatives use the same coordinates and scalar algorithm. This step provides separate evidence for capacity reuse, physical register assignment, and address induction.
+
+### Prompt context
+
+See Step 1. The user specifically requested the REPL. I retained the entire pass archive, exact JS cells, raw timing batches, census and per-PC evidence for reproduction.
+
+### What I did
+
+Built a standalone IDF 5.4.2 diagnostic without touching production sources. Added compiled LLVM objects, selected the existing optimized Typed entry by its pinned image hash and preserved the previous checked C predicate. Ran six rotated arms, twelve natural streams and four single-sphere path cohorts. Used scripts/04-trace.py to extract each relocated body from the timed ELF, execute it in QEMU, validate all 19,477 booleans and count every executed PC. Queried the combined results in the dedicated trace REPL. Committed the first checkpoint at 38d3b75.
+
+### Why
+
+LLVM pass metrics count static program sites. Only execution reveals their frequency. Only a physical timed run establishes cycles on the P4. Collecting all three makes it possible to test a prediction and report when a host metric gives the opposite preference from the board.
+
+### What worked
+
+GCC and LLVM evaluated the natural opening queries in 136.66 and 144.31 cycles. Typed required 382.25. The Go-hosted JS session traced local promotion and capacity-load reuse and counted 1,624,336 excess direct stack accesses plus 245,451 excess capacity loads. The two disjoint classes account for 60.35% of the guest instruction gap. Disabling optimized register allocation increased LLVM time by 91.64%; disabling loop strength reduction increased natural opening time by 3.92% and improved the one-sphere X-only path. Verified application health after the runner restored the playable firmware.
+
+### What didn't work
+
+The first instruction census stopped on the assertion that Typed must reproduce the prior 5,428,633 instructions. The captured QEMU PCs summed to 5,428,633, while the disassembly parser counted 5,163,705. A whitespace pattern consumed the next line after each operand-less ebreak, hiding twelve instruction addresses. I restricted the pattern to horizontal whitespace, added an assertion that every executed PC was decoded, enabled disassembly of zero encodings for cold traps and reran all six binaries. A trial decode of the raw UART log as strict UTF-8 also encountered boot noise; the importer preserves a raw digest and parses only identified measurement rows.
+
+### What I learned
+
+The larger pass is not necessarily the right next implementation. A bounded capacity reuse rule has a precise prediction and small scope. The optimized-versus-fast LLVM comparison shows much greater potential for cross-block value placement. Counting stack operations alone would incorrectly rank the two LSR treatments.
+
+### What was tricky to build
+
+The exported native symbol has the checked kernel’s size for GCC and LLVM. Typed exposes an entry within one larger native image. I verified both the full image digest and the sliced 1,060-byte body. Validating the branch and payload totals also required distinguishing an explicit conditional jump to a C trap from Typed's inverted conditional branch over a trap.
+
+### What warrants a second pair of eyes
+
+A position-relative function body must execute correctly after moving to the host harness. The per-call result oracle and the previous independently recorded Typed instruction total both passed. Cross-check the local source for the 0xf1 emitter; this routine retrieves the original index and receiver from stack homes before loading capacity.
+
+### What should be done in the future
+
+Prototype capacity reuse and register forwarding separately. Check their combination, trap observable behavior, per-PC counts and full-frame effects before proposing a default.
+
+### Code review instructions
+
+Read the report, then run scripts/06-repl.py against the dedicated server. Each response contains actual code or original pass references. Compare the paired cycles and the per-PC frequencies rather than comparing a host instruction tally with a physical timer.
+
+### Technical details
+
+The six kernels verified the same 19,477 opening calls in QEMU. The board independently verified natural inputs for all twelve fixtures plus four single-sphere strata and recorded 576 batches. The board image digest is recorded in various/device/receipt.json, the compiled kernel digests and exact linked addresses in various/native/pcs.json. The full REPL session ID is recorded in various/repl.json.
