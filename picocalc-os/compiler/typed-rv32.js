@@ -104,11 +104,12 @@ class FunctionCode {
             }
             if (op === 0x6d) {
                 const safe = {};
-                // No operand lives in an argument register between operations.
-                this.constant(A0, -1);
-                this.branch(1, b, A0, safe);
-                this.constant(A0, -2147483648);
-                this.emit(instruction.b(1, a, A0, 8));
+                // A frameless function still keeps its parameters in argument registers.
+                const check = this.frameless ? T5 : A0;
+                this.constant(check, -1);
+                this.branch(1, b, check, safe);
+                this.constant(check, -2147483648);
+                this.emit(instruction.b(1, a, check, 8));
                 this.emit(0x00100073);
                 this.mark(safe);
             }
@@ -224,6 +225,29 @@ class FunctionCode {
             this.push(out);
             break;
         }
+        case 0xf1: { // checked UTF-16 address, before any payload load or write RHS
+            const receiver = this.cell(), position = this.cell();
+            this.load(T5, 4 * position);
+            this.load(T6, 4 * receiver);
+            this.load(A0, 0, T6);
+            this.emit(instruction.b(6, T5, A0, 8)); // unsigned position < capacity
+            this.emit(0x00100073);
+            const out = this.resultRegister();
+            this.emit(instruction.i(0x13, out, 1, T5, 1));
+            this.emit(instruction.r(0x33, out, 0, T6, out));
+            this.push(out);
+            break;
+        }
+        case 0xf2: { // ordered UTF-16 stores after the complete range check
+            const address = this.cell();
+            const value = this.program.literals[this.cell()];
+            this.load(T5, 4 * address);
+            for (let i = 0; i < value.length; i++) {
+                this.constant(T6, value.charCodeAt(i));
+                this.store(T6, 4 + 2 * i, T5, 1);
+            }
+            break;
+        }
         default: this.binary(op);
         }
         return false;
@@ -248,6 +272,53 @@ class FunctionCode {
     }
 }
 
+// An allowlist keeps any new operation with a possible frame dependency on the
+// ordinary path until its frameless lowering is reviewed.
+const LEAF_OPERANDS = new Map([
+    [0x02,1],[0x04,1],[0x05,0],[0x0b,0],[0x0c,1],[0x0d,1],[0x0f,0],
+    [0x1a,0],[0x20,1],[0x41,1],[0x45,0],
+    [0x46,0],[0x47,0],[0x48,0],[0x4a,0],[0x4c,0],[0x4e,0],[0x4f,0],
+    ...Array.from(ALU.keys(), op => [op,0]),
+]);
+const LEAF_SPILL = Symbol("frameless function needs an operand spill");
+
+class LeafCode extends FunctionCode {
+    spill() { throw LEAF_SPILL; }
+
+    step(op) {
+        if (op !== 0x20) return super.step(op);
+        const local = this.cell();
+        if (local >= this.program.params.length) throw LEAF_SPILL;
+        this.push(A0 + local);
+        return false;
+    }
+
+    lower() {
+        this.frameless = true;
+        while (this.at < this.program.code.length && !this.step(this.cell())) {}
+        if (this.at !== this.program.code.length || this.control.length) throw LEAF_SPILL;
+        this.mark(this.exit);
+        this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
+        return this;
+    }
+}
+
+function lowerLeaf(fn, callables, targets) {
+    if (fn.nlocals || fn.code.length > 128 || fn.params.length > 8 ||
+        !fn.params.every(type => type === "i32" || type === "bool")) return null;
+    for (let at = 0; at < fn.code.length;) {
+        const operands = LEAF_OPERANDS.get(fn.code[at++]);
+        if (operands === undefined || at + operands > fn.code.length) return null;
+        at += operands;
+    }
+    try {
+        return new LeafCode(fn, callables, targets).lower();
+    } catch (error) {
+        if (error !== LEAF_SPILL) throw error;
+        return null;
+    }
+}
+
 function compile(source, imports = [], maxSourceLength, options) {
     const imported = imports.map((fn, index) => ({...fn, index}));
     const targets = imported.map(fn => ({importIndex: fn.index}));
@@ -260,7 +331,11 @@ function compile(source, imports = [], maxSourceLength, options) {
         }
     }
 
-    function lower(fn) { code.push(new FunctionCode(fn, callables, targets).lower()); }
+    function lower(fn) {
+        code.push(lowerLeaf(fn, callables, targets) ?? new FunctionCode(fn, callables, targets).lower());
+        // The lowered code retains the descriptor, so release the function-local literal table.
+        if (fn.literals) fn.literals = null;
+    }
 
     let lowerError;
     function consume(fn) {

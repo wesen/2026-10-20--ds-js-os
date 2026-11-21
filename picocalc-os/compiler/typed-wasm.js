@@ -560,12 +560,16 @@ class FunctionEmitter {
         this.code.push(OP.add);
         this.emitIndex(OP.get, receiver);
         this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
+        this.emitLiteralStores(address, value);
+        return value.length;
+    }
+
+    emitLiteralStores(address, value) {
         for (let i = 0; i < value.length; i++) {
             this.emitIndex(OP.get, address);
             this.emitConst(value.charCodeAt(i));
             this.emitMemory(0x3b, 1, 4 + 2 * i);
         }
-        return value.length;
     }
 
     call(name) {
@@ -860,7 +864,20 @@ class NumericFunctionEmitter extends FunctionEmitter {
     emitConst(value) { this.code.push(OP.const, value); }
     emitIndex(op, index) { this.code.push(op, index); }
     emitMemory(op, alignment, offset) { this.code.push(op, alignment, offset); }
-    finish(fn) { return fn; }
+
+    codeUnitAddress(receiver, position) {
+        this.code.push(0xf1, receiver, position); // checked UTF-16 address
+    }
+
+    emitLiteralStores(address, value) {
+        this.literals ??= [];
+        this.code.push(0xf2, address, this.literals.push(value) - 1); // checked literal stores
+    }
+
+    finish(fn) {
+        if (this.literals) fn.literals = this.literals;
+        return fn;
+    }
 }
 
 function scanSignatures(lex, records, declared, functionBase, enums, distinct, asyncSpans = false) {
