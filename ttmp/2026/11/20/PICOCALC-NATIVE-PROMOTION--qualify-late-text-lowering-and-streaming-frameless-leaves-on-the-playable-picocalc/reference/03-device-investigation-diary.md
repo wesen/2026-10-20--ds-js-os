@@ -1,7 +1,7 @@
 ---
 Title: Device investigation diary
 Ticket: PICOCALC-NATIVE-PROMOTION
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -11,7 +11,7 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: ""
+Summary: "Physical preflight, matched ordinary release trials, verified rollback, and successful candidate handoff."
 LastUpdated: 2026-11-20T20:01:06.925902032-05:00
 WhatFor: ""
 WhenToUse: ""
@@ -182,3 +182,75 @@ Inspect `opening` in the workflow and the candidate runner's exception handler. 
 ### Technical details
 
 The attested candidate contains 4,331,776 bytes. Its app digest is `33b439d0a7bcdf85f01b373ed1ec71d654ce60d7079f2569fce4de859f29e813`. The release profile is built at revision `8052db721eda91720010867915b70064b33912f0`. The ordinary prior application contains 4,328,368 bytes. esptool verifies the 3,072-byte partition table separately from either application.
+
+## Step 4. Qualify the candidate and release the serial console
+
+With the steady opening pose established, the candidate completed the paired ordinary trials. The numerical comparison and screenshots below derive from the final three-boot run for each arm; the earlier rollback data remain separately identified.
+
+### Prompt Context
+
+**User prompt (verbatim)** See Step 1.
+
+**Assistant interpretation** Leave the verified candidate installed when all ordinary release gates pass, then hand the board to the director for the separately instrumented PSRAM study.
+
+**Inferred user intent** Preserve one usable production device and distinguish the game as experienced through its UI from a dedicated guest-code experiment.
+
+**Commit (code)** 90bbfa1 established the stable opening predicate. This entry accompanies the final physical receipts.
+
+### What I did
+
+I repeated three explicit candidate software cold boots, three complete opening replies and the gated Editor create/edit/save/reopen/edit/save/remove sequence. The candidate runner re-read both flash regions after the workflow, reset the board, checked all eight expected native world filenames and states, verified one installed painter and sampled the keyboard bus. A separate offline check reconstructed all 102,400 RGB565 pixels from the retained candidate PNG, recovered the full UART framebuffer byte-for-byte and compared the 95,360-pixel app body with the independent reference. [Readbacks and image digest](../various/device/physical-readback.json)
+
+### Why
+
+Compiling and linking successfully does not exercise the normally loaded app, scheduler, backing store and display together. The director's independent workload isolates a narrower part of those costs. Measuring both boundaries provides an answer to different practical questions.
+
+### What worked
+
+Median Chess world CPU fell from 246.665 to 212.009 ms. The median upper observation of the second paint fell from 463.171 to 400.228 ms. The cold Chess compiler duration fell from 3,637.659 to 1,893.521 ms. From the normal Editor app, both file revisions and the edited screen matched across arms. After the final cold boot the keyboard was actively polling and the painter had compiled once with zero rejects. The application and partition table matched their expected flash bytes. [Final health](../various/device/candidate-final.json) [Paired measurements](../various/device/comparison.json)
+
+### What didn't work
+
+Files used 280.497 ms to compile on the candidate versus 273.617 ms on the prior release, a 2.5% cold slowdown. Its median tracked peak rose from 480,392 to 490,776 bytes. Each arm recorded one Editor save latency. The filesystem timings from these single saves cannot support an Editor speed claim.
+
+### What I learned
+
+Kernel world CPU is an elapsed-time account for segments of the Chess turn. External input, waiting between segments, a separate painter and the sampled UART completion boundary explain why the observed app repaint and the world's CPU cannot be treated as the same number. The module container remains fixed even where compiler time or peak compiler heap changes substantially.
+
+### What was tricky to build
+
+The system bar can change independently of the application and the startup demonstration can temporarily cover real game content. The target equality includes every visible app pixel and excludes only the top 22 system rows. Timed moves begin once a full opening match has established a settled board. The archival PNG is the entire physical framebuffer including that system bar.
+
+### What warrants a second pair of eyes
+
+Compare all three CPU deltas and both sides of every host poll bracket, including SPI-byte and paint counts. The operation is a fixed position in the same world under two firmware versions, with every old trial preceding every new trial. The hidden device search tuple cannot be obtained from the ordinary console; the visible result and the independent source/reference tuple have different provenance.
+
+### What should be done in the future
+
+The director has sole serial ownership for the complementary full-ELF search measurement and will return the board to this same qualified firmware. A broader UI study could vary positions and repeat Editor saves on a controlled filesystem.
+
+### Code review instructions
+
+Run the offline aggregation from this ticket without attaching a board.
+
+```sh
+python scripts/device/04-summarize.py various/device > /tmp/ordinary-comparison.json
+diff -u various/device/comparison.json /tmp/ordinary-comparison.json
+```
+
+For an authorized physical replay on the prior ordinary release, use a checkout of this ticket and the corresponding complete ESP-IDF application and partition-table directories. These are the commands used on the research workstation, with new empty output paths for each run. The SHA checks protect the historical input and installed image, and the final command leaves the new application installed on success. Each arm's source files, release profile, and hardware budget came from the official build. [Build identity](../various/release/build.json)
+
+```sh
+P4PY=/home/manuel/.espressif/python_env/idf5.4_py3.11_env/bin/python
+"$P4PY" -B scripts/device/01-baseline.py /tmp/ordinary-cold \
+  --previous-build /tmp/chess-camera-release/build
+"$P4PY" -B scripts/device/02-workflow.py /tmp/ordinary-baseline
+"$P4PY" -B scripts/device/03-candidate.py /tmp/picocalc-native-promotion-rev1/build \
+  33b439d0a7bcdf85f01b373ed1ec71d654ce60d7079f2569fce4de859f29e813 \
+  /tmp/ordinary-baseline /tmp/ordinary-candidate \
+  --previous-build /tmp/chess-camera-release/build
+```
+
+### Technical details
+
+The candidate reply PNG has SHA-256 `68a0f3371728831784ad305ad16ddfcc0f66a77bf3452ec9a2f7d2d763a5ba57`; the RGB565 board and hint digest is `5ebdc7118d57aac83f7fc5702dab8db5546d8a18e32a7c6c9dc9b8b28644c55b`. Archive copies omit raw serial and RGB565 dumps. The browser-readable PNG uses a reversible expansion of each physical 5- or 6-bit color component to eight bits. [Ordinary device report](../analysis/04-what-changes-for-the-person-playing-chess.md)

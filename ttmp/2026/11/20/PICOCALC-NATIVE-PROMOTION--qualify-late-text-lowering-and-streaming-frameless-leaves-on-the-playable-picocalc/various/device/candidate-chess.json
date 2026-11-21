@@ -1,0 +1,70 @@
+{
+  "opening": {
+    "opening": "5d8b54bd3255b68c37adfb55724a88db574b6fa7c74e4addf82df445cfa35fc8"
+  },
+  "independentOpeningReply": {
+    "label": "turn-1",
+    "caption": "1. e2e4   b8c6",
+    "keys": [
+      "enter",
+      "up",
+      "up",
+      "enter"
+    ],
+    "yaw": 0,
+    "board": "c0bdebac9999999900a000000000000000001000000000001111011142356324",
+    "masks": "0000000000000000",
+    "fields": [
+      36,
+      64,
+      1,
+      18,
+      0,
+      0,
+      3,
+      1600,
+      12
+    ]
+  },
+  "rows": [
+    {
+      "block": 0,
+      "chessWorldCpuMs": 212.009,
+      "worldTurns": 1,
+      "hostCompletionBracketMs": [
+        315.721,
+        405.732
+      ],
+      "painterPacketDelta": 2,
+      "painterPaintDelta": 2,
+      "spiByteDelta": 23628,
+      "replyAppSHA256": "5ebdc7118d57aac83f7fc5702dab8db5546d8a18e32a7c6c9dc9b8b28644c55b"
+    },
+    {
+      "block": 1,
+      "chessWorldCpuMs": 212.385,
+      "worldTurns": 1,
+      "hostCompletionBracketMs": [
+        317.423,
+        400.228
+      ],
+      "painterPacketDelta": 2,
+      "painterPaintDelta": 2,
+      "spiByteDelta": 23628,
+      "replyAppSHA256": "5ebdc7118d57aac83f7fc5702dab8db5546d8a18e32a7c6c9dc9b8b28644c55b"
+    },
+    {
+      "block": 2,
+      "chessWorldCpuMs": 211.43,
+      "worldTurns": 1,
+      "hostCompletionBracketMs": [
+        317.434,
+        398.982
+      ],
+      "painterPacketDelta": 2,
+      "painterPaintDelta": 2,
+      "spiByteDelta": 23628,
+      "replyAppSHA256": "5ebdc7118d57aac83f7fc5702dab8db5546d8a18e32a7c6c9dc9b8b28644c55b"
+    }
+  ]
+}

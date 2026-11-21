@@ -1,0 +1,16 @@
+{
+  "firstSaveHostMs": 441.243,
+  "expectedFirst": "alpha text\nbeTa",
+  "readback": [
+    "alpha text",
+    "beTa"
+  ],
+  "editorWorldCpuMs": 17.102,
+  "editorWorldTurns": 19,
+  "editedScreen": "f1ec6af4664d0f92c9a291fd7c39afd1397030e167c929a8edf81b01b2c6c412",
+  "reopenedReadback": [
+    "alpha text",
+    "beTa7"
+  ],
+  "scratchRemoved": true
+}

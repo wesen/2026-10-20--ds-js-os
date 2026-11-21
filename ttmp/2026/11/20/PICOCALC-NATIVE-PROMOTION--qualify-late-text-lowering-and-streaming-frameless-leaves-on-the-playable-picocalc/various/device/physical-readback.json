@@ -1,0 +1,30 @@
+{
+  "applicationSHA256": "33b439d0a7bcdf85f01b373ed1ec71d654ce60d7079f2569fce4de859f29e813",
+  "partitionSHA256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "checks": {
+    "previous-verified": [
+      "Verifying 0x420bb0 (4328368) bytes @ 0x00010000 in flash against /tmp/chess-camera-release/build/picocalc-os-p4.bin...",
+      "-- verify OK (digest matched)",
+      "Verifying 0xc00 (3072) bytes @ 0x00008000 in flash against /tmp/chess-camera-release/build/partition_table/partition-table.bin...",
+      "-- verify OK (digest matched)"
+    ],
+    "read-candidate": [
+      "Verifying 0x421900 (4331776) bytes @ 0x00010000 in flash against /tmp/picocalc-native-promotion-rev1/build/picocalc-os-p4.bin...",
+      "-- verify OK (digest matched)",
+      "Verifying 0xc00 (3072) bytes @ 0x00008000 in flash against /tmp/picocalc-native-promotion-rev1/build/partition_table/partition-table.bin...",
+      "-- verify OK (digest matched)"
+    ],
+    "candidate-final": [
+      "Verifying 0x421900 (4331776) bytes @ 0x00010000 in flash against /tmp/picocalc-native-promotion-rev1/build/picocalc-os-p4.bin...",
+      "-- verify OK (digest matched)",
+      "Verifying 0xc00 (3072) bytes @ 0x00008000 in flash against /tmp/picocalc-native-promotion-rev1/build/partition_table/partition-table.bin...",
+      "-- verify OK (digest matched)"
+    ]
+  },
+  "candidatePngSHA256": "68a0f3371728831784ad305ad16ddfcc0f66a77bf3452ec9a2f7d2d763a5ba57",
+  "completeRGB565SHA256": "689fa9e38fc31bc4f5cb25cf45bb22629ba255975af20429912aa36ae52a83d2",
+  "completeRGB565CRC32": "f429cd3d",
+  "appBodyRGB565SHA256": "5ebdc7118d57aac83f7fc5702dab8db5546d8a18e32a7c6c9dc9b8b28644c55b",
+  "screenshotPixelsReconstructed": 102400,
+  "appBodyPixelsCompared": 95360
+}
