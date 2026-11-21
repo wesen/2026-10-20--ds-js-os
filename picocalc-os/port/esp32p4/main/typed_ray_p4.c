@@ -35,17 +35,31 @@ static buffer *new_buffer(uint32_t capacity) {
 }
 
 static bool install(int program) {
-    static const char *sources[] = {"typed-ray/main.typed","typed-ray/main.typed","typed-ray/SPAN","typed-ray/SPAN",
-                                    "typed-ray/main.typed","typed-ray/main.typed","typed-ray/SHADOW","typed-ray/SHADOW","typed-ray/main.typed"};
-    static const char *backends[] = {NULL,"typed-ray/DIV",NULL,"typed-ray/DIV","typed-ray/PACKED","typed-ray/INFERRED",NULL,"typed-ray/DIV","typed-ray/MATCHED"};
-    if (program < 0 || program >= (int)(sizeof(sources)/sizeof(sources[0]))) return false;
-    const p4_compile_limits limits = {.heap_bytes=4*1024*1024,.duration_us=8000000,.rv32_backend=backends[program]};
+    static const struct { const char *source, *backend; } programs[] = {
+        {"typed-ray/main.typed", NULL},
+        {"typed-ray/main.typed", "typed-ray/DIV"},
+        {"typed-ray/SPAN", NULL},
+        {"typed-ray/SPAN", "typed-ray/DIV"},
+        {"typed-ray/main.typed", "typed-ray/PACKED"},
+        {"typed-ray/main.typed", "typed-ray/INFERRED"},
+        {"typed-ray/SHADOW", NULL},
+        {"typed-ray/SHADOW", "typed-ray/DIV"},
+        {"typed-ray/main.typed", "typed-ray/MATCHED"},
+        {"typed-ray/main.typed", "typed-ray/CHECK_STACK"},
+        {"typed-ray/main.typed", "typed-ray/HOIST_STACK"},
+        {"typed-ray/main.typed", "typed-ray/CHECK_REG"},
+        {"typed-ray/main.typed", "typed-ray/HOIST_REG"},
+        {"typed-ray/main.typed", "typed-ray/SKIP_REG"},
+    };
+    if (program < 0 || program >= (int)(sizeof(programs)/sizeof(programs[0]))) return false;
+    const char *source_name = programs[program].source;
+    const p4_compile_limits limits = {.heap_bytes=4*1024*1024,.duration_us=8000000,.rv32_backend=programs[program].backend};
     size_t ns=0, nt=0, ni=0;
     int64_t begin=port_clock();
-    char *source=p4_bundle_read(sources[program],&ns,NULL,0);
+    char *source=p4_bundle_read(source_name,&ns,NULL,0);
     // Four entry trampolines are shared with the closed Candela slot template.
     char *slot=p4_bundle_read("candela/slot.elf",&nt,NULL,0);
-    char *image=source && slot ? p4_typed_compile("typed-ray",sources[program],source,ns,"typed-ray/link.js",
+    char *image=source && slot ? p4_typed_compile("typed-ray",source_name,source,ns,"typed-ray/link.js",
              "linkTypedRay",ENG_NATIVE,slot,nt,&ni,begin,&limits) : NULL;
     free(source); free(slot);
     module *next=image ? port_big_calloc(sizeof(*next)) : NULL;
