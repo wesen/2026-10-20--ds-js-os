@@ -168,3 +168,55 @@ Review the stable earlier task cards with `git show c5e3f69`, the decision rubri
 ### Technical details
 
 Claude used `--model opus --effort high` with no agent tools. Pi uses a separate provider and `--thinking high`. These settings label different roles.
+
+## Step 4: Observe the researchers and reproduce a silent scientific error
+
+I ran the three original compiler engineer personas and the separate optimization-decision card against the same frozen local binary. The numerical test key passed on all primary cards, yet two participants drew incorrect extra conclusions from the interface. That difference changed the priority of the implementation findings.
+
+### Prompt Context
+
+See Step 1 and the scientific decision instruction in Step 3. Baseline transcripts and raw verification are committed at `4efbbca`; the additional decision study and its initial manual grades are at `253f0fb`.
+
+### What I did
+
+- Recorded running ELF SHA-256 `d8a8b5ae1c6ff2c76f2e94e4f7a8c8c0dacb1c417d92c73a13b3adfcaa3f2dd4` and created separate VMs on loopback for each Pi participant.
+- The live control allocated two additional rooms and checked binding persistence and isolation. It inspected all 13 named help topics. None of the six selected aggregate numbers appeared verbatim. Several help topics named a matching pass and supplied example ordinals, so I recorded the opportunity for guided discovery.
+- Sent the confirmed errors to the xhigh implementer through the supervisor. Added small probes for the descriptor error and for the wrongly classified LLVM loop.
+- Read the archived compressed bytes at the returned ordinal and independently counted prints whose first nonempty body line is `; Preheader:`. Recorded the count with the source digest.
+- Commissioned an Opus High regrade with the action receipts and independent facts. My initial manual grades are withheld from this audit commission.
+
+### Why
+
+An agent's subjective experience is different from its scientific answer. Looking only at whether the instructor's expected numbers appeared in the final would have awarded the misleading loop conclusion full credit.
+
+### What worked
+
+All three original participants recovered the expected counts or matching ablation and supplied query evidence. Separate VMs preserved individual bindings. Starting a second participant did not alter the first. The optimization reviewer proposed a falsifiable experiment and distinguished it from its current measurements.
+
+### What didn't work
+
+Five actual calls in the first three sessions failed with `[notAPlan]` for values such as `arm.describe()`, `q.help()` and `a.streams()`. The baseline correction suggested an unrelated event count. More importantly, the actual call `q.run(a.variant("checked").events("middle").where(e => e.scope.kind === "loop").count())` succeeded with value 0. Ordinal 88 in that exact stream contains an explicit LLVM loop fragment. Its scope was reported as function `for.cond`. The intern's extra nine-function conclusion also included basic-block names and missing values.
+
+### What I learned
+
+Numeric correctness, units, scope classification, and causal attribution must be graded independently. Only 19.45% of the original direct stack accesses were removed in stock→scalar. The same difference is 61.39% of the change in overall instruction count. The latter percentage cannot establish that the candidate removed most stack traffic.
+
+### What was tricky to build
+
+A prompt requesting reusable evidence should count **all** tool attempts, also identifying tool calls refused before reaching the service. The ablation persona made 15 attempts, of which the first 14 reached the evaluator. When reading debriefs I matched each reported claim against actual replies rather than relying on the participant's own numbering of batched calls.
+
+### What warrants a second pair of eyes
+
+Check the scope of the full row-timeline differences. Some original ordinals contain only fragments. Recognizing a loop locally does not establish its enclosing function when the archive lacks an explicit ownership witness. Also distinguish the code size in `rowBytes` from pixel data used to check rendering.
+
+### What should be done in the future
+
+Replay the original ordinal-88 selection against the repaired binary, compare its source reference byte for byte, recheck the explicit fragment lower bounds and run the held-out allocator plus fresh discovery and optimization participants. The operator guide documents how to preserve those receipts.
+
+### Code review instructions
+
+Start with `various/personas/baseline-pass.json`, especially the scope-filter query and its final debrief. Compare `various/usability-loops-baseline.json` with `scripts/26-source-loop-census.py`. For the optimizer, read `various/personas/baseline-optimization.json` beside the raw C collector's calculation of the row symbol size.
+
+### Technical details
+
+For the checked stream, the original ordinal is 88, the start is 346976 and the exclusive end is 348729. The independent census found explicit preheaders in at least 42 checked, 42 unchecked and 437 firmware middle-end prints. The `typed-stock` direct stack-access pool is 1,290,106 across the opening scene's 160 verified row outputs; it does not classify accessible temporaries by depth.

@@ -6,7 +6,7 @@ Topics:
     - compiler
     - performance
     - picocalc
-DocType: playbooks
+DocType: playbook
 Intent: long-term
 Owners: []
 RelatedFiles: []
@@ -76,3 +76,11 @@ A claim about a prospective change stays a hypothesis until that change is execu
 Opus High reviewed the plan before the first scored session. Persistence is explicitly cued in the common brief, so a successful second query demonstrates that the session works, while leaving unaided discoverability open. Inspect public help for expected numerical answers. An arm name, pass name or worked example can guide a user to an actual query. Mark a value disclosed directly by help separately from a value computed from a real capture. Keep the measured observations, derived arithmetic and new proposals in separate rows of the grading notes.
 
 A session with a shortened response retains exactly the text shown to the researcher, the full reply's byte count and its SHA-256. For a scientific claim depending on a missing tail, replay the sequence locally and inspect the necessary projection before scoring it. This keeps raw IR bodies out of the provider prompt and bounds committed evidence. The supervisor independently replays the strongest scientific claim outside the persona room. These exploratory runs support a qualitative interface assessment. A controlled population estimate would also need repeated runs and independently blinded graders.
+
+## Amendment after the baseline
+
+Check extra claims outside the requested answer. Three correct numerical results on this archive coexisted with two incorrect extra conclusions about function and loop populations. A reliable grading form records “primary response”, “additional inference”, and “raw witness or unresolved”. Numerical answer-key coverage alone would have missed the high-priority scope bug.
+
+For each scientific falsehood, replay the actual public query in a fresh session, take the returned stream digest and half-open interval, and read the raw compiler print. Save that minimal reproducer and a conservative count of unequivocal counterexamples. A claim that zero loop fragments exist is disproved by one explicit fragment. A global exact total would require classifying every record, including ambiguous ones. When retesting, require both the corrected result and preservation of the witness identity.
+
+Distinguish terminal objects and deferred query plans from wrong numerical results. The three primary researchers each tried evaluating an already materialized descriptor, help value or stream inventory. Record the exact correction the error suggested; a harmlessly failing method still creates a real discovery issue if its advice takes the investigator to a different experiment. Count blocked tool attempts separately from calls actually delivered to the service.

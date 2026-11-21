@@ -1,0 +1,32 @@
+{
+  "stage": "baseline-audit",
+  "modelAlias": "opus",
+  "effort": "high",
+  "modelUsage": [
+    "claude-opus-5-5"
+  ],
+  "durationMs": 175886,
+  "inputs": [
+    "ARTICLE - Playbook - Improving an Agent-Facing JavaScript API with Persona Runs - Lessons from homolog-bench.md",
+    "ARTICLE - Playbook - Persona Sessions with Agents - Improving Software and APIs from Usability Reports.md",
+    "investigation-entry.md",
+    "SKILL.md",
+    "SKILL.md",
+    "ablation.md",
+    "allocator.md",
+    "brief.md",
+    "catalog.md",
+    "optimization.md",
+    "pass.md",
+    "01-running-blind-compiler-engineer-persona-sessions.md",
+    "baseline-ablation.json",
+    "baseline-catalog.json",
+    "baseline-optimization.json",
+    "baseline-pass.json",
+    "usability-controls-baseline.json",
+    "usability-raw-loop-census.json",
+    "usability-loops-baseline.json",
+    "usability-replay-baseline.json",
+    "verified-facts.json"
+  ]
+}

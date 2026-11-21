@@ -30,7 +30,11 @@ def main():
     if stage == "publication":
         inputs += [DIARY, *sorted((T/"analysis").glob("01-what-compiler*.md")),
                    *sorted((T/"various/personas").glob("*.json")), *sorted((T/"design-doc").glob("02-*.md")),
-                   *sorted((T/"reference").glob("04-usability-diary.md"))]
+                   *sorted((T/"reference").glob("04-usability-diary.md")),
+                   *sorted((T/"reference").glob("10-independent-baseline-grades.md")),
+                   *sorted((T/"various").glob("usability-loops-*.json")),
+                   *sorted((T/"various").glob("usability-replay-*.json")),
+                   T/"various/usability-raw-loop-census.json"]
     prompt = """You are the lab's lead usability researcher, commissioned at Opus High. Independent DeepSeek Flash high compiler engineers are the actual blind participants. Your work is methodological review, your own chronological investigation diary, and later a research article using real evidence for new compiler students. Ground every claim in the supplied records. Do not assert that you yourself ran a tool or that any model is a human. The two named playbooks supply the methods. Preserve the experimental task cards. No analogies, slogans, semicolons or sales pitch. Use exact names for queries and files. Explain evidence units where used. Return a single JSON object, no code fence, with the requested Markdown bodies as JSON strings. No frontmatter.\n"""
     if stage == "protocol":
         prompt += """Review the pre-registered protocol and the new scientific-decision rubric. Write the first detailed investigation entry for your own diary in diary-skill format, including where filtering, blindness, truth keys and scope can fail. Write a concise usable preregistration critique with verification tests the independent supervisor can perform. No result claims or article yet. Keys: diary, critique."""
