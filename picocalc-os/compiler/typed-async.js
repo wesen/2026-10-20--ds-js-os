@@ -13,8 +13,8 @@ const ordinaryCall = /\/\/[^\n]*|"(?:[^"\\\r\n]|\\.)*"|(?<member>\.\s*(?:\/\/[^\
 // Use the real expression/statement checker over already lexed source tokens.
 // Its type and mutability checks do not require allocating instruction bytes.
 class TypeChecker extends typedWasm.FunctionEmitter {
-    constructor(lex, functions, {records, enums, distinct}, locals, nextLocal) {
-        super(lex, functions, records, undefined, 0, enums, distinct);
+    constructor(lex, functions, {records, enums, distinct, aliases}, locals, nextLocal) {
+        super(lex, functions, records, undefined, 0, enums, distinct, aliases);
         this.locals = locals;
         this.nextLocal = nextLocal;
         this.code = {push() {}};
@@ -106,7 +106,7 @@ class Cursor {
         const from = this.i;
         let depth = 0;
         while (depth || this.value !== end) {
-            if ((this.value === ")" && !depth) || this.value === "{" || this.value === "}")
+            if (!depth && (this.value === ")" || this.value === "{" || this.value === "}"))
                 this.fail("expected " + end);
             if (this.value === "(") depth++;
             if (this.value === ")") depth--;
@@ -349,7 +349,7 @@ class AsyncBody extends Cursor {
         const refs = new Map();
         for (let i = 0; i < tokens.length; i++) {
             const binding = this.locals.get(tokens[i].value);
-            if (binding && tokens[i - 1]?.value !== "." && tokens[i + 1]?.value !== "(")
+            if (binding && tokens[i - 1]?.value !== "." && tokens[i + 1]?.value !== "(" && tokens[i + 1]?.value !== ":")
                 refs.set(tokens[i].at, binding);
         }
         return {tokens, refs, uses: new Set(refs.values())};

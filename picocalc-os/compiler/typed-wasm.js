@@ -280,7 +280,8 @@ class Lexer {
 }
 
 class FunctionEmitter {
-    constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set()) {
+    constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases) {
+        this.aliases = aliases;
         this.records = records;
         this.enums = enums;
         this.distinct = distinct;
@@ -427,6 +428,10 @@ class FunctionEmitter {
             this.emitConst(value);
             return name;
         }
+        if (!binding && this.aliases?.namespaces.has(name)) {
+            lex.expect(".");
+            return this.memberCall(this.aliases.namespaces.get(name), name, false);
+        }
         if (!binding) lex.fail("unknown local " + name);
         if (binding.patternPoint) {
             this.emitConst(0);
@@ -435,12 +440,6 @@ class FunctionEmitter {
         if (binding.type === "i32" || binding.type === "bool") {
             this.emitIndex(OP.get, binding.index);
             return binding.type;
-        }
-        if (this.records.has(binding.type) && (lex.token.value === "." && (lex.next(), true))) {
-            this.emitIndex(OP.get, binding.index);
-            const field = this.field(binding.type);
-            this.emitMemory(0x28, 2, field.offset);
-            return field.type;
         }
         if ((binding.type === "string" || binding.type === "buffer") && (lex.token.value === "." && (lex.next(), true))) {
             if (binding.type === "buffer" && (lex.token.value === "writeLiteral" && (lex.next(), true))) {
@@ -470,6 +469,7 @@ class FunctionEmitter {
         const lex = this.lex;
         if (++this.depth > 128) lex.fail("expression nesting limit exceeded");
         let type = this.prefix();
+        if (lex.token.value === ".") type = this.postfix(type);
         while (true) {
             const op = lex.token.value;
             const rule = BINARY[op];
@@ -600,7 +600,69 @@ class FunctionEmitter {
         }
     }
 
-    call(name) {
+    // The receiver value, when present, is already on the operand stack.
+    memberCall(members, owner, receiver, name = this.lex.ident()) {
+        const member = members?.get(name);
+        if (!member) this.lex.fail("unknown member " + owner + "." + name);
+        this.lex.expect("(");
+        return this.call(member.target, receiver ? 1 : 0, member.options);
+    }
+
+    postfix(type) {
+        const lex = this.lex;
+        while (lex.accept(".")) {
+            const name = lex.ident();
+            if (lex.token.value === "(") {
+                type = this.memberCall(this.aliases?.methods.get(type), scalarType(type), true, name);
+            } else {
+                const field = this.field(type, name);
+                this.emitMemory(0x28, 2, field.offset);
+                type = field.type;
+            }
+        }
+        return type;
+    }
+
+    // A grouped options argument feeds the trailing scalar parameters of the
+    // direct target. A literal has no address. Preserve written order even if
+    // it differs from field order; spill only the suffix needing permutation.
+    optionArgument(options) {
+        const lex = this.lex;
+        const fields = this.records.get(options);
+        if (!lex.accept("{")) {
+            this.want(this.expr(), options);
+            const record = this.nextLocal++;
+            this.emitIndex(OP.set, record);
+            for (const field of fields.values()) {
+                this.emitIndex(OP.get, record);
+                this.emitMemory(0x28, 2, field.offset);
+            }
+            return;
+        }
+        const seen = new Set(), pending = new Map();
+        while (lex.token.value !== "}") {
+            const name = lex.ident();
+            const field = fields.get(name);
+            if (!field) lex.fail("unknown option " + options + "." + name);
+            if (seen.has(name)) lex.fail("duplicate option " + options + "." + name);
+            lex.expect(":");
+            this.want(this.expr(), field.type);
+            if (pending.size || field.offset !== 4 * seen.size) {
+                const temp = this.nextLocal++;
+                this.emitIndex(OP.set, temp);
+                pending.set(name, temp);
+            }
+            seen.add(name);
+            if (!lex.accept(",")) break;
+        }
+        lex.expect("}");
+        for (const name of fields.keys()) {
+            if (!seen.has(name)) lex.fail("missing option " + options + "." + name);
+            if (pending.has(name)) this.emitIndex(OP.get, pending.get(name));
+        }
+    }
+
+    call(name, first = 0, options = null) {
         const lex = this.lex;
         if (name === "pattern" && lex.token.kind === "id" && !this.functions.has(name)) {
             const look = new Lexer(lex.source, lex.token.at + lex.token.value.length, lex.end);
@@ -618,9 +680,14 @@ class FunctionEmitter {
             this.emitMemory(0x28, 2, this.records.get("WorldState").get(startField).offset);
             this.code.push(OP.eqz, OP.if, I32);
         }
-        for (let i = 0; i < callee.params.length; i++) {
-            if (i) lex.expect(",");
+        const end = options ? callee.params.length - this.records.get(options).size : callee.params.length;
+        for (let i = first; i < end; i++) {
+            if (i !== first) lex.expect(",");
             this.want(this.expr(), callee.params[i]);
+        }
+        if (options) {
+            if (end !== first) lex.expect(",");
+            this.optionArgument(options);
         }
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         this.emitIndex(0x10, callee.index);
@@ -635,10 +702,9 @@ class FunctionEmitter {
         return callee.result;
     }
 
-    field(type) {
-        const name = this.lex.ident();
+    field(type, name = this.lex.ident()) {
         const field = this.records.get(type)?.get(name);
-        if (!field) this.lex.fail("unknown field " + type + "." + name);
+        if (!field) this.lex.fail("unknown field " + scalarType(type) + "." + name);
         return field;
     }
 
@@ -738,8 +804,15 @@ class FunctionEmitter {
         if (statement && (lex.token.value === "." && (lex.next(), true))) {
             if (local.type === "buffer") this.bufferWrite(local.index);
             else {
-                const field = this.field(local.type);
+                const name = lex.ident();
                 this.emitIndex(OP.get, local.index);
+                if (lex.token.value === "(") {
+                    const type = this.memberCall(this.aliases?.methods.get(local.type), local.type, true, name);
+                    if (lex.token.value === ".") this.postfix(type);
+                    this.code.push(0x1a);
+                    return;
+                }
+                const field = this.field(local.type, name);
                 { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
                 this.want(this.expr(), field.type);
                 this.emitMemory(0x36, 2, field.offset);
@@ -857,8 +930,14 @@ class FunctionEmitter {
         default: {
             const id = lex.ident();
             if ((lex.token.value === "(" && (lex.next(), true))) {
-                this.call(id);
+                const type = this.call(id);
+                if (lex.token.value === ".") this.postfix(type);
                 this.code.push(0x1a); // drop the unused call result
+            } else if (!this.locals.has(id) && this.aliases?.namespaces.has(id)) {
+                lex.expect(".");
+                const type = this.memberCall(this.aliases.namespaces.get(id), id, false);
+                if (lex.token.value === ".") this.postfix(type);
+                this.code.push(0x1a);
             } else {
                 this.assignment(id, true);
             }
@@ -1007,15 +1086,73 @@ function parseEnum(lex, name) {
     return members;
 }
 
+// Aliases live only in compiler metadata. Receiver and options signatures
+// are checked once the normal forward-signature pass has seen every target.
+function parseMembers(lex, members, owner, records) {
+    if (members.has(owner)) lex.fail("duplicate member group " + owner);
+    const entries = new Map();
+    members.set(owner, entries);
+    lex.expect("{");
+    while (!lex.accept("}")) {
+        const name = lex.ident();
+        if (entries.has(name)) lex.fail("duplicate member " + owner + "." + name);
+        let options = null;
+        if (lex.accept("(")) {
+            options = lex.ident();
+            if (!records.get(options)?.size) lex.fail("expected a nonempty options record " + options);
+            lex.expect(")");
+        }
+        lex.expect("=");
+        const target = lex.ident();
+        entries.set(name, {target, options, at: lex.token.at});
+        lex.expect(";");
+    }
+}
+
+function checkMembers(lex, aliases, declared, records) {
+    if (!aliases) return;
+    for (const groups of [aliases.namespaces, aliases.methods]) {
+        const receiver = groups === aliases.methods;
+        for (const [owner, members] of groups) for (const [name, member] of members) {
+            const fail = message => { lex.token.at = member.at; lex.fail(owner + "." + name + ": " + message); };
+            const fn = declared.get(member.target);
+            if (!fn) fail("unknown target " + member.target);
+            if (receiver && fn.params[0] !== owner) fail("target must take " + owner + " as its first parameter");
+            if (member.options) {
+                const fields = records.get(member.options);
+                const first = fn.params.length - fields.size;
+                if (first < (receiver ? 1 : 0)) fail("too few parameters for " + member.options);
+                let i = first;
+                for (const [field, layout] of fields) {
+                    if (fn.params[i++] !== layout.type) fail("wrong target type for option " + field);
+                }
+            }
+        }
+    }
+}
+
 function parseDeclarations(lex, recordEnds) {
     const records = new Map();
     const enums = new Map();
     const distinct = new Set();
-    while (lex.token.value === "record" || lex.token.value === "enum" || lex.token.value === "type") {
+    let aliases;
+    while (lex.token.value === "record" || lex.token.value === "enum" || lex.token.value === "type" ||
+           lex.token.value === "namespace" || lex.token.value === "methods") {
         const kind = lex.token.value;
         lex.next();
         const name = lex.ident();
-        if (records.has(name) || enums.has(name) || distinct.has(name))
+        if (kind === "methods" || kind === "namespace") {
+            aliases ??= {namespaces: new Map(), methods: new Map()};
+            if (kind === "methods") {
+                if (!records.has(name) && !distinct.has(name) && !enums.has(name)) lex.fail("unknown receiver type " + name);
+                parseMembers(lex, aliases.methods, name, records);
+            } else {
+                if (records.has(name) || enums.has(name) || distinct.has(name)) lex.fail("namespace collides with type " + name);
+                parseMembers(lex, aliases.namespaces, name, records);
+            }
+            continue;
+        }
+        if (records.has(name) || enums.has(name) || distinct.has(name) || aliases?.namespaces.has(name))
             lex.fail("duplicate " + kind + " " + name);
         if (kind === "enum") {
             enums.set(name, parseEnum(lex, name));
@@ -1043,7 +1180,7 @@ function parseDeclarations(lex, recordEnds) {
         { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
         records.set(name, fields);
     }
-    return {records, enums, distinct};
+    return {records, enums, distinct, aliases};
 }
 
 function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction, onSignatures, options) {
@@ -1084,7 +1221,7 @@ function configureGeneratedLexer(lex, lowered) {
 function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onFunction, onSignatures) {
     const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
     const {original, declarations, fields, bodies, generated} = lowered.plan;
-    const {enums, distinct} = declarations;
+    const {enums, distinct, aliases} = declarations;
     const records = new Map(declarations.records);
     if (fields.length) {
         const state = new Map(records.get("WorldState"));
@@ -1108,6 +1245,7 @@ function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onF
         functions.push(fn);
     }
     if (!functions.length) throw new SyntaxError("expected a function");
+    checkMembers(originalLex, aliases, declared, records);
     if (onSignatures) onSignatures(functions);
     const edges = functions.map(() => []);
     for (const [i, fn] of functions.entries()) {
@@ -1122,7 +1260,7 @@ function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onF
             fn.bodyAt = body.at;
         }
         try {
-            new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct).function(fn);
+            new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases).function(fn);
         } finally {
             fn.bodyAt = virtualAt;
         }
@@ -1142,14 +1280,15 @@ function emitFunctions(source, functionBase, imported, numericOperands, onFuncti
         lex.generatedStartFields = lowered.startFields;
     }
     const declared = new Map(imported.map(fn => [fn.name, fn]));
-    const {records, enums, distinct} = parseDeclarations(lex);
+    const {records, enums, distinct, aliases} = parseDeclarations(lex);
     for (const name of distinct) if (declared.has(name)) lex.fail("duplicate imported function " + name);
     const functions = scanSignatures(lex, records, declared, functionBase, enums, distinct);
     if (!functions.length) lex.fail("expected a function");
+    checkMembers(lex, aliases, declared, records);
     if (onSignatures) onSignatures(functions);
     const edges = functions.map(() => []);
     for (const [i, fn] of functions.entries()) {
-        new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct).function(fn);
+        new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases).function(fn);
         if (onFunction) onFunction(fn);
     }
 

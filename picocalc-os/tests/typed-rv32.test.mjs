@@ -98,3 +98,57 @@ test("checked UTF-16 addresses branch directly and literal stores reuse the dest
     assert.deepEqual(Array.from({length: 4}, (_, i) => memory.getUint16(20 + 2 * i, true)),
         [0x61, 0x263a, 0xd83d, 0xdc08]);
 });
+
+test("named options preserve written evaluation order and receiver calls emit direct functions", () => {
+    const {typedWasm, typedRv32} = compiler();
+    const lib = `
+type Ball = distinct i32;
+record Options { magnitude: i32; invert: bool; }
+namespace ball { make = make; }
+methods Ball { adjust(Options) = adjust; plain = plain; }
+function make(value: i32): Ball { return Ball(value); }
+function adjust(b: Ball, magnitude: i32, invert: bool): Ball {
+    if (invert) return b - Ball(magnitude);
+    return b + Ball(magnitude);
+}
+function plain(b: Ball, x: i32): Ball { return b + Ball(x); }
+function mark(out: buffer, n: i32): i32 {
+    out.setCharCodeAt(0, out.charCodeAt(0) * 10 + n);
+    return n;
+}
+`;
+    const from = `function sample(out: buffer): i32 {
+        return i32(ball.make(mark(out,1)).adjust({invert: mark(out,2) === 2, magnitude: mark(out,3)}).plain(5));
+    }`;
+    const direct = `function sample(out: buffer): i32 {
+        const b = make(mark(out,1));
+        const inverted = mark(out,2) === 2;
+        return i32(plain(adjust(b,mark(out,3),inverted),5));
+    }`;
+    for (const definition of [from, direct]) {
+        const module = new WebAssembly.Module(typedWasm.compile(lib + definition).bytes);
+        const guest = new WebAssembly.Instance(module).exports;
+        const memory = new DataView(guest.memory.buffer);
+        memory.setUint32(32, 1, true);
+        assert.equal(guest.sample(32), 3);
+        assert.equal(memory.getUint16(36, true), 123);
+        const p = typedRv32.compile(lib + definition);
+        assert.deepEqual(p.image, typedRv32.compile(lib + definition, [], undefined, {streamFunctions:false}).image);
+    }
+    const body = expr => lib + "function f():i32 {return i32(" + expr + ");}";
+    const canon = body("ball.make(8).adjust({magnitude:3,invert:false}).plain(5)");
+    const flat = body("plain(adjust(make(8),3,false),5)");
+    assert.deepEqual(typedWasm.compile(canon).bytes, typedWasm.compile(flat).bytes);
+    assert.deepEqual(typedRv32.compile(canon).image, typedRv32.compile(flat).image);
+    for (const [expr, message] of [
+        ["ball.unknown()", /unknown member ball\.unknown/],
+        ["ball.make(1).lost()", /unknown member Ball\.lost/],
+        ["ball.make(1).adjust({magnitude:1})", /missing option Options\.invert/],
+        ["ball.make(1).adjust({invert:false, width:1})", /unknown option Options\.width/],
+        ["ball.make(1).adjust({invert:false,invert:true,magnitude:1})", /duplicate option Options\.invert/],
+        ["ball.make(1).adjust({magnitude:0,invert:0})", /expected bool/],
+    ]) {
+        assert.throws(() => typedWasm.compile(body(expr)), message);
+        assert.throws(() => typedRv32.compile(body(expr)), message);
+    }
+});
