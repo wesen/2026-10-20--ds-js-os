@@ -1,0 +1,261 @@
+{
+  "candidate": "b3ad52ac6eae03f82a6e20e575d00818d37fcb1e7990e396b73d6d775cc3714f",
+  "release": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+  "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+  "memory": {
+    "editor": 27953356,
+    "chess": 7094500
+  },
+  "cold": [
+    {
+      "app": "editor",
+      "arm": "clean",
+      "us": 2573743,
+      "peakBytes": 2554092,
+      "crc": 3763014618
+    },
+    {
+      "app": "editor",
+      "arm": "fragment",
+      "us": 3234262,
+      "peakBytes": 3369376,
+      "crc": 3763014618
+    },
+    {
+      "app": "chess",
+      "arm": "clean",
+      "us": 3579123,
+      "peakBytes": 3186424,
+      "crc": 178518363
+    },
+    {
+      "app": "chess",
+      "arm": "fragment",
+      "us": 3961463,
+      "peakBytes": 4074036,
+      "crc": 178518363
+    }
+  ],
+  "cells": {
+    "editor": {
+      "body": {
+        "medianMs": {
+          "clean": 2265.609,
+          "global": 888.237,
+          "precise": 1009.258
+        },
+        "rawMs": {
+          "clean": [
+            2281.729,
+            2264.303,
+            2268.174,
+            2262.584,
+            2265.609
+          ],
+          "global": [
+            888.274,
+            889.541,
+            888.237,
+            885.707,
+            884.982
+          ],
+          "precise": [
+            1012.572,
+            1009.258,
+            1009.832,
+            1004.86,
+            1000.338
+          ]
+        },
+        "preciseToGlobalMedianPairedRatio": 1.1345828916261307,
+        "preciseToCleanMedianPairedRatio": 0.4441205276798563,
+        "winsVsGlobal": 0,
+        "winsVsClean": 5,
+        "reuse": 118,
+        "build": 1
+      },
+      "signature": {
+        "medianMs": {
+          "clean": 2271.43,
+          "global": 2464.536,
+          "precise": 1079.593
+        },
+        "rawMs": {
+          "clean": [
+            2266.135,
+            2271.43,
+            2274.669,
+            2271.39,
+            2285.667
+          ],
+          "global": [
+            2464.536,
+            2454.421,
+            2467.465,
+            2450.403,
+            2480.661
+          ],
+          "precise": [
+            1078.437,
+            1079.593,
+            1082.771,
+            1078.909,
+            1080.863
+          ]
+        },
+        "preciseToGlobalMedianPairedRatio": 0.43881919297740796,
+        "preciseToCleanMedianPairedRatio": 0.475292216797348,
+        "winsVsGlobal": 5,
+        "winsVsClean": 5,
+        "reuse": 115,
+        "build": 4
+      },
+      "layout": {
+        "medianMs": {
+          "clean": 2271.004,
+          "global": 2474.354,
+          "precise": 1300.594
+        },
+        "rawMs": {
+          "clean": [
+            2268.776,
+            2271.004,
+            2275.62,
+            2301.237,
+            2264.907
+          ],
+          "global": [
+            2474.354,
+            2474.412,
+            2470.313,
+            2478.602,
+            2464.007
+          ],
+          "precise": [
+            1300.594,
+            1300.818,
+            1297.282,
+            1305.121,
+            1298.413
+          ]
+        },
+        "preciseToGlobalMedianPairedRatio": 0.5257079257617567,
+        "preciseToCleanMedianPairedRatio": 0.5727942355011264,
+        "winsVsGlobal": 5,
+        "winsVsClean": 5,
+        "reuse": 109,
+        "build": 10
+      }
+    },
+    "chess": {
+      "body": {
+        "medianMs": {
+          "clean": 3220.936,
+          "global": 582.827,
+          "precise": 645.46
+        },
+        "rawMs": {
+          "clean": [
+            3215.271,
+            3220.936,
+            3220.463,
+            3223.527,
+            3223.646
+          ],
+          "global": [
+            581.61,
+            585.858,
+            584.175,
+            582.477,
+            582.827
+          ],
+          "precise": [
+            645.003,
+            646.29,
+            645.983,
+            645.132,
+            645.46
+          ]
+        },
+        "preciseToGlobalMedianPairedRatio": 1.1074641360129165,
+        "preciseToCleanMedianPairedRatio": 0.20058699634183033,
+        "winsVsGlobal": 0,
+        "winsVsClean": 5,
+        "reuse": 81,
+        "build": 1
+      },
+      "signature": {
+        "medianMs": {
+          "clean": 3223.842,
+          "global": 3364.866,
+          "precise": 970.043
+        },
+        "rawMs": {
+          "clean": [
+            3220.001,
+            3223.842,
+            3227.074,
+            3228.282,
+            3222.795
+          ],
+          "global": [
+            3363.095,
+            3361.043,
+            3364.866,
+            3370.299,
+            3368.61
+          ],
+          "precise": [
+            969.524,
+            969.558,
+            970.043,
+            971.881,
+            973.588
+          ]
+        },
+        "preciseToGlobalMedianPairedRatio": 0.288366403099547,
+        "preciseToCleanMedianPairedRatio": 0.3010520766153638,
+        "winsVsGlobal": 5,
+        "winsVsClean": 5,
+        "reuse": 72,
+        "build": 10
+      },
+      "layout": {
+        "medianMs": {
+          "clean": 3224.032,
+          "global": 3362.601,
+          "precise": 891.079
+        },
+        "rawMs": {
+          "clean": [
+            3225.341,
+            3219.484,
+            3237.27,
+            3220.744,
+            3224.032
+          ],
+          "global": [
+            3362.601,
+            3361.008,
+            3356.384,
+            3368.832,
+            3364.909
+          ],
+          "precise": [
+            890.627,
+            891.079,
+            895.388,
+            892.951,
+            889.403
+          ]
+        },
+        "preciseToGlobalMedianPairedRatio": 0.2650624905011589,
+        "preciseToCleanMedianPairedRatio": 0.27658737145804957,
+        "winsVsGlobal": 5,
+        "winsVsClean": 5,
+        "reuse": 76,
+        "build": 6
+      }
+    }
+  }
+}

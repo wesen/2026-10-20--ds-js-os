@@ -300,3 +300,51 @@ Run 19-host-phases.mjs followed by 20-host-summary.py and inspect per-cell block
 ### Technical details
 
 The bootstrap resamples 30 paired differences 10,000 times with a fixed seed; it does not represent variation between computers or boots.
+
+## Step 6. Measure the physical edit sessions, restore the release and audit every row
+
+The preceding operator explicitly handed off the shared serial port after restoring and checking the ordinary release. The process verified that state itself, installed the isolated compiler experiment and obtained four cold and ninety warmed measurements. It then restored the production image and partition, read them back and waited for the ordinary native worlds and painter. I released the lock to the director for the fourth window only after the process exited successfully.
+
+### Prompt context
+
+**User prompt.** See Step 1 for the verbatim request. **Assistant interpretation.** Put the genuine release workloads through all three compiler paths on the PicoCalc. **Inferred user intent.** Measure both structural gains and their costs in normal local-edit and cold cases. **Earlier code checkpoint.** The measured policy sources were frozen in c07464e. The build and target controls were committed at 153bae9.
+
+### What I did
+
+Ran the SD-independent ESP-IDF image via `12-device.py /tmp/native-wave-deps-board/build /tmp/chess-camera-release/build /tmp/native-wave-deps/gold.json /tmp/native-wave-deps-physical` after explicit serial handoff. The physical data were copied to `various/04-deps/physical.json` and the emitted benchmark-only records to `physical-rows.txt`. The report writer received aggregate data without the raw serial session or credentials.
+
+### Why
+
+Recording every declaration read saves work only if checking incoming answers and maintaining the cache costs less than compiling the functions it retains. The baseline coarse cache can be particularly cheap for a one-function body edit. The three-arm comparison measures both effects.
+
+### What worked
+
+The warm precise compiler won all five pairs against both alternatives on signature and layout edits in each app. Editor structural medians were 1.080 and 1.301 seconds against 2.465 and 2.474 for the previous cache. Chess structural medians were 0.970 and 0.891 seconds against 3.365 and 3.363. Every completed image matched the stock hardware ELF byte for byte and the stock host checksum.
+
+### What didn’t work
+
+The local-body timing prediction failed on the actual target. The precise-to-global median paired ratio was 1.1346 for Editor and 1.1075 for Chess, losing all five direct pairs in each case. The new cache remained faster than clean in every body-edit pair. Fresh precise compilation cost 3.234 seconds and a 3,369,376-byte peak for Editor versus 2.574 seconds and 2,554,092 bytes stock; Chess cost 3.961 seconds and 4,074,036 bytes versus 3.579 seconds and 3,186,424 bytes stock. The measured implementation does not meet the whole preregistered timing criterion.
+
+### What I learned
+
+The structural improvement is large enough to change elapsed time at the physical return endpoint. It comes with a reproducible local-body cost and thinner first-build headroom. Saving work in source-independent code demand does not make the research harness fit a production interactive memory envelope.
+
+### What was tricky to build
+
+The instrumented warm harness held all three compilers and retained verification state. Its peaks of 27,953,356 bytes and 7,094,500 bytes are whole-trial high-water observations, not measurements of one proposed production session. Cold and warm clocks therefore cannot be interpreted as measuring the same process.
+
+### What warrants a second pair of eyes
+
+Five rotated blocks share one boot and do not establish the proposed 30-block physical confidence interval. The 30-block host experiment supplies an independently reported within-run interval and exposes a different engine. The public native ELF-return endpoint excludes loader relocation and invocation of the edited native application.
+
+### What should be done in the future
+
+A follow-up should keep a cheap whole-environment-match fast path for local-body edits and record dependencies on the slow path, then evaluate the combination as a new candidate. Isolate one resident compiler, retain only the required generation, and test the exact 4 MiB and six-second shipping limits across boots.
+
+### Code review instructions
+
+Run `24-physical-audit.py` on the serial result excerpt, physical JSON and freshly generated clean gold. Run `16-summarize.py` to reproduce cell medians, wins and paired ratios. The audit found exactly 90 unique warm combinations, four fresh CRCs, two warm heap peaks, ordinary release readback and a healthy painter.
+
+### Technical details
+
+The scalar release application matched SHA-256 `134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1`, the partition `72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30`. After readback the expected eight native worlds were healthy and the painter reported one source, one compilation, one installation and zero rejects. The test did not open the filesystem or persist fragments.

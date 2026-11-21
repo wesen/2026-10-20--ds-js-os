@@ -1,0 +1,100 @@
+INC_BEGIN precise dependencies; no filesystem access
+INC_COLD editor clean 2573743 2554092 3763014618
+INC_COLD editor fragment 3234262 3369376 3763014618
+INC_COLD chess clean 3579123 3186424 178518363
+INC_COLD chess fragment 3961463 4074036 178518363
+INC_READY editor 944056
+INC_ROW {"app":"editor","key":"body","arm":"clean","block":0,"us":2281729,"crc":3650697465}
+INC_ROW {"app":"editor","key":"body","arm":"global","block":0,"us":888274,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"precise","block":0,"us":1012572,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"global","block":1,"us":889541,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"precise","block":1,"us":1009258,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"clean","block":1,"us":2264303,"crc":3650697465}
+INC_ROW {"app":"editor","key":"body","arm":"precise","block":2,"us":1009832,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"clean","block":2,"us":2268174,"crc":3650697465}
+INC_ROW {"app":"editor","key":"body","arm":"global","block":2,"us":888237,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"clean","block":3,"us":2262584,"crc":3650697465}
+INC_ROW {"app":"editor","key":"body","arm":"global","block":3,"us":885707,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"precise","block":3,"us":1004860,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"global","block":4,"us":884982,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"precise","block":4,"us":1000338,"crc":3650697465,"reused":118,"rebuilt":1}
+INC_ROW {"app":"editor","key":"body","arm":"clean","block":4,"us":2265609,"crc":3650697465}
+INC_ROW {"app":"editor","key":"signature","arm":"clean","block":0,"us":2266135,"crc":3656441164}
+INC_ROW {"app":"editor","key":"signature","arm":"global","block":0,"us":2464536,"crc":3656441164,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"signature","arm":"precise","block":0,"us":1078437,"crc":3656441164,"reused":115,"rebuilt":4}
+INC_ROW {"app":"editor","key":"signature","arm":"global","block":1,"us":2454421,"crc":3656441164,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"signature","arm":"precise","block":1,"us":1079593,"crc":3656441164,"reused":115,"rebuilt":4}
+INC_ROW {"app":"editor","key":"signature","arm":"clean","block":1,"us":2271430,"crc":3656441164}
+INC_ROW {"app":"editor","key":"signature","arm":"precise","block":2,"us":1082771,"crc":3656441164,"reused":115,"rebuilt":4}
+INC_ROW {"app":"editor","key":"signature","arm":"clean","block":2,"us":2274669,"crc":3656441164}
+INC_ROW {"app":"editor","key":"signature","arm":"global","block":2,"us":2467465,"crc":3656441164,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"signature","arm":"clean","block":3,"us":2271390,"crc":3656441164}
+INC_ROW {"app":"editor","key":"signature","arm":"global","block":3,"us":2450403,"crc":3656441164,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"signature","arm":"precise","block":3,"us":1078909,"crc":3656441164,"reused":115,"rebuilt":4}
+INC_ROW {"app":"editor","key":"signature","arm":"global","block":4,"us":2480661,"crc":3656441164,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"signature","arm":"precise","block":4,"us":1080863,"crc":3656441164,"reused":115,"rebuilt":4}
+INC_ROW {"app":"editor","key":"signature","arm":"clean","block":4,"us":2285667,"crc":3656441164}
+INC_ROW {"app":"editor","key":"layout","arm":"clean","block":0,"us":2268776,"crc":3731796167}
+INC_ROW {"app":"editor","key":"layout","arm":"global","block":0,"us":2474354,"crc":3731796167,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"layout","arm":"precise","block":0,"us":1300594,"crc":3731796167,"reused":109,"rebuilt":10}
+INC_ROW {"app":"editor","key":"layout","arm":"global","block":1,"us":2474412,"crc":3731796167,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"layout","arm":"precise","block":1,"us":1300818,"crc":3731796167,"reused":109,"rebuilt":10}
+INC_ROW {"app":"editor","key":"layout","arm":"clean","block":1,"us":2271004,"crc":3731796167}
+INC_ROW {"app":"editor","key":"layout","arm":"precise","block":2,"us":1297282,"crc":3731796167,"reused":109,"rebuilt":10}
+INC_ROW {"app":"editor","key":"layout","arm":"clean","block":2,"us":2275620,"crc":3731796167}
+INC_ROW {"app":"editor","key":"layout","arm":"global","block":2,"us":2470313,"crc":3731796167,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"layout","arm":"clean","block":3,"us":2301237,"crc":3731796167}
+INC_ROW {"app":"editor","key":"layout","arm":"global","block":3,"us":2478602,"crc":3731796167,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"layout","arm":"precise","block":3,"us":1305121,"crc":3731796167,"reused":109,"rebuilt":10}
+INC_ROW {"app":"editor","key":"layout","arm":"global","block":4,"us":2464007,"crc":3731796167,"reused":0,"rebuilt":119}
+INC_ROW {"app":"editor","key":"layout","arm":"precise","block":4,"us":1298413,"crc":3731796167,"reused":109,"rebuilt":10}
+INC_ROW {"app":"editor","key":"layout","arm":"clean","block":4,"us":2264907,"crc":3731796167}
+INC_MEM editor 27953356
+INC_READY chess 949186
+INC_ROW {"app":"chess","key":"body","arm":"clean","block":0,"us":3215271,"crc":2170287918}
+INC_ROW {"app":"chess","key":"body","arm":"global","block":0,"us":581610,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"precise","block":0,"us":645003,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"global","block":1,"us":585858,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"precise","block":1,"us":646290,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"clean","block":1,"us":3220936,"crc":2170287918}
+INC_ROW {"app":"chess","key":"body","arm":"precise","block":2,"us":645983,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"clean","block":2,"us":3220463,"crc":2170287918}
+INC_ROW {"app":"chess","key":"body","arm":"global","block":2,"us":584175,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"clean","block":3,"us":3223527,"crc":2170287918}
+INC_ROW {"app":"chess","key":"body","arm":"global","block":3,"us":582477,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"precise","block":3,"us":645132,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"global","block":4,"us":582827,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"precise","block":4,"us":645460,"crc":2170287918,"reused":81,"rebuilt":1}
+INC_ROW {"app":"chess","key":"body","arm":"clean","block":4,"us":3223646,"crc":2170287918}
+INC_ROW {"app":"chess","key":"signature","arm":"clean","block":0,"us":3220001,"crc":766439757}
+INC_ROW {"app":"chess","key":"signature","arm":"global","block":0,"us":3363095,"crc":766439757,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"signature","arm":"precise","block":0,"us":969524,"crc":766439757,"reused":72,"rebuilt":10}
+INC_ROW {"app":"chess","key":"signature","arm":"global","block":1,"us":3361043,"crc":766439757,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"signature","arm":"precise","block":1,"us":969558,"crc":766439757,"reused":72,"rebuilt":10}
+INC_ROW {"app":"chess","key":"signature","arm":"clean","block":1,"us":3223842,"crc":766439757}
+INC_ROW {"app":"chess","key":"signature","arm":"precise","block":2,"us":970043,"crc":766439757,"reused":72,"rebuilt":10}
+INC_ROW {"app":"chess","key":"signature","arm":"clean","block":2,"us":3227074,"crc":766439757}
+INC_ROW {"app":"chess","key":"signature","arm":"global","block":2,"us":3364866,"crc":766439757,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"signature","arm":"clean","block":3,"us":3228282,"crc":766439757}
+INC_ROW {"app":"chess","key":"signature","arm":"global","block":3,"us":3370299,"crc":766439757,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"signature","arm":"precise","block":3,"us":971881,"crc":766439757,"reused":72,"rebuilt":10}
+INC_ROW {"app":"chess","key":"signature","arm":"global","block":4,"us":3368610,"crc":766439757,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"signature","arm":"precise","block":4,"us":973588,"crc":766439757,"reused":72,"rebuilt":10}
+INC_ROW {"app":"chess","key":"signature","arm":"clean","block":4,"us":3222795,"crc":766439757}
+INC_ROW {"app":"chess","key":"layout","arm":"clean","block":0,"us":3225341,"crc":145852333}
+INC_ROW {"app":"chess","key":"layout","arm":"global","block":0,"us":3362601,"crc":145852333,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"layout","arm":"precise","block":0,"us":890627,"crc":145852333,"reused":76,"rebuilt":6}
+INC_ROW {"app":"chess","key":"layout","arm":"global","block":1,"us":3361008,"crc":145852333,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"layout","arm":"precise","block":1,"us":891079,"crc":145852333,"reused":76,"rebuilt":6}
+INC_ROW {"app":"chess","key":"layout","arm":"clean","block":1,"us":3219484,"crc":145852333}
+INC_ROW {"app":"chess","key":"layout","arm":"precise","block":2,"us":895388,"crc":145852333,"reused":76,"rebuilt":6}
+INC_ROW {"app":"chess","key":"layout","arm":"clean","block":2,"us":3237270,"crc":145852333}
+INC_ROW {"app":"chess","key":"layout","arm":"global","block":2,"us":3356384,"crc":145852333,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"layout","arm":"clean","block":3,"us":3220744,"crc":145852333}
+INC_ROW {"app":"chess","key":"layout","arm":"global","block":3,"us":3368832,"crc":145852333,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"layout","arm":"precise","block":3,"us":892951,"crc":145852333,"reused":76,"rebuilt":6}
+INC_ROW {"app":"chess","key":"layout","arm":"global","block":4,"us":3364909,"crc":145852333,"reused":0,"rebuilt":82}
+INC_ROW {"app":"chess","key":"layout","arm":"precise","block":4,"us":889403,"crc":145852333,"reused":76,"rebuilt":6}
+INC_ROW {"app":"chess","key":"layout","arm":"clean","block":4,"us":3224032,"crc":145852333}
+INC_MEM chess 7094500
+INC_DONE ok

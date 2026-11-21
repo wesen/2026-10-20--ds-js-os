@@ -1,0 +1,42 @@
+{
+  "seed": 20261120,
+  "sources": 64,
+  "results": {
+    "layout": {
+      "compared": 64,
+      "reused": 165,
+      "rebuilt": 348,
+      "rejected": 0
+    },
+    "signature": {
+      "compared": 64,
+      "reused": 199,
+      "rebuilt": 314,
+      "rejected": 0
+    },
+    "declaration order": {
+      "compared": 64,
+      "reused": 513,
+      "rebuilt": 0,
+      "rejected": 0
+    },
+    "body": {
+      "compared": 64,
+      "reused": 449,
+      "rebuilt": 64,
+      "rejected": 0
+    },
+    "undefined local": {
+      "compared": 64,
+      "reused": 449,
+      "rebuilt": 64,
+      "rejected": 64
+    },
+    "additional field": {
+      "compared": 64,
+      "reused": 513,
+      "rebuilt": 0,
+      "rejected": 0
+    }
+  }
+}

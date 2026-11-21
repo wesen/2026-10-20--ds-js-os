@@ -1,0 +1,662 @@
+You are the same actual lead researcher who wrote this study's design and critique. Write the final standalone project report in Markdown now. Title “Which native functions survive a changed interface?” Approximately 2,000–2,700 words with a worked example, small tables, explicit source links as described below, no analogies. Introduce for a newcomer a function signature, record layout, the IR-to-machine-code step, symbolic relocation, call graph, query read set, actual return endpoint, and previous global-cache control. Credit the operator for on-device work. Do not invent any unperformed comparisons. The final P4 and host evidence is attached below. Do not misstate double-negative findings from the design or critique. The citations under ../various/04-deps/ are host-summary.json, physical-summary.json, physical.json, held-out.json, clean-fragments.json, program-oracle.json, knockouts.json, declarations.json, interface-matrix.json and release-inputs.json. Design ../design-doc/04-precise-fragment-dependencies.md, source ../scripts/04-deps/03-session.js and diary ../reference/14-dependency-reuse-diary.md. Output directions from scripts/04-deps: python3 -B 04-stage.py /tmp/native-wave-deps /tmp/mobile-painter-chess3d/build/esp-idf/main; node 05-host.mjs /tmp/native-wave-deps /tmp/edits.json. Do not invent flags or create placeholders.
+
+Please integrate these evidence clarifications, several directly answering your critique. Each successful P4 edit was compared byte for byte with an independent P4 stock read through the public compiler and by CRC against host clean gold, and each host build was compared with the unmodified compiler. All public metadata as well as complete native bytes/ELF compared in an extra separate structural pass for the 18 rows including rejected changes and reverse edits. For the release examples the oracle checks the complete linked ELF, for the ten-function standalone program it checks the entire internal-linked RV32 image and symbol tables, no SDK. A clean raw fragment oracle separately records prepatch words and symbolic calls before layout. For each of all 6 primary changes it measured exactly the same retained set as precise, none missing or wrongly retained. This oracle was written after the frozen implementation, so do not claim a preregistered oracle hash. 6 knockout controls disabling body, own bindings, field, enum, call and graph facts were detected; this does not satisfy the larger requested per-kind mutation coverage. The held-out 4 valid edits all reused 9 of 10; invalid signature error hit 7 before rejection. Recheck of baseline hit 10. Program contained 1,603 independently scored return/value/trap cases, 101 traps; the base image matched that prequalified oracle. Source edit validation compared each edit to its own fresh output; do not claim original oracle expected outputs on semantically changed edits. Supplementary valid async-yield edit retained 118/119. Import reordering reused both test functions with remapped symbols and relocations. Real release compile handler captures the call map's observed read answers, tracks arguments / return / awaitable and namespace, concrete field offsets and types, consulted enum member tables and positive and negative nominal membership. All entries by exact function body and its own bound parameter names; session tags are per compiler realm, not persistent across processes. Treat source, target and SDK as pinned. The program-wide generated prefix/start-field configuration is conservative. A failed build is never published. The release actually emits writeLiteral as unrolled immediate constants + per-code-unit halfword stores (typed-wasm.js bufferLiteral); despite the label in the director manifest, image growth in the literal fixture is not a shared pool; the separate research-only pooled variant would need its own relocation/cache contract. The field model is all 4-byte slots with nested record references carried in one word, not by-value embedding. No universal proof over compiler extensions.
+
+Hardware: 360 MHz ESP32-P4; shipping native lexical index, aligned PSRAM QuickJS allocator, three compiler arms in a single process for warm runs. Public compiler returns full linked ELF, with oracle checks outside clock, does not load/execute edited native code. No runtime SDK calls timed or file persistence studied. 5 rotated blocks per app/edit/arm, one boot overall: 2 apps x 3 edits x 3 arms x 5 = 90 rows; within-boot counts are descriptive; no hardware confidence interval or independent reboots. Fresh single-realm first compile: starts before runtime creation, includes frontend eval and embedded source/runtime copy, ends at full first linked ELF; 1 cold observation per arm/app, stock vs precise only, report memory/time (warm harness holds multiple compilers and two roots, cannot attribute to single resident session). Research ignores shipping caps 4 MiB and 6s; no product certification. P4 JIT not used, host Node / V8. Research image b3ad52ac…; ordinary release 134f3a24… and matching partition and healthy painter restored as recorded. Hardware budget imposed five blocks not 30 as proposed. Separate host on CPU6 30 rotated blocks across each cell and paired within-run bootstrap; stock, previous conservative global invalidator, new precise read-set. Thirty-block host Chess local edit median paired ratio 1.143 vs coarse, misses 10% allowance; study positive on structural edit cases but measure body or memory tradeoff. Additional 7-block host correctness experiment. No unqualified production adoption or claim that all edit types win. Primary advantage is a selective rebuild after an interface change because the current Edit/Chess release rarely needs to rebuild every function. Full source including developer-friendly call-site count nuance: current Editor 119, 3 updated caller sites; Chess 82 functions, 10 updated caller sites across 9 caller functions, 10 functions including callee. Show hardware and host numbers with units, differentiating medians vs paired ratios. Article must explain what measured, what unmet, and whether to pursue in-session prototype.
+{
+  "physical": {
+    "candidate": "b3ad52ac6eae03f82a6e20e575d00818d37fcb1e7990e396b73d6d775cc3714f",
+    "release": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+    "partition": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30",
+    "memory": {
+      "editor": 27953356,
+      "chess": 7094500
+    },
+    "cold": [
+      {
+        "app": "editor",
+        "arm": "clean",
+        "us": 2573743,
+        "peakBytes": 2554092,
+        "crc": 3763014618
+      },
+      {
+        "app": "editor",
+        "arm": "fragment",
+        "us": 3234262,
+        "peakBytes": 3369376,
+        "crc": 3763014618
+      },
+      {
+        "app": "chess",
+        "arm": "clean",
+        "us": 3579123,
+        "peakBytes": 3186424,
+        "crc": 178518363
+      },
+      {
+        "app": "chess",
+        "arm": "fragment",
+        "us": 3961463,
+        "peakBytes": 4074036,
+        "crc": 178518363
+      }
+    ],
+    "cells": {
+      "editor": {
+        "body": {
+          "medianMs": {
+            "clean": 2265.609,
+            "global": 888.237,
+            "precise": 1009.258
+          },
+          "preciseToGlobalMedianPairedRatio": 1.1345828916261307,
+          "preciseToCleanMedianPairedRatio": 0.4441205276798563,
+          "winsVsGlobal": 0,
+          "winsVsClean": 5,
+          "reuse": 118,
+          "build": 1
+        },
+        "signature": {
+          "medianMs": {
+            "clean": 2271.43,
+            "global": 2464.536,
+            "precise": 1079.593
+          },
+          "preciseToGlobalMedianPairedRatio": 0.43881919297740796,
+          "preciseToCleanMedianPairedRatio": 0.475292216797348,
+          "winsVsGlobal": 5,
+          "winsVsClean": 5,
+          "reuse": 115,
+          "build": 4
+        },
+        "layout": {
+          "medianMs": {
+            "clean": 2271.004,
+            "global": 2474.354,
+            "precise": 1300.594
+          },
+          "preciseToGlobalMedianPairedRatio": 0.5257079257617567,
+          "preciseToCleanMedianPairedRatio": 0.5727942355011264,
+          "winsVsGlobal": 5,
+          "winsVsClean": 5,
+          "reuse": 109,
+          "build": 10
+        }
+      },
+      "chess": {
+        "body": {
+          "medianMs": {
+            "clean": 3220.936,
+            "global": 582.827,
+            "precise": 645.46
+          },
+          "preciseToGlobalMedianPairedRatio": 1.1074641360129165,
+          "preciseToCleanMedianPairedRatio": 0.20058699634183033,
+          "winsVsGlobal": 0,
+          "winsVsClean": 5,
+          "reuse": 81,
+          "build": 1
+        },
+        "signature": {
+          "medianMs": {
+            "clean": 3223.842,
+            "global": 3364.866,
+            "precise": 970.043
+          },
+          "preciseToGlobalMedianPairedRatio": 0.288366403099547,
+          "preciseToCleanMedianPairedRatio": 0.3010520766153638,
+          "winsVsGlobal": 5,
+          "winsVsClean": 5,
+          "reuse": 72,
+          "build": 10
+        },
+        "layout": {
+          "medianMs": {
+            "clean": 3224.032,
+            "global": 3362.601,
+            "precise": 891.079
+          },
+          "preciseToGlobalMedianPairedRatio": 0.2650624905011589,
+          "preciseToCleanMedianPairedRatio": 0.27658737145804957,
+          "winsVsGlobal": 5,
+          "winsVsClean": 5,
+          "reuse": 76,
+          "build": 6
+        }
+      }
+    }
+  },
+  "host": {
+    "editor": {
+      "body": {
+        "measurementsPerArm": 30,
+        "medianMs": {
+          "clean": {
+            "total": 14.806876999999986,
+            "compile": 14.717675500000041,
+            "link": 0.06180499999999256
+          },
+          "global": {
+            "total": 9.271923999999984,
+            "compile": 7.783894500000059,
+            "link": 0.06464849999997568
+          },
+          "precise": {
+            "total": 8.517304499999995,
+            "compile": 8.43812399999996,
+            "link": 0.0651459999999986
+          }
+        },
+        "preciseMinusGlobalMedianPairedMs": -0.16222550000003366,
+        "bootstrap95WithinRunMs": [
+          -2.6540840000000117,
+          1.758368499999989
+        ],
+        "medianPairedRatio": 0.9861914983906042
+      },
+      "signature": {
+        "measurementsPerArm": 30,
+        "medianMs": {
+          "clean": {
+            "total": 11.195401500000116,
+            "compile": 11.093208999999888,
+            "link": 0.0751874999998563
+          },
+          "global": {
+            "total": 12.780355500000042,
+            "compile": 12.49333549999983,
+            "link": 0.07337900000015907
+          },
+          "precise": {
+            "total": 5.349604499999828,
+            "compile": 5.3049499999999625,
+            "link": 0.028641500000048836
+          }
+        },
+        "preciseMinusGlobalMedianPairedMs": -6.065489000000298,
+        "bootstrap95WithinRunMs": [
+          -8.246548999999732,
+          -5.436879499999918
+        ],
+        "medianPairedRatio": 0.466063947645591
+      },
+      "layout": {
+        "measurementsPerArm": 30,
+        "medianMs": {
+          "clean": {
+            "total": 9.271328499999981,
+            "compile": 8.499758000000156,
+            "link": 0.030468500000097265
+          },
+          "global": {
+            "total": 8.929927500000076,
+            "compile": 8.872340000000122,
+            "link": 0.03363200000012512
+          },
+          "precise": {
+            "total": 6.1842609999998785,
+            "compile": 6.138678000000027,
+            "link": 0.028270000000020445
+          }
+        },
+        "preciseMinusGlobalMedianPairedMs": -3.2430669999998827,
+        "bootstrap95WithinRunMs": [
+          -3.9383280000001832,
+          -2.1214624999997795
+        ],
+        "medianPairedRatio": 0.6460999349035609
+      }
+    },
+    "chess": {
+      "body": {
+        "measurementsPerArm": 30,
+        "medianMs": {
+          "clean": {
+            "total": 6.2653099999999995,
+            "compile": 5.950753999999961,
+            "link": 0.12575149999997848
+          },
+          "global": {
+            "total": 1.773634500000071,
+            "compile": 1.6240670000001955,
+            "link": 0.126796000000013
+          },
+          "precise": {
+            "total": 2.099837500000149,
+            "compile": 1.8611195000000862,
+            "link": 0.12589600000001155
+          }
+        },
+        "preciseMinusGlobalMedianPairedMs": 0.26341600000000653,
+        "bootstrap95WithinRunMs": [
+          0.21385850000001483,
+          0.3027480000000651
+        ],
+        "medianPairedRatio": 1.143490425340668
+      },
+      "signature": {
+        "measurementsPerArm": 30,
+        "medianMs": {
+          "clean": {
+            "total": 6.1153419999996,
+            "compile": 5.978477499999826,
+            "link": 0.10276650000014342
+          },
+          "global": {
+            "total": 7.037599999999884,
+            "compile": 6.920888999999761,
+            "link": 0.10110900000017864
+          },
+          "precise": {
+            "total": 3.2343089999999393,
+            "compile": 3.0615324999998847,
+            "link": 0.10019250000004831
+          }
+        },
+        "preciseMinusGlobalMedianPairedMs": -3.9385270000002492,
+        "bootstrap95WithinRunMs": [
+          -4.15798199999972,
+          -3.716067999999723
+        ],
+        "medianPairedRatio": 0.44048476604278153
+      },
+      "layout": {
+        "measurementsPerArm": 30,
+        "medianMs": {
+          "clean": {
+            "total": 5.863668000000416,
+            "compile": 5.739961000000221,
+            "link": 0.10146549999990384
+          },
+          "global": {
+            "total": 6.999773000000005,
+            "compile": 6.884048500000063,
+            "link": 0.10420449999992343
+          },
+          "precise": {
+            "total": 2.7170569999998406,
+            "compile": 2.5926660000000084,
+            "link": 0.09921449999956167
+          }
+        },
+        "preciseMinusGlobalMedianPairedMs": -4.2662949999999,
+        "bootstrap95WithinRunMs": [
+          -4.442204999999831,
+          -4.122140499999659
+        ],
+        "medianPairedRatio": 0.39043136411778834
+      }
+    }
+  },
+  "cleanFragmentOracle": {
+    "editor": {
+      "body": {
+        "unchanged": 118,
+        "retained": 118,
+        "conservativelyRebuilt": [],
+        "changed": [
+          "editorPreviewSlot"
+        ]
+      },
+      "signature": {
+        "unchanged": 115,
+        "retained": 115,
+        "conservativelyRebuilt": [],
+        "changed": [
+          "editorPreviewSlot",
+          "editorPreviewFinish",
+          "editorPreviewAppend",
+          "editorPreviewFrame"
+        ]
+      },
+      "layout": {
+        "unchanged": 109,
+        "retained": 109,
+        "conservativelyRebuilt": [],
+        "changed": [
+          "editorShow",
+          "editorRemember",
+          "editorSave",
+          "editorApplyKey",
+          "editorInput",
+          "editorOpen",
+          "editorOpened",
+          "editorOpenFailed",
+          "typedWorldEvent",
+          "__typed_async_2_editorOpenTask_editorOpenTask_step"
+        ]
+      }
+    },
+    "chess": {
+      "body": {
+        "unchanged": 81,
+        "retained": 81,
+        "conservativelyRebuilt": [],
+        "changed": [
+          "chessFrom"
+        ]
+      },
+      "signature": {
+        "unchanged": 72,
+        "retained": 72,
+        "conservativelyRebuilt": [],
+        "changed": [
+          "chessFrom",
+          "chessMake",
+          "chessUnmake",
+          "chessCapture",
+          "chessPriority",
+          "chessSelectedMove",
+          "chessMarkDestinations",
+          "chessAppendTile",
+          "chessRenderTree",
+          "chessRender"
+        ]
+      },
+      "layout": {
+        "unchanged": 76,
+        "retained": 76,
+        "conservativelyRebuilt": [],
+        "changed": [
+          "chessNewGame",
+          "chessPlay",
+          "chessControl",
+          "chessAppendTile",
+          "chessRenderTree",
+          "chessRender"
+        ]
+      }
+    }
+  },
+  "independentEdits": [
+    {
+      "name": "change correction body",
+      "global": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "artifact": {
+        "hash": "cbac02ce895d982bde9806bb9f64ebb4353fd0fe0c57bad88e73f00bbf36dddf",
+        "meta": "ee8b1def076fbe4e79253b1bdd1d161c3160976c83f84c8b53ddcf7f4f72db38",
+        "bytes": 2876
+      }
+    },
+    {
+      "name": "reorder fields",
+      "global": {
+        "reused": 0,
+        "rebuilt": 10
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "artifact": {
+        "hash": "77359fd3637ae48c4e0bf19de72426892f6f18f92009c160ac4167b81fa65a70",
+        "meta": "2f9382e1a12f2b66c99ae1ae14d5e8bdfe9fb9bf9d4d531427d1a4456e5cf2df",
+        "bytes": 2876
+      }
+    },
+    {
+      "name": "lengthen pooled literal",
+      "global": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "artifact": {
+        "hash": "9625c3cf128c03f8bedeac73219dad3eef1182efb39a7efc4b4a5dc55e33e36a",
+        "meta": "ee8b1def076fbe4e79253b1bdd1d161c3160976c83f84c8b53ddcf7f4f72db38",
+        "bytes": 3176
+      }
+    },
+    {
+      "name": "fresh independent declaration",
+      "global": {
+        "reused": 0,
+        "rebuilt": 10
+      },
+      "precise": {
+        "reused": 9,
+        "rebuilt": 1
+      },
+      "artifact": {
+        "hash": "8a4ff97020617af874cdc9840e88c4cb451e77758f80be3d68ba58d9ff7eace1",
+        "meta": "b10ff2b4256eb7fac8c8c4eb9dd6ec1a42c00927eec7b5055f798517c2c91f80",
+        "bytes": 2880
+      }
+    },
+    {
+      "name": "invalid signature edit",
+      "global": {
+        "reused": 0,
+        "rebuilt": 9
+      },
+      "precise": {
+        "reused": 7,
+        "rebuilt": 2
+      },
+      "error": "SyntaxError: 57:47: expected ,"
+    }
+  ],
+  "controls": [
+    {
+      "name": "SDK import permutation",
+      "stats": {
+        "reused": 2,
+        "rebuilt": 0
+      }
+    },
+    {
+      "name": "import changes awaitable flag",
+      "stats": {
+        "reused": 1,
+        "rebuilt": 1
+      }
+    },
+    {
+      "name": "former import becomes an internal leaf",
+      "stats": {
+        "reused": 1,
+        "rebuilt": 2
+      }
+    },
+    {
+      "name": "a new global shares the local spelling",
+      "stats": {
+        "reused": 1,
+        "rebuilt": 1
+      }
+    },
+    {
+      "name": "distinct nominal type becomes an enum",
+      "stats": {
+        "reused": 0,
+        "rebuilt": 1
+      }
+    },
+    {
+      "name": "enum exhaustiveness",
+      "stats": {
+        "reused": 0,
+        "rebuilt": 1
+      },
+      "error": "SyntaxError: 1:80: match on T does not cover: C"
+    },
+    {
+      "name": "existing async task adds a suspension",
+      "stats": {
+        "reused": 118,
+        "rebuilt": 1
+      }
+    },
+    {
+      "name": "nested record remains one word in outer record",
+      "stats": {
+        "reused": 2,
+        "rebuilt": 0
+      }
+    },
+    {
+      "name": "field kind changes without changing following offset",
+      "stats": {
+        "reused": 1,
+        "rebuilt": 1
+      },
+      "error": "SyntaxError: 1:127: expected bool, got i32"
+    },
+    {
+      "name": "longer literal ahead of still-used helpers and caller",
+      "stats": {
+        "reused": 2,
+        "rebuilt": 1
+      }
+    },
+    {
+      "name": "renaming a function that a retained caller needs",
+      "stats": {
+        "reused": 0,
+        "rebuilt": 2
+      },
+      "error": "SyntaxError: 1:84: unknown function add"
+    },
+    {
+      "name": "removed declaration with unaffected caller order",
+      "stats": {
+        "reused": 2,
+        "rebuilt": 0
+      }
+    }
+  ],
+  "generatedAfterFreeze": {
+    "seed": 20261120,
+    "sources": 64,
+    "results": {
+      "layout": {
+        "compared": 64,
+        "reused": 165,
+        "rebuilt": 348,
+        "rejected": 0
+      },
+      "signature": {
+        "compared": 64,
+        "reused": 199,
+        "rebuilt": 314,
+        "rejected": 0
+      },
+      "declaration order": {
+        "compared": 64,
+        "reused": 513,
+        "rebuilt": 0,
+        "rejected": 0
+      },
+      "body": {
+        "compared": 64,
+        "reused": 449,
+        "rebuilt": 64,
+        "rejected": 0
+      },
+      "undefined local": {
+        "compared": 64,
+        "reused": 449,
+        "rebuilt": 64,
+        "rejected": 64
+      },
+      "additional field": {
+        "compared": 64,
+        "reused": 513,
+        "rebuilt": 0,
+        "rejected": 0
+      }
+    }
+  },
+  "mutationChecks": [
+    {
+      "name": "used field offset",
+      "caught": true,
+      "stock": "2ed09c7b56339dd6432f5cf8d374e372fce4c0c090b7ca7282ca4ce554b74c36",
+      "mutant": "6e600b3f7a25eb37b591562edf6606b9232c6c984b0e7fb66f4b3f9f6baedc13"
+    },
+    {
+      "name": "enum values",
+      "caught": true,
+      "stock": "bbd97b43aa0595e86aaf00a02fb173b667807da032d737fcf1c9ea04f3607f04",
+      "mutant": "562c07cf66c8fc6300e5f82c93a783f35ad5df6d02eefcf3f37b71d737568df3"
+    },
+    {
+      "name": "call signature",
+      "caught": true,
+      "stock": "SyntaxError: 1:99: expected ,",
+      "mutant": "8c48d1921f43f32fa189d7e63de22e136695c143622516c77152d2d139cf6285"
+    },
+    {
+      "name": "symbolic graph edge",
+      "caught": true,
+      "stock": "SyntaxError: recursive call cycle: leaf -> caller -> leaf",
+      "mutant": "df928a1bae62189bff0f14bd039e602e8c21e1ab692507cafaee64ea7ef1a03c"
+    },
+    {
+      "name": "own parameter bindings",
+      "caught": true,
+      "stock": "SyntaxError: 1:38: unknown local x",
+      "mutant": "a789cf1ad012f76b37643b8b89daa4007205a122f464af8a2d9b142ad3500c90"
+    },
+    {
+      "name": "exact body",
+      "caught": true,
+      "stock": "fd85f91e653576051538498a5e312c412530fe1c087af416ae47f171a3745739",
+      "mutant": "fada8054fde28901b38466749cab90566a46fb88172d7ab6d70cc34336716204"
+    }
+  ],
+  "cleanCompleteMetadataRows": 18,
+  "rejectedSteps": [
+    {
+      "app": "editor",
+      "key": "bad",
+      "error": "SyntaxError: 730:53: expected ,"
+    },
+    {
+      "app": "chess",
+      "key": "bad",
+      "error": "SyntaxError: 146:32: expected ,"
+    },
+    {
+      "app": "burst",
+      "key": "invalid signature edit",
+      "error": "SyntaxError: 57:47: expected ,"
+    }
+  ],
+  "releaseProvenance": {
+    "applicationSHA256": "134f3a249589a860a1a85311e361498a9e6ba4f14bef34ca2397ea26ca86ebc1",
+    "files": {
+      "editor.typed": {
+        "bytes": 69884,
+        "sha256": "ea6354bd16ac788862b4f4d8a7362273dcb0d5d5c1b11f29248af388200632b0",
+        "releaseOffset": 630604
+      },
+      "chess.typed": {
+        "bytes": 61022,
+        "sha256": "2a86ca2473b18beb30bf7a4d5990a55e8386f086a207cf24c19d43d7d620837c",
+        "releaseOffset": 978728
+      },
+      "editor.elf": {
+        "bytes": 242124,
+        "sha256": "386a56b9e2ae4ff3e3bfb8f431ba315d5fb415b6ba29360b04e7d7e611c3837b",
+        "releaseOffset": 388476
+      },
+      "chess.elf": {
+        "bytes": 274892,
+        "sha256": "f28687cff3b242c18027dde3ad8b15930108035ca8b416b120071f62e1963630",
+        "releaseOffset": 703832
+      }
+    }
+  }
+}
