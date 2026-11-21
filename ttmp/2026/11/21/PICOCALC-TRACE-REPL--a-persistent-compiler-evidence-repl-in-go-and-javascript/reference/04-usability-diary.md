@@ -68,3 +68,53 @@ Read the common brief and all three cards, then the runner, its Pi extension and
 ### Technical details
 
 Every session has a ceiling of fourteen evaluations and eight minutes of wall time. Service loopback is fixed by the host. The model sees neither a session ID nor a general-purpose network primitive.
+
+## Step 2: Freeze the answer key and preserve completed queries
+
+I independently inspected the compiler archive before running any participant. I added a fourth card for a register-allocation reviewer to use after the main round. That card exercises machine IR and repeated pass names, a different input path from the three initial tasks.
+
+### Prompt Context
+
+See Step 1. The research question is whether independent compiler engineers can learn a public query interface well enough to answer real optimization questions. The harness checkpoint was `c5e3f69`. The initial oracle and three pre-registered questions were committed at `06239ed`.
+
+### What I did
+
+- Used the checked middle index to locate ordinal 74 at byte 240363, with the next record starting at byte 248127. Verified the inflated stream digest.
+- Ran the original TRACE-QUERY Node verifier and added an independent scoring script reading the raw checked stream, checked backend and C execution JSON.
+- Required a serving revision or executable digest on each receipt. Each completed public tool action is saved by atomically replacing the receipt. A repeated invocation requires a new output filename.
+
+### Why
+
+A plausible final number with the wrong denominator or evidence unit can mislead compiler work. The scoring helper explicitly labels matches as lexical. The reviewer checks that pass positions, totals, percentage signs, source availability and per-PC attribution match the actual evaluated records.
+
+### What worked
+
+The two independent readers agreed on 4,133 headers, the first reduction at 73→74, and 41,949 fewer executed instructions for the LSR-enabled controlled run. The backend index contains two register rewrites at 74 and 78.
+
+### What didn't work
+
+A first attempt to stage the protocol inside the restricted checkout returned `fatal: Unable to create '/home/manuel/code/wesen/2026-10-20--ds-js-os/.git/index.lock': Read-only file system`. A scoped, authorized Git add and commit recorded the intended files only.
+
+### What I learned
+
+Use a whole-function print to count direct load sites. A missing function body breaks the adjacency required to interpret a pass delta. The digest belongs to the inflated stream, and byte offsets use the same representation.
+
+### What was tricky to build
+
+A transient tool or provider failure may end a session before Pi produces a final answer. The runner now persists completed public tool actions during the session; it never stores thinking events.
+
+### What warrants a second pair of eyes
+
+Check endpoints and adjacent pass names from the raw archive and inspect the denominator in the ablation report. Confirm that an error from a wrong method is never accepted as evidence that the underlying data are unavailable.
+
+### What should be done in the future
+
+Run the fourth card independently with no access to the first round's answers or tool log.
+
+### Code review instructions
+
+Run the preceding ticket's `scripts/01-check-evidence.mjs` with Node and compare it with `read_ground_truth` in this ticket's `scripts/22-audit-persona-receipts.py`.
+
+### Technical details
+
+The independent static verifier counts the literal capacity pointer in this known C fixture. That spelling is a fixture-level oracle and does not generalize to arbitrary LLVM IR.

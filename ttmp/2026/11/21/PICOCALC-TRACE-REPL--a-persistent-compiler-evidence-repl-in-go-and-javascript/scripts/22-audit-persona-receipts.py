@@ -39,7 +39,12 @@ def read_ground_truth():
         raise ValueError("no observed change in archive")
     execution = json.loads((base / "passes/execution.json").read_text())
     before, after = [execution[arm]["totals"]["instructions"] for arm in ("checked-llc-nolsr", "checked-llc")]
+    backend = gzip.decompress((pipeline / "checked-backend.log.gz").read_bytes())
+    assert hashlib.sha256(backend).hexdigest() == manifest["checked"]["backend"]["sha256"]
+    backend_index = json.loads(gzip.decompress((pipeline / "checked-backend.index.json.gz").read_bytes()))
+    positions = [i for i, event in enumerate(backend_index) if "Virtual Register Rewriter" in event["header"]]
     return {
+        "allocator": {"first": positions[0], "last": positions[1], "property":"NoVRegs"},
         "catalog": {"overall": sum(p["dumps"] for v in manifest.values() for p in v.values()),
                     "checkedMiddle": manifest["checked"]["middle"]["dumps"],
                     "checkedBackend": manifest["checked"]["backend"]["dumps"],

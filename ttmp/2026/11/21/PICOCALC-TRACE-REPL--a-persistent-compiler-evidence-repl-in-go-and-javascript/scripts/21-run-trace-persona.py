@@ -17,13 +17,15 @@ def request(url, method):
 
 def main():
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("card", choices=["catalog", "pass", "ablation"])
+    p.add_argument("card", choices=["catalog", "pass", "ablation", "allocator"])
     p.add_argument("receipt", type=Path)
     p.add_argument("--port", default=3791, type=int)
     p.add_argument("--build", required=True, help="Git revision or binary SHA for the serving process")
     p.add_argument("--provider-extension", type=Path,
                    default=Path.home() / ".pi/agent/npm/node_modules/@lunaroute/pi-extension")
     args = p.parse_args()
+    if not 1 <= args.port <= 65535:
+        p.error("--port must be a valid TCP port")
     args.receipt.parent.mkdir(parents=True, exist_ok=True)
     if args.receipt.exists():
         p.error("choose a new receipt path so an earlier run stays intact")
