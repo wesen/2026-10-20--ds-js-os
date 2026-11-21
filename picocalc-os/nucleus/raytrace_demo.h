@@ -60,6 +60,18 @@ bool raytrace_demo_intersections(int16_t *depth, size_t stride_pixels,
                                  const raytrace_demo_scene *scene, raytrace_demo_mode mode,
                                  raytrace_demo_stats *stats);
 
+// Matched measurement paths. All planes have the same stride and different
+// storage. A miss writes zero; sphere IDs are one-based in scene order.
+bool raytrace_demo_render_audit(uint16_t *pixels, int16_t *depth, uint16_t *ids,
+                                size_t stride_pixels, const raytrace_demo_scene *scene,
+                                raytrace_demo_mode mode);
+bool raytrace_demo_trace_audit(int16_t *depth, uint16_t *ids, size_t stride_pixels,
+                               const raytrace_demo_scene *scene, raytrace_demo_mode mode);
+// The audit inputs come from the same scene's trace. Malformed planes may
+// cause an early return after preceding pixels have been drawn.
+bool raytrace_demo_shade_audit(uint16_t *pixels, const int16_t *depth, const uint16_t *ids,
+                               size_t stride_pixels, const raytrace_demo_scene *scene);
+
 // Render already validated sphere geometry with an external material evaluator.
 bool raytrace_demo_render_materials(uint16_t *pixels, size_t stride_pixels,
                                   const raytrace_demo_object *objects, size_t object_count,

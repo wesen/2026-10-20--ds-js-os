@@ -90,11 +90,15 @@ static void prepare_tables(trace *work) {
     }
 }
 
-static void prepare(trace *work, const raytrace_demo_scene *scene) {
+static void prepare_objects(trace *work, const raytrace_demo_scene *scene) {
     work->object_count = SPHERES;
     work->objects[0] = (sphere){scene->sphere_x, scene->sphere_y, 56, 26, 245, 83, 67};
     work->objects[1] = (sphere){100, 65, 105, 32, 48, 197, 213};
     work->objects[2] = (sphere){58, 109, 86, 23, 245, 182, 58};
+}
+
+static void prepare(trace *work, const raytrace_demo_scene *scene) {
+    prepare_objects(work, scene);
     prepare_tables(work);
 }
 
@@ -254,6 +258,71 @@ bool raytrace_demo_intersections(int16_t *depth, size_t stride_pixels, const ray
         }
     }
     if (stats && mode == RAYTRACE_DEMO_PIE) stats->pie_active_lanes = stats->sphere_hits;
+    return true;
+}
+
+static void save_audit(const trace *work, int16_t *depth, uint16_t *ids) {
+    memcpy(depth, work->depth, sizeof(work->depth));
+    for (int x = 0; x < SIDE; ++x)
+        ids[x] = work->depth[x] ? (uint16_t)(work->object_index[x] + 1) : 0;
+}
+
+bool raytrace_demo_render_audit(uint16_t *pixels, int16_t *depth, uint16_t *ids,
+                                size_t stride_pixels, const raytrace_demo_scene *scene,
+                                raytrace_demo_mode mode) {
+    if (!valid(pixels, stride_pixels, scene, mode) || !valid(depth, stride_pixels, scene, mode) ||
+        !valid(ids, stride_pixels, scene, mode)) return false;
+    trace work;
+    prepare(&work, scene);
+    const light lamp = prepare_light(&work, scene->light_x, scene->light_y);
+    for (int y = 0; y < SIDE; ++y) {
+        const size_t row = (size_t)y * stride_pixels;
+        trace_row(&work, y, mode, false);
+        save_audit(&work, depth + row, ids + row);
+        for (int x = 0; x < SIDE; ++x)
+            pixels[row + x] = work.depth[x] ? shade_sphere(&work, &lamp, x, y) :
+                shade_floor(x, y, in_shadow(&work, &lamp, x, y));
+    }
+    return true;
+}
+
+bool raytrace_demo_trace_audit(int16_t *depth, uint16_t *ids, size_t stride_pixels,
+                               const raytrace_demo_scene *scene, raytrace_demo_mode mode) {
+    if (!valid(depth, stride_pixels, scene, mode) || !valid(ids, stride_pixels, scene, mode))
+        return false;
+    trace work;
+    prepare(&work, scene);
+    for (int y = 0; y < SIDE; ++y) {
+        const size_t row = (size_t)y * stride_pixels;
+        trace_row(&work, y, mode, false);
+        save_audit(&work, depth + row, ids + row);
+    }
+    return true;
+}
+
+bool raytrace_demo_shade_audit(uint16_t *pixels, const int16_t *depth, const uint16_t *ids,
+                               size_t stride_pixels, const raytrace_demo_scene *scene) {
+    if (!valid(pixels, stride_pixels, scene, RAYTRACE_DEMO_SCALAR) ||
+        !valid(depth, stride_pixels, scene, RAYTRACE_DEMO_SCALAR) ||
+        !valid(ids, stride_pixels, scene, RAYTRACE_DEMO_SCALAR)) return false;
+    trace work;
+    prepare_objects(&work, scene);
+    const light lamp = prepare_light(&work, scene->light_x, scene->light_y);
+    for (int y = 0; y < SIDE; ++y) {
+        const size_t row = (size_t)y * stride_pixels;
+        for (int x = 0; x < SIDE; ++x) {
+            const uint16_t id = ids[row + x];
+            const int z = depth[row + x];
+            if (id > SPHERES || z < 0 || z > 105 || (id == 0) != (z == 0)) return false;
+            if (id == 0) {
+                pixels[row + x] = shade_floor(x, y, in_shadow(&work, &lamp, x, y));
+            } else {
+                const sphere *object = &work.objects[id - 1];
+                pixels[row + x] = rgb565(object->red, object->green, object->blue,
+                    sphere_scale(object, &lamp, z, x, y));
+            }
+        }
+    }
     return true;
 }
 
