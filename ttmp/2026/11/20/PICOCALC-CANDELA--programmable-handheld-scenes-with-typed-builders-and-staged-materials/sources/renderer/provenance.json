@@ -1,0 +1,20 @@
+{
+  "command": [
+    "claude",
+    "-p",
+    "--model",
+    "opus",
+    "--effort",
+    "high",
+    "--tools",
+    "",
+    "--setting-sources",
+    ""
+  ],
+  "scope": "A generic public technical chapter with invented examples. No private project payload was sent.",
+  "blockedProjectBrief": "Automatic approval review rejected the proposed upload of the scoped project design before execution.",
+  "files": {
+    "sources/renderer/01-public-methodology-prompt.txt": "ac853fef6dcfa23b7bd337e46a62ff14369d1b5e90b21bbd36f163390eeda339",
+    "sources/renderer/02-opus-high-public-methodology.md": "39ae00f27d491121b643a2556e260a612c84ceae3d16d9b2aa8acf9fbcc6f4a9"
+  }
+}
