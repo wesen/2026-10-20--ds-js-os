@@ -1,0 +1,138 @@
+{
+  "compilerSHA256": "01ed39d12dd6c0238d8fa11f16d2ccf883e792c783a916c31e36f8349b179cb6",
+  "sources": {
+    "builders.typed": "93acb5dafde9d8744ddba48b7d51111a4f4ff3492d3e43e60af1d97c8d9c3680",
+    "materials.typed": "31be5ce21cb0dcc6421b5a5083b243294a12f2422edf5d2820b48b6380d079f0",
+    "hand.typed": "5fd296646cbb28240ff6a9241572fd5c90beea64a5c21be3a5e8305eaf084acd"
+  },
+  "wasm": {
+    "bytes": 6462,
+    "sha256": "51e3e0020556f7daa43736a980ee169e9191a76cbbea4310ee6afba43f4f548b"
+  },
+  "rv32": {
+    "bytes": 13884,
+    "sha256": "b7a870603ea0385462d8484afa827f2a4eee963cdbee68bfbfd106eb7b6f1019"
+  },
+  "orderedLiteralMatchesDirectImages": true,
+  "modes": [
+    {
+      "variant": "hand",
+      "target": "wasm",
+      "graphSHA256": "2b7747f2ef002dcee8841048295221eea19fb1e6388fcc1898c1c79d95cccd94",
+      "checks": 12
+    },
+    {
+      "variant": "hand",
+      "target": "rv32",
+      "graphSHA256": "2b7747f2ef002dcee8841048295221eea19fb1e6388fcc1898c1c79d95cccd94",
+      "checks": 12
+    },
+    {
+      "variant": "fluent",
+      "target": "wasm",
+      "graphSHA256": "2b7747f2ef002dcee8841048295221eea19fb1e6388fcc1898c1c79d95cccd94",
+      "checks": 12
+    },
+    {
+      "variant": "fluent",
+      "target": "rv32",
+      "graphSHA256": "2b7747f2ef002dcee8841048295221eea19fb1e6388fcc1898c1c79d95cccd94",
+      "checks": 12
+    },
+    {
+      "variant": "expanded",
+      "target": "wasm",
+      "graphSHA256": "2b7747f2ef002dcee8841048295221eea19fb1e6388fcc1898c1c79d95cccd94",
+      "checks": 12
+    },
+    {
+      "variant": "expanded",
+      "target": "rv32",
+      "graphSHA256": "2b7747f2ef002dcee8841048295221eea19fb1e6388fcc1898c1c79d95cccd94",
+      "checks": 12
+    }
+  ],
+  "samples": [
+    {
+      "q": 0,
+      "left": [
+        30,
+        70,
+        150
+      ],
+      "right": [
+        30,
+        70,
+        150
+      ],
+      "floor": [
+        [
+          48,
+          61,
+          72
+        ],
+        [
+          72,
+          93,
+          109
+        ]
+      ]
+    },
+    {
+      "q": 128,
+      "left": [
+        30,
+        70,
+        150
+      ],
+      "right": [
+        125,
+        120,
+        95
+      ],
+      "floor": [
+        [
+          48,
+          61,
+          72
+        ],
+        [
+          72,
+          93,
+          109
+        ]
+      ]
+    },
+    {
+      "q": 256,
+      "left": [
+        30,
+        70,
+        150
+      ],
+      "right": [
+        220,
+        170,
+        40
+      ],
+      "floor": [
+        [
+          48,
+          61,
+          72
+        ],
+        [
+          72,
+          93,
+          109
+        ]
+      ]
+    }
+  ],
+  "effects": {
+    "recordedOrder": 123,
+    "nestedResult": 132,
+    "discardedStatementEffects": 4567,
+    "existingRecordResult": 134
+  }
+}

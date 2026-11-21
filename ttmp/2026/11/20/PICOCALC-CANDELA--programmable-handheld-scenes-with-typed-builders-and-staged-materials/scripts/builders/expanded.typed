@@ -1,0 +1,15 @@
+function candelaFluentShared(graph: buffer): i32 {
+    if (candelaInit(graph) === 0) return 0;
+    const blue = candelaColor(graph, 30, 70, 150);
+    const base = candelaMaterial(graph, blue);
+    const left = fluentAt(fluentSphere(graph, 26, base), graph, 68, 61, 56);
+    const gold = candelaColor(graph, 220, 170, 40);
+    const slot = candelaParameter(graph, 0);
+    const derived = candelaMaterial(graph, candelaMix(graph, blue, gold, candelaParam(graph, slot)));
+    const right = fluentMaterial(fluentAt(fluentSphere(graph, 32, base), graph, 100, 65, 105), graph, derived);
+    if (i32(left) < 0 || i32(right) < 0) return 0;
+    const dark = candelaColor(graph, 48, 61, 72);
+    const bright = candelaColor(graph, 72, 93, 109);
+    const floor = candelaMaterial(graph, candelaChecker(graph, dark, bright, 12));
+    return candelaFloor(graph, floor);
+}

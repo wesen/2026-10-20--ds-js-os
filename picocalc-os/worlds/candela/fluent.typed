@@ -1,0 +1,28 @@
+// Radius and initial material are fixed when the builder reserves its sphere.
+function fluentSphere(graph: buffer, radius: i32, initialMaterial: i32): SphereHandle {
+    return SphereHandle(candelaAddSphere(graph, 68, 61, 56, radius, initialMaterial));
+}
+function fluentAt(sphere: SphereHandle, graph: buffer, x: i32, y: i32, z: i32): SphereHandle {
+    return SphereHandle(candelaSphereAt(graph, i32(sphere), x, y, z));
+}
+function fluentMaterial(sphere: SphereHandle, graph: buffer, material: i32): SphereHandle {
+    return SphereHandle(candelaSphereMaterial(graph, i32(sphere), material));
+}
+
+function candelaFluentShared(graph: buffer): i32 {
+    if (candelaInit(graph) === 0) return 0;
+    const blue = candelaColor(graph, 30, 70, 150);
+    const base = candelaMaterial(graph, blue);
+    const left = shape.sphere(graph, 26, base).at(graph, {x: 68, y: 61, z: 56});
+    const gold = candelaColor(graph, 220, 170, 40);
+    const slot = candelaParameter(graph, 0);
+    const derived = candelaMaterial(graph, candelaMix(graph, blue, gold, candelaParam(graph, slot)));
+    const right = shape.sphere(graph, 32, base)
+        .at(graph, {x: 100, y: 65, z: 105})
+        .material(graph, derived);
+    if (i32(left) < 0 || i32(right) < 0) return 0;
+    const dark = candelaColor(graph, 48, 61, 72);
+    const bright = candelaColor(graph, 72, 93, 109);
+    const floor = candelaMaterial(graph, candelaChecker(graph, dark, bright, 12));
+    return candelaFloor(graph, floor);
+}

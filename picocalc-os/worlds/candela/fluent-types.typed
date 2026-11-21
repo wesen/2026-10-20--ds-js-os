@@ -1,0 +1,10 @@
+type SphereHandle = distinct i32;
+record SpherePosition { x: i32; y: i32; z: i32; }
+
+namespace shape {
+    sphere = fluentSphere;
+}
+methods SphereHandle {
+    at(SpherePosition) = fluentAt;
+    material = fluentMaterial;
+}
