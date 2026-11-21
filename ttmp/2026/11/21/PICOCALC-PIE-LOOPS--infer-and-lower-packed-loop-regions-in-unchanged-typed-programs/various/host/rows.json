@@ -1,0 +1,124 @@
+{
+  "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "images": [
+    {
+      "mode": "stock",
+      "bytes": 9564,
+      "sha256": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4"
+    },
+    {
+      "mode": "scalar",
+      "bytes": 10384,
+      "sha256": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187"
+    },
+    {
+      "mode": "pie",
+      "bytes": 10308,
+      "sha256": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a"
+    }
+  ],
+  "cases": [
+    {
+      "name": "ordinary pose, all rows",
+      "stock": 3608697,
+      "scalar": 3199910,
+      "pie": 3131435,
+      "packets": 3135
+    },
+    {
+      "name": "partially written short output",
+      "trap": true,
+      "stock": 202,
+      "scalar": 202,
+      "pie": 202,
+      "packets": 0
+    },
+    {
+      "name": "misaligned peel",
+      "trap": false,
+      "stock": 26349,
+      "scalar": 21436,
+      "pie": 20606,
+      "packets": 38
+    },
+    {
+      "name": "already aligned",
+      "trap": false,
+      "stock": 26349,
+      "scalar": 21240,
+      "pie": 20366,
+      "packets": 40
+    },
+    {
+      "name": "wrapped signed calculation",
+      "trap": false,
+      "stock": 20103,
+      "scalar": 20130,
+      "pie": 20130,
+      "packets": 0
+    },
+    {
+      "name": "source overlaps depth for extra sphere",
+      "trap": true,
+      "stock": 26437,
+      "scalar": 21497,
+      "pie": 20667,
+      "packets": 38
+    },
+    {
+      "name": "full unsigned input",
+      "trap": false,
+      "stock": 26408,
+      "scalar": 21460,
+      "pie": 20630,
+      "packets": 38
+    },
+    {
+      "name": "transfer on 144 combinations",
+      "stock": 83439,
+      "scalar": 70929,
+      "pie": 68808,
+      "packets": 105
+    },
+    {
+      "name": "aliased or short destination",
+      "dst": 64,
+      "capacity": 80,
+      "trap": false,
+      "stock": 1334,
+      "scalar": 1378,
+      "pie": 1378,
+      "packets": 0
+    },
+    {
+      "name": "aliased or short destination",
+      "dst": 320,
+      "capacity": 80,
+      "trap": false,
+      "stock": 1334,
+      "scalar": 955,
+      "pie": 892,
+      "packets": 3
+    },
+    {
+      "name": "aliased or short destination",
+      "dst": 320,
+      "capacity": 5,
+      "trap": true,
+      "stock": 208,
+      "scalar": 210,
+      "pie": 213,
+      "packets": 0
+    },
+    {
+      "name": "aliased or short destination",
+      "dst": 44,
+      "capacity": 80,
+      "trap": false,
+      "stock": 1334,
+      "scalar": 1378,
+      "pie": 1378,
+      "packets": 0
+    }
+  ]
+}

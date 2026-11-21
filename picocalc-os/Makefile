@@ -136,6 +136,7 @@ test-apps:
 	$(NODE) tests/typed-rv32.test.mjs
 	$(NODE) tests/typed-wasm-inspect.test.mjs
 	$(NODE) tests/typed-inspect.test.mjs
+	$(NODE) tests/typed-pie-loops.test.mjs
 
 # The wall clock through the host binary: clock.wall/set/zone, Date, -w and -z.
 test-clock: $(BIN)

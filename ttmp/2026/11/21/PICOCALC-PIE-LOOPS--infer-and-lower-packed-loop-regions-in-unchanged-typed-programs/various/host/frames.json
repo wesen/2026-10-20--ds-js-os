@@ -1,0 +1,214 @@
+{
+  "sourceSHA": "b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f",
+  "images": [
+    {
+      "mode": "stock",
+      "bytes": 9564,
+      "sha256": "813974db340e1b1e6e42e898ef9741e59847e0b20ae89adffd851409d6b57fe4"
+    },
+    {
+      "mode": "scalar",
+      "bytes": 10384,
+      "sha256": "119637d1aefe968507ea39dfc00036b90e149aeff8326cdaa359f0972cb10187"
+    },
+    {
+      "mode": "pie",
+      "bytes": 10308,
+      "sha256": "8420b7361973fac2053d95e45f90ed699fbb92dae19f0a64cab16da23776310a"
+    }
+  ],
+  "cases": [
+    {
+      "name": "default",
+      "audit": false,
+      "stock": 15532634,
+      "scalar": 15110647,
+      "pie": 15038542,
+      "packets": 3300
+    },
+    {
+      "name": "default",
+      "audit": true,
+      "stock": 16920810,
+      "scalar": 16514993,
+      "pie": 16446518,
+      "packets": 3135
+    },
+    {
+      "name": "lamp-only",
+      "audit": false,
+      "stock": 15450758,
+      "scalar": 15028771,
+      "pie": 14956666,
+      "packets": 3300
+    },
+    {
+      "name": "lamp-only",
+      "audit": true,
+      "stock": 16838934,
+      "scalar": 16433117,
+      "pie": 16364642,
+      "packets": 3135
+    },
+    {
+      "name": "near-corner",
+      "audit": false,
+      "stock": 15729913,
+      "scalar": 15307926,
+      "pie": 15235821,
+      "packets": 3300
+    },
+    {
+      "name": "near-corner",
+      "audit": true,
+      "stock": 17118089,
+      "scalar": 16712272,
+      "pie": 16643797,
+      "packets": 3135
+    },
+    {
+      "name": "far-corner",
+      "audit": false,
+      "stock": 15854860,
+      "scalar": 15432873,
+      "pie": 15360768,
+      "packets": 3300
+    },
+    {
+      "name": "far-corner",
+      "audit": true,
+      "stock": 17243036,
+      "scalar": 16837219,
+      "pie": 16768744,
+      "packets": 3135
+    },
+    {
+      "name": "left-bottom",
+      "audit": false,
+      "stock": 15339300,
+      "scalar": 14917313,
+      "pie": 14845208,
+      "packets": 3300
+    },
+    {
+      "name": "left-bottom",
+      "audit": true,
+      "stock": 16727476,
+      "scalar": 16321659,
+      "pie": 16253184,
+      "packets": 3135
+    },
+    {
+      "name": "right-top",
+      "audit": false,
+      "stock": 15010240,
+      "scalar": 14588253,
+      "pie": 14516148,
+      "packets": 3300
+    },
+    {
+      "name": "right-top",
+      "audit": true,
+      "stock": 16398416,
+      "scalar": 15992599,
+      "pie": 15924124,
+      "packets": 3135
+    },
+    {
+      "name": "blue-overlap",
+      "audit": false,
+      "stock": 15041233,
+      "scalar": 14619246,
+      "pie": 14547141,
+      "packets": 3300
+    },
+    {
+      "name": "blue-overlap",
+      "audit": true,
+      "stock": 16429409,
+      "scalar": 16023592,
+      "pie": 15955117,
+      "packets": 3135
+    },
+    {
+      "name": "gold-overlap",
+      "audit": false,
+      "stock": 14991636,
+      "scalar": 14569649,
+      "pie": 14497544,
+      "packets": 3300
+    },
+    {
+      "name": "gold-overlap",
+      "audit": true,
+      "stock": 16379812,
+      "scalar": 15973995,
+      "pie": 15905520,
+      "packets": 3135
+    },
+    {
+      "name": "left-lamp",
+      "audit": false,
+      "stock": 15336111,
+      "scalar": 14914124,
+      "pie": 14842019,
+      "packets": 3300
+    },
+    {
+      "name": "left-lamp",
+      "audit": true,
+      "stock": 16724287,
+      "scalar": 16318470,
+      "pie": 16249995,
+      "packets": 3135
+    },
+    {
+      "name": "right-lamp",
+      "audit": false,
+      "stock": 15325522,
+      "scalar": 14903535,
+      "pie": 14831430,
+      "packets": 3300
+    },
+    {
+      "name": "right-lamp",
+      "audit": true,
+      "stock": 16713698,
+      "scalar": 16307881,
+      "pie": 16239406,
+      "packets": 3135
+    },
+    {
+      "name": "bottom-lamp",
+      "audit": false,
+      "stock": 15213109,
+      "scalar": 14791122,
+      "pie": 14719017,
+      "packets": 3300
+    },
+    {
+      "name": "bottom-lamp",
+      "audit": true,
+      "stock": 16601285,
+      "scalar": 16195468,
+      "pie": 16126993,
+      "packets": 3135
+    },
+    {
+      "name": "top-lamp-wide",
+      "audit": false,
+      "stock": 15059231,
+      "scalar": 14637244,
+      "pie": 14565139,
+      "packets": 3300
+    },
+    {
+      "name": "top-lamp-wide",
+      "audit": true,
+      "stock": 16447407,
+      "scalar": 16041590,
+      "pie": 15973115,
+      "packets": 3135
+    }
+  ]
+}

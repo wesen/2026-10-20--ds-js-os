@@ -1,0 +1,9 @@
+// Threshold and sum the nonnegative distance to a ceiling, a different consumer.
+function headroom(samples: buffer, first: i32, limit: i32, ceiling: i32): i32 {
+    let total = 0;
+    for (let bin = 0; bin < limit; bin = bin + 1) {
+        let remaining = ceiling - samples.charCodeAt(first + bin);
+        if (remaining >= 0) { total = total + remaining; }
+    }
+    return total;
+}

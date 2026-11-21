@@ -121,3 +121,53 @@ Inspect typed-pie-loops.js, followed by the small optional dispatch in typed-rv3
 ### Technical details
 
 Guide checkpoint fd7cea6. Cloud receipt: OK: uploaded PicoCalc Inferred PIE Loops - Intern Guide.pdf -> /ai/2026/11/21/PICOCALC-PIE-LOOPS. Initial accepted plan maps the unchanged hit continuation to tape interval [207,292).
+
+## Step 3. Reproduce the native images on independent execution engines
+
+I froze the compiler at 74456f2 and wrote the transfer program, fixtures and physical trial scripts myself. The transfer program sums sample headroom; a second version writes its results into a buffer. I have no independently revealed preimage for the preliminary researcher's sealed selection. This is a post-freeze transfer check, not a blind independent replication.
+
+### Prompt Context
+
+See Steps 1 and 2. Preserve the ordinary ray source, use the host inspector, then check physical elapsed time.
+
+### What I did
+
+Rebuilt the three ordinary-source images, disassembled each packed word independently, compared whole guest memory and return/trap outcomes with Wasm, and checked every frame, depth, ID and padding cell against independent C outputs in twelve poses. Added normal app-suite regression tests and a side-by-side source/tape/assembly report. Timed compilation in rotated fresh Node contexts. Separately built a physical test app with two temporary benchmark selectors.
+
+### Why
+
+Exact emitted words and matched inputs allow a meaningful comparison. Moving an input read ahead of a scalar write can introduce an error even when every normally prepared scene renders correctly. Transfer cases vary input capacity, offsets, output overlap, limits and the signed saturation boundary.
+
+### What worked
+
+The twelve-pose complete-frame and audit comparisons passed for all three native images and Wasm. The default isolated primary row calls retired 3,608,697 stock instructions, 3,199,910 matched scalar and 3,131,435 PIE. The transfer workload executed real vector groups. A shifted write overlapping future input went through the scalar fallback and produced the correct memory. All 78 app regression tests passed.
+
+### What didn't work
+
+- The initial mutation tried assigning to an immutable parameter. The frontend reported “6:37: expected mutable local first”. I changed the rejection fixture to mutate a declared local.
+- The standalone Wasm module has a one-page maximum. The first full-frame test failed with “RangeError: WebAssembly.Memory.grow(): Maximum memory size exceeded”. For the multi-plane oracle only, I changed the test module's memory-section maximum and enlarged its memory. Function bytes are unchanged. The emulator reserves a separate stack above these allocations.
+- An independent helper had sealed a holdout without delivering its preimage before the user requested personal ownership. I kept the transfer study explicit about its provenance.
+
+### What I learned
+
+The same source produces different packet counts for the audit and clean calls because their scratch buffer bases have different alignment. Trace both before assigning a performance difference to the shader.
+
+### What was tricky to build
+
+I independently linked each exact guest ELF before the board run. The benchmark runner verifies the checksum from each device compilation, rotates all six arm orders, and verifies the prior release before any flash write.
+
+### What warrants a second pair of eyes
+
+Inspect short-buffer fallbacks, overlapping writes and the first differing test case if porting the pass to another frontend representation. The aligned scratch slot is additional stack use outside the normal saved locals.
+
+### What should be done in the future
+
+Finish the hardware timing and publish the measured break-even evidence, including unfavorable cases.
+
+### Code review instructions
+
+Replay scripts/03-qualify.mjs in rows and frames modes. Look at various/host/comparison.md and vendor-row.txt. Use scripts/08-compile-cost.mjs for host compiler overhead; interpret those results separately from P4 cold compilation.
+
+### Technical details
+
+The frozen ray SHA-256 is b0a7c02bbb8646a2b17c669c7c42fcb5d76ae4d666fe90f988ea2bb97f143e0f. The qualification program fits the original ABI. Padded 160-row multi-plane images require additional test memory capacity.

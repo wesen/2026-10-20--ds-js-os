@@ -12,11 +12,11 @@ const signed12 = n => (n << 20) >> 20;
 export function runRv32(program, name, args, imports, handlers, initialBytes, decoded, instructionLimit = 100_000, onFetch) {
     const code = new DataView(program.image.buffer, program.image.byteOffset, program.image.byteLength);
     const relocations = new Map(program.relocations.map(({offset, index}) => [offset, index]));
-    const memory = new DataView(new ArrayBuffer(stackTop));
+    const memory = new DataView(new ArrayBuffer(Math.max(stackTop, Math.ceil((initialBytes.length + 4096) / 16) * 16)));
     new Uint8Array(memory.buffer).set(initialBytes);
     const x = new Int32Array(32);
     for (const reg of preserved) x[reg] = 0x12340000 + reg;
-    x[2] = stackTop;
+    x[2] = memory.byteLength;
     x[1] = returnToHost;
     x.set(args, 10);
     const packed = packedMachine(memory,x);
