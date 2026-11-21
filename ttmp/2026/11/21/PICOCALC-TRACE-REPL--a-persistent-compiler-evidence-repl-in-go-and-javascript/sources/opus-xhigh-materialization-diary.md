@@ -24,3 +24,19 @@ I rejected an error-only design because the investigators' repeated `q.run(…)`
 - Error code lists in help are still incomplete for codes I did not add (for example `unknownProfile`, `needState`, `noSuchArgument`). That was already true before this change.
 
 **5. Open.** The tests are written but have not been run, because this environment had no shell. Next step: `go test -run Materialization` on the release branch.
+
+**6. coverage_test.go (test-only follow-up).**
+- **Evidence:** coverage-failure.txt shows two failures, at `coverage_test.go:74` (`Function: … Method:none AnchorOrdinal:0`) and `:123` (`[loop for.cond1.preheader.i <nil> true module]`).
+- **Cause:** both tests expected the superseded contract, which treated the nearest preceding pass as the owner (`function: "row"` / `"prepare"`, `functionEvidence.method: passManagerAdjacency`, anchor 87). They also expected "another function's loop is notInSelection" and "0 firmware loops without a function".
+- **frozen-release.js as read:**
+  - `assignLoopScopes` sets `function: null` and `functionEvidence.method: 'none'`, and puts `ownerHint { function, tentative, method: 'passManagerAdjacency', anchorOrdinal, provenance }` to one side.
+  - `confirmLoop` adds `print`, `headerBlockInPrint` and `ownerHint.headerBlockInAnchorPrint`.
+  - `covers` keeps a null-owner loop in every timeline.
+  - `changeRow` returns `known` only for consecutive original ordinals.
+- **Edits, test file only:**
+  - Renamed `TestLoopPrintsBelongToTheirFunctionAndBreakAdjacency` to `TestLoopPrintsHaveNoProvenOwnerAndBreakAdjacency`.
+  - Owner is null. Each tentative hint must equal the anchor computed from the event listing. Fragment and anchor labels are checked against the print bytes, with no hardcoded anchor ordinal or hinted function.
+  - Loop 98 must be in both checked timelines, and the bare loop in all 24 firmware timelines. Another function's function-scoped event still gives `notInSelection`.
+  - A change is `known` only between consecutive ordinals; every other change is a gap with exact `skippedOrdinals` and no delta. This is checked on row, element, an even-ordinal filter and a prepare window.
+  - Kept every check that doesn't depend on ownership: 37 ordinals, example 13 (88/loopFragment/row), 106 unknown after 105, invalidated module print, unrolled copy name, and the catalog, excerpt and timing tests.
+- **Status:** not run here, because there is no shell. The director runs the Go tests.

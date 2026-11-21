@@ -14,6 +14,8 @@ The [four-study supervisor report](ttmp/2026/11/19/PICOCALC-COMPILER-LAB--measur
 
 The [playable firmware qualification](ttmp/2026/11/20/PICOCALC-NATIVE-PROMOTION--qualify-late-text-lowering-and-streaming-frameless-leaves-on-the-playable-picocalc/analysis/01-promoting-two-native-compiler-changes-to-the-playable-picocalc.md) follows late checked-text lowering and streaming frameless leaves through the production compiler, complete Chess and Editor ELFs, and physical ESP32-P4 execution. It includes cold compiler timings, generated-code timings, and the firmware identity.
 
+A persistent host workbench runs the original 26 compiler-evidence queries over LLVM dumps, emulator counts and ESP32-P4 timing captures. Start with the [CLI and session protocol](cmd/trace-repl/README.md) and the [compiler-evidence ticket](ttmp/2026/11/21/PICOCALC-TRACE-REPL--a-persistent-compiler-evidence-repl-in-go-and-javascript/index.md).
+
 ## Handheld firmware
 
 Leave the latest playable firmware installed on the PicoCalc for everyday use. After an experiment with a temporary image, return the device to the current playable build. Follow the [build and installation recipe](ttmp/2026/11/20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/reference/03-reproduce-chess.md).

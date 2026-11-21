@@ -1,0 +1,88 @@
+{
+  "article": "05-designing-and-validating-compiler-optimizations-with-a-trace-repl.md",
+  "publicCells": 2,
+  "results": [
+    {
+      "ordinal": 74,
+      "pass": "EarlyCSEPass",
+      "header": "IR Dump After EarlyCSEPass on row",
+      "from": 73,
+      "fromPass": "SROAPass",
+      "before": 11,
+      "after": 6,
+      "delta": -5,
+      "changed": true,
+      "transition": null,
+      "status": "known",
+      "reason": null,
+      "skipped": null,
+      "skippedOrdinals": null,
+      "endpointDelta": null,
+      "unit": "static instruction sites",
+      "ref": {
+        "variant": "checked",
+        "phase": "middle",
+        "streamSHA": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+        "ordinal": 74,
+        "start": 240363,
+        "end": 248127
+      }
+    },
+    [
+      {
+        "block": 0,
+        "savedMicroseconds": 217,
+        "savedPercent": 0.38535987640070324,
+        "rawRows": [
+          12,
+          24
+        ]
+      },
+      {
+        "block": 1,
+        "savedMicroseconds": 221,
+        "savedPercent": 0.3928190543903306,
+        "rawRows": [
+          71,
+          59
+        ]
+      },
+      {
+        "block": 2,
+        "savedMicroseconds": 307,
+        "savedPercent": 0.5448479040215809,
+        "rawRows": [
+          82,
+          106
+        ]
+      },
+      {
+        "block": 3,
+        "savedMicroseconds": 260,
+        "savedPercent": 0.4614101403751619,
+        "rawRows": [
+          117,
+          129
+        ]
+      },
+      {
+        "block": 4,
+        "savedMicroseconds": 299,
+        "savedPercent": 0.530631078299141,
+        "rawRows": [
+          176,
+          152
+        ]
+      },
+      {
+        "block": 5,
+        "savedMicroseconds": 224,
+        "savedPercent": 0.3976354889673903,
+        "rawRows": [
+          199,
+          187
+        ]
+      }
+    ]
+  ]
+}

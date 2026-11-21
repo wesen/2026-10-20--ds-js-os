@@ -379,3 +379,61 @@ Start with `pkg/traceapi/release_test.go`, then the checked-loop fixture and the
 ### Technical details
 
 The workbook verifies executable programs and defined absence results, without asserting that every possible compiler question has a corresponding captured observation. Runtime measurements include transport and serialization. The shared archive could already be warm when the fresh VM was opened.
+
+## Step 7: Review the blind retest and qualify the compiler research recommendation
+
+Nine investigators finished. The corrected pass-scope results survived a raw-stream census and a held-out allocator investigator distinguished a machine-function flag from execution. I accepted these as individual scientific observations, then checked a remaining performance extrapolation against the populations each experiment sampled.
+
+### Prompt Context
+
+**User prompt:** “the overall goal is: allow researchers/users to design and validate optimizations for compiler building.”
+
+**Assistant interpretation:** Qualify the workbench through an experiment somebody could actually run, including evidence against the claim and evidence that remains missing.
+
+**Inferred user intent:** Give the lab a tool, a way to improve that tool, and a report through which a new engineer can reconstruct the reasoning.
+
+**Commit (code):** `6494e30` — Preserve compiler scope uncertainty and identify measured optimization treatments.
+
+### What I did
+
+- Reviewed all nine persona outcomes recorded by the usability lane at `64d6dda`. The candidate catalog, pass, ablation and optimization cards repeated the original questions. The fifth card asked a new allocator question.
+- Read the independent grade, the baseline and candidate receipts, and the correspondence between raw print and normalized loop event. Checked one remaining unsupported roughly 3.9% whole-frame extrapolation against its primary-phase physical numerator and opening-row emulation denominator.
+- Ran the full Opus candidate regression set unmodified on the research host. The six final integration checks and the conservative loop-coverage regressions passed. Ran `go test -race -count=1 ./...` on the real five-package module with loopback enabled and `go vet ./...`. Both succeeded.
+- Wrote the director's report and executed its exact two JavaScript blocks against port 3792. They returned the original 73→74 change and six paired opening-scene records. The new article includes the candidate versus stock control choices and a proposed two-value register treatment with its own correctness and hardware gates.
+- Validated the ticket with `docmgr doctor --ticket PICOCALC-TRACE-REPL --stale-after 365 --fail-on error`. Added a local ignore for two directories of original experiment inputs so the validator scans the actual managed documents.
+
+### Why
+
+Running programs and checking numeric answers could not detect the two baseline investigators' additional false statements or the incorrect follow-up hardware projection. The scientific object of review was the inference from an observation to a proposed compiler change.
+
+### What worked
+
+The corrected input semantics, raw-stream oracle and held-out allocator witness agreed on what each question could establish. All five Go packages passed the race detector. The held-out problem did not use a repeat participant.
+
+### What didn't work
+
+The revised optimization metadata did not prevent the fresh optimizer from constructing a quantitative projection across different units and populations. There was also a residual type error when an eager descriptor was put into a query bundle. Both findings are retained in the usability report.
+
+### What I learned
+
+Improving the honesty of a single API result is practical. Correctly combining good results into a new causal claim is a harder research problem. Each comparison needs its own explicit population, denominator and control.
+
+### What was tricky to build
+
+The original test author had used an earlier version of the loop provenance contract. The Opus engineer revised the test to independently assert absence of an established owner and presence of the observed adjacent hint. The verified implementation and running candidate share the exact embedded language digest.
+
+### What warrants a second pair of eyes
+
+The study has one participant in each build and card cell. Worked examples expose several names and ordinals. Preserve these limitations in the vault reports and in any future performance or usability claim.
+
+### What should be done in the future
+
+Collect instruction-address-level Typed counters for identical inputs, isolate the register choice, add invalid-input tests, then collect new device data. The manuscripts describe the decision rule; this work did not implement the proposed raytracer treatment.
+
+### Code review instructions
+
+Read `scripts/32-replay-director-article.py`, the nine public receipts, the Opus scientific reports, and the frozen executable's identity. A new investigator can replay the study from the CLI without access to the authors' temporary directories.
+
+### Technical details
+
+The candidate binary was frozen while its source was in the working tree. The committed `pkg/traceapi/query.js` at `6494e30` hashes to `482260a431634db8de4dcea6f17d8600dc4fc75b1e1d9ce2feca023db7f25dea`, the same full JavaScript bytes found in the executable on 3792.
