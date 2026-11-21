@@ -33,6 +33,8 @@ Write a separate detailed investigation diary, recording public factual activity
     events=json.loads(result.stdout); receipt=events[-1] if isinstance(events,list) else events
     text=receipt["result"];(d/"article-response.txt").write_text(text)
     if receipt.get("is_error"): raise ValueError(text[:700])
+    if any(marker not in text for marker in ("ARTICLE_BEGIN","ARTICLE_END","DIARY_BEGIN","DIARY_END")):
+        raise ValueError("No complete manuscript and diary in public response; preserved article-response.txt")
     article=text.split("ARTICLE_BEGIN",1)[1].split("ARTICLE_END",1)[0].strip()
     diary=text.split("DIARY_BEGIN",1)[1].split("DIARY_END",1)[0].strip()
     (d/"article.md").write_text(article+"\n");(d/"author-diary.md").write_text(diary+"\n")

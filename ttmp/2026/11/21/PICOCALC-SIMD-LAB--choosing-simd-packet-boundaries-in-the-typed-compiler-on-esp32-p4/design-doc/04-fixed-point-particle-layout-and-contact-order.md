@@ -47,9 +47,9 @@ For physical timing, prepare the schedule outside timed updates and also measure
 
 ## Identity and qualification
 
-The host uses the production Typed front end and streaming RV32 emitter. A generated, immutable assembly stream embeds the emitted words with their public entry symbols. The board compiler links precisely these words, so the experiment does not require an independent Typed implementation on the device. The physical trial therefore measures generated execution only. The native assembly undergoes assembly and static linking with the Espressif toolchain. The host replays actual RV32 image words in Unicorn and models a small allowlisted set of PIE instructions using vendor disassembly. The board independently executes these instructions. Each recorded host address is relative to its own linked image.
+The host uses the production Typed front end and streaming RV32 emitter. A generated, immutable assembly stream embeds the emitted words with their public entry symbols. The board compiler links precisely these words, so the experiment does not require an independent Typed implementation on the device. The timed interval covers repeated kernel calls plus harness dispatch. Preparation and correctness checks run outside it. The native assembly undergoes assembly and static linking with the Espressif toolchain. The host replays actual RV32 image words in Unicorn and models a small allowlisted set of PIE instructions using vendor disassembly. The board independently executes these instructions. Each recorded host address is relative to its own linked image.
 
-Each timed arm starts with twelve copies of the same deterministic state prepared before reading the cycle counter. Output validation, checksums and UART emission happen after the second counter read. Eight blocks rotate arm ordering and retain individual records. The same operator runs all board studies. A failure in any buffer comparison invalidates that arm. The counter measures elapsed CPU cycles for a batch including harness calls; one emulated instruction in the host study has a different unit.
+Each timed arm starts with twelve copies of the same deterministic state prepared before reading the cycle counter. Output validation, checksums and UART emission happen after the second counter read. Twelve particle blocks and fourteen contact blocks rotate arm ordering and retain individual records. The same operator runs all board studies. A failure in any buffer comparison invalidates that arm. The counter measures elapsed CPU cycles for a batch including harness calls; one emulated instruction in the host study has a different unit.
 
 The researcher manuscript, replay script and retained device data distinguish measured arms, alternatives declined for correctness, and future compiler inference mechanisms. A winning manually selected arm is evidence about attainable speed for this kernel. It does not by itself evaluate the compiler's selection policy on a held-out workload.
 
@@ -60,3 +60,21 @@ A second pair of controls connects each particle layout to an explicitly selecte
 Each particle size has twelve arms. The first four are the native factorial, then two unmodified Typed baseline functions, two layout conversion arms, and four matched checked plans. Twelve cyclic blocks put each arm in each ordinal position once. Contacts use seven arms and fourteen cyclic blocks. The board thus prints 818 measured rows, each validated against an independent reference. The host additionally tests nonpositive count and partial capacities on every guarded arm. It records the exact post-trap memory state and virtual-machine interruption, and the normal return value for paths that complete.
 
 Box2D's solver research describes packing contacts which share no dynamic body and retaining the coloring while contacts survive. The toy fixture here fixes one step of a two-body relaxation law and separately times the complete deterministic input-generation, coloring and stable scatter used in this harness. A production incremental coloring algorithm would have a different cost. [Erin Catto on contact coloring and SIMD](https://box2d.org/posts/2024/08/simd-matters/) · [Espressif on aligned vector loads and PIE](https://developer.espressif.com/blog/2024/12/pie-introduction/)
+
+
+## Transferring the qualified layouts into a compiler
+
+The first integration target is a host prototype for exported Typed entries. The frontend exposes one numeric operation tape per function through `typedWasm.compileFunctions(..., true, onFunction)`. The recognizer declines a tape larger than 256 words before decoding it. A cursor verifies the single-loop control flow, checked halfword accesses, sign extension, widened sum, saturation clamps, sole store, induction step and return. Index expressions are normalized to coefficients of iteration, count and constant in i32 arithmetic. Distinct role IDs protect the induction variable and loaded values from mutation. Ordinary scalar compilation supplies the fallback and every unsupported function.
+
+```text
+ordinary Typed source
+  ├── per-function numeric operations → bounded proof → entry selection
+  └── production compiler → generic code for every function
+checked exported entry
+  ├── count > 0 and capacity / 2 >= count → qualified scalar or PIE body
+  └── other input → source-ordered generic function and its original traps
+```
+
+The study implementation generates one proof record and public entry symbol per function. Two recognized layouts share the wrapper code and use separate native templates. Multiple accepted functions of the same family receive different labels. Recognition considers source arithmetic and affine access families. Names remain solely as identifiers for symbol emission and reporting. The host compiler fixture is a standalone driver and checks self-contained modules. Internal stock calls keep their original targets. No compile-time performance bound for the complete host driver follows from the 256-word bound on its local analysis.
+
+The 2,280-comparison qualification and the actual flashed-image binding are described in the [physics research report](../analysis/04-fixed-point-particle-layouts-and-contact-scheduling-on-the-esp32-p4.md). Source, plan records, selected addresses, real stock fallbacks and complete before/after state are available to independent reviewers.

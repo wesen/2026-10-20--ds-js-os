@@ -1,0 +1,56 @@
+{
+  "flashedFirmwareSHA256": "f9ad948df76c6dae831778d5eb123383d9f37a7b46cdb394f4019e58a8d6ea4c",
+  "generatedHostSHA256": "79809bfa90fcb600d3064bc09595ccb054c7475660f95dbf95af968c3893f3ac",
+  "calibratedObjectSHA256": {
+    "native": "7b0b6ffad3f4377167c6485e7ded8e54c358f527f5920fa41726f19c7d5a2581",
+    "typed": "53be528977c17e5ee634eb46c63ff05e9d6e410b46a9858d530b9fb82b16e722",
+    "guard": "0d17954d4726c2ecbbe3876eec4e2a697f501e6eebc8dc5bfbd8e967c2ceb151"
+  },
+  "sections": {
+    "native": {
+      "offset": 313308,
+      "hostOffset": 272,
+      "size": 1652
+    },
+    "typed": {
+      "offset": 311832,
+      "hostOffset": 1924,
+      "size": 1476
+    }
+  },
+  "guards": [
+    {
+      "name": "guarded_aos_scalar",
+      "boardFileOffset": 298228,
+      "targetFileOffsets": {
+        "native": 313308,
+        "typed": 311832
+      }
+    },
+    {
+      "name": "guarded_aos_pie",
+      "boardFileOffset": 298296,
+      "targetFileOffsets": {
+        "native": 313380,
+        "typed": 311832
+      }
+    },
+    {
+      "name": "guarded_soa_scalar",
+      "boardFileOffset": 298364,
+      "targetFileOffsets": {
+        "native": 313644,
+        "typed": 312284
+      }
+    },
+    {
+      "name": "guarded_soa_pie",
+      "boardFileOffset": 298432,
+      "targetFileOffsets": {
+        "native": 313732,
+        "typed": 312284
+      }
+    }
+  ],
+  "scope": "Original module. Absolute offsets index the firmware file; the PC-relative displacement agrees across both complete sections."
+}
