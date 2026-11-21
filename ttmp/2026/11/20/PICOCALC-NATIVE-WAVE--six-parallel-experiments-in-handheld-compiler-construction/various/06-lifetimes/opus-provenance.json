@@ -1,0 +1,9 @@
+{
+  "command": "claude -p --model opus --effort high --tools ''",
+  "initialDesignPromptSHA256": "bf6bbbb23db3434d2bef19a1a6b42b8ec51fc95de826b7f5ac81f8edf3a86390",
+  "initialDesignOutputSHA256": "6088dd8ae28ce220ff8239575285b86e96dfcca093baa1af24aeee5d8ca85247",
+  "articlePromptSHA256": "32a0ece5cbbc9be51063dbd7d43f7f5b1b9c6175bf3f6a9648cddebd73f88814",
+  "rawArticleSHA256": "ee0374ce9488e3441bfa4601b21fa4c4e1084a8af3bb109895de4e9f3525dd57",
+  "reviewedArticleSHA256": "6bb7beef811a9ce05f9b697950326dcad7f7dcc40d025960513e785f6f551a8a",
+  "review": "Clarified conditional suspension, three arms, actual Editor in-place UTF-16 behavior, and host-only evidence. Fixed the raw design link after preserving its bytes in a .txt attachment. Added a separately tested counterexample to clarify that the complete world linker must enforce scalar state fields."
+}

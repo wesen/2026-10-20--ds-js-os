@@ -1,0 +1,1486 @@
+{
+  "heldOutSha256": "0732c83754dfcb3271d6502f41e14b0cc3e96dc9e0896691da36b1f17e3385db",
+  "checks": {
+    "development": [
+      {
+        "name": "scalar across wait",
+        "sourceSha256": "b79f3d7273a236376eeddfb6c813579e968a5df5b0b4b12c1b677bc6bea5c304",
+        "expected": true,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": true,
+          "bytes": 1004,
+          "imageSha256": "6620d5d460f4c61cb32f21f402937668377793e55a28a54f8c278ca16962447a",
+          "slots": 3,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 0,
+            "tokens": 12,
+            "calls": 0
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "837b10cb62ba2b52d7a861e201cc568cfa4d87b42edf93d4be19254122a0d677",
+            "value": 7
+          }
+        },
+        "inferred": {
+          "accepted": true,
+          "bytes": 1004,
+          "imageSha256": "6620d5d460f4c61cb32f21f402937668377793e55a28a54f8c278ca16962447a",
+          "slots": 3,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 0,
+            "tokens": 12,
+            "calls": 0
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "837b10cb62ba2b52d7a861e201cc568cfa4d87b42edf93d4be19254122a0d677",
+            "value": 7
+          }
+        }
+      },
+      {
+        "name": "direct returned alias consumed within turn",
+        "sourceSha256": "f0fb0692096c3ae96515c7919c090a99b727e2a34b10813255e672a07ea15692",
+        "expected": true,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "6:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": true,
+          "bytes": 1100,
+          "imageSha256": "89a08a96254c49818b2a2a1a21e7b0f700be9aaf17b20b9a8f516014b2cf6567",
+          "slots": 3,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 2,
+            "tokens": 36,
+            "calls": 2
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "837b10cb62ba2b52d7a861e201cc568cfa4d87b42edf93d4be19254122a0d677",
+            "value": 7
+          }
+        },
+        "inferred": {
+          "accepted": true,
+          "bytes": 1100,
+          "imageSha256": "89a08a96254c49818b2a2a1a21e7b0f700be9aaf17b20b9a8f516014b2cf6567",
+          "slots": 3,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 2,
+            "tokens": 36,
+            "calls": 2
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "837b10cb62ba2b52d7a861e201cc568cfa4d87b42edf93d4be19254122a0d677",
+            "value": 7
+          }
+        }
+      },
+      {
+        "name": "direct scalar field store after reference read",
+        "sourceSha256": "8972788df99dfebfe643cd4fa724b288142087b2f5b8ae05dc3eac044d52a81e",
+        "expected": true,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": false,
+          "diagnostic": "7:22: turn buffer: unproved retained store"
+        },
+        "inferred": {
+          "accepted": false,
+          "diagnostic": "7:22: turn buffer: unproved retained store"
+        },
+        "coverageGap": true
+      },
+      {
+        "name": "overwrite kills old reference then copies scalar",
+        "sourceSha256": "095052d7061d4788c2413144becfe6d27fc71792a463265ffaa3cb89052fd853",
+        "expected": true,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": true,
+          "bytes": 1008,
+          "imageSha256": "3f7c6b69e68c43591c9d646ff292141e33d58b9137399f0fa08ea9527125155a",
+          "slots": 2,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 0,
+            "tokens": 17,
+            "calls": 1
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ],
+              [
+                "buffer",
+                1
+              ]
+            ],
+            "bytes": "11e60fd1bc69041ab34360bef1696ed19b0ad45d63d7d920a0886c8e07679038",
+            "value": 99
+          }
+        },
+        "inferred": {
+          "accepted": true,
+          "bytes": 1008,
+          "imageSha256": "3f7c6b69e68c43591c9d646ff292141e33d58b9137399f0fa08ea9527125155a",
+          "slots": 2,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 0,
+            "tokens": 17,
+            "calls": 1
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ],
+              [
+                "buffer",
+                1
+              ]
+            ],
+            "bytes": "11e60fd1bc69041ab34360bef1696ed19b0ad45d63d7d920a0886c8e07679038",
+            "value": 99
+          }
+        }
+      },
+      {
+        "name": "nested async prefix",
+        "sourceSha256": "69831039045684962a118011eeacfd46e194f4cbf02aac93f31d165a3258be6b",
+        "expected": true,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "3:39: async reference parameter local is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": true,
+          "bytes": 1544,
+          "imageSha256": "01b5d59b42f4ee85e28dde043e8c5d322dcb8e5e636f281554a72b673edfe4a9",
+          "slots": 5,
+          "metrics": {
+            "functions": 2,
+            "parameters": 2,
+            "helperSummaries": 0,
+            "tokens": 16,
+            "calls": 0
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "c51c42bff546a58c6f65ecfabe176a97490cc2015b258ed3729971b08460ce6c",
+            "value": 7
+          }
+        },
+        "inferred": {
+          "accepted": true,
+          "bytes": 1544,
+          "imageSha256": "01b5d59b42f4ee85e28dde043e8c5d322dcb8e5e636f281554a72b673edfe4a9",
+          "slots": 5,
+          "metrics": {
+            "functions": 2,
+            "parameters": 2,
+            "helperSummaries": 0,
+            "tokens": 16,
+            "calls": 0
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "c51c42bff546a58c6f65ecfabe176a97490cc2015b258ed3729971b08460ce6c",
+            "value": 7
+          }
+        }
+      },
+      {
+        "name": "alias across wait",
+        "sourceSha256": "20d28d47bd1c28df41432cfc753a8101179d167fcb03dc6d486954afe663051a",
+        "expected": false,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": false,
+          "diagnostic": "6:14: b is live across the wait at line 6; obtain it again after the wait"
+        },
+        "inferred": {
+          "accepted": false,
+          "diagnostic": "6:14: b is live across the wait at line 6; obtain it again after the wait"
+        }
+      },
+      {
+        "name": "escape through transitive helper",
+        "sourceSha256": "451432733e575a49c33d615fa2ca1cdc45fa986e987db1ae3538b64711834d00",
+        "expected": false,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "6:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": false,
+          "diagnostic": "3:38: turn buffer: unproved reference import opaqueKeep"
+        },
+        "inferred": {
+          "accepted": false,
+          "diagnostic": "3:38: turn buffer: unproved reference import opaqueKeep"
+        }
+      },
+      {
+        "name": "loop-carried buffer remains live",
+        "sourceSha256": "76bce8a88e719b16edcee79044db8b61fb1d9eb79a6f59c694191ce8e4fa2528",
+        "expected": false,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": false,
+          "diagnostic": "7:9: b is live across the wait at line 7; obtain it again after the wait"
+        },
+        "inferred": {
+          "accepted": false,
+          "diagnostic": "7:9: b is live across the wait at line 7; obtain it again after the wait"
+        }
+      },
+      {
+        "name": "only one branch kills the old reference",
+        "sourceSha256": "c7cf68b738c9bd76245d57af1e34481aa418e9f2f94847772d1fa02a0500d588",
+        "expected": false,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": false,
+          "diagnostic": "7:9: b is live across the wait at line 7; obtain it again after the wait"
+        },
+        "inferred": {
+          "accepted": false,
+          "diagnostic": "7:9: b is live across the wait at line 7; obtain it again after the wait"
+        }
+      },
+      {
+        "name": "opaque reference sink",
+        "sourceSha256": "da7a08194b200fcd97e744418a5ce1d882e7947c176f10337525812f5083bdff",
+        "expected": false,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": false,
+          "diagnostic": "5:1: turn buffer: unproved reference import opaqueKeep"
+        },
+        "inferred": {
+          "accepted": false,
+          "diagnostic": "5:1: turn buffer: unproved reference import opaqueKeep"
+        }
+      }
+    ],
+    "heldOut": [
+      {
+        "name": "parse then yield",
+        "sourceSha256": "b2fcb53a17c56d22594c76bf99a1e7ac70edd54a6e9f61362e6e189136b93547",
+        "expected": true,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": true,
+          "bytes": 972,
+          "imageSha256": "aab85a29f509acaa1b12f4676db21a6838b0695a4025b84daf10ef61569091a1",
+          "slots": 3,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 0,
+            "tokens": 12,
+            "calls": 0
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "837b10cb62ba2b52d7a861e201cc568cfa4d87b42edf93d4be19254122a0d677",
+            "value": 7
+          }
+        },
+        "inferred": {
+          "accepted": true,
+          "bytes": 972,
+          "imageSha256": "aab85a29f509acaa1b12f4676db21a6838b0695a4025b84daf10ef61569091a1",
+          "slots": 3,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 0,
+            "tokens": 12,
+            "calls": 0
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "837b10cb62ba2b52d7a861e201cc568cfa4d87b42edf93d4be19254122a0d677",
+            "value": 7
+          }
+        }
+      },
+      {
+        "name": "resume through alias",
+        "sourceSha256": "b2183b3d2f9a5348b32fa4d43f5c68a812065f48babbeb8b7c7310a5af383750",
+        "expected": false,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": false,
+          "diagnostic": "5:51: q is live across the wait at line 5; obtain it again after the wait"
+        },
+        "inferred": {
+          "accepted": false,
+          "diagnostic": "5:51: q is live across the wait at line 5; obtain it again after the wait"
+        }
+      },
+      {
+        "name": "overwrite alias with durable",
+        "accepted": true,
+        "outsideLanguage": "The shared grammar has no persistent buffer value type; substituting a fresh ambient buffer would change the scenario."
+      },
+      {
+        "name": "conditional replacement",
+        "accepted": false,
+        "outsideLanguage": "The shared grammar has no persistent buffer value type; substituting a fresh ambient buffer would change the scenario."
+      },
+      {
+        "name": "borrow helper",
+        "sourceSha256": "999156dc9ae3afe390df4dab5af0bdd0b1902f9b9d3cda7e8dfb511b98300a42",
+        "expected": true,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "5:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": true,
+          "bytes": 548,
+          "imageSha256": "af99d3dc5ffce6c6532f31206159961761a8d72d0a55333133f17ce424756661",
+          "slots": 2,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 1,
+            "tokens": 26,
+            "calls": 1
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ]
+            ],
+            "bytes": "e3650326d3ea6696e97f0fc529da476335e7b6da4d0768e78f66987e9021b123",
+            "value": 7
+          }
+        },
+        "inferred": {
+          "accepted": true,
+          "bytes": 548,
+          "imageSha256": "af99d3dc5ffce6c6532f31206159961761a8d72d0a55333133f17ce424756661",
+          "slots": 2,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 1,
+            "tokens": 26,
+            "calls": 1
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ]
+            ],
+            "bytes": "e3650326d3ea6696e97f0fc529da476335e7b6da4d0768e78f66987e9021b123",
+            "value": 7
+          }
+        }
+      },
+      {
+        "name": "escaping helper",
+        "sourceSha256": "c5635680b703f2677eafe96e4b96e64ce4e0f3afbee74f5866341fc894c36728",
+        "expected": false,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": false,
+          "diagnostic": "3:38: turn buffer: unproved reference import opaqueKeep"
+        },
+        "inferred": {
+          "accepted": false,
+          "diagnostic": "3:38: turn buffer: unproved reference import opaqueKeep"
+        }
+      },
+      {
+        "name": "dead alternate arm",
+        "sourceSha256": "3bd663a33fd18929e35f1c4811f5c4fe2f4e5905d5ac30ca02b9dce861646a97",
+        "expected": true,
+        "stock": {
+          "accepted": false,
+          "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+        },
+        "explicit": {
+          "accepted": true,
+          "bytes": 1016,
+          "imageSha256": "62f9de2c3f9c88a85706d8d440c15f76ab7feb2990d12c3cb3f98faaf02f0e4a",
+          "slots": 3,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 0,
+            "tokens": 19,
+            "calls": 0
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "837b10cb62ba2b52d7a861e201cc568cfa4d87b42edf93d4be19254122a0d677",
+            "value": 7
+          }
+        },
+        "inferred": {
+          "accepted": true,
+          "bytes": 1016,
+          "imageSha256": "62f9de2c3f9c88a85706d8d440c15f76ab7feb2990d12c3cb3f98faaf02f0e4a",
+          "slots": 3,
+          "metrics": {
+            "functions": 1,
+            "parameters": 1,
+            "helperSummaries": 0,
+            "tokens": 19,
+            "calls": 0
+          },
+          "runtime": {
+            "steps": [
+              [
+                "buffer",
+                0
+              ],
+              [
+                "yield",
+                0
+              ]
+            ],
+            "bytes": "837b10cb62ba2b52d7a861e201cc568cfa4d87b42edf93d4be19254122a0d677",
+            "value": 7
+          }
+        }
+      },
+      {
+        "name": "loop-carried borrowed value",
+        "accepted": false,
+        "outsideLanguage": "The shared grammar has no persistent buffer value type; substituting a fresh ambient buffer would change the scenario."
+      }
+    ],
+    "realistic": {
+      "name": "Editor CRLF normalization prefix",
+      "sourceSha256": "cd46025b14c67a16254111f4b2e24d570daae137616fbdd60345e09f932b47d2",
+      "expected": true,
+      "stock": {
+        "accepted": false,
+        "diagnostic": "4:38: async reference parameter chunk is not an ambient handler parameter"
+      },
+      "explicit": {
+        "accepted": true,
+        "bytes": 1300,
+        "imageSha256": "07dad003911ba9b5c8eb0e104bed8b7b8b2dc3a084c64ca2bc76674d9f60088d",
+        "slots": 3,
+        "metrics": {
+          "functions": 1,
+          "parameters": 1,
+          "helperSummaries": 0,
+          "tokens": 53,
+          "calls": 0
+        },
+        "runtime": {
+          "steps": [
+            [
+              "buffer",
+              0
+            ],
+            [
+              "yield",
+              0
+            ]
+          ],
+          "bytes": "f3326ba9fe8fbe14cd31c091046babe94885a1859f5076a80ff616daf9587494",
+          "value": 3
+        }
+      },
+      "inferred": {
+        "accepted": true,
+        "bytes": 1300,
+        "imageSha256": "07dad003911ba9b5c8eb0e104bed8b7b8b2dc3a084c64ca2bc76674d9f60088d",
+        "slots": 3,
+        "metrics": {
+          "functions": 1,
+          "parameters": 1,
+          "helperSummaries": 0,
+          "tokens": 53,
+          "calls": 0
+        },
+        "runtime": {
+          "steps": [
+            [
+              "buffer",
+              0
+            ],
+            [
+              "yield",
+              0
+            ]
+          ],
+          "bytes": "f3326ba9fe8fbe14cd31c091046babe94885a1859f5076a80ff616daf9587494",
+          "value": 3
+        }
+      }
+    }
+  },
+  "costs": [
+    {
+      "helpers": 16,
+      "runs": {
+        "explicit": [
+          {
+            "analyzeMs": 1.6769060000000025,
+            "compileMs": 2.3069580000000087,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.66610399999999,
+            "compileMs": 1.42931999999999,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.6509409999999889,
+            "compileMs": 1.4224389999999971,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.6402860000000032,
+            "compileMs": 1.3804769999999849,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.518178000000006,
+            "compileMs": 1.9021899999999903,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.40947899999997617,
+            "compileMs": 1.0303569999999809,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.4837829999999883,
+            "compileMs": 1.1769299999999987,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.4991719999999873,
+            "compileMs": 1.1222949999999798,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.5380179999999939,
+            "compileMs": 2.198516000000012,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.4355040000000088,
+            "compileMs": 0.9422110000000146,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.4085269999999923,
+            "compileMs": 0.8850020000000143,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          }
+        ],
+        "inferred": [
+          {
+            "analyzeMs": 1.3023070000000132,
+            "compileMs": 1.6085950000000082,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.5293670000000077,
+            "compileMs": 1.3818409999999801,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.6890010000000188,
+            "compileMs": 1.5507630000000177,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.6594340000000045,
+            "compileMs": 1.3681749999999795,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.4722770000000196,
+            "compileMs": 1.1563250000000096,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.42390499999999065,
+            "compileMs": 1.2344360000000165,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.48810000000000286,
+            "compileMs": 1.1539689999999894,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.48553400000000124,
+            "compileMs": 1.0682949999999778,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.42003199999999197,
+            "compileMs": 0.9044869999999889,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.3575829999999769,
+            "compileMs": 0.8677650000000199,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          },
+          {
+            "analyzeMs": 0.4575839999999971,
+            "compileMs": 1.1142650000000174,
+            "imageSha256": "2cabad3894c244d2746ddf311e1d9490d13f3b5394cc119f4de763791cbab34f",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 16,
+              "tokens": 359,
+              "calls": 16
+            }
+          }
+        ]
+      }
+    },
+    {
+      "helpers": 64,
+      "runs": {
+        "explicit": [
+          {
+            "analyzeMs": 1.7142860000000155,
+            "compileMs": 3.482073999999983,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.2940619999999967,
+            "compileMs": 2.5977379999999926,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 2.6997949999999946,
+            "compileMs": 2.122616999999991,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.6223099999999988,
+            "compileMs": 2.8794650000000104,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.4047910000000172,
+            "compileMs": 3.1428569999999922,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.040994000000012,
+            "compileMs": 2.0123059999999953,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 0.9062959999999975,
+            "compileMs": 2.452600999999987,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 2.426809999999989,
+            "compileMs": 1.8388149999999541,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.54382099999998,
+            "compileMs": 2.886148999999989,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 0.9575710000000299,
+            "compileMs": 1.5817260000000033,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 0.8334950000000276,
+            "compileMs": 2.745306000000028,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          }
+        ],
+        "inferred": [
+          {
+            "analyzeMs": 2.8647259999999903,
+            "compileMs": 4.306016999999997,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.8911370000000147,
+            "compileMs": 3.0236579999999833,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.1020639999999844,
+            "compileMs": 2.1868969999999877,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.2365629999999896,
+            "compileMs": 2.400296999999995,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.315560000000005,
+            "compileMs": 3.621391000000017,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 0.9757900000000177,
+            "compileMs": 1.8413249999999834,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.185510000000022,
+            "compileMs": 3.542252000000019,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.0854080000000295,
+            "compileMs": 2.279182999999989,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 0.8988929999999868,
+            "compileMs": 1.4261459999999602,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 1.2122949999999832,
+            "compileMs": 2.815894999999955,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          },
+          {
+            "analyzeMs": 0.8679520000000025,
+            "compileMs": 1.4774899999999889,
+            "imageSha256": "106d09a2b307129d77a8dd3f5e1608b921c52139fc232e658298ccb9a7b2d8f9",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 64,
+              "tokens": 1415,
+              "calls": 64
+            }
+          }
+        ]
+      }
+    },
+    {
+      "helpers": 120,
+      "runs": {
+        "explicit": [
+          {
+            "analyzeMs": 2.599474999999984,
+            "compileMs": 7.617179999999962,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 2.902042999999992,
+            "compileMs": 6.497625000000028,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 2.5804959999999824,
+            "compileMs": 4.388094000000024,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 2.3197159999999712,
+            "compileMs": 3.5660669999999755,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.886004000000014,
+            "compileMs": 4.5426180000000045,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.4748629999999707,
+            "compileMs": 3.9012440000000197,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.7092510000000516,
+            "compileMs": 3.502543000000003,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.8724690000000237,
+            "compileMs": 10.835477000000026,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.7774989999999775,
+            "compileMs": 3.800768000000005,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.7064289999999573,
+            "compileMs": 2.84197800000004,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.6249129999999923,
+            "compileMs": 2.5732509999999706,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          }
+        ],
+        "inferred": [
+          {
+            "analyzeMs": 2.8080209999999965,
+            "compileMs": 4.698653999999976,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.745250999999996,
+            "compileMs": 3.3180419999999913,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.8605159999999614,
+            "compileMs": 3.5011370000000284,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.6995959999999855,
+            "compileMs": 3.5934799999999996,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 3.16013700000002,
+            "compileMs": 6.866406999999981,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 2.6270549999999844,
+            "compileMs": 2.772736000000009,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 2.061550000000011,
+            "compileMs": 3.25231100000002,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 1.8784240000000523,
+            "compileMs": 3.5152989999999704,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 6.063643000000013,
+            "compileMs": 7.973450000000014,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 2.993520999999987,
+            "compileMs": 5.0508290000000216,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          },
+          {
+            "analyzeMs": 2.488640999999973,
+            "compileMs": 6.421019000000001,
+            "imageSha256": "483bd400b209d1431dd1138c4cb92753c8d0e6f4827f7b3edcdb0f89fcd8bcdf",
+            "metrics": {
+              "functions": 1,
+              "parameters": 1,
+              "helperSummaries": 120,
+              "tokens": 2647,
+              "calls": 120
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

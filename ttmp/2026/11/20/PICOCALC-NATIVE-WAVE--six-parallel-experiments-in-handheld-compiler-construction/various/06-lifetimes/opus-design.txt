@@ -1,0 +1,416 @@
+# Inferring turn lifetimes for borrowed buffer handles in Typed async code
+
+## Design for an off-by-default study, with nothing measured yet
+
+---
+
+## 0. What this document is and is not
+
+I had no tools for this session. I did not read the Typed compiler, the SDK, Editor, Agenda or the runtime, and I ran nothing. As a result:
+
+- **No result in this document was measured.** Every timing, count and verdict below is a prediction, a rule or an expected outcome for a test. None of them is an observation.
+- SDK names such as `fs.borrowChunk`, `bytes.countByte` and `ui.yield`, and the type name `Borrowed<Bytes>`, are **placeholders**. The study must replace them with the real names before any case is frozen.
+- I could not inspect the code, so several design choices depend on facts about it. Section 3 lists those questions. Each one has a default answer. If the code contradicts a default, the affected rule changes in the direction of rejecting more programs, never fewer.
+
+The study is "explicit lifetime oracle vs inferred turn lifetime." This document gives the definitions, the analysis, the tiered rules, matched accepted and rejected examples, the safety invariants, and the protocols for validation, held-out cases and timing.
+
+---
+
+## 1. The problem in one paragraph
+
+A Typed `async` function runs in **turns**. A turn is a stretch of execution that contains no suspension. It starts at function entry or at a resume point, and it ends at the next `await` or at function exit. The current frontend computes backwards liveness across each `await`. It stores only live values in the continuation, and it allows only scalar or wire-compatible types there, so buffers cannot cross a suspension. The SDK also hands out **synchronous borrowed buffer handles**. They stay valid until the current turn ends, and code may acquire, use and drop them freely inside that turn. The question is whether the compiler can **infer**, without annotations, that each borrowed handle stays within its turn. Concretely, the handle must:
+
+1. not be live at any suspension point,
+2. not escape into storage that outlives the turn,
+
+and the inference must reject everything it cannot prove. The comparison point is an **explicit** lexical discipline, where the programmer marks the turn. That discipline is trivially sound and easy to audit, so it serves as the oracle.
+
+---
+
+## 2. Terms
+
+| Term | Meaning in this design |
+|---|---|
+| **Suspension point** | A CFG node where the turn ends: every `await`, function exit of an async function, and any synchronous SDK call that the runtime documents as ending the turn (Q5). |
+| **Turn region** | The set of CFG points reachable from entry or from a resume point without passing through a suspension point. |
+| **Borrow site** | A call site that produces a borrowed handle: an SDK acquisition, or an SDK view whose result aliases a borrowed handle. |
+| **Turn-bound value** | A value that may hold a borrowed handle obtained from any borrow site. |
+| **Escape** | Any flow of a turn-bound value into a place whose lifetime is not bounded by the current turn: a global or module binding, a record, array or opaque-store field, a closure capture, a continuation slot, the async return value or promise resolution, a thrown value, an argument to an async or unknown callee, or a wire send. |
+| **Entity** | A resolved binding after name resolution. Two `h`s in nested scopes are two entities. The analysis never works on names. |
+
+---
+
+## 3. Facts the study must establish from the code first
+
+The first investigation step answers each question and records the answer with a file and line reference in the diary. Every answer feeds into the rules.
+
+| # | Question | Why it matters | Default if unknown (conservative) |
+|---|---|---|---|
+| Q1 | Is a borrowed handle a distinct type (`Borrowed<T>`), or is it a plain `Bytes` or integer? | If it is a type, aliases are visible through types and taint comes almost for free. If it is not, the analysis must seed taint from SDK return summaries. | Seed from both. The type check counts as authoritative only if it exists. |
+| Q2 | Can borrowed handles currently appear in async functions at all? | Decides what the study adds. If they are banned outright, inference **adds acceptance**. If they are allowed, inference **closes escape holes** (see Q3). These are different studies with different risks. | Assume they are banned. Tier 0 is the current behavior. |
+| Q3 | Does the continuation check look only at the top-level type of each live entity, or does it look inside records and closures? | A record `{buf: h}` that is live at an `await` may pass a shallow check. | Assume shallow, and add a deep check (rule E1 in §6). |
+| Q4 | Does the backend save **exactly** the frontend's live set into the continuation, or does it save more (for example every local in the frame)? | Rule A2 below, overwrite after suspension, is sound only if a dead handle's bits never get saved. A stale pointer that is stored but never read still crosses the persistence boundary. | Add an assertion in the backend that the saved set equals the live set. If that cannot be shown, reject every borrowed entity that is *declared* outside a single turn region. |
+| Q5 | Does any **synchronous** SDK call end the turn or invalidate borrowed buffers, for example a frame present, a pool reset or a cooperative yield inside the SDK? | Such a call is a suspension point that the syntax does not show. | Every SDK function without a summary entry is treated as turn-ending *and* as retaining. |
+| Q6 | When `f` is async and the caller runs `f(h)`, does the runtime run `f`'s synchronous prefix immediately in the caller's turn (JavaScript semantics), or does it schedule `f` for later? | Passing a handle to an async callee is safe only under eager-prefix semantics plus a callee summary. | Reject all such passes (rule E6). |
+| Q7 | Must a handle be dropped before the turn ends? Does the runtime release handles at turn end on its own? Does it detect stale handles, for example with a generation or epoch counter? | Decides whether "forgot to drop" is an error, and whether a debug runtime can serve as a dynamic oracle (§10.3). | Dropping is optional. There is no dynamic detection, so build a debug epoch check for the study. |
+| Q8 | Which constructs does the fixed async grammar include: closures, `try`/`catch`/`finally`, destructuring, `for…of`, short-circuit operators containing `await`, `switch`? Does the CFG have exceptional edges? | Each construct needs either a transfer rule or a rejection. | Reject any function that contains a borrowed value *and* a construct without a rule (`E_TURN_UNSUPPORTED`). |
+
+---
+
+## 4. Four layers that must be kept apart
+
+The study report must say which layer each claim belongs to. Most of the subtle errors in this problem come from mixing them up.
+
+1. **What the source can express.** This is the fixed grammar, plus whatever the type system lets a borrowed value do. The analysis is defined over resolved IR, so "expressible" means "survives parsing and resolution."
+2. **What the backend can express.** This covers how a handle is lowered and what goes into the continuation. A handle might be a raw pointer into SDK memory, or an index into a handle table with or without a generation. If it is a raw pointer, a static mistake means silent memory corruption. If it is a checked index, the same mistake traps.
+3. **What the runtime executes.** This is where turns actually end. A static turn is a conservative over-approximation, because every syntactic `await` is assumed to suspend. That stays safe even if the runtime fast-paths awaits on values that are already resolved. It is **unsafe** if the runtime ends turns that the source does not show (Q5) or changes when async prefixes run (Q6).
+4. **What the static evidence covers.** An accepted program is proven turn-safe only for the compiled module, and only under three assumptions: (a) the SDK summary table is correct, (b) the runtime's turn semantics match §3, and (c) the backend saves exactly the live set. The proof says nothing about native SDK code, other worlds, or differences between host and device. The report must state this scope next to every "accepted" count.
+
+---
+
+## 5. The explicit oracle
+
+The oracle is a **lexical** checker, so it needs no dataflow analysis. It exists in the prototype's test mode only. Production grammar does not change unless the study recommends it.
+
+### 5.1 Syntax (oracle mode only)
+
+```ts
+turn {
+  const h = fs.borrowChunk(path, 0);    // acquisition is legal only inside `turn`
+  total += bytes.countByte(h, 10);
+}                                        // h's scope ends here
+await ui.yield();
+
+function firstNewline(borrow b: Bytes): i32 {   // `borrow` marks a parameter
+  return bytes.indexOf(b, 10);                  // that must not be retained
+}
+```
+
+### 5.2 Oracle rules
+
+- O1. A borrow site is legal only lexically inside a `turn { }` block.
+- O2. `await`, nested `async` calls and `turn`-ending SDK calls are syntax errors inside a `turn` block.
+- O3. A turn-bound binding must be declared inside the block. It may not be assigned to a binding declared outside the block.
+- O4. A turn-bound value may only be read, passed to SDK parameters marked non-retaining, or passed to helper parameters marked `borrow`.
+- O5. Inside a helper, a `borrow` parameter may not be stored, captured, thrown or returned, and may only be passed on to other `borrow` parameters. The one exception is a helper whose return type is itself marked `borrow`. Its callers then treat the result as turn-bound.
+
+The oracle is easy to audit: it is a scope check and a parameter-flag check. It is also stricter than inference. Section 8 shows where the two disagree.
+
+---
+
+## 6. The inferred analysis
+
+### 6.1 Input
+
+Each async function is given as resolved IR with a CFG. Every node carries def/use sets over **entities**, suspension nodes are marked, and every call node is classified as one of:
+`Sdk(name)`, `DirectSync(fn)`, `DirectAsync(fn)`, `Unknown` (imports, indirect calls, anything unresolved).
+
+### 6.2 Abstract domain
+
+For each program point *p* and local entity *x*, B(p, x) is the set of borrow sites that *x* may hold. The implementation is a bitset whose width is the number of borrow sites in the function. Sites are kept rather than a single boolean so that diagnostics can name the acquisition line, and so that subview aliasing composes.
+
+Joining two points takes the union. Locals cannot have their address taken: tier 1 treats closure capture as an escape, so nothing else can reach a local. That makes **strong update on assignment** sound. The lattice is finite, with height at most |entities| × |sites|, so the loop fixpoint terminates.
+
+### 6.3 Transfer
+
+| Statement | Effect on B |
+|---|---|
+| `x = borrowSite_s(...)` | B(x) := {s} |
+| `x = y` | B(x) := B(y) |
+| `x = sdkView(y, ...)` (summary: returns an alias of its argument) | B(x) := B(y) ∪ {s} |
+| `x = sdkCopy(y)` or another expression with a scalar or owned result | B(x) := ∅ |
+| `x = c ? y : z` | B(x) := B(y) ∪ B(z) |
+| `x = f(a₀…aₙ)` where `f` is `DirectSync` | B(x) := ⋃ B(aᵢ) over i ∈ RetAlias(f), plus a fresh site if Summary(f).returnsBorrowed |
+| shadowing declaration | a new entity, so the outer entity is unaffected |
+
+### 6.4 Checks (all must pass, otherwise reject)
+
+- **L1, liveness at suspension.** Reuse the existing liveness set that the continuation uses: the entities live-in at the resume point. For every suspension S and every entity *x* in that set, require B(S, x) = ∅. This includes `async` function exit, where the return value counts as live.
+- **E1, store.** A turn-bound value must not be assigned into a global or module binding, a record or array field, or an opaque store (kv, channel, wire send). This applies even when the container is fresh. Tier 3 relaxes it (§7).
+- **E2, capture.** A turn-bound entity must not be referenced inside a closure.
+- **E3, return or throw from async.** These carry the value to a later turn.
+- **E4, unknown callee.** A turn-bound value must not be passed to an `Unknown` call, **even if no `await` follows**, because the callee might retain it.
+- **E5, retaining callee.** A turn-bound value must not be passed to an SDK or `DirectSync` parameter whose summary says it is retained.
+- **E6, async callee.** A turn-bound value must not be passed to a `DirectAsync` call (until tier 3, and Q6 must be answered).
+- **C1, construct coverage.** If any entity in the function has non-empty B, the function may contain only constructs that have transfer rules (Q8).
+
+### 6.5 Summaries for direct synchronous calls
+
+For each sync function *f* and each parameter *i*:
+
+- `Retains(f, i)`: whether the parameter may reach any escape position, either inside *f* or through a callee.
+- `RetAlias(f)`: the set of parameters whose value may flow to the return value.
+- `returnsBorrowed(f)`: whether a borrow site inside *f* may flow to the return value.
+
+Summaries are computed bottom-up over the call graph's strongly connected components (SCCs):
+
+- **Tier 2.** Only acyclic SCCs get summaries. Every parameter of a recursive function counts as `Retains = true`. A function larger than *N_nodes* CFG nodes, or with call depth greater than *D*, gets `Retains = true`. Budgets are fixed before reveal; I suggest N_nodes = 512 and D = 8, and the study must justify them.
+- **Tier 3.** Recursive SCCs get a least fixpoint, starting from "no retention" and iterating. This is sound because retention is a may-property. Iteration is capped at *K* rounds, and hitting the cap gives `E_TURN_SUMMARY_LIMIT`, which rejects the call.
+
+Summaries are finite: one boolean and one set of size at most *n* per parameter. A summary is part of compiler output, so tests can compare it exactly.
+
+### 6.6 Optional typestate for drop (tier 2 and up, only if Q7 says use-after-drop is undefined)
+
+Each entity also carries a "may be released" flag. Reading a handle that may have been released raises `E_TURN_USE_AFTER_DROP`. This property is separate from turn lifetime, and the study should report it separately.
+
+---
+
+## 7. Tiered prototype
+
+Each tier is **off by default** behind its own flag, for example `--turn-borrows=0|1|2|3`. Every tier includes the ones below it. Any construct a tier does not cover is rejected with a named diagnostic. No tier ever accepts by default.
+
+| Tier | Accepts | Still rejects |
+|---|---|---|
+| **0** (current) | Whatever the compiler accepts today (Q2) | Anything else |
+| **1, intraprocedural** | Borrowed values in locals; assignment, overwrite, branch joins, loops, shadowing; SDK calls that have explicit non-retaining summaries | All `DirectSync` helpers that take borrowed arguments, records, closures, async arguments, unknown calls |
+| **2, summaries** | Tier 1, plus non-recursive sync helpers with inferred summaries (including returned aliases) under size and depth budgets | Recursion, records, async arguments |
+| **3, research** | Tier 2, plus recursive SCC fixpoint, plus **turn-local records**. A record allocated in this turn that holds a turn-bound value becomes turn-bound itself, and the L1 and E rules then apply to the record. Async arguments are accepted only if Q6 shows eager-prefix semantics *and* the callee summary shows the parameter is dead at the callee's first suspension. | Everything else |
+
+I recommend that the study evaluate tiers 1 and 2 for possible production use and treat tier 3 as measurement only.
+
+---
+
+## 8. Concrete examples
+
+Each example lists its verdict at each tier, the oracle's verdict, and the diagnostic. The SDK names are placeholders (§0).
+
+**A1, use then suspend (accept at tier ≥ 1, oracle accepts)**
+```ts
+async function countLines(path: string): Promise<i32> {
+  const h = fs.borrowChunk(path, 0);
+  const n = bytes.countByte(h, 10);   // scalar result, so B(n) = ∅
+  await ui.yield();                   // h is not live here
+  return n;
+}
+```
+
+**R1, live across suspension (reject at every tier)**
+```ts
+  const h = fs.borrowChunk(path, 0);
+  await ui.yield();
+  return bytes.countByte(h, 10);
+// E_TURN_LIVE_AT_SUSPEND: h (borrowed at line 1) is live at the await on line 2
+```
+
+**A2, overwrite after suspension (accept at tier ≥ 1, but only if Q4 holds; the oracle needs a rewrite)**
+```ts
+  let h = fs.borrowChunk(p, 0);
+  total += bytes.countByte(h, 10);
+  await ui.yield();                   // h is dead here: it is redefined before its next use
+  h = fs.borrowChunk(p, 1);
+  total += bytes.countByte(h, 10);
+```
+The oracle accepts this only after a rewrite into two `turn` blocks with separate bindings. This is the standard case of **inference going beyond the oracle**, and its safety depends entirely on the backend fact in Q4.
+
+**R2, overwrite on one branch only (reject)**
+```ts
+  let h = fs.borrowChunk(p, 0);
+  await ui.yield();
+  if (c) h = fs.borrowChunk(p, 1);
+  use(h);        // on the else path, h from line 1 is live at the await
+// E_TURN_LIVE_AT_SUSPEND: h (borrowed at line 1) via the else path
+```
+
+**A3, branch join followed by suspension (accept)**
+```ts
+  const h = c ? fs.borrowChunk(p, 0) : fs.borrowChunk(q, 0);
+  const n = bytes.countByte(h, 10);
+  await ui.yield();
+```
+
+**R3, mixed join, a conservative false positive (reject, listed as a known false positive)**
+```ts
+  const b = c ? fs.borrowChunk(p, 0) : bytes.copy(owned);
+  await ui.yield();
+  use(b);        // b may be borrowed, even though on one path it is owned
+```
+
+**A4, a fresh handle each loop iteration (accept)**
+```ts
+  for (let i = 0; i < n; i++) {
+    const h = fs.borrowChunk(p, i);   // each iteration defines h again
+    total += bytes.countByte(h, 10);
+    await ui.yield();                 // h is dead here: the next use follows the next definition
+  }
+```
+
+**R4, loop-carried handle (reject)**
+```ts
+  let prev = fs.borrowChunk(p, 0);
+  for (let i = 1; i < n; i++) {
+    const cur = fs.borrowChunk(p, i);
+    if (bytes.equal(prev, cur)) dup++;
+    prev = cur;
+    await ui.yield();                 // prev is live along the back edge
+  }
+// E_TURN_LIVE_AT_SUSPEND: prev (borrowed at line 3) along the loop back edge
+```
+
+**A5, shadowing (accept; a name-based analysis would reject this wrongly)**
+```ts
+  const h = fs.borrowChunk(p, 0);
+  total += bytes.countByte(h, 10);
+  { const h = 42; await ui.yield(); log(h); }   // the inner h is a different, scalar entity
+```
+
+**R5, shadowing with a later use of the outer binding (reject)**
+```ts
+  const h = fs.borrowChunk(p, 0);
+  { const h = 42; await ui.yield(); log(h); }
+  use(h);        // the outer h is live at the inner await
+```
+
+**R6, escapes (reject at tiers 1–2, even with no `await` anywhere)**
+```ts
+  lastChunk = h;               // E_TURN_ESCAPE_STORE (module binding)
+  state.buf = h;               // E_TURN_ESCAPE_STORE (record field)
+  kv.put("k", h);              // E_TURN_ESCAPE_STORE (opaque store; the summary retains)
+  items.push(h);               // E_TURN_ESCAPE_STORE (array)
+  const f = () => bytes.len(h);// E_TURN_ESCAPE_CAPTURE
+  return h;                    // E_TURN_ESCAPE_RETURN (async return value)
+  throw h;                     // E_TURN_ESCAPE_RETURN
+  lib.process(h);              // E_TURN_UNKNOWN_CALLEE (import with no summary)
+```
+
+**A7 and R7, direct-call summaries (accept or reject at tier ≥ 2)**
+```ts
+function firstNewline(b: Bytes): i32 { return bytes.indexOf(b, 10); }
+                                   // Retains = false, RetAlias = ∅
+function pick(a: Bytes, b: Bytes, c: bool): Bytes { return c ? a : b; }
+                                   // Retains = false, RetAlias = {0, 1}
+function remember(b: Bytes) { lastSeen = b; }
+                                   // Retains(0) = true
+
+  const n = firstNewline(h); await ui.yield(); return n;   // A7: accept
+  const v = pick(h, h2, c);  await ui.yield(); use(v);     // R7a: E_TURN_LIVE_AT_SUSPEND (v is a returned alias)
+  remember(h);                                             // R7b: E_TURN_ESCAPE_STORE via remember param 0
+```
+At tier 1, both A7 and R7a are rejected with `E_TURN_UNSUMMARIZED_CALLEE`. The oracle accepts A7 only if `firstNewline`'s parameter is marked `borrow`.
+
+**R8, async call argument (reject at tiers 1–2)**
+```ts
+  const n = await parseAsync(h);   // E_TURN_ASYNC_ARG
+```
+
+**R9, recursion (reject at tier 2, accept at tier 3 if within budget)**
+```ts
+function scan(b: Bytes, i: i32): i32 {
+  if (i >= bytes.len(b)) return 0;
+  return bytes.at(b, i) + scan(b, i + 1);
+}
+// tier 2: E_TURN_SUMMARY_RECURSIVE; tier 3: fixpoint gives Retains = false, so accept
+```
+
+**R10, records (reject at tiers 1–2; tier 3 accepts only when the record is dead at the await)**
+```ts
+  const view = { buf: h, off: 0 };
+  total += bytes.countByte(view.buf, 10);
+  await ui.yield();                // tier 3: view is turn-bound and dead here, so accept
+  use(view.off);                   // tier 3: view is live at the await, so reject
+```
+Under tier 3 the second line rejects the whole function, even though only the scalar field is used. That is a known false positive. Supporting field-sensitive records is out of scope.
+
+**R11, a hidden turn end (reject, only if Q5 finds such a call)**
+```ts
+  const fb = screen.borrowFrame();
+  screen.present();                // summary: endsTurn
+  draw(fb);                        // E_TURN_LIVE_AT_SUSPEND at the synchronous turn end
+```
+
+---
+
+## 9. Invariants that keep the existing boundaries intact
+
+These invariants are tests, not intentions. Each has an automated check.
+
+1. **The continuation check still decides.** The existing scalar and wire-compatible check runs **after** the new analysis and is not changed. The new analysis may only turn specific rejections about borrowed values into acceptances, under the rules in §6. It never adds a type to the wire-compatible set. *Test:* grep or AST-diff the continuation checker. No diff is allowed.
+2. **Flag off means identical output.** Compile the full maintained corpus (every world the repository builds) with the flag off before and after the change. The generated WASM and RV32 must match byte for byte.
+3. **Flag on, no borrows, identical output.** Programs without borrowed values in async functions must produce identical bytes with the flag on. The analysis must exit early per function when it finds no borrow sites.
+4. **Anything unknown is rejected.** Every unrecognized callee, every construct without a rule and every exhausted budget produces a named diagnostic, never an acceptance. *Test:* inject a fault so the summary lookup returns "missing", and confirm that this causes rejection.
+5. **The backend saves exactly the live set** (Q4). Add a debug assertion in continuation lowering that the saved entities equal the frontend's live set. If an entity holds a borrowed value, it must not be in either set.
+6. **Wire and persistence paths reject borrowed values unconditionally**, at every tier, through a type rule that the new analysis cannot override.
+
+---
+
+## 10. Validation plan
+
+### 10.1 Development corpus (the study writes and sees these)
+
+- **Matched pairs.** Each positive case in §8 is paired with its oracle rewrite, and each negative case with its oracle rejection. Results go into an agreement matrix with these cells: both accept; both reject; inference accepts and the oracle rejects (manual review required, like A2); oracle accepts and inference rejects (a regression that must be explained).
+- **Mutants that insert an `await`.** For every accepted case, insert `await ui.yield()` at each statement boundary in turn. The expected verdict comes from the oracle and from a hand check of liveness. This produces a systematic family of negative cases at almost no cost.
+- **Mutants that insert an escape.** For every accepted case, insert each escape form from R6 after each use of a borrowed value. Every mutant must be rejected.
+
+### 10.2 Held-out cases, frozen before reveal
+
+1. Freeze this rule specification (§6 and §7), the SDK summary table and the budgets. Record their content hash in the ticket diary.
+2. A separate author writes the held-out cases from the specification only and assigns expected verdicts using the oracle. That author has not seen the analysis code; a pi student agent is suitable. The author commits the cases out of reach of the implementer, as an encrypted archive or on a separate unmerged ref, and records their hash. I suggest at least 40 cases, half positive, covering every row of §8 plus combinations.
+3. Implement and tune the analysis on the development corpus only.
+4. Freeze the analysis commit and record its hash. Reveal the held-out cases and run them **once**. Record every verdict unchanged.
+5. If a fix is needed after reveal, report it as a fix after reveal. Any further claim then needs a new held-out set.
+
+**Acceptance criterion:** zero held-out negatives accepted. A single accepted negative is an unsoundness finding that blocks promotion of the tier. False positives are reported as a count with their categories, and do not block.
+
+### 10.3 Dynamic cross-check on the runtime
+
+If Q7 shows that the runtime does not already detect stale handles, add a debug-only **turn epoch**. The runtime increments a counter at every resume, every handle records the epoch it was created in, and any use with a stale epoch traps. Run every accepted case, every accepted mutant and the real workflow (§10.4) under this runtime on the host *and* on the device. Any trap is direct evidence of unsoundness, and it also catches turn ends that the static model missed (Q5). A clean run supports only the paths that actually ran; it is not a proof.
+
+### 10.4 A real maintained workflow
+
+Pick **one** maintained async path in Editor or Agenda that currently copies a buffer, or reshapes its code, so that nothing crosses an `await`. Typical shapes are a file load that reads chunks, parses them and yields, or a save that formats, writes and awaits. I could not look at either program, so step 1 is to search their sources for async functions that call SDK buffer functions, and to record the candidates with file and line before choosing.
+
+Then:
+
+1. Write the borrowed-handle version of that path with both the oracle form and the bare (inferred) form. The source rewrite is done by hand or by script and is **excluded from timing**.
+2. Show that tier 1 or tier 2 accepts the bare form. If it does not, report which rule rejected it; that is itself a finding about how far the analysis reaches.
+3. Build it, install it on the PicoCalc, and run it with the epoch runtime. Also measure the time from edit to native return, and the copy bytes avoided, using the same harness as the earlier studies.
+4. Return the device to the current playable firmware afterwards, following the chess reproduction recipe.
+
+---
+
+## 11. Timing and cost at large density
+
+### 11.1 Synthetic generator
+
+Parameters are F (async functions), A (awaits per function), S (borrow sites per function), L (alias chain length), N (nesting depth of branches and loops) and H (sync helpers, with call depth up to D). Use a fixed seed, and commit the generated sources.
+
+### 11.2 Counters (deterministic, reported for every run)
+
+CFG nodes, entities, borrow sites, bitset width, transfer evaluations, worklist pops, the largest per-function fixpoint iteration count, summary SCCs, summary iterations, budget hits, diagnostics by code, the largest |B|, and peak bytes allocated by the analysis, if the allocator can be instrumented.
+
+### 11.3 Timings
+
+- Report the time of each frontend phase separately: parse, resolve, type, **turn analysis**, continuation check and backend.
+- **Exclude** the source rewriting that produces oracle forms and mutants. Time only what the compiler itself does.
+- Report three configurations: flag off, flag on with no borrows (which should cost almost nothing, via early exit), and flag on at density.
+- Run on the host and on the ESP32-P4, cold and warm, with a fixed repetition count chosen before the run. Report the median and spread. Earlier studies showed that the host is not a reliable stand-in for the device, so device numbers are the ones that count for any decision.
+
+**Prediction to test, not a result:** each fixpoint round should cost about O(nodes × ⌈S/32⌉), and the number of rounds should be bounded by loop nesting. If device time per function grows faster than nodes × sites, the bitset width or the worklist order is the first suspect.
+
+---
+
+## 12. Failure plan and decision rules
+
+| Observation | Action |
+|---|---|
+| A held-out negative is accepted, a mutant escapes rejection, or the epoch runtime traps | Unsoundness. Stop, find the root cause, and do not promote the tier. Record it verbatim. |
+| The backend saves more than the live set (Q4) | Fix the backend, or restrict acceptance so that borrowed entities may not be declared across turn regions. Restricting removes A2. |
+| An undeclared synchronous turn end is found (Q5) | Mark it `endsTurn` in the summary table and re-freeze. Held-out results recorded before that point remain as they were reported. |
+| The real workflow is rejected | Report the rule responsible. Decide whether the next tier is justified by real code, not by synthetic cases. |
+| Device analysis cost is material compared with the frontend total | Report it and consider limiting the analysis to functions that contain borrow sites, which is the planned design anyway. Do not loosen rules to save time. |
+| Many budget hits in real code | Report the distribution. Budgets change only through a new freeze. |
+
+**Promotion rule.** A tier may become a candidate for default-on only if all of the following hold: zero unsoundness findings; all invariants in §9 pass; the real workflow is accepted and runs clean on the device; and device cost is reported. Tier 3 is never promoted from this study.
+
+---
+
+## 13. What the final report must say separately
+
+1. What the grammar and type system could express, and which constructs were rejected for lack of a rule.
+2. What the backend lowered, including how handles are represented and the continuation-set assertion.
+3. What the runtime executed: turn ends, async prefix semantics, and epoch-trap results.
+4. Which static claims hold, and their exact scope (§4, item 4).
+5. Measured numbers, each labelled host or device, cold or warm, and development or held-out.
+
+---
+
+**Bottom line:** none of this has been checked against the code or measured yet. The first work item is answering Q1–Q8 in the code, because several rules depend on those answers. The riskiest one is Q4: whether the backend can save a dead handle. If it can, inference has to be restricted by removing case A2, the main way inference accepts more than the oracle.
