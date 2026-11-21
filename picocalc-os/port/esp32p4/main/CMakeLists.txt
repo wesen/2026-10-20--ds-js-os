@@ -254,6 +254,30 @@ if(PICOCALC_RV32_EDITOR OR PICOCALC_RV32_CHESS)
     endif()
 endif()
 
+if(PICOCALC_CHESS_3D AND PICOCALC_RV32_CHESS)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_CANDELA=1)
+    target_sources(${COMPONENT_LIB} PRIVATE candela_p4.c ${OS}/nucleus/candela_scene.c)
+    target_link_libraries(${COMPONENT_LIB} PRIVATE idf::espressif__elf_loader)
+    set(candela_dir ${OS}/worlds/candela)
+    set(candela_slot ${CMAKE_CURRENT_BINARY_DIR}/candela-slot.elf)
+    set(candela_link ${OS}/compiler/candela.js)
+    set(candela_stub ${CMAKE_CURRENT_LIST_DIR}/candela_slot.c ${CMAKE_CURRENT_LIST_DIR}/candela_slot.S)
+    add_custom_command(OUTPUT ${candela_slot}
+        COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o ${candela_slot} ${candela_stub}
+        DEPENDS ${candela_stub} VERBATIM)
+    list(APPEND BUNDLE_EXTRA "candela/slot.elf=${candela_slot}" "candela/link.js=${candela_link}")
+    list(APPEND BUNDLE_EXTRA_DEPS ${candela_slot} ${candela_link})
+    file(GLOB candela_inputs CONFIGURE_DEPENDS ${candela_dir}/*.typed)
+    foreach(stage hand fluent callback)
+        set(output ${CMAKE_CURRENT_BINARY_DIR}/candela-${stage}.typed)
+        add_custom_command(OUTPUT ${output}
+            COMMAND ${PYTHON} ${candela_dir}/assemble.py ${output} --stage ${stage}
+            DEPENDS ${candela_dir}/assemble.py ${candela_inputs} VERBATIM)
+        list(APPEND BUNDLE_EXTRA "candela/${stage}.typed=${output}")
+        list(APPEND BUNDLE_EXTRA_DEPS ${output})
+    endforeach()
+endif()
+
 if(PICOCALC_MOBILE_PAINTER)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_MOBILE_PAINTER=1)
     target_sources(${COMPONENT_LIB} PRIVATE mobile_painter_p4.c painter_service.c ${OS}/nucleus/painter_commands.c ${OS}/sdk/typed/chess-psix.c)

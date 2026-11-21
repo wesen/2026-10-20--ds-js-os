@@ -26,6 +26,9 @@
 #include "esp_system.h"
 #include "freertos/task.h"
 #include "p4.h"
+#if PICOCALC_CANDELA
+#include "candela_p4.h"
+#endif
 #if PICOCALC_MOBILE_PAINTER
 #include "painter_service.h"
 #endif
@@ -164,6 +167,9 @@ void console_exec(char *line) {
   else if (!strcmp(cmd, "painter")) p4_painter_status();
 #endif
   else if (!strcmp(cmd, "raybench")) p4_raybench(rest);
+#if PICOCALC_CANDELA
+  else if (!strcmp(cmd, "candela")) p4_candela_console(rest);
+#endif
 #if PICOCALC_DEVICE_COMPILER
   else if (!strcmp(cmd, "cji")) compiler_console(rest);
 #endif
@@ -209,6 +215,9 @@ static void kernel_task(void *arg) {
   K.uart = stdout;            // the kernel log and the #OCT1 fault frames go to the console
   port_clock();               // starts the clock
   kernel_init("js", NULL);    // the prelude, and the calibration loops
+#if PICOCALC_CANDELA
+  p4_candela_init();
+#endif
 #if PICOCALC_TYPED_FILES
   const char *manifest = "js/system.typed-files.json";
 #elif PICOCALC_TYPED_EDITOR
