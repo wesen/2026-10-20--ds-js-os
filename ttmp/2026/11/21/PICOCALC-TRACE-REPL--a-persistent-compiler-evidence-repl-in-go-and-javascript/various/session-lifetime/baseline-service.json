@@ -1,0 +1,29 @@
+{
+  "addr": "http://127.0.0.1:3791",
+  "tmux": "picocalc-trace-repl",
+  "binarySHA256": "d8a8b5ae1c6ff2c76f2e94e4f7a8c8c0dacb1c417d92c73a13b3adfcaa3f2dd4",
+  "sourceQuerySHA256": "5434331b4e1f4008dc131e276e8011d454163db4eeccf8282e12c0ed0fa7b411",
+  "headAtLaunch": "df7a7b64c0b6d6930a803f8022b9c312bedf7e03",
+  "launchArgs": [
+    "serve",
+    "--addr",
+    "127.0.0.1:3791",
+    "--archive",
+    "ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes",
+    "--device-study",
+    "ttmp/2026/11/21/PICOCALC-PIE-LOOPS--infer-and-lower-packed-loop-regions-in-unchanged-typed-programs"
+  ],
+  "readiness": {
+    "verifiedStreams": 6,
+    "verifiedBytes": 30912391,
+    "reportedLoadElapsedMs": 127.133443,
+    "pairedTrials": 864,
+    "loadRecords": 18
+  },
+  "smoke": {
+    "source": "q.help()",
+    "ok": true,
+    "valueType": "str",
+    "keys": null
+  }
+}
