@@ -92,44 +92,211 @@
   };
 
   // ───────────────────────── plans and the synchronous terminal ─────────────────────────
+  // Values this library has already materialized: eager describe() descriptors and every plan result.
+  // They are tagged when created; q.run trusts the tag only, never an object's shape (copies are untagged).
+  const MATERIALIZED = new WeakMap();
+  function markMaterialized(value, info) {
+    if (value !== null && typeof value === 'object') MATERIALIZED.set(value, info);
+    return value;
+  }
+  function materializedInfo(v) { return v !== null && typeof v === 'object' ? MATERIALIZED.get(v) || null : null; }
   class Plan {
     constructor(kind, label) { this._kind = kind; this._label = label; }
     describe() { return this._label; }
     run(options) { return runPlan(this, options); }
-    help() { return helpText(this._kind); }
+    help() { return 'plan ' + this._label + '\n' + (KIND_TOPICS[this._kind] ? helpText(KIND_TOPICS[this._kind]) : helpText()); }
     toString() { return '[plan ' + this._label + '] (evaluate with q.run(plan) or plan.run())'; }
     toJSON() { return { plan: this._label, kind: this._kind, note: 'not evaluated yet: q.run(plan) or plan.run()' }; }
     _evaluate(ctx) {
       if (ctx.memo.has(this)) return ctx.memo.get(this);
-      const value = this._eval(ctx);
+      const value = markMaterialized(this._eval(ctx), { what: 'result', of: this._label, kind: this._kind });
       ctx.memo.set(this, value);
       return value;
     }
     _eval() { throw QueryError('internal', 'plan kind ' + this._kind + ' has no evaluator'); }
   }
+  // Reading a result field on an unevaluated plan is the plan-builder version of a missing await:
+  // make it an instruction instead of a silent undefined.
+  const RESULT_FIELDS = ['value', 'rows', 'status', 'outputs', 'delta', 'percent', 'witnesses', 'hits', 'reason', 'before', 'after'];
+  RESULT_FIELDS.forEach(k => {
+    if (k === 'before' || k === 'after') return;          // event picks define .before/.after as states
+    Object.defineProperty(Plan.prototype, k, { configurable: true, enumerable: false, get() {
+      throw QueryError('notEvaluated', 'this is a plan (' + this._label + '); .' + k + ' belongs to its result', { fix: 'q.run(plan).' + k });
+    } });
+  });
   function newContext(options) {
     const opts = options || {};
     return { memo: new Map(), aux: new Map(), bindings: opts.bindings || {}, maxRows: opts.maxRows || 200, started: Date.now() };
   }
+  // q.run(x, options?) — public contract (q.help("plans")):
+  //   x is a plan → its result · x is { name: plan, … } with every value a plan → a bundle result
+  //   x carries the MATERIALIZED tag (describe() descriptor, plan result) → x itself, unchanged; options → [alreadyMaterialized]
+  //   anything else → [notAPlan] with err.got (what arrived) and err.fix. Nothing is coerced to a zero, an empty set or a default.
+  const RUN_OPTIONS = ['bindings', 'maxRows'];
+  function checkRunOptions(options, argc) {
+    if (argc > 2)
+      throw QueryError('badArgument', 'q.run(plan, options) takes one plan and optional options; got ' + argc + ' arguments, and the extra ones would be ignored',
+        { fix: 'evaluate several plans together by name: q.run({ first: p1, second: p2 })', got: 'extraArguments' });
+    if (options === undefined || options === null) return;
+    if (options instanceof Plan || materializedInfo(options))
+      throw QueryError('badArgument', 'q.run evaluates one plan; its second argument is options { bindings, maxRows }, not ' + runArgument(options, 1, true).what,
+        { fix: 'evaluate several plans together by name: q.run({ first: p1, second: p2 })', got: 'planAsOptions' });
+    if (typeof options !== 'object' || Array.isArray(options))
+      throw QueryError('badArgument', 'q.run options must be an object { bindings, maxRows }; got ' + runArgument(options, 1, true).what,
+        { fix: 'q.run(plan, { bindings: { minimum: 5 }, maxRows: 50 })', got: 'badOptions' });
+    Object.keys(options).forEach(k => { if (RUN_OPTIONS.indexOf(k) < 0) throw unknownName('unknownOption', 'q.run option', k, RUN_OPTIONS); });
+    const b = options.bindings, m = options.maxRows;
+    if (b !== undefined && (b === null || typeof b !== 'object' || Array.isArray(b) || b instanceof Plan))
+      throw QueryError('badArgument', 'q.run option bindings must be an object { paramName: value }; got ' + runArgument(b, 1, true).what,
+        { fix: 'q.run(plan, { bindings: { minimum: 5 } })', got: 'badOptions' });
+    if (m !== undefined && !(typeof m === 'number' && m % 1 === 0 && m > 0))
+      throw QueryError('badArgument', 'q.run option maxRows must be a positive integer; got ' + runArgument(m, 1, true).what,
+        { fix: 'q.run(plan, { maxRows: 500 })', got: 'badOptions' });
+  }
   function runPlan(plan, options) {
+    checkRunOptions(options, arguments.length);
     if (plan instanceof Plan) return plan._evaluate(newContext(options));
+    const done = materializedInfo(plan);
+    if (done) {
+      const given = options ? Object.keys(options).filter(k => options[k] !== undefined) : [];
+      if (given.length)
+        throw QueryError('alreadyMaterialized', runArgument(plan, 1, true).what + ' is already a value; the options ' + given.join(', ') + ' cannot change it',
+          { fix: done.what === 'result' ? 'run the plan with the options: q.run(' + done.of + ', { ' + given.map(k => k + ': …').join(', ') + ' })'
+            : 'drop the options: ' + done.of + ' is the descriptor itself', got: done.what });
+      return plan;     // idempotent by tag: the very object describe() / q.run produced, never a copy or a guess
+    }
     if (plan && typeof plan === 'object' && !Array.isArray(plan) && Object.keys(plan).length &&
         Object.keys(plan).every(k => plan[k] instanceof Plan))
       return bundle(plan)._evaluate(newContext(options));     // q.run({ a: p1, b: p2 }) means a bundle
-    throw QueryError('notAPlan', 'q.run expects a plan (from a.events(), q.ir…, profiles…, q.bundle…); got ' +
-      (plan === null ? 'null' : typeof plan), { fix: 'q.run(a.events().count())' });
+    const r = runArgument(plan, arguments.length, false);
+    throw QueryError('notAPlan', 'q.run expects a plan or an object of named plans; got ' + r.what + (r.why ? '. ' + r.why : ''), { fix: r.fix, got: r.got });
+  }
+  const RUN_METHOD_HINTS = {
+    total: 'q.run(profiles.arm("checked-gcc").total("instructions"))',
+    describe: 'profiles.arm("checked-gcc").describe() (eager: the descriptor itself)',
+    count: 'q.run(a.events().count())',
+  };
+  function firstPhase(variant) {
+    try { const ps = phasesOf(variant); return !ps.length || ps.indexOf('middle') >= 0 ? 'middle' : ps[0]; } catch (err) { return 'middle'; }
+  }
+  // What arrived at q.run, in words, plus the next call to make. Only tags and classes are trusted, never shapes.
+  // nested = describing an option or a bundle member (no bundle analysis, no recursion).
+  function runArgument(v, argc, nested) {
+    if (v instanceof Plan) return { got: 'plan', what: 'the plan ' + v._label, why: '', fix: 'q.run(plan)' };
+    const done = materializedInfo(v);
+    if (done) return { got: done.what, what: done.what === 'result' ? 'the evaluated ' + done.kind + ' result of ' + done.of : 'the descriptor ' + done.of,
+      why: 'it is already a value', fix: 'use it directly' };
+    if (v === undefined) return argc === 0
+      ? { got: 'noArgument', what: 'no argument', why: 'nothing was evaluated', fix: RUN_METHOD_HINTS.total }
+      : { got: 'undefined', what: 'undefined',
+          why: 'nothing was evaluated, so this is not a zero, an empty set or an unavailable result. undefined usually comes from a misspelled method or field ' +
+            '(describe().total instead of describe().totals), an unassigned variable or a lambda without return',
+          fix: 'evaluate the argument alone to see what it is (a plan shows { plan, kind, note }), then q.run(thatPlan)' };
+    if (v === null) return { got: 'null', what: 'null',
+      why: 'null is a value, not a plan and not a zero (samples() and descriptor fields such as rowsVerified are null when the summary lacks them)',
+      fix: 'use the value directly, or find the call or field that produced null' };
+    if (typeof v === 'function') {
+      const name = typeof v.name === 'string' ? v.name : '';
+      return name
+        ? { got: 'function', what: 'the function ' + name + ' itself', why: 'its call parentheses are missing, so nothing was evaluated',
+            fix: 'call it: ' + (Object.prototype.hasOwnProperty.call(RUN_METHOD_HINTS, name) ? RUN_METHOD_HINTS[name] : '….' + name + '(…)') }
+        : { got: 'function', what: 'an anonymous function', why: 'q.run does not call lambdas; a lambda belongs inside .where(…)',
+            fix: 'q.run(selection.where(e => e.pass === "EarlyCSEPass").count())' };
+    }
+    if (typeof v === 'string') return { got: 'string', what: 'the string ' + JSON.stringify(v.length > 80 ? v.slice(0, 77) + '...' : v),
+      why: 'q.run does not parse labels or source text; plan.describe() and metric.describe() return a label only',
+      fix: 'pass the plan object itself: q.run(plan), not q.run(plan.describe())' };
+    if (typeof v !== 'object') return { got: typeof v, what: 'the ' + typeof v + ' ' + String(v),
+      why: 'it is already a plain value without unit, scope or provenance; q.run has nothing to evaluate and does not echo it',
+      fix: typeof v === 'number' ? 'use the number directly, or ask for the total with unit, workload, contract and source: ' + RUN_METHOD_HINTS.total : 'use the value directly' };
+    if (Array.isArray(v)) return v.length && v.every(isPlan)
+      ? { got: 'arrayOfPlans', what: 'an array of ' + v.length + ' plans', why: 'q.run evaluates one plan or an object of named plans',
+          fix: 'name them: q.run({ first: p1, second: p2 })' }
+      : { got: 'array', what: 'an array of ' + v.length + ' value' + (v.length === 1 ? '' : 's'),
+          why: 'eager listings such as profiles.arms(), sel.totals() and run.functions() already return values',
+          fix: 'use the array directly; to evaluate several plans together: q.run({ name: plan, … })' };
+    const handle = handleArgument(v);
+    if (handle) return handle;
+    const keys = Object.keys(v);
+    if (!nested && keys.some(k => isPlan(v[k]) || materializedInfo(v[k]))) {
+      const bad = keys.filter(k => !isPlan(v[k]));
+      return { got: 'bundleMember', what: 'an object whose ' + bad.map(k => JSON.stringify(k) + ' is ' + runArgument(v[k], 1, true).what).join(', '),
+        why: 'q.run treats an object as a bundle only when every value is a plan',
+        fix: 'keep only plans in the object (e.g. sel.total("instructions") instead of sel.describe()) and read eager values outside q.run' };
+    }
+    if (!keys.length) return { got: 'object', what: 'an empty object', why: 'a bundle needs at least one named plan', fix: 'q.run({ name: plan })' };
+    return { got: 'object', what: 'an object with keys ' + keys.slice(0, 6).join(', ') + (keys.length > 6 ? ', …' : ''),
+      why: 'it is neither a plan, nor an object of plans, nor a value produced by describe() or q.run (copies and hand-built objects carry no tag)',
+      fix: 'if it already holds the data you need, use it directly; otherwise evaluate the argument alone to see what it is (q.help("plans"))' };
+  }
+  function handleArgument(v) {
+    if (v instanceof ProfileSelection) {
+      const chain = v._chain();
+      let names = [];
+      try { if (!(v._armSpec instanceof Param)) names = Object.keys(findArm(v._armSpec).entry.totals); } catch (err) { names = []; }
+      const metric = !names.length || names.indexOf('instructions') >= 0 ? 'instructions' : names[0];
+      return { got: 'profileSelection', what: 'the profile selection ' + chain,
+        why: 'a selection names an arm and is not evaluated' + (names.length ? '; its totals: ' + names.join(', ') : ''),
+        fix: 'q.run(' + chain + '.total("' + metric + '")) for a total with unit and provenance, or ' + chain + '.describe() for the descriptor (eager; q.run returns it unchanged)' };
+    }
+    if (v instanceof FunctionHandle) {
+      const at = 'a.variant("' + v.variant + '").function("' + v.name + '")', p = firstPhase(v.variant);
+      return { got: 'functionHandle', what: 'the function handle ' + at,
+        why: 'a function handle navigates to timelines and arguments; it is neither a plan nor an evaluated value',
+        fix: 'q.run(' + at + '.timeline("' + p + '").count()) or q.run(' + at + '.timeline("' + p + '").at(n).after)' };
+    }
+    if (v instanceof Run) {
+      const at = 'a.variant("' + v.name + '")';
+      return { got: 'run', what: 'the run handle ' + at, why: 'a run handle navigates to streams and functions',
+        fix: 'q.run(' + at + '.events("' + firstPhase(v.name) + '").count()); ' + at + '.phases() and ' + at + '.functions() return values now' };
+    }
+    if (v instanceof InitialModule) {
+      const at = 'a.variant("' + v.variant + '").initialModule()';
+      return { got: 'initialModule', what: 'the initial-module handle ' + at, why: 'it is an eager handle, not a plan',
+        fix: at + '.describe() returns its facts now; plans: q.run(' + at + '.state("row")) or q.run(' + at + '.sourceLocations({ function: "row" }))' };
+    }
+    if (v instanceof Metric) {
+      const p = v._spec.level === 'machine' ? 'backend' : 'middle';
+      return { got: 'metric', what: 'the metric ' + v._spec.label, why: 'a metric is a definition; it has a value only at a state',
+        fix: 'q.run(' + v._spec.label + '.at(row.timeline("' + p + '").at(n).after)) or q.run(row.timeline("' + p + '").measure(metric))' };
+    }
+    if (v instanceof InstructionQuery) {
+      const label = v.toJSON().query;
+      return { got: 'instructionQuery', what: 'the instruction selector ' + (v._state ? v._state._label + '.instructions()…' : label),
+        why: 'a selector needs .count() or .sites()' + (v._state ? '' : ' and then a state'),
+        fix: v._state ? 'add .count() or .sites(): q.run(state.instructions().opcode("load").count())' : 'q.run(' + label + '.count().at(row.timeline("middle").at(n).after))' };
+    }
+    if (v instanceof Param) return { got: 'param', what: 'the parameter ' + v.name, why: 'a parameter gets its value when a plan runs',
+      fix: 'q.run(plan, { bindings: { ' + v.name + ': … } })' };
+    if (v === archive) return { got: 'archive', what: 'the archive a', why: 'a is the archive handle', fix: 'q.run(a.events().count()); a.variants() and a.streams() return values now' };
+    if (v === profilesApi) return { got: 'profiles', what: 'the profiles facade', why: 'it is the entry point for execution summaries',
+      fix: 'profiles.arms() lists arms now; ' + RUN_METHOD_HINTS.total };
+    const spaces = [[q, 'q'], [ir, 'q.ir'], [machine, 'q.machine'], [param, 'q.param'], [session, 'q.session']];
+    for (let i = 0; i < spaces.length; i++)
+      if (v === spaces[i][0]) return { got: 'namespace', what: 'the namespace ' + spaces[i][1], why: 'a namespace builds plans; it is not one', fix: spaces[i][1] + '.help()' };
+    const proto = Object.getPrototypeOf(v);
+    if (proto && proto !== Object.prototype && proto.constructor && proto.constructor.name)
+      return { got: 'handle', what: 'the ' + proto.constructor.name + ' object', why: 'it is an input to other calls, not a plan',
+        fix: typeof proto.help === 'function' ? 'its .help() lists the plans it builds' : 'q.help("plans")' };
+    return null;
   }
 
   // ───────────────────────── event headers and scopes ─────────────────────────
   function unquote(s) { const t = String(s).trim(); return /^".*"$/.test(t) ? t.slice(1, -1) : t; }
+  // A bare name ("row", "for.body29") is provisionally a function; index() keeps it a function only if
+  // the module given to the pipeline defines it (or a CGSCC header names it) and otherwise makes it a loop.
   function parseScopeName(text) {
-    const t = text.trim();
+    let t = text.trim();
+    const invalidated = / \(invalidated\)$/.test(t);
+    if (invalidated) t = t.slice(0, -' (invalidated)'.length);
     if (t === '[module]') return { kind: 'module' };
     let m = /^\((.*)\)$/.exec(t);
     if (m) return { kind: 'cgscc', functions: m[1].split(/,\s*/).map(unquote) };
     m = /^loop %(\S+) in function (.+)$/.exec(t);
-    if (m) return { kind: 'loop', loop: m[1], function: unquote(m[2]) };
-    return { kind: 'function', function: unquote(t) };
+    if (m) return { kind: 'loop', loop: m[1], function: unquote(m[2]), functionEvidence: { method: 'header' } };
+    const scope = { kind: 'function', function: unquote(t) };
+    if (invalidated) scope.invalidated = true;
+    return scope;
   }
   // New pass manager: "*** IR Dump After EarlyCSEPass on row ***".
   // Legacy (llc):     "*** IR Dump After Virtual Register Rewriter (virtregrewriter) ***:" — the IR unit
@@ -141,7 +308,9 @@
     const legacy = /IR Dump (After|Before) (.+?) \(([^()\s]+)\)(?: \*\*\*:?)?\s*$/.exec(h);
     if (legacy && (legacy[3] === pass || phase === 'backend') && !/ on \(/.test(h))
       return { when: legacy[1].toLowerCase(), passName: legacy[2], scope: { kind: 'unresolved' } };
-    const m = /IR Dump (After|Before) (\S+) on (.+?)( omitted because no change)?(?: \*\*\*)?\s*$/.exec(h);
+    // Split at the first " on ", as the archive's index does: pass names such as
+    // "RequireAnalysisPass<llvm::GlobalsAA, llvm::Module>" contain spaces but never " on ".
+    const m = /IR Dump (After|Before) (.+?) on (.+?)( omitted because no change)?(?: \*\*\*)?\s*$/.exec(h);
     if (m) {
       const scope = parseScopeName(m[3]);
       if (m[4]) scope.omitted = 'no change';
@@ -176,8 +345,46 @@
     streams.forEach(s => s.events.sort((x, y) => x.ordinal - y.ordinal));
     const variants = [], phases = [];
     streams.forEach(s => { if (variants.indexOf(s.variant) < 0) variants.push(s.variant); if (phases.indexOf(s.phase) < 0) phases.push(s.phase); });
-    archiveIdx = { all, streams, variants: variants.sort(), phases: phases.sort() };
+    const scopeEvidence = {};
+    variants.forEach(v => { scopeEvidence[v] = assignLoopScopes(v, streams); });
+    archiveIdx = { all, streams, variants: variants.sort(), phases: phases.sort(), scopeEvidence };
     return archiveIdx;
+  }
+  // New-PM loop passes name the loop by its header block ("on for.body29"); neither the header nor the
+  // pass-manager line names the function. A bare header name is a function only if the module given to
+  // the pipeline defines it or a CGSCC header names it; any other name is a loop. Nothing in such a
+  // header or its fragment print proves which function owns the loop, so scope.function stays null
+  // (every function timeline keeps the event). The nearest earlier event of the stream scoped to exactly
+  // one function is only proximity: it is kept as scope.ownerHint { tentative: true, method, anchorOrdinal },
+  // never as the owner. resolveScope later checks the print itself (confirmLoop).
+  function assignLoopScopes(variant, streams) {
+    let known;
+    try { known = new Set(definedFunctions(initialModuleOf(variant).text)); }
+    catch (err) { return { functions: null, note: 'initial module unreadable (' + err.message.split('\n')[0] + '); header names are taken as functions' }; }
+    streams.forEach(s => { if (s.variant === variant) s.events.forEach(e => { if (e.scope.kind === 'cgscc') e.scope.functions.forEach(f => known.add(f)); }); });
+    let loops = 0;
+    streams.forEach(s => {
+      if (s.variant !== variant) return;
+      let anchor = null;
+      s.events.forEach(e => {
+        const sc = e.scope;
+        if (sc.kind === 'function' && known.has(sc.function)) { anchor = { fn: sc.function, ordinal: e.ordinal }; return; }
+        if (sc.kind === 'cgscc') { anchor = sc.functions.length === 1 ? { fn: sc.functions[0], ordinal: e.ordinal } : null; return; }
+        if (sc.kind !== 'function') { if (sc.kind === 'module') anchor = null; return; }
+        loops++;
+        e.scope = { kind: 'loop', loop: sc.function, function: null,
+          functionEvidence: { method: 'none', note: 'the header names only the loop header block, so ownership is not shown; function is null and every function timeline keeps this event' +
+            (anchor ? ' (scope.ownerHint is a tentative proximity hint, not an owner)' : '') },
+          ownerHint: anchor
+            ? { function: anchor.fn, tentative: true, method: 'passManagerAdjacency', anchorOrdinal: anchor.ordinal,
+                provenance: 'the nearest earlier event (ordinal ' + anchor.ordinal + ') of this ' + s.variant + '/' + s.phase + ' stream scoped to exactly one function; proximity only, not proof of ownership' }
+            : null,
+          classifiedBy: '"' + sc.function + '" is not a function of the module given to the pipeline' };
+        if (sc.invalidated) e.scope.invalidated = true;
+        e.function = e.scope.function;
+      });
+    });
+    return { functions: Array.from(known).sort(), loopEvents: loops };
   }
   function stream(variant, phase) {
     const s = index().streams.get(streamKey(variant, phase));
@@ -320,19 +527,47 @@
   }
   // ───────────────────────── prints (text) and lazily resolved scopes ─────────────────────────
   function eventKey(e) { return streamKey(e.variant, e.phase) + '|' + e.ordinal; }
+  // A Ref runs to the next header. In the middle end its tail is -debug-pass-manager output: analysis
+  // bookkeeping and the announcement of the NEXT pass ("Running pass: EarlyCSEPass on row" ends the
+  // SROA print). That tail is not this snapshot, so it is split off and never searched or measured.
+  const TRAILER_LINE = /^(Running (pass|analysis): |Invalidating (analysis: |all non-preserved analyses)|Clearing all analysis results for: |Skipping pass: )/;
+  // Scans from the end only, so a 10 kB machine print costs a few line reads, not a split of the whole print.
+  function splitTrailer(raw) {
+    const trailer = [];
+    let end = raw.length;
+    for (;;) {
+      let stop = end;
+      while (stop > 0 && raw[stop - 1] === '\n') stop--;
+      if (stop === 0) { end = 0; break; }
+      const start = raw.lastIndexOf('\n', stop - 1) + 1, line = raw.slice(start, stop);
+      if (start === 0 || !TRAILER_LINE.test(line)) { end = stop; break; }   // the first line is the header
+      trailer.unshift(line);
+      end = start;
+    }
+    return { print: raw.slice(0, end) + '\n', trailer, tail: raw.slice(end) };
+  }
+  // UTF-8 length of the bytes read for e (print without its added newline, plus the split-off tail).
+  // Computed only when an excerpt needs stream offsets: it is a per-character loop in the interpreter.
+  function rawBytesOf(t) {
+    if (t.rawBytes === undefined) t.rawBytes = utf8Length(t.print) - 1 + utf8Length(t.tail);
+    return t.rawBytes;
+  }
+  const TRAILER_NOTE = 'pass-manager output after this print (it announces the next pass); excluded from this snapshot\'s evidence';
   function printOf(e) {
     const key = eventKey(e);
     let t = cache.texts.get(key);
     if (t === undefined) {
       const raw = callBridge('text', [e.variant, e.phase, e.ordinal]);
-      const print = typeof raw === 'string' ? raw : raw && (typeof raw.print === 'string' ? raw.print : raw.text);
-      if (typeof print !== 'string')
+      const whole = typeof raw === 'string' ? raw : raw && (typeof raw.print === 'string' ? raw.print : raw.text);
+      if (typeof whole !== 'string')
         throw QueryError('bridge', '__trace.text(' + [e.variant, e.phase, e.ordinal].map(x => JSON.stringify(x)).join(', ') + ') returned no print');
-      t = { header: raw && typeof raw.header === 'string' ? raw.header : e.header, print };
-      cache.texts.set(key, t, (print.length + t.header.length) * 2);
+      const parts = splitTrailer(whole);
+      t = { header: raw && typeof raw.header === 'string' ? raw.header : e.header, print: parts.print, trailer: parts.trailer, tail: parts.tail };
+      cache.texts.set(key, t, (whole.length + t.header.length) * 2);
     }
     return t;
   }
+  function trailerInfo(t) { return t.trailer.length ? { lines: t.trailer.length, note: TRAILER_NOTE } : null; }
   const FN_NAME = '("(?:[^"\\\\]|\\\\.)*"|[-a-zA-Z$._0-9]+)';
   const DEFINE_RE = new RegExp('^define\\b[^@\\n]*@' + FN_NAME + '\\(', 'gm');
   function definedFunctions(print) {
@@ -350,14 +585,42 @@
     if (defs.length === 1) return { kind: 'function', function: defs[0], resolvedFrom: 'print' };
     return { kind: 'unknown', resolvedFrom: 'print' };
   }
-  const resolvedScopes = new Map();   // small: one entry per backend event whose header names no IR unit
+  const resolvedScopes = new Map();   // one entry per backend event whose header names no IR unit, or per loop event read
   function resolveScope(e) {
-    if (e.scope.kind !== 'unresolved') return e.scope;
+    const loop = e.scope.kind === 'loop' && e.scope.functionEvidence && e.scope.functionEvidence.method !== 'header';
+    if (e.scope.kind !== 'unresolved' && !loop) return e.scope;
     const key = eventKey(e);
-    if (!resolvedScopes.has(key)) resolvedScopes.set(key, scopeFromPrint(printOf(e).print));
+    if (!resolvedScopes.has(key)) resolvedScopes.set(key, loop ? confirmLoop(e) : scopeFromPrint(printOf(e).print));
     return resolvedScopes.get(key);
   }
+  function labelRe(name) { return new RegExp('^(?:' + escapeRe(name) + '|"' + escapeRe(name) + '"):', 'm'); }
+  // Checks a loop scope against the bytes: the print must be a loop fragment (or, for an invalidated
+  // loop, the module), and the loop's header block should be a block of the function in the anchor print.
+  function confirmLoop(e) {
+    const s = Object.assign({}, e.scope, { functionEvidence: Object.assign({}, e.scope.functionEvidence),
+      ownerHint: e.scope.ownerHint ? Object.assign({}, e.scope.ownerHint) : e.scope.ownerHint });
+    const print = printOf(e).print, kind = printKind(print);
+    if (kind === 'functions' && definedFunctions(print).indexOf(s.loop) >= 0)
+      return { kind: 'function', function: s.loop, resolvedFrom: 'print', note: 'the print defines this function, which the initial module does not (created during the pipeline)' };
+    s.print = kind === 'loop' ? 'loopFragment' : kind;
+    s.headerBlockInPrint = kind === 'loop' ? labelRe(s.loop).test(print) : null;
+    if (s.headerBlockInPrint === false)
+      s.headerNote = 'the header names the loop as it was before the pass; a pass that replaces the header (LoopRotatePass) leaves that block out of its print';
+    if (kind !== 'loop' && !(s.invalidated && kind === 'module'))
+      s.note = 'expected a loop fragment' + (s.invalidated ? ' or, for an invalidated loop, a module print' : '') + '; found a ' + kind + ' print';
+    // The anchor print containing a block of that name supports the hint but does not prove ownership
+    // (block names such as for.body repeat across functions), so function stays null either way.
+    if (s.ownerHint && s.ownerHint.anchorOrdinal !== undefined) {
+      const anchor = stream(e.variant, e.phase).byOrdinal.get(s.ownerHint.anchorOrdinal);
+      s.ownerHint.headerBlockInAnchorPrint = anchor ? labelRe(s.loop).test(printOf(anchor).print) : null;
+    }
+    return s;
+  }
   function covers(e, fn) {
+    // Loop membership uses the header-time assignment, never a print read, and keeps an unassigned loop in
+    // every timeline: wrongly keeping a loop print only turns a change into "unknown"; wrongly dropping
+    // one would let changes() difference across passes that ran in between.
+    if (e.scope.kind === 'loop') return e.scope.function === null || e.scope.function === fn;
     const s = resolveScope(e);
     if (s.kind === 'function' || s.kind === 'machineFunction' || s.kind === 'loop') return s.function === fn;
     if (s.kind === 'cgscc') return s.functions.indexOf(fn) >= 0;
@@ -478,7 +741,7 @@
       const self = this;
       return new FnPlan('text', this._label + '.text()', ctx => {
         const e = self._event(ctx), t = printOf(e);
-        return { kind: 'text', ordinal: e.ordinal, variant: e.variant, phase: e.phase, header: t.header, print: t.print, ref: e.ref };
+        return { kind: 'text', ordinal: e.ordinal, variant: e.variant, phase: e.phase, header: t.header, print: t.print, ref: e.ref, trailer: trailerInfo(t) };
       });
     }
   }
@@ -520,7 +783,7 @@
       return new EventSelection({ variant: this.name, phase: p, fn: null }, 'a.variant("' + this.name + '").events("' + p + '")');
     }
     functions() { return knownFunctions(this.name); }
-    function(name) {
+    functionNamed(name) {
       requireString(name, 'function(name)', 'run.function("row")');
       let known = knownFunctions(this.name, false);
       if (known.indexOf(name) < 0) known = knownFunctions(this.name, true);
@@ -533,6 +796,8 @@
     help() { return helpText('run'); }
     toJSON() { return { variant: this.name, phases: this.phases() }; }
   }
+  // run.function(name): assigned by key so that older parsers need not accept a keyword method name.
+  Run.prototype['function'] = function (name) { return this.functionNamed(name); };
   const archive = {
     events(phase) {
       if (phase === undefined) return new EventSelection({ variant: null, phase: null, fn: null }, 'a.events()');
@@ -930,12 +1195,12 @@
       return new FnPlan('text', this._label + '.text()', ctx => {
         const t = self._target(ctx, null, true);
         if (!t.event) return { kind: 'text', status: 'unavailable', reason: 'noEarlierPrint' };
-        const snap = t.fn ? irSnapshot(t.event, t.fn) : null;
-        const text = snap && snap.functionText ? snap.functionText : printOf(t.event).print;
+        const snap = t.fn ? irSnapshot(t.event, t.fn) : null, whole = printOf(t.event);
+        const text = snap && snap.functionText ? snap.functionText : whole.print;
         const lines = text.split('\n');
         return { kind: 'text', scope: snap && snap.functionText ? 'function' : 'print', function: t.fn, source: sourceWitness(t.event),
           lineRange: snap && snap.lineRange ? snap.lineRange : [1, lines.length], truncated: lines.length > maxLines,
-          text: lines.slice(0, maxLines).join('\n') };
+          text: lines.slice(0, maxLines).join('\n'), trailer: snap && snap.functionText ? null : trailerInfo(whole) };
       });
     }
     instructions() { return new InstructionQuery([], this); }
@@ -954,9 +1219,10 @@
     const r = e.ref;
     if (!r || typeof r.start !== 'number' || typeof r.end !== 'number') return null;
     const span = r.end - r.start;
-    if (utf8Length(t.print) === span) return { offset: r.start, basis: 'ref span equals print bytes' };
-    const head = t.header + '\n';
-    if (utf8Length(head + t.print) === span) return { offset: r.start + utf8Length(head), basis: 'ref span equals header line + print bytes' };
+    const read = rawBytesOf(t);
+    if (read === span) return { offset: r.start, basis: 'ref span equals the bytes read (the print keeps their prefix)' };
+    const head = utf8Length(t.header + '\n');
+    if (head + read === span) return { offset: r.start + head, basis: 'ref span equals header line + bytes read' };
     return null;
   }
   class ExcerptPlan extends Plan {
@@ -994,6 +1260,7 @@
       return { kind: 'excerpt', status: 'available', query: o.contains !== undefined ? { contains: o.contains } : { matches: String(o.matches) },
         scope: useFn ? 'function ' + t.fn : 'whole print', searchedLines: [from, to], hitCount: total, hits, truncated: total > hits.length,
         source: sourceWitness(t.event), offsetBasis: base ? base.basis : 'stream offset not derivable from ref; offsets are within the print',
+        excluded: useFn ? null : trailerInfo(text),
         note: 'a text search over printed IR; printed local names are not operand identities' };
     }
   }
@@ -1030,16 +1297,24 @@
     toJSON() { return { metric: this._spec.label, unit: this._spec.unit, valueType: this._spec.valueType, use: 'metric.at(state) or timeline.measure(metric)' }; }
     toString() { return '[metric ' + this._spec.label + ']'; }
   }
+  ['value', 'status', 'witnesses'].forEach(k => {
+    Object.defineProperty(Metric.prototype, k, { configurable: true, enumerable: false, get() {
+      throw QueryError('notEvaluated', 'a metric has no ' + k + ' until it is bound to a state and run', { fix: 'q.run(metric.at(row.timeline("middle").at(74).after)).' + k });
+    } });
+  });
   function describeValue(v) {
     if (v instanceof Plan) return 'a plan (' + v._kind + ': ' + v._label + ')';
     if (v === null) return 'null';
+    if (materializedInfo(v)) return runArgument(v, 1, true).what + ' (already a value; pass the plan itself)';
+    if (v === undefined || typeof v === 'function') return runArgument(v, 1, true).what + ' (nothing was evaluated; not a zero)';
     return typeof v === 'object' ? 'an object with keys ' + Object.keys(v).slice(0, 6).join(', ') : typeof v + ' ' + JSON.stringify(v);
   }
   function computeMetric(metric, snap) {
+    // Results are copied out of the cache so that a caller mutating a result cannot change later answers.
     const k = snap.key + '#' + metric._spec.key;
-    const hit = cache.values.get(k);
-    if (hit !== undefined) return hit;
-    return cache.values.set(k, metric._spec.compute(snap));
+    let hit = cache.values.get(k);
+    if (hit === undefined) hit = cache.values.set(k, metric._spec.compute(snap));
+    return JSON.parse(JSON.stringify(hit));
   }
   class MetricAt extends Plan {
     constructor(metric, state, requirement) {
@@ -1161,8 +1436,9 @@
     }
     changes() { return new ChangeRows(this); }
   }
-  // Adjacency is judged against the unfiltered timeline (`base`) of the same function and stream:
-  // after a where() that skips events, a pair of rows is a 'gap', never a 'known' change.
+  // Adjacency is judged against the unfiltered timeline (`base`) of the same function and stream AND the
+  // original stream ordinals: after a where() that skips events, or when other events of the stream ran
+  // between two rows of the timeline, a pair of rows is a 'gap', never a 'known' change.
   class ChangeRows extends Rows {
     constructor(measure) {
       const sel = measure._sel, valueType = measure._metric._spec.valueType;
@@ -1182,20 +1458,39 @@
     ctx.aux.set(sel._base, positions);
     return positions;
   }
+  // Original stream ordinals strictly between two rows (events of any scope), so a gap names what ran in between.
+  function ordinalsBetween(variant, phase, from, to) {
+    const s = index().streams.get(streamKey(variant, phase));
+    if (!s) return null;
+    const out = [];
+    for (let o = from + 1; o < to; o++) if (s.byOrdinal.has(o)) out.push(o);
+    return out;
+  }
   function changeRow(prev, cur, positions, valueType) {
     const out = { ordinal: cur.ordinal, pass: cur.pass, header: cur.header, from: prev ? prev.ordinal : null,
       fromPass: prev ? prev.pass : null, before: prev ? prev.value : null, after: cur.value, delta: null,
-      changed: null, transition: null, status: null, reason: null, skipped: null, endpointDelta: null,
+      changed: null, transition: null, status: null, reason: null, skipped: null, skippedOrdinals: null, endpointDelta: null,
       unit: cur.unit, ref: cur.ref };
-    if (cur.status !== 'available') { out.status = 'unavailable'; out.reason = cur.reason || cur.status; return out; }
+    if (cur.status !== 'available') { out.status = cur.status; out.reason = cur.reason || cur.status; return out; }   // absent | unavailable | unsupported
     if (!prev) { out.status = 'first'; out.reason = 'no earlier row in this selection'; return out; }
     if (prev.status !== 'available') { out.status = 'unknown'; out.reason = 'previous row ' + prev.ordinal + ' is ' + prev.status + ' (' + prev.reason + ')'; out.before = null; return out; }
     const pk = streamKey(prev.variant, prev.phase) + '|' + prev.ordinal, ck = streamKey(cur.variant, cur.phase) + '|' + cur.ordinal;
     const pp = positions.order.get(pk), cp = positions.order.get(ck);
-    if (pp === undefined || cp === undefined || cp - pp !== 1) {
+    const sameStream = prev.variant === cur.variant && prev.phase === cur.phase;
+    const timelineAdjacent = pp !== undefined && cp !== undefined && cp - pp === 1;
+    // A per-pass change is known only between consecutive ORIGINAL ordinals of one stream. Rows adjacent in
+    // a function timeline can still have other events between them (another function's passes, loops of
+    // unknown owner excluded elsewhere, or ordinals missing from the capture): that is a gap, not a change.
+    const consecutive = sameStream && cur.ordinal - prev.ordinal === 1;
+    if (!timelineAdjacent || !consecutive) {
       out.status = 'gap';
       out.skipped = pp !== undefined && cp !== undefined ? positions.list.slice(pp + 1, cp) : null;
-      out.reason = 'rows are not adjacent in the function timeline; intervening events may have changed the value';
+      out.skippedOrdinals = sameStream ? ordinalsBetween(cur.variant, cur.phase, prev.ordinal, cur.ordinal) : null;
+      out.reason = !timelineAdjacent ? 'rows are not adjacent in the function timeline; intervening events may have changed the value'
+        : !sameStream ? 'rows come from different streams (' + prev.variant + '/' + prev.phase + ', ' + cur.variant + '/' + cur.phase + '); ordinals restart per stream'
+        : 'original ordinals ' + prev.ordinal + ' and ' + cur.ordinal + ' are not consecutive' +
+          (out.skippedOrdinals && out.skippedOrdinals.length ? ' (stream events ' + out.skippedOrdinals.join(', ') + ' lie between them, outside this timeline)' : ' (no stream event recorded between them: ordinals missing from the capture)') +
+          '; the difference is not attributable to one pass';
       if (valueType === 'count') out.endpointDelta = cur.value - prev.value;
       return out;
     }
@@ -1294,6 +1589,106 @@
     }
     return findArm(spec);
   }
+  // ── treatment metadata: study/capture provenance, NOT measurements ──
+  // Curated from the capture scripts (execute.py, typed-counts.mjs) and the studies (study.md,
+  // evidence.md). Keyed by profile source + entry so a label never attaches to another source.
+  const TREATMENT_CATALOG = 'picocalc-row-treatments.v1';
+  const TREATMENT_BASIS = {
+    typed: ['typed-counts.mjs (build options, workload, counters)', 'study.md (treatment design)', 'evidence.md §4'],
+    execution: ['execute.py (link, workload, counters)', 'evidence.md §3 (build table, LSR pairs)'],
+  };
+  const TYPED_TREATMENTS = {
+    stock: { role: 'baseline', build: 'typedRv32.compile(src, [], undefined, { pieLoops: undefined })',
+      design: 'ordinary Typed RV32 backend; no PIE-loops region inference' },
+    scalar: { role: 'matched scalar control for typed-pie', build: 'typedRv32.compile(src, [], undefined, { pieLoops: "scalar" })',
+      design: 'PIE-loops region inference and lowering with a scalar producer: eight scalar subtracts and halfword stores fill the lane scratch; admission, memory intervals, iteration domain, lane consumer and fallback are shared with typed-pie',
+      notA: 'a dedicated stack-placement treatment; its stack-count change vs typed-stock comes from the bundled region lowering, which the counts cannot apportion' },
+    pie: { role: 'packed-producer treatment', build: 'typedRv32.compile(src, [], undefined, { pieLoops: "pie" })',
+      design: 'same region lowering as typed-scalar, but the producer is one 16-byte load, one eight-lane signed saturating subtraction and one 16-byte scratch store; it targets the discriminant subtraction of the inner pixel loop',
+      notA: 'an intervention targeted at stack traffic; the hit continuation (lookup, depth compare, stores) stays ordinary scalar code' },
+  };
+  const C_FORMS = {
+    checked: 'checked C model of the Typed row (01-row.c, hand-written, not Typed compiler output): each element access calls a capacity check that traps on failure',
+    unchecked: 'unchecked C model of the Typed row (01-row.c, hand-written, not Typed compiler output): no capacity checks',
+  };
+  const C_TOOLS = {
+    gcc: { role: 'GCC build', build: 'GCC 14.2 -O2' },
+    'gcc-noiv': { role: 'GCC build without IV optimization', build: 'GCC with -fno-ivopts' },
+    llc: { role: 'LSR-on arm of the llc LSR ablation', build: 'LLVM 18 llc, Loop Strength Reduction on' },
+    'llc-nolsr': { role: 'LSR-off arm of the llc LSR ablation', build: 'LLVM 18 llc -disable-lsr, from the same optimized module as the llc arm' },
+    llvm: { role: 'LLVM-built object labelled "llvm"', build: null },
+  };
+  const TREATMENT_NOT_ATTRIBUTABLE = [
+    'an individual stack slot, frame offset or PC: totals and row samples carry no addresses (see q.joinPCs)',
+    'spill vs prologue/epilogue save vs local stack home vs scratch: the predicate sees only the base register sp',
+    'an individual optimization inside a treatment that bundles several changes',
+    'cycles or ESP32-P4 board time: these are emulator counts',
+    'trap-path behaviour: every workload input is a valid row',
+  ];
+  const TREATMENT_CAPTURE = {
+    execution: { workload: 'one qemu-riscv32-static run of the linked executable per fixture row (fixtures/<y>.in on stdin); stdout must equal fixtures/<y>.gold',
+      counter: 'QEMU exec trace (-one-insn-per-tb -d exec,nochain); only PCs inside the nm -S range of symbol row are counted' },
+    typed: { workload: 'one runRv32 call of typedRayComputeRow per fixture row; each must not trap, must return 1 and must reproduce fixtures/<y>.gold',
+      counter: 'runRv32 per-PC hook over the whole call; the script applies no symbol-range filter' },
+  };
+  const NOT_TIME = 'ESP32-P4 cycles or board time';
+  const TREATMENT_FIELDS = {
+    execution: {
+      'totals.instructions': { scope: 'dynamic', meaning: 'QEMU guest instructions executed with PC inside the linked row symbol, summed over the workload', isNot: NOT_TIME },
+      'totals.stackLoads': { scope: 'dynamic', meaning: 'executed lw/lh/lhu whose operand text contains (sp), summed over the workload', isNot: 'a stack-slot or spill count; byte, FP and copied-sp accesses are not counted' },
+      'totals.stackStores': { scope: 'dynamic', meaning: 'executed sw/sh whose operand text contains (sp), summed over the workload', isNot: 'a stack-slot or spill count; byte, FP and copied-sp accesses are not counted' },
+      rowBytes: { scope: 'static', meaning: 'bytes of linked machine code: the size of the C row symbol from nm -S on the linked executable', isNot: 'output bytes, the .gold file length, a checksum, or an execution count' },
+    },
+    typed: {
+      'totals.instructions': { scope: 'dynamic', meaning: 'RV32 interpreter steps (r.steps): one decoded instruction per step, a packed instruction counts once', isNot: NOT_TIME },
+      'totals.stackLoads': { scope: 'dynamic', meaning: 'executed PCs whose 32-bit word has rs1 = sp and major opcode LOAD (any integer width), summed over the workload', isNot: 'a stack-slot or spill count; compressed and vendor encodings are not decoded' },
+      'totals.stackStores': { scope: 'dynamic', meaning: 'executed PCs whose 32-bit word has rs1 = sp and major opcode STORE (any integer width), summed over the workload', isNot: 'a stack-slot or spill count; compressed and vendor encodings are not decoded' },
+      'totals.packets': { scope: 'dynamic', meaning: 'r.packed.stores: executed 16-byte packed scratch stores', isNot: 'a separately counted number of packed groups' },
+      rowBytes: { scope: 'static', meaning: 'absent from this summary: typed-counts.mjs records no code size', isNot: 'a Typed image size; image bytes are a study figure (study.md)' },
+    },
+  };
+  const SHARED_FIELDS = {
+    samples: { scope: 'dynamic', meaning: 'per-row totals for a few fixture rows, keyed by row index', isNot: 'PC samples' },
+    rowsVerified: { scope: 'workload', meaning: 'row inputs whose output equalled fixtures/<y>.gold', isNot: 'a count of output bytes' },
+  };
+  function ownKey(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+  function treatmentOf(arm) {
+    const provenance = { kind: 'study/capture metadata', measured: false, catalog: TREATMENT_CATALOG, basis: TREATMENT_BASIS[arm.source] || [],
+      note: 'curated from the attached study and capture sources; not read from the profile entry and not covered by source.digest' };
+    if (arm.source === 'typed' && ownKey(TYPED_TREATMENTS, arm.key)) {
+      const t = TYPED_TREATMENTS[arm.key];
+      return { id: arm.arm, status: 'described', role: t.role, design: t.design, build: t.build, notA: t.notA || null, provenance };
+    }
+    const m = arm.source === 'execution' ? /^(checked|unchecked)-(.+)$/.exec(arm.key) : null;
+    if (m && ownKey(C_TOOLS, m[2])) {
+      const c = C_TOOLS[m[2]];
+      return { id: arm.arm, status: c.build ? 'described' : 'partial', role: c.role, design: C_FORMS[m[1]],
+        build: c.build || 'not described by the attached sources (execute.py only links ' + m[1] + '/' + m[2] + '.o)', notA: null, provenance };
+    }
+    return { id: arm.arm, status: 'undescribed', why: 'no study/capture metadata for ' + arm.source + '["' + arm.key + '"] in ' + TREATMENT_CATALOG };
+  }
+  function treatmentComparisons(arm) {
+    const out = [];
+    const pair = (before, after, isolates, heldEqual) => { if (arm.arm === before || arm.arm === after) out.push({ before, after, isolates, heldEqual }); };
+    if (arm.source === 'typed') {
+      pair('typed-scalar', 'typed-pie', 'the packet producer only (scalar lane fill vs packed subtraction)',
+        'source, workload, counters, admission, memory intervals, iteration domain, lane consumer, fallback');
+      pair('typed-stock', 'typed-scalar', 'no single change: the whole region lowering (admission and entry guards, lane scratch, checked-interval reuse, register-held induction state) with a scalar producer',
+        'source, workload, counters');
+      pair('typed-stock', 'typed-pie', 'no single change: region lowering plus packed producer', 'source, workload, counters');
+    }
+    const m = arm.source === 'execution' ? /^(checked|unchecked)-(llc|llc-nolsr)$/.exec(arm.key) : null;
+    if (m) pair(m[1] + '-llc-nolsr', m[1] + '-llc', 'LLVM backend Loop Strength Reduction: its net effect through the rest of the llc pipeline',
+      'optimized module, contract, link, workload, counters; only -disable-lsr differs');
+    return out;
+  }
+  function treatmentFields(arm) {
+    const table = TREATMENT_FIELDS[arm.source] || {}, out = {};
+    Object.keys(arm.entry.totals).forEach(k => { const f = 'totals.' + k; out[f] = table[f] || { scope: 'dynamic', meaning: 'not described by ' + TREATMENT_CATALOG, isNot: null }; });
+    if (table.rowBytes) out.rowBytes = table.rowBytes;
+    Object.keys(SHARED_FIELDS).forEach(k => { if (arm.entry[k] !== undefined) out[k] = SHARED_FIELDS[k]; });
+    return out;
+  }
   class ProfileSelection {
     constructor(armSpec, region, workload) {
       this._armSpec = armSpec; this._region = region || null; this._workload = workload || null;
@@ -1315,15 +1710,40 @@
       }
       return new TotalPlan(this, metric);
     }
-    totals() { const arm = findArm(this.name); return Object.keys(arm.entry.totals).map(k => ({ metric: k, value: arm.entry.totals[k], unit: unitOf(k).unit })); }
-    describe() {
-      const arm = findArm(this.name), e = arm.entry;
-      return { arm: arm.arm, source: { profile: arm.source, entry: arm.key, digest: arm.digest }, totals: e.totals,
-        rowsVerified: e.rowsVerified === undefined ? null : e.rowsVerified, rowBytes: e.rowBytes === undefined ? null : e.rowBytes,
-        sampleKeys: e.samples && typeof e.samples === 'object' ? Object.keys(e.samples).slice(0, 40) : null,
-        contract: contractOf(arm), otherFields: Object.keys(e).filter(k => ['totals', 'rowsVerified', 'rowBytes', 'samples'].indexOf(k) < 0) };
+    _chain() {
+      return 'profiles.arm(' + (this._armSpec instanceof Param ? this._armSpec.name : JSON.stringify(this._armSpec)) + ')' +
+        (this._region ? '.region("' + this._region + '")' : '') + (this._workload ? '.workload("' + this._workload + '")' : '');
     }
-    samples() { const arm = findArm(this.name); return arm.entry.samples === undefined ? null : arm.entry.samples; }
+    // describe(), totals(), samples() are eager: they read the summary now, so a q.param arm cannot be bound yet.
+    _eagerArm(method) {
+      if (this._armSpec instanceof Param)
+        throw QueryError('unboundParam', this._chain() + '.' + method + '() is eager (it reads the summary now), so it cannot use the q.run binding of parameter ' + JSON.stringify(this._armSpec.name),
+          { fix: 'name the arm: profiles.arm(' + JSON.stringify((this._armSpec.choices || [])[0] || 'checked-llc') + ').' + method + '(), or stay lazy: q.run(' + this._chain() +
+            '.total("instructions"), { bindings: { ' + this._armSpec.name + ': … } })' });
+      return findArm(this._armSpec);
+    }
+    totals() { const arm = this._eagerArm('totals'); return Object.keys(arm.entry.totals).map(k => ({ metric: k, value: arm.entry.totals[k], unit: unitOf(k).unit })); }
+    describe() {
+      // Eager (reads the summary now; a q.param arm is refused with a fix), tagged as a materialized
+      // descriptor so q.run(d) === d, and carrying the treatment's study/capture metadata.
+      const arm = this._eagerArm('describe'), e = arm.entry, t = treatmentOf(arm);
+      const allSampleKeys = e.samples && typeof e.samples === 'object' ? Object.keys(e.samples) : null;
+      return markMaterialized({ arm: arm.arm, source: { profile: arm.source, entry: arm.key, digest: arm.digest }, totals: e.totals,
+        units: Object.keys(e.totals).reduce((o, k) => { o[k] = unitOf(k).unit; return o; }, {}),
+        rowsVerified: e.rowsVerified === undefined ? null : e.rowsVerified, rowBytes: e.rowBytes === undefined ? null : e.rowBytes,
+        sampleKeys: allSampleKeys ? allSampleKeys.slice(0, 40) : null,
+        sampleCount: allSampleKeys ? allSampleKeys.length : null,
+        sampleKeysTruncated: allSampleKeys ? allSampleKeys.length > 40 : null,
+        contract: contractOf(arm), otherFields: Object.keys(e).filter(k => ['totals', 'rowsVerified', 'rowBytes', 'samples'].indexOf(k) < 0),
+        // additive: what the arm is and what its numbers can and cannot support (study/capture metadata)
+        treatment: t,
+        countsCover: Object.assign({ treatment: arm.arm, role: t.role || null, verifiedBy: 'rowsVerified' },
+          TREATMENT_CAPTURE[arm.source] || { workload: null, counter: null }),
+        fields: treatmentFields(arm), comparisons: treatmentComparisons(arm), cannotAttribute: TREATMENT_NOT_ATTRIBUTABLE.slice(),
+        timing: 'emulator counts only; ESP32-P4 timings are a separate study layer, not loaded as a profile' },
+        { what: 'descriptor', of: this._chain() + '.describe()' });
+    }
+    samples() { const arm = this._eagerArm('samples'); return arm.entry.samples === undefined ? null : arm.entry.samples; }
     help() { return helpText('profiles'); }
     toJSON() { return { arm: this.name, region: this._region, workload: this._workload, use: '.total("instructions")' }; }
   }
@@ -1342,11 +1762,17 @@
       if (names.indexOf(this._metric) < 0) throw unknownName('unknownTotal', 'total of ' + arm.arm, this._metric, names);
       const value = arm.entry.totals[this._metric];
       const region = this._sel._region || 'row';
-      return { kind: 'total', status: typeof value === 'number' ? 'available' : 'unavailable', arm: arm.arm, metric: this._metric,
-        value: typeof value === 'number' ? value : null, unit: u.unit, dimension: u.dimension, category: u.category || null,
+      const workload = workloadOf(arm, this._sel._workload);
+      // A requested workload that the entry contradicts is not a reading of that workload.
+      const contradicted = this._sel._workload !== null && workload.rowsVerified !== null && !workload.verified;
+      const status = typeof value !== 'number' ? 'unavailable' : contradicted ? 'unavailable' : 'available';
+      return { kind: 'total', status, reason: typeof value !== 'number' ? 'notANumber' : contradicted ? 'workloadMismatch' : null,
+        arm: arm.arm, metric: this._metric,
+        value: status === 'available' ? value : null, recordedValue: contradicted ? value : undefined,
+        unit: u.unit, dimension: u.dimension, category: u.category || null,
         scope: 'dynamic (executed work, summed over the workload)',
         region: { name: region, requested: !!this._sel._region, evidence: REGIONS[region] },
-        workload: workloadOf(arm, this._sel._workload), contract: contractOf(arm),
+        workload, contract: contractOf(arm),
         source: { profile: arm.source, entry: arm.key, digest: arm.digest, path: arm.source + '["' + arm.key + '"].totals.' + this._metric } };
     }
   }
@@ -1400,10 +1826,14 @@
         });
         if (rs.some(r => !r.category) || rs.some((r, i) => rs.findIndex(x => x.category === r.category) !== i))
           throw QueryError('doubleCount', 'q.add needs disjoint categories of one dimension (e.g. stackLoads + stackStores)');
+      } else {
+        const states = rs.map(r => JSON.stringify([r.state.variant, r.state.phase, r.state.ordinal, r.state.function, r.state.side]));
+        if (states.some(s => s !== states[0])) throw QueryError('incompatibleScope', 'q.add over static counts of different states does not describe one program', { fix: 'q.compare or q.bundle for different states' });
+        out.note = 'static selections are summed as given; q.add does not prove that they are disjoint';
       }
       out.value = rs.reduce((s, r) => s + r.value, 0);
       out.unit = rs[0].kind === 'total' ? rs[0].dimension : rs[0].unit;
-      out.formula = rs.map(r => (r.metric || r.metric) + '=' + r.value).join(' + ') + ' = ' + out.value;
+      out.formula = rs.map(r => r.metric + '=' + r.value).join(' + ') + ' = ' + out.value;
       return out;
     }
   }
@@ -1479,7 +1909,8 @@
   }
   function intervalBetween(b, a) {
     const s = b.state, t = a.state;
-    if (!s || !t || s.variant !== t.variant || s.phase !== t.phase || !s.function || s.function !== t.function)
+    if (!s || !t || s.variant !== t.variant || s.phase !== t.phase || !s.function || s.function !== t.function ||
+        typeof s.ordinal !== 'number' || typeof t.ordinal !== 'number')
       return { status: 'unknown', note: 'endpoints are not in one function timeline' };
     const lo = Math.min(s.ordinal, t.ordinal), hi = Math.max(s.ordinal, t.ordinal);
     const between = stream(s.variant, s.phase).events.filter(e => e.ordinal > lo && e.ordinal < hi && covers(e, s.function));
@@ -1554,7 +1985,8 @@
     functions() { return definedFunctions(initialModuleOf(this.variant).text); }
     describe() {
       const m = initialModuleOf(this.variant);
-      return { kind: 'initialModule', variant: this.variant, digest: m.digest, bytes: utf8Length(m.text), functions: definedFunctions(m.text), debug: debugFacts(m.text, null) };
+      return markMaterialized({ kind: 'initialModule', variant: this.variant, digest: m.digest, bytes: utf8Length(m.text), functions: definedFunctions(m.text), debug: debugFacts(m.text, null) },
+        { what: 'descriptor', of: 'a.variant("' + this.variant + '").initialModule().describe()' });
     }
     state(fn) { return new InitialStatePlan(this.variant, fn ? requireString(fn, 'state(function)') : null); }
     sourceLocations(options) {
@@ -1642,7 +2074,13 @@
   }
 
   // ───────────────────────── def-use edges inside one snapshot ─────────────────────────
-  function valueToken(part) { const t = typedOperand(part); const v = t ? t.value : part; const w = v.split(/\s+/); return w[w.length - 1]; }
+  // Value of a typed operand ("ptr noundef %work" → "%work"); attributes sit between type and value.
+  function valueToken(part) {
+    const t = typedOperand(part || '');
+    const v = t && t.value ? t.value : String(part || '');
+    const w = v.split(/\s+/);
+    return w[w.length - 1];
+  }
   // Operand values in LLVM operand order for the forms recognized here; null when not derived.
   function operandsOf(inst) {
     const op = inst.opcode;
@@ -1712,7 +2150,7 @@
       },
     };
   }
-  FunctionHandle.prototype.with = function (frag) {
+  FunctionHandle.prototype['with'] = function (frag) {
     if (!(frag instanceof Fragment)) throw QueryError('badArgument', 'with(fragment) takes q.fragment(name).on("irFunction", {…})');
     const self = this, out = { fragment: frag.toJSON() };
     Object.keys(frag.members).forEach(k => {
@@ -1797,15 +2235,20 @@
     index: () => [
       'q — compiler-evidence queries over the PicoCalc LLVM row archive (release ' + VERSION + '). Globals: q, a (archive), profiles.',
       'Plans are lazy; evaluate synchronously with q.run(plan) or plan.run(). Results are plain objects with status, unit and witnesses.',
-      '  q.run(a.events().count())                                  // all header records, with byStream',
+      'Eager calls (….describe(), profiles.arms(), run.functions()) return values at once; q.run returns a describe() descriptor unchanged (q.help("plans")).',
+      '  q.run(a.events().count())                                // all header records, with byStream',
       '  run = a.variant("checked"); row = run.function("row"); middle = row.timeline("middle")',
       '  q.run(run.events("middle").at(74).select("ordinal", "header", "ref"))',
       '  hdr = q.ir.instructions().opcode("load").resultType("i32").pointer(row.argument(0)).count()',
       '  q.run(hdr.at(middle.at(74).after))                         // static sites, with witnesses',
       '  q.run(middle.measure(hdr).changes().where(c => c.status === "known" && c.delta < 0).first())',
       '  q.run(profiles.arm("checked-gcc").region("row").workload("opening-160-rows").total("instructions"))',
-      'Topics: q.help("events" | "timeline" | "states" | "metrics" | "changes" | "machine" | "profiles" | "compare" | "capabilities" | "params" | "results" | "errors" | "cache").',
+      'Topics: q.help("plans" | "events" | "timeline" | "states" | "metrics" | "changes" | "machine" | "profiles" | "compare" | "capabilities" | "params" | "results" | "errors" | "cache").',
       'Every object answers .help(). Statuses: available · absent (module print lacks the function) · unavailable (capture lacks it) · unsupported (parser limit).',
+      'Physical ESP32-P4 timings are a separate global, never mixed into profiles (guest instruction counts): ' + liveList(() => {
+        const hw = typeof root.hardware === 'object' && root.hardware && typeof root.hardware.help === 'function' ? root.hardware.help() : null;
+        return hw === null ? 'hardware is not installed in this session.' : hw.available ? 'hardware.help() (available in this session).' : 'hardware.help() reports them unavailable in this session (no device study).';
+      }),
     ].join('\n'),
     events: () => [
       'Events = header records of print-after-all streams; one stream per (variant, phase); ordinals restart at 0 per stream.',
@@ -1815,10 +2258,17 @@
       '  .select("ordinal", "pass", "scope", "ref")  .limit(10)  .count()  .ordinals()  .text()',
       'Event fields: ' + EVENT_FIELDS.join(', ') + ' (+ host fields). pass = new-PM class (EarlyCSEPass) or llc pass ID (virtregrewriter); passId = pass.',
       'scope.kind: function · module · cgscc (functions) · loop (loop, function) · machineFunction · unresolved (llc header; resolved from the print).',
+      'A loop header names only the loop\'s header block ("on for.body29"). A name the initial module does not define is a loop; its owner is not shown,',
+      'so scope.function is null and every function timeline keeps the event. scope.ownerHint { function, tentative: true, method, anchorOrdinal,',
+      'headerBlockInAnchorPrint, provenance } is the nearest earlier single-function event: a proximity hint, never an owner. "loop %L in function F" headers',
+      'do name the owner (functionEvidence.method "header"). Loop prints are fragments: whole-function metrics on them are unavailable, so the next',
+      'change in a timeline that keeps one is "unknown", never "known".',
+      'A print ends before the next pass\'s "Running pass: …" announcement; that tail is never searched or measured (see trailer/excluded).',
       'Variants now: ' + liveList(() => index().variants.join(', ')) + '. Phases: ' + liveList(() => index().phases.join(', ')) + '.',
     ].join('\n'),
     timeline: () => [
-      'A function timeline = the events of one stream whose print can contain the function (its function/loop/cgscc events and module prints).',
+      'A function timeline = the events of one stream whose print can contain the function (its function/cgscc events, loops it is shown to own,',
+      'loops whose owner is not shown, and module prints).',
       '  row = a.variant("checked").function("row"); middle = row.timeline("middle"); machine = row.timeline("backend")',
       '  middle.at(74)   // same original ordinal as run.events("middle").at(74); an ordinal of another function → [notInSelection]',
       '  machine.where(e => e.passId === "virtregrewriter").select("ordinal", "passId", "scope", "ref")',
@@ -1847,8 +2297,9 @@
     ].join('\n'),
     changes: () => [
       'timeline.measure(metric) → one row per event: ordinal, pass, status, value, reason, coverage, unit, ref.',
-      '.changes() → lazy rows: ordinal, pass, from, fromPass, before, after, delta, changed, status, reason, unit, ref (+ skipped, endpointDelta for gaps).',
-      'status: known (adjacent full prints) · first · unavailable (this print) · unknown (previous print unavailable; predecessor reset) · gap (rows not adjacent in the function timeline).',
+      '.changes() → lazy rows: ordinal, pass, from, fromPass, before, after, delta, changed, status, reason, unit, ref (+ skipped, skippedOrdinals, endpointDelta for gaps).',
+      'status: known (full prints at consecutive original ordinals) · first · unavailable (this print) · unknown (previous print unavailable; predecessor reset)',
+      '  · gap (rows not adjacent in the function timeline, or other stream events between them: skipped = timeline rows, skippedOrdinals = every original ordinal between).',
       '  q.run(middle.measure(hdr).changes().where(c => c.status === "known" && c.delta < 0).first())',
       '  q.run(middle.measure(hdr).changes().table("ordinal", "pass", "before", "after", "delta", "status"))',
       'Filtering before differencing changes the question: middle.where(e => e.pass === "EarlyCSEPass").measure(hdr).changes() yields gaps.',
@@ -1862,17 +2313,26 @@
     ].join('\n'),
     profiles: () => [
       'Execution summaries: dynamic totals of executed work (not static sites). Sources: execution, typed, metrics (q: profiles.sources()).',
-      '  profiles.arms()      profiles.arm("checked-gcc").describe()      profiles.workloads()      profiles.regions()',
+      '  eager, values now:  profiles.arms()   profiles.arm("checked-gcc").describe()   .totals()   .samples()   profiles.workloads()   profiles.regions()',
+      '  lazy, use q.run:    .total(name)   q.add(…)   q.compare(…).  q.run(<a describe() descriptor>) returns it unchanged; see q.help("plans").',
       '  q.run(profiles.arm("checked-gcc").region("row").workload("opening-160-rows").total("instructions"))',
       '  stock = profiles.arm("typed-stock").region("row").workload("opening-160-rows")',
       '  q.run(q.add(stock.total("stackLoads"), stock.total("stackStores")).label("direct stack accesses"))',
       'Typed-summary entries are arms with the prefix "typed-" (typed-stock = typed["stock"]). Workload "opening-160-rows" is verified by rowsVerified === 160.',
+      'What an arm IS: profiles.arm("typed-scalar").describe().treatment → role, design, build, notA, provenance.',
+      '  Treatment labels are study/capture metadata (provenance.measured === false), not measurements; status "partial"/"undescribed" means the sources say no more.',
+      '  .describe().countsCover (treatment, workload, counter) · .fields (scope static|dynamic, meaning, isNot) · .comparisons (what a pair isolates) · .cannotAttribute',
+      '  .describe().units (one per total) · .sampleKeys (first 40) with .sampleCount and .sampleKeysTruncated; .samples() returns every sample',
+      'Totals are dynamic emulator counts: QEMU guest instructions inside the C row symbol, or RV32 interpreter steps for Typed. Neither is cycles or board time.',
+      'rowBytes is static: the nm -S size of the linked C row symbol, not output bytes or the .gold length. Typed summaries carry no code size.',
+      'Stack totals are direct sp-based accesses summed over the workload; they cannot be attributed to a stack slot, a spill, or one optimization in a bundled treatment.',
       'Arms now: ' + liveList(() => profilesApi.arms().map(x => x.arm).join(', ')),
     ].join('\n'),
     compare: () => [
       'q.bundle({ name: plan, … }) keeps outputs separate. q.add(t1, t2) sums disjoint categories of one dimension and scope.',
       'q.compare(before, after) → delta (counts), equal/transition (booleans), matchedOn; .matchOn(keys…), .percentChange({ denominator: "before"|"after" }), .asEndpoints().',
-      '  q.run(q.compare(total("checked-llc-nolsr"), total("checked-llc")).matchOn("workload", "region", "checkedContract", "unit").percentChange({ denominator: "before" }))',
+      '  t = arm => profiles.arm(arm).region("row").workload("opening-160-rows").total("instructions")',
+      '  q.run(q.compare(t("checked-llc-nolsr"), t("checked-llc")).matchOn("workload", "region", "checkedContract", "unit").percentChange({ denominator: "before" }))',
       '  q.run(q.compare(np.at(machine.at(74).after), np.at(machine.at(78).after)).asEndpoints())   // interval + intervening events',
       'Match keys: ' + MATCH_KEYS.join(', ') + '. A mismatch → status incomparable, delta null. percentChange on booleans → [typeError].',
       'q.explain(plan) lists plan nodes, inputs and shared consumers.',
@@ -1895,7 +2355,7 @@
       'count: { kind, value, unit, of, streams?, byStream? }      rows: { kind, of, unit, count, rows, truncated? }',
       'measurement: { kind, status, metric, definition, unit, valueType, value, count, witnesses, resolved, state, reason?, why? }',
       'state witness: { variant, phase, ordinal, pass, header, ref, function, side, coverage, lineRange, derivedFrom? }',
-      'total: { kind, status, arm, metric, value, unit, dimension, category, scope, region, workload, contract, source{profile, entry, digest, path} }',
+      'total: { kind, status, arm, metric, value, unit, dimension, category, scope, region, workload, contract, pipeline{status: notLinked}, source{profile, entry, digest, path} }',
       'comparison: { kind, status, before, after, valueType, unit, delta, percent?, denominator?, equal?, transition?, matchedOn, interval? }',
       'sum: { kind, label, status, value, unit, parts, formula }      bundle: { kind, outputs, keys }',
       'Units are kept apart: events (records) · rows (result rows) · static instruction sites · executed … (dynamic work).',
@@ -1904,8 +2364,29 @@
       'Errors are thrown as "[code] message\\n  fix: …". Codes: unknownVariant unknownPhase unknownFunction unknownOpcode unknownProperty',
       'unknownArm unknownRegion unknownWorkload unknownTotal unknownMatchKey unknownField unknownTopic ordinalOutOfRange notInSelection',
       'ambiguousStream ambiguous noEvent needFunction functionMismatch notAPlan badArgument badType typeError incompatibleUnits',
-      'incompatibleScope doubleCount percentBaselineRequired undeclaredParam unboundParam badBinding unsupported noBridge bridge.',
+      'incompatibleScope doubleCount percentBaselineRequired undeclaredParam unboundParam badBinding unknownOption alreadyMaterialized',
+      'notEvaluated (a result field such as .value read on a plan: q.run(plan).value) noSuchArgument unknownCoverage unknownProfile needState',
+      'unknownTarget noPaths unavailable (profiles.source(name) could not read that source)',
+      'unsupported noBridge bridge. q.run refusals (notAPlan, badArgument, alreadyMaterialized) carry err.got and err.fix: q.help("plans").',
       'Scientific gaps are NOT errors: they come back as results with status absent / unavailable / unsupported and a reason.',
+    ].join('\n'),
+    plans: () => [
+      'Lazy plans vs eager values. A plan is a description (it shows as { plan, kind, note }); q.run(plan) or plan.run() evaluates it.',
+      '  plans: a.events(…), run.events(p), row.timeline(p) and what they build (.at(n) .after .before .where .select .count() .first() .measure(m) .changes()),',
+      '         metric.at(state), profiles.arm(n).total(name), q.add, q.compare, q.bundle, q.joinPCs',
+      '  eager, values when called: profiles.arms() .sources() .workloads() .regions(), profiles.arm(n).describe() .totals() .samples(),',
+      '         a.variants() a.streams() run.phases() run.functions() initialModule().describe() q.capabilities() q.explain(plan)',
+      'q.run(x, options?) with options { bindings: { name: value }, maxRows: n }:',
+      '  x is a plan → its result · x is { name: plan, … } (every value a plan) → a bundle result',
+      '  x is a describe() descriptor or a q.run / plan.run result (nested outputs too) → x itself, unchanged (q.run(d) === d)',
+      '      recognized by a tag set when the value was created, never by its shape: copies are untagged. Options with it → [alreadyMaterialized].',
+      '  anything else → [notAPlan], with err.got naming what arrived and err.fix the next call. err.got is one of:',
+      '      noArgument undefined null function string number boolean array arrayOfPlans bundleMember object',
+      '      profileSelection functionHandle run initialModule metric instructionQuery param archive profiles namespace handle',
+      '  bad options → [unknownOption] (did you mean) or [badArgument] with err.got planAsOptions · badOptions · extraArguments',
+      'A refused call evaluated nothing. It is never a zero, an empty set or an unavailable result.',
+      '  q.run(profiles.arm("checked-llc-nolsr").describe())                // the descriptor, same as without q.run',
+      '  q.run(profiles.arm("checked-llc-nolsr").total("instructions"))     // a total with unit, workload, contract and source',
     ].join('\n'),
     cache: () => 'q.cache() → bounded session caches (texts, snapshots, values) with hits/misses/evictions. Keys use declarative plan parts only; lambdas never enter a key. q.cache({ clear: true }) empties them.',
   };
@@ -1915,8 +2396,9 @@
     arms: 'profiles', arm: 'profiles', totals: 'profiles', typed: 'profiles', add: 'compare', bundle: 'compare', explain: 'compare',
     percent: 'compare', unsupported: 'capabilities', missing: 'capabilities', remarks: 'capabilities', pc: 'capabilities',
     joinPCs: 'capabilities', source: 'capabilities', sourceLocations: 'capabilities', param: 'params', bindings: 'params',
-    result: 'results', shapes: 'results', error: 'errors' };
-  const KIND_TOPICS = { events: 'events', pick: 'events', ordinals: 'events', count: 'results', state: 'states', excerpt: 'states',
+    result: 'results', shapes: 'results', error: 'errors', plan: 'plans', eager: 'plans', lazy: 'plans', describe: 'plans',
+    materialized: 'plans', notAPlan: 'plans', alreadyMaterialized: 'plans', 'q.run': 'plans' };
+  const KIND_TOPICS = { events: 'events', pick: 'events', event: 'events', ordinals: 'events', count: 'results', state: 'states', excerpt: 'states',
     text: 'states', measurement: 'metrics', measurements: 'changes', changes: 'changes', uses: 'metrics', total: 'profiles',
     comparison: 'compare', endpoints: 'compare', sum: 'compare', bundle: 'compare', join: 'capabilities', remarks: 'capabilities',
     sourceLocations: 'capabilities', rows: 'events', archive: 'events', run: 'timeline', 'function': 'timeline' };
