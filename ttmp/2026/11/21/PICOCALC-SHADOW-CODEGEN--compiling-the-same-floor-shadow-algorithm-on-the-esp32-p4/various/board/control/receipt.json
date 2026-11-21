@@ -1,0 +1,14 @@
+{
+  "rows": {
+    "pred": 80,
+    "frame": 24
+  },
+  "benchSHA": "83644477a0e9495b1242d9931eac207e3a76a43ab5c3925a9f6cdf37d3375c54",
+  "diagnostic": {
+    "sha256": "4bcab71009945453617064b445fbcbae81352c5565434205ab8a05bcf5fdac0f",
+    "bytes": 657392,
+    "port": "/dev/ttyACM0"
+  },
+  "restoreSHA": "e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5",
+  "afterHealth": true
+}

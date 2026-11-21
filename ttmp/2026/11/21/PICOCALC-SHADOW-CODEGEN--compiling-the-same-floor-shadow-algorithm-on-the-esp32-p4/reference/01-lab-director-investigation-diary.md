@@ -114,3 +114,49 @@ Start with scripts/board/01-images.mjs for input contracts, scripts/board/bench.
 ### Technical details
 
 The previous comparison used pie-empty. Both candidate arms preserve that setting. A P4 cycle count is taken around a whole sequence of indirect calls; its denominator is the number of calls in that particular fixture and route.
+
+## Step 3. Time the source-identical control, reproduce the host treatment, and start the paired trial
+
+### Prompt Context
+
+The [commission](../sources/commission.txt) requests a physical comparison and a report for a new student. The sequential researcher chose one guarded-return transformation after observing the opening frame.
+
+### What I did
+
+Built the diagnostic with ESP-IDF 5.4.2 and staged the exact known baseline image. Timed 80 predicate batches and 24 integration entries in visit 1. Rebuilt the three treatment images from the same ray source and pinned Chess definitions. Independently executed scripts/compile/04-correctness.mjs and compared its output with the researcher's saved receipt. The comparison was byte-identical for 744 cases.
+
+### Why
+
+An independent scalar C path reading checked halfwords controls for a large semantic and representation difference. The separate physical visit establishes a baseline with different linked addresses from the subsequent candidate trial. Only within-visit pairs estimate treatment effects.
+
+### What worked
+
+Opening natural shadow calls took 70.15, 82.46, 129.36 and 430.01 cycles per call for production C, same-layout unchecked C, same-layout checked C and baseline Typed respectively (medians of four timed batches). Opening integrated frames took 7,712.5 µs in C and 55,642 µs in Typed. The harness checked each boolean before timing. Visit 1 completed its verified restoration and reported application health.
+
+### What didn't work
+
+The incoming baseline measured more work than a simple change to arithmetic width could explain. Even the GCC halfword control with bounds checks used materially fewer cycles than Typed. The researcher's register allocation alternative remains unmeasured in this study.
+
+### What I learned
+
+The earlier GCC comparison had removed all helper calls. The experimental compiler removes 74,226 dynamic calls from shadow, while retaining 264,928 shadow bounds checks. Whole-frame host instruction counts move from 14,879,359 to 14,088,411 for shadow only. This predicts a time saving without equating instructions with cycles.
+
+### What was tricky to build
+
+The comparison needs both source-identical treatment images and the physical board's own compilation output. A fresh QuickJS runtime with a PSRAM allocation meter times each on-device compile and validates its returned bytes by length and FNV digest against the corresponding host image. Raw SHA-256 identities are available on the host.
+
+### What warrants a second pair of eyes
+
+The frame and isolated predicate use different arm-number tables. The JavaScript workbook maps them explicitly and rejects unmatched or duplicated blocks.
+
+### What should be done in the future
+
+Evaluate separate primary, shade and full-frame changes, and distinguish isolated compiler behavior from deployment across the rest of the module.
+
+### Code review instructions
+
+Review checkpoint e54409b for fixture acquisition, 36adac5 for baseline host evidence, and 3d18ebf for the optional compiler pass. The compact board receipt identifies the physically flashed image and the restored playable image.
+
+### Technical details
+
+The control visit uses four blocks on the default scene. The main visit uses six blocks on each of twelve fixed fixtures and separate one-sphere path strata. Counts and checksums are checked at import. The optional compiler policy is either true or a function selecting the caller by name.
