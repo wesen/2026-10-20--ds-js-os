@@ -1,0 +1,2330 @@
+{
+ "presets": 105,
+ "built": 105,
+ "spectral": 4,
+ "customKernel": 1,
+ "api": {
+  "fn": [
+   "fbm3",
+   "fmodp",
+   "fmodp3",
+   "fresnelDielectric",
+   "hitAlbedo",
+   "lobeNone",
+   "lum",
+   "metalAt",
+   "noise3",
+   "occluded",
+   "safeNorm",
+   "sellmeier",
+   "tangentWorld",
+   "traceScene",
+   "voronoi3"
+  ],
+  "global": [
+   "gLam",
+   "gTime"
+  ],
+  "const": [],
+  "struct": [
+   "Hit",
+   "Lobe"
+  ],
+  "accessors": [
+   "U"
+  ]
+ },
+ "fnPresetCount": {
+  "fbm3": 18,
+  "fmodp": 4,
+  "fmodp3": 1,
+  "fresnelDielectric": 104,
+  "hitAlbedo": 1,
+  "lobeNone": 105,
+  "lum": 6,
+  "metalAt": 24,
+  "noise3": 2,
+  "occluded": 1,
+  "safeNorm": 7,
+  "sellmeier": 3,
+  "tangentWorld": 9,
+  "traceScene": 1,
+  "voronoi3": 3
+ },
+ "fixedFunctions": 107,
+ "rows": [
+  {
+   "id": "A-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 79,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "A-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 86,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "A-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 83,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "A-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 55,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "A-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 110,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "A-06",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 54,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "B-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 43,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "B-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 84,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "B-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 62,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "B-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 88,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "B-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 94,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "C-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 78,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "C-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 83,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "C-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 81,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "C-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 100,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "C-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 101,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "C-06",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 64,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "D-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 70,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "D-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 43,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "D-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 61,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "D-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 74,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "E-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 72,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt",
+     "voronoi3"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "E-02",
+   "spectral": false,
+   "customKernel": true,
+   "fieldLines": 12,
+   "matLines": 108,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "hitAlbedo",
+     "lobeNone",
+     "occluded",
+     "traceScene"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "E-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 70,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "E-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 104,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "E-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 63,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "E-06",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 62,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "E-07",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 56,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "F-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 86,
+   "uses": {
+    "fn": [
+     "fmodp",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "F-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 62,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "F-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 67,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt",
+     "safeNorm",
+     "voronoi3"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "F-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 97,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt",
+     "noise3",
+     "safeNorm",
+     "voronoi3"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "F-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 72,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [
+     "gTime"
+    ],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "F-06",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 118,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "safeNorm"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "F-07",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 86,
+   "uses": {
+    "fn": [
+     "fmodp",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "F-08",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 60,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "G-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 138,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "G-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 99,
+   "matLines": 74,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "G-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 20,
+   "matLines": 34,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "G-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 53,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "G-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 85,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "G-06",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 75,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "K-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 386,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "tangentWorld"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "K-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 386,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone",
+     "safeNorm",
+     "tangentWorld"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "K-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 682,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone",
+     "safeNorm",
+     "tangentWorld"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "K-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 222,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "tangentWorld"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "K-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 95,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "tangentWorld"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "K-06",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 265,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "tangentWorld"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "K-07",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 269,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "tangentWorld"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "K-08",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 211,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "tangentWorld"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "K-09",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 653,
+   "uses": {
+    "fn": [
+     "fmodp",
+     "fresnelDielectric",
+     "lobeNone",
+     "lum",
+     "tangentWorld"
+    ],
+    "global": [
+     "gTime"
+    ],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "L-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 59,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "L-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 74,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "L-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 62,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "L-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 62,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "L-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 80,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "L-06",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 86,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "L-07",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 81,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "L-08",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 51,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "L-09",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 126,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "lum"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "L-10",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 60,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "L-11",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 114,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "L-12",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 109,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "M-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 229,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "M-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 144,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "M-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 43,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "M-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 80,
+   "uses": {
+    "fn": [
+     "fmodp",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "M-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 115,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "M-06",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 36,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "M-07",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 93,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "M-08",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 55,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "lum"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "M-09",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 56,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "M-10",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 120,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "M-11",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 80,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "M-12",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 101,
+   "uses": {
+    "fn": [
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "M-13",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 76,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "M-14",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 172,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "R-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 70,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "R-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 133,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "R-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 153,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone",
+     "lum"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "R-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 30,
+   "matLines": 50,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone",
+     "noise3",
+     "safeNorm"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "R-05",
+   "spectral": true,
+   "customKernel": false,
+   "fieldLines": 27,
+   "matLines": 103,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "lum",
+     "metalAt",
+     "sellmeier"
+    ],
+    "global": [
+     "gLam"
+    ],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "R-06",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 313,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "lum"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "R-07",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 499,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "R-08",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 72,
+   "matLines": 51,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "R-09",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 74,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "R-10",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 126,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "S-01",
+   "spectral": true,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 54,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "sellmeier"
+    ],
+    "global": [
+     "gLam"
+    ],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "S-02",
+   "spectral": true,
+   "customKernel": false,
+   "fieldLines": 27,
+   "matLines": 71,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "sellmeier"
+    ],
+    "global": [
+     "gLam"
+    ],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "S-03",
+   "spectral": true,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 96,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "S-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 185,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "V-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 62,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "V-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 28,
+   "matLines": 53,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "V-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 36,
+   "matLines": 31,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "V-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 45,
+   "matLines": 31,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "V-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 72,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "W-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 86,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "W-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 248,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "W-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 55,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": [
+     "U"
+    ]
+   }
+  },
+  {
+   "id": "W-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 79,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "X-01",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 55,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone",
+     "metalAt"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "X-02",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 55,
+   "uses": {
+    "fn": [
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "X-03",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 34,
+   "matLines": 66,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone",
+     "safeNorm"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "X-04",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 82,
+   "matLines": 43,
+   "uses": {
+    "fn": [
+     "fmodp3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  },
+  {
+   "id": "X-05",
+   "spectral": false,
+   "customKernel": false,
+   "fieldLines": 12,
+   "matLines": 61,
+   "uses": {
+    "fn": [
+     "fbm3",
+     "fresnelDielectric",
+     "lobeNone"
+    ],
+    "global": [],
+    "const": [],
+    "struct": [
+     "Hit",
+     "Lobe"
+    ],
+    "accessors": []
+   }
+  }
+ ]
+}
