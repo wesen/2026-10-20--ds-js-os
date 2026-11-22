@@ -1,0 +1,82 @@
+{
+ "cFrameUs": 7724,
+ "checkedCPredicateCycles": 135.90370693638653,
+ "chess": {
+  "control": 1993.1875,
+  "candidate": 1997.34375,
+  "savedPct": 0.02,
+  "wins": 3
+ },
+ "mode1": {
+  "frame": {
+   "control": 15277.5,
+   "candidate": 13843.5,
+   "savedPct": 9.39,
+   "wins": 6
+  },
+  "primary": {
+   "control": 4085,
+   "candidate": 4064.5,
+   "savedPct": 0.54,
+   "wins": 6
+  },
+  "shade": {
+   "control": 22369.5,
+   "candidate": 22386.5,
+   "savedPct": -0.03,
+   "wins": 3
+  },
+  "predicate": {
+   "control": 161.44644965857165,
+   "candidate": 161.41833958001746,
+   "savedPct": 0.01,
+   "wins": 3
+  },
+  "compileRay": {
+   "control": 1625300,
+   "candidate": 1728678,
+   "savedPct": -6.37,
+   "wins": 0
+  },
+  "compileChess": {
+   "control": 244419.5,
+   "candidate": 260405,
+   "savedPct": -6.54,
+   "wins": 0
+  },
+  "peakRay": {
+   "control": 1387132,
+   "candidate": 1387132,
+   "savedPct": 0,
+   "wins": 0
+  },
+  "scenesSavedPct": [
+   9.39,
+   9.22,
+   8.92,
+   8.89,
+   8.76,
+   9.06,
+   9.66,
+   9.38,
+   9.74,
+   9.61,
+   9.59,
+   9.3
+  ],
+  "sceneWins": [
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6,
+   6
+  ]
+ }
+}

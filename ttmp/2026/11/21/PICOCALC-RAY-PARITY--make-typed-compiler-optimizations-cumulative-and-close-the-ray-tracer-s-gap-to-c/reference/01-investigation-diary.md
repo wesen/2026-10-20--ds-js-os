@@ -1155,3 +1155,105 @@ With the native interpreter in the workbench, the hot listing of `LitRow` under 
 - **Addendum, a packing allocator (prototype, not committed).** Replaced `planSavedHomes`' score-ordered first fit with a per-register maximum-weight set of disjoint intervals, which is weighted interval scheduling, solved by DP. In `LitRow`, stack traffic fell: loads 105,834 → 65,241, stores 81,979 → 23,548, moves 112,586 → 56,433. The frame still got 114,298 instructions worse (4,532,990 → 4,647,288). Constant homes and pointer homes were lost: `li` +39,875, `lui` +51,040, `alu-imm` +76,480, `alu-reg` +102,080.
   - Constants, capacities and pointer groups have no interval, because the prologue initializes them, so they count as live in the whole function. Packing correctly prefers chains of short intervals over a whole-function value, but these values are only whole-function by construction.
   - **Phase 4a therefore needs two parts:** (1) an interval-aware assignment (this DP, or linear scan with spill weight over length), and (2) region-entry materialization, so a constant, capacity or pointer home is set at the entry of the loop that uses it and has the interval of its uses. Loop weights should also approach real trip counts: the planner weighs each nesting level 4×, while the sphere loop runs about 2.7 times per pixel and the x loop 160 times.
+
+## Step 17: Value sets fold the floor colour, and the frame reaches 1.79× C
+
+The floor's brightness is one of four constants. GCC folds `rgb565(105, 134, 158, level)` into four precomputed colours and a branch. Typed recomputed three multiplies and three divisions per floor pixel. A new pass, `select.sets`, now does what GCC does here. On the P4 the frame fell from 15.28 to 13.84 ms (−9.39%, 6/6 blocks, every scene 8.8–9.7%), and Typed is at 1.79× the C frame. Splitting both frames shows where the remaining gap is. Typed's trace half already beats C's (934,991 against 1,132,651 instructions). Shading is 2.38× C's, and a quarter of it is `InShadow` setup that does not depend on x.
+
+### Prompt context
+
+No new instructions; continuing under "it's fine you do whatever you think is best" (see the summary at the top of this session's diary steps).
+
+### What I did
+
+- **Measured GCC.** I compiled `shade_floor` from `picocalc-os/nucleus/raytrace_demo.c` with `riscv32-esp-elf-gcc -O3`. It loads the four colours with `li`, chooses a pair per checker square and selects by the shadow flag. It also hoists `y / 16` out of the loop.
+- **Bounded the gain at source level** (scratch copies of `raytrace.typed`, frame digest unchanged at `b3c26cc8`):
+  - a four-way `if (level === …) return c;` chain: 4,532,990 → 4,116,468 instructions (−9.2%);
+  - the colour pushed into the shadow branch, two values per arm: 4,068,438 (−10.2%).
+- **The pass** (`foldValueSets` and helpers, before `rotate`, under `select.sets`):
+  1. `setCandidates`: value blocks whose body is straight-line pure arithmetic over at most one local L read before written. Only locals written a constant somewhere in the function qualify, which filters out most inlined blocks cheaply.
+  2. `entrySets`: a flow-sensitive forward analysis. It tracks only the candidates' locals, each as a set of at most 4 constants or unknown. An `if` unions the states of its arms. A `block` joins its fallthrough with each branch to it. A loop's written locals are unknown at its start, so nothing iterates.
+  3. `evaluateSetBlock` computes the body for each value. A trap, such as a division by zero, cancels the fold.
+  4. `liveAfterBlocks`: backward liveness over the structured tape, iterating loops to a fixed point. It proves the body's own writes are dead after the block. An inlined callee's locals are shared by every copy of it in the caller (`Pack` is inlined four times in `Pixel`), and each copy writes them before reading them, so they are dead.
+  5. `setTree` replaces the body with a balanced tree of `lt_s` comparisons over the sorted values, selecting the precomputed results.
+  6. `sinkSetBlocks`: a block right after a void `if` moves into both arms, and the `if` becomes a value `if`. If an arm is itself pure straight-line code, it goes inside its copy. So `level = level / 3` folds too, and the copy compares the value from before the division.
+- **Hot listing after the pass** (`hot-code.js`, native rv32): the floor path is now `addi t1,zero,117; sw t1,68(sp)`, the shadow test, then `lw; addi t2,zero,177; bge`, and a leaf with `lui/addi`.
+- **Test** `value sets fold pure inlined blocks only over proven constant sets…`:
+  - Three functions must fold:
+    - `floor`, adjacent to the dividing `if`: only the unfoldable copy's 2 multiplies and 2 divisions remain;
+    - `spaced`, not adjacent: one tree, keeps `level / 3`;
+    - `arms`, with an else arm.
+  - Four must not fold: eight possible values, a buffer read, a loop-carried local, a division by zero.
+  - All seven match `stock` on ordinary, trapping and out-of-range inputs.
+- **Gates, all with `sets` in `kernel`:**
+  - 147/147 tests;
+  - 24/24 replays with `kernel` as the default (`various/64-replays-kernel-sets.log`);
+  - Chess engine oracle under `kernel`: 6981/6981 words, 120,826,730 instructions, the same as without sets (`various/65-chess-oracle-kernel-sets.log`).
+- **Board run 11:**
+  - Modes (`various/66-board-modes-sets.json`): mode 0 is run 10's `kernel` image, pin `22c20887…`; mode 1 adds `sets`, image `a5eb06b2…`.
+  - Build log `various/67-board-build-sets.log`. Imported to `various/68-board-sets`, scored in the workbench to `various/69-board-sets-scores.json`.
+  - The device was restored to `b22a807d…` with eight healthy worlds. `11-import-board.py` now takes the restored app's SHA as an optional fourth argument, since the restore target changed.
+
+### What worked
+
+| | `kernel` (run 10) | + `sets` |
+|---|---:|---:|
+| host frame instructions | 4,532,990 | 4,080,475 (−10.0%) |
+| P4 frame (run 11, 6 blocks) | 15.28 ms | 13.84 ms (−9.39%, 6/6) |
+| ratio to C (7.72 ms) | 1.98× | 1.79× |
+| ray compile on the P4 | 1.63 s | 1.73 s (+6.4%) |
+| Chess engine oracle | 120,826,730 | 120,826,730 |
+
+The frame splits into trace and shading as follows (C: the same frame with the pixel loop skipped under `-DTRACE_ONLY`, in a scratch copy):
+
+| | C | Typed `kernel` |
+|---|---:|---:|
+| trace (`trace_row` / `ComputeRow`) | 1,132,651 | 934,991 (0.83×) |
+| shading (pixel loop / `LitRow`) | 1,317,388 | 3,130,634 (2.38×) |
+
+### What didn't work
+
+- **The first ordering.** A tree with two comparisons per path, without sinking, gave 4,167,664 instructions. That was worse than the source-level chain, and it also moved `level` to a stack slot, because the tree reads it less often than `Pack` did. Sinking (4,109,233), then merging the pure arm (4,080,475), recovered the source-level bound to within 12k.
+- **The test compared the wrong tape.** It first compared the `sets` tape with the `inline` tape, but `commuteConstants` runs between them. It now compares with `commute`.
+- **Compile-time measurements while firmware builds ran.** The same baseline went from 49 to 391 ms. Direct timing of the pass on `LitRow` (jitless Node) was usable: `entrySets` 4.5 ms, liveness 1.6 ms, and the re-fold after sinking doubles both (17.6 ms of a 22.8 ms pass). The board's on-device numbers are the real measure.
+
+### What I learned
+
+- **The gap to C is now in shading, not tracing.** Per `LitRow` run-length profile (25,600 pixels, 19,477 floor):
+
+  | | Instructions | Per unit |
+  |---|---:|---:|
+  | per-pixel loads, store address, loop | 384k | 15 per pixel |
+  | sphere pixels (SphereScale + Pack) | 446k | 73 per sphere pixel |
+  | floor checker | 253k | 13 per floor pixel |
+  | `InShadow` setup | 506k | 26 per floor pixel |
+  | `InShadow` sphere loop | 1,233k | 23 per iteration (52,917 iterations) |
+
+- **23 of the 26 setup instructions do not depend on x:** the light vector, the sphere count, `4096 + 32·y`, and the 9-instruction version guard of the inner loop.
+- **The sphere loop rebuilds `work + 2·(21 + 4·sphere)` every iteration** (5 instructions), where a derived induction variable would need 1. It also materializes `&&` as 0/1 before branching on it (2 instructions on the reject path).
+
+### What was tricky to build
+
+- **Liveness.** The writes of an inlined block are read again by the next copy of the same callee, so "not read outside the block" was the wrong test, and liveness was needed. The loop fixed point uses the loop's own live-in as its label set.
+- **Sinking a block into a void `if`.** The `if` becomes a value `if`. Any `br` from an arm to the `if` itself would then have to carry a value, so such arms are skipped. A block also has to stay a `block 127`, so that the second fold recognizes it.
+
+### What warrants a second pair of eyes
+
+- `entrySets` models only stack heights around branches. A wrong height would attach a set to the wrong value. Frames reset the stack to their entry height, and value frames push unknown.
+- `liveAfterBlocks` treats `br` past the outermost label as leaving the function, with nothing live.
+
+### What should be done in the future
+
+- **Phase 4b: hoist loop-invariant statements out of versioned fast copies.** Do it in `versionLoops`, where the guard proves this level's unchecked accesses in range. Hoist pure expressions, and loads of buffers the loop does not store. For every stored buffer, add a `pixels ≠ work` term to the guard. Then hoist the inner guard's terms. Bound: about 448k instructions.
+- **Derived induction variables and `&&` fusion** in the sphere loop: about 4 + 2 instructions per iteration.
+- **One analysis instead of a re-fold after sinking:** record the arm states in `entrySets`.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `i32Fold`, `setCandidates`, `evaluateSetBlock`, `entrySets`, `liveAfterBlocks`, `setTree`, `pureArm`, `sinkSetBlocks`, `foldValueSets`. The call sits in `lower()` after `commute`. `POLICIES.kernel` now has `sets`.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the new test and both kernel pins.
+- Re-run:
+  - `node --test tests/*.test.mjs`;
+  - `bash $B/scripts/05-replays-policy.sh GCC EMU <compiler with kernel as default>`;
+  - `TYPED_RV32_OPTIONS='{"policy":"kernel"}' node scripts/05-chess-engine-oracle.mjs GCC EMU`;
+  - the board: `10-stage-board.py BUILD various/66-board-modes-sets.json 22c20887…`, then SIMD-LAB's `02-run-board.py` with the current restore target, then `11-import-board.py CAPTURE BUILD OUT <restored sha>`.

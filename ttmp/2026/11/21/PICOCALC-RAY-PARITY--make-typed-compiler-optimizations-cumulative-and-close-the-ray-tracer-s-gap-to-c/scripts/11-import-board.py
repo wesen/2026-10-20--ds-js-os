@@ -1,6 +1,9 @@
 """Check a board capture from 10-stage-board.py and keep normalized rows.
 
-usage: python3 11-import-board.py CAPTURE_DIR BUILD_DIR OUT_DIR
+usage: python3 11-import-board.py CAPTURE_DIR BUILD_DIR OUT_DIR [RESTORED_SHA256]
+
+RESTORED_SHA256 is the playable app the run restored (default: e7b771aa…, the target until
+COMPILE-BUDGET; later runs restore the app in /tmp/picocalc-current-playable.txt).
 
 Generalizes 07-import-board.py to any number of modes (read from the build manifest).
 Row arms follow bench.c: predicate arms are 3+m, frame arms 1+m, cold arms m; Chess is
@@ -10,6 +13,7 @@ from pathlib import Path
 import collections, gzip, hashlib, json, sys
 
 run, build, out = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
+restored = sys.argv[4] if len(sys.argv) > 4 else "e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5"
 raw = (run / "bench.log").read_bytes()
 assert b"SIMDLAB END" in raw and b"SHERROR" not in raw
 manifest = json.loads((build / "generated/manifest.json").read_text())
@@ -32,7 +36,7 @@ assert counts == dict(pred=16 * 6 * (3 + modes), frame=12 * 6 * (1 + modes) * 3,
                       compileUs=cold, totalUs=cold, peakBytes=cold), counts
 assert len({(r["kind"], r["fixture"], r["phase"], r["block"], r["arm"]) for r in rows}) == len(rows)
 after = json.loads((run / "after.json").read_text())
-assert after["sha256"] == "e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5"
+assert after["sha256"] == restored, after["sha256"]
 out.mkdir(parents=True, exist_ok=True)
 (out / "rows.json").write_text(json.dumps(rows, separators=(",", ":")) + "\n")
 (out / "images.json").write_text(json.dumps(manifest["records"], indent=1) + "\n")

@@ -237,8 +237,11 @@ test("the default policy applies the qualified options and stock reproduces the 
         ["split", "pointers", "share", "constants", "capacities", "nested"], {inline: false})),
         "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.equal(sha({policy: "interactive"}), "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
-    // The "kernel" policy adds division facts: board run 10 timed this image at 15.27 ms (Step 15).
-    assert.equal(sha({policy: "kernel"}), "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
+    // The "kernel" policy adds division facts (board run 10 timed that image at 15.27 ms, Step 15)
+    // and value sets (board run 11: 13.84 ms, Step 17); without sets it is still run 10's image.
+    assert.equal(sha({policy: "kernel", select: {...typedRv32.policies.kernel.select, sets: false}}),
+        "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
+    assert.equal(sha({policy: "kernel"}), "a5eb06b25026ea4f3fa85f8941fd062718b6fed3665ca38ba70944b73b122dc3");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
 
@@ -638,4 +641,126 @@ function fill(work: buffer, n: i32): i32 {
     }
     assert(traps >= 8, "the sizes reach the trapping bound");
     for (const f of ["sum", "affine", "shifted", "start", "early", "nested", "fill"]) assert(unchecked[f], f + " has an unchecked copy");
+});
+
+test("value sets fold pure inlined blocks only over proven constant sets, and keep results and traps identical", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    // folded: level is one of 117, 177, 39, 59 (the ray tracer's floor), right after the if that
+    // divides it (sunk into both arms), beside a second copy of the same callee over a buffer
+    // read, which shares its locals; the same not adjacent to the if (one tree of four values);
+    // two arms with an else.
+    // not folded: eight possible values, an unknown read, a loop-carried value, a division by zero.
+    const fns = {
+        floor: [true, `function floor(work: buffer, n: i32): i32 {
+    let total = 0;
+    for (let x = 0; x < n; x = x + 1) {
+        let level = 117;
+        if (work.charCodeAt(x) > 70) { level = 177; }
+        if (work.charCodeAt(x + 1) > 75) { level = level / 3; }
+        const c = scale(105, level);
+        total = total + c + scale(3, work.charCodeAt(x + 2));
+    }
+    return total;
+}`],
+        spaced: [true, `function spaced(work: buffer, n: i32): i32 {
+    let total = 0;
+    for (let x = 0; x < n; x = x + 1) {
+        let level = 117;
+        if (work.charCodeAt(x) > 70) { level = 177; }
+        if (work.charCodeAt(x + 1) > 75) { level = level / 3; }
+        total = total + scale(105, level);
+    }
+    return total;
+}`],
+        arms: [true, `function arms(work: buffer, n: i32): i32 {
+    let total = 0;
+    for (let x = 0; x < n; x = x + 1) {
+        let level = 5;
+        if (work.charCodeAt(x) > 66) { level = 0 - 7; } else { work.setCharCodeAt(x + 3, 1); }
+        total = total + scale(31, level);
+    }
+    return total;
+}`],
+        wide: [false, `function wide(work: buffer, n: i32): i32 {
+    let total = 0;
+    for (let x = 0; x < n; x = x + 1) {
+        let level = 1;
+        if (work.charCodeAt(x) > 64) { level = 2; }
+        if (work.charCodeAt(x + 1) > 66) { level = level + 2; }
+        if (work.charCodeAt(x + 2) > 68) { level = level * 5; }
+        total = total + scale(7, level);
+    }
+    return total;
+}`],
+        read: [false, `function read(work: buffer, n: i32): i32 {
+    let total = 0;
+    for (let x = 0; x < n; x = x + 1) { total = total + scale(9, work.charCodeAt(x)); }
+    return total;
+}`],
+        carried: [false, `function carried(work: buffer, n: i32): i32 {
+    let level = 3;
+    let total = 0;
+    for (let x = 0; x < n; x = x + 1) {
+        total = total + scale(11, level);
+        level = 8;
+    }
+    return total;
+}`],
+        zero: [false, `function zero(work: buffer, n: i32): i32 {
+    let total = 0;
+    for (let x = 0; x < n; x = x + 1) {
+        let d = 4;
+        if (work.charCodeAt(x) > 80) { d = 0; }
+        total = total + hundred(d);
+    }
+    return total;
+}`],
+    };
+    const helpers = `function scale(v: i32, s: i32): i32 {
+    const r = v * s / 255;
+    return r / 8 + r * 3;
+}
+function hundred(d: i32): i32 { return 100 / d; }
+`;
+    const kernel = typedRv32.policies.kernel;
+    const withSets = {policy: "kernel", select: {...kernel.select, sets: true}};
+    const without = {policy: "kernel", select: {...kernel.select, sets: false}};
+    const CELLS = {0x02: 1, 0x03: 1, 0x04: 1, 0x0c: 1, 0x0d: 1, 0x10: 1, 0x20: 1, 0x21: 1, 0x28: 2, 0x2f: 2, 0x36: 2, 0x3b: 2,
+        0x41: 1, 0xf1: 2, 0xf2: 2, 0xf3: 3};
+    const opcodes = code => { const out = []; for (let at = 0; at < code.length; at += 1 + (CELLS[code[at]] ?? 0)) out.push(code[at]); return out; };
+    for (const [name, [folded, src]] of Object.entries(fns)) {
+        const tapes = {};
+        const b = typedRv32.compile(helpers + src, [], undefined, {...withSets,
+            observeTape: (fn, phase, code) => { if (fn === name) tapes[phase] = code; }});
+        const a = typedRv32.compile(helpers + src, [], undefined, without);
+        assert.equal(Buffer.compare(Buffer.from(a.image), Buffer.from(b.image)) !== 0, folded, name);
+        // Compared with the tape the pass receives (constants already commuted).
+        assert.equal(tapes.sets.length !== tapes.commute.length || tapes.sets.some((c, i) => c !== tapes.commute[i]), folded, name + " tape");
+        // The floor's sunk copies absorb level / 3, leaving the unfoldable copy's two multiplies
+        // and two divisions; spaced keeps level / 3.
+        const ops = opcodes(tapes.sets), count = op => ops.filter(x => x === op).length;
+        if (name === "floor") assert.deepEqual([count(0x6c), count(0x6d)], [2, 2], "floor multiplies and divisions");
+        if (name === "spaced") assert.deepEqual([count(0x6c), count(0x6d)], [0, 1], "spaced multiplies and divisions");
+    }
+    const all = helpers + Object.values(fns).map(([, src]) => src).join("\n");
+    const stock = typedRv32.compile(all, [], undefined, {policy: "stock"});
+    const candidate = typedRv32.compile(all, [], undefined, withSets);
+    const cells = 40;
+    function run(p, f, n) {
+        const mem = new Uint8Array(4096), view = new DataView(mem.buffer);
+        view.setUint32(1024, cells, true);
+        for (let i = 0; i < cells; i++) view.setUint16(1028 + 2 * i, 60 + (i * 7) % 23, true);
+        const out = typedRv32Interp.run(p, f, [1024, n], mem);
+        return {result: out.result, trap: Boolean(out.trap), bytes: Array.from(out.bytes.subarray(1024, 1028 + 2 * cells))};
+    }
+    let traps = 0;
+    for (const f of Object.keys(fns)) for (const n of [0, 1, 5, 17, 30, 37, 38, 39]) {
+        const expected = run(stock, f, n);
+        assert.deepEqual(run(candidate, f, n), expected, f + " " + n);
+        traps += expected.trap;
+    }
+    assert(traps >= 4, "the inputs reach the division by zero and the buffer bound");
 });
