@@ -1,0 +1,30 @@
+{
+  "counts": {
+    "pred": 672,
+    "frame": 1080,
+    "chess": 72,
+    "compileUs": 36,
+    "totalUs": 36,
+    "peakBytes": 36
+  },
+  "coldErrors": {
+    "compile SyntaxError: invalid property name": 12
+  },
+  "image": {
+    "sha256": "03bbf5426e6d8134832b31118f1b913ca5aa0557a639b0fd042e509feb744145",
+    "bytes": 1409216,
+    "port": "/dev/ttyACM0"
+  },
+  "restored": "e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5",
+  "worlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "logSHA": "be70411b3dac6104d640da8bcb2f1f40bea56236adc696a51627302e633ad084"
+}

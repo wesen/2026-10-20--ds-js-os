@@ -171,7 +171,7 @@ Each iteration touches the stack ten times: eight times in the body shown, and t
 
 ### 4.2 Three optional lowerings that are now default
 
-Three mechanisms were added by earlier labs as opt-in options. Since this ticket they are the default.
+Three mechanisms were added by earlier labs as opt-in options. Since this ticket they are the default, and Phase 1 (Section 9) extended the third one with callee-saved homes and direct reads.
 
 **Guarded-return inlining** (`inlineGuardedReturns`, class `GuardedReturnCode`). `guardedReturnSummary` recognizes a one-argument helper of the exact form `if (x <rel> K) return -x or C; return x;`, for example `typedRayAbs`. Its call sites are replaced by a compare and a branch. The ray tracer's shadow test calls `typedRayAbs` 74,226 times per frame. After inlining, the shadow function makes no calls, which also makes it a **leaf** for the next mechanism.
 
@@ -180,6 +180,7 @@ Three mechanisms were added by earlier labs as opt-in options. Since this ticket
 - *forward*: when a `local.set` of a temporary is immediately consumed by a checked address and the temporary is read nowhere else, the index stays in a register. In `sumCells` this removes the `sw t1,16(sp)` / `lw t5,16(sp)` pair.
 - *capacity*: in a **pure leaf**, a function with no stores and no real calls, the capacity of the first buffer read on the straight-line entry path is loaded once into `a7` and reused by later checks.
 - *homes*: in a leaf, the highest-scoring locals get fixed registers from the spare argument registers. Score is one per read, or four inside a loop. The register is the local's location for the whole function, so branch joins need no reconciliation.
+- *saved* and *direct* (Phase 1, default since this ticket's Step 5): every framed function may also home locals in `s1`–`s11`, and a read of a homed local is consumed straight from its home instead of being copied to an operand register. Section 9 describes both.
 
 With these policies the same loop body becomes the following. `work` is in `a5`, `n` in `a4`, `total` in `a3` and `i` in `a2`:
 
@@ -227,25 +228,25 @@ Explicit fields override the policy. `{operandLocations: false}` turns that mech
 
 The entry `typedRayFrame(pixels, work, sphereX, sphereY, lightX, lightY)` calls `typedRayPrepare`, which fills lookup tables in `work`. Then for each of the 160 rows it calls `typedRayComputeRow` (primary intersections) and `typedRayLitRow`. `typedRayLitRow` calls `typedRayPixel` for each pixel. `typedRayPixel` calls `typedRaySphereScale` for sphere pixels, or `typedRayInShadow` for floor pixels, and then `typedRayPack` for the RGB565 conversion.
 
-`node picocalc-os/tools/typed-ray-profile.mjs` runs the opening frame in the host interpreter and attributes executed instructions to functions. These are the two arms on the current source:
+`node picocalc-os/tools/typed-ray-profile.mjs` runs the opening frame in the host interpreter and attributes executed instructions to functions. These are the arms on the current source. "Leaf homes" is the default as of commit eaf0872; "current default" adds Phase 1's saved homes and direct reads.
 
-| Function | Stock instructions | Default instructions | Default stack loads + stores | Calls made |
-|---|---:|---:|---:|---:|
-| `typedRayInShadow` | 5,528,397 | 4,232,582 | 626,243 | 0 (helper inlined) |
-| `typedRayComputeRow` | 3,608,697 | 3,140,941 | 354,598 | 0 |
-| `typedRayPack` | 1,740,800 | 1,740,800 | 460,800 | 0 |
-| `typedRayPixel` | 1,564,356 | 1,564,356 | 413,496 | 51,200 |
-| `typedRayLitRow` | 1,539,680 | 1,386,080 | 539,360 | 25,600 |
-| `typedRaySphereScale` | 810,424 | 608,365 | 138,323 | 0 |
-| **Frame** | **15,532,634** | **12,717,463** | **2,535,422** | 77,131 |
+| Function | Stock | Leaf homes | Leaf homes: stack ld+st | Current default | Current: stack ld+st | Calls made |
+|---|---:|---:|---:|---:|---:|---:|
+| `typedRayInShadow` | 5,528,397 | 4,232,582 | 626,243 | 3,787,258 | 459,059 | 0 (helper inlined) |
+| `typedRayComputeRow` | 3,608,697 | 3,140,941 | 354,598 | 2,539,646 | 38,175 | 0 |
+| `typedRayPack` | 1,740,800 | 1,740,800 | 460,800 | 1,561,600 | 204,800 | 0 |
+| `typedRayPixel` | 1,564,356 | 1,564,356 | 413,496 | 1,564,356 | 413,496 | 51,200 |
+| `typedRayLitRow` | 1,539,680 | 1,386,080 | 539,360 | 1,029,280 | 79,520 | 25,600 |
+| `typedRaySphereScale` | 810,424 | 608,365 | 138,323 | 583,873 | 138,323 | 0 |
+| **Frame** | **15,532,634** | **12,717,463** | **2,535,422** | **11,098,863** | **1,333,516** | 77,131 |
 
-The table says where the next instructions are:
+Before Phase 1 the table showed three register-allocation problems:
 
-- `typedRayPack` is unchanged by the default. It makes no checked access, so `planLocations` returns no plan at all, and its seven named values all live on the stack.
-- `typedRayPixel` and `typedRayLitRow` make calls. The *homes* policy only applies to leaves, because the argument registers are overwritten by a call.
-- `typedRayInShadow` is a leaf with homes, but it has 3 parameters and 15 locals and only four spare argument registers. Most of its values still live on the stack.
+- `typedRayPack` was unchanged by the earlier default. It makes no checked access, so `planLocations` returned no plan at all, and its seven named values all lived on the stack.
+- `typedRayPixel` and `typedRayLitRow` make calls. Leaf homes apply only to leaves, because the argument registers are overwritten by a call.
+- `typedRayInShadow` is a leaf with homes, but it has 3 parameters and 15 locals and only four spare argument registers.
 
-All three are register-allocation problems. Phase 1 (Section 9) addresses them together.
+Phase 1 (Section 9) addressed them together. What remains: `typedRayPixel` claims no `s` register because its per-call estimate is below the save/restore margin, and it is called 25,600 times. `typedRayInShadow` and `typedRayPack` still execute about 0.66 M stack accesses between them. The profiler does not yet separate prologue/epilogue saves from body accesses; adding that split is the first step of the next register-allocation change.
 
 The interpreter's counts are guest instructions, not cycles. A load, a branch and a divide each count as one. Physical time comes from the board (Section 6.5).
 
@@ -266,7 +267,7 @@ flowchart TD
 
 ### 6.1 Unit tests
 
-`make -C picocalc-os test-apps` runs the app logic tests and the compiler tests: `tests/typed-rv32.test.mjs`, `typed-pie-loops.test.mjs`, `typed-inspect.test.mjs` and `typed-wasm-inspect.test.mjs`. Two tests pin exact image digests that were timed on the P4. `9a4a2356…` is `pie-empty` over the stock policy (PICOCALC-SIMD-LAB). `2e33bb64…` is `pie-empty` over the default policy (PICOCALC-OPERAND-HOMES, 46.05 ms per frame). When a change alters the default code generation on purpose, the second digest changes. Record the new one only after it has been timed on the board.
+`make -C picocalc-os test-apps` runs the app logic tests and the compiler tests: `tests/typed-rv32.test.mjs`, `typed-pie-loops.test.mjs`, `typed-inspect.test.mjs` and `typed-wasm-inspect.test.mjs`. Three tests pin exact image digests that were timed on the P4. `9a4a2356…` is `pie-empty` over the stock policy (PICOCALC-SIMD-LAB). `2e33bb64…` is `pie-empty` over forward, capacity and leaf homes (PICOCALC-OPERAND-HOMES, 46.05 ms per frame). `3ea6af69…` is `pie-empty` over the current default (this ticket, 42.56 ms). When a change alters the default code generation on purpose, the default's digest changes. Record the new one only after it has been timed on the board.
 
 ### 6.2 The reference interpreter and the ray profile
 
@@ -328,11 +329,13 @@ The remaining factor of 3.75 to the C predicate splits into three parts:
 
 The code-generation factor is mostly register allocation. LLVM's middle end turns every local into an SSA value (SROA and `PromoteMemToReg`). Its greedy allocator then keeps loop-carried values in registers across blocks and calls, saving callee-saved registers once per call. Its block-local allocator, which spills at block boundaries, needs 92% more cycles on the same IR, and Typed now sits at exactly that level. LLVM also removes redundant capacity loads with EarlyCSE: 12 sites become 1 in the read-only predicate. The checks factor is the cost of the bounds contract itself. C omits the checks. Typed must keep them, but it can test a whole region once and keep a checked fallback. The representation factor comes from Typed buffers having only 16-bit cells.
 
-For the whole frame, Typed under the measured default plus `pie-empty` took 46.05 ms against 7.72 ms for scalar C in the same firmware. The C renderer visits all 160 pixels of every row for every sphere. A Typed source that computes exact sphere spans and traverses shadows row by row took 29.98 ms on the old compiler. "Competitive with C" therefore has two meanings, and both should be reported. One compares the same algorithm in both languages; that is the compiler benchmark. The other compares the best correct Typed program against the existing C renderer; that is the product benchmark.
+For the whole frame, Typed under the earlier default plus `pie-empty` took 46.05 ms against 7.72 ms for scalar C in the same firmware. After Phase 1 the default without PIE takes 39.49 ms (5.11× C) and the shadow predicate 247 cycles (1.82× the checked C predicate's 136). The C renderer visits all 160 pixels of every row for every sphere. A Typed source that computes exact sphere spans and traverses shadows row by row took 29.98 ms on the old compiler. "Competitive with C" therefore has two meanings, and both should be reported. One compares the same algorithm in both languages; that is the compiler benchmark. The other compares the best correct Typed program against the existing C renderer; that is the product benchmark.
 
 ## 8. Why vectorization is not the next step
 
 PIE vectorization of the primary row saved 0.43% of a frame over an equally scheduled scalar row, and the best packet variant saved 0.90%. Only the subtraction `d = R - squares[x]` is packed. Every hit still goes through a scalar square-root lookup at a data-dependent address, a compare and conditional stores, which the ordinary backend emits with its stack-resident locals. Hand-written PIE in the C renderer saves only about 1.1 ms of a 7.9 ms frame. GCC's vectorizer declined the loop on cost, and LLVM's RV32 target left it scalar. Vectorization pays on this processor when the whole loop body stays in lanes. A planar particle update used 89% fewer cycles packed than scalar. Return to SIMD once scalar code is close to LLVM.
+
+Phase 1 made the case stronger. With the new default, `pie-empty` is a net loss: 42.56 ms per frame against 39.49 ms without it. A PIE-lowered function is emitted by `typed-pie-loops.js`, which receives no operand-location plan, so `typedRayComputeRow` loses its register homes when it is packed. Any future SIMD lowering must start from the scalar backend's register plan, not from the stack-resident form.
 
 ## 9. The plan
 
@@ -346,7 +349,14 @@ Each phase changes the default only after passing the four gates in Section 6. E
 
 ### Phase 1: register homes for every framed function
 
-This is the next compiler change, and it addresses the three rows of Section 5's table that are register-allocation problems. It has four parts.
+**Status: done, default since Step 5 of the diary.** The opening frame fell from 12,717,463 to 11,098,863 host instructions. On the P4 the frame without PIE fell from 45.14 to 39.49 ms (−12.5%), the shadow predicate from 277.5 to 247.2 cycles (−10.9%) and Chess evaluation by 11.1%, all with 6/6 block wins. Ray cold compile on the device rose from 307 to 332 ms (+8.2%), so the change pays for itself after five frames. What was built differs from the plan below in two ways, and both matter:
+
+- Callee-saved homes alone made the frame **slower** (13,175,107 instructions). A homed read was still copied into an operand register, so a home only turned `lw` into `mv`. The *direct* option, which lets the consumer read the home register itself, is what made homes pay: alone it saved 0.76 M instructions, and together with saved homes 1.62 M.
+- The cost model is stricter than `score > cost + 1`. A local's estimate halves under each enclosing `if`, a write counts half, and an `s` register needs a score above twice its save/restore cost (`SAVED_MARGIN = 2`, chosen by a sweep over 1–4 on the ray frame, with the Chess engine as holdout).
+
+The original plan follows for reference.
+
+This was the next compiler change, and it addresses the three rows of Section 5's table that are register-allocation problems. It has four parts.
 
 1. **Plan every framed function.** Today `planLocations` returns `null` unless the tape contains a checked address (`0xf1`). Homes do not depend on buffers. Forwarding and capacity caching keep their own conditions.
 2. **Keep parameters in their incoming registers in a leaf.** Today homes start at `a{max(1, params)}`, so a homed parameter is copied to another register. Parameter `i >= 1` can stay in `a_i`. `a0` cannot be a home, because the framed emitter uses it as scratch for capacity loads, division checks and return values.

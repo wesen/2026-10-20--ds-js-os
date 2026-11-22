@@ -197,7 +197,7 @@ test("a checked constant read can use a halfword displacement and a dominating c
 test("the default policy applies the qualified options and stock reproduces the earlier default", () => {
     const {typedRv32} = compiler();
     const src = readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8");
-    const qualified = {inlineGuardedReturns: true, operandLocations: {forward: true, capacity: true, homes: true}};
+    const qualified = {inlineGuardedReturns: true, operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}};
     const image = options => typedRv32.compile(src, [], 65536, options).image;
     assert.deepEqual(image(), image({policy: "stock", ...qualified}));
     assert.deepEqual(image({policy: "default"}), image());
@@ -243,6 +243,8 @@ function mix(n: i32): i32 {
     const frame = options => typedRayBench.openingFrame(typedRv32.compile(
         readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8"), [], 65536, options));
     const stock = frame({policy: "stock"}), saved = frame(candidate);
+    const leafHomes = frame({operandLocations: {forward: true, capacity: true, homes: true}});
     assert.equal(sha(saved.bytes), sha(stock.bytes));
-    assert(saved.steps < frame().steps, "saved homes and direct reads reduce the frame's instructions");
+    assert.equal(sha(leafHomes.bytes), sha(stock.bytes));
+    assert(saved.steps < leafHomes.steps, "saved homes and direct reads reduce the frame's instructions");
 });

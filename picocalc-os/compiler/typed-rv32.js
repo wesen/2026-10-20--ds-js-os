@@ -568,7 +568,8 @@ function planLocations(fn, options, inlineCall) {
     for (let at = 0; at < tape.length;) {
         const offset = at, opcode = tape[at++];
         const cells = OPERAND_CELLS[opcode];
-        if (cells < 0) throw new Error("unknown Typed inspection opcode " + opcode);
+        // An opcode the planner does not know gets no plan; the emitter reports it.
+        if (cells < 0) return null;
         const a = cells > 0 ? tape[at] : undefined, b = cells > 1 ? tape[at + 1] : undefined;
         at += cells;
         if (at > tape.length) throw new Error("truncated Typed inspection operation");
@@ -661,7 +662,7 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached) {
 const POLICIES = Object.freeze({
     default: Object.freeze({
         inlineGuardedReturns: true,
-        operandLocations: Object.freeze({forward: true, capacity: true, homes: true}),
+        operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true}),
     }),
     stock: Object.freeze({}),
 });
