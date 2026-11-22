@@ -330,7 +330,7 @@ The remaining factor of 3.75 to the C predicate splits into three parts:
 
 The code-generation factor is mostly register allocation. LLVM's middle end turns every local into an SSA value (SROA and `PromoteMemToReg`). Its greedy allocator then keeps loop-carried values in registers across blocks and calls, saving callee-saved registers once per call. Its block-local allocator, which spills at block boundaries, needs 92% more cycles on the same IR, and Typed now sits at exactly that level. LLVM also removes redundant capacity loads with EarlyCSE: 12 sites become 1 in the read-only predicate. The checks factor is the cost of the bounds contract itself. C omits the checks. Typed must keep them, but it can test a whole region once and keep a checked fallback. The representation factor comes from Typed buffers having only 16-bit cells.
 
-For the whole frame, Typed under the earlier default plus `pie-empty` took 46.05 ms against 7.72 ms for scalar C in the same firmware. After Phase 1 the default without PIE took 39.49 ms (5.11× C) and the shadow predicate 247 cycles (1.82× the checked C predicate's 136). After Phase 1b it takes 31.51 ms (4.08× C) and 212.8 cycles (1.57×). The C renderer visits all 160 pixels of every row for every sphere. A Typed source that computes exact sphere spans and traverses shadows row by row took 29.98 ms on the old compiler. "Competitive with C" therefore has two meanings, and both should be reported. One compares the same algorithm in both languages; that is the compiler benchmark. The other compares the best correct Typed program against the existing C renderer; that is the product benchmark.
+For the whole frame, Typed under the earlier default plus `pie-empty` took 46.05 ms against 7.72 ms for scalar C in the same firmware. After Phase 1 the default without PIE took 39.49 ms (5.11× C) and the shadow predicate 247 cycles (1.82× the checked C predicate's 136). After Phase 1b it took 31.51 ms (4.08× C) and 212.8 cycles (1.57×); after Phases 1c and 1d it takes 22.43 ms (2.90× C) and 194.1 cycles (1.43×). The C renderer visits all 160 pixels of every row for every sphere. A Typed source that computes exact sphere spans and traverses shadows row by row took 29.98 ms on the old compiler. "Competitive with C" therefore has two meanings, and both should be reported. One compares the same algorithm in both languages; that is the compiler benchmark. The other compares the best correct Typed program against the existing C renderer; that is the product benchmark.
 
 ## 8. Why vectorization is not the next step
 
@@ -415,6 +415,10 @@ The profile after Phase 1 showed where the remaining instructions were: 1.79 M `
 ### Phase 1c: inlining and capacity homes (done, default since Step 7)
 
 `inline` replaces calls inside loops with the callee's expanded tape, substituting plain-local and literal arguments; `operandLocations.capacities` gives each unwritten buffer parameter a capacity register loaded once per call; `operandLocations.nested` weighs homes by loop depth; `select.commute` moves left-hand literals of commutative operations to the right. Together they make `typedRayLitRow` one leaf loop containing `Pixel`, `SphereScale`, `Pack` and `InShadow`. P4 frame: 31.53 → 24.18 ms (3.13× C). Ray cold compile: 343 → 605 ms, which pays for itself after about 36 frames; Agenda and Editor images grow by 85% and 30%. Reducing that compile cost is open work.
+
+### Phase 1d: loop rotation and constant homes (done, default since Step 8)
+
+`select.rotate` emits every `for`/`while` loop bottom-tested, so an iteration ends in one backward branch instead of a skip and a jump. `operandLocations.constants` keeps literals that need a register (fused compares, constant checked indices, large immediates) in homes, planned by the same `constantForm` decision the emitter uses. P4 frame: 24.19 → 22.43 ms (2.90× C), ray cold compile +10.6%.
 
 ### Phase 2: capacity reuse beyond pure leaves
 

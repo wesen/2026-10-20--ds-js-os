@@ -597,3 +597,90 @@ Board, against mode 0 (median of per-block savings; wins of 6):
 
 - `picocalc-os/compiler/typed-rv32.js`: `INLINE_DEFAULTS`, `loopDepth`, `inlineCalls`, `inlineCandidate`, `commuteConstants`, the capacity parts of `planLocations` (`weigh`, `capacityUses`), `checkedAddress`, the prologue loop in `FunctionCode.lower`, and the inlining block at the top of `compile`'s `lower`.
 - `picocalc-os/tests/typed-rv32.test.mjs`: the last test, and the two default pins.
+
+## Step 8: Loop rotation and constant homes
+
+The Step 7 default left two visible costs in every loop iteration:
+
+- **A jump back:** a taken skip over the exit jump, then a taken `jal` back to the test.
+- **Re-loaded literals:** 479 k `li` remained. 328 k of them fed fused branches (`x < 160` re-loads 160 on every iteration, because RISC-V has no compare-with-immediate branch) and constant checked indices.
+
+`select.rotate` turns each loop into a bottom-tested loop. `operandLocations.constants` gives hot literals register homes, planned with the same decision function the emitter uses. On the P4 they cut the frame from 24.19 to 22.43 ms (−7.3%, all 12 scenes), the predicate from 200.1 to 194.1 cycles and Chess evaluation by 8.5%. Ray cold compile rose 10.6%. Both are now the default. Typed is at 2.90× the C frame.
+
+**Commits (code):** 00cf3b5 made Step 7's options the default and added these two as opt-in. Making them the default is recorded in Step 9.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 6.
+**Assistant interpretation:** Continue toward C parity.
+**Inferred user intent:** As before.
+
+### What I did
+
+- `rotateLoops(code)`: rewrites `block; loop; C; eqz; br_if 1; B; br 0; end; end` into `block; C; eqz; br_if 0; loop; B; C; br_if 0; end; end`, applying itself recursively to loops inside B.
+  - It requires the block's `end` to follow the loop's directly and the loop to end with `br 0`.
+  - It requires every branch in C to target a block inside C (`internal`), and C to contain no `return` or `unreachable`.
+  - The frontend emits exactly this shape for `for` and `while` (`typed-wasm.js` loop emitter, around line 752).
+- `constantForm(tape, at, select)` returns `zero`, `divide`, `immediate` or `register`, the decision `selectConstant` used to make inline. It is now shared, so the planner scores `"c" + value` with `weigh()` exactly where the emitter would load the literal.
+  - Homes are loaded in the prologue.
+  - `case 0x41` pushes the home as a direct read.
+  - The forwarded constant-index path uses the home as the index register.
+- `planLocations` receives `select` through its options (`{...operandLocations, select}`).
+- Inliner pre-checks: no call to a library function, or (for the function's own code) no loop, now returns before the walk. Node compile timing showed no measurable change (select 0.61–0.70 ms against full default 1.05–1.19 ms per ray compile). The extra compile cost is the larger lowered function, not the inliner's walk; a CPU profile put `inlineCalls` at 13% self time.
+- Board: `various/25-board-modes-rotate.json`, stock-based. Mode 0 is the Step 7 default (pin `4e7eb52a…`), which also proved that the `constantForm` refactor left output unchanged. Mode 1 is rotation, mode 2 constants, mode 3 both. Imported to `various/29-board-rotate` and scored in the REPL (`various/30-board-rotate-scores.json`).
+
+### Why
+
+- In C, GCC rotates loops and keeps loop bounds in registers.
+
+### What worked
+
+Host frame (reference digest): Step 7 default 6,752,211; rotation 6,558,278; plus constants **6,454,048** (`li` 479 k → 367 k). Chess engine oracle (6981/6981 words): 145,676,489, then 142,204,226 with rotation and 141,569,168 with both.
+
+Board, against mode 0 (median of per-block savings; wins of 6):
+
+| | mode 1: rotate | mode 2: constants | mode 3: both |
+|---|---:|---:|---:|
+| frame (24,187.5 µs) | 22,737 (6.00%) | 23,914 (1.14%) | **22,434 (7.26%)** |
+| primary pass (7,280.5 µs) | 10.76% | 5.10% | 15.79% |
+| shade pass (26,933 µs) | 2.30% | −0.36% (0 wins) | 2.00% |
+| shadow predicate (200.1 cycles) | 193.4 (3.41%) | 200.2 | 194.1 (3.07%) |
+| ray cold compile (622,878.5 µs) | −7.54% | −3.27% | −10.59% |
+| Chess cold compile (124,802.5 µs) | −6.81% | −2.90% | −10.15% |
+
+- Mode 3 scenes: 6.48% to 8.26%, all 6/6. Chess evaluate: 2,927.1 → 2,682.5 cycles per call (−8.49%). C references: frame 7,731.5 µs, checked predicate 135.7 cycles. Restored `e7b771aa…`, eight worlds healthy. Diagnostic app SHA-256 `2abff32ab1a32b84450f8cf79d5bcb8c65024b15ea166d217a7c0458505a763b`.
+- Tests: 142 pass with both in the default. Replays: `various/31-replays-rotate-default.log`, result in Step 9.
+
+### What didn't work
+
+- **Constant homes on their own are worth little** (1.1% of the frame). In the large inlined `LitRow` the literals compete for the same 15 or so registers as more than 73 locals, and most lose.
+- **Mode 0's cold compile was 623 ms here against 605 ms in Step 7** for an identical image. The compiler bundle differs (more code), so cold-compile figures are comparable only within one run.
+
+### What I learned
+
+- **Each home holds one local for the whole function, and that is now the binding limit.** `LitRow` holds the bodies of `Pixel`, `SphereScale`, `Pack` and `InShadow`, whose locals are never live at the same time, yet each claims its own register or slot. The disassembly of the hot loop shows `InShadow`'s `lx`, `ly` and `scaledY` going through stack slots (`sw t1,188(sp)`, `lw t1,220(sp)`) on every floor pixel.
+- **The remaining per-pixel waste is mostly loop-invariant.** About 31 instructions per floor pixel reload `work[16..19]` and recompute `scaledY`. Hoisting the loads needs proof that `pixels` and `work` don't overlap, or a versioned loop.
+
+### What warrants a second pair of eyes
+
+- `rotateLoops` duplicates C. If C contained a call with side effects, the number and order of its evaluations would still match the original (once before each iteration and once at exit), but the code grows.
+
+### What should be done in the future
+
+- **Share homes between locals whose live intervals don't overlap** (Step 9).
+- **Group checked accesses off one base local** (`shadow + k`): one pointer, `lhu` displacements, and one check per unconditional group.
+- **Version loops** for alias-free hoisting of invariant loads.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `rotateLoops`, `constantForm`, `selectConstant`, `case 0x41`, the forwarded constant path at the top of `step`, the prologue loop in `lower`, and the `constants` scoring in `planLocations`.
+
+## Step 9: Make loop rotation and constant homes the default
+
+This is a milestone. The two Step 8 options became part of `POLICIES.default`, and the pinned default image is now the one timed in Step 8's mode 3. Every gate passed.
+
+- Replays with both in the default: 24/24 PASS (`various/31-replays-rotate-default.log`).
+- Tests: 142 pass. The pins are the default image `7c660e87…` (22.43 ms), Step 7's image `4e7eb52a…` with rotation and constants disabled, and Step 6's image `6b854512…` with inlining and the Step 7 options disabled.
+- Host frame: 6,454,048 instructions, reference digest. Gap to C on the P4: 2.90× the frame, 1.43× the checked predicate.
+
+**Commit (code):** recorded in the next step.

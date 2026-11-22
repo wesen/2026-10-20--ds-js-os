@@ -788,7 +788,11 @@ function loopDepth(code) {
 
 function inlineCalls(fn, library, limits, arity, anywhere) {
     const tape = fn.code;
-    if (!tape.includes(0x10)) return null;
+    // Cheap rejections before the walk: no call to a library function, or (for the
+    // function's own code) no loop. Operand cells can match too, which only costs a walk.
+    let candidate = false;
+    for (let i = tape.indexOf(0x10); i >= 0 && !candidate; i = tape.indexOf(0x10, i + 1)) candidate = library.has(tape[i + 1]);
+    if (!candidate || (!anywhere && !tape.includes(0x03))) return null;
     const bases = new Map(), out = [], stack = [], blocks = [];
     let locals = fn.params.length + fn.nlocals, loops = 0, changed = false;
     const push = entry => stack.push(entry);
@@ -1135,9 +1139,9 @@ const POLICIES = Object.freeze({
     default: Object.freeze({
         inlineGuardedReturns: true,
         operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
-            capacities: true, nested: true}),
+            capacities: true, nested: true, constants: true}),
         select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
-            commute: true}),
+            commute: true, rotate: true}),
         inline: true,
     }),
     stock: Object.freeze({}),

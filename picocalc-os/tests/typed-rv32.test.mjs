@@ -200,8 +200,9 @@ test("the default policy applies the qualified options and stock reproduces the 
     const {typedRv32} = compiler();
     const src = readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8");
     const qualified = {inlineGuardedReturns: true, inline: true,
-        operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true},
-        select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true}};
+        operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
+            constants: true},
+        select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true, rotate: true}};
     const image = options => typedRv32.compile(src, [], 65536, options).image;
     assert.deepEqual(image(), image({policy: "stock", ...qualified}));
     assert.deepEqual(image({policy: "default"}), image());
@@ -210,11 +211,15 @@ test("the default policy applies the qualified options and stock reproduces the 
     assert.deepEqual(image({operandLocations: false, inlineGuardedReturns: false, select: false, inline: false}), image({policy: "stock"}));
     assert.deepEqual(image({operandLocations: undefined}), image());
     assert.equal(image({policy: "stock"}).length, 9564);
-    // PICOCALC-RAY-PARITY Step 7 timed this image on the P4 (board mode 3: 24.18 ms per frame).
+    // PICOCALC-RAY-PARITY Step 8 timed this image on the P4 (board mode 3: 22.43 ms per frame).
     assert.equal(createHash("sha256").update(image()).digest("hex"),
+        "7c660e876a8c1211b853e9c8b7aff4b2fd400b2431500fce753fa7e55d5ab201");
+    // Step 7's image (24.18 ms): without loop rotation and constant homes.
+    assert.equal(createHash("sha256").update(image({select: {...qualified.select, rotate: false},
+        operandLocations: {...qualified.operandLocations, constants: false}})).digest("hex"),
         "4e7eb52aee07cf8fd5e6a3a96733d100241b10fe445030793a73513229fb676c");
     // Step 6's image (31.51 ms): the same policy without inlining and the Step 7 options.
-    assert.equal(createHash("sha256").update(image({inline: false, select: qualified.select && {...qualified.select, commute: false},
+    assert.equal(createHash("sha256").update(image({inline: false, select: {...qualified.select, commute: false, rotate: false},
         operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}})).digest("hex"),
         "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
