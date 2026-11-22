@@ -1,0 +1,177 @@
+v5.4.2 2nd stage bootloader
+I (26) boot: compile time Nov  1 2026 16:48:47
+I (26) boot: Multicore bootloader
+I (27) boot: chip revision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40170020 size=2ebf3ch (3063612) map
+I (609) esp_image: segment 1: paddr=002fbf64 vaddr=30100000 size=00068h (   104) load
+I (611) esp_image: segment 2: paddr=002fbfd4 vaddr=4ff00000 size=04044h ( 16452) load
+I (617) esp_image: segment 3: paddr=00300020 vaddr=40000020 size=1644d4h (1459412) map
+I (863) esp_image: segment 4: paddr=004644fc vaddr=4ff04044 size=101a0h ( 65952) load
+I (878) esp_image: segment 5: paddr=004746a4 vaddr=4ff14200 size=04ffch ( 20476) load
+I (888) boot: Loaded app from partition at offset 0x10000
+I (888) boot: Disabling RNG early entropy source...
+I (898) hex_psram: vendor id    : 0x0d (AP)
+I (899) hex_psram: Latency      : 0x01 (Fixed)
+I (899) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (899) hex_psram: dev id       : 0x03 (generation 4)
+I (904) hex_psram: density      : 0x07 (256 Mbit)
+I (909) hex_psram: good-die     : 0x06 (Pass)
+I (913) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (918) hex_psram: BurstType    : 0x00 ( Wrap)
+I (922) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (926) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (931) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (936) hex_psram: DriveStrength: 0x00 (1/1)
+I (940) MSPI DQS: tuning success, best phase id is 0
+I (1113) MSPI DQS: tuning success, best delayline id is 17
+I (1113) esp_psram: Found 32MB PSRAM device
+I (1113) esp_psram: Speed: 200MHz
+I (1114) hex_psram: psram CS IO is dedicated
+I (1117) cpu_start: Multicore app
+I (2026) esp_psram: SPI SRAM memory test OK
+I (2036) cpu_start: Pro cpu start user code
+I (2036) cpu_start: cpu freq: 360000000 Hz
+I (2036) app_init: Application information:
+I (2037) app_init: Project name:     picocalc-os-p4
+I (2041) app_init: App version:      676ae95
+I (2045) app_init: Compile time:     Nov 21 2026 23:39:07
+I (2050) app_init: ELF file SHA256:  46d3b2b33...
+I (2055) app_init: ESP-IDF:          v5.4.2
+I (2058) efuse_init: Min chip rev:     v0.1
+I (2062) efuse_init: Max chip rev:     v1.99 
+I (2066) efuse_init: Chip rev:         v1.3
+I (2070) heap_init: Initializing. RAM available for dynamic allocation:
+I (2077) heap_init: At 4FF29730 len 00011890 (70 KiB): RAM
+I (2082) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (2087) heap_init: At 4FF51160 len 0004EEA0 (315 KiB): RAM
+I (2092) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (2098) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (2105) spi_flash: detected chip: generic
+W (2108) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (2118) spi_flash: flash io: dio
+I (2122) main_task: Started on CPU0
+I (2125) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (2133) main_task: Calling app_main()
+I (2136) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+heap: internal 405207 free (largest 319488), psram 33551748 free (largest 33030144)
+I (2195) fs: /files: 7900 KB, 7892 KB free (mounted in 21 ms)
+I (2197) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2198) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2393) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+I (2394) main_task: Returned from app_main()
+[   158.511] calibration on the real clock: the 100k loop took 112.8 ms (the model says 133), fib(20) 30.2 ms (the model says 29.1)
+typed compiler bytecode: typed/wasm.js 236247 bytes
+typed compiler bytecode: typed/rv32.js 334010 bytes
+typed compiler bytecode: candela/link.js 1874 bytes
+candela native compiler functions=streamed
+candela compile source=candela/callback.typed status=ok us=2013964 peak_js_bytes=1374684 module_bytes=66816
+I (4570) ELF: ELF loader version: 2.0.0
+I (4572) ELF: elf->entry=0x48103c98
+CANLOAD {"stage":2,"compileUs":2015455,"relocateUs":3629,"installTotalUs":2019309,"imageBytes":66816,"elfSegmentBytes":66092,"residentStructBytes":732,"sourceBytes":15942,"graphBytes":612,"psramMonitored":1,"psramPeakDeltaBytes":2072072}
+typed compiler bytecode: agenda/compile.js 5525 bytes
+agenda native compiler functions=streamed
+agenda native compiler policy=interactive
+agenda compile source=bundle status=ok us=650070 peak_js_bytes=1047092 module_bytes=66364
+agenda boot source_start_us=2196679
+typed compiler bytecode: files/compile.js 3147 bytes
+files native compiler functions=streamed
+files compile source=bundle status=ok us=409549 peak_js_bytes=815084 module_bytes=24424
+typed compiler bytecode: typed/async.js 166436 bytes
+typed compiler bytecode: typed/world.js 9924 bytes
+editor native compiler functions=streamed
+editor native compiler policy=interactive
+editor compile source=bundle status=ok us=3035961 peak_js_bytes=2825612 module_bytes=242124
+chess native compiler functions=streamed
+chess native compiler policy=balanced
+chess compile source=bundle status=ok us=3786735 peak_js_bytes=2673504 module_bytes=274892
+[ 10205.721] booting 24 worlds from js/system.typed-agenda.json
+[ 10218.046] booting 5 worlds from js/system.elf.json
+agenda stage before-cji-restore us=8022614
+agenda stage before-dispatch us=8023239
+quickjs prelude cache bytes=44957 build_us=53149
+agenda stage world-init us=8514309
+agenda stage world-init-done us=8521468
+[ 11060.280] toplog: hello from the top level
+[ 11063.828] nat-echo: TEST kind ok 
+[ 11064.510] nat-echo: TEST provide ok 
+[ 11064.967] nat-echo: TEST every ok 
+[ 11065.477] nat-echo: TEST title ok 
+[ 11066.252] nat-echo: TEST icon ok 
+[ 11066.709] nat-echo: TEST about ok 
+[ 11067.254] nat-echo: TEST icon-object err an icon is a JSON array of drawing operations, at most 1024 bytes
+[ 11077.001] nat-echo: TEST key-upper err a shortcut key is one of a-z and 0-9
+[ 11086.859] nat-echo: TEST init done
+E (13483) ELF: Can't find common path_open
+[ 11096.815] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":11096.815,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+I (13518) bus: spi2: panel device at 40000000 Hz requested, 40000 kHz actual
+[ 11156.827] nat-echo: TEST start self=nat-echo clock=running
+[ 11158.298] nat-bench: BENCH loop n=1000 us=35 r=122468
+[ 11159.061] nat-bench: BENCH loop n=4000 us=139 r=498743
+[ 11160.223] nat-bench: BENCH loop n=16000 us=539 r=2028337
+E (13629) ELF: Can't find common path_open
+[ 11236.114] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":11236.114,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+[ 11252.060] nat-echo: TEST ticks 3 timer=0
+agenda stage file-submitted us=9072737
+agenda stage file-returned us=9163320
+agenda stage settle us=9168780
+agenda response us=9169888 world_bytes=185535
+agenda frame turn_us=1109 world_bytes=185535
+agenda compositor kind=draw total_us=16916 segments=1 reply_wait_us=0 reply_wait_segments=0
+agenda compositor kind=worlds.status total_us=1994 segments=1 reply_wait_us=0 reply_wait_segments=0
+agenda compositor kind=other total_us=19272 segments=2 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=keyboard engine=2 first_us=8023775 total_us=10778 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=1366 reply_wait_segments=1
+agenda boot-world name=power engine=2 first_us=8034870 total_us=10868 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=display engine=2 first_us=8046050 total_us=9845 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=compositor engine=2 first_us=8056271 total_us=28542 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=agent engine=2 first_us=8085209 total_us=41024 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=chat engine=0 first_us=8126615 total_us=98246 attempts=1 js_setup_us=7316 js_prelude_us=62666 js_source_us=25500 js_init_us=2604 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=launcher engine=0 first_us=8225310 total_us=35063 attempts=1 js_setup_us=6740 js_prelude_us=8370 js_source_us=17411 js_init_us=2396 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=files engine=2 first_us=8260804 total_us=2624 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=editor engine=2 first_us=8263709 total_us=13955 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=calc engine=0 first_us=8278031 total_us=235720 attempts=1 js_setup_us=7064 js_prelude_us=8228 js_source_us=215922 js_init_us=4368 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=agenda engine=2 first_us=8514300 total_us=7990 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=settings engine=2 first_us=8522671 total_us=21208 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=logs engine=0 first_us=8544296 total_us=32578 attempts=1 js_setup_us=7153 js_prelude_us=8499 js_source_us=14179 js_init_us=2632 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=loader engine=0 first_us=8577311 total_us=39298 attempts=1 js_setup_us=6756 js_prelude_us=8370 js_source_us=21280 js_init_us=2760 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=sysmon engine=0 first_us=8617074 total_us=39781 attempts=1 js_setup_us=6818 js_prelude_us=8366 js_source_us=21712 js_init_us=2754 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=repl engine=0 first_us=8657312 total_us=27399 attempts=1 js_setup_us=6707 js_prelude_us=8365 js_source_us=9516 js_init_us=2697 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=sandbox engine=0 first_us=8685116 total_us=23648 attempts=1 js_setup_us=6722 js_prelude_us=8298 js_source_us=6403 js_init_us=2117 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=snake engine=2 first_us=8709175 total_us=13657 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=2989 reply_wait_segments=1
+agenda boot-world name=faults engine=0 first_us=8723238 total_us=30353 attempts=1 js_setup_us=7190 js_prelude_us=8439 js_source_us=12062 js_init_us=2523 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=flaky engine=2 first_us=8754044 total_us=8518 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=raytrace engine=0 first_us=8762930 total_us=26213 attempts=1 js_setup_us=7067 js_prelude_us=8466 js_source_us=7936 js_init_us=2631 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=keys engine=0 first_us=8789576 total_us=26766 attempts=1 js_setup_us=6888 js_prelude_us=8294 js_source_us=9221 js_init_us=2223 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=about engine=0 first_us=8816806 total_us=25381 attempts=1 js_setup_us=6799 js_prelude_us=8331 js_source_us=7780 js_init_us=2356 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=chess engine=2 first_us=8842673 total_us=14681 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=toplog engine=2 first_us=8857764 total_us=8332 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=nat-echo engine=2 first_us=8866366 total_us=24280 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=nat-bench engine=2 first_us=8890818 total_us=408 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=nat-import engine=2 first_us=8891273 total_us=11864 attempts=2 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=nat-dial engine=2 first_us=8921704 total_us=632 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+E (14247) ELF: Can't find common path_open
+[ 11854.136] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":11854.136,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":3,"mem_kb":0,"limit_kb":64}
+E (14650) ELF: Can't find common path_open
+[ 12257.563] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":12257.563,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+typed compiler bytecode: painter/link.js 1183 bytes
+mobile-painter native compiler functions=streamed
+E (15454) ELF: Can't find common path_open
+[ 13061.125] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":13061.125,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+[ 13061.125] nat-import crashed 5 times in ten seconds; it stays stopped

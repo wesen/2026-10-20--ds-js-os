@@ -238,3 +238,36 @@ Every native world reports no error, and the 3D board renders (`shot-1.png`).
 
 - Run the arms firmware on the smooth-chess configuration. Then choose Chess's and Candela's policies by measurement, and keep or drop Chess's 22% margin.
 - Persist the bytecode cache in flash, keyed by the source digest.
+
+## Step 6: The 3D-Chess configuration measured; Chess moves to a balanced policy
+
+Run 4 used the everyday configuration (`build-smooth-chess.sh`'s flags, clean `cf177af`) and added a `kernel` arm. It settles the question Step 5 left open. With the 3D painter, Chess compiles in 4.66 s under `default`, outside the 4.5 s target. Under the Step 11 set it compiles in 3.76 s, and in the Chess engine oracle loop versioning saves only 0.45% of instructions (128,741,180 against 128,152,624). Chess now uses a new named policy, `balanced`, which is exactly the Step 11 set.
+
+### What I did
+
+- Built the arms image with arms stock to step13 plus `{policy: "kernel"}` (`various/09-arms-smooth.json`, receipt `various/09-arms-smooth-receipt.json`).
+- Ran it with the restore target updated to the 3D-Chess firmware (`7b1181b4…`, recorded in `/tmp/picocalc-current-playable.txt`), giving `various/10-arms-run-smooth/` and its summary. The device was restored afterwards with eight healthy worlds.
+- Added `POLICIES.balanced`: `default` without `select.version` and `operandLocations.split`. The pin test checks that it reproduces Step 11's P4-timed image `4fa61ed1…`. `chess_p4.c` names it.
+- Replayed all 24 workflows with `balanced` as the default: 24/24 PASS (`various/11-replays-balanced.log`). Ran the Chess oracle with `{policy: "balanced"}`: 6981/6981 words, 128,741,180 instructions (`various/12-chess-oracle-balanced.log`).
+
+### What worked
+
+| World | stock | interactive | step7 | step8 | balanced (step11) | default (step13) | kernel | 75% of deadline |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Files | 0.16 s | 0.18 | 0.25 | 0.30 | 0.32 | 0.40 | 0.41 | 1.28 |
+| Agenda | 0.50 | 0.64 | 1.32 | 1.59 | 1.95 | 2.37 | 2.87 | 1.28 |
+| Editor | 2.46 | 2.94 | 4.63 | 5.36 | 6.06 | 7.37 | 7.71 | 4.50 |
+| Chess (3D) | 1.81 | 2.18 | 3.16 | 3.39 | 3.76 | 4.66 | 5.37 | 4.50 |
+
+All times include the bytecode cache. On the device, division facts (`kernel`) add 21% to Agenda's compile, 15% to Chess's and 5% to Editor's. The delivered painter compiled in 4.56 s under `default`, against its 8 s deadline.
+
+### What I learned
+
+- The policy that fits a world depends on its source as well as its kind. The flat Chess fit `default` at 4.34 s. The 3D Chess, with a larger source, does not.
+- **Final assignment:**
+  - Files: `default`.
+  - Agenda and Editor: `interactive`.
+  - Chess: `balanced`.
+  - Candela and the painter: `default` (2.0 s and 4.6 s against 8 s).
+  - The ray tracer: `kernel`.
+- **Installed** `build-smooth-chess.sh` at `676ae95`: app `b22a807d…`, `/tmp/picocalc-playable-smooth-chess-676ae95` (`various/13-install-balanced/`). Boot compiles: Candela 2.01 s, Agenda 0.65 s (`interactive`), Files 0.41 s, Editor 3.04 s (`interactive`), Chess 3.79 s (`balanced`). Every world boots without error, and the 3D board renders. This app is now the restore target (`/tmp/picocalc-current-playable.txt`).

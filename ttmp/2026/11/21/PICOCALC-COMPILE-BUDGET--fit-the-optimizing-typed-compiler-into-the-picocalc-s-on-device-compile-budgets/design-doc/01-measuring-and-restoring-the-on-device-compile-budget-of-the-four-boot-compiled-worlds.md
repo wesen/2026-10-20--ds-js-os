@@ -133,3 +133,18 @@ Chess was not reached in run 1; run 2 measures it. Inlining is the step that bre
 ### The fixed cost
 
 Even the `stock` arm compiles more slowly than the previous firmware did: Agenda 0.83 s against 0.61 s, Files 0.49 s against 0.32 s. Code generation is the same, so the extra time is in work that every compile repeats, most likely evaluating 225 KB of compiler JavaScript in each fresh runtime. Run 2 times evaluation separately. If the share is large, `eval_file` can cache each compiler source as QuickJS bytecode: `JS_Eval` with `JS_EVAL_FLAG_COMPILE_ONLY`, then `JS_WriteObject`, then `JS_ReadObject` and `JS_EvalFunction` in later runtimes. That speeds up every world under every policy and changes no output.
+
+### Final assignment (after runs 3 and 4)
+
+With the bytecode cache and the everyday 3D-Chess configuration (`various/10-arms-run-smooth-summary.json`):
+
+| World | Policy | Boot compile on the P4 | Deadline |
+|---|---|---:|---:|
+| Files | `default` | 0.40 s | 1.7 s |
+| Agenda | `interactive` | 0.64 s | 1.7 s |
+| Editor | `interactive` | 2.94 s | 6 s |
+| Chess (3D) | `balanced` (Step 11: default without versioning and split locals) | 3.76 s | 6 s |
+| Candela, painter | `default` | 2.0 s, 4.6 s | 8 s |
+| ray tracer (benchmark images) | `kernel` (default plus division facts) | 1.84 s | 8 s |
+
+Each named policy is pinned in the tests to a ray image that a paired board run timed. All 24 replays pass with `interactive`, `balanced` and `kernel` (with facts on) each acting as the default.
