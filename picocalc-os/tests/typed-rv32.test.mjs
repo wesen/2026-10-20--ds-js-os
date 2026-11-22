@@ -347,7 +347,7 @@ function fill(out: buffer, buf: buffer, n: i32): i32 {
     const all = {inline: true, select: {immediates: true, divisions: true, branches: true, results: true,
         leafParams: true, commute: true, rotate: true},
         operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true,
-            nested: true, constants: true}};
+            nested: true, constants: true, share: true}};
     const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
     const candidate = typedRv32.compile(src, [], undefined, all);
     assert.deepEqual(candidate.image, typedRv32.compile(src, [], undefined, {...all, streamFunctions: false}).image);

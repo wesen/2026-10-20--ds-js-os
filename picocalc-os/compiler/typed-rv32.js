@@ -1018,6 +1018,16 @@ function planLocations(fn, options, inlineCall) {
         reads.set(local, (reads.get(local) ?? 0) + 1);
         weigh(local);
     }
+    // share: first and last tape offset of each local, whether its first occurrence is a
+    // read, and every loop's extent, for the live intervals planSavedHomes compares.
+    const first = new Map(), last = new Map(), readFirst = new Set(), loopSpans = [], loopStarts = [];
+    function occur(local, offset, isRead) {
+        if (!first.has(local)) {
+            first.set(local, offset);
+            if (isRead) readFirst.add(local);
+        }
+        last.set(local, offset);
+    }
     const blocks = [];
     // A checked address whose index local was set by the preceding operation; the
     // forwarding decision needs the final read count, so it is resolved after the walk.
@@ -1031,6 +1041,11 @@ function planLocations(fn, options, inlineCall) {
         const a = cells > 0 ? tape[at] : undefined, b = cells > 1 ? tape[at + 1] : undefined;
         at += cells;
         if (at > tape.length) throw new Error("truncated Typed inspection operation");
+        if (options.share) {
+            if (opcode === 0x20 || opcode === 0xf2) occur(a, offset, true);
+            else if (opcode === 0x21) occur(a, offset, false);
+            else if (opcode === 0xf1) { occur(a, offset, true); occur(b, offset, true); }
+        }
         if (opcode === 0xf1) {
             if (straight && receiver === undefined) receiver = a;
             if (options.capacities) {
@@ -1056,12 +1071,12 @@ function planLocations(fn, options, inlineCall) {
         if (opcode === 0x36 || opcode === 0x3b || opcode === 0xf2) pure = false;
         if (opcode >= 0x02 && opcode <= 0x04) {
             blocks.push(opcode);
-            if (opcode === 0x03) loops++;
+            if (opcode === 0x03) { loops++; loopStarts.push(offset); }
             if (opcode === 0x04) ifs++;
         }
         if (opcode === 0x0b) {
             const closed = blocks.pop();
-            if (closed === 0x03) loops--;
+            if (closed === 0x03) { loops--; loopSpans.push([loopStarts.pop(), offset]); }
             if (closed === 0x04) ifs--;
         }
         if (opcode >= 0x02 && opcode <= 0x0f) straight = false;
@@ -1085,7 +1100,25 @@ function planLocations(fn, options, inlineCall) {
         scores.delete(id);
     }
     const direct = Boolean(options.direct);
-    if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined);
+    let intervals;
+    if (options.share) {
+        // Every Typed declaration has an initializer and is re-initialized on each iteration
+        // of a loop that contains it, so a value crosses a loop's back edge only for a local
+        // that also occurs before the loop: those intervals are widened to the whole loop,
+        // innermost loops first. Parameters are live from entry; a local first read before
+        // any write (a generated continuation slot) is live everywhere.
+        intervals = new Map();
+        for (const [local, start] of first) {
+            if (readFirst.has(local) && local >= fn.params.length) continue;
+            intervals.set(local, [local < fn.params.length ? -1 : start, last.get(local)]);
+        }
+        for (let p = 0; p < fn.params.length; p++) if (!intervals.has(p)) intervals.set(p, [-1, -1]);
+        loopSpans.sort((x, y) => (x[1] - x[0]) - (y[1] - y[0]));
+        for (const [ls, le] of loopSpans)
+            for (const span of intervals.values())
+                if (span[0] < ls && span[1] >= ls && span[1] < le) span[1] = le;
+    }
+    if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined, intervals);
     else if (options.homes && leaf) {
         let reg = A0 + Math.max(1, fn.params.length);
         const end = A0 + (receiver === undefined ? 8 : 7);
@@ -1112,19 +1145,39 @@ const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27);
 // in sorted order and costs rise along the free list, so the first unaffordable local
 // ends the assignment.
 const SAVED_MARGIN = 2;
-function planSavedHomes(fn, scores, homes, leaf, capacityCached) {
-    const free = [];
+function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals) {
+    const free = [], opened = [];
+    // share: a register already holding homes takes another local whose live interval
+    // overlaps none of theirs, at no further cost. Keys without an interval (capacities,
+    // constants, slots live everywhere) occupy their register for the whole function.
+    const span = id => intervals?.get(id) ?? [-Infinity, Infinity];
+    const disjoint = (r, [s, e]) => r.spans.every(([s2, e2]) => e < s2 || s > e2);
     if (leaf) {
         const lastIncoming = capacityCached ? Math.min(fn.params.length, 7) : fn.params.length;
-        for (let p = 1; p < lastIncoming; p++) if ((scores.get(p) ?? 0) >= 2) homes.set(p, A0 + p);
+        for (let p = 1; p < lastIncoming; p++) if ((scores.get(p) ?? 0) >= 2) {
+            homes.set(p, A0 + p);
+            opened.push({reg: A0 + p, spans: [span(p)]});
+        }
         for (let reg = A0 + Math.max(1, fn.params.length); reg < A0 + (capacityCached ? 7 : 8); reg++)
             free.push({reg, cost: 0});
     }
     for (const reg of SAVED_REGISTERS) free.push({reg, cost: 2});
     for (const [id, score] of [...scores].sort((a, b) => b[1] - a[1])) {
         if (homes.has(id)) continue;
-        if (!free.length || score <= (free[0].cost ? SAVED_MARGIN * free[0].cost : 1)) break;
-        homes.set(id, free.shift().reg);
+        const own = span(id);
+        const shared = intervals && score >= 1 ? opened.find(r => disjoint(r, own)) : undefined;
+        if (shared) {
+            homes.set(id, shared.reg);
+            shared.spans.push(own);
+            continue;
+        }
+        if (!free.length || score <= (free[0].cost ? SAVED_MARGIN * free[0].cost : 1)) {
+            if (intervals) continue;
+            break;
+        }
+        const reg = free.shift().reg;
+        homes.set(id, reg);
+        opened.push({reg, spans: [own]});
     }
 }
 
