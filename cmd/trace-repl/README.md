@@ -129,7 +129,7 @@ Several services often run side by side on different ports. `trace-repl info --a
 | Request | Response |
 | --- | --- |
 | `GET /` | HTTP 200, the list of routes |
-| `GET /info` | HTTP 200, `{"service","build","repo":{"root","head"},"mounts","archive","deviceStudy","simdStudy","sessions":{"open","max"},"limits":{"sourceBytes","resultBytes","cellSeconds"},"started"}` |
+| `GET /info` | HTTP 200, `{"service","build","repo":{"root","head"},"mounts","compiler":{"modules","cachedCommits"},"archive","deviceStudy","simdStudy","sessions":{"open","max","idleSeconds"},"limits":{"sourceBytes","resultBytes","cellSeconds","jobSeconds"},"started"}` |
 | `POST /sessions` with empty body | HTTP 201, `{"id":"session-…"}`; HTTP 429 at 32 open sessions |
 | `GET /sessions` | HTTP 200, `[{"id","created","lastUsed","idleSeconds","cells","jobs","activeJob","busy"}]`, oldest first |
 | `POST /sessions/{id}/eval` with `Content-Type: application/json` and `{"source":"7 * 6"}` | HTTP 200, `{"ok":true,"value":42}` |
