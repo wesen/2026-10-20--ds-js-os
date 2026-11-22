@@ -340,15 +340,17 @@ The playable app was health-checked before each run, and the measurement image a
 
 | Change | File | Default firmware affected? |
 |---|---|---|
-| `long_ms`, `stack_kb` manifest fields; `world_t.long_budget_us`, `js_stack`, `mem_peak`, `seg_long` | `nucleus/nucleus.h`, `kernel.c`, `vm.c` | no behaviour change: absent fields keep today's limits; `mem_peak` is one comparison per allocation |
-| `vm_long_segment()` | `nucleus/vm.c` | unused unless a world has `long_ms` |
-| the overrun message names a long segment | `nucleus/kernel.c` | only for long segments |
+| `long_ms`, `stack_kb` manifest fields; `world_t.long_budget_us`, `js_stack`, `mem_peak`, `seg_long` | `nucleus/nucleus.h`, `kernel.c`, `vm.c` | no: compiled only with `PICOCALC_CANDELA_WORLD` |
+| `vm_long_segment()` | `nucleus/vm.c` | no: compiled only with the flag |
+| the overrun message names a long segment | `nucleus/kernel.c` | no: compiled only with the flag |
 | Candela loader and host object hooks in `vm_create`/`vm_dispose` | `nucleus/vm.c` | compiled only with `PICOCALC_CANDELA_WORLD` |
 | `candela_world.c`, `candela_render.h`, `candela_render_stub.c` | `nucleus/` | compiled only with the flag |
 | `PICOCALC_CANDELA_WORLD` option, bundle and manifest entry | `port/esp32p4/CMakeLists.txt`, `main/CMakeLists.txt` | OFF by default |
 | `send WORLD TYPE [JSON]` console command | `port/esp32p4/main/main_p4.c` | only with the flag |
 | `build-smooth-chess.sh BUILD [-D ...]` | `port/esp32p4/build-smooth-chess.sh` | without extra arguments it builds the same image |
 | `make CANDELA=1 candela` host build | `picocalc-os/Makefile`, `tools/candela-stage.py` | separate build directory |
+
+Without the flag, `nucleus/vm.c` and `nucleus/kernel.c` preprocess to exactly the text of `main` at `1fc0f1e`, with the host's defaults and with the playable build's guards (`PICOCALC_TYPED_AGENDA`, `_CHESS`, `_EDITOR`, `_FILES`, `PICOCALC_MOBILE_PAINTER`, `NUCLEUS_WASM`); `nucleus.h` is gated the same way, `main_p4.c`'s command and the CMake block are under the flag, and `build-smooth-chess.sh` without extra arguments runs the same `idf.py` command. With the flag, the same files preprocess to the measured commit's statements (`c0bd0f3`), split differently across lines. (The nucleus changes were gated after the device runs, in `HEAD`.)
 
 Measurement image:
 

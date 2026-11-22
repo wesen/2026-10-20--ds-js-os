@@ -231,3 +231,13 @@ The final run used the image built from `c0bd0f3` (both fixes), app SHA-256 `63a
 ## Step 9: The vault report
 
 A milestone entry. The deep-dive report went to the vault as `Projects/2026/11/22/PROJECT REPORT - PicoCalc Candela - Candela's Unchanged Front End as a QuickJS World on the ESP32-P4 - A Technical Deep Dive.md`, staged alone and pushed to `go-go-golems/go-go-parc` `main` as `63ea311` (first push accepted). Its numbers are the final run's (`various/device-04-final/summary.json`) and the host suite's.
+
+## Step 10: The default image, unchanged
+
+The brief says `build-smooth-chess.sh` must produce what it produced before unless a change is behind a flag. The nucleus changes (manifest `long_ms` and `stack_kb`, `vm_long_segment()`, the per-world heap peak, the long-segment overrun message) had been compiled into every build. They did not change behaviour for manifests without the new fields, but they changed the binary. They are now under `#if PICOCALC_CANDELA_WORLD`, like the loader hooks.
+
+### What I did
+- Gated the new `world_t` and `manifest_world_t` fields, the declaration of `vm_long_segment()`, and every use in `kernel.c` and `vm.c`. The manifest struct keeps the measured commit's field order when the flag is on.
+- Compared preprocessed sources (`gcc -E -P`, scratch scripts `same-default.sh` and `same-flag.sh`): without the flag, `vm.c` and `kernel.c` give exactly the text of `main` (`1fc0f1e`), with the host's defaults and with `-DPICOCALC_TYPED_AGENDA=1 -DPICOCALC_TYPED_CHESS=1 -DPICOCALC_MOBILE_PAINTER=1 -DPICOCALC_TYPED_EDITOR=1 -DPICOCALC_TYPED_FILES=1 -DNUCLEUS_WASM=1`. With the flag, the only differences from `c0bd0f3` (the measured image) are two declarations and one statement line split across lines.
+- `make -j8` and `make CANDELA=1 candela` build without warnings; the T0 suite in the simulator again gives 27 of 28 built scenes equal to Node and M-12 stopped by the long segment.
+- Design doc Section 10 updated.

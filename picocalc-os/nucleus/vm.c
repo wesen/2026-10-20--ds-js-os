@@ -37,7 +37,9 @@ static void *w_malloc(JSMallocState *s, size_t size) {
   if (!p) return NULL;
   size_t u = port_heap_usable(p) + 8;
   W->mem_used += u; s->malloc_size += u; s->malloc_count++;
+#if PICOCALC_CANDELA_WORLD
   if (W->mem_used > W->mem_peak) W->mem_peak = W->mem_used;
+#endif
   return p;
 }
 static void w_free(JSMallocState *s, void *p) {
@@ -57,7 +59,9 @@ static void *w_realloc(JSMallocState *s, void *p, size_t size) {
   if (!q) return NULL;
   size_t u = port_heap_usable(q) + 8;
   W->mem_used = W->mem_used - old + u; s->malloc_size = s->malloc_size - old + u;
+#if PICOCALC_CANDELA_WORLD
   if (W->mem_used > W->mem_peak) W->mem_peak = W->mem_used;
+#endif
   return q;
 }
 static size_t w_usable(const void *p) { return port_heap_usable(p); }
@@ -79,9 +83,12 @@ void vm_begin_segment(world_t *W, vtime_t budget_us) {
   W->budget_interrupts = (int64_t)((double)budget_us * 1000.0 / (PROFILE.ns_per_step * JS_GetInterruptCounterInit())) + 1;
   W->seg_deadline = K.realtime ? port_clock() + budget_us : VT_INF;
   W->overrun = false;
+#if PICOCALC_CANDELA_WORLD
   W->seg_long = false;
+#endif
 }
 
+#if PICOCALC_CANDELA_WORLD
 // A long segment: this segment runs on the world's long budget (manifest "long_ms") instead of its turn budget, counted
 // from the segment's start. For work that cannot be split across turns, such as a Candela scene build; it holds the
 // lane as a boot segment does. A world without long_ms cannot ask.
@@ -93,6 +100,7 @@ int vm_long_segment(world_t *W, char *why, size_t n) {
   if (K.realtime) W->seg_deadline = K.vnow + W->long_budget_us;
   return 0;
 }
+#endif
 
 int64_t vm_steps(world_t *W) {
   if (!W->vm || !W->vm->ctx) return 0;
@@ -1027,11 +1035,18 @@ int vm_create(world_t *W) {
   extern void p4_agenda_js_boot(const world_t *, const vtime_t *);
   vtime_t stages[5] = {port_clock()};
 #endif
-  W->oom = false; W->interrupts = 0; W->mem_used = 0; W->mem_peak = 0;
+  W->oom = false; W->interrupts = 0; W->mem_used = 0;
+#if PICOCALC_CANDELA_WORLD
+  W->mem_peak = 0;
+#endif
   W->vm = calloc(1, sizeof(*W->vm));
   W->vm->rt = JS_NewRuntime2(&MF, W);
   if (!W->vm->rt) { snprintf(W->last_error, sizeof W->last_error, "could not make a runtime within %zu KB", W->mem_limit / 1024); return -1; }
+#if PICOCALC_CANDELA_WORLD
   JS_SetMaxStackSize(W->vm->rt, W->js_stack && W->js_stack < port_js_stack() ? W->js_stack : port_js_stack());
+#else
+  JS_SetMaxStackSize(W->vm->rt, port_js_stack());
+#endif
   JS_SetInterruptHandler(W->vm->rt, on_interrupt, W);
   JS_SetHostPromiseRejectionTracker(W->vm->rt, on_rejection, W);
   W->vm->ctx = JS_NewContext(W->vm->rt);
@@ -1189,8 +1204,10 @@ int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(vo
     f = JS_GetPropertyStr(ctx, o, "mem_kb"); if ((mw.has_mem = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.mem_kb, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "priority"); if ((mw.has_prio = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.priority, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "store_kb"); if ((mw.has_store = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.store_kb, f); JS_FreeValue(ctx, f);
+#if PICOCALC_CANDELA_WORLD
     f = JS_GetPropertyStr(ctx, o, "long_ms"); if ((mw.has_long = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.long_ms, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "stack_kb"); if ((mw.has_stack = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.stack_kb, f); JS_FreeValue(ctx, f);
+#endif
     f = JS_GetPropertyStr(ctx, o, "claims");
     JSValue cl = JS_GetPropertyStr(ctx, f, "length"); int32_t nc = 0; JS_ToInt32(ctx, &nc, cl); JS_FreeValue(ctx, cl);
     for (int k = 0; k < nc && k < MAX_LIST; k++) {
