@@ -1,0 +1,51 @@
+PASS 01-check-files-wasm.mjs
+    {"nameCases":18,"matchedFrames":26,"wasmBytes":49089,"rv32CodeBytes":2160,"editorWrites":true}
+PASS 02-check-files-rv32.mjs riscv32-esp-elf-gcc rv32emu
+    {"elfBytes":24424,"result":"Files RV32 startup, directory sorting, rounding, and mkdir passed"}
+PASS 07-check-editor-layout.mjs riscv32-esp-elf-gcc rv32emu
+    {"logicalLines":40,"vectors":107776,"wasmBytes":859,"rv32Bytes":1288}
+PASS 01-check-calendar.mjs
+    {"cases":235158,"wasmBytes":2605}
+PASS 02-check-leads.mjs
+    {"cases":30010}
+PASS 03-check-task-records.mjs
+    {"cases":6411,"diagnosticCases":2,"wasmBytes":2605}
+PASS 04-check-wasm-world.mjs
+      }
+    }
+PASS 07-check-rv32-parser.mjs riscv32-esp-elf-gcc rv32emu
+      "sha256": "0021ef0762ce1f49d6f980fd31bd73a72c4beffde84591f70f24cd9059c79656"
+    }
+PASS 14-check-local-inference.mjs
+    {"declarations":25,"targets":["wasm","rv32"],"byteIdentical":true,"diagnostics":5}
+PASS 16-check-entry-tokens.mjs riscv32-esp-elf-gcc rv32emu
+    {"cases":3924,"prompts":319,"targets":["wasm","rv32"],"machineBytes":11284,"includesReminder":true}
+PASS 01-check-editor-empty-view.mjs riscv32-esp-elf-gcc rv32emu
+    {"matchingInitialView":true,"units":222,"wasmBytes":2111,"rv32Bytes":2044}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu
+    {"inputBytes":123,"matchingWasmFramebuffers":3,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":50}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --large
+    {"inputBytes":65536,"matchingWasmFramebuffers":3,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":200}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --edit
+    {"inputBytes":123,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":50}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --positions
+    {"inputBytes":123,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":50}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --find
+    {"inputBytes":65,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":50}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --markdown
+    {"inputBytes":571,"matchingWasmFramebuffers":5,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":50}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-large
+    {"inputBytes":21614,"matchingWasmFramebuffers":6,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":50}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-line
+    {"inputBytes":18047,"matchingWasmFramebuffers":6,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":200}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-inline
+    {"inputBytes":65536,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":200}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --preview-dense-inline
+    {"inputBytes":65536,"matchingWasmFramebuffers":5,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":200}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --dense-search
+    {"inputBytes":65536,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":200}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --tail-search
+    {"inputBytes":65536,"matchingWasmFramebuffers":4,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":200}
+PASS 04-check-editor-world.mjs riscv32-esp-elf-gcc rv32emu --late-navigation
+    {"inputBytes":65536,"matchingWasmFramebuffers":6,"rv32Open":true,"wasmBytes":92162,"elfBytes":242276,"wasmTurnBudgetMs":200}
+exit 0

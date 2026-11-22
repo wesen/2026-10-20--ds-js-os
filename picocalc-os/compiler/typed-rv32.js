@@ -20,6 +20,56 @@ const ALU = new Map([
     [0x74,[1,0]], [0x75,[5,0x20]],
 ]);
 
+// select.branches: the branch funct3 taken when the predicate holds, and whether the
+// instruction's operands are reversed. From PICOCALC-RV32-BRANCH 02-predicate-fusion.patch.
+const PREDICATES = new Map([
+    [0x45,[0,false]], // eqz (right operand is zero)
+    [0x46,[0,false]], // eq
+    [0x47,[1,false]], // ne
+    [0x48,[4,false]], // lt_s
+    [0x4a,[4,true]],  // gt_s
+    [0x4c,[5,true]],  // le_s
+    [0x4e,[5,false]], // ge_s
+    [0x4f,[7,false]], // ge_u
+]);
+
+const fitsImmediate = n => n >= -2048 && n <= 2047;
+const powerOfTwo = n => n > 0 && (n & (n - 1)) === 0 ? 31 - Math.clz32(n) : -1;
+
+// select.immediates: an operation whose right operand is a literal, as I-type instructions.
+// Each entry returns [funct3, immediate] pairs, applied in order to the result register; the
+// first reads the left operand. null keeps the register form.
+const IMMEDIATE_FORMS = new Map([
+    [0x6a, c => fitsImmediate(c) ? [[0, c]] : null],                       // addi
+    [0x6b, c => fitsImmediate(-c) ? [[0, -c]] : null],                     // addi -c
+    [0x6c, c => c === 1 ? [[0, 0]] : powerOfTwo(c) > 0 ? [[1, powerOfTwo(c)]] : null], // mv, slli
+    [0x74, c => [[1, c & 31]]],                                            // slli
+    [0x75, c => [[5, 0x400 | (c & 31)]]],                                  // srai
+    [0x48, c => fitsImmediate(c) ? [[2, c]] : null],                       // slti
+    [0x4c, c => c < 2047 && c >= -2049 ? [[2, c + 1]] : null],             // a <= c as a < c+1
+    [0x4e, c => fitsImmediate(c) ? [[2, c], [4, 1]] : null],               // !(a < c)
+    [0x4f, c => fitsImmediate(c) ? [[3, c], [4, 1]] : null],               // !(a <u c)
+    [0x46, c => fitsImmediate(c) ? [[4, c], [3, 1]] : null],               // xori, seqz
+]);
+
+// Signed division by a constant d in [3, 2^31) that is not a power of two: q = mulh(n, M)
+// (+ n when M is negative), shifted right arithmetically by s, plus one when n < 0.
+// Hacker's Delight, Figure 10-1, with exact doubles (every value stays below 2^34).
+function divisionMagic(d) {
+    const two31 = 2147483648, anc = two31 - 1 - two31 % d;
+    let p = 31, q1 = Math.floor(two31 / anc), r1 = two31 - q1 * anc;
+    let q2 = Math.floor(two31 / d), r2 = two31 - q2 * d, delta;
+    do {
+        p++;
+        q1 *= 2; r1 *= 2;
+        if (r1 >= anc) { q1++; r1 -= anc; }
+        q2 *= 2; r2 *= 2;
+        if (r2 >= d) { q2++; r2 -= d; }
+        delta = d - r2;
+    } while (q1 < delta || (q1 === delta && r1 === 0));
+    return {magic: (q2 + 1) | 0, shift: p - 32};
+}
+
 class FunctionCode {
     constructor(program, functions, starts) {
         this.program = program;
@@ -51,7 +101,26 @@ class FunctionCode {
     constant(reg, n) {
         const lo = (n << 20) >> 20;
         if (n !== lo) this.emit(((n - lo) & 0xfffff000) | (reg << 7) | 0x37);
-        this.emit(instruction.i(0x13, reg, 0, n === lo ? ZERO : reg, lo));
+        if (n === lo || lo !== 0 || !this.select?.immediates)
+            this.emit(instruction.i(0x13, reg, 0, n === lo ? ZERO : reg, lo));
+    }
+
+    // select.results: when the next operation stores this result into a homed local, the
+    // result is computed in the home and the store disappears. Call after popping the
+    // operands; every caller's sequence reads its operands no later than its first write.
+    destination() {
+        const tape = this.program.code, plan = this.locations;
+        if (!this.select?.results || !plan || tape[this.at] !== 0x21 || plan.forward.has(this.at)) return undefined;
+        const home = plan.homes.get(tape[this.at + 1]);
+        if (home === undefined) return undefined;
+        this.at += 2;
+        this.materialize(home);
+        return home;
+    }
+
+    // Push a result computed in resultRegister(), unless destination() stored it already.
+    result(out, stored) {
+        if (stored === undefined) this.push(out);
     }
 
     move(to, from) {
@@ -144,6 +213,13 @@ class FunctionCode {
 
     // A conditional branch skips the fixed-width jump when the predicate is false.
     branch(kind, a, b, target) {
+        if (this.select?.branches && target.at !== undefined) {
+            const offset = 4 * (target.at - this.words.length);
+            if (offset >= -4096) {
+                this.emit(instruction.b(kind, a, b, offset) >>> 0);
+                return;
+            }
+        }
         this.emit(instruction.b(kind ^ 1, a, b, 8));
         this.jump(target);
     }
@@ -158,7 +234,8 @@ class FunctionCode {
     binary(op) {
         const b = this.pop(T6);
         const a = this.pop(T5);
-        const out = this.resultRegister();
+        const stored = this.destination();
+        const out = stored ?? this.resultRegister();
         const alu = ALU.get(op);
         if (alu) {
             if (op === 0x6d || op === 0x6f) {
@@ -190,17 +267,120 @@ class FunctionCode {
             if (op === 0x4c || op === 0x4e || unsigned)
                 this.emit(instruction.i(0x13, out, 4, out, 1));
         }
-        this.push(out);
+        this.result(out, stored);
     }
 
-    begin(op) {
+    // select.immediates and select.divisions: the literal at this.at feeds the next operation.
+    selectConstant() {
+        const tape = this.program.code, c = tape[this.at], next = tape[this.at + 1], s = this.select;
+        if (s.branches && PREDICATES.has(next) && this.fusible(this.at + 2)) {
+            if (!s.immediates || c !== 0) return false;
+            this.at++;
+            this.pushHome(ZERO);
+            return true;
+        }
+        if (s.divisions && (next === 0x6d || next === 0x6f) && (c >= 3 || powerOfTwo(c) > 0) &&
+            !(next === 0x6f && powerOfTwo(c) < 0)) {
+            this.at += 2;
+            this.divideByConstant(next === 0x6f, c);
+            return true;
+        }
+        if (!s.immediates) return false;
+        if (c === 0) {
+            this.at++;
+            this.pushHome(ZERO);
+            return true;
+        }
+        const form = IMMEDIATE_FORMS.get(next)?.(c);
+        if (!form) return false;
+        this.at += 2;
+        const a = this.pop(T5);
+        const stored = this.destination();
+        const out = stored ?? this.resultRegister();
+        form.forEach(([f3, imm], i) => this.emit(instruction.i(0x13, out, f3, i ? out : a, imm)));
+        this.result(out, stored);
+        return true;
+    }
+
+    // Signed truncating division or remainder by a positive constant, without a divide.
+    // T6 is the scratch register; pop(T5) never returns it.
+    divideByConstant(remainder, d) {
+        const a = this.pop(T5);
+        const stored = this.destination();
+        const out = stored ?? this.resultRegister();
+        const k = powerOfTwo(d);
+        if (k === 0) this.move(out, a);
+        else if (k > 0) {
+            // Bias a negative dividend by d - 1 so that the shift rounds toward zero.
+            if (k === 1) this.emit(instruction.i(0x13, T6, 5, a, 31));         // srli t6,a,31
+            else {
+                this.emit(instruction.i(0x13, T6, 5, a, 0x400 | 31));         // srai t6,a,31
+                this.emit(instruction.i(0x13, T6, 5, T6, 32 - k));            // srli t6,t6,32-k
+            }
+            if (remainder) {
+                this.emit(instruction.r(0x33, T6, 0, a, T6));                 // add t6,a,t6
+                if (fitsImmediate(-d)) this.emit(instruction.i(0x13, T6, 7, T6, -d)); // andi
+                else {
+                    this.emit(instruction.i(0x13, T6, 5, T6, 0x400 | k));
+                    this.emit(instruction.i(0x13, T6, 1, T6, k));
+                }
+                this.emit(instruction.r(0x33, out, 0, a, T6, 0x20));          // sub out,a,t6
+            } else {
+                this.emit(instruction.r(0x33, out, 0, a, T6));                // add out,a,t6
+                this.emit(instruction.i(0x13, out, 5, out, 0x400 | k));       // srai out,out,k
+            }
+        } else {
+            const {magic, shift} = divisionMagic(d);
+            this.constant(T6, magic);
+            this.emit(instruction.r(0x33, T6, 1, a, T6, 1));                  // mulh t6,a,t6
+            if (magic < 0) this.emit(instruction.r(0x33, T6, 0, T6, a));      // add t6,t6,a
+            if (shift) this.emit(instruction.i(0x13, T6, 5, T6, 0x400 | shift));
+            this.emit(instruction.i(0x13, out, 5, a, 31));                    // srli out,a,31
+            this.emit(instruction.r(0x33, out, 0, out, T6));                  // add out,out,t6
+        }
+        this.result(out, stored);
+    }
+
+    // Whether the operation at `at` (after a predicate) is a branch the predicate can fuse with.
+    fusible(at) {
+        const tape = this.program.code;
+        const consumer = tape[at] === 0x45 ? tape[at + 1] : tape[at];
+        return consumer === 0x04 || consumer === 0x0d;
+    }
+
+    branchTarget() {
+        const block = this.control.at(-1 - this.cell());
+        return block.op === 0x03 ? block.start : block.end;
+    }
+
+    // select.branches: a comparison consumed by if or br_if becomes one conditional branch.
+    fuseBranch(op) {
+        const encoding = PREDICATES.get(op);
+        if (!encoding || !this.fusible(this.at)) return false;
+        const negate = this.program.code[this.at] === 0x45;
+        const consumer = this.program.code[this.at + Number(negate)];
+        this.at += 1 + Number(negate);
+        const [kind, swap] = encoding;
+        const right = op === 0x45 ? ZERO : this.pop(T6);
+        const left = this.pop(T5);
+        // As at every control operation, pending direct reads move to their stack registers.
+        this.materialize();
+        const a = swap ? right : left;
+        const b = swap ? left : right;
+        const whenTrue = kind ^ Number(negate);
+        if (consumer === 0x04) this.begin(consumer, whenTrue ^ 1, a, b);
+        else this.branch(whenTrue, a, b, this.branchTarget());
+        return true;
+    }
+
+    begin(op, kind = 0, a, b = ZERO) {
         const type = this.cell();
         if (type !== 0x40 && type !== 0x7f) throw new SyntaxError("unsupported RV32 control result");
-        const condition = op === 0x04 ? this.pop(T5) : ZERO;
+        const condition = op === 0x04 ? a ?? this.pop(T5) : ZERO;
         const block = {op, depth: this.depth, value: type === 0x7f, start: {}, alternate: {}, end: {}};
         this.control.push(block);
         this.mark(block.start);
-        if (op === 0x04) this.branch(0, condition, ZERO, block.alternate);
+        if (op === 0x04) this.branch(kind, condition, b, block.alternate);
     }
 
     end() {
@@ -254,6 +434,8 @@ class FunctionCode {
             this.push(A0 + 7);
             return false;
         }
+        if (this.select?.branches && op >= 0x45 && op <= 0x4f && this.fuseBranch(op)) return false;
+        if (op === 0x41 && this.select && this.selectConstant()) return false;
         switch (op) {
         case 0x00: this.emit(0x00100073); break;  // Wasm unreachable
         case 0x02: case 0x03: case 0x04: this.begin(op); break;
@@ -282,9 +464,10 @@ class FunctionCode {
                 this.pushHome(home);
                 break;
             }
-            const out = this.resultRegister();
+            const stored = this.destination();
+            const out = stored ?? this.resultRegister();
             this.readLocal(out, local);
-            this.push(out);
+            this.result(out, stored);
             break;
         }
         case 0x21: this.writeLocal(this.pop(T5), this.cell()); break;
@@ -294,9 +477,10 @@ class FunctionCode {
             if (offset > 2047) throw new SyntaxError("RV32 field offset exceeds the instruction range");
             if (op === 0x28 || op === 0x2f) {
                 const base = this.pop(T5);
-                const out = this.resultRegister();
+                const stored = this.destination();
+                const out = stored ?? this.resultRegister();
                 this.load(out, offset, base, op === 0x28 ? 2 : 5); // lw or lhu
-                this.push(out);
+                this.result(out, stored);
             } else {
                 const value = this.pop(T6);
                 this.store(value, offset, this.pop(T5), op === 0x36 ? 2 : 1); // sw or sh
@@ -304,16 +488,19 @@ class FunctionCode {
             break;
         }
         case 0x41: {
-            const out = this.resultRegister();
-            this.constant(out, this.cell());
-            this.push(out);
+            const n = this.cell();
+            const stored = this.destination();
+            const out = stored ?? this.resultRegister();
+            this.constant(out, n);
+            this.result(out, stored);
             break;
         }
         case 0x45: {
             const value = this.pop(T5);
-            const out = this.resultRegister();
+            const stored = this.destination();
+            const out = stored ?? this.resultRegister();
             this.emit(instruction.i(0x13, out, 3, value, 1));
-            this.push(out);
+            this.result(out, stored);
             break;
         }
         case 0xf1: { // checked UTF-16 address, before any payload load or write RHS
@@ -432,7 +619,9 @@ class LeafCode extends FunctionCode {
         if (op !== 0x20) return super.step(op);
         const local = this.cell();
         if (local >= this.program.params.length) throw LEAF_SPILL;
-        this.push(A0 + local);
+        // select.leafParams: a frameless leaf never writes a parameter, so reads use it in place.
+        if (this.select?.leafParams) this.pushHome(A0 + local);
+        else this.push(A0 + local);
         return false;
     }
 
@@ -511,7 +700,7 @@ function declineLeaf(fn, reason) {
     return null;
 }
 
-function lowerLeaf(fn, callables, targets) {
+function lowerLeaf(fn, callables, targets, select) {
     if (fn.nlocals) return declineLeaf(fn, "function declares frame locals");
     if (fn.code.length > 128) return declineLeaf(fn, "operation tape exceeds 128 cells");
     if (fn.params.length > 8 || !fn.params.every(type => type === "i32" || type === "bool"))
@@ -523,7 +712,9 @@ function lowerLeaf(fn, callables, targets) {
         at += operands;
     }
     try {
-        return new LeafCode(fn, callables, targets).lower();
+        const leaf = new LeafCode(fn, callables, targets);
+        leaf.select = select;
+        return leaf.lower();
     } catch (error) {
         if (error !== LEAF_SPILL) throw error;
         return declineLeaf(fn, "leaf requires frame storage");
@@ -714,9 +905,10 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 return;
             }
         }
-        let compiled = lowerLeaf(fn, callables, targets);
+        let compiled = lowerLeaf(fn, callables, targets, options?.select);
         if (!compiled) {
             const emitter = new Emitter(fn, callables, targets);
+            emitter.select = options?.select;
             if (options?.operandLocations) emitter.locations = planLocations(fn, options.operandLocations,
                 index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn);
             compiled = emitter.lower();

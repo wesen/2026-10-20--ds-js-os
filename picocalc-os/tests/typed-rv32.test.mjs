@@ -248,3 +248,50 @@ function mix(n: i32): i32 {
     assert.equal(sha(leafHomes.bytes), sha(stock.bytes));
     assert(saved.steps < leafHomes.steps, "saved homes and direct reads reduce the frame's instructions");
 });
+
+test("instruction selection matches stock code on constant division, immediates and fused branches", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    const all = {select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true}};
+    const divisors = [2, 3, 4, 5, 7, 8, 10, 16, 25, 32, 100, 128, 183, 255, 256, 1000, 2048, 4096, 12345, 65536,
+        1 << 30, 2147483647];
+    const dividends = [0, 1, -1, 2, -2, 7, -7, 254, 255, 256, -255, -256, 1000000, -1000000, 2147483647,
+        -2147483648, -2147483647, 123456789, -987654321];
+    for (let i = 0; i < 40; i++) dividends.push((Math.imul(i + 1, 2654435761) ^ (i << 7)) | 0);
+    // Every operator appears with a literal right operand, in a leaf and in a framed function.
+    const body = divisors.map((d, i) => `    s = s + (n / ${d}) * ${i + 1} + (n % ${powerOf2(d) ? d : 2}) * ${i + 7};`).join("\n");
+    function powerOf2(d) { return (d & (d - 1)) === 0; }
+    const src = `function cmp(n: i32): i32 {
+    let s = 0;
+    if (n < 2047) { s = s + 1; }
+    if (n <= 2046) { s = s + 2; }
+    if (n <= -2049) { s = s + 4; }
+    if (n >= -2048) { s = s + 8; }
+    if (n === 255) { s = s + 16; }
+    if (n > 0) { s = s + 32; }
+    if (n !== 0) { s = s + 64; }
+    if (n < 0) { s = s + 128; }
+    if (n >= 2047) { s = s + 256; }
+    if (n === -2048) { s = s + 512; }
+    return s + (n - 2048) + (n + 2047) - n * 8 + (n >> 3) + (n >> 31) + (n >> 0);
+}
+function div(n: i32): i32 {
+    let s = 0;
+${body}
+    return s;
+}
+function leaf(a: i32, b: i32): i32 { return (a - b) * 4 + a / 8 - b % 4 + a / 3; }`;
+    const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
+    const selected = typedRv32.compile(src, [], undefined, all);
+    const run = (program, entry, args) => typedRv32Interp.run(program, entry, args, new Uint8Array(64)).result;
+    for (const n of [...dividends, 2046, 2047, 2048, -2048, -2049, -2050]) {
+        assert.equal(run(selected, "cmp", [n]), run(stock, "cmp", [n]), "cmp " + n);
+        assert.equal(run(selected, "div", [n]), run(stock, "div", [n]), "div " + n);
+        assert.equal(run(selected, "leaf", [n, 3 - n]), run(stock, "leaf", [n, 3 - n]), "leaf " + n);
+    }
+    // No divide instruction remains: every divisor above is a positive constant.
+    const divides = words(selected, "div").filter(w => opcode(w) === 0x33 && (w >>> 25) === 1 && ((w >>> 12) & 7) >= 4);
+    assert.equal(divides.length, 0);
+});

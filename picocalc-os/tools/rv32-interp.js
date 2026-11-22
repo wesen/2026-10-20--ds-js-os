@@ -105,6 +105,8 @@ function run(program, entry, args, memoryBytes, options = {}) {
         case 0x33: { // register ALU and M extension
             if (f7 === 1) {
                 if (f3 === 0) x[rd] = Math.imul(a, b);
+                else if (f3 === 1) x[rd] = Number((BigInt(a) * BigInt(b)) >> 32n); // mulh
+                else if (f3 === 3) x[rd] = Number((BigInt(a >>> 0) * BigInt(b >>> 0)) >> 32n) | 0; // mulhu
                 else if (f3 === 4) x[rd] = b === 0 ? -1 : (a === -2147483648 && b === -1 ? a : a / b);
                 else if (f3 === 6) x[rd] = b === 0 ? a : (a === -2147483648 && b === -1 ? 0 : a % b);
                 else fault("unsupported M instruction", at);
