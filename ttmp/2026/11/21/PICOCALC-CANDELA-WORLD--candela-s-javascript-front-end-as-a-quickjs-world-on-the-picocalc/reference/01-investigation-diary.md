@@ -227,3 +227,7 @@ The final run used the image built from `c0bd0f3` (both fixes), app SHA-256 `63a
 ### What I did about it
 - `scripts/lib/board_health.py`: `board_health(console, "off-by-user")` skips the keyboard probe, records keyboard, display and compositor without judging them, and still requires the other native worlds and the painter to be healthy. `08-run-device.py --peripherals off-by-user` uses it.
 - `scripts/12-after-health.py --out various/device-04-final/after.json --peripherals off-by-user` (under the lock, no flashing): app `b22a807d...`; Snake, Files, Editor, Agenda and Chess native, idle, no restarts; painter compiled once, no rejects; I2C 11,087 transfers, 11,087 errors; keyboard and display "off by user".
+
+## Step 9: The vault report
+
+A milestone entry. The deep-dive report went to the vault as `Projects/2026/11/22/PROJECT REPORT - PicoCalc Candela - Candela's Unchanged Front End as a QuickJS World on the ESP32-P4 - A Technical Deep Dive.md`, staged alone and pushed to `go-go-golems/go-go-parc` `main` as `63ea311` (first push accepted). Its numbers are the final run's (`various/device-04-final/summary.json`) and the host suite's.
