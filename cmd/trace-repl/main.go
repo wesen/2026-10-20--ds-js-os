@@ -13,6 +13,7 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
+	"regexp"
 	"runtime/debug"
 	"strings"
 	"syscall"
@@ -51,6 +52,8 @@ type settings struct {
 	Job         bool     `glazed:"job"`
 	JobTimeout  int      `glazed:"job-timeout"`
 	Detach      bool     `glazed:"detach"`
+	Args        []string `glazed:"arg"`
+	ArgsFile    string   `glazed:"args-file"`
 	JobID       string   `glazed:"job-id"`
 	Stop        bool     `glazed:"stop"`
 	MaxJob      string   `glazed:"max-job"`
@@ -95,6 +98,8 @@ func root() (*cobra.Command, error) {
 	job := fields.New("job", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("Run the code as a background job with its own deadline and wait for its result"))
 	jobTimeout := fields.New("job-timeout", fields.TypeInteger, fields.WithDefault(0), fields.WithHelp("With --job: deadline in seconds (0 means the service's --max-job)"))
 	detach := fields.New("detach", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("With --job: print the job ID and return instead of waiting"))
+	arg := fields.New("arg", fields.TypeStringList, fields.WithHelp("NAME=JSON: one parameter, visible to the cell or job as args.NAME (a fresh object per cell); repeat for more, e.g. --arg rev='\"worktree\"'"))
+	argsFile := fields.New("args-file", fields.TypeString, fields.WithHelp("JSON object file of parameters for args; --arg values replace its fields"))
 	jobID := fields.New("job-id", fields.TypeString, fields.WithRequired(true), fields.WithHelp("ID printed by eval --job --detach"))
 	stop := fields.New("stop", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("Interrupt the job instead of reporting it"))
 	idle := fields.New("idle", fields.TypeString, fields.WithDefault("2h"), fields.WithHelp("Unload sessions unused for this long (Go duration; 0 keeps them until closed)"))
@@ -110,7 +115,7 @@ func root() (*cobra.Command, error) {
 		},
 		{
 			cmds.NewCommandDescription("eval", cmds.WithShort("Evaluate JavaScript from --code or stdin in an open session (--job for work longer than the cell deadline)"),
-				cmds.WithFlags(addr, session, code, job, jobTimeout, detach)),
+				cmds.WithFlags(addr, session, code, job, jobTimeout, detach, arg, argsFile)),
 			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "eval") },
 		},
 		{
@@ -423,6 +428,59 @@ func readSource(cfg settings) (string, error) {
 	return source, nil
 }
 
+// withArgs adds args to a request body only when there are some, so this
+// client still talks to services that predate the args field.
+func withArgs(body map[string]any, args json.RawMessage) map[string]any {
+	if args != nil {
+		body["args"] = args
+	}
+	return body
+}
+
+var argName = regexp.MustCompile(`^[A-Za-z_$][A-Za-z0-9_$]*$`)
+
+// cellArgs builds the args object of one eval from --args-file and --arg.
+// Each --arg replaces the file's field of the same name; naming one twice is
+// an error, because it is almost always a mistake in a script.
+func cellArgs(cfg settings) (json.RawMessage, error) {
+	fields := map[string]json.RawMessage{}
+	if cfg.ArgsFile != "" {
+		data, err := os.ReadFile(cfg.ArgsFile)
+		if err != nil {
+			return nil, errors.Wrap(err, "--args-file")
+		}
+		if err := tracerepl.ValidateArgs(data); err != nil {
+			return nil, errors.Wrapf(err, "--args-file %s", cfg.ArgsFile)
+		}
+		if err := json.Unmarshal(data, &fields); err != nil || fields == nil {
+			return nil, errors.Errorf("--args-file %s: give one JSON object", cfg.ArgsFile)
+		}
+	}
+	seen := map[string]bool{}
+	for _, spec := range cfg.Args {
+		name, value, ok := strings.Cut(spec, "=")
+		if !ok || !argName.MatchString(name) || name == "__proto__" {
+			return nil, errors.Errorf("--arg %q: use NAME=JSON with a JavaScript identifier as NAME", spec)
+		}
+		if seen[name] {
+			return nil, errors.Errorf("--arg %s given twice", name)
+		}
+		seen[name] = true
+		if !json.Valid([]byte(value)) {
+			return nil, errors.Errorf("--arg %s: %q is not JSON; quote strings, for example --arg %s='\"%s\"'", name, value, name, value)
+		}
+		fields[name] = json.RawMessage(value)
+	}
+	if len(fields) == 0 && cfg.ArgsFile == "" {
+		return nil, nil
+	}
+	data, err := json.Marshal(fields)
+	if err != nil {
+		return nil, err
+	}
+	return data, tracerepl.ValidateArgs(data)
+}
+
 func printResult(result tracerepl.Result, what string) error {
 	if err := json.NewEncoder(os.Stdout).Encode(result); err != nil {
 		return err
@@ -476,14 +534,18 @@ func client(ctx context.Context, cfg settings, action string) error {
 		if err != nil {
 			return err
 		}
+		args, err := cellArgs(cfg)
+		if err != nil {
+			return err
+		}
 		if !cfg.Job {
 			var result tracerepl.Result
-			if err := call(ctx, cfg, http.MethodPost, sessionPath+"/eval", map[string]string{"source": source}, &result); err != nil {
+			if err := call(ctx, cfg, http.MethodPost, sessionPath+"/eval", withArgs(map[string]any{"source": source}, args), &result); err != nil {
 				return err
 			}
 			return printResult(result, "cell")
 		}
-		body := map[string]any{"source": source}
+		body := withArgs(map[string]any{"source": source}, args)
 		if cfg.JobTimeout > 0 {
 			body["timeoutSeconds"] = cfg.JobTimeout
 		}

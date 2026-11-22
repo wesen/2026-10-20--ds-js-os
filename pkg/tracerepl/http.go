@@ -22,8 +22,8 @@ const MaxSessions = 32
 var routes = []string{
 	"GET /info: inventory of mounted inputs, sessions and limits",
 	"POST /sessions: open a session; GET /sessions: list open sessions",
-	`POST /sessions/{id}/eval: evaluate {"source": "..."} within the cell deadline`,
-	`POST /sessions/{id}/jobs: start {"source": "...", "timeoutSeconds": N} in the background (202)`,
+	`POST /sessions/{id}/eval: evaluate {"source": "...", "args": {...}} within the cell deadline; the cell sees args as a fresh object`,
+	`POST /sessions/{id}/jobs: start {"source": "...", "args": {...}, "timeoutSeconds": N} in the background (202)`,
 	"GET /sessions/{id}/jobs: list jobs; GET /sessions/{id}/jobs/{job}: state and result",
 	"DELETE /sessions/{id}/jobs/{job}: stop a job",
 	"DELETE /sessions/{id}: close a session",
@@ -56,7 +56,7 @@ func Handler(s *Service, logger zerolog.Logger) http.Handler {
 		if !ok {
 			return
 		}
-		result, err := s.Evaluate(r.Context(), r.PathValue("id"), body.Source)
+		result, err := s.EvaluateCell(r.Context(), r.PathValue("id"), Cell{Source: body.Source, Args: body.Args})
 		if err != nil {
 			failure(w, err)
 			return
@@ -69,7 +69,7 @@ func Handler(s *Service, logger zerolog.Logger) http.Handler {
 		if !ok {
 			return
 		}
-		job, err := s.Submit(r.PathValue("id"), body.Source, time.Duration(body.TimeoutSeconds*float64(time.Second)))
+		job, err := s.SubmitCell(r.PathValue("id"), Cell{Source: body.Source, Args: body.Args}, time.Duration(body.TimeoutSeconds*float64(time.Second)))
 		if err != nil {
 			failure(w, err)
 			return
@@ -136,6 +136,7 @@ func Handler(s *Service, logger zerolog.Logger) http.Handler {
 
 type sourceBody struct {
 	Source         string
+	Args           json.RawMessage
 	TimeoutSeconds float64
 }
 
@@ -146,15 +147,17 @@ func decodeSource(w http.ResponseWriter, r *http.Request, job bool) (sourceBody,
 		response(w, http.StatusUnsupportedMediaType, Result{Error: "send application/json with a source string"})
 		return sourceBody{}, false
 	}
-	// A JS string in JSON can use six wire bytes per source byte.
-	dec := json.NewDecoder(http.MaxBytesReader(w, r.Body, 6*MaxSourceBytes+1024))
+	// A JS string in JSON can use six wire bytes per source byte; args are JSON as they are.
+	dec := json.NewDecoder(http.MaxBytesReader(w, r.Body, 6*MaxSourceBytes+MaxArgsBytes+1024))
 	dec.DisallowUnknownFields()
 	var cell struct {
-		Source *string `json:"source"`
+		Source *string         `json:"source"`
+		Args   json.RawMessage `json:"args"`
 	}
 	var batch struct {
-		Source         *string  `json:"source"`
-		TimeoutSeconds *float64 `json:"timeoutSeconds"`
+		Source         *string         `json:"source"`
+		Args           json.RawMessage `json:"args"`
+		TimeoutSeconds *float64        `json:"timeoutSeconds"`
 	}
 	var target any = &cell
 	if job {
@@ -169,10 +172,10 @@ func decodeSource(w http.ResponseWriter, r *http.Request, job bool) (sourceBody,
 		response(w, status, Result{Error: err.Error()})
 		return sourceBody{}, false
 	}
-	source := cell.Source
+	source, args := cell.Source, cell.Args
 	var timeout float64
 	if job {
-		source = batch.Source
+		source, args = batch.Source, batch.Args
 		if batch.TimeoutSeconds != nil {
 			if *batch.TimeoutSeconds <= 0 {
 				response(w, http.StatusBadRequest, Result{Error: "timeoutSeconds must be positive; omit it for the service maximum"})
@@ -189,7 +192,15 @@ func decodeSource(w http.ResponseWriter, r *http.Request, job bool) (sourceBody,
 		response(w, http.StatusRequestEntityTooLarge, Result{Error: "source exceeds 64 KiB"})
 		return sourceBody{}, false
 	}
-	return sourceBody{Source: *source, TimeoutSeconds: timeout}, true
+	if err := ValidateArgs(args); err != nil {
+		status := http.StatusBadRequest
+		if len(args) > MaxArgsBytes {
+			status = http.StatusRequestEntityTooLarge
+		}
+		response(w, status, Result{Error: err.Error()})
+		return sourceBody{}, false
+	}
+	return sourceBody{Source: *source, Args: args, TimeoutSeconds: timeout}, true
 }
 
 func localAddress(addr string) bool {

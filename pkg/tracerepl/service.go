@@ -2,7 +2,10 @@
 package tracerepl
 
 import (
+	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"reflect"
@@ -23,8 +26,62 @@ import (
 const (
 	MaxSourceBytes     = 64 << 10
 	MaxResultBytes     = 512 << 10
+	MaxArgsBytes       = 64 << 10
 	defaultEvalTimeout = 15 * time.Second
 )
+
+// Cell is one unit of work for a session: its source and its parameters.
+// Args is one JSON object; nil or JSON null means no parameters. Every cell
+// and job sees its own args as a fresh object in the global `args`, so no
+// parameter survives into a later cell.
+type Cell struct {
+	Source string
+	Args   json.RawMessage
+}
+
+// ValidateArgs checks that raw is absent, null, or one JSON object of at most
+// MaxArgsBytes bytes.
+func ValidateArgs(raw json.RawMessage) error {
+	if isAbsent(raw) {
+		return nil
+	}
+	if len(raw) > MaxArgsBytes {
+		return errors.Errorf("args exceed %d bytes", MaxArgsBytes)
+	}
+	var fields map[string]json.RawMessage
+	if trimmed := bytes.TrimSpace(raw); len(trimmed) == 0 || trimmed[0] != '{' || json.Unmarshal(trimmed, &fields) != nil {
+		return errors.New("args must be one JSON object, for example {\"rev\": \"worktree\"}")
+	}
+	return nil
+}
+
+func isAbsent(raw json.RawMessage) bool {
+	trimmed := bytes.TrimSpace(raw)
+	return len(trimmed) == 0 || bytes.Equal(trimmed, []byte("null"))
+}
+
+// Unit describes the cell or job a session is running, for the result store
+// and for job records.
+type Unit struct {
+	Session      string          `json:"session"`
+	Kind         string          `json:"unit"` // "cell" or "job"
+	Job          string          `json:"job,omitempty"`
+	SourceSHA256 string          `json:"sourceSHA256"`
+	SourceBytes  int             `json:"sourceBytes"`
+	Args         json.RawMessage `json:"args,omitempty"`
+}
+
+func newUnit(session, kind, job string, cell Cell) Unit {
+	digest := sha256.Sum256([]byte(cell.Source))
+	u := Unit{Session: session, Kind: kind, Job: job, SourceSHA256: hex.EncodeToString(digest[:]), SourceBytes: len(cell.Source)}
+	if !isAbsent(cell.Args) {
+		var compact bytes.Buffer
+		if json.Compact(&compact, cell.Args) == nil {
+			u.Args = compact.Bytes()
+		}
+	}
+	return u
+}
 
 type ConsoleLine struct {
 	Kind    string `json:"kind"`
@@ -94,7 +151,21 @@ func (install Installer) InitRuntime(ctx *engine.RuntimeInitializationContext) e
 	if !ok {
 		return errors.New("initialize result serializer")
 	}
-	state.stringify = stringify
+	parse, ok := goja.AssertFunction(vm.Get("JSON").ToObject(vm).Get("parse"))
+	if !ok {
+		return errors.New("initialize args parser")
+	}
+	state.stringify, state.parse = stringify, parse
+	// args is a non-configurable accessor on the global object. The engine then
+	// refuses a top-level let, const, class or function named args, which would
+	// otherwise shadow every later cell's parameters, and no cell can delete or
+	// redefine it. The setter keeps `globalThis.args = {...}` working within a cell.
+	state.args = vm.NewObject()
+	getter := vm.ToValue(func(goja.FunctionCall) goja.Value { return state.args })
+	setter := vm.ToValue(func(call goja.FunctionCall) goja.Value { state.args = call.Argument(0); return goja.Undefined() })
+	if err := vm.GlobalObject().DefineAccessorProperty("args", getter, setter, goja.FLAG_FALSE, goja.FLAG_FALSE); err != nil {
+		return errors.Wrap(err, "define args")
+	}
 	ctx.SetValue("cellIO", state)
 	return nil
 }
@@ -102,6 +173,9 @@ func (install Installer) InitRuntime(ctx *engine.RuntimeInitializationContext) e
 type cellIO struct {
 	lines     []ConsoleLine
 	stringify goja.Callable
+	parse     goja.Callable
+	args      goja.Value // the running cell's args
+	unit      Unit       // the running cell or job
 }
 
 type Service struct {
@@ -168,12 +242,13 @@ func New(ctx context.Context, install Installer, logger zerolog.Logger, opts ...
 type Limits struct {
 	SourceBytes int     `json:"sourceBytes"`
 	ResultBytes int     `json:"resultBytes"`
+	ArgsBytes   int     `json:"argsBytes"`
 	CellSeconds float64 `json:"cellSeconds"`
 	JobSeconds  float64 `json:"jobSeconds"`
 }
 
 func (s *Service) Limits() Limits {
-	return Limits{SourceBytes: MaxSourceBytes, ResultBytes: MaxResultBytes, CellSeconds: s.timeout.Seconds(), JobSeconds: s.maxJob.Seconds()}
+	return Limits{SourceBytes: MaxSourceBytes, ResultBytes: MaxResultBytes, ArgsBytes: MaxArgsBytes, CellSeconds: s.timeout.Seconds(), JobSeconds: s.maxJob.Seconds()}
 }
 
 // inventory is the GET /info body without the handler's session counts.
@@ -225,8 +300,16 @@ func (s *Service) Close(ctx context.Context) error {
 // is running or queueing a job refuses the cell at once with ErrSessionBusy:
 // waiting would only spend the cell's deadline behind the job.
 func (s *Service) Evaluate(ctx context.Context, id, source string) (Result, error) {
-	if len(source) > MaxSourceBytes {
+	return s.EvaluateCell(ctx, id, Cell{Source: source})
+}
+
+// EvaluateCell is Evaluate with parameters: cell.Args becomes the cell's args.
+func (s *Service) EvaluateCell(ctx context.Context, id string, cell Cell) (Result, error) {
+	if len(cell.Source) > MaxSourceBytes {
 		return Result{}, errors.Errorf("source exceeds %d bytes", MaxSourceBytes)
+	}
+	if err := ValidateArgs(cell.Args); err != nil {
+		return Result{}, err
 	}
 	if err := s.claim(id); err != nil {
 		return Result{}, err
@@ -234,15 +317,16 @@ func (s *Service) Evaluate(ctx context.Context, id, source string) (Result, erro
 	defer s.touch(id, true)
 	ctx, cancel := context.WithTimeout(ctx, s.timeout)
 	defer cancel()
-	return s.run(ctx, id, source, "cell", s.timeout, nil)
+	return s.run(ctx, newUnit(id, "cell", "", cell), cell, s.timeout, nil)
 }
 
-// run evaluates source in the session's VM while holding its gate. It is the
-// body shared by cells and jobs; what names the unit in interrupt messages and
-// limit is the deadline that ctx carries. started, when set, is called on the
-// VM's owner just before the source runs.
-func (s *Service) run(ctx context.Context, id, source, what string, limit time.Duration, started func()) (Result, error) {
+// run evaluates a cell in the session's VM while holding its gate. It is the
+// body shared by cells and jobs; unit names the session and the kind of work
+// (in interrupt messages too), and limit is the deadline that ctx carries.
+// started, when set, is called on the VM's owner just before the source runs.
+func (s *Service) run(ctx context.Context, unit Unit, cell Cell, limit time.Duration, started func()) (Result, error) {
 	var result Result
+	id, what := unit.Session, unit.Kind
 	err := s.sessions.WithRuntime(ctx, id, func(opCtx context.Context, rt *engine.Runtime) error {
 		// Wait for the owner callback to finish even after cancellation. This keeps
 		// the session gate held until its interrupt has been consumed and cleared.
@@ -266,7 +350,14 @@ func (s *Service) run(ctx context.Context, id, source, what string, limit time.D
 			}
 			state := rt.Values["cellIO"].(*cellIO)
 			state.lines = nil
-			result = evalCell(vm, state, source)
+			// Every cell gets a fresh args object, parsed in this VM, even when it sent none.
+			args, err := cellArgs(vm, state, cell.Args)
+			if err != nil {
+				result = Result{Error: err.Error()}
+				return nil, nil
+			}
+			state.args, state.unit = args, unit
+			result = evalCell(vm, state, cell.Source)
 			result.Console = state.lines
 			state.lines = nil
 			return nil, nil
@@ -274,6 +365,18 @@ func (s *Service) run(ctx context.Context, id, source, what string, limit time.D
 		return err
 	})
 	return result, err
+}
+
+// cellArgs parses raw in the VM, so the cell owns the resulting object.
+func cellArgs(vm *goja.Runtime, state *cellIO, raw json.RawMessage) (goja.Value, error) {
+	if isAbsent(raw) {
+		return vm.NewObject(), nil
+	}
+	v, err := state.parse(goja.Undefined(), vm.ToValue(string(raw)))
+	if err != nil {
+		return nil, errors.Wrap(err, "parse args")
+	}
+	return v, nil
 }
 
 // errJobStopped is the cancellation cause of DELETE /sessions/{id}/jobs/{job}.
