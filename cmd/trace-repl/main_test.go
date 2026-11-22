@@ -351,6 +351,26 @@ func TestEvalJobThroughTheClient(t *testing.T) {
 	}
 }
 
+// --arg values reach the client verbatim: a pflag StringSlice would split
+// {"a": 1, "b": 2} at the comma and choke on the quotes.
+func TestArgFlagKeepsJSONIntact(t *testing.T) {
+	root, err := root()
+	if err != nil {
+		t.Fatal(err)
+	}
+	eval, _, err := root.Find([]string{"eval"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := eval.ParseFlags([]string{"--arg", `arms={"a": 1, "b": "x,y"}`, "--arg", `rev="worktree"`}); err != nil {
+		t.Fatal(err)
+	}
+	got, err := eval.Flags().GetStringArray("arg")
+	if err != nil || len(got) != 2 || got[0] != `arms={"a": 1, "b": "x,y"}` || got[1] != `rev="worktree"` {
+		t.Fatalf("%q %v", got, err)
+	}
+}
+
 // --arg and --args-file build one args object; bad names, values and files are refused.
 func TestCellArgsFlags(t *testing.T) {
 	dir := t.TempDir()

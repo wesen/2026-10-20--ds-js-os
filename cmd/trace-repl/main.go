@@ -52,7 +52,7 @@ type settings struct {
 	Job         bool     `glazed:"job"`
 	JobTimeout  int      `glazed:"job-timeout"`
 	Detach      bool     `glazed:"detach"`
-	Args        []string `glazed:"arg"`
+	Args        []string // --arg, a raw cobra flag (see root)
 	ArgsFile    string   `glazed:"args-file"`
 	JobID       string   `glazed:"job-id"`
 	Stop        bool     `glazed:"stop"`
@@ -80,6 +80,7 @@ func (c *command) Run(ctx context.Context, vals *values.Values) error {
 }
 
 func root() (*cobra.Command, error) {
+	var evalArgs *[]string
 	root := &cobra.Command{
 		Use:           "trace-repl",
 		Short:         "Explore compiler traces in persistent JavaScript sessions",
@@ -98,7 +99,6 @@ func root() (*cobra.Command, error) {
 	job := fields.New("job", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("Run the code as a background job with its own deadline and wait for its result"))
 	jobTimeout := fields.New("job-timeout", fields.TypeInteger, fields.WithDefault(0), fields.WithHelp("With --job: deadline in seconds (0 means the service's --max-job)"))
 	detach := fields.New("detach", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("With --job: print the job ID and return instead of waiting"))
-	arg := fields.New("arg", fields.TypeStringList, fields.WithHelp("NAME=JSON: one parameter, visible to the cell or job as args.NAME (a fresh object per cell); repeat for more, e.g. --arg rev='\"worktree\"'"))
 	argsFile := fields.New("args-file", fields.TypeString, fields.WithHelp("JSON object file of parameters for args; --arg values replace its fields"))
 	jobID := fields.New("job-id", fields.TypeString, fields.WithRequired(true), fields.WithHelp("ID printed by eval --job --detach"))
 	stop := fields.New("stop", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("Interrupt the job instead of reporting it"))
@@ -115,8 +115,13 @@ func root() (*cobra.Command, error) {
 		},
 		{
 			cmds.NewCommandDescription("eval", cmds.WithShort("Evaluate JavaScript from --code or stdin in an open session (--job for work longer than the cell deadline)"),
-				cmds.WithFlags(addr, session, code, job, jobTimeout, detach, arg, argsFile)),
-			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "eval") },
+				cmds.WithFlags(addr, session, code, job, jobTimeout, detach, argsFile)),
+			func(ctx context.Context, cfg settings) error {
+				if evalArgs != nil {
+					cfg.Args = *evalArgs
+				}
+				return client(ctx, cfg, "eval")
+			},
 		},
 		{
 			cmds.NewCommandDescription("job", cmds.WithShort("Report a background job, with its result once finished, or stop it with --stop"), cmds.WithFlags(addr, session, jobID, stop)),
@@ -137,6 +142,13 @@ func root() (*cobra.Command, error) {
 	}
 	for _, def := range defs {
 		sub, err := cli.BuildCobraCommand(def)
+		if err == nil && def.Name == "eval" {
+			// Glazed string lists are pflag StringSlices, which split and unquote
+			// their values as CSV and so break JSON such as {"a": 1, "b": 2}.
+			// A StringArray keeps every --arg value exactly as given.
+			evalArgs = sub.Flags().StringArray("arg", nil, "NAME=JSON: one parameter, visible to the cell or job as args.NAME "+
+				"(a fresh object per cell); repeat for more, e.g. --arg rev='\"worktree\"' --arg arms='{\"base\": {}}'")
+		}
 		if err != nil {
 			return nil, err
 		}
