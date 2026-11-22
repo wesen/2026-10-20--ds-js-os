@@ -1,16 +1,18 @@
 // The most executed native instructions of the opening frame, disassembled, as one job.
 // Replaces the scratch hot.mjs and left.mjs.
-//   (echo 'globalThis.args = {options: {...}, fn: "typedRayLitRow", min: 20000};'; cat hot-code.js) |
-//       trace-repl eval --addr ... --session "$sid" --job --job-timeout 300
+//   trace-repl eval --addr ... --session "$sid" --arg options='{"policy":"kernel"}' --arg fn='"typedRayLitRow"' < hot-code.js
+// The frame runs on the native rv32 interpreter (PICOCALC-WORKBENCH-NATIVE), a fraction of a second;
+// args.interp = "reference" uses the JavaScript reference instead (a job, tens of seconds in goja).
 // Lines are "pc  count  function  instruction", in address order, for instructions executed at
 // least args.min times (default 20,000), optionally limited to function args.fn. Also returns the
 // checked accesses that still rebuild their address (bltu followed by slli), by count.
-// Parameters arrive in globalThis.args, which each invocation replaces whole: session globals
-// persist between cells, so a parameter left by an earlier script must not leak into this one.
+// Parameters arrive in args: a fresh object per cell from --arg (or, on older services,
+// globalThis.args assigned whole by the invocation).
 (() => {
   const c = compiler.at(args.rev ?? "worktree");
   const program = c.typedRv32.compile(c.ray, [], 65536, args.options ?? {});
-  const counts = c.rayBench.openingFrame(program).counts;
+  const bench = args.interp === "reference" ? c.rayBench : c.native.rayBench;
+  const counts = bench.openingFrame(program).counts;
   const v = new DataView(program.image.buffer, program.image.byteOffset, program.image.byteLength);
   const w = i => v.getUint32(4 * i, true);
   const R = ["zero","ra","sp","gp","tp","t0","t1","t2","s0","s1","a0","a1","a2","a3","a4","a5","a6","a7","s2","s3","s4","s5","s6","s7","s8","s9","s10","s11","t3","t4","t5","t6"];

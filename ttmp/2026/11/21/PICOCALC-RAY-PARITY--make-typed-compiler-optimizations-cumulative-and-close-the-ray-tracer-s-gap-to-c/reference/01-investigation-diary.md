@@ -1114,3 +1114,37 @@ C references in the same run: frame 7,737 µs, checked predicate 135.9 cycles. T
 ### What I learned
 
 - The remaining floor divisions need `y`, which is a parameter of `LitRow`, so the analysis would have to cross function boundaries. The sphere scale `62 + dot * 183 / bound` is non-negative only under the preceding `if (dot <= 0) return 62`. Both need more than a flow-insensitive analysis.
+
+## Step 16: Where a floor pixel still spends its instructions, and why the pixel store keeps its address arithmetic
+
+With the native interpreter in the workbench, the hot listing of `LitRow` under `kernel` is a 0.46 s cell (`scripts/workbench/hot-code.js`, now on `rv32` and `--arg`). A floor pixel costs about 100 instructions. Three groups stand out, and one experiment rules out the cheapest fix for the first.
+
+### What I did
+
+- Ported `hot-code.js` to `c.native.rayBench` and `--arg` (`args.interp = "reference"` keeps the old path).
+- Read the listing (19,477 floor pixels and 25,600 pixels per frame):
+  1. **Pixel store address.** `lw t0,16(sp); add t0,t0,a6; lw t6,0(sp); slli; add` rebuilds `pixels + 2·(row + x)` every pixel. Both `row` and `pixels` live in stack slots. That is 5 instructions × 25,600.
+  2. **Division magic.** Each of the three `/ 255` in `typedRayPack` reloads the magic number (`lui` + `addi`) and its multiplier constant (`addi t2,zero,105`). That is about 9 instructions × 19,477.
+  3. **Loop-invariant work.** The inlined `InShadow` reloads the light vector (`work[17..19]`, minus 32), the sphere count `work[16]` and the bounds `work[20]`, and spills them to the stack. Then the inner loop's version guard runs on the reloaded count: `bge`, `lui`, `blt`, `slli`, `addi`, `bge`, `mul`, `addi`, `bge`. That is about 20 instructions × 19,477, roughly 8% of the frame.
+- **Pointer home for the store.** The store's address is the pointer-home shape `r[L + M]` (`get 4; get 5; add; set 10; UNCHK 0 10 0`). Forwarding accepts it, and the group's modeled gain is about 5.5. I tested whether its score was the obstacle with scratch copies of the compiler:
+
+  | Change to the pointer-home score | Frame (steps) | Stack loads | Stack stores |
+  |---|---:|---:|---:|
+  | none | 4,532,990 | 105,834 | 81,979 |
+  | threshold 2 → 1 or 0.5 | 4,532,990 | 105,834 | 81,979 |
+  | score × 2 | 4,532,990 | 105,834 | 81,979 |
+  | score × 4 | 4,606,429 | 143,938 | 116,034 |
+
+### What didn't work
+
+- **Scoring the pointer home higher.** `LitRow` has 154 locals after inlining and splitting, and its callee-saved registers are all taken. A pointer home wins a register only by displacing a local whose loss costs more. The interval-sharing model (first to last occurrence, widened to whole loops) is coarse: values such as `row` and `pixels` are live across the whole loop and get no register.
+
+### What I learned
+
+- **Item 3 is the largest and needs loop-invariant code motion.** In the x loop's fast copy, the reads have the form `const c; set t; UNCHK 1 t 0; load16u` and are already proven in range. Moving them to the fast copy's guard block is sound only if no store in the loop can reach `work`. The loop stores to `pixels`, which may be the same buffer object, so the version guard needs a no-alias term (`pixels ≠ work`). It also calls function 3, so the transform has to establish that a call cannot write `work`.
+- **Item 1 needs fewer live values, not a better score.** Hoisting item 3 out of the loop would also free registers.
+
+### What should be done in the future
+
+- **Phase 4: invariant loads in versioned fast copies.** A no-alias guard term, hoisting pure unchecked loads of unwritten buffers into the guard block, and then the inner loop's guard once its count is invariant.
+- **Constant homes for division magic numbers.** The planner would see `divideByConstant`'s magic as a literal that needs a register.
