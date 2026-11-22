@@ -11,5 +11,7 @@
 - [ ] Phase G: one root Makefile with test, test-replays, firmware, playable and bench-board <!-- t:wd80 -->
 - [ ] Phase H: rewrite AGENTS.md as a layout and command reference; promote current guides to docs/ <!-- t:3fup -->
 - [ ] Phase I: ttmp hygiene (close finished tickets, ticket index); no renames <!-- t:1ank -->
-- [ ] Phase B2: promote the Candela generators (CPU-KERNEL, SECTIONS, GALLERY) to tools/gen/candela, regenerate third_party/candela from them, fold the gallery compositor patch into compositor.js <!-- t:4dwu -->
+- [x] Phase B2: promote the Candela generators (CPU-KERNEL, SECTIONS, GALLERY) to tools/gen/candela, regenerate third_party/candela from them, fold the gallery compositor patch into compositor.js <!-- t:4dwu -->
 - [ ] Before Phase C: make the trace REPL's compiler module table revision-aware (pkg/tracecompiler) so compiler.at works on both sides of each move <!-- t:v3ua -->
+- [ ] Phase B2 device gate: install the B2 playable image, check the gallery is in front and gallery digest agrees for the 18 scenes (not run in B2: device off limits) <!-- t:oemr -->
+- [ ] Promote upstream Candela vendoring (CANDELA-WORLD 01-vendor-candela.py, REPO-LAYOUT scripts/01) to tools/gen/candela for the next Candela bump; it must also re-derive translator/isa.js SECTION_API over all presets <!-- t:y737 -->

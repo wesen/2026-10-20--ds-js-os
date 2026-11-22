@@ -1,0 +1,5 @@
+{
+ "private": true,
+ "type": "module",
+ "description": "The Candela generators (regenerate.mjs); tells Node that translator/*.js are ES modules. The translator also runs in QuickJS."
+}

@@ -6,7 +6,7 @@
 // relative import resolves within its own namespace; every import of candela:kernel.js except the memo module's
 // own resolves to world:kernel-memo.js (the constant GGX table, see worlds/candela-world/kernel-memo.js).
 //
-// The bundle (tools/candela-bc.c "CQB1") is read once with port_read_file and kept for the life of the firmware;
+// The bundle (tools/gen/candela/candela-bc.c "CQB1") is read once with port_read_file and kept for the life of the firmware;
 // JS_ReadObject copies what it needs from it into the world's heap.
 #include <math.h>
 #include <stdio.h>

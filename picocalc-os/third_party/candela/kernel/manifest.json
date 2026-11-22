@@ -86,12 +86,12 @@
   {
    "fn": "hash3",
    "switch": "CDL_INT_HASH",
-   "how": "cpu/cdl_overrides.inc cdl_cpu_hash3"
+   "how": "cdl_overrides.inc cdl_cpu_hash3"
   },
   {
    "fn": "hash13",
    "switch": "CDL_INT_HASH",
-   "how": "cpu/cdl_overrides.inc cdl_cpu_hash13"
+   "how": "cdl_overrides.inc cdl_cpu_hash13"
   },
   {
    "fn": "voronoi3",
@@ -101,7 +101,7 @@
   {
    "fn": "skyL",
    "switch": "CDL_SKY_TABLE",
-   "how": "cpu/cdl_overrides.inc cdl_cpu_skyL"
+   "how": "cdl_overrides.inc cdl_cpu_skyL"
   }
  ],
  "post": {

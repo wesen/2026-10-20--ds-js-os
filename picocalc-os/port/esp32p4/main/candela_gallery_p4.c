@@ -4,8 +4,8 @@
 // build worker does), renders the gallery's scenes with nucleus/candela_gallery.c: CPU-KERNEL's kernel with every
 // CPU substitution, the scene's sections in SECTIONS' interpreter, progressive passes. After the first coarse
 // sub-pass, the half sub-pass, and passes (at most every 0.4 s, or every 1.5 s inside a long pass) it tone maps the
-// accumulation, upscales it to 320 x 320 and publishes the frame in a triple buffer. The compositor (patched at build
-// time, tools/candela-gallery-compositor.py) draws the gallery world's frames with fb.raytrace(skip, 0, 0, 0, 1000):
+// accumulation, upscales it to 320 x 320 and publishes the frame in a triple buffer. The compositor
+// (js/system/compositor.js drawGallery) draws the gallery world's frames with fb.raytrace(skip, 0, 0, 0, 1000):
 // nucleus/gfx.c takes the newest frame here (p4_gallery_take) on the kernel task and draws a caption over it.
 //
 // The worker renders only while the gallery is on screen (a paint in the last 2 s). A scene ends when it reaches
