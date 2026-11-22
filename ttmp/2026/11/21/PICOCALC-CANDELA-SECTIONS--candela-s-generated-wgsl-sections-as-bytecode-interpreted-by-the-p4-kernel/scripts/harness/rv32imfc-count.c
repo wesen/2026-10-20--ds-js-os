@@ -31,7 +31,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MEM (16u << 20)
+/* PICOCALC-CANDELA-SECTIONS: -DCOUNT_MEM_MB=64 for scenes whose packed buffers exceed 16 MB (the T3 mesh presets) */
+#ifndef COUNT_MEM_MB
+#define COUNT_MEM_MB 16
+#endif
+#define MEM ((uint32_t)COUNT_MEM_MB << 20)
 static uint8_t *mem;
 static uint32_t x[32], pc;
 static float f[32];

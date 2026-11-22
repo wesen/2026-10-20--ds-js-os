@@ -1,0 +1,280 @@
+{
+ "harness": [
+  {
+   "run": "first",
+   "preset": "B-01",
+   "frame": "64x64",
+   "compiled": 8193.4,
+   "vm": 8776.9,
+   "ratio": 1.071,
+   "interpreterPerSample": 278.1,
+   "evaluationsPerSample": 0.81,
+   "interpreterPerEvaluation": 343.5
+  },
+  {
+   "run": "first",
+   "preset": "R-01",
+   "frame": "160x160",
+   "compiled": 9531.5,
+   "vm": 10439.7,
+   "ratio": 1.095,
+   "interpreterPerSample": 444.0,
+   "evaluationsPerSample": 1.31,
+   "interpreterPerEvaluation": 339.6
+  },
+  {
+   "run": "first",
+   "preset": "F-01",
+   "frame": "64x64",
+   "compiled": 8992.9,
+   "vm": 9811.9,
+   "ratio": 1.091,
+   "interpreterPerSample": 472.0,
+   "evaluationsPerSample": 0.9,
+   "interpreterPerEvaluation": 525.9
+  },
+  {
+   "run": "first",
+   "preset": "W-02",
+   "frame": "64x64",
+   "compiled": 78585.2,
+   "vm": 79824.7,
+   "ratio": 1.016,
+   "interpreterPerSample": 698.3,
+   "evaluationsPerSample": 1.7,
+   "interpreterPerEvaluation": 411.8
+  },
+  {
+   "run": "first",
+   "preset": "E-02",
+   "frame": "64x64",
+   "compiled": 3634.2,
+   "vm": 5284.9,
+   "ratio": 1.454,
+   "interpreterPerSample": 1350.9,
+   "evaluationsPerSample": 3.0,
+   "interpreterPerEvaluation": 450.3
+  },
+  {
+   "run": "first",
+   "preset": "G-02",
+   "frame": "64x64",
+   "compiled": 13156.8,
+   "vm": 23329.6,
+   "ratio": 1.773,
+   "interpreterPerSample": 10504.8,
+   "evaluationsPerSample": 15.46,
+   "interpreterPerEvaluation": 679.6
+  },
+  {
+   "run": "first",
+   "preset": "R-05",
+   "frame": "64x64",
+   "compiled": 13560.5,
+   "vm": 16683.4,
+   "ratio": 1.23,
+   "interpreterPerSample": 2702.5,
+   "evaluationsPerSample": 8.79,
+   "interpreterPerEvaluation": 307.6
+  },
+  {
+   "run": "first",
+   "preset": "R-08",
+   "frame": "64x64",
+   "compiled": 617388.4,
+   "vm": 713444.0,
+   "ratio": 1.156,
+   "interpreterPerSample": 86992.3,
+   "evaluationsPerSample": 107.54,
+   "interpreterPerEvaluation": 808.9
+  },
+  {
+   "run": "first",
+   "preset": "S-02",
+   "frame": "64x64",
+   "compiled": 15279.5,
+   "vm": 26739.4,
+   "ratio": 1.75,
+   "interpreterPerSample": 10832.6,
+   "evaluationsPerSample": 34.44,
+   "interpreterPerEvaluation": 314.6
+  },
+  {
+   "run": "first",
+   "preset": "X-03",
+   "frame": "64x64",
+   "compiled": 4975380.3,
+   "vm": 5098547.4,
+   "ratio": 1.025,
+   "interpreterPerSample": 129876.2,
+   "evaluationsPerSample": 391.22,
+   "interpreterPerEvaluation": 332.0
+  },
+  {
+   "run": "first",
+   "preset": "X-04",
+   "frame": "64x64",
+   "compiled": 17334.5,
+   "vm": 55264.4,
+   "ratio": 3.188,
+   "interpreterPerSample": 40940.0,
+   "evaluationsPerSample": 20.74,
+   "interpreterPerEvaluation": 1973.8
+  },
+  {
+   "run": "final",
+   "preset": "B-01",
+   "frame": "64x64",
+   "compiled": 8193.4,
+   "vm": 8549.5,
+   "ratio": 1.043,
+   "interpreterPerSample": 352.9,
+   "evaluationsPerSample": 0.81,
+   "interpreterPerEvaluation": 435.9
+  },
+  {
+   "run": "final",
+   "preset": "R-01",
+   "frame": "160x160",
+   "compiled": 9531.5,
+   "vm": 10077.4,
+   "ratio": 1.057,
+   "interpreterPerSample": 568.1,
+   "evaluationsPerSample": 1.31,
+   "interpreterPerEvaluation": 434.5
+  },
+  {
+   "run": "final",
+   "preset": "F-01",
+   "frame": "64x64",
+   "compiled": 8992.9,
+   "vm": 9469.6,
+   "ratio": 1.053,
+   "interpreterPerSample": 523.3,
+   "evaluationsPerSample": 0.9,
+   "interpreterPerEvaluation": 583.1
+  },
+  {
+   "run": "final",
+   "preset": "W-02",
+   "frame": "64x64",
+   "compiled": 78585.2,
+   "vm": 79320.7,
+   "ratio": 1.009,
+   "interpreterPerSample": 836.7,
+   "evaluationsPerSample": 1.7,
+   "interpreterPerEvaluation": 493.4
+  },
+  {
+   "run": "final",
+   "preset": "E-02",
+   "frame": "64x64",
+   "compiled": 3634.2,
+   "vm": 4712.8,
+   "ratio": 1.297,
+   "interpreterPerSample": 1247.8,
+   "evaluationsPerSample": 3.0,
+   "interpreterPerEvaluation": 415.9
+  },
+  {
+   "run": "final",
+   "preset": "G-02",
+   "frame": "64x64",
+   "compiled": 13156.8,
+   "vm": 20645.6,
+   "ratio": 1.569,
+   "interpreterPerSample": 8160.1,
+   "evaluationsPerSample": 15.46,
+   "interpreterPerEvaluation": 527.9
+  },
+  {
+   "run": "final",
+   "preset": "R-05",
+   "frame": "64x64",
+   "compiled": 13560.5,
+   "vm": 15863.5,
+   "ratio": 1.17,
+   "interpreterPerSample": 2436.7,
+   "evaluationsPerSample": 8.79,
+   "interpreterPerEvaluation": 277.4
+  },
+  {
+   "run": "final",
+   "preset": "R-08",
+   "frame": "64x64",
+   "compiled": 617388.4,
+   "vm": 687564.0,
+   "ratio": 1.114,
+   "interpreterPerSample": 77037.9,
+   "evaluationsPerSample": 107.54,
+   "interpreterPerEvaluation": 716.4
+  },
+  {
+   "run": "final",
+   "preset": "S-02",
+   "frame": "64x64",
+   "compiled": 15279.5,
+   "vm": 24234.5,
+   "ratio": 1.586,
+   "interpreterPerSample": 9256.7,
+   "evaluationsPerSample": 34.44,
+   "interpreterPerEvaluation": 268.8
+  },
+  {
+   "run": "final",
+   "preset": "X-04",
+   "frame": "64x64",
+   "compiled": 17334.5,
+   "vm": 39905.4,
+   "ratio": 2.302,
+   "interpreterPerSample": 28504.5,
+   "evaluationsPerSample": 20.74,
+   "interpreterPerEvaluation": 1374.3
+  },
+  {
+   "run": "final",
+   "preset": "V-02",
+   "frame": "24x24",
+   "compiled": 12026.3,
+   "vm": 12933.1,
+   "ratio": 1.075,
+   "interpreterPerSample": 798.4,
+   "evaluationsPerSample": 3.82,
+   "interpreterPerEvaluation": 209.2
+  },
+  {
+   "run": "final",
+   "preset": "V-03",
+   "frame": "24x24",
+   "compiled": 1820976.7,
+   "vm": 1825836.0,
+   "ratio": 1.003,
+   "interpreterPerSample": 6367.1,
+   "evaluationsPerSample": 9.65,
+   "interpreterPerEvaluation": 659.5
+  },
+  {
+   "run": "final",
+   "preset": "V-04",
+   "frame": "24x24",
+   "compiled": 4689590.3,
+   "vm": 4702452.4,
+   "ratio": 1.003,
+   "interpreterPerSample": 17132.2,
+   "evaluationsPerSample": 18.05,
+   "interpreterPerEvaluation": 949.1
+  },
+  {
+   "run": "final",
+   "preset": "X-03",
+   "frame": "24x24",
+   "compiled": 4778347.1,
+   "vm": 4882738.1,
+   "ratio": 1.022,
+   "interpreterPerSample": 111912.1,
+   "evaluationsPerSample": 391.22,
+   "interpreterPerEvaluation": 286.1
+  }
+ ],
+ "kernel": []
+}

@@ -10,12 +10,20 @@ Topics:
 DocType: reference
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/scripts/04-qjs-translate.mjs
+      Note: Translator under QuickJS and Node (Step 7)
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/scripts/07-rv32-count.py
+      Note: RV32 counts in the prototype harness (Steps 7, 10)
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/scripts/ck/driver.c
+      Note: Kernel driver with per-pixel digests (Step 9)
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/scripts/vm/test-verify.c
+      Note: Verifier rejection and mutation test (Step 6)
 ExternalSources: []
-Summary: "Chronological record of building the section translator, bytecode v1, the C verifier and interpreter, and the host agreement and cost measurements"
-LastUpdated: 2026-11-22T01:10:00-05:00
-WhatFor: "Resume or review PICOCALC-CANDELA-SECTIONS; each step records commands, evidence, failures and decisions"
-WhenToUse: "Read the latest step before continuing; earlier steps hold the evidence behind the format and the measurements"
+Summary: Chronological record of building the section translator, bytecode v1, the C verifier and interpreter, and the host agreement and cost measurements
+LastUpdated: 2026-11-22T02:30:00-05:00
+WhatFor: Resume or review PICOCALC-CANDELA-SECTIONS; each step records commands, evidence, failures and decisions
+WhenToUse: Read the latest step before continuing; earlier steps hold the evidence behind the format and the measurements
 ---
 
 # Investigation diary
@@ -317,3 +325,343 @@ The interpreter (`vm/cdl_vm.c`) and its interface (`vm/cdl_vm.h`) followed the d
 ### Technical details
 
 - Build: `g++ -std=c++17 -O2 -fno-math-errno -DMODE=2 -DSPP=1 -DKERNEL=... -I vm harness.cpp cdl_vm.o`.
+
+## Step 6: Every preset, and the one bug the K presets found
+
+The first run over all 105 presets at 1 spp agreed bit for bit in every entry except `evalMaterial` of the eight T3 mesh presets K-01 and K-03 to K-09: 2,753 of 504,351 material evaluations differed beyond 1e-5, all in conductor lobes with tangents. The field was `T`, the result of `tangentWorld`, and in K-04 it pointed in a different direction altogether. The cause was a translator bug, not arithmetic. After the fix, a 4 spp run over all presets agreed everywhere, and the verifier passed its rejection and mutation tests.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** deliverable 4 (per-evaluation agreement over all presets) and deliverable 2's guarantee (malformed programs rejected).
+**Inferred user intent:** evidence that holds for every preset, not one.
+
+### What I did
+
+- `harness.cpp` compare mode now prints the worst field's name and both values. `python3 -I 03-agree.py $S/export $S/agree $S/agree-k.jsonl K-04 K-08` printed `mat 6 ... rel 0.882 in T: (0.578303635 0.803594947 0.140713051) / (-4.06378022e-05 -0.0757327601 0.997128189)`.
+- K-04's listing showed the cause: `CALL tangentWorld r80:3, h, r83:3, r0, r86:3`, whose last operand (`N`, from `h.N`) was `r86`, the register of `m8 = h.lp - vec3f(0.01175, 0, 0)`. The `HLD` of `h.N` had been cached in the scope's load cache, then **retargeted** into a `Lobe` field register by a later `L.N = h.N`. The load cache still named the original virtual register, which no instruction wrote any more, so the allocator gave its slot to another value.
+- Fix in `lower.js`: a value bound to a name (`let`) or held in the load cache is marked `shared`, and `retarget` refuses shared values.
+- Full run at 4 spp: `python3 -I 03-agree.py $S/export $S/agree $S/agree-s4.jsonl --spp 4 --jobs 5` (kept as `various/03-agreement-s4.jsonl`).
+- `vm/test-verify.c`, built with `-fsanitize=address,undefined -DCDL_VM_COUNT`: 17 targeted malformations of B-01's blob, then 2,000 random mutants of each of the 105 blobs (1 to 4 halfwords of header, descriptors or code); an accepted mutant is bound and all five entries run on six inputs, and the step counter must stay within the entry's length.
+- The lexer now walks character codes instead of slicing and matching a regular expression per token. DCE became one backward pass, and the fusion pass no longer restarts after each fusion. Output is byte-identical; QuickJS time for B-01 fell from 16.5 ms to 6.3 ms and for K-03 to 77 ms (32-bit host build).
+- Commit `1e1d89f`.
+
+### Why
+
+- A field-level report with both values made the bug visible as a wrong direction, not a rounding problem.
+
+### What worked
+
+- 4 spp, all 105 presets: `evalMaterial` 2,016,847 evaluations, 2,016,845 bit-identical, 0 over 1e-5, maximum relative difference 2.49e-7, no integer-field or random-stream mismatch. `sdUser` 1,541,521 (6 presets), `heightAt` 6,851,269 (3), `densityOf` 6,547,730 (4) and `customKernel` 16,384 (1) evaluations, all bit-identical.
+- Verifier: 17 of 17 targeted malformations rejected, each with its own message; 184,981 of 210,000 mutants rejected; the 25,019 accepted ones ran 753,720 evaluations with no sanitizer report and no step-bound violation.
+
+### What didn't work
+
+- The first full run reported `rel 0.000388 in T` for K-08 and `rel 0.882 in T` for K-04, as above.
+- `test-verify` first ended in a LeakSanitizer report for its own two buffers (`main` and `slurp`), fixed by freeing them.
+
+### What I learned
+
+- Retargeting (computing a value directly into its final register) is only safe for a value nothing will read again under its old name. In straight-line code that is easy to forget, because the uses that break are reads through a cache.
+
+### What was tricky to build
+
+- The targeted malformations need the exact offset of each field. `test-verify.c` computes the code start from the header (`20 + 12 x 5 + 4 nconst + 4 nimport`) and finds the material `SWITCH` by scanning for opcode 7.
+
+### What warrants a second pair of eyes
+
+- The two `evalMaterial` evaluations that differ in the last bit (relative 2.5e-7): neither the integer fields nor the random stream differ, and no frame changes (Steps 7 and 9).
+
+### What should be done in the future
+
+- Nothing for agreement; QuickJS and the frame check follow.
+
+### Code review instructions
+
+- `scripts/translator/lower.js`: `retarget`, `bind`, `hitField` (`shared`).
+- `scripts/vm/test-verify.c`; `various/05-verifier-test.txt`.
+
+### Technical details
+
+- Per-evaluation metric: integer fields equal; each float field `max_i |a_i - b_i| <= 1e-5 * max(max_i |a_i|, max_i |b_i|)` with a floor of 1e-30.
+
+## Step 7: QuickJS, the frames, and the first RV32 counts
+
+The translator gives the same bytes in Node and in the firmware's QuickJS build. At 64 spp the interpreted frames of B-01, R-01, F-01 and W-02 are identical to the compiled ones pixel for pixel. The first RV32 counts put the interpreter's cost at 2-10% per sample for path-traced presets and up to 3.2 times the compiled cost for the Menger-sponge SDF.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** deliverables 1 (QuickJS), 4 (luminance) and 5 (instruction counts).
+**Inferred user intent:** the cost of running sections in bytecode, and confidence that the device's JavaScript produces the same program.
+
+### What I did
+
+- `04-qjs-translate.mjs`: one driver that runs under `candela-qjs` (P4's `quickjs/build.sh`, 32- and 64-bit host builds) or Node, and writes each blob as hex plus CPU time and QuickJS steps. All 105 blobs are identical across Node, 64-bit and 32-bit QuickJS, and equal to `02-translate-all.mjs`'s files.
+- `06-luminance.py $S/run $S/lum $S/lum.jsonl --size 160 --spp 64 B-01 R-01 F-01 W-02`.
+- `07-rv32-count.py`: ESP-IDF GCC 14.2 (`esp-14.2.0_20260121`), `-march=rv32imafc_zicsr_zifencei -mabi=ilp32f -O2 -fno-math-errno`, scene and bytecode linked with `.incbin`, counted between per-row region marks by `harness/rv32imfc-count.c`, with a per-function profile.
+
+### Why
+
+- Equal bytes across engines means the device's translation needs no device-side check beyond the verifier.
+
+### What worked
+
+- Luminance at 64 spp, 160 x 160: all four presets have 25,600 / 25,600 pixels bit-identical, so the mean-luminance ratio is exactly 1 (B-01 8461.34, R-01 62.1498, F-01 8176.34, W-02 15.3828).
+- Baseline interpreter, instructions per sample (compiled to interpreted): B-01 8,164 to 8,743 at 160 x 160 (1.071), R-01 9,532 to 10,440 (1.095), F-01 8,929 to 9,739 (1.091), W-02 78,550 to 79,781 (1.016), E-02 3,634 to 5,285 at 64 x 64 (1.454), and for the user-SDF presets G-02 13,157 to 23,330 (1.773), S-02 15,280 to 26,739 (1.750), X-04 17,335 to 55,264 (3.188), R-05 13,561 to 16,683 (1.230), R-08 617,388 to 713,444 (1.156).
+
+### What didn't work
+
+- `RuntimeError: R-05 mode 0: counter exit 70: rv32imfc-count: bad access 0 at pc 0x2079e after 36866`. The compiled build failed too. `addr2line` put the fault in newlib's `with_errnof` (`math_errf.c:39`), which stores `errno` through a reentrancy pointer that nothing initialises on the bare machine. `harness.cpp` now defines `__errno()` for RV32.
+- The first parallel count failed with `FileNotFoundError ... kernel-rw.cpp.tmp`: both modes of one preset raced to create the rewritten kernel. Kernels are now prepared sequentially before the parallel builds.
+
+### What I learned
+
+- B-01's profile: `memcpy` costs 256 instructions per sample in the interpreted build and nothing in the compiled one. GCC turned the 104-byte `lobeNone()` template copy, the result copy and the generic vector result loops into library calls. RV32IMAFC also has no count-trailing-zeros instruction, so `__builtin_ctz` in `LOBE` was a call to `__ctzsi2`.
+
+### What was tricky to build
+
+- One driver for two engines: QuickJS's `host` object provides `readFile`, `listDir`, `cpu` and `steps`; under Node the script builds the same object from `node:fs` with a dynamic import, so the translator modules are imported identically.
+
+### What warrants a second pair of eyes
+
+- Host timings in this step were measured while other workloads shared the machine; QuickJS steps are the load-independent figure.
+
+### What should be done in the future
+
+- Remove the library calls from the interpreter loop (Step 10).
+
+### Code review instructions
+
+- `scripts/04-qjs-translate.mjs`, `scripts/06-luminance.py`, `scripts/07-rv32-count.py`; `harness.cpp` `__errno`.
+
+### Technical details
+
+- Luminance: `0.2126 R + 0.7152 G + 0.0722 B` over the mean RGB of frames 0..63.
+
+## Step 8: CPU-KERNEL's two constraints: the section API and argument order
+
+The coordinator relayed two results from the finished CPU-KERNEL ticket (now on `main`, `817e6b4..719a493`). Section code calls the 15 functions of `scripts/generated/manifest.json`'s `sectionAPI`, and 13 kernel functions change module state (`kernel.sideEffects`). C++ leaves argument order unspecified, which made `sampleLobe(L, woL, rnd2(), rnd())` differ between x86-64 and RV32. The coordinator asked that the VM and translator evaluate arguments left to right, respect `sideEffects`, and be checked against the kernel's host build per pixel.
+
+### Prompt Context
+
+**User prompt (verbatim, the coordinator's message):** "The CPU-KERNEL ticket finished, and two of its results constrain your section bytecode. [...] 1. Call targets: section code calls the 15 API functions listed in scripts/generated/manifest.json. The same manifest's `sideEffects` list names the 13 functions that change module state. 2. Argument order: WGSL evaluates call arguments left to right, but C++ leaves the order unspecified. `sampleLobe(L, woL, rnd2(), rnd())` came out different on x86-64 and RV32; means agreed while only 42–59% of pixels did. The fix is translation rule 5 in lib/wgsl2c.mjs: side-effecting calls are hoisted and called in WGSL order, and statement shapes it can't handle fail the build. Your VM and compiler must also evaluate arguments left to right and respect `sideEffects`. Please add a per-pixel digest comparison against the kernel's host build, not only mean luminance. [...]"
+**Assistant interpretation:** make the ordering and side-effect guarantees explicit and tested in the translator, restrict kernel calls to the manifest's API, and test the interpreter inside the real kernel.
+**Inferred user intent:** no silent image divergence from evaluation order once bytecode and the C kernel meet on the device.
+
+### What I did
+
+- Read CPU-KERNEL from `main` as a read-only archive extracted to `$S/ck`: `manifest.json`, `cdl_api.h`, `cdl_kernel.h` (`struct Sections`, `namespace api`), `cdl_math.h`, `cdl_switches.h`, `04-build.py`, `06-driver.c`, `09-host-tests.py`, `03-gen-scene.mjs`, rule 5 (`sequence()`) in `lib/wgsl2c.mjs`.
+- `isa.js`: `SECTION_API` and `KERNEL_SIDE_EFFECTS` copied from the manifest, with an `api` and an `effects` flag per kernel function, and a load-time check that the flags agree with the lists. `traceScene`, `occluded`, `rnd`, `rnd2` and `cosHemiN` (which draws `rnd2`) have effects.
+- `emit.js`: dead-code removal keeps every call with effects (before, an unused `traceScene` or `occluded` would have been removed). `lower.js`: such calls are never merged by CSE (asserted at load). `&&`/`||` with a side effect in the right operand is refused (`E-SECT-UNSUPPORTED short-circuit:side-effect`), because WGSL short-circuits and the bytecode evaluates both operands. `Program.hasEffects` follows generated functions transitively.
+- `opts.kernelApi` (default: the manifest's 15): a call to a kernel function outside it is `E-SECT-CALL call:<name>-not-in-kernel-api`. The 105 presets call only nine kernel functions (`fresnelDielectric`, `fbm3`, `tangentWorld`, `noise3`, `voronoi3`, `sellmeier`, `traceScene`, `occluded`, `hitAlbedo`); the other six API functions are translated into bytecode. The seven custom-integrator helpers beyond the API (`hitEmission`, `hash13`, `voronoiVec3`, `envSun`, `rnd`, `rnd2`, `cosHemiN`) keep their opcode numbers but are refused unless a kernel exports them.
+- `09-order-test.mjs` with `vm/test-order.c`: a stub kernel in which every side effect changes one counter (`rnd` adds 1 and returns it, `rnd2` adds 1, `occluded` 10, `traceScene` 100). Twelve customKernel bodies run with hand-derived expected results: constructor arguments, binary operands, built-in arguments and `select`, `rnd2` then `rnd`, an unused `occluded` and an unused `traceScene`, two equal traces not merged, `occluded` between equal traces, nested calls, an untaken branch, a generated function with effects called twice, and `&&` with the effect on the left. Three more bodies must fail with a named construct.
+- `10-effects-census.mjs` over the 105 exports.
+
+### Why
+
+- Ordering by construction is only a claim until a test with observable side effects checks it. The counter makes every reordering, merge or removal visible in the result.
+
+### What worked
+
+- `all 15 cases pass` (`various/09-order-test.txt`).
+- Census (`various/10-effects-census.json`): 13,205 section statements; 2 contain a call with side effects (E-02's `traceScene` and `occluded`), none contains two, and no `&&`/`||` has one on its right. Evaluation order cannot change any current preset's image; the rules protect the next generator version.
+- All 105 presets still translate, to identical bytes.
+
+### What didn't work
+
+- The first order-test run failed 7 of 12 cases with `'let a' without a type is not in the section subset (Candela always writes the type)`. The cases were mine; they now declare types as Candela does.
+
+### What I learned
+
+- Their rule 5 and the translator reach the same order by different means: C++ needs explicit temporaries, and the bytecode gets the order from lowering arguments in source order into separate instructions.
+
+### What was tricky to build
+
+- The test's expected values need WGSL's semantics worked out by hand. Example: `select(rnd(), rnd(), true)` evaluates both arguments, so it consumes two draws and returns the second.
+
+### What warrants a second pair of eyes
+
+- `hasEffects` treats any call of a name in `KERNEL_SIDE_EFFECTS` as an effect, even one sections cannot reach (`traceAll`); this is conservative.
+
+### What should be done in the future
+
+- If a generator version emits `a && f()` with an effect in `f`, lower it as a branch instead of refusing it.
+
+### Code review instructions
+
+- `scripts/translator/isa.js` (`KFUNCS`, `SECTION_API`, `KERNEL_SIDE_EFFECTS`), `emit.js` `IMPURE_K`, `lower.js` `binary` and `kcall`, `index.js` `hasEffects`; `scripts/09-order-test.mjs`.
+
+### Technical details
+
+- `node scripts/09-order-test.mjs $S/order`; `node scripts/10-effects-census.mjs $S/export various/10-effects-census.json`.
+
+## Step 9: Inside CPU-KERNEL's kernel, per pixel
+
+The bytecode now runs as a CPU-KERNEL `Sections` table. On the host, the kernel's own compiled sections and the interpreted bytecode render the same pixels: 20 presets, two arms, four frames each, every pixel's 48-byte output equal. The six cpu-arm frame digests are the ones the kernel ticket published.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 8 ("Please add a per-pixel digest comparison against the kernel's host build").
+**Assistant interpretation:** build the kernel instance with both section tables and compare complete per-pixel outputs. Cover the kernel ticket's scenes and presets it did not generate (SDF, heightfield, volume, mesh tangents, spectral).
+**Inferred user intent:** the FIRST-LIGHT integration, tested on the host before it reaches the device.
+
+### What I did
+
+- `ck/cdl_vm_sections.cpp`: compiled inside the instance's namespace. It checks `Hit`/`cdl_hit` and `Lobe`/`cdl_lobe` with `static_assert` on size and every field's offset, fills `cdl_vm_kernel` from the nine `api::` functions (the rest `NULL`, with `gTime` and `gLam`), and exports `<ns>_sections_vm`, `<ns>_vm_load` (verify, check RGB/spectral against `CDL_SPECTRAL`, bind to the instance's uniform rows) and `<ns>_vm_rebind_uniforms`. It also exports `cdl_vm_k_floorf/sinf/cosf/expf`, the instance's own `floor`, `sin`, `cos` and `exp`.
+- `ck/cdl_vm_ck_math.h`: `cdl_vm.c` compiled with `-include` points `CDL_VM_FLOORF`, `CDL_VM_SINF`, `CDL_VM_COSF` and `CDL_VM_EXPF` at those functions. The cpu arm's `CDL_FAST_FLOOR`, `CDL_FAST_TRIG` and `CDL_FAST_EXP` therefore apply to interpreted sections exactly as to compiled ones.
+- `ck/driver.c` (from `06-driver.c`): both tables linked; with a bytecode argument it binds `<ns>_sections_vm`. It writes the same frame-0 digest and, per pixel, an FNV-1a digest of that pixel's `cdl_pixout` over all frames.
+- `08-kernel-digest.py --ck <CPU-KERNEL scripts>`: presets the kernel ticket did not generate go through its own `03-gen-scene.mjs` into `WORK/gen` (80 x 80). Each instance uses that ticket's flags; spectral scenes get a `CDL_SPECTRAL=1` instance.
+
+### Why
+
+- The kernel's compiled sections are the reference FIRST-LIGHT will replace. Comparing complete pixel records tests the kernel functions, the layouts, the math hooks and the uniform binding together.
+
+### What worked
+
+- 40 of 40 comparisons pixel-identical over 4 frames: arms `lazy` and `cpu`, presets B-01, R-01, L-03, G-01, E-02 (160 x 160) and W-02, F-01, K-04, K-08, G-02, X-04, S-02 (spectral), X-03, R-04, R-05 (spectral), R-08, G-03, V-02, V-03, V-04 (80 x 80).
+- Frame-0 digests in the cpu arm with bytecode: B-01 `df6d3f85`, R-01 `e8421c97`, L-03 `585a3f2f`, G-01 `211878db`, E-02 `de9e22b5`, W-02 `794c1a46`. These are the six in CPU-KERNEL's `various/05-host-frames-64spp.jsonl`.
+
+### What didn't work
+
+- The eager `wgsl` arm crashed both builds with SIGFPE in `cdl_wgsl::hdriTexel` (`gdb`: `#0 cdl_wgsl::hdriTexel(int, int)`). The kernel ticket's own `06-driver.c` crashed the same way. Evaluating `select` eagerly calls `hdriL` in a scene without an HDRI, and `x0 % W` with `W = 0` traps on x86-64. The kernel ticket's host frames use the `lazy`, `hash` and `cpu` arms. The test uses `lazy` (only `CDL_LAZY_SELECT`) for Candela's arithmetic.
+- `static assertion failed: preset S-02 needs a kernel instance with CDL_SPECTRAL=1`: fixed by building a spectral instance per arm when a preset needs one.
+
+### What I learned
+
+- The kernel ticket's API wrappers (`api::fresnelDielectric` and so on) are plain functions, so the adapter needs no access to the kernel's internals.
+
+### What was tricky to build
+
+- The math hooks: four C functions with fixed names, defined once per binary. A firmware image with an RGB and a spectral instance under the same switches defines them in one instance and sets `CDL_VM_NO_MATH_EXPORTS` in the other.
+
+### What warrants a second pair of eyes
+
+- The adapter casts `const Hit &` to `const cdl_hit *`. The layouts are asserted equal, and the two are compiled in separate translation units, so no optimiser sees both types at once.
+
+### What should be done in the future
+
+- The RV32 counts inside this kernel (Step 10) and a board run for FIRST-LIGHT.
+
+### Code review instructions
+
+- `scripts/ck/cdl_vm_sections.cpp`, `scripts/ck/cdl_vm_ck_math.h`, `scripts/ck/driver.c`, `scripts/08-kernel-digest.py`.
+
+### Technical details
+
+- `python3 -I scripts/08-kernel-digest.py --ck $S/ck/.../scripts --spp 4 --jobs 6 $S/run $S/export $S/kd $S/kd-host.jsonl B-01 R-01 L-03 G-01 E-02 W-02 F-01 K-04 K-08 G-02 X-04 S-02 X-03 R-04 R-05 R-08 G-03 V-02 V-03 V-04`.
+- Commit `b6d771a` (Steps 8 and 9 and the dispatch work of Step 10).
+
+## Step 10: A faster dispatch loop, and the cost inside the firmware kernel
+
+The interpreter now dispatches through a table of label addresses, and its dispatch loop contains no library call. The final counts cover two settings. In the prototype harness, interpretation adds 0.9-5.7% to path-traced presets and 17-130% to SDF presets. In CPU-KERNEL's kernel with its RV32 flags, the interpreter is 4.3-10.8 times slower than compiled code on section code alone. There, path-traced presets need 2.9-7.8% more instructions per sample and SDF presets 1.55-2.81 times as many. With contraction off, every RV32 frame digest of compiled and interpreted sections is equal.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1 (deliverable 5) and Step 8 (the coordinator's budget figures: "section code is 0.8–1.2% of instructions in B-01, R-01 and G-01. At a 7–20× interpreter slowdown that makes those scenes about 5–23% slower; SDF scenes are unmeasured").
+**Assistant interpretation:** remove the interpreter's avoidable costs, then measure in the kernel FIRST-LIGHT will use, with SDF presets separately.
+**Inferred user intent:** a cost FIRST-LIGHT can plan with, including the scenes where interpretation may not be acceptable.
+
+### What I did
+
+- `cdl_vm.c`:
+  - Under GCC and Clang, handlers are labels (`OPC(name)`), each ending in its own `goto *dispatch_table[ip[0] & 255]`, with no bounds check. `-DCDL_VM_SWITCH` keeps the `switch`. `gen-isa.mjs` emits `CDL_VM_OPLIST(X)` for the table.
+  - `H` is a macro that decodes the high byte only where a handler uses it.
+  - `copy2/3/4`, `copy_lobe` (26 words) and `copy_hit` (23 words) are written out. `move_words` copies in the direction that keeps `memmove`'s meaning. `STOREF`/`STOREW` store 1-4 words without a loop. `LOBE` walks its mask with a shift loop instead of `__builtin_ctz`.
+  - The vec3 macros are written per component; every source word is read before the first store.
+- `lower.js`: the identity `x - (+0) = x`. 21 presets' blobs became 8-172 bytes smaller. Re-run agreement on those 21 presets at 1 spp: all bit-exact.
+- `07-rv32-count.py --vm DIR` counts an earlier interpreter (a copy of the first version kept outside the repository) for the before-and-after comparison. `harness/rv32imfc-count.c` takes `-DCOUNT_MEM_MB`, and `08-kernel-digest.py --rv32 --rv32-nofma` builds the counter with 64 MB, because K-04's packed buffers are 18 MB.
+- `11-cost-table.py` and `12-cost-figure.py` produce `various/11-cost-*.json/.txt` and `various/12-*.png`.
+- Commands: `python3 -I scripts/07-rv32-count.py $S/lum/export160 $S/rv32-160-v1 ... B-01 R-01 F-01 W-02`; the same at 64 x 64 for B-01 F-01 W-02 E-02 G-02 R-05 R-08 S-02 X-04 and at 24 x 24 for V-02 V-03 V-04 X-03; `python3 -I scripts/08-kernel-digest.py --ck ... --arms cpu --spp 1 --jobs 3 --rv32 --rv32-nofma $S/run $S/export $S/kd2 $S/kd-rv32.jsonl B-01 R-01 L-03 G-01 E-02 W-02 F-01 K-04 G-02 X-04 S-02 R-04 V-04`; the host digest test again with the final code (`various/08-kernel-digests-host.jsonl`: 40 of 40 identical).
+
+### Why
+
+- B-01's first profile showed `memcpy` at 256 instructions per sample and `__ctzsi2` in the interpreted build only; the dispatch itself was 9 instructions plus the jump back.
+- The prototype harness inlines compiled sections where GCC chooses, while the firmware kernel calls them through its table. Only the firmware kernel separates section cost from kernel cost cleanly, and only it is what FIRST-LIGHT will run.
+
+### What worked
+
+- Prototype harness, first to final interpreter (extra instructions per sample): B-01 7.1% to 4.3%, R-01 9.5% to 5.7%, F-01 9.1% to 5.3%, W-02 1.6% to 0.9%, E-02 45.4% to 29.7%, R-05 23.0% to 17.0%, R-08 15.6% to 11.4%, S-02 75.0% to 58.6%, G-02 77.3% to 56.9%, X-04 218.8% to 130.2%.
+- Firmware kernel, cpu arm, default flags, compiled to interpreted (ratio; sections compiled to interpreted per sample): B-01 4,419.5 to 4,696.8 (1.063; 54.9 to 359.7), R-01 1.047, L-03 1.057, G-01 1.038, F-01 1.078, W-02 1.043, K-04 1.029, E-02 1.296, R-04 1.113, V-04 1.133, S-02 1.554, G-02 1.807, X-04 2.809 (3,938.3 to 32,042.3). Slowdown on section code 4.3 (G-02) to 10.8 (S-02). Section share of the compiled work: 0.57-1.97% for path-traced presets, 7.68% for E-02, 24.55% and 28.77% for G-02 and X-04.
+- RV32 digests: equal for B-01, R-01, L-03, G-01, K-04 with the default flags; with `-ffp-contract=off`, equal for all 13 presets.
+- A scalar `SUB` handler is 19 RV32 instructions (from the disassembly, through the dispatch table).
+
+### What didn't work
+
+- The first copy rewrite used `__attribute__((optimize("no-tree-loop-distribute-patterns")))` on a copy loop. GCC then refused to inline the function (12 calls to `copy_words` in `run`), because functions with different optimisation attributes are not inlined into each other. The copies are now written out.
+- The generic vector result loops still became `memcpy` (34 call sites in `run`) until `STOREF`/`STOREW` replaced them.
+- `copy_words` from the first rewrite was also too narrow for `HLD`, whose width the verifier allows up to 23; `HLD` keeps a general path for widths above 3.
+- `cpu K-04 compiled: counter exit 2: segment outside memory`: the counter has 16 MB of guest memory and K-04's scene is 18,171,320 bytes.
+- Counting the heightfield and volume presets in the prototype harness at 64 x 64 took over 30 minutes per run on a machine shared with other work (load average up to 48). I stopped those runs with a checked script (`stop_counts.py` in the scratch directory, which matches drivers and counters by command line). The volume presets were counted at 24 x 24; the heightfield presets have their numbers from the firmware kernel (R-04) and R-08.
+
+### What I learned
+
+- GCC's loop-distribution pass turns any copy loop into `memcpy`, and newlib's `memcpy` on this target costs more than the copies it replaces. Straight-line stores are the reliable form.
+- The prototype kernel's volume presets cost 4.7 million instructions per sample (V-04) against 83,170 in the firmware kernel. Ratios measured in the prototype understate the interpreter's share there.
+
+### What was tricky to build
+
+- `goto *` with a table built from `CDL_VM_OPLIST` through designated initialisers, so the table is indexed by opcode number whatever the list order.
+
+### What warrants a second pair of eyes
+
+- `move_words` is still a loop and becomes one `memcpy` call in `run`; it serves only `MOVN` and wide `HLD`, which no hot path uses.
+
+### What should be done in the future
+
+- The prepared code form (pre-scaled byte offsets, handler addresses) if SDF scenes matter: it removes three of a scalar operation's 19 instructions and the opcode decode.
+
+### Code review instructions
+
+- `scripts/vm/cdl_vm.c` (`OPC`, `DISPATCH`, `copy_lobe`, `STOREF`, the vec3 macros, `LOBE`); `scripts/08-kernel-digest.py` (`rv_one`, `group`); `various/11-cost-kernel.txt`.
+
+### Technical details
+
+- RV32 flags in the kernel: `-march=rv32imafc_zicsr_zifencei -mabi=ilp32f -O2 -fno-math-errno -fwrapv -msmall-data-limit=0 -mno-relax -std=gnu++17 -ffunction-sections -fdata-sections`, linked with `--gc-sections`; `cdl_vm.c` as C99 with `-include ck/cdl_vm_ck_math.h`.
+
+## Step 11: The vault report
+
+The deep-dive report is in the vault as `Projects/2026/11/22/PROJECT REPORT - PicoCalc Candela - Scene Code as Verified Bytecode in the Fixed Kernel - A Technical Deep Dive.md`, with two figures in `_assets/` (`picocalc-candela-sections-kernel-cost.png`, `picocalc-candela-sections-interpreter-versions.png`).
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1 (the vault-report requirement).
+**Assistant interpretation:** a textbook-style technical report of the whole project, committed alone in the vault and pushed.
+**Inferred user intent:** a durable account that a reader can use without the ticket.
+
+### What I did
+
+- Wrote the report following the sibling CPU-KERNEL report's structure (frontmatter, summary callout, why, status, shape, implementation details, docs, open questions, next steps, working rule, related notes).
+- Generated the figures with `scripts/12-cost-figure.py` from `various/11-cost-*.json`. The two colours are the reference palette's first two categorical slots; `validate_palette.js` reported all checks passing for them.
+
+### What worked
+
+- See the push result in the ticket's changelog.
+
+### What didn't work
+
+- Nothing recorded.
+
+### What I learned
+
+- Nothing new.
+
+### What was tricky to build
+
+- Keeping the report's numbers identical to the evidence files; every table was copied from `various/11-cost-kernel.txt` and `various/03-agreement-s4.jsonl` summaries.
+
+### What warrants a second pair of eyes
+
+- The device translation time (0.2-3.4 s) is an estimate from host QuickJS time and P4's measured QuickJS ratio, not a device measurement.
+
+### What should be done in the future
+
+- FIRST-LIGHT's board run.
+
+### Code review instructions
+
+- The report in the vault; `scripts/12-cost-figure.py`.
+
+### Technical details
+
+- Figures: `various/12-kernel-cost.png`, `various/12-interpreter-versions.png` (copied to the vault's `_assets/`).

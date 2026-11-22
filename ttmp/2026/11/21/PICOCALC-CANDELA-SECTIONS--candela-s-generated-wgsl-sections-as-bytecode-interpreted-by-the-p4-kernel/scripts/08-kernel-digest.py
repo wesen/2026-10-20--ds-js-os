@@ -203,7 +203,7 @@ with open(out, "a") as f, ThreadPoolExecutor(jobs) as ex:
     for tag, extra, on in (("", [], "--rv32" in flags), ("-nofma", ["-ffp-contract=off"], "--rv32-nofma" in flags)):
         if not on:
             continue
-        run(["gcc", "-O2", "-o", COUNT, os.path.join(HERE, "harness", "rv32imfc-count.c"), "-lm"])
+        run(["gcc", "-O2", "-DCOUNT_MEM_MB=64", "-o", COUNT, os.path.join(HERE, "harness", "rv32imfc-count.c"), "-lm"])
         robjs = dict(zip(keys, ex.map(lambda k: rv_objs(k, tag, extra), keys)))
         for o in ex.map(lambda ap: rv_one(ap[0], ap[1], robjs[(ap[0], spec[ap[1]])], tag, extra), [(a, p) for a in arms for p in presets]):
             emit(o)
