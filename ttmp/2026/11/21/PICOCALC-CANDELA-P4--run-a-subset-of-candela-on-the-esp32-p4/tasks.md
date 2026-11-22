@@ -9,4 +9,4 @@
 - [x] Analysis doc: how Candela turns a scene program into pixels <!-- t:jyhc -->
 - [x] Design doc: a Candela subset for the ESP32-P4 <!-- t:je2o -->
 - [x] Follow-up tickets with design stubs (CPU-KERNEL, SECTIONS, WORLD, FIRST-LIGHT, TYPED-F32) <!-- t:7atc -->
-- [ ] Vault report pushed <!-- t:izfl -->
+- [x] Vault report pushed <!-- t:izfl -->

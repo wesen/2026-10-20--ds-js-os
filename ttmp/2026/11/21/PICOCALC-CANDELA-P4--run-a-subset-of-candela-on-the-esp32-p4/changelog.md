@@ -12,3 +12,7 @@ Census and tiers of all 105 presets; Candela's own WGSL kernel translated to C++
 
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-CANDELA-P4--run-a-subset-of-candela-on-the-esp32-p4/analysis/01-how-candela-turns-a-scene-program-into-pixels.md — Candela end to end with the measured cost model
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-CANDELA-P4--run-a-subset-of-candela-on-the-esp32-p4/design-doc/01-a-candela-subset-for-the-esp32-p4.md — Decisions with evidence
+
+## 2026-11-21
+
+Folded the QuickJS study's final numbers into the design (B-01 build about 67-88 ms on the device once the GGX table is memoised); committed the study; published the vault report (go-go-parc bf2902a).
