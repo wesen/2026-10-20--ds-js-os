@@ -17,6 +17,14 @@ import (
 
 const MaxSessions = 32
 
+// routes is what GET / lists, so a client that finds a port can discover the protocol.
+var routes = []string{
+	"GET /info: inventory of mounted inputs, sessions and limits",
+	"POST /sessions: open a session",
+	`POST /sessions/{id}/eval: evaluate {"source": "..."}`,
+	"DELETE /sessions/{id}: close a session",
+}
+
 // Handler serves the in-process operator API. Browser-origin requests are not
 // part of the protocol. Test the Host header as well as the listener address.
 func Handler(s *Service, logger zerolog.Logger) http.Handler {
@@ -75,6 +83,16 @@ func Handler(s *Service, logger zerolog.Logger) http.Handler {
 		}
 		logger.Debug().Bool("ok", result.OK).Int("sourceBytes", len(*body.Source)).Msg("evaluated trace cell")
 		response(w, http.StatusOK, result)
+	})
+	mux.HandleFunc("GET /info", func(w http.ResponseWriter, r *http.Request) {
+		info := s.inventory()
+		mu.Lock()
+		info["sessions"] = map[string]int{"open": len(live), "max": MaxSessions}
+		mu.Unlock()
+		response(w, http.StatusOK, info)
+	})
+	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
+		response(w, http.StatusOK, map[string]any{"service": "trace-repl", "routes": routes})
 	})
 	mux.HandleFunc("DELETE /sessions/{id}", func(w http.ResponseWriter, r *http.Request) {
 		id := r.PathValue("id")

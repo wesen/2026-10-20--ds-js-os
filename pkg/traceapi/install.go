@@ -50,6 +50,10 @@ func Install(vm *goja.Runtime, archive *tracearchive.Archive) error {
 			return vm.ToValue(s)
 		},
 		"stats": func() goja.Value { return copyJSON(archive.Stats(), nil) },
+		"describe": func() goja.Value {
+			label := archive.Label()
+			return copyJSON(map[string]any{"ticket": label.Ticket, "title": label.Title, "name": label.String()}, nil)
+		},
 	}
 	for name, method := range methods {
 		if err := bridge.Set(name, method); err != nil {

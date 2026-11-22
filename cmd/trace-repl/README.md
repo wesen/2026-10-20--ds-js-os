@@ -52,10 +52,16 @@ lab.physicsPair("contact", 128, "grouped-scalar", "grouped-pie")
 
 The director loader adds the `lab` binding only in its new session. The `simd` provider is available in every session of the mounted study. [Study index](../../ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/index.md)
 
+## Find out what a running service mounted
+
+Several services often run side by side on different ports. `trace-repl info --addr 127.0.0.1:PORT` prints the inventory of one of them: the archive's directory, ticket name, title and stream digests, the device and SIMD studies (or `null`), open sessions against the limit, and the per-cell limits. `build.revision` is the git commit that `go build` stamped into the binary. A `go run` service has no stamp, so the field is `null`. A binary built inside a git worktree is stamped with the enclosing main checkout's commit, not the worktree's, so build there with `-buildvcs=false`. `q.help()` names the same archive.
+
 ## HTTP protocol
 
 | Request | Response |
 | --- | --- |
+| `GET /` | HTTP 200, the list of routes |
+| `GET /info` | HTTP 200, `{"service","build","archive","deviceStudy","simdStudy","sessions":{"open","max"},"limits":{"sourceBytes","resultBytes","cellSeconds"},"started"}` |
 | `POST /sessions` with empty body | HTTP 201, `{"id":"session-…"}` |
 | `POST /sessions/{id}/eval` with `Content-Type: application/json` and `{"source":"7 * 6"}` | HTTP 200, `{"ok":true,"value":42}` |
 | JS parse or evaluation error | HTTP 200, `{"ok":false,"error":"…"}`. A subsequent valid cell can still run. |

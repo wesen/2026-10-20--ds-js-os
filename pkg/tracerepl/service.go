@@ -106,9 +106,21 @@ type cellIO struct {
 type Service struct {
 	sessions *replsession.Service
 	timeout  time.Duration
+	started  time.Time
+	describe func() map[string]any
 }
 
-func New(ctx context.Context, install Installer, logger zerolog.Logger) (*Service, error) {
+// Option configures a Service.
+type Option func(*Service)
+
+// WithInventory supplies what GET /info reports about the inputs this service
+// mounted (archive, studies, repository). The function is called per request
+// and must return a fresh map that the handler may extend.
+func WithInventory(describe func() map[string]any) Option {
+	return func(s *Service) { s.describe = describe }
+}
+
+func New(ctx context.Context, install Installer, logger zerolog.Logger, opts ...Option) (*Service, error) {
 	factory, err := engine.NewRuntimeFactoryBuilder(
 		engine.WithImplicitDefaultRegistryModules(false),
 		engine.WithDataOnlyDefaultRegistryModules(false),
@@ -116,10 +128,37 @@ func New(ctx context.Context, install Installer, logger zerolog.Logger) (*Servic
 	if err != nil {
 		return nil, errors.Wrap(err, "build trace runtime")
 	}
-	return &Service{sessions: replsession.NewService(factory, logger,
+	s := &Service{sessions: replsession.NewService(factory, logger,
 		replsession.WithLifetimeContext(ctx),
 		replsession.WithDefaultSessionOptions(replsession.RawSessionOptions()),
-	), timeout: defaultEvalTimeout}, nil
+	), timeout: defaultEvalTimeout, started: time.Now().UTC()}
+	for _, opt := range opts {
+		opt(s)
+	}
+	return s, nil
+}
+
+// Limits are the per-cell bounds a client must respect.
+type Limits struct {
+	SourceBytes int     `json:"sourceBytes"`
+	ResultBytes int     `json:"resultBytes"`
+	CellSeconds float64 `json:"cellSeconds"`
+}
+
+func (s *Service) Limits() Limits {
+	return Limits{SourceBytes: MaxSourceBytes, ResultBytes: MaxResultBytes, CellSeconds: s.timeout.Seconds()}
+}
+
+// inventory is the GET /info body without the handler's session counts.
+func (s *Service) inventory() map[string]any {
+	info := map[string]any{}
+	if s.describe != nil {
+		info = s.describe()
+	}
+	info["service"] = "trace-repl"
+	info["started"] = s.started
+	info["limits"] = s.Limits()
+	return info
 }
 
 func (s *Service) Open(ctx context.Context) (string, error) {

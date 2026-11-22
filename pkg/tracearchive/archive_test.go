@@ -353,3 +353,35 @@ func BenchmarkCheckedMiddleDump(b *testing.B) {
 		}
 	})
 }
+
+// A service names the capture it mounted from the ticket directory and its
+// index.md title, and lists every stream with the manifest's digest.
+func TestLabelAndStreamsDescribeTheMountedCapture(t *testing.T) {
+	a := actualArchive(t)
+	label := a.Label()
+	if label.Ticket != "PICOCALC-ROW-IR" || label.Title != "Trace the ray row through GCC and LLVM optimization passes" || !filepath.IsAbs(label.Dir) {
+		t.Fatalf("label: %+v", label)
+	}
+	if label.String() != "PICOCALC-ROW-IR (Trace the ray row through GCC and LLVM optimization passes)" {
+		t.Fatal(label.String())
+	}
+	streams := a.Streams()
+	if len(streams) != 6 || streams[0].Variant != "checked" || streams[0].Phase != "middle" || streams[1].Phase != "backend" {
+		t.Fatalf("streams: %+v", streams)
+	}
+	events, _ := a.Events("checked", "middle")
+	if streams[0].SHA256 != events[0].Ref.StreamSHA || streams[0].Dumps != len(events) {
+		t.Fatalf("stream 0 disagrees with its events: %+v", streams[0])
+	}
+	raw, err := os.ReadFile(filepath.Join(a.Dir(), "various", "llvm-pipeline", "manifest.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if sum := sha256.Sum256(raw); a.ManifestSHA256() != hex.EncodeToString(sum[:]) {
+		t.Fatal("manifest digest")
+	}
+	// A directory that is not a docmgr ticket still gets a name.
+	if l := readLabel(t.TempDir()); l.Ticket == "" || l.Title != "" {
+		t.Fatalf("plain directory label: %+v", l)
+	}
+}

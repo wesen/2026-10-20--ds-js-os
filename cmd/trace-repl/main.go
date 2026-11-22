@@ -12,6 +12,8 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"path/filepath"
+	"runtime/debug"
 	"syscall"
 	"time"
 
@@ -93,6 +95,10 @@ func root() (*cobra.Command, error) {
 			cmds.NewCommandDescription("close", cmds.WithShort("Release a session and its JavaScript bindings"), cmds.WithFlags(addr, session)),
 			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "close") },
 		},
+		{
+			cmds.NewCommandDescription("info", cmds.WithShort("Print what a running service mounted: archive, studies, sessions and limits"), cmds.WithFlags(addr)),
+			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "info") },
+		},
 	}
 	for _, def := range defs {
 		sub, err := cli.BuildCobraCommand(def)
@@ -160,6 +166,7 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 	} else {
 		logger.Info().Msg("no --simd-study: simd.* reports SIMD attribution as unavailable")
 	}
+	inputs := inventory{archive: archive, hardware: hardware, hardwarePath: absPath(cfg.DeviceStudy), simd: simd, simdPath: absPath(cfg.SIMDStudy)}
 	return tracerepl.New(ctx, func(vm *goja.Runtime) error {
 		if err := traceapi.Install(vm, archive); err != nil {
 			return err
@@ -168,7 +175,72 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 			return err
 		}
 		return traceapi.InstallSIMD(vm, simd)
-	}, logger)
+	}, logger, tracerepl.WithInventory(inputs.describe))
+}
+
+// inventory is what GET /info reports about the service's verified inputs.
+// Every field is fixed at startup, so concurrent requests only read it.
+type inventory struct {
+	archive      *tracearchive.Archive
+	hardware     *tracehardware.Study
+	hardwarePath string
+	simd         *tracesimd.Study
+	simdPath     string
+}
+
+func (in inventory) describe() map[string]any {
+	info := map[string]any{
+		"build": buildInfo(),
+		"archive": map[string]any{
+			"path": in.archive.Dir(), "label": in.archive.Label(), "manifestSHA256": in.archive.ManifestSHA256(),
+			"streams": in.archive.Streams(),
+		},
+		"deviceStudy": nil,
+		"simdStudy":   nil,
+	}
+	if in.hardware != nil {
+		meta := in.hardware.Metadata()
+		info["deviceStudy"] = map[string]any{"path": in.hardwarePath, "sourceSHA": meta.SourceSHA, "firmwareSHA": meta.FirmwareSHA,
+			"pairs": len(in.hardware.Rows()), "loads": len(in.hardware.Loads())}
+	}
+	if in.simd != nil {
+		info["simdStudy"] = map[string]any{"path": in.simdPath, "sha256": in.simd.SHA256(), "empty": in.simd.Empty(),
+			"decisions": len(in.simd.Decisions()), "traces": len(in.simd.Traces())}
+	}
+	return info
+}
+
+// buildInfo reports the toolchain's VCS stamp. `go build` in a checkout
+// records it; `go run` does not, and then revision is absent.
+func buildInfo() map[string]any {
+	out := map[string]any{"revision": nil}
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return out
+	}
+	out["goVersion"] = info.GoVersion
+	out["module"] = info.Main.Path
+	for _, setting := range info.Settings {
+		switch setting.Key {
+		case "vcs.revision":
+			out["revision"] = setting.Value
+		case "vcs.time":
+			out["revisionTime"] = setting.Value
+		case "vcs.modified":
+			out["modified"] = setting.Value == "true"
+		}
+	}
+	return out
+}
+
+func absPath(path string) string {
+	if path == "" {
+		return ""
+	}
+	if abs, err := filepath.Abs(path); err == nil {
+		return abs
+	}
+	return path
 }
 
 func serveListener(ctx context.Context, ln net.Listener, service *tracerepl.Service, logger zerolog.Logger) error {
@@ -223,6 +295,9 @@ func client(ctx context.Context, cfg settings, action string) error {
 	} else if action == "close" {
 		method = http.MethodDelete
 		path += "/" + url.PathEscape(cfg.Session)
+	} else if action == "info" {
+		method = http.MethodGet
+		path = "http://" + cfg.Addr + "/info"
 	}
 	req, err := http.NewRequestWithContext(ctx, method, path, input)
 	if err != nil {
@@ -262,6 +337,16 @@ func client(ctx context.Context, cfg settings, action string) error {
 		if !result.OK {
 			return errors.New("cell failed; see the error in its JSON response")
 		}
+	case "info":
+		var info json.RawMessage
+		if err := json.NewDecoder(resp.Body).Decode(&info); err != nil {
+			return err
+		}
+		var pretty bytes.Buffer
+		if err := json.Indent(&pretty, info, "", "  "); err != nil {
+			return err
+		}
+		fmt.Println(pretty.String())
 	}
 	return nil
 }

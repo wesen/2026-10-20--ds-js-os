@@ -106,6 +106,79 @@ func TestServeWiresVerifiedEvidenceAndOptionalDevice(t *testing.T) {
 	}
 }
 
+// GET /info names what this service mounted, so five services on five ports
+// can be told apart without ps, and q.help() names the same capture.
+func TestInfoNamesTheMountedCapture(t *testing.T) {
+	archive := evidenceRoot(t, "PICOCALC-ROW-IR--*")
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	service, err := newService(ctx, settings{Archive: archive, DeviceStudy: evidenceRoot(t, "PICOCALC-PIE-LOOPS--*")}, zerolog.Nop())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer service.Close(context.Background())
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	go func() { _ = serveListener(ctx, ln, service, zerolog.Nop()) }()
+	base := "http://" + ln.Addr().String()
+	resp, err := http.Get(base + "/info")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var info struct {
+		Build   map[string]any
+		Archive struct {
+			Path    string
+			Label   struct{ Ticket, Title string }
+			Streams []struct{ Variant, Phase, SHA256 string }
+		}
+		DeviceStudy *struct {
+			Path  string
+			Pairs int
+		}
+		SIMDStudy *struct{ Path string }
+		Sessions  struct{ Open, Max int }
+		Limits    struct{ SourceBytes, ResultBytes int }
+	}
+	if err = json.NewDecoder(resp.Body).Decode(&info); err != nil || resp.StatusCode != http.StatusOK {
+		t.Fatalf("info: %d %v", resp.StatusCode, err)
+	}
+	resp.Body.Close()
+	abs, _ := filepath.Abs(archive)
+	if info.Archive.Path != abs || info.Archive.Label.Ticket != "PICOCALC-ROW-IR" || len(info.Archive.Streams) != 6 ||
+		info.DeviceStudy == nil || info.DeviceStudy.Pairs == 0 || !filepath.IsAbs(info.DeviceStudy.Path) || info.SIMDStudy != nil ||
+		info.Sessions.Max != 32 || info.Limits.SourceBytes != 64<<10 || info.Build == nil {
+		t.Fatalf("info: %+v", info)
+	}
+	if err := client(ctx, settings{Addr: ln.Addr().String()}, "info"); err != nil {
+		t.Fatal(err)
+	}
+	resp, err = http.Post(base+"/sessions", "application/json", nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var session struct{ ID string }
+	_ = json.NewDecoder(resp.Body).Decode(&session)
+	resp.Body.Close()
+	body, _ := json.Marshal(map[string]string{"source": "[q.help().split('\\n')[0], a.toJSON().archive]"})
+	resp, err = http.Post(base+"/sessions/"+session.ID+"/eval", "application/json", bytes.NewReader(body))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var result struct {
+		OK    bool
+		Value []string
+	}
+	_ = json.NewDecoder(resp.Body).Decode(&result)
+	resp.Body.Close()
+	name := "PICOCALC-ROW-IR (Trace the ray row through GCC and LLVM optimization passes)"
+	if !result.OK || !strings.Contains(result.Value[0], "queries over "+name) || result.Value[1] != name {
+		t.Fatalf("help title: %+v", result)
+	}
+}
+
 // A capture whose bytes do not match its manifest is refused before serving.
 func TestServeRefusesUnverifiableArchive(t *testing.T) {
 	dir := t.TempDir()

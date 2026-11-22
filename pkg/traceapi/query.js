@@ -1,4 +1,4 @@
-/* query.js — compiler-evidence query library for the PicoCalc LLVM row archive.
+/* query.js — compiler-evidence query library for a PicoCalc LLVM pass-dump archive.
  * Runs inside the Goja trace REPL. The host injects one bridge object, __trace.
  * Public globals: q (query language), a (the archive), profiles (execution summaries).
  * Evaluation is synchronous: q.run(plan) or plan.run(). Nothing here prints to stdout.
@@ -6,6 +6,11 @@
 (function (root, bridge) {
   'use strict';
   const VERSION = '0.1.0';
+  // The mounted capture's name, from its ticket directory (the manifest has no title).
+  const ARCHIVE_NAME = (() => {
+    try { return bridge && typeof bridge.describe === 'function' ? bridge.describe().name : 'an LLVM pass-dump archive'; }
+    catch (err) { return 'an LLVM pass-dump archive'; }
+  })();
 
   // ───────────────────────── errors and names ─────────────────────────
   function QueryError(code, message, extra) {
@@ -819,7 +824,7 @@
     },
     stats() { return callBridge('stats', []); },
     help() { return helpText('archive'); },
-    toJSON() { return { archive: 'PicoCalc LLVM row archive', variants: index().variants, use: 'a.help()' }; },
+    toJSON() { return { archive: ARCHIVE_NAME, variants: index().variants, use: 'a.help()' }; },
   };
 
   // ───────────────────────── LLVM IR subset parser ─────────────────────────
@@ -2233,7 +2238,7 @@
   function liveList(fn) { try { return fn(); } catch (err) { return '(unavailable: ' + err.message.split('\n')[0] + ')'; } }
   const TOPICS = {
     index: () => [
-      'q — compiler-evidence queries over the PicoCalc LLVM row archive (release ' + VERSION + '). Globals: q, a (archive), profiles.',
+      'q — compiler-evidence queries over ' + ARCHIVE_NAME + ' (release ' + VERSION + '). Globals: q, a (archive), profiles.',
       'Plans are lazy; evaluate synchronously with q.run(plan) or plan.run(). Results are plain objects with status, unit and witnesses.',
       'Eager calls (….describe(), profiles.arms(), run.functions()) return values at once; q.run returns a describe() descriptor unchanged (q.help("plans")).',
       '  q.run(a.events().count())                                // all header records, with byStream',
