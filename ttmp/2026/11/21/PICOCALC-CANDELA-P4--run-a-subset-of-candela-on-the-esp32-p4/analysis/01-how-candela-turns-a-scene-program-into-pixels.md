@@ -293,7 +293,7 @@ The ESP32-P4's cycle cost per instruction for this code has not been measured, s
 - `fdiv.s` and `fsqrt.s`: 10 to 30 cycles each (iterative units are typical; no P4 measurement exists).
 - Other floating-point arithmetic: pipelined, with 0 to 1 cycle of extra stall per instruction for dependent chains.
 
-For B-01 at -O3 (7,100 instructions, 110 divisions and square roots, about 1,900 other floating-point operations) this gives 9,000 to 13,100 cycles per sample: **27,000 to 40,000 samples per second on one 360 MHz core**. A 160 x 160 frame at one sample per pixel then takes 0.64-0.93 s, and an 80 x 80 frame 0.16-0.23 s. The fast-math and sky-table changes above would shorten this by roughly a quarter to a third for outdoor scenes. For comparison, the Typed integer ray tracer renders its 160 x 160 frame (primary rays and hard shadows) in 16.26 ms; a physically based path-traced sample costs about 50 times more per pixel than that frame does.
+For B-01 at -O3 (7,100 instructions, of which 110 are divisions and square roots and 1,612 other floating-point arithmetic) this gives 8,800 to 12,600 cycles per sample: **28,500 to 41,000 samples per second on one 360 MHz core**. A 160 x 160 frame at one sample per pixel then takes 0.63-0.90 s, and an 80 x 80 frame 0.16-0.22 s. `scripts/14-cycle-model.py` applies the same model to every measured run (`various/11-cycle-model.txt`): the ordinary presets fall between 20,000 and 47,000 samples per second, the toon preset E-02 reaches 59,000-83,000, and W-02 manages 3,500-4,100 with newlib and 15,000-21,000 with the fast-math prologue. The fast-math and sky-table changes above would shorten this by roughly a quarter to a third for outdoor scenes. For comparison, the Typed integer ray tracer renders its 160 x 160 frame (primary rays and hard shadows) in 16.26 ms; a physically based path-traced sample costs about 50 times more per pixel than that frame does.
 
 ## 10. Key points
 
@@ -302,6 +302,6 @@ For B-01 at -O3 (7,100 instructions, 110 divisions and square roots, about 1,900
 - Materials are generated code on the GPU, but for 57 of the 105 presets every material value is a constant or a uniform, so a CPU kernel could take them as data.
 - Candela's own kernel, compiled for RV32IMAFC, costs 6,100-11,300 instructions per camera sample on ordinary presets; the outdoor presets spend 40% of that in libm, and sine-based hashes cost up to ten times more than everything else.
 - The packed values span 1e-2 to 1.8e9, which a single fixed-point format cannot hold.
-- On one 360 MHz core the realistic budget is tens of thousands of samples per second: interactive at 80 x 80, progressive at 160 x 160, minutes for a clean full-screen still.
+- On one 360 MHz core the estimated budget is 20,000-47,000 samples per second for ordinary presets: several updates per second at 80 x 80, about one pass per second at 160 x 160, about a minute for 16 passes at 320 x 320.
 
 The design document (`design-doc/01-a-candela-subset-for-the-esp32-p4.md`) turns these facts into a subset, a numeric model and a staged implementation.

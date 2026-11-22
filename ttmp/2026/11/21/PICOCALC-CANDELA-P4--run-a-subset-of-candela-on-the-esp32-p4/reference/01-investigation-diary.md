@@ -331,3 +331,63 @@ The answer is not close. f32 on the FPU costs 14-49 instructions per call with r
 ### Technical details
 
 - Inputs: origins in [-8, 8]^3 aimed within 1.6 radii of the sphere centre, radii 0.3-2; unit wo, wi in the upper hemisphere; alpha = 0.05 + 0.95 u^2.
+
+## Step 6: CPU-specific math, a cycle model, and how often a sample enters generated code
+
+Step 4 showed the outdoor presets spending 40% of their instructions in newlib. This step asked how much of that is inherent, turned instruction counts into a defensible time range, and measured the one number the design for per-scene code depends on: how many times a camera sample calls into it.
+
+Polynomial `sin`/`cos`/`exp` and a conversion-based `floor` cut B-01 from 8,160 to 6,173 instructions per sample at -O2 (−24%) and W-02 from 78,776 to 14,967 (−81%). A material is evaluated 0.8-1.7 times per sample, which makes an interpreter for generated material code affordable.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** settle where each stage runs and what resolution and sample rate are realistic.
+**Inferred user intent:** numbers that survive contact with the device, with their assumptions visible.
+
+### What I did
+
+- `scripts/04-wgsl2cpp.mjs`: a `CDL_FAST_MATH` prologue (degree-9 odd polynomial `sin` after one-step reduction, `cos(x) = sin(x + pi/2)`, `exp` via `exp2` with a degree-6 polynomial and exponent bits, `ffloor` through `fcvt`); five presets remeasured with `-DCDL_FAST_MATH` → `various/07-kernel-counts-fastmath.jsonl`, profiles → `various/08-profile-groups-fastmath.txt`.
+- `scripts/14-cycle-model.py`: cycles per sample = 1.13 x (integer, memory, branch and FP load/store instructions) + 10-30 x (`fdiv.s` + `fsqrt.s`) + 1-2 x (other FP arithmetic) → `various/11-cycle-model.txt`.
+- `scripts/13-count-entry-calls.sh`: counters at the top of `evalMaterial`, `sdUser`, `heightAt`, `densityOf`, `customKernel`, `traceAll`, `occluded`, `tracePath` in the translated kernel; host run, 1 spp → `various/10-entry-calls.txt`.
+- Rendered eight presets at 64 spp with the translated kernel on the host for the analysis figure (`various/09-translated-kernel-previews.png`); `08-tonemap-png.py` now exposes from lit pixels only, because the Cornell box's black surround dragged the log-average down and the first R-01 preview came out white.
+
+### Why
+
+- Fast math tests whether transcendental cost is a property of the renderer or of newlib; it is the latter.
+- The cycle model's assumptions are the weakest link of the design, so they live in one script, stated once, and every time figure in the documents comes from it.
+
+### What worked
+
+- Fast math at -O2: B-01 6,173, F-01 6,926, G-01 9,478, R-01 9,205, W-02 14,967 instructions per sample; mean luminance RV32/host unchanged (0.995-1.002).
+- Cycle model, B-01 -O3: 8,792-12,610 cycles per sample, 28,548-40,945 samples/s, 0.63-0.90 s per 160 x 160 pass. Ordinary presets 20,000-47,000 samples/s; E-02 59,000-83,000; W-02 3,500-4,100 (15,000-21,000 with fast math).
+- Entry calls per sample: `evalMaterial` 0.81 (B-01) to 1.71 (W-02); `traceAll` 2.5-4.1; `occluded` 0.7-1.6.
+
+### What didn't work
+
+- The first fast-math build still called newlib's `floorf` from the new `sin`/`exp` (RV32F has no rounding-to-integer instruction), so B-01 only fell to 7,083 and the "libm floor/misc" group grew to 1,114 instructions per sample. A local `ffloor` fixed that; my first placement of it after its first use failed to compile, and moving it before `abs` in the prologue fixed that.
+- My first call-counting build included the instrumented kernel twice (`-include` plus the harness's own `#include KERNEL`): `error: redefinition of 'struct cdl::vec2f'`. Dropping `-include` fixed it.
+
+### What I learned
+
+- In fast-math B-01 the Preetham `perez` function is the largest single function (1,180 instructions per sample); a direction-indexed sky table is the next lever.
+- The interpreter question is about calls per sample, not about interpreter speed alone: at one material evaluation per sample, a 20-instructions-per-node interpreter costs a few percent; at 220 SDF evaluations per ray it costs several samples.
+
+### What was tricky to build
+
+- Keeping the RNG stream comparable: fast math changes `sin`-hash values, so W-02's noise pattern differs from the libm build. The comparison that stays meaningful is RV32 vs host under the same prologue, which still agrees.
+
+### What warrants a second pair of eyes
+
+- The cycle model treats FP loads and stores like integer instructions and ignores PSRAM misses; the scenes' data is a few KB and the kernel's text is 42-55 KB, which may not fit the P4's instruction cache. Only a device run settles this.
+
+### What should be done in the future
+
+- Measure cycles per sample on the device (CPU-KERNEL ticket); build the sky table; replace `fract(sin(...))` hashes with an integer hash in the CPU kernel.
+
+### Code review instructions
+
+- `scripts/14-cycle-model.py various/04-kernel-counts.jsonl`; `scripts/13-count-entry-calls.sh <work> B-01`.
+
+### Technical details
+
+- Fast-math accuracy: `sin` max error about 4e-6 on [-pi, pi]; `exp` about 2e-7 relative; `ffloor` exact for |x| < 2.1e9.
