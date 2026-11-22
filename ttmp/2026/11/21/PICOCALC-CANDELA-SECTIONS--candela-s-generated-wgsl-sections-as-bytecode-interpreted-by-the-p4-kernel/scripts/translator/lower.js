@@ -145,9 +145,11 @@ export class EntryLowering {
     else this.emit('V' + name, [d, ...ops], ISA.genH(w, bc[0], bc[1], bc[2]));
     return d;
   }
-  // exact identities: x * 1, x / 1, 1 * x, pow(1, y)
+  // exact identities: x * 1, x / 1, 1 * x, pow(1, y), x - (+0) (also for -0 and NaN; x + 0 is not one, since -0 + 0 = +0)
   simplify(name, args, t) {
     const isOne = a => a.c && a.c.every(x => x === 1);
+    const isPlusZero = a => a.c && a.c.every(x => x === 0 && 1 / x > 0);
+    if (name === 'SUB' && isPlusZero(args[1]) && WIDTH[args[0].t] === WIDTH[t]) return args[0];
     if (name === 'MUL' && isOne(args[1]) && WIDTH[args[0].t] === WIDTH[t]) return args[0];
     if (name === 'MUL' && isOne(args[0]) && WIDTH[args[1].t] === WIDTH[t]) return args[1];
     if (name === 'DIV' && isOne(args[1]) && WIDTH[args[0].t] === WIDTH[t]) return args[0];
@@ -671,6 +673,9 @@ export class Lowerer extends EntryLowering {
         return this.fcmp({ '<': 'FLT', '<=': 'FLE', '>': 'FGT', '>=': 'FGE', '==': 'FEQ', '!=': 'FNE' }[e.op], a, b, e.at);
       }
       case '&&': case '||': {
+        // both operands were evaluated above: right only if evaluating the right operand has no side effect, since
+        // WGSL short-circuits && and || (the census finds no such operand)
+        if (this.prog.hasEffects(e.b)) err('E-SECT-UNSUPPORTED', 'short-circuit:side-effect', `the right operand of ${e.op} calls a function with side effects`, e.at);
         if (a.t !== 'bool' || b.t !== 'bool') err('E-SECT-TYPE', 'type:logic-' + a.t, `${e.op} on ${a.t} and ${b.t}`, e.at);
         if (a.c && !b.c && a.c[0] === (e.op === '&&' ? 1 : 0)) return b;
         if (b.c && !a.c && b.c[0] === (e.op === '&&' ? 1 : 0)) return a;
@@ -811,6 +816,7 @@ export class Lowerer extends EntryLowering {
     const k = ISA.KFUNC[name];
     const f = ISA.KFUNCS[k];
     if (f.custom && this.entry.name !== 'customKernel') err('E-SECT-CALL', 'call:' + name + '-outside-custom', `${name} is only available in a custom integrator`, at);
+    if (!this.prog.kernelApi.has(name)) err('E-SECT-CALL', 'call:' + name + '-not-in-kernel-api', `${name} is not in the kernel's section API`, at);
     this.kfuncs.add(name);
     const dspec = f.sig[0];
     const t = { d1: name === 'occluded' ? 'bool' : 'f32', d2: 'vec2f', d3: 'vec3f', d4: 'vec4f', dH: 'Hit' }[dspec];
@@ -859,6 +865,7 @@ const CSE_OPS = new Set([...Object.keys(ISA.ELEM), ...ISA.ELEM3.map(k => k + '3'
   'VDOT', 'VLEN', 'VNORM', 'VSAFENORM', 'FLT', 'FLE', 'FGT', 'FGE', 'FEQ', 'FNE', 'SEL', 'SEL3', 'VSEL', 'SPLAT3', 'GATHER', 'GLD',
   'IADD', 'ISUB', 'IMUL', 'IOR', 'IAND', 'IXOR', 'IEQ', 'INE', 'ILT', 'ILE', 'IGT', 'IGE', 'AND', 'OR', 'NOT', 'INEG', 'ITOF', 'FTOI', 'HBOOL']);
 const CSE_K = new Set(['fresnelDielectric', 'noise3', 'fbm3', 'voronoi3', 'tangentWorld', 'sellmeier', 'hash13', 'voronoiVec3'].map(n => ISA.KFUNC[n]));
+for (const k of CSE_K) if (ISA.KFUNCS[k].effects) throw new Error('lower.js: a call with side effects cannot be merged');
 // the width of operand i of an IR instruction (for the mutability test)
 function operandWidth(ins, i) {
   const o = ISA.OP[ins.op];

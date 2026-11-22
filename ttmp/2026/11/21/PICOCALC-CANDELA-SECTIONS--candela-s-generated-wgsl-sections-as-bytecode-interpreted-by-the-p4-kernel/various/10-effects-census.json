@@ -1,0 +1,12 @@
+{
+ "presets": 105,
+ "statements": 13205,
+ "statementsWithEffects": 2,
+ "statementsWithTwoOrMore": 0,
+ "shortCircuitWithEffect": 0,
+ "callsByFunction": {
+  "traceScene": 1,
+  "occluded": 1
+ },
+ "statementsWithTwoOrMoreAt": []
+}

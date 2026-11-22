@@ -49,6 +49,8 @@ L('/* entry argument and result widths */');
 L('static const unsigned char cdl_vm_entry_args[CDL_VM_NENTRY] = {' + ISA.ENTRIES.map(e => e.args.reduce((s, [, t]) => s + { f32: 1, i32: 1, vec2f: 2, vec3f: 3 }[t], 0)).join(', ') + '};');
 L('static const unsigned char cdl_vm_entry_ret[CDL_VM_NENTRY] = {' + ISA.ENTRIES.map(e => ({ Lobe: ISA.LOBE_WORDS, f32: 1, vec3f: 3 }[e.ret])).join(', ') + '};');
 const LN = ISA.LOBE_NONE.map(x => (Array.isArray(x) ? `{.i = ${x[1]}}` : `{.f = ${Number.isInteger(x) ? x + '.0f' : x + 'f'}}`));
+L('/* every opcode, in number order, for computed-goto dispatch tables */');
+L('#define CDL_VM_OPLIST(X) ' + ISA.OPS.map(o => `X(${o.name})`).join(' '));
 L('/* lobeNone() as words (kernel.js CORE) */');
 L('#define CDL_VM_LOBE_NONE_INIT {' + LN.join(', ') + '}');
 L('#endif');

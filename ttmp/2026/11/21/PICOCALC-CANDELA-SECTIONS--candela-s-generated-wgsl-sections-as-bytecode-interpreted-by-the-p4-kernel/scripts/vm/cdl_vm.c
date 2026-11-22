@@ -305,31 +305,48 @@ static inline int32_t ftoi(float f) { if (!(f > -2147483648.0f)) return f != f ?
 #endif
 
 #define F(i) (R[i].f)
-#define NEXT(n) do { ip += (n); goto dispatch; } while (0)
-#define JUMP(t) do { ip = code + (t); goto dispatch; } while (0)
+/* Dispatch. With GCC or Clang the interpreter jumps through a table of label addresses, and every handler ends in
+   its own copy of the dispatch; a verified program holds only defined opcodes, so the table needs no bounds check.
+   Elsewhere (or with -DCDL_VM_SWITCH) it is a switch in a loop. H, the instruction's high byte, is decoded only by
+   the handlers that use it. */
+#if (defined(__GNUC__) || defined(__clang__)) && !defined(CDL_VM_SWITCH)
+#define CDL_VM_GOTO 1
+#define OPC(name) L_##name:
+#define DISPATCH() do { COUNT(); goto *dispatch_table[ip[0] & 255]; } while (0)
+#else
+#define OPC(name) case CDL_OP_##name:
+#define DISPATCH() goto dispatch
+#endif
+#define H ((unsigned)(ip[0] >> 8))
+#define NEXT(n) do { ip += (n); DISPATCH(); } while (0)
+#define JUMP(t) do { ip = code + (t); DISPATCH(); } while (0)
 
 /* elementwise operations: scalar, vec3 and generic */
-#define S2(OP, E) case CDL_OP_##OP: { float a = F(ip[2]), b = F(ip[3]); F(ip[1]) = (E); NEXT(4); }
-#define S1(OP, E) case CDL_OP_##OP: { float a = F(ip[2]); F(ip[1]) = (E); NEXT(3); }
-#define S3(OP, E) case CDL_OP_##OP: { float a = F(ip[2]), b = F(ip[3]), cc = F(ip[4]); F(ip[1]) = (E); NEXT(5); }
-#define V3_2(OP, E) case CDL_OP_##OP##3: { const unsigned pa = ip[2], pb = ip[3]; float o[3]; \
-    for (int q = 0; q < 3; q++) { float a = F(pa + q), b = F(pb + q); o[q] = (E); } F(ip[1]) = o[0]; F(ip[1] + 1) = o[1]; F(ip[1] + 2) = o[2]; NEXT(4); }
-#define V3_1(OP, E) case CDL_OP_##OP##3: { const unsigned pa = ip[2]; float o[3]; \
-    for (int q = 0; q < 3; q++) { float a = F(pa + q); o[q] = (E); } F(ip[1]) = o[0]; F(ip[1] + 1) = o[1]; F(ip[1] + 2) = o[2]; NEXT(3); }
-#define V3_3(OP, E) case CDL_OP_##OP##3: { const unsigned pa = ip[2], pb = ip[3], pc = ip[4]; float o[3]; \
-    for (int q = 0; q < 3; q++) { float a = F(pa + q), b = F(pb + q), cc = F(pc + q); o[q] = (E); } F(ip[1]) = o[0]; F(ip[1] + 1) = o[1]; F(ip[1] + 2) = o[2]; NEXT(5); }
+#define S2(OP, E) OPC(OP) { float a = F(ip[2]), b = F(ip[3]); F(ip[1]) = (E); NEXT(4); }
+#define S1(OP, E) OPC(OP) { float a = F(ip[2]); F(ip[1]) = (E); NEXT(3); }
+#define S3(OP, E) OPC(OP) { float a = F(ip[2]), b = F(ip[3]), cc = F(ip[4]); F(ip[1]) = (E); NEXT(5); }
+/* vec3: the three components written out (GCC keeps a three-iteration loop through a stack array otherwise). Every
+   source word is read before the first destination word is written, because a destination may overlap a source. */
+#define ST3(d) do { cdl_vm_word *D_ = &R[d]; D_[0].f = o0; D_[1].f = o1; D_[2].f = o2; } while (0)
+#define V3_2(OP, E) OPC(OP##3) { const cdl_vm_word *A_ = &R[ip[2]], *B_ = &R[ip[3]]; float a, b, o0, o1, o2; \
+    a = A_[0].f; b = B_[0].f; o0 = (E); a = A_[1].f; b = B_[1].f; o1 = (E); a = A_[2].f; b = B_[2].f; o2 = (E); ST3(ip[1]); NEXT(4); }
+#define V3_1(OP, E) OPC(OP##3) { const cdl_vm_word *A_ = &R[ip[2]]; float a, o0, o1, o2; \
+    a = A_[0].f; o0 = (E); a = A_[1].f; o1 = (E); a = A_[2].f; o2 = (E); ST3(ip[1]); NEXT(3); }
+#define V3_3(OP, E) OPC(OP##3) { const cdl_vm_word *A_ = &R[ip[2]], *B_ = &R[ip[3]], *C_ = &R[ip[4]]; float a, b, cc, o0, o1, o2; \
+    a = A_[0].f; b = B_[0].f; cc = C_[0].f; o0 = (E); a = A_[1].f; b = B_[1].f; cc = C_[1].f; o1 = (E); \
+    a = A_[2].f; b = B_[2].f; cc = C_[2].f; o2 = (E); ST3(ip[1]); NEXT(5); }
 /* vec3 with a broadcast scalar: VS (vector op scalar), SV (scalar op vector) */
-#define VS3(NAME, E) case CDL_OP_##NAME: { const unsigned pa = ip[2]; const float b = F(ip[3]); float o[3]; \
-    for (int q = 0; q < 3; q++) { float a = F(pa + q); o[q] = (E); } F(ip[1]) = o[0]; F(ip[1] + 1) = o[1]; F(ip[1] + 2) = o[2]; NEXT(4); }
-#define SV3(NAME, E) case CDL_OP_##NAME: { const float a = F(ip[2]); const unsigned pb = ip[3]; float o[3]; \
-    for (int q = 0; q < 3; q++) { float b = F(pb + q); o[q] = (E); } F(ip[1]) = o[0]; F(ip[1] + 1) = o[1]; F(ip[1] + 2) = o[2]; NEXT(4); }
+#define VS3(NAME, E) OPC(NAME) { const cdl_vm_word *A_ = &R[ip[2]]; const float b = F(ip[3]); float a, o0, o1, o2; \
+    a = A_[0].f; o0 = (E); a = A_[1].f; o1 = (E); a = A_[2].f; o2 = (E); ST3(ip[1]); NEXT(4); }
+#define SV3(NAME, E) OPC(NAME) { const float a = F(ip[2]); const cdl_vm_word *B_ = &R[ip[3]]; float b, o0, o1, o2; \
+    b = B_[0].f; o0 = (E); b = B_[1].f; o1 = (E); b = B_[2].f; o2 = (E); ST3(ip[1]); NEXT(4); }
 /* generic: width H & 7, broadcast flags 8 (a), 16 (b), 32 (c) */
-#define G2(OP, E) case CDL_OP_V##OP: { const unsigned w = H & 7, sa = (H & 8) ? 0 : 1, sb = (H & 16) ? 0 : 1, pa = ip[2], pb = ip[3]; float o[4]; \
-    for (unsigned q = 0; q < w; q++) { float a = F(pa + q * sa), b = F(pb + q * sb); o[q] = (E); } for (unsigned q = 0; q < w; q++) F(ip[1] + q) = o[q]; NEXT(4); }
-#define G1(OP, E) case CDL_OP_V##OP: { const unsigned w = H & 7, sa = (H & 8) ? 0 : 1, pa = ip[2]; float o[4]; \
-    for (unsigned q = 0; q < w; q++) { float a = F(pa + q * sa); o[q] = (E); } for (unsigned q = 0; q < w; q++) F(ip[1] + q) = o[q]; NEXT(3); }
-#define G3(OP, E) case CDL_OP_V##OP: { const unsigned w = H & 7, sa = (H & 8) ? 0 : 1, sb = (H & 16) ? 0 : 1, sc = (H & 32) ? 0 : 1, pa = ip[2], pb = ip[3], pc = ip[4]; float o[4]; \
-    for (unsigned q = 0; q < w; q++) { float a = F(pa + q * sa), b = F(pb + q * sb), cc = F(pc + q * sc); o[q] = (E); } for (unsigned q = 0; q < w; q++) F(ip[1] + q) = o[q]; NEXT(5); }
+#define G2(OP, E) OPC(V##OP) { const unsigned w = H & 7, sa = (H & 8) ? 0 : 1, sb = (H & 16) ? 0 : 1, pa = ip[2], pb = ip[3]; float o[4]; \
+    for (unsigned q = 0; q < w; q++) { float a = F(pa + q * sa), b = F(pb + q * sb); o[q] = (E); } STOREF(ip[1], o, w); NEXT(4); }
+#define G1(OP, E) OPC(V##OP) { const unsigned w = H & 7, sa = (H & 8) ? 0 : 1, pa = ip[2]; float o[4]; \
+    for (unsigned q = 0; q < w; q++) { float a = F(pa + q * sa); o[q] = (E); } STOREF(ip[1], o, w); NEXT(3); }
+#define G3(OP, E) OPC(V##OP) { const unsigned w = H & 7, sa = (H & 8) ? 0 : 1, sb = (H & 16) ? 0 : 1, sc = (H & 32) ? 0 : 1, pa = ip[2], pb = ip[3], pc = ip[4]; float o[4]; \
+    for (unsigned q = 0; q < w; q++) { float a = F(pa + q * sa), b = F(pb + q * sb), cc = F(pc + q * sc); o[q] = (E); } STOREF(ip[1], o, w); NEXT(5); }
 
 #define E_ADD (a + b)
 #define E_SUB (a - b)
@@ -367,148 +384,176 @@ static inline int32_t ftoi(float f) { if (!(f > -2147483648.0f)) return f != f ?
   X(ASIN, E_ASIN) X(ACOS, E_ACOS) X(ATAN, E_ATAN) X(EXP, E_EXP) X(EXP2, E_EXP2) X(LOG, E_LOG) X(LOG2, E_LOG2) X(SIGN, E_SIGN)
 #define ALL3(X) X(CLAMP, E_CLAMP) X(MIX, E_MIX) X(SMOOTH, E_SMOOTH)
 
+/* store a result of 1 to 4 words (w is at least 1 in a verified program) without a loop GCC would make a memcpy */
+#define STOREF(d, o, w) do { const unsigned d_ = (d), w_ = (w); F(d_) = o[0]; if (w_ > 1) { F(d_ + 1) = o[1]; if (w_ > 2) { F(d_ + 2) = o[2]; if (w_ > 3) F(d_ + 3) = o[3]; } } } while (0)
+#define STOREW(d, o, w) do { const unsigned d_ = (d), w_ = (w); R[d_] = o[0]; if (w_ > 1) { R[d_ + 1] = o[1]; if (w_ > 2) { R[d_ + 2] = o[2]; if (w_ > 3) R[d_ + 3] = o[3]; } } } while (0)
 static inline float dot3(const cdl_vm_word *R, unsigned a, unsigned b) { return F(a) * F(b) + F(a + 1) * F(b + 1) + F(a + 2) * F(b + 2); }
 #define HITP(x) ((x) == CDL_VM_HIT_IN ? c->hit : (const cdl_hit *)(const void *)&R[x])
+
+/* Word copies written out, so that the compiler keeps them inline: GCC turns a copy loop into a call to newlib's
+   memcpy, which costs more than the copy for these sizes (and an optimize attribute would stop inlining). */
+static inline void copy2(cdl_vm_word *restrict d, const cdl_vm_word *restrict s) { d[0] = s[0]; d[1] = s[1]; }
+static inline void copy3(cdl_vm_word *restrict d, const cdl_vm_word *restrict s) { d[0] = s[0]; d[1] = s[1]; d[2] = s[2]; }
+static inline void copy4(cdl_vm_word *restrict d, const cdl_vm_word *restrict s) { d[0] = s[0]; d[1] = s[1]; d[2] = s[2]; d[3] = s[3]; }
+static inline void copy_lobe(cdl_vm_word *restrict d, const cdl_vm_word *restrict s) {
+  d[0] = s[0]; d[1] = s[1]; d[2] = s[2]; d[3] = s[3]; d[4] = s[4]; d[5] = s[5]; d[6] = s[6]; d[7] = s[7]; d[8] = s[8]; d[9] = s[9]; d[10] = s[10]; d[11] = s[11]; d[12] = s[12]; d[13] = s[13]; d[14] = s[14]; d[15] = s[15]; d[16] = s[16]; d[17] = s[17]; d[18] = s[18]; d[19] = s[19]; d[20] = s[20]; d[21] = s[21]; d[22] = s[22]; d[23] = s[23]; d[24] = s[24]; d[25] = s[25];
+}
+static inline void copy_hit(cdl_vm_word *restrict d, const cdl_vm_word *restrict s) {
+  d[0] = s[0]; d[1] = s[1]; d[2] = s[2]; d[3] = s[3]; d[4] = s[4]; d[5] = s[5]; d[6] = s[6]; d[7] = s[7]; d[8] = s[8]; d[9] = s[9]; d[10] = s[10]; d[11] = s[11]; d[12] = s[12]; d[13] = s[13]; d[14] = s[14]; d[15] = s[15]; d[16] = s[16]; d[17] = s[17]; d[18] = s[18]; d[19] = s[19]; d[20] = s[20]; d[21] = s[21]; d[22] = s[22];
+}
+_Static_assert(CDL_VM_LOBE_WORDS == 26 && CDL_VM_HIT_WORDS == 23, "copy_lobe and copy_hit are written for these sizes");
+/* MOVN's ranges may overlap (the verifier allows it): copy in the direction that keeps memmove's meaning */
+static inline void move_words(cdl_vm_word *d, const cdl_vm_word *s, unsigned n) {
+  if (d <= s) { for (unsigned q = 0; q < n; q++) d[q] = s[q]; }
+  else { for (unsigned q = n; q-- > 0; ) d[q] = s[q]; }
+}
 
 static void run(cdl_vm_ctx *c, unsigned pc) {
   const uint16_t *const code = c->p->code;
   cdl_vm_word *const R = c->R;
   const cdl_vm_kernel *const k = c->k;
   const uint16_t *ip = code + pc;
-  unsigned H;
+#ifdef CDL_VM_GOTO
+#define LABEL_ADDR(name) [CDL_OP_##name] = &&L_##name,
+  static const void *const dispatch_table[256] = { CDL_VM_OPLIST(LABEL_ADDR) };
+#undef LABEL_ADDR
+  DISPATCH();
+  {
+#else
 dispatch:
   COUNT();
-  H = ip[0] >> 8;
   switch (ip[0] & 255) {
-    case CDL_OP_RET: return;
-    case CDL_OP_JMP: JUMP(ip[1]);
-    case CDL_OP_BRZ: if (R[ip[1]].i == 0) JUMP(ip[2]); NEXT(3);
-    case CDL_OP_BRNZ: if (R[ip[1]].i != 0) JUMP(ip[2]); NEXT(3);
-    case CDL_OP_IFLT: if (!(F(ip[1]) < F(ip[2]))) JUMP(ip[3]); NEXT(4);
-    case CDL_OP_CHOOSE: {
+#endif
+    OPC(RET) return;
+    OPC(JMP) JUMP(ip[1]);
+    OPC(BRZ) if (R[ip[1]].i == 0) JUMP(ip[2]); NEXT(3);
+    OPC(BRNZ) if (R[ip[1]].i != 0) JUMP(ip[2]); NEXT(3);
+    OPC(IFLT) if (!(F(ip[1]) < F(ip[2]))) JUMP(ip[3]); NEXT(4);
+    OPC(CHOOSE) {
       const float u = F(ip[1]), v = F(ip[2]);
       if (u < v) { F(ip[1]) = u / fmaxf(v, 1e-6f); NEXT(4); }
       F(ip[1]) = (u - v) / fmaxf(1.0f - v, 1e-6f); JUMP(ip[3]);
     }
-    case CDL_OP_CHOOSE0: if (!(F(ip[1]) < F(ip[2]))) JUMP(ip[3]); NEXT(4);
-    case CDL_OP_SWITCH: { const uint32_t x = R[ip[1]].u, n = ip[2]; JUMP(x < n ? ip[3 + x] : ip[3 + n]); }
-    case CDL_OP_MOV1: R[ip[1]] = R[ip[2]]; NEXT(3);
-    case CDL_OP_MOV2: { cdl_vm_word a = R[ip[2]], b = R[ip[2] + 1]; R[ip[1]] = a; R[ip[1] + 1] = b; NEXT(3); }
-    case CDL_OP_MOV3: { cdl_vm_word a = R[ip[2]], b = R[ip[2] + 1], d = R[ip[2] + 2]; R[ip[1]] = a; R[ip[1] + 1] = b; R[ip[1] + 2] = d; NEXT(3); }
-    case CDL_OP_MOV4: memmove(&R[ip[1]], &R[ip[2]], 16); NEXT(3);
-    case CDL_OP_MOVN: memmove(&R[ip[1]], &R[ip[2]], 4u * H); NEXT(3);
-    case CDL_OP_SPLAT3: { cdl_vm_word a = R[ip[2]]; R[ip[1]] = a; R[ip[1] + 1] = a; R[ip[1] + 2] = a; NEXT(3); }
-    case CDL_OP_GATHER: { cdl_vm_word o[4]; const unsigned s = ip[2], pat = ip[3];
+    OPC(CHOOSE0) if (!(F(ip[1]) < F(ip[2]))) JUMP(ip[3]); NEXT(4);
+    OPC(SWITCH) { const uint32_t x = R[ip[1]].u, n = ip[2]; JUMP(x < n ? ip[3 + x] : ip[3 + n]); }
+    OPC(MOV1) R[ip[1]] = R[ip[2]]; NEXT(3);
+    OPC(MOV2) { cdl_vm_word a = R[ip[2]], b = R[ip[2] + 1]; R[ip[1]] = a; R[ip[1] + 1] = b; NEXT(3); }
+    OPC(MOV3) { cdl_vm_word a = R[ip[2]], b = R[ip[2] + 1], d = R[ip[2] + 2]; R[ip[1]] = a; R[ip[1] + 1] = b; R[ip[1] + 2] = d; NEXT(3); }
+    OPC(MOV4) { cdl_vm_word a = R[ip[2]], b = R[ip[2] + 1], d = R[ip[2] + 2], e = R[ip[2] + 3]; R[ip[1]] = a; R[ip[1] + 1] = b; R[ip[1] + 2] = d; R[ip[1] + 3] = e; NEXT(3); }
+    OPC(MOVN) move_words(&R[ip[1]], &R[ip[2]], H); NEXT(3);
+    OPC(SPLAT3) { cdl_vm_word a = R[ip[2]]; R[ip[1]] = a; R[ip[1] + 1] = a; R[ip[1] + 2] = a; NEXT(3); }
+    OPC(GATHER) { cdl_vm_word o[4]; const unsigned s = ip[2], pat = ip[3];
       for (unsigned q = 0; q < H; q++) o[q] = R[s + ((pat >> (2 * q)) & 3)];
-      for (unsigned q = 0; q < H; q++) R[ip[1] + q] = o[q];
+      STOREW(ip[1], o, H);
       NEXT(4); }
-    case CDL_OP_HLD: memcpy(&R[ip[1]], (const cdl_vm_word *)(const void *)c->hit + ip[2], 4u * H); NEXT(3);
-    case CDL_OP_HBOOL: R[ip[1]].i = *(const uint8_t *)(const void *)&R[ip[2] + ip[3]] != 0; NEXT(4);
-    case CDL_OP_GLD: F(ip[1]) = H ? *k->lambda : *k->time; NEXT(2);
-    case CDL_OP_LNONE: memcpy(&R[ip[1]], LOBE_NONE, sizeof LOBE_NONE); NEXT(2);
-    case CDL_OP_LOBE: {
+    OPC(HLD) { const cdl_vm_word *src = (const cdl_vm_word *)(const void *)c->hit + ip[2]; cdl_vm_word *dst = &R[ip[1]]; const unsigned w = H;
+      if (w <= 3) { dst[0] = src[0]; if (w > 1) { dst[1] = src[1]; if (w > 2) dst[2] = src[2]; } } else move_words(dst, src, w);   /* fields are 1 to 3 words; the verifier allows up to 23 */
+      NEXT(3); }
+    OPC(HBOOL) R[ip[1]].i = *(const uint8_t *)(const void *)&R[ip[2] + ip[3]] != 0; NEXT(4);
+    OPC(GLD) F(ip[1]) = H ? *k->lambda : *k->time; NEXT(2);
+    OPC(LNONE) copy_lobe(&R[ip[1]], LOBE_NONE); NEXT(2);
+    OPC(LOBE) {
       cdl_vm_word *L = &R[ip[1]];
       unsigned mask = ip[2];
       const uint16_t *s = ip + 3;
-      while (mask) {
-        const unsigned f = (unsigned)__builtin_ctz(mask), off = cdl_vm_lobe_field[f][0], w = cdl_vm_lobe_field[f][1];
+      /* fields in mask order; a shift loop, since RV32IMAFC has no count-trailing-zeros instruction */
+      for (unsigned f = 0; mask; f++, mask >>= 1) {
+        if (!(mask & 1)) continue;
+        const unsigned off = cdl_vm_lobe_field[f][0], w = cdl_vm_lobe_field[f][1];
         const cdl_vm_word *src = &R[*s++];
         L[off] = src[0]; if (w > 1) { L[off + 1] = src[1]; if (w > 2) L[off + 2] = src[2]; }
-        mask &= mask - 1;
       }
-      ip = s; goto dispatch;
+      ip = s; DISPATCH();
     }
     ALL2(S2) ALL1(S1) ALL3(S3)
-    case CDL_OP_FLT: R[ip[1]].i = F(ip[2]) < F(ip[3]); NEXT(4);
-    case CDL_OP_FLE: R[ip[1]].i = F(ip[2]) <= F(ip[3]); NEXT(4);
-    case CDL_OP_FGT: R[ip[1]].i = F(ip[2]) > F(ip[3]); NEXT(4);
-    case CDL_OP_FGE: R[ip[1]].i = F(ip[2]) >= F(ip[3]); NEXT(4);
-    case CDL_OP_FEQ: R[ip[1]].i = F(ip[2]) == F(ip[3]); NEXT(4);
-    case CDL_OP_FNE: R[ip[1]].i = F(ip[2]) != F(ip[3]); NEXT(4);
-    case CDL_OP_SEL: R[ip[1]] = R[ip[2]].i ? R[ip[3]] : R[ip[4]]; NEXT(5);
+    OPC(FLT) R[ip[1]].i = F(ip[2]) < F(ip[3]); NEXT(4);
+    OPC(FLE) R[ip[1]].i = F(ip[2]) <= F(ip[3]); NEXT(4);
+    OPC(FGT) R[ip[1]].i = F(ip[2]) > F(ip[3]); NEXT(4);
+    OPC(FGE) R[ip[1]].i = F(ip[2]) >= F(ip[3]); NEXT(4);
+    OPC(FEQ) R[ip[1]].i = F(ip[2]) == F(ip[3]); NEXT(4);
+    OPC(FNE) R[ip[1]].i = F(ip[2]) != F(ip[3]); NEXT(4);
+    OPC(SEL) R[ip[1]] = R[ip[2]].i ? R[ip[3]] : R[ip[4]]; NEXT(5);
     V3_2(ADD, E_ADD) V3_2(SUB, E_SUB) V3_2(MUL, E_MUL) V3_2(DIV, E_DIV) V3_2(MIN, E_MIN) V3_2(MAX, E_MAX)
     V3_1(NEG, E_NEG) V3_1(ABS, E_ABS) V3_1(FLOOR, E_FLOOR) V3_1(FRACT, E_FRACT)
     V3_3(CLAMP, E_CLAMP) V3_3(MIX, E_MIX)
     VS3(ADD3S, E_ADD) VS3(SUB3S, E_SUB) VS3(MUL3S, E_MUL) VS3(DIV3S, E_DIV)
     SV3(SSUB3, E_SUB) SV3(SDIV3, E_DIV) SV3(SMUL3, E_MUL) SV3(SADD3, E_ADD)
-    case CDL_OP_MIX3S: { const unsigned pa = ip[2], pb = ip[3]; const float cc = F(ip[4]); float o[3];
-      for (int q = 0; q < 3; q++) { float a = F(pa + q), b = F(pb + q); o[q] = E_MIX; } F(ip[1]) = o[0]; F(ip[1] + 1) = o[1]; F(ip[1] + 2) = o[2]; NEXT(5); }
-    case CDL_OP_DOT3: F(ip[1]) = dot3(R, ip[2], ip[3]); NEXT(4);
-    case CDL_OP_CROSS: { const unsigned a = ip[2], b = ip[3];
+    OPC(MIX3S) { const cdl_vm_word *A_ = &R[ip[2]], *B_ = &R[ip[3]]; const float cc = F(ip[4]); float a, b, o0, o1, o2;
+      a = A_[0].f; b = B_[0].f; o0 = E_MIX; a = A_[1].f; b = B_[1].f; o1 = E_MIX; a = A_[2].f; b = B_[2].f; o2 = E_MIX; ST3(ip[1]); NEXT(5); }
+    OPC(DOT3) F(ip[1]) = dot3(R, ip[2], ip[3]); NEXT(4);
+    OPC(CROSS) { const unsigned a = ip[2], b = ip[3];
       const float x = F(a + 1) * F(b + 2) - F(a + 2) * F(b + 1), y = F(a + 2) * F(b) - F(a) * F(b + 2), z = F(a) * F(b + 1) - F(a + 1) * F(b);
       F(ip[1]) = x; F(ip[1] + 1) = y; F(ip[1] + 2) = z; NEXT(4); }
-    case CDL_OP_LEN3: F(ip[1]) = sqrtf(dot3(R, ip[2], ip[2])); NEXT(3);
-    case CDL_OP_NORM3: { const unsigned a = ip[2]; const float l = sqrtf(dot3(R, a, a)); const float x = F(a) / l, y = F(a + 1) / l, z = F(a + 2) / l;
+    OPC(LEN3) F(ip[1]) = sqrtf(dot3(R, ip[2], ip[2])); NEXT(3);
+    OPC(NORM3) { const unsigned a = ip[2]; const float l = sqrtf(dot3(R, a, a)); const float x = F(a) / l, y = F(a + 1) / l, z = F(a + 2) / l;
       F(ip[1]) = x; F(ip[1] + 1) = y; F(ip[1] + 2) = z; NEXT(3); }
-    case CDL_OP_SAFENORM3: { const unsigned a = ip[2]; const float l = sqrtf(dot3(R, a, a)); float x = 0.0f, y = 1.0f, z = 0.0f;
+    OPC(SAFENORM3) { const unsigned a = ip[2]; const float l = sqrtf(dot3(R, a, a)); float x = 0.0f, y = 1.0f, z = 0.0f;
       if (l > 1e-20f) { const float m = fmaxf(l, 1e-20f); x = F(a) / m; y = F(a + 1) / m; z = F(a + 2) / m; }
       F(ip[1]) = x; F(ip[1] + 1) = y; F(ip[1] + 2) = z; NEXT(3); }
-    case CDL_OP_SEL3: { const unsigned s = R[ip[2]].i ? ip[3] : ip[4]; cdl_vm_word a = R[s], b = R[s + 1], d = R[s + 2]; R[ip[1]] = a; R[ip[1] + 1] = b; R[ip[1] + 2] = d; NEXT(5); }
+    OPC(SEL3) { const unsigned s = R[ip[2]].i ? ip[3] : ip[4]; cdl_vm_word a = R[s], b = R[s + 1], d = R[s + 2]; R[ip[1]] = a; R[ip[1] + 1] = b; R[ip[1] + 2] = d; NEXT(5); }
     ALL2(G2) ALL1(G1) ALL3(G3)
-    case CDL_OP_VSEL: { const unsigned w = H & 7, s = R[ip[2]].i ? ip[3] : ip[4]; cdl_vm_word o[4];
+    OPC(VSEL) { const unsigned w = H & 7, s = R[ip[2]].i ? ip[3] : ip[4]; cdl_vm_word o[4];
       for (unsigned q = 0; q < w; q++) o[q] = R[s + q];
-      for (unsigned q = 0; q < w; q++) R[ip[1] + q] = o[q];
+      STOREW(ip[1], o, w);
       NEXT(5); }
-    case CDL_OP_VDOT: { const unsigned w = H & 7, a = ip[2], b = ip[3]; float s = F(a) * F(b); for (unsigned q = 1; q < w; q++) s = s + F(a + q) * F(b + q); F(ip[1]) = s; NEXT(4); }
-    case CDL_OP_VLEN: { const unsigned w = H & 7, a = ip[2]; float s = F(a) * F(a); for (unsigned q = 1; q < w; q++) s = s + F(a + q) * F(a + q); F(ip[1]) = sqrtf(s); NEXT(3); }
-    case CDL_OP_VNORM: case CDL_OP_VSAFENORM: {
+    OPC(VDOT) { const unsigned w = H & 7, a = ip[2], b = ip[3]; float s = F(a) * F(b); for (unsigned q = 1; q < w; q++) s = s + F(a + q) * F(b + q); F(ip[1]) = s; NEXT(4); }
+    OPC(VLEN) { const unsigned w = H & 7, a = ip[2]; float s = F(a) * F(a); for (unsigned q = 1; q < w; q++) s = s + F(a + q) * F(a + q); F(ip[1]) = sqrtf(s); NEXT(3); }
+    OPC(VNORM) OPC(VSAFENORM) {
       const unsigned w = H & 7, a = ip[2]; float s = F(a) * F(a), o[4];
       for (unsigned q = 1; q < w; q++) s = s + F(a + q) * F(a + q);
       const float l = sqrtf(s);
       if ((ip[0] & 255) == CDL_OP_VNORM) for (unsigned q = 0; q < w; q++) o[q] = F(a + q) / l;
       else if (l > 1e-20f) { const float m = fmaxf(l, 1e-20f); for (unsigned q = 0; q < w; q++) o[q] = F(a + q) / m; }
       else for (unsigned q = 0; q < w; q++) o[q] = (w == 2 ? q == 0 : w == 3 ? q == 1 : q == 3) ? 1.0f : 0.0f;
-      for (unsigned q = 0; q < w; q++) F(ip[1] + q) = o[q];
+      STOREF(ip[1], o, w);
       NEXT(3);
     }
-    case CDL_OP_IADD: R[ip[1]].u = R[ip[2]].u + R[ip[3]].u; NEXT(4);
-    case CDL_OP_ISUB: R[ip[1]].u = R[ip[2]].u - R[ip[3]].u; NEXT(4);
-    case CDL_OP_IMUL: R[ip[1]].u = R[ip[2]].u * R[ip[3]].u; NEXT(4);
-    case CDL_OP_IOR: R[ip[1]].u = R[ip[2]].u | R[ip[3]].u; NEXT(4);
-    case CDL_OP_IAND: R[ip[1]].u = R[ip[2]].u & R[ip[3]].u; NEXT(4);
-    case CDL_OP_IXOR: R[ip[1]].u = R[ip[2]].u ^ R[ip[3]].u; NEXT(4);
-    case CDL_OP_IEQ: R[ip[1]].i = R[ip[2]].i == R[ip[3]].i; NEXT(4);
-    case CDL_OP_INE: R[ip[1]].i = R[ip[2]].i != R[ip[3]].i; NEXT(4);
-    case CDL_OP_ILT: R[ip[1]].i = R[ip[2]].i < R[ip[3]].i; NEXT(4);
-    case CDL_OP_ILE: R[ip[1]].i = R[ip[2]].i <= R[ip[3]].i; NEXT(4);
-    case CDL_OP_IGT: R[ip[1]].i = R[ip[2]].i > R[ip[3]].i; NEXT(4);
-    case CDL_OP_IGE: R[ip[1]].i = R[ip[2]].i >= R[ip[3]].i; NEXT(4);
-    case CDL_OP_AND: R[ip[1]].i = R[ip[2]].i && R[ip[3]].i; NEXT(4);
-    case CDL_OP_OR: R[ip[1]].i = R[ip[2]].i || R[ip[3]].i; NEXT(4);
-    case CDL_OP_NOT: R[ip[1]].i = !R[ip[2]].i; NEXT(3);
-    case CDL_OP_INEG: R[ip[1]].u = 0u - R[ip[2]].u; NEXT(3);
-    case CDL_OP_ITOF: F(ip[1]) = (float)R[ip[2]].i; NEXT(3);
-    case CDL_OP_FTOI: R[ip[1]].i = ftoi(F(ip[2])); NEXT(3);
-    case CDL_OP_CALL: {
+    OPC(IADD) R[ip[1]].u = R[ip[2]].u + R[ip[3]].u; NEXT(4);
+    OPC(ISUB) R[ip[1]].u = R[ip[2]].u - R[ip[3]].u; NEXT(4);
+    OPC(IMUL) R[ip[1]].u = R[ip[2]].u * R[ip[3]].u; NEXT(4);
+    OPC(IOR) R[ip[1]].u = R[ip[2]].u | R[ip[3]].u; NEXT(4);
+    OPC(IAND) R[ip[1]].u = R[ip[2]].u & R[ip[3]].u; NEXT(4);
+    OPC(IXOR) R[ip[1]].u = R[ip[2]].u ^ R[ip[3]].u; NEXT(4);
+    OPC(IEQ) R[ip[1]].i = R[ip[2]].i == R[ip[3]].i; NEXT(4);
+    OPC(INE) R[ip[1]].i = R[ip[2]].i != R[ip[3]].i; NEXT(4);
+    OPC(ILT) R[ip[1]].i = R[ip[2]].i < R[ip[3]].i; NEXT(4);
+    OPC(ILE) R[ip[1]].i = R[ip[2]].i <= R[ip[3]].i; NEXT(4);
+    OPC(IGT) R[ip[1]].i = R[ip[2]].i > R[ip[3]].i; NEXT(4);
+    OPC(IGE) R[ip[1]].i = R[ip[2]].i >= R[ip[3]].i; NEXT(4);
+    OPC(AND) R[ip[1]].i = R[ip[2]].i && R[ip[3]].i; NEXT(4);
+    OPC(OR) R[ip[1]].i = R[ip[2]].i || R[ip[3]].i; NEXT(4);
+    OPC(NOT) R[ip[1]].i = !R[ip[2]].i; NEXT(3);
+    OPC(INEG) R[ip[1]].u = 0u - R[ip[2]].u; NEXT(3);
+    OPC(ITOF) F(ip[1]) = (float)R[ip[2]].i; NEXT(3);
+    OPC(FTOI) R[ip[1]].i = ftoi(F(ip[2])); NEXT(3);
+    OPC(CALL) {
       switch (H) {
         case CDL_K_fresnelDielectric: F(ip[1]) = k->fresnelDielectric(F(ip[2]), F(ip[3])); NEXT(4);
         case CDL_K_noise3: F(ip[1]) = k->noise3(&F(ip[2])); NEXT(3);
         case CDL_K_fbm3: F(ip[1]) = k->fbm3(&F(ip[2]), ip[5], F(ip[3]), F(ip[4]), ip[6]); NEXT(7);
-        case CDL_K_voronoi3: { float o[4]; k->voronoi3(&F(ip[2]), o); memcpy(&R[ip[1]], o, 16); NEXT(3); }
-        case CDL_K_tangentWorld: { float o[3]; k->tangentWorld(HITP(ip[2]), &F(ip[3]), F(ip[4]), &F(ip[5]), o); memcpy(&R[ip[1]], o, 12); NEXT(6); }
+        case CDL_K_voronoi3: { float o[4]; k->voronoi3(&F(ip[2]), o); copy4(&R[ip[1]], (const cdl_vm_word *)(const void *)o); NEXT(3); }
+        case CDL_K_tangentWorld: { float o[3]; k->tangentWorld(HITP(ip[2]), &F(ip[3]), F(ip[4]), &F(ip[5]), o); copy3(&R[ip[1]], (const cdl_vm_word *)(const void *)o); NEXT(6); }
         case CDL_K_sellmeier: F(ip[1]) = k->sellmeier(F(ip[2]), &F(ip[3]), &F(ip[4])); NEXT(5);
-        case CDL_K_traceScene: { cdl_hit o; k->traceScene(&F(ip[2]), &F(ip[3]), F(ip[4]), &o); memcpy(&R[ip[1]], &o, sizeof o); NEXT(5); }
+        case CDL_K_traceScene: { cdl_hit o; k->traceScene(&F(ip[2]), &F(ip[3]), F(ip[4]), &o); copy_hit(&R[ip[1]], (const cdl_vm_word *)(const void *)&o); NEXT(5); }
         case CDL_K_occluded: R[ip[1]].i = k->occluded(&F(ip[2]), &F(ip[3]), F(ip[4])) != 0; NEXT(5);
-        case CDL_K_hitAlbedo: { float o[3]; k->hitAlbedo(HITP(ip[2]), &F(ip[3]), o); memcpy(&R[ip[1]], o, 12); NEXT(4); }
-        case CDL_K_hitEmission: { float o[3]; k->hitEmission(HITP(ip[2]), &F(ip[3]), o); memcpy(&R[ip[1]], o, 12); NEXT(4); }
+        case CDL_K_hitAlbedo: { float o[3]; k->hitAlbedo(HITP(ip[2]), &F(ip[3]), o); copy3(&R[ip[1]], (const cdl_vm_word *)(const void *)o); NEXT(4); }
+        case CDL_K_hitEmission: { float o[3]; k->hitEmission(HITP(ip[2]), &F(ip[3]), o); copy3(&R[ip[1]], (const cdl_vm_word *)(const void *)o); NEXT(4); }
         case CDL_K_hash13: F(ip[1]) = k->hash13(&F(ip[2])); NEXT(3);
-        case CDL_K_voronoiVec3: { float o[3]; k->voronoiVec3(&F(ip[2]), o); memcpy(&R[ip[1]], o, 12); NEXT(3); }
-        case CDL_K_envSun: { float o[3]; k->envSun(&F(ip[2]), o); memcpy(&R[ip[1]], o, 12); NEXT(3); }
+        case CDL_K_voronoiVec3: { float o[3]; k->voronoiVec3(&F(ip[2]), o); copy3(&R[ip[1]], (const cdl_vm_word *)(const void *)o); NEXT(3); }
+        case CDL_K_envSun: { float o[3]; k->envSun(&F(ip[2]), o); copy3(&R[ip[1]], (const cdl_vm_word *)(const void *)o); NEXT(3); }
         case CDL_K_rnd: F(ip[1]) = k->rnd(); NEXT(2);
-        case CDL_K_rnd2: { float o[2]; k->rnd2(o); memcpy(&R[ip[1]], o, 8); NEXT(2); }
-        case CDL_K_cosHemiN: { float o[3]; k->cosHemiN(&F(ip[2]), o); memcpy(&R[ip[1]], o, 12); NEXT(3); }
+        case CDL_K_rnd2: { float o[2]; k->rnd2(o); copy2(&R[ip[1]], (const cdl_vm_word *)(const void *)o); NEXT(2); }
+        case CDL_K_cosHemiN: { float o[3]; k->cosHemiN(&F(ip[2]), o); copy3(&R[ip[1]], (const cdl_vm_word *)(const void *)o); NEXT(3); }
       }
       return;   /* unreachable for a verified program */
     }
-    case CDL_OP_FRESDOT: { const float d = fminf(fmaxf(dot3(R, ip[2], ip[3]), 0.0f), 1.0f); F(ip[1]) = k->fresnelDielectric(d, F(ip[4])); NEXT(5); }
-    case CDL_OP_STRIPES: { const float t = F(ip[2]) * F(ip[3]); F(ip[1]) = step_(F(ip[4]), fract_(t)); NEXT(5); }
-    case CDL_OP_CHECKER: { const unsigned a = ip[2], b = ip[3];
+    OPC(FRESDOT) { const float d = fminf(fmaxf(dot3(R, ip[2], ip[3]), 0.0f), 1.0f); F(ip[1]) = k->fresnelDielectric(d, F(ip[4])); NEXT(5); }
+    OPC(STRIPES) { const float t = F(ip[2]) * F(ip[3]); F(ip[1]) = step_(F(ip[4]), fract_(t)); NEXT(5); }
+    OPC(CHECKER) { const unsigned a = ip[2], b = ip[3];
       const float s = CDL_VM_FLOORF(F(a) * F(b)) + CDL_VM_FLOORF(F(a + 1) * F(b + 1)); F(ip[1]) = fmodp(s, 2.0f); NEXT(4); }
-    case CDL_OP_MAD: F(ip[1]) = F(ip[2]) * F(ip[3]) + F(ip[4]); NEXT(5);
-    case CDL_OP_MAD3S: { const unsigned a = ip[2], cc = ip[4]; const float s = F(ip[3]); float o[3];
-      for (int q = 0; q < 3; q++) o[q] = F(a + q) * s + F(cc + q);
-      F(ip[1]) = o[0]; F(ip[1] + 1) = o[1]; F(ip[1] + 2) = o[2];
-      NEXT(5); }
+    OPC(MAD) F(ip[1]) = F(ip[2]) * F(ip[3]) + F(ip[4]); NEXT(5);
+    OPC(MAD3S) { const cdl_vm_word *A_ = &R[ip[2]], *C_ = &R[ip[4]]; const float s = F(ip[3]);
+      const float o0 = A_[0].f * s + C_[0].f, o1 = A_[1].f * s + C_[1].f, o2 = A_[2].f * s + C_[2].f; ST3(ip[1]); NEXT(5); }
   }
   /* unreachable for a verified program */
 }
@@ -522,7 +567,7 @@ void cdl_vm_eval_material(cdl_vm_ctx *c, const cdl_hit *h, const float wo[3], fl
   c->hit = h;
   run(c, e->pc);
   c->hit = saved;
-  memcpy(out, &R[e->ret], sizeof *out);
+  copy_lobe((cdl_vm_word *)(void *)out, &R[e->ret]);
 }
 float cdl_vm_sd_user(cdl_vm_ctx *c, int k, const float p[3]) {
   const cdl_vm_entry_desc *e = &c->p->entry[CDL_E_sdUser];
@@ -550,5 +595,5 @@ void cdl_vm_custom_kernel(cdl_vm_ctx *c, const float ro[3], const float rd[3], f
   cdl_vm_word *R = c->R;
   for (int q = 0; q < 3; q++) { R[e->arg + q].f = ro[q]; R[e->arg + 3 + q].f = rd[q]; }
   run(c, e->pc);
-  memcpy(out, &R[e->ret], 12);
+  copy3((cdl_vm_word *)(void *)out, &R[e->ret]);
 }

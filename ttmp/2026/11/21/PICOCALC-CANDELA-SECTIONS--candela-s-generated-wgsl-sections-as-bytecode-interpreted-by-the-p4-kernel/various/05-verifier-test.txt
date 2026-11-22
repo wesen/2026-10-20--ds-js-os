@@ -17,4 +17,4 @@ targeted malformations of $SCRATCH/export/B-01/prog.cdvm:
   kernel without fresnelDielectric             rejected: the program needs kernel function 0, which the kernel does not export
   last instruction of an entry is not RET/JMP  rejected: instruction at pc 86 runs past the entry
 targeted: 17 of 17 rejected
-{"blobs": 105, "blobsVerified": 105, "targeted": 17, "targetedRejected": 17, "mutants": 210000, "mutantsRejected": 184981, "mutantsAcceptedAndRun": 25019, "evaluations": 753720, "maxStepsOneMaterialEvaluation": 116}
+{"blobs": 105, "blobsVerified": 105, "targeted": 17, "targetedRejected": 17, "mutants": 210000, "mutantsRejected": 184933, "mutantsAcceptedAndRun": 25067, "evaluations": 755160, "maxStepsOneMaterialEvaluation": 116}

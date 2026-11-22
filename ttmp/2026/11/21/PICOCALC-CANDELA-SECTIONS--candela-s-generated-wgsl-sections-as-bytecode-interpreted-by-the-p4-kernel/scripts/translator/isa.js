@@ -48,24 +48,40 @@ export const ENTRIES = [
 
 // Kernel functions reached through cdl_vm_kernel (design Section 7.2). sig: operands after the CALL opcode
 // halfword (whose H is the function number). `custom`: allowed only in the customKernel entry.
+// `effects`: the function changes the kernel's module state (PICOCALC-CANDELA-CPU-KERNEL manifest.json, kernel.sideEffects:
+// traceScene, occluded, rnd, rnd2; cosHemiN draws rnd2). Such calls are never removed, merged or reordered, and run in
+// WGSL's left-to-right order (design Section 4.6). `api`: in the kernel's section API (manifest.json sectionAPI).
 export const KFUNCS = [
-  { name: 'fresnelDielectric', sig: ['d1', 's1', 's1'] },
-  { name: 'noise3', sig: ['d1', 's3'] },
-  { name: 'fbm3', sig: ['d1', 's3', 's1', 's1', 'i', 'i'] },            // oct (<= 16) and mode (<= 2) are immediates
-  { name: 'voronoi3', sig: ['d4', 's3'] },
-  { name: 'tangentWorld', sig: ['d3', 'h', 's3', 's1', 's3'] },
-  { name: 'sellmeier', sig: ['d1', 's1', 's3', 's3'] },
-  { name: 'traceScene', sig: ['dH', 's3', 's3', 's1'], custom: true },
-  { name: 'occluded', sig: ['d1', 's3', 's3', 's1'], custom: true },
-  { name: 'hitAlbedo', sig: ['d3', 'h', 's3'], custom: true },
+  { name: 'fresnelDielectric', sig: ['d1', 's1', 's1'], api: true },
+  { name: 'noise3', sig: ['d1', 's3'], api: true },
+  { name: 'fbm3', sig: ['d1', 's3', 's1', 's1', 'i', 'i'], api: true },            // oct (<= 16) and mode (<= 2) are immediates
+  { name: 'voronoi3', sig: ['d4', 's3'], api: true },
+  { name: 'tangentWorld', sig: ['d3', 'h', 's3', 's1', 's3'], api: true },
+  { name: 'sellmeier', sig: ['d1', 's1', 's3', 's3'], api: true },
+  { name: 'traceScene', sig: ['dH', 's3', 's3', 's1'], custom: true, api: true, effects: true },
+  { name: 'occluded', sig: ['d1', 's3', 's3', 's1'], custom: true, api: true, effects: true },
+  { name: 'hitAlbedo', sig: ['d3', 'h', 's3'], custom: true, api: true },
+  // beyond the section API: Candela's custom-integrator helpers; no preset's sections call them, and a kernel that
+  // does not export them leaves them NULL (the translator refuses them unless opts.kernelApi names them)
   { name: 'hitEmission', sig: ['d3', 'h', 's3'], custom: true },
   { name: 'hash13', sig: ['d1', 's3'] },
   { name: 'voronoiVec3', sig: ['d3', 's3'] },
   { name: 'envSun', sig: ['d3', 's3'], custom: true },
-  { name: 'rnd', sig: ['d1'], custom: true },
-  { name: 'rnd2', sig: ['d2'], custom: true },
-  { name: 'cosHemiN', sig: ['d3', 's3'], custom: true },
+  { name: 'rnd', sig: ['d1'], custom: true, effects: true },
+  { name: 'rnd2', sig: ['d2'], custom: true, effects: true },
+  { name: 'cosHemiN', sig: ['d3', 's3'], custom: true, effects: true },
 ];
+// The kernel's section API and its functions with side effects, as PICOCALC-CANDELA-CPU-KERNEL's
+// scripts/generated/manifest.json lists them (sectionAPI, kernel.sideEffects). lobeNone, lum, metalAt, safeNorm, fmodp and
+// fmodp3 are translated into bytecode; the other nine are kernel calls.
+export const SECTION_API = ['fbm3', 'fmodp', 'fmodp3', 'fresnelDielectric', 'hitAlbedo', 'lobeNone', 'lum', 'metalAt', 'noise3', 'occluded',
+  'safeNorm', 'sellmeier', 'tangentWorld', 'traceScene', 'voronoi3'];
+export const KERNEL_SIDE_EFFECTS = ['cameraRay', 'hitMesh', 'hitObj', 'neeAt', 'occluded', 'renderPixel', 'rnd', 'rnd2', 'shadowTr', 'traceAOV',
+  'traceAll', 'tracePath', 'traceScene'];
+for (const f of KFUNCS) {
+  if (!!f.api !== SECTION_API.includes(f.name)) throw new Error('isa.js: api flag of ' + f.name + ' disagrees with SECTION_API');
+  if (KERNEL_SIDE_EFFECTS.includes(f.name) && !f.effects) throw new Error('isa.js: ' + f.name + ' has side effects');
+}
 export const KFUNC = Object.fromEntries(KFUNCS.map((f, i) => [f.name, i]));
 
 // Elementwise float operations: name -> [arity, C expression over a, b, c]. Scalar opcodes use the name as is;

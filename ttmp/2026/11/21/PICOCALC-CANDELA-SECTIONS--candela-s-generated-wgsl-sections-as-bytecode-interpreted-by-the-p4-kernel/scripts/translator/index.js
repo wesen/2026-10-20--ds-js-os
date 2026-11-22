@@ -16,11 +16,39 @@ const f32bits = (() => { const f = new Float32Array(1), u = new Uint32Array(f.bu
 const FLOATY = new Set(['f32', 'vec2f', 'vec3f', 'vec4f']);
 
 class Program {
-  constructor(fns, spectral) {
-    this.fns = fns; this.spectral = spectral; this.nv = 0;
+  constructor(fns, spectral, kernelApi) {
+    this.fns = fns; this.spectral = spectral; this.nv = 0; this.kernelApi = kernelApi; this.effectMemo = new Map();
     this.constList = []; this.constMap = new Map(); this.importList = []; this.importMap = new Map(); this.kernelAst = new Map();
   }
   newVReg(w, kind) { return new VReg(this.nv++, w, kind); }
+  // does evaluating this expression or statement list call a kernel function with side effects (directly, through a
+  // generated function, or through a pattern such as toWorld(frameOf(N), cosHemi(rnd2())))?
+  hasEffects(node) {
+    if (!node) return false;
+    if (Array.isArray(node)) return node.some(n => this.hasEffects(n));
+    switch (node.k) {
+      case 'call': {
+        const n = node.callee;
+        if (ISA.KFUNC[n] !== undefined && ISA.KFUNCS[ISA.KFUNC[n]].effects) return true;
+        if (ISA.KERNEL_SIDE_EFFECTS.includes(n)) return true;
+        if (this.fns.has(n)) {
+          if (!this.effectMemo.has(n)) { this.effectMemo.set(n, false); this.effectMemo.set(n, this.hasEffects(this.fns.get(n).body)); }
+          if (this.effectMemo.get(n)) return true;
+        }
+        return node.args.some(a => this.hasEffects(a));
+      }
+      case 'member': return this.hasEffects(node.obj);
+      case 'un': return this.hasEffects(node.a);
+      case 'bin': return this.hasEffects(node.a) || this.hasEffects(node.b);
+      case 'let': case 'var': return this.hasEffects(node.init);
+      case 'assign': return this.hasEffects(node.target) || this.hasEffects(node.value);
+      case 'if': return this.hasEffects(node.cond) || this.hasEffects(node.then) || this.hasEffects(node.else);
+      case 'return': return this.hasEffects(node.value);
+      case 'expr': return this.hasEffects(node.e);
+      case 'block': return this.hasEffects(node.body);
+    }
+    return false;
+  }
   constOperand(v) {
     let words;
     if (FLOATY.has(v.t)) words = v.c.map(f32bits);
@@ -58,7 +86,9 @@ export function translateSections(fieldCode, matCode, opts = {}) {
         fns.set(f.name, f);
       }
     }
-    const prog = new Program(fns, !!opts.spectral);
+    // opts.kernelApi: the section API the target kernel exports (default: PICOCALC-CANDELA-CPU-KERNEL's manifest), or 'all'
+    const api = opts.kernelApi === 'all' ? ISA.KFUNCS.map(f => f.name) : (opts.kernelApi || ISA.SECTION_API);
+    const prog = new Program(fns, !!opts.spectral, new Set(api));
     const lowered = [];
     for (const E of ISA.ENTRIES) {
       const ast = fns.get(E.name);

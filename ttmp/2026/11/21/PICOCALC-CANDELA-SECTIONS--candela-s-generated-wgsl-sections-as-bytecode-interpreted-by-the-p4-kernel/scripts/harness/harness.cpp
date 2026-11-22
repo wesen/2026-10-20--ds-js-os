@@ -187,6 +187,9 @@ static void mark(long what, long tag) {
 }
 static void fatal(const char *m) { emit(m, (unsigned)strlen(m)); register long a0 asm("a0") = 3, a7 asm("a7") = 93; asm volatile("ecall" : : "r"(a0), "r"(a7)); for (;;) {} }
 extern "C" int main();
+/* newlib's libm stores errno through the reentrancy structure, which nothing initialises on this bare machine:
+   give the library a plain errno (domain errors such as powf of a negative base occur in some scenes) */
+extern "C" int *__errno(void) { static int e; return &e; }
 extern "C" __attribute__((naked, section(".text.start"))) void _start() {
   asm volatile("call main\n li a7, 93\n ecall\n");
 }

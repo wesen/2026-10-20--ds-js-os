@@ -3,7 +3,7 @@
 import * as ISA from './isa.js';
 import { SectionError } from './parse.js';
 
-const IMPURE_K = new Set([ISA.KFUNC.rnd, ISA.KFUNC.rnd2, ISA.KFUNC.cosHemiN]);
+const IMPURE_K = new Set(ISA.KFUNCS.map((f, i) => (f.effects ? i : -1)).filter(i => i >= 0));   // never removed (design Section 4.6)
 const CONTROL = new Set(['RET', 'JMP', 'BRZ', 'BRNZ', 'IFLT', 'CHOOSE', 'CHOOSE0', 'SWITCH', 'LABEL']);
 
 // operand roles of an IR instruction: for each argument 'd' (defines), 's' (uses), 'x' (both), 'n' (neither)
