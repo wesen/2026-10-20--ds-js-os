@@ -549,7 +549,31 @@ function planLocations(fn, options, inlineCall) {
     return {receiver,forward,homes};
 }
 
-function compile(source, imports = [], maxSourceLength, options) {
+// Named code-generation policies. "default" applies every native optimization that has
+// passed the host differential, the historical replays and a paired P4 trial; a caller
+// that passes no options gets it. "stock" is the code generation of 2026-11-21 before
+// those became defaults, kept as the control arm for experiments. Fields given in the
+// options object override the selected policy; false or null switches one off.
+// PIE loop lowering stays opt-in: it needs typed-pie-loops.js and saved under 1% of a
+// ray frame for about 70 ms of cold compile on the P4.
+const POLICIES = Object.freeze({
+    default: Object.freeze({
+        inlineGuardedReturns: true,
+        operandLocations: Object.freeze({forward: true, capacity: true, homes: true}),
+    }),
+    stock: Object.freeze({}),
+});
+
+function resolveOptions(options) {
+    const name = options?.policy ?? "default";
+    if (!Object.hasOwn(POLICIES, name)) throw new TypeError("unknown RV32 code-generation policy " + name);
+    const resolved = {...POLICIES[name]};
+    for (const key in options ?? {}) if (options[key] !== undefined) resolved[key] = options[key];
+    return resolved;
+}
+
+function compile(source, imports = [], maxSourceLength, requested) {
+    const options = resolveOptions(requested);
     const imported = imports.map((fn, index) => ({...fn, index}));
     const targets = imported.map(fn => ({importIndex: fn.index}));
     const callables = imported.slice();
@@ -713,5 +737,5 @@ function linkSlot(program, runtime, entries) {
     return bytes;
 }
 
-globalThis.typedRv32 = {compile, linkSlot};
+globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES};
 })();

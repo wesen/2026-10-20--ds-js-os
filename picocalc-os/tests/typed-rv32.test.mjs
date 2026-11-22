@@ -162,7 +162,7 @@ test("guarded scalar returns are proved from an earlier body and applied to sele
         function ordinary(x:i32):i32 {return normalize(x);}
     `;
     const events = [];
-    const control = typedRv32.compile(source);
+    const control = typedRv32.compile(source, [], undefined, {policy: "stock"});
     const options = {inlineGuardedReturns: name => name === "selected" || name === "early",
         inspect:{function:"selected",emit:e => events.push(e)}};
     const candidate = typedRv32.compile(source, [], undefined, options);
@@ -176,12 +176,14 @@ test("guarded scalar returns are proved from an earlier body and applied to sele
     assert(emission.ranges.some(r => r.decisions?.some(d => d.includes("guarded return"))));
     assert.deepEqual(candidate.image, typedRv32.compile(source, [], undefined, {...options, streamFunctions:false}).image);
     assert.deepEqual(control.image, typedRv32.compile(source, [], undefined, {inlineGuardedReturns:false}).image);
+    // The default policy inlines every proved helper; the explicit selector narrows it.
+    assert.equal(calls(typedRv32.compile(source), "ordinary"), 0);
 });
 
 test("a checked constant read can use a halfword displacement and a dominating capacity", () => {
     const {typedRv32} = compiler();
     const src = "function read(b:buffer):i32 { return b.charCodeAt(0)+b.charCodeAt(19); }";
-    const emit = operandLocations => words(typedRv32.compile(src, [], undefined, {operandLocations}), "read");
+    const emit = operandLocations => words(typedRv32.compile(src, [], undefined, {policy: "stock", operandLocations}), "read");
     const control = emit(undefined);
     assert.deepEqual(emit({}), control);
     const optimized = emit({forward:true, capacity:true, homes:true});
@@ -190,4 +192,19 @@ test("a checked constant read can use a halfword displacement and a dominating c
     assert.equal(headerLoads.length, 1);
     assert.equal(optimized.filter(w => w === 0x00100073).length, 2);
     assert(optimized.some(w => (w & 0x707f) === 0x5003 && (w >>> 20) === 42));
+});
+
+test("the default policy applies the qualified options and stock reproduces the earlier default", () => {
+    const {typedRv32} = compiler();
+    const src = readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8");
+    const qualified = {inlineGuardedReturns: true, operandLocations: {forward: true, capacity: true, homes: true}};
+    const image = options => typedRv32.compile(src, [], 65536, options).image;
+    assert.deepEqual(image(), image({policy: "stock", ...qualified}));
+    assert.deepEqual(image({policy: "default"}), image());
+    assert.notDeepEqual(image({policy: "stock"}), image());
+    // Explicit fields override the policy, and an explicit undefined leaves it unchanged.
+    assert.deepEqual(image({operandLocations: false, inlineGuardedReturns: false}), image({policy: "stock"}));
+    assert.deepEqual(image({operandLocations: undefined}), image());
+    assert.equal(image({policy: "stock"}).length, 9564);
+    assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });

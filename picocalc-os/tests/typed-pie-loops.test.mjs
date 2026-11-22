@@ -7,9 +7,9 @@ import "../compiler/typed-rv32.js";
 import "../compiler/typed-pie-loops.js";
 
 const source = readFileSync(new URL("../worlds/raytrace/raytrace.typed",import.meta.url),"utf8");
-function observe(text, name, pieLoops, streamFunctions=true) {
+function observe(text, name, pieLoops, streamFunctions=true, policy) {
     const events=[];
-    const options={pieLoops, streamFunctions, inspect:{function:name,emit:event=>events.push(event)}};
+    const options={policy, pieLoops, streamFunctions, inspect:{function:name,emit:event=>events.push(event)}};
     const program=typedRv32.compile(text,[],undefined,options);
     const fn=events.find(e=>e.kind==="emission");
     let position=fn.start;
@@ -74,9 +74,14 @@ test("a per-loop policy sees proved facts and selects the forced image exactly",
 });
 
 test("empty-packet bypass emits the exact P4-qualified ray image in both frontend modes", () => {
+    const sha = image => createHash("sha256").update(Buffer.from(image)).digest("hex");
     for (const streaming of [true,false]) {
-        const result=observe(source, "typedRayComputeRow", "pie-empty", streaming);
-        assert.equal(createHash("sha256").update(Buffer.from(result.program.image)).digest("hex"),
+        // PICOCALC-OPERAND-HOMES timed this image on the P4 (forward + capacity + homes arm).
+        assert.equal(sha(typedRv32.compile(source,[],undefined,{pieLoops:"pie-empty",streamFunctions:streaming}).image),
+            "2e33bb648fd24dc470769ef92cb72be3a793cf4a8de4e964cbbed273b91684ac");
+        const result=observe(source, "typedRayComputeRow", "pie-empty", streaming, "stock");
+        // PICOCALC-SIMD-LAB timed this image on the P4 (pie-empty over the earlier default).
+        assert.equal(sha(result.program.image),
             "9a4a2356a86beee281fb79dcc199bc2369b819ef9b0a5f5c28d444ff4719f26f");
         assert(result.fn.ranges.some(r=>r.segment==="advance past eight misses"));
         assert(result.fn.ranges.some(r=>r.segment==="packet minimum and all-miss test"));

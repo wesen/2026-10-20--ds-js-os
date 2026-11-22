@@ -2,8 +2,8 @@
 
 ## TODO
 - [x] Phase 0: remove the operand-location planner's tape-decoding compile cost with byte-identical output <!-- t:3f8k -->
-- [ ] Phase 0: make the qualified options the default compile path, with an explicit stock policy for controls <!-- t:8yt9 -->
-- [ ] Phase 0: one host ray profiler (RV32 interpreter + per-function counts) usable from node and the REPL <!-- t:4mw9 -->
+- [x] Phase 0: make the qualified options the default compile path, with an explicit stock policy for controls <!-- t:8yt9 -->
+- [x] Phase 0: one host ray profiler (RV32 interpreter + per-function counts) usable from node and the REPL <!-- t:4mw9 -->
 - [ ] Phase 0: write the intern guide (system, evidence, gap decomposition, phased implementation plan) <!-- t:rkpc -->
 - [ ] Phase 0: upload the intern guide to reMarkable <!-- t:1s7m -->
 - [ ] Phase 0: keep REPL field notes and write the verdict on what would make the REPL more useful <!-- t:wzb4 -->

@@ -9,44 +9,448 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: picocalc-os/compiler/typed-rv32.js
+      Note: RV32 backend, compile policies, planLocations
+    - Path: picocalc-os/compiler/typed-wasm.js
+      Note: Frontend and numeric operation tape
+    - Path: picocalc-os/nucleus/raytrace_demo.c
+      Note: The C renderer used as the reference
+    - Path: picocalc-os/tools/rv32-interp.js
+      Note: Reference interpreter with calling-convention checks
+    - Path: picocalc-os/tools/typed-ray-profile.mjs
+      Note: |-
+        Opening-frame profiler
+        Profiler used for Section 5
+    - Path: picocalc-os/worlds/raytrace/raytrace.typed
+      Note: The benchmark program
 ExternalSources: []
-Summary: ""
-LastUpdated: 2026-11-21T19:42:50.482825143-05:00
-WhatFor: ""
-WhenToUse: ""
+Summary: 'What a newcomer needs to change the Typed RV32 compiler: the system, the code generator, the ray-tracer benchmark, the validation tools, the measured gap to C and a phased plan to close it.'
+LastUpdated: 2026-11-21T20:00:00-05:00
+WhatFor: Onboarding a new compiler engineer to PICOCALC-RAY-PARITY
+WhenToUse: Before changing typed-rv32.js, before designing a ray-tracer experiment, or when resuming the parity plan
 ---
 
-# How the Typed compiler reaches C on the ray tracer - an intern guide
+# How the Typed compiler reaches C on the ray tracer
 
-## Executive Summary
+This guide is for an engineer joining the work of making Typed programs on the PicoCalc run as fast as C. By the end you should be able to explain how a Typed function becomes RISC-V machine code on the handheld, read the code generator in `picocalc-os/compiler/typed-rv32.js`, measure a change on the host and on the board, and pick up the next phase of the plan. The guide assumes you know a compiled language and can read a RISC-V instruction listing. It explains everything specific to this project when it first matters.
 
-<!-- Provide a high-level overview of the design proposal -->
+## 1. What the system is
 
-## Problem Statement
+The PicoCalc is a handheld computer built around an Espressif ESP32-P4, a dual-core 32-bit RISC-V processor running at 360 MHz. The firmware is a small operating system written in C. It hosts applications called **worlds**, for example Files, Agenda, Editor, Chess and the Ray Tracer. A world can be written in JavaScript, which the firmware runs in QuickJS, or in **Typed**, a statically typed JavaScript subset that this project defines.
 
-<!-- Describe the problem this design addresses -->
+A Typed world is compiled **on the device**. The compiler is itself JavaScript. When the user opens a Typed world, the firmware starts a fresh QuickJS runtime, loads the compiler, compiles the world's source to RISC-V machine code, links that code into a prebuilt executable, and calls it. Two numbers therefore matter for every compiler change:
 
-## Proposed Solution
+- **Cold compile time** is how long the user waits for the compiler. It runs inside QuickJS, a bytecode interpreter, on the P4.
+- **Execution time** is how fast the generated code runs, for example one ray-traced frame.
 
-<!-- Describe the proposed solution in detail -->
+An optimization that saves 2 ms per frame and costs 100 ms of compile time pays for itself only after 50 frames. Each step of this project reports both numbers.
 
-## Design Decisions
+```mermaid
+flowchart LR
+    subgraph Device["ESP32-P4 (PicoCalc)"]
+        SRC["world source<br/>.typed"] --> QJS["QuickJS runtime<br/>running the compiler"]
+        QJS --> IMG["RV32 machine code"]
+        IMG --> LINK["linkSlot: copy into the<br/>reactor ELF's reserved slot"]
+        LINK --> RUN["firmware loads the ELF<br/>and calls its entries"]
+    end
+    subgraph Host["Workstation"]
+        SAME["same compiler in Node or goja"] --> WASM["WebAssembly encoding<br/>(independent oracle)"]
+        SAME --> INTERP["RV32 interpreter<br/>(instruction counts)"]
+    end
+    style QJS fill:#fde2e2
+    style RUN fill:#e2f0fd
+```
 
-<!-- Document key design decisions and rationale -->
+The same compiler files run on a workstation under Node or under goja, the JavaScript engine inside the trace REPL. On the host the compiler can also emit WebAssembly. Running the WebAssembly in V8 gives an execution of the same source that does not depend on the RISC-V backend. Tests compare the two.
 
-## Alternatives Considered
+There is no production compiler in the commercial sense. Everything here is experimental. What matters is which compile path is the **default**, meaning what `typedRv32.compile(source, imports, maxLength)` does when given no options. Every world on the device uses the default, and every experiment's control arm measures it. Section 6 explains how the default was made cumulative in this ticket.
 
-<!-- List alternative approaches that were considered and why they were rejected -->
+## 2. Typed, as the code generator sees it
 
-## Implementation Plan
+Typed looks like JavaScript with type annotations. The parts that matter for code generation are small:
 
-<!-- Outline the steps to implement this design -->
+- `i32` is a 32-bit signed integer with wrapping arithmetic. `bool` is stored as 0 or 1. Division and remainder trap on a zero divisor and on `-2147483648 / -1`.
+- `buffer` is a reference to a block of unsigned 16-bit **cells** preceded by a 4-byte header holding the capacity in cells. `b.length` reads the header. `b.charCodeAt(i)` reads cell `i`. `b.setCharCodeAt(i, v)` writes it. Both check `0 <= i < capacity` and **trap** otherwise. Writes performed before a trap stay visible. A compiler may therefore never move a check above a store that the source executes first.
+- Functions take at most eight parameters, which arrive in registers `a0`–`a7`. There are no closures in the native target and no garbage collector.
+- Records, enums, imports of firmware services (`typedSdk*`) and `async` functions exist, but the ray tracer uses none of them.
 
-## Open Questions
+Here is a small checked loop that this guide follows through the compiler:
 
-<!-- List any unresolved questions or concerns -->
+```js
+function sumCells(work: buffer, n: i32): i32 {
+    let total = 0;
+    for (let i = 0; i < n; i = i + 1) {
+        total = total + work.charCodeAt(16 + i);
+    }
+    return total;
+}
+```
 
-## References
+## 3. From source to a numeric operation tape
 
-<!-- Link to related documents, RFCs, or external resources -->
+The frontend lives in `picocalc-os/compiler/typed-wasm.js`. Its entry `typedWasm.compileFunctions(source, functionBase, imports, maxLength, numericOperands, onFunction, onSignatures, options)` parses and type-checks the source. For each function it emits a **tape**: an array of integer cells encoding WebAssembly-like stack operations. With `numericOperands = true`, every operand occupies exactly one cell. The RV32 backend consumes this form.
+
+The tape for `sumCells` has 52 cells and 29 operations. `typedWasm.decodeNumericOperations(fn.code)` prints it as follows. The offset is the cell index.
+
+```text
+  0 i32.const              0          8 block 64              29 text.checked_address 0 4
+  2 local.set              2         10 loop 64               32 i32.load16_u 1 4
+  4 i32.const              0         12 local.get 3           35 i32.add
+  6 local.set              3         14 local.get 1           36 local.set 2
+                                     16 i32.lt_s              38 local.get 3   (i = i + 1 …)
+                                     17 i32.eqz               45 br 0
+                                     18 br_if 1               47 end
+                                     20 local.get 2           48 end
+                                     22 i32.const 16          49 local.get 2
+                                     24 local.get 3           51 end
+                                     26 i32.add
+                                     27 local.set 4
+```
+
+Three details matter later:
+
+- Locals are numbered. Parameters come first: `work` is 0 and `n` is 1. Then come declared locals, `total` = 2 and `i` = 3, then frontend temporaries. Local 4 holds the computed index `16 + i`.
+- A buffer read is `text.checked_address receiver index` (opcode `0xf1`) followed immediately by `i32.load16_u` with offset 4. The check and the address computation are one operation, and the load skips the 4-byte header. A write is `0xf1`, then the value expression, then `i32.store16` (`0x3b`).
+- The frontend streams by default. It hands each finished function to the backend through `onFunction` and then drops its tape, so peak memory stays bounded on the P4. `streamFunctions: false` buffers all functions first. Both modes must produce identical images, and tests check this.
+
+The full opcode table is `inspectOperations` in `typed-wasm.js`. The backend's operand-count table `OPERAND_CELLS` in `typed-rv32.js` must agree with it.
+
+## 4. The RV32 backend
+
+`picocalc-os/compiler/typed-rv32.js` is about 700 lines. `typedRv32.compile(source, imports, maxSourceLength, options)` drives the frontend, lowers each function to 32-bit RISC-V words, resolves calls and returns `{image, entries, relocations, signatures, ...}`. Here `image` is a `Uint8Array` of machine code and `entries` maps each function name to its byte offset. `typedRv32.linkSlot(program, reactor, entryNames)` copies the image into a reserved region of a prebuilt reactor ELF and patches its entry stubs.
+
+### 4.1 Where values live
+
+The class `FunctionCode` walks the tape once and emits instructions as it goes. It never builds an intermediate representation. Its decisions about value locations are fixed:
+
+| Value | Default location | Code |
+|---|---|---|
+| Operand-stack depth 0–4 | `t0, t1, t2, t3, t4` | `STACK_REGISTERS`, `push`, `pop` |
+| Deeper operands | frame slot after the locals | `spill`, `slot(depth)` |
+| Every parameter and local | a 4-byte frame slot at `4*local(sp)` | `readLocal`, `writeLocal` |
+| Scratch | `t5`, `t6`; `a0` for capacity, division checks and results | `checkedAddress`, `binary` |
+| Return address | the frame's top slot | `lower()` |
+
+Operand registers keep expression temporaries out of memory. Every **named** value, however, lives in memory: each `local.get` is a load from `sp` and each `local.set` a store. `lower()` emits the prologue (`addi sp,sp,-frame; sw ra,frame-4(sp)`), stores each incoming argument register into its local's slot, walks the tape, and emits one epilogue that every `return` jumps to.
+
+A checked read is lowered by `checkedAddress(receiver, index)`:
+
+```text
+readLocal(t6, receiver)        lw   t6, 4*receiver(sp)    # buffer pointer
+load capacity                  lw   a0, 0(t6)
+bounds test                    bltu index, a0, +8
+                               ebreak                     # the trap
+address                        slli out, index, 1 ; add out, t6, out
+then i32.load16_u              lhu  out, 4(out)
+```
+
+The default backend, with the stock policy, compiles the loop body of `sumCells` to this:
+
+```asm
+38: lw    t0,8(sp)        # total
+3c: addi  t1,zero,16
+40: lw    t2,12(sp)       # i
+44: add   t1,t1,t2
+48: sw    t1,16(sp)       # index temporary, local 4
+4c: lw    t5,16(sp)       # …read straight back
+50: lw    t6,0(sp)        # work
+54: lw    a0,0(t6)        # capacity, again
+58: bltu  t5,a0,0x60
+5c: ebreak
+60: slli  t1,t5,0x1
+64: add   t1,t6,t1
+68: lhu   t1,4(t1)
+6c: add   t0,t0,t1
+70: sw    t0,8(sp)        # total
+74: lw    t0,12(sp)       # i
+   … i = i + 1, stored to 12(sp), then jump back to the test that reloads i and n
+```
+
+Each iteration touches the stack ten times: eight times in the body shown, and twice more in the loop test, which reloads `i` and `n`. GCC and LLVM compile the equivalent checked C with no stack access in the loop at all (Section 7).
+
+### 4.2 Three optional lowerings that are now default
+
+Three mechanisms were added by earlier labs as opt-in options. Since this ticket they are the default.
+
+**Guarded-return inlining** (`inlineGuardedReturns`, class `GuardedReturnCode`). `guardedReturnSummary` recognizes a one-argument helper of the exact form `if (x <rel> K) return -x or C; return x;`, for example `typedRayAbs`. Its call sites are replaced by a compare and a branch. The ray tracer's shadow test calls `typedRayAbs` 74,226 times per frame. After inlining, the shadow function makes no calls, which also makes it a **leaf** for the next mechanism.
+
+**Operand locations** (`operandLocations: {forward, capacity, homes}`, function `planLocations`). This is a pre-pass over a function's tape that produces a plan the emitter consults. It has three policies:
+
+- *forward*: when a `local.set` of a temporary is immediately consumed by a checked address and the temporary is read nowhere else, the index stays in a register. In `sumCells` this removes the `sw t1,16(sp)` / `lw t5,16(sp)` pair.
+- *capacity*: in a **pure leaf**, a function with no stores and no real calls, the capacity of the first buffer read on the straight-line entry path is loaded once into `a7` and reused by later checks.
+- *homes*: in a leaf, the highest-scoring locals get fixed registers from the spare argument registers. Score is one per read, or four inside a loop. The register is the local's location for the whole function, so branch joins need no reconciliation.
+
+With these policies the same loop body becomes the following. `work` is in `a5`, `n` in `a4`, `total` in `a3` and `i` in `a2`:
+
+```asm
+38: addi  t0,a3,0         # total
+3c: addi  t1,zero,16
+40: addi  t2,a2,0         # i
+44: add   t1,t1,t2        # index stays in t1 (forwarded)
+48: lw    a0,0(a5)        # capacity
+4c: bltu  t1,a0,0x54
+50: ebreak
+54: slli  t1,t1,0x1
+58: add   t1,a5,t1
+5c: lhu   t1,4(t1)
+60: add   t0,t0,t1
+64: addi  a3,t0,0         # total
+```
+
+No stack accesses remain in the loop. The register moves (`addi t0,a3,0`) remain, because operands still pass through the fixed operand registers. The capacity is still loaded every iteration, because the first read of `work` lies inside the loop rather than on the straight-line entry path.
+
+**Frameless leaves** (`LeafCode`) were already default. A function with no locals, at most 128 tape cells and only allowlisted operations runs without a stack frame.
+
+**PIE loops** (`pieLoops`, in `typed-pie-loops.js`) stay opt-in. The P4's PIE extension has 128-bit registers holding eight 16-bit lanes. The recognizer finds one loop shape, a subtraction from a loop invariant guarding a scalar continuation, and packs eight subtractions. It saved under 1% of a ray frame and cost about 70 ms of cold compile. Section 8 explains why.
+
+### 4.3 The compile API
+
+```js
+typedRv32.compile(source, imports = [], maxSourceLength, options)
+// options (all optional):
+//   policy: "default" | "stock"        code-generation policy (Section 6); default "default"
+//   inlineGuardedReturns: true | false | (callerName) => bool
+//   operandLocations: {forward?, capacity?, homes?} | false
+//   pieLoops: "scalar" | "pie" | "pie-empty" | (facts) => {plan}   (needs typed-pie-loops.js)
+//   streamFunctions: true (default) | false
+//   inspect: {function?, emit(event)}  observe emitted ranges and decisions
+typedRv32.policies                    // {default, stock}, frozen
+typedRv32.linkSlot(program, reactorBytes, entryNames)
+```
+
+Explicit fields override the policy. `{operandLocations: false}` turns that mechanism off. An explicit `undefined` leaves the policy's value in place.
+
+## 5. The benchmark: one ray-traced frame
+
+`picocalc-os/worlds/raytrace/raytrace.typed` renders a 160 × 160 image of three spheres over a checkered floor, with shadows and diffuse lighting, into RGB565 cells. The camera is orthographic, so every primary ray is parallel to the depth axis. The C reference is `picocalc-os/nucleus/raytrace_demo.c`. Both renderers produce identical pixels, depths and object identities for twelve tested poses.
+
+The entry `typedRayFrame(pixels, work, sphereX, sphereY, lightX, lightY)` calls `typedRayPrepare`, which fills lookup tables in `work`. Then for each of the 160 rows it calls `typedRayComputeRow` (primary intersections) and `typedRayLitRow`. `typedRayLitRow` calls `typedRayPixel` for each pixel. `typedRayPixel` calls `typedRaySphereScale` for sphere pixels, or `typedRayInShadow` for floor pixels, and then `typedRayPack` for the RGB565 conversion.
+
+`node picocalc-os/tools/typed-ray-profile.mjs` runs the opening frame in the host interpreter and attributes executed instructions to functions. These are the two arms on the current source:
+
+| Function | Stock instructions | Default instructions | Default stack loads + stores | Calls made |
+|---|---:|---:|---:|---:|
+| `typedRayInShadow` | 5,528,397 | 4,232,582 | 626,243 | 0 (helper inlined) |
+| `typedRayComputeRow` | 3,608,697 | 3,140,941 | 354,598 | 0 |
+| `typedRayPack` | 1,740,800 | 1,740,800 | 460,800 | 0 |
+| `typedRayPixel` | 1,564,356 | 1,564,356 | 413,496 | 51,200 |
+| `typedRayLitRow` | 1,539,680 | 1,386,080 | 539,360 | 25,600 |
+| `typedRaySphereScale` | 810,424 | 608,365 | 138,323 | 0 |
+| **Frame** | **15,532,634** | **12,717,463** | **2,535,422** | 77,131 |
+
+The table says where the next instructions are:
+
+- `typedRayPack` is unchanged by the default. It makes no checked access, so `planLocations` returns no plan at all, and its seven named values all live on the stack.
+- `typedRayPixel` and `typedRayLitRow` make calls. The *homes* policy only applies to leaves, because the argument registers are overwritten by a call.
+- `typedRayInShadow` is a leaf with homes, but it has 3 parameters and 15 locals and only four spare argument registers. Most of its values still live on the stack.
+
+All three are register-allocation problems. Phase 1 (Section 9) addresses them together.
+
+The interpreter's counts are guest instructions, not cycles. A load, a branch and a divide each count as one. Physical time comes from the board (Section 6.5).
+
+## 6. Measuring and validating a change
+
+A compiler change in this project must pass four gates in this order. The first three run on the workstation in minutes. The fourth needs the board.
+
+```mermaid
+flowchart TD
+    C["change typed-rv32.js"] --> U["1. unit tests<br/>node --test tests/typed-*.test.mjs"]
+    U --> E["2. host semantics<br/>ray profile digest + 24 historical replays"]
+    E --> P["3. host cost<br/>instruction profile + goja compile time"]
+    P --> B["4. board<br/>paired frame and cold-compile trial, then restore"]
+    B --> D["make it the default; next experiment's control"]
+    style B fill:#fde2e2
+    style D fill:#e2f0fd
+```
+
+### 6.1 Unit tests
+
+`make -C picocalc-os test-apps` runs the app logic tests and the compiler tests: `tests/typed-rv32.test.mjs`, `typed-pie-loops.test.mjs`, `typed-inspect.test.mjs` and `typed-wasm-inspect.test.mjs`. Two tests pin exact image digests that were timed on the P4. `9a4a2356…` is `pie-empty` over the stock policy (PICOCALC-SIMD-LAB). `2e33bb64…` is `pie-empty` over the default policy (PICOCALC-OPERAND-HOMES, 46.05 ms per frame). When a change alters the default code generation on purpose, the second digest changes. Record the new one only after it has been timed on the board.
+
+### 6.2 The reference interpreter and the ray profile
+
+`picocalc-os/tools/rv32-interp.js` interprets exactly the RV32IM subset the backend emits. It is a classic script with no imports, so the same file runs in Node, in a trace-REPL session and in QuickJS. `typedRv32Interp.run(program, entry, args, memory, options)` returns the result, the step count and a `Uint32Array` of per-word execution counts. At every internal call it checks that `sp` is 16-byte aligned. At every return it checks that the return address matches the call and that `sp`, `gp`, `tp` and `s0`–`s11` are unchanged. A backend that keeps locals in callee-saved registers and forgets a restore fails here with `callee-saved x9 changed across a call`.
+
+`picocalc-os/tools/typed-ray-bench.js` sets up the opening frame's memory exactly as earlier profilers did. `typed-ray-profile.mjs` runs it and requires the SHA-256 of guest memory after the frame to equal `430f0d50…`, the digest every earlier lab recorded for the C-verified frame. A miscompilation that changes one pixel, depth, identity or padding byte fails this check.
+
+```sh
+cd picocalc-os
+node tools/typed-ray-profile.mjs                       # stock and default
+node tools/typed-ray-profile.mjs --options '{"operandLocations":{"homes":true}}' --json /tmp/p.json
+```
+
+### 6.3 The 24 historical replays
+
+Files, Agenda and Editor have end-to-end host checks written by earlier labs. Each compiles a world, links it into a reactor built with the Espressif GCC, runs it in the CJI RISC-V emulator (`cji/build/rv32/rv32emu`) and compares screens and state with the WebAssembly build. `scripts/04-replays.sh` in this ticket runs all 24:
+
+```sh
+gcc=/home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-gcc
+bash ttmp/2026/11/21/PICOCALC-RAY-PARITY--*/scripts/04-replays.sh "$gcc" "$PWD/cji/build/rv32/rv32emu"
+```
+
+The Editor replays had been failing since November 20 for a reason unrelated to the compiler. `sdk/typed/world.c` now encodes Chess PSIX frames, so the reactor needs `chess-psix.c` plus `__floatsidf`, `__divdi3` and `strcmp`, and the emulator's firmware modules provide none of them. The ticket's copy of the Editor replay links `chess-psix.c` and `scripts/04-libgcc-helpers.c`, whose integer-only implementations were checked against native results on 4,000,000 inputs. With that fix, all 24 replays pass.
+
+### 6.4 The trace REPL as a compiler sandbox
+
+The trace REPL (`cmd/trace-repl`) is a Go service that keeps JavaScript sessions alive between requests. Its query language answers questions about captured LLVM pass dumps. Its session VM can also hold the Typed compiler. `scripts/01-open-compiler-session.py PORT --baseline REV` loads the frontend, the async rewriter, the world linker and two backends into one session: the working tree's as `typedRv32` and the one at `REV` as `typedRv32Base`. It also loads every Typed source, including the assembled worlds. Two drivers use such a session:
+
+- `02-planner-equivalence.py` compiles every input with both backends under seven option sets and compares the bytes. Use it for any change that should not alter output.
+- `03-compile-cost.py` interleaves base and candidate compiles and reports medians.
+
+goja, like QuickJS, is a bytecode interpreter. Allocation-heavy compiler code that V8 runs quickly shows up there as it does on the P4. The planner's original cost was found this way. The ticket's analysis document records the REPL's limits: 64 KiB per cell, a 15 s deadline, and no file loading.
+
+### 6.5 The board
+
+Physical trials use the procedure of the earlier labs. Build a diagnostic firmware that compiles each arm on the device and times the compiled entry in rotated, paired blocks. Check every output against its host fixture after timing. Then flash the playable firmware again. Leaving the playable build installed is a standing rule (`AGENTS.md`). The build and install recipe is `ttmp/2026/11/20/PICOCALC-TYPED-CHESS--…/reference/03-reproduce-chess.md`. The closest existing ray harness is PICOCALC-OPERAND-HOMES `scripts/01-board.py`, which timed five policies, the shadow predicate, complete frames and cold compiles in one image. Report paired medians: the median of the per-block percentage changes, not the ratio of two medians.
+
+## 7. What C does that Typed does not yet do
+
+The earlier labs compared the shadow predicate against GCC 14.2 and LLVM 18 on the same data layout, with the same checks, on the same P4. Listed in cycles per call, fastest first:
+
+| Implementation | Cycles/call | What separates it from the row above |
+|---|---:|---|
+| Firmware C, native data layout | 73.76 | — |
+| GCC, Typed's 16-bit cell layout, unchecked | 88.40 | data representation (+20%) |
+| GCC, same layout, checked | 135.74 | bounds checks (+54%) |
+| LLVM, same layout, checked | 144.31 | a different optimizing compiler |
+| LLVM with its block-local register allocator | 276.70 | register allocation across blocks (+92%) |
+| Typed default (this ticket) | 276.98 | — |
+| Typed before operand locations | 382.25 | forwarding, capacity reuse, leaf homes |
+
+The remaining factor of 3.75 to the C predicate splits into three parts:
+
+```text
+277 / 74  ≈  (277 / 136)  ×  (136 / 88)  ×  (88 / 74)
+ 3.75     ≈     2.04      ×     1.54     ×    1.20
+            code generation   bounds checks  representation
+```
+
+The code-generation factor is mostly register allocation. LLVM's middle end turns every local into an SSA value (SROA and `PromoteMemToReg`). Its greedy allocator then keeps loop-carried values in registers across blocks and calls, saving callee-saved registers once per call. Its block-local allocator, which spills at block boundaries, needs 92% more cycles on the same IR, and Typed now sits at exactly that level. LLVM also removes redundant capacity loads with EarlyCSE: 12 sites become 1 in the read-only predicate. The checks factor is the cost of the bounds contract itself. C omits the checks. Typed must keep them, but it can test a whole region once and keep a checked fallback. The representation factor comes from Typed buffers having only 16-bit cells.
+
+For the whole frame, Typed under the measured default plus `pie-empty` took 46.05 ms against 7.72 ms for scalar C in the same firmware. The C renderer visits all 160 pixels of every row for every sphere. A Typed source that computes exact sphere spans and traverses shadows row by row took 29.98 ms on the old compiler. "Competitive with C" therefore has two meanings, and both should be reported. One compares the same algorithm in both languages; that is the compiler benchmark. The other compares the best correct Typed program against the existing C renderer; that is the product benchmark.
+
+## 8. Why vectorization is not the next step
+
+PIE vectorization of the primary row saved 0.43% of a frame over an equally scheduled scalar row, and the best packet variant saved 0.90%. Only the subtraction `d = R - squares[x]` is packed. Every hit still goes through a scalar square-root lookup at a data-dependent address, a compare and conditional stores, which the ordinary backend emits with its stack-resident locals. Hand-written PIE in the C renderer saves only about 1.1 ms of a 7.9 ms frame. GCC's vectorizer declined the loop on cost, and LLVM's RV32 target left it scalar. Vectorization pays on this processor when the whole loop body stays in lanes. A planar particle update used 89% fewer cycles packed than scalar. Return to SIMD once scalar code is close to LLVM.
+
+## 9. The plan
+
+Each phase changes the default only after passing the four gates in Section 6. Each phase's result becomes the next phase's control.
+
+### Phase 0: make improvements cumulative (this ticket, done)
+
+- `planLocations` walks raw tape cells instead of decoding the tape into objects. Its output is byte-identical on every compiling input (98 compiles across the ray tracer, four assembled worlds and the standalone sources, under seven option sets). Its overhead in goja fell from +34% to +5% of a ray compile.
+- `compile` resolves a named **policy**. `default` enables guarded-return inlining and all three operand-location policies. `stock` reproduces the earlier default for control arms.
+- The interpreter, the frame bench and the profiler live in `picocalc-os/tools/`. The replays are repaired.
+
+### Phase 1: register homes for every framed function
+
+This is the next compiler change, and it addresses the three rows of Section 5's table that are register-allocation problems. It has four parts.
+
+1. **Plan every framed function.** Today `planLocations` returns `null` unless the tape contains a checked address (`0xf1`). Homes do not depend on buffers. Forwarding and capacity caching keep their own conditions.
+2. **Keep parameters in their incoming registers in a leaf.** Today homes start at `a{max(1, params)}`, so a homed parameter is copied to another register. Parameter `i >= 1` can stay in `a_i`. `a0` cannot be a home, because the framed emitter uses it as scratch for capacity loads, division checks and return values.
+3. **Use the callee-saved registers `s1`–`s11`** for leaves that run out of argument registers and for functions that make calls. A callee must preserve these registers across a call. Each one the function claims costs a save in the prologue and a restore in the epilogue, two instructions per invocation, plus a frame slot. A function that calls others can keep values in `s` registers across those calls, which argument registers cannot do.
+4. **Charge the cost.** Assign an `s` register only to a local whose loop-weighted score exceeds the save/restore cost, with reads and writes both counted. A local read once outside any loop is better left in its slot.
+
+Pseudocode for the planner part (a sketch; names follow the current code):
+
+```js
+function planHomes(fn, scores, {leaf, receiverCached}) {
+    const homes = new Map();
+    const free = [];
+    if (leaf) {
+        // incoming argument registers a1..a{params-1} stay homes for their parameters
+        for (let p = 1; p < fn.params.length; p++) if (scores.get(p) >= 2) homes.set(p, A0 + p);
+        for (let r = A0 + Math.max(1, fn.params.length); r < A0 + (receiverCached ? 7 : 8); r++) free.push({reg: r, cost: 0});
+    }
+    for (const s of [9, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]) free.push({reg: s, cost: 2});  // s1, s2..s11
+    for (const [local, score] of [...scores].sort((x, y) => y[1] - x[1])) {
+        if (homes.has(local)) continue;
+        const next = free[0];
+        if (!next || score <= next.cost + 1) break;
+        homes.set(local, free.shift().reg);
+    }
+    return homes;   // the emitter saves/restores every s register that appears here
+}
+```
+
+The emitter changes are small, because `readLocal` and `writeLocal` already consult `this.locations.homes`:
+
+```text
+lower():
+    addi sp, sp, -frame              # frame now includes one slot per claimed s register
+    sw   ra, frame-4(sp)
+    sw   s_k, saveSlot(k)(sp)        # NEW, for each claimed s register
+    move each argument register to its home or slot
+    … body …
+exit:
+    lw   s_k, saveSlot(k)(sp)        # NEW
+    lw   ra, frame-4(sp)
+    addi sp, sp, frame
+    ret
+```
+
+`call()` needs no change. It spills only the operand registers `t0`–`t4` that survive the call, and the callee preserves `s` registers by contract. The PIE emitter path returns before planning and is unaffected. Frameless leaves have no locals and are unaffected.
+
+Validation: the interpreter's callee-saved check, the ray profile digest, the 24 replays, and byte-identity of the `stock` policy. The profile should show `typedRayPack` and `typedRayInShadow` stack traffic falling sharply, and `typedRayPixel` and `typedRayLitRow` stack traffic falling for the values that live across their calls. The target on the board is the shadow predicate moving from 277 cycles toward LLVM's 144.
+
+The unmerged patch from November 19 (`ttmp/2026/11/19/PICOCALC-REGISTER-LOCALS--…/scripts/02-register-locals.patch`) implemented the same idea on a different research copy of the backend. It cut Editor's search loop by 41% and cost 6.7% compile time. Read it for the corner cases it handled, such as an older pending read of a local that a direct write would overwrite, and the division check's scratch register. It cannot be applied as a patch.
+
+### Phase 2: capacity reuse beyond pure leaves
+
+`typedRayComputeRow` still loads `work`'s capacity 155,812 times per frame. It writes only into `work` itself, through checked stores. A checked store to cell `i` writes bytes `4+2i` and `5+2i`, which can never overlap the buffer's own 4-byte header. A store into a *different* buffer might, if the caller passed overlapping buffers, and earlier labs tested such aliases. The rule to implement: the cache survives checked stores into the cached receiver and is invalidated by any other store or real call. Separately, the load must not be hoisted to entry unless the function reads that buffer on every path. Otherwise, loading at the first access inside a loop and keeping the register afterwards needs a "loaded" flag, or a guard at the loop header.
+
+### Phase 3: one check for a whole region
+
+Generalize the SCALAR-BREAKDOWN shadow-region guard. When every access in a function or loop has a provable maximum index, test the maximum once at entry and run an unchecked copy. Otherwise run the original checked copy, so traps still occur at the same operation with the same prior writes. The earlier lab's instruction prediction for this transformation matched the measurement exactly. Target: the unchecked GCC row of Section 7.
+
+### Phase 4: division by constants
+
+`typedRayPack` divides by 255, 8 and 4 six times per pixel. GCC replaces `x / 255` with a high-half multiplication by a fixed reciprocal, shifts and a sign correction. For a divisor proved positive, Typed already omits the trap checks. The remaining step is the reciprocal sequence. It must keep truncation toward zero for negative dividends.
+
+### Phase 5: the algorithm, in both languages
+
+Port the exact-span and row-oriented-shadow traversal from PICOCALC-TYPED-RAY into `raytrace.typed`. Port the same traversal to C for the fair reference. `scripts/director/row-domain.c` in that ticket is a start. Measure both against the then-current default.
+
+### Phase 6: element widths
+
+Signed 16-bit and 32-bit indexed arrays would let source state what it stores. This is a language change in the frontend and both backends, and it is scheduled last.
+
+## 10. Decision records
+
+**D1. The qualified options become the default; `stock` remains for controls.** Context: improvements lived behind options, so every lab's control was the unimproved compiler. Alternatives: keep options and require every caller to pass them; or flip the default with no way back. Decision: a named policy object, defaulting to `default`, with `stock` reproducing the previous output byte for byte. Consequence: the next experiment starts from the improved compiler automatically. The P4-pinned digest in `typed-pie-loops.test.mjs` now names the OPERAND-HOMES image.
+
+**D2. PIE loop lowering stays opt-in.** It needs another module, saves under 1% of a ray frame and costs about 70 ms of cold compile. Revisit after Phase 3.
+
+**D3. The interpreter lives in `picocalc-os/tools/` as a dependency-free classic script.** Earlier labs ran interpreters copied between ticket directories and patched with string replacement. One maintained file that runs in Node, goja and QuickJS lets tests, the REPL and future on-device checks share it. It does not execute PIE instructions; programs compiled with `pieLoops` are profiled elsewhere.
+
+**D4. Copy, do not edit, historical replay scripts.** The ticket keeps a repaired copy of the Editor replay and of `replay.sh`. The original evidence in older tickets stays as it was recorded.
+
+## 11. Review rules for a backend change
+
+- A new location for a value must be honored by every reader and writer of that value: `readLocal`, `writeLocal`, `checkedAddress`, argument setup in `lower()`, and the PIE emitter if it can see the function.
+- Never home a value in `a0`, `t5` or `t6` in a framed function. They are scratch.
+- A function that claims an `s` register must restore it on every exit. All exits jump to `this.exit`; keep it that way.
+- Run the `stock` policy through `02-planner-equivalence.py` after any refactor. Its output must not move.
+- Report guest instructions and P4 cycles separately. Report cold compile time next to execution time.
+
+## 12. File and API reference
+
+| Path | Contents |
+|---|---|
+| `picocalc-os/compiler/typed-wasm.js` | Lexer, parser, type checker, tape emitter, `compileFunctions`, `decodeNumericOperations`, Wasm encoder |
+| `picocalc-os/compiler/typed-async.js` | Rewrites `async` functions before emission (needed for Editor) |
+| `picocalc-os/compiler/typed-rv32.js` | `FunctionCode`, `GuardedReturnCode`, `LeafCode`, `planLocations`, `POLICIES`, `compile`, `linkSlot` |
+| `picocalc-os/compiler/typed-pie-loops.js` | Optional PIE loop recognizer and emitter |
+| `picocalc-os/compiler/typed-world.js` | World import table (`typedWorld.imports`) and linker contract |
+| `picocalc-os/compiler/raytrace.js` | `linkTypedRay`: the ray tracer's four entries |
+| `picocalc-os/worlds/raytrace/raytrace.typed` | Benchmark source |
+| `picocalc-os/nucleus/raytrace_demo.c` | C reference renderer (`trace_row`) |
+| `picocalc-os/port/esp32p4/main/typed_ray_p4.c` | Firmware side of the Typed ray mode; program table at `install()` |
+| `picocalc-os/tools/rv32-interp.js` | `typedRv32Interp.run/profile/classify` |
+| `picocalc-os/tools/typed-ray-bench.js` | `typedRayBench.openingFrame/frameProfile` |
+| `picocalc-os/tools/typed-ray-profile.mjs` | Opening-frame profiler with digest check |
+| `picocalc-os/tests/typed-rv32.test.mjs` | Backend unit tests, including the policy test |
+| `cmd/trace-repl/README.md` | REPL service protocol |
+| this ticket `scripts/` | REPL session setup, planner equivalence, compile cost, repaired replays |

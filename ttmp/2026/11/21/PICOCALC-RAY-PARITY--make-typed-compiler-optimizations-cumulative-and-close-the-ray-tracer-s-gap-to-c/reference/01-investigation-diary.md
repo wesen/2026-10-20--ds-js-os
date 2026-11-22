@@ -160,3 +160,66 @@ An earlier run in another session gave ray 19.0/24.3/19.3/21.0, Chess 214.8/252.
 ### Technical details
 
 - Operand cells per opcode are taken from `inspectOperations` in `typed-wasm.js` (numeric mode reads one cell per operand format).
+
+## Step 3: Make the qualified options the default and repair the historical replays
+
+The default compile path now applies guarded-return inlining and all three operand-location policies. `{policy: "stock"}` reproduces the previous default byte for byte for control arms. Before changing the default I needed a semantic gate for the apps whose code generation would change. The 24 historical replays were that gate, but 13 of them, all Editor, had been failing since November 20 for a reason unrelated to the compiler. Repairing them took most of this step.
+
+All 24 replays pass on the commit before the change and on the new default. The ray profiler reproduces the C-verified opening-frame digest under both policies. The default plus `pie-empty` emits exactly the image that PICOCALC-OPERAND-HOMES timed on the P4.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** "Clean things up" means improvements must accumulate: the next experiment's control must already contain them.
+**Inferred user intent:** Stop measuring every new idea against the unimproved compiler.
+**Commit (code):** recorded in Step 4.
+
+### What I did
+
+- Added `POLICIES` (`default`, `stock`) and `resolveOptions` to `typed-rv32.js`. `compile` resolves the policy first. Explicit fields override it, and explicit `undefined` is ignored. Exported as `typedRv32.policies`.
+- Updated tests: two tests that examine stock behaviour now pass `policy: "stock"`. The pinned PIE test checks both the SIMD-LAB image (`9a4a2356…`, `pie-empty` over stock) and the OPERAND-HOMES image (`2e33bb64…`, `pie-empty` over the new default). A new test covers the policy API.
+- Wrote `picocalc-os/tools/rv32-interp.js` (dependency-free interpreter with calling-convention checks), `tools/typed-ray-bench.js` (opening-frame memory and per-function profile) and `tools/typed-ray-profile.mjs` (CLI with SHA-256 digest check).
+- Ran the 24 replays from `PICOCALC-COMPILER-THESIS/scripts/lowering/replay.sh`, found the Editor failures, and made repaired copies in this ticket: `scripts/04-replays.sh`, `04-check-editor-world.mjs`, `04-editor-world-driver.c` and `04-libgcc-helpers.c`.
+
+### Why
+
+- A default that changes Files, Agenda and Editor code needs an end-to-end check of those apps. The replays compare RV32 execution in `cji/build/rv32/rv32emu` with WebAssembly.
+
+### What worked
+
+- Replays: `various/03-replays-baseline-25cd108.log` 24/24 PASS on the planner commit; `various/04-replays-default-policy.log` 24/24 PASS on the new default.
+- Tests: `node --test` over the five compiler and app test files gives 37 pass, 0 fail. `make -s test-apps`: every suite reports 0 failures.
+- Profile (`various/05-ray-profile-default.json`): stock 15,532,634 instructions, default 12,717,463 (−18.1%). Both reproduce the output digest `430f0d50…`. Per function, the interpreter reproduces the earlier labs' counts exactly: `typedRayInShadow` 5,528,397, `typedRayComputeRow` 3,608,697, `typedRayPack` 1,740,800. The frame total is 10 instructions above TYPED-RAY's 15,532,624. I did not find the cause, and it does not affect any comparison made here.
+
+### What didn't work
+
+- The first baseline run (`replay.sh` unchanged) gave 11 PASS and 13 FAIL. Every Editor world check failed with `rv32emu: it links to chess_psix_encode, which picocalc-os does not give a module`.
+- Adding `chess-psix.c` gave `rv32emu: it links to __floatsidf, which picocalc-os does not give a module`. Adding `-lgcc` failed in the shared link (`collect2: error: ld returned 1 exit status`).
+- `riscv32-esp-elf-nm -u` on a probe reactor listed `__divdi3`, `__floatsidf`, `memcpy`, `memmove`, `snprintf`, `strcmp`, `strlen`. My first helper file used 64-bit variable shifts, which GCC compiled into a call to `__ashldi3`: `rv32emu: it links to __ashldi3`. Rewritten on 32-bit halves, the next missing symbol was `strcmp`. Adding it made the replay pass: `{"inputBytes":123,"matchingWasmFramebuffers":3,"rv32Open":true,...}`.
+
+### What I learned
+
+- The replays had been silently broken since the Chess PSIX commit to `sdk/typed/world.c` on November 20. No ray lab ran them. A default change during that period would have had no Editor gate.
+
+### What was tricky to build
+
+- Helpers that implement libgcc routines must not need libgcc. 64-bit shifts by a variable amount and 64-bit division compile to calls at `-Os` on RV32. The helpers in `04-libgcc-helpers.c` use explicit lo/hi words. They were checked on the host against native `(double)` conversion and 64-bit division on 4,000,000 inputs, including `INT32_MIN`, `INT64_MIN+1 / -1` and sign combinations, with 0 mismatches.
+
+### What warrants a second pair of eyes
+
+- `resolveOptions` copies only defined fields. `{operandLocations: undefined}` therefore keeps the default. That is intentional, so that callers which forward an optional field do not silently drop to stock, and a test covers it.
+- The default now changes the native code of every Typed world on the next firmware build. The 24 replays and the ray digest are host evidence. A board trial (task "Device") is still owed.
+
+### What should be done in the future
+
+- Promote the repaired replay suite out of ticket directories into `picocalc-os/tests/`, so it runs with `make`.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `POLICIES`, `resolveOptions`, `compile`.
+- `picocalc-os/tests/typed-rv32.test.mjs`: last test. `tests/typed-pie-loops.test.mjs`: pinned digests.
+- Run: `node --test picocalc-os/tests/typed-*.test.mjs`; `node picocalc-os/tools/typed-ray-profile.mjs`; `bash $T/scripts/04-replays.sh $GCC $PWD/cji/build/rv32/rv32emu`.
+
+### Technical details
+
+- GCC: `/home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-gcc`. Emulator: `cji/build/rv32/rv32emu` (built 2026-11-17).
