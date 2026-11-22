@@ -1,0 +1,157 @@
+{
+ "session": "session-f7d6e40b-6ba3-45ce-9354-75c5a07aa81e",
+ "scores": {
+  "cFrameUs": 7726.5,
+  "checkedCPredicateCycles": 135.88011500744466,
+  "chess": {
+   "control": 2691.0677083333335,
+   "candidate": 2434.6875,
+   "savedPct": 9.55,
+   "wins": 6
+  },
+  "mode1": {
+   "frame": {
+    "control": 22439,
+    "candidate": 21563,
+    "savedPct": 3.85,
+    "wins": 6
+   },
+   "primary": {
+    "control": 6109.5,
+    "candidate": 6094,
+    "savedPct": 0.29,
+    "wins": 4
+   },
+   "shade": {
+    "control": 26381,
+    "candidate": 25752,
+    "savedPct": 2.37,
+    "wins": 6
+   },
+   "predicate": {
+    "control": 193.4304564357961,
+    "candidate": 188.2011090003594,
+    "savedPct": 2.8,
+    "wins": 6
+   },
+   "compileRay": {
+    "control": 674974.5,
+    "candidate": 773780,
+    "savedPct": -14.64,
+    "wins": 0
+   },
+   "compileChess": {
+    "control": 138421.5,
+    "candidate": 151933,
+    "savedPct": -9.77,
+    "wins": 0
+   },
+   "peakRay": {
+    "control": 1050256,
+    "candidate": 1050256,
+    "savedPct": 0,
+    "wins": 0
+   },
+   "scenesSavedPct": [
+    3.85,
+    4.16,
+    4.22,
+    4.42,
+    3.9,
+    3.47,
+    3.17,
+    3.44,
+    3.38,
+    4.67,
+    3.55,
+    3.56
+   ],
+   "sceneWins": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  "mode2": {
+   "frame": {
+    "control": 22439,
+    "candidate": 20195,
+    "savedPct": 9.98,
+    "wins": 6
+   },
+   "primary": {
+    "control": 6109.5,
+    "candidate": 5789,
+    "savedPct": 5.03,
+    "wins": 6
+   },
+   "shade": {
+    "control": 26381,
+    "candidate": 24633,
+    "savedPct": 6.64,
+    "wins": 6
+   },
+   "predicate": {
+    "control": 193.4304564357961,
+    "candidate": 181.66637572521435,
+    "savedPct": 5.89,
+    "wins": 6
+   },
+   "compileRay": {
+    "control": 674974.5,
+    "candidate": 777635,
+    "savedPct": -15.21,
+    "wins": 0
+   },
+   "compileChess": {
+    "control": 138421.5,
+    "candidate": 150407,
+    "savedPct": -8.66,
+    "wins": 0
+   },
+   "peakRay": {
+    "control": 1050256,
+    "candidate": 1050256,
+    "savedPct": 0,
+    "wins": 0
+   },
+   "scenesSavedPct": [
+    9.98,
+    10.71,
+    10.39,
+    10.84,
+    9.86,
+    8.97,
+    9.46,
+    10.28,
+    9.23,
+    10.24,
+    9.83,
+    10.28
+   ],
+   "sceneWins": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  }
+ }
+}

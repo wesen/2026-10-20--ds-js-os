@@ -238,8 +238,24 @@ class FunctionCode {
                 return;
             }
         }
+        // select.shortBranches: a forward branch is one conditional branch, patched once the
+        // function is complete; patchBranches() asks for a long-branch lowering if any
+        // target is beyond the 4 KiB range.
+        if (this.select?.shortBranches && !this.longBranches) {
+            (this.shortBranches ??= []).push({from: this.words.length, target, kind, a, b});
+            this.emit(0);
+            return;
+        }
         this.emit(instruction.b(kind ^ 1, a, b, 8));
         this.jump(target);
+    }
+
+    patchBranches() {
+        for (const {from, target, kind, a, b} of this.shortBranches ?? []) {
+            const offset = 4 * (target.at - from);
+            if (!(offset <= 4094)) throw SHORT_BRANCH_RANGE;
+            this.words[from] = instruction.b(kind, a, b, offset) >>> 0;
+        }
     }
 
     jump(target, rd = ZERO) {
@@ -575,6 +591,7 @@ class FunctionCode {
         this.load(RA, frame - 4);
         this.emit(instruction.i(0x13, SP, 0, SP, frame));
         this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
+        this.patchBranches();
         return this;
     }
 }
@@ -633,6 +650,7 @@ const LEAF_OPERANDS = new Map([
     ...Array.from(ALU.keys(), op => [op,0]),
 ]);
 const LEAF_SPILL = Symbol("frameless function needs an operand spill");
+const SHORT_BRANCH_RANGE = Symbol("a forward branch target is beyond the conditional-branch range");
 
 class LeafCode extends FunctionCode {
     spill() { throw LEAF_SPILL; }
@@ -653,6 +671,7 @@ class LeafCode extends FunctionCode {
         if (this.at !== this.program.code.length || this.control.length) throw LEAF_SPILL;
         this.mark(this.exit);
         this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
+        this.patchBranches();
         return this;
     }
 }
@@ -1192,9 +1211,9 @@ const POLICIES = Object.freeze({
     default: Object.freeze({
         inlineGuardedReturns: true,
         operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
-            capacities: true, nested: true, constants: true}),
+            capacities: true, nested: true, constants: true, share: true}),
         select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
-            commute: true, rotate: true}),
+            commute: true, rotate: true, shortBranches: true}),
         inline: true,
     }),
     stock: Object.freeze({}),
@@ -1274,11 +1293,21 @@ function compile(source, imports = [], maxSourceLength, requested) {
         }
         let compiled = lowerLeaf(fn, callables, targets, options?.select);
         if (!compiled) {
-            const emitter = new Emitter(fn, callables, targets);
-            emitter.select = options?.select;
-            if (options?.operandLocations) emitter.locations = planLocations(fn, {...options.operandLocations, select: options.select},
-                index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn);
-            compiled = emitter.lower();
+            const plan = options?.operandLocations ? planLocations(fn, {...options.operandLocations, select: options.select},
+                index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn) : undefined;
+            const emit = longBranches => {
+                const emitter = new Emitter(fn, callables, targets);
+                emitter.select = options?.select;
+                emitter.longBranches = longBranches;
+                if (plan !== undefined) emitter.locations = plan;
+                return emitter.lower();
+            };
+            try {
+                compiled = emit(false);
+            } catch (error) {
+                if (error !== SHORT_BRANCH_RANGE) throw error;
+                compiled = emit(true);
+            }
         }
         const index = imported.length + code.length;
         const candidate = inlining && inlineCandidate(fn, libraryCopy.code, inlining, targets[index]?.guardedReturn);

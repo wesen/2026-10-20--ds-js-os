@@ -330,7 +330,7 @@ The remaining factor of 3.75 to the C predicate splits into three parts:
 
 The code-generation factor is mostly register allocation. LLVM's middle end turns every local into an SSA value (SROA and `PromoteMemToReg`). Its greedy allocator then keeps loop-carried values in registers across blocks and calls, saving callee-saved registers once per call. Its block-local allocator, which spills at block boundaries, needs 92% more cycles on the same IR, and Typed now sits at exactly that level. LLVM also removes redundant capacity loads with EarlyCSE: 12 sites become 1 in the read-only predicate. The checks factor is the cost of the bounds contract itself. C omits the checks. Typed must keep them, but it can test a whole region once and keep a checked fallback. The representation factor comes from Typed buffers having only 16-bit cells.
 
-For the whole frame, Typed under the earlier default plus `pie-empty` took 46.05 ms against 7.72 ms for scalar C in the same firmware. After Phase 1 the default without PIE took 39.49 ms (5.11× C) and the shadow predicate 247 cycles (1.82× the checked C predicate's 136). After Phase 1b it took 31.51 ms (4.08× C) and 212.8 cycles (1.57×); after Phases 1c and 1d it takes 22.43 ms (2.90× C) and 194.1 cycles (1.43×). The C renderer visits all 160 pixels of every row for every sphere. A Typed source that computes exact sphere spans and traverses shadows row by row took 29.98 ms on the old compiler. "Competitive with C" therefore has two meanings, and both should be reported. One compares the same algorithm in both languages; that is the compiler benchmark. The other compares the best correct Typed program against the existing C renderer; that is the product benchmark.
+For the whole frame, Typed under the earlier default plus `pie-empty` took 46.05 ms against 7.72 ms for scalar C in the same firmware. After Phase 1 the default without PIE took 39.49 ms (5.11× C) and the shadow predicate 247 cycles (1.82× the checked C predicate's 136). After Phase 1b it took 31.51 ms (4.08× C) and 212.8 cycles (1.57×); after Phases 1c and 1d it took 22.43 ms (2.90× C) and 194.1 cycles (1.43×); after Phase 1e it takes 20.20 ms (2.61× C) and 181.7 cycles (1.34×). The C renderer visits all 160 pixels of every row for every sphere. A Typed source that computes exact sphere spans and traverses shadows row by row took 29.98 ms on the old compiler. "Competitive with C" therefore has two meanings, and both should be reported. One compares the same algorithm in both languages; that is the compiler benchmark. The other compares the best correct Typed program against the existing C renderer; that is the product benchmark.
 
 ## 8. Why vectorization is not the next step
 
@@ -420,6 +420,10 @@ The profile after Phase 1 showed where the remaining instructions were: 1.79 M `
 
 `select.rotate` emits every `for`/`while` loop bottom-tested, so an iteration ends in one backward branch instead of a skip and a jump. `operandLocations.constants` keeps literals that need a register (fused compares, constant checked indices, large immediates) in homes, planned by the same `constantForm` decision the emitter uses. P4 frame: 24.19 → 22.43 ms (2.90× C), ray cold compile +10.6%.
 
+### Phase 1e: shared homes and short forward branches (Step 10)
+
+`operandLocations.share` lets locals whose live intervals do not overlap share a register, so the inlined bodies in `LitRow` share homes and one callee-saved save serves several locals (stack loads 275 k → 105 k). `select.shortBranches` emits a forward conditional branch as one instruction, patched once the function is complete, and lowers the function again with long branches if any target lies beyond 4 KiB. Host frame: 6,454,048 → 6,102,270 → 5,884,011 instructions. P4 frame: 22.44 → 20.20 ms (2.61× C), ray cold compile +15% (from `share`, whose interval test is quadratic).
+
 ### Phase 2: capacity reuse beyond pure leaves
 
 (Largely covered by `capacities` in Phase 1c for buffer parameters; locals that hold buffers remain.)
@@ -429,6 +433,13 @@ The profile after Phase 1 showed where the remaining instructions were: 1.79 M `
 ### Phase 3: one check for a whole region
 
 Generalize the SCALAR-BREAKDOWN shadow-region guard. When every access in a function or loop has a provable maximum index, test the maximum once at entry and run an unchecked copy. Otherwise run the original checked copy, so traps still occur at the same operation with the same prior writes. The earlier lab's instruction prediction for this transformation matched the measurement exactly. Target: the unchecked GCC row of Section 7.
+
+**Status after Phases 1–1e.** This is now the largest remaining cost. In the default frame (5.9–6.1 M host instructions), each checked `work.charCodeAt(K + x)` costs `addi`, `bltu`, `slli`, `add` and `lhu`. That is about 1.6 M instructions across 541,956 accesses, where GCC emits one `lhu` off a strength-reduced pointer. Two pieces are needed, and both work on the tape after inlining:
+
+1. **Pointer homes.** For accesses `r[L + k]` with the same buffer r and local L and constants k within ±1021 of an anchor K0, keep `p = r + 4 + 2*(L + K0)` in a register. Each access becomes `lhu v, 2*(k-K0)(p)`. The planner scores p like a local. The emitter updates p at every write of L: `addi p, p, 2c` for `L = L + c`, otherwise three instructions. Example: `typedRayInShadow`'s `work[shadow]` … `work[shadow + 3]` (52,917 iterations per frame), and `ComputeRow`'s `work[1545 + x]` and `work[1705 + x]` with anchor 1545.
+2. **Versioned loops.** For a rotated loop whose counter has a constant start, a constant or invariant bound and a constant step, every `r[L + k]` index lies in a computable range. Before the loop, test the range's maximum against a capacity home and its minimum against 0. If both pass, run a copy of the loop whose accesses in that set carry no check; otherwise run the original. Writes in the loop cannot change a capacity (Phase 1c), so the test is valid for the whole loop. The cost is code size: the loop exists twice. In `typedRayLitRow` the loop holds the inlined pixel pipeline.
+
+Loop-invariant loads (`InShadow`'s `work[16..19]` inside `LitRow`'s pixel loop, about 0.5 M instructions) need the same versioning with an additional test: the hoisted cells must not lie inside the address range of any buffer the loop writes.
 
 ### Phase 4: division by constants
 

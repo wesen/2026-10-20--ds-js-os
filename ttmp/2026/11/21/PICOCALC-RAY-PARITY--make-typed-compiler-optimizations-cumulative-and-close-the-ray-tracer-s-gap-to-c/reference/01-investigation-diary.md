@@ -684,3 +684,92 @@ This is a milestone. The two Step 8 options became part of `POLICIES.default`, a
 - Host frame: 6,454,048 instructions, reference digest. Gap to C on the P4: 2.90× the frame, 1.43× the checked predicate.
 
 **Commit (code):** recorded in the next step.
+
+## Step 10: Shared homes and short forward branches
+
+Step 8 named the binding limit: each home holds one local for the whole function. `LitRow` holds four inlined bodies whose locals are never live together, so most of them lost the competition for registers. This step adds two options.
+
+- **`operandLocations.share`** gives locals with disjoint live intervals the same register.
+- **`select.shortBranches`** turns every forward conditional branch from a skip plus a jump into one branch.
+
+On the P4 the two together cut the frame from 22.44 to 20.20 ms (−10.0%, 6/6 blocks, all 12 scenes), the predicate from 193.4 to 181.7 cycles and Chess evaluation by 9.6%. Typed is now at 2.61× the C frame. Ray cold compile rose 15%, almost all of it from `share`. Both are now the default.
+
+**Commits (code):** 3c99db8 added `share` as opt-in. The default change and `shortBranches` are in the commit that records this step.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 6. During this step the user asked "have you been checking on your subagent btw? how are they doing?" and "how's our progress?". Both were answered in the conversation; neither changed the plan.
+**Assistant interpretation:** Continue toward C parity.
+**Inferred user intent:** As before, with visibility into progress.
+
+### What I did
+
+- `share`: while walking the tape, the planner records each local's first and last offset, whether its first occurrence is a read, and every loop's extent.
+  - Intervals: a parameter is live from entry (offset −1). A local that occurs before a loop and inside it is widened to the whole loop, innermost loops first. This is sound because Typed re-initializes every declaration inside a loop body on each iteration, so only a local that also occurs before the loop carries a value across the back edge. A local whose first occurrence is a read (a generated continuation slot) gets no interval and is live everywhere.
+  - Assignment: `planSavedHomes` keeps the registers it has opened with their intervals. A local takes the first opened register whose intervals it overlaps nowhere, at no cost. Otherwise it opens a free register as before. Once registers run out it keeps going (`continue`, not `break`), because a lower-scored local may still share. Capacity and constant homes have no interval and occupy their register for the whole function.
+- `shortBranches`: `branch()` records a forward branch, emits a placeholder, and `patchBranches()` writes `b<cond> offset` once the function is complete. A target beyond +4094 bytes throws `SHORT_BRANCH_RANGE`, and `compile` lowers that function again with `longBranches` (the old skip plus `jal`). Frameless leaves are at most 128 tape cells, so they keep their own path.
+- A new test (`short forward branches fall back to the long form…`) puts a 300-statement if-arm in `far`. It checks that `near` gets shorter, that `far` is word-for-word the long form, and that both match stock results.
+- Board: `various/35-board-modes-share-short.json`, stock-based. Mode 0 is the Step 8 default (pin `7c660e87…`), mode 1 adds `share`, mode 2 adds both. Imported to `various/38-board-share-short`, scored in the REPL to `various/39-board-share-short-scores.json`.
+- Compile cost in goja for all five programs: `scripts/13-compile-cost-arms.py`, a checked-in version of the heredoc that produced `various/24`. It takes a modes file and named arms. Output: `various/37-compile-cost-share-goja.json`.
+
+### Why
+
+- After Step 8, `InShadow`'s locals in `LitRow` went through stack slots on every floor pixel (`sw t1,188(sp)` … `lw t1,220(sp)`). 275 k stack loads remained.
+
+### What worked
+
+Host frame (reference digest each time): Step 8 default 6,454,048. With `share` 6,102,270 (stack loads 275 k → 105 k, `li` 367 k → 337 k). With both **5,884,011**, 8004 B image (8804 before).
+
+Chess engine oracle (6981/6981 words each): 141,569,168, then 137,330,965 with `share` and **128,814,186** with both. `share` without inlining gives 178,293,829.
+
+Board, against mode 0 (median of per-block savings; wins of 6):
+
+| | mode 1: share | mode 2: share + short |
+|---|---:|---:|
+| frame (22,439 µs) | 21,563 (3.85%) | **20,195 (9.98%)** |
+| primary pass (6,109.5 µs) | 0.29% (4 wins) | 5.03% |
+| shade pass (26,381 µs) | 2.37% | 6.64% |
+| shadow predicate (193.4 cycles) | 188.2 (2.80%) | 181.7 (5.89%) |
+| ray cold compile (674,974.5 µs) | −14.64% | −15.21% |
+| Chess cold compile (138,421.5 µs) | −9.77% | −8.66% |
+
+- Mode 2 scenes: 8.97% to 10.84%, all 6/6. Chess evaluate: 2,691.1 → 2,434.7 cycles per call (−9.55%). C references: frame 7,726.5 µs, checked predicate 135.9 cycles.
+- Restored `e7b771aa…`, eight worlds healthy. Diagnostic app SHA-256 `c51afb0b2b10b0c9deff7c76b3000811a2b2a260446095073abde2ae13fbc29c`.
+- goja, median ms (image bytes):
+
+| program | Step 8 | + share | + short |
+|---|---:|---:|---:|
+| ray | 74.2 (8,804) | 89.8 (8,340) | 86.2 (8,004) |
+| Chess | 513.1 (40,680) | 526.0 (39,880) | 525.6 (37,912) |
+| Editor | 1,209.8 (88,500) | 1,292.4 (86,580) | 1,250.4 (80,600) |
+| Files | 25.3 (3,752) | 25.8 (3,700) | 25.8 (3,208) |
+| Agenda | 211.6 (24,728) | 216.3 (23,868) | 214.8 (22,320) |
+
+- Tests: 143 pass. Replays: 24/24 PASS with `share` alone in the default (`various/34-replays-share-default.log`) and with both (`various/40-replays-share-short-default.log`).
+
+### What didn't work
+
+- **I first put short branches under the existing `select.branches` flag.** That changed the default image without a board run, and the default-policy pin test failed (`✖ the default policy applies the qualified options…`). Short branches are now their own field.
+- **I edited the compiler while the replays for `share` were running.** The short-branch edit landed mid-run, so that log (24/24 PASS) did not test a single compiler. I moved it out of the ticket and reran the replays after the edit settled (24/24 again). The rule: do not touch `compiler/` while a replay or an image build is reading it.
+- **I built a two-mode board image first** (`board-build-5`: Step 8 and `share`). By the time it finished, short branches existed, so I rebuilt with three modes and never flashed the first.
+- **`share` costs compile time** (+21% for ray in goja, +15% on the device) because `disjoint()` scans every interval in a register for every candidate, and `opened.find` scans every register. For ray this is fine. For a function with hundreds of locals it is quadratic.
+
+### What I learned
+
+- **Branch shape mattered more than expected.** `shortBranches` alone removed 218 k frame instructions, and in the inlined code every `if` and every `&&` produces a forward branch.
+- **Checked accesses are now the largest single cost.** A classifier over the hot frame (`scratchpad/access.mjs`) counts 541,956 checks per frame. The sequence around them (`addi` index, `bltu`, `slli`, `add`, `lhu`) is 2.32 M of 5.88 M instructions, 39.5% of the frame.
+
+### What warrants a second pair of eyes
+
+- **The interval argument relies on Typed's block scoping.** Inlining keeps it: callee locals are declared inside the inlined block, and argument copies are written immediately before it. A future frontend feature that lets a value declared in a loop body escape the loop would break it.
+- **The fallback lowers the whole function a second time.** That is correct but doubles the cost of the rare function with a far branch.
+
+### What should be done in the future
+
+- **Phase 3 pointer homes and versioned loops** (designed in the guide's Phase 3 section).
+- **Make `share` linear:** sort intervals per register, or run a linear scan over all locals.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `occur` and the `intervals` block in `planLocations`; `planSavedHomes` (`opened`, `disjoint`); `branch`, `patchBranches`, `SHORT_BRANCH_RANGE` and the retry in `compile`'s `lower`.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the short-branch test; the four default pins and the `without` helper.

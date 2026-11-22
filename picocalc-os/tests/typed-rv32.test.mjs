@@ -201,9 +201,14 @@ test("the default policy applies the qualified options and stock reproduces the 
     const src = readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8");
     const qualified = {inlineGuardedReturns: true, inline: true,
         operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
-            constants: true},
-        select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true, rotate: true}};
+            constants: true, share: true},
+        select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true, rotate: true,
+            shortBranches: true}};
     const image = options => typedRv32.compile(src, [], 65536, options).image;
+    // The default with some qualified fields switched off.
+    const without = (select, locations, rest = {}) => ({...rest,
+        select: {...qualified.select, ...Object.fromEntries(select.map(k => [k, false]))},
+        operandLocations: {...qualified.operandLocations, ...Object.fromEntries(locations.map(k => [k, false]))}});
     assert.deepEqual(image(), image({policy: "stock", ...qualified}));
     assert.deepEqual(image({policy: "default"}), image());
     assert.notDeepEqual(image({policy: "stock"}), image());
@@ -211,16 +216,16 @@ test("the default policy applies the qualified options and stock reproduces the 
     assert.deepEqual(image({operandLocations: false, inlineGuardedReturns: false, select: false, inline: false}), image({policy: "stock"}));
     assert.deepEqual(image({operandLocations: undefined}), image());
     assert.equal(image({policy: "stock"}).length, 9564);
-    // PICOCALC-RAY-PARITY Step 8 timed this image on the P4 (board mode 3: 22.43 ms per frame).
-    assert.equal(createHash("sha256").update(image()).digest("hex"),
-        "7c660e876a8c1211b853e9c8b7aff4b2fd400b2431500fce753fa7e55d5ab201");
-    // Step 7's image (24.18 ms): without loop rotation and constant homes.
-    assert.equal(createHash("sha256").update(image({select: {...qualified.select, rotate: false},
-        operandLocations: {...qualified.operandLocations, constants: false}})).digest("hex"),
+    const sha = options => createHash("sha256").update(image(options)).digest("hex");
+    // PICOCALC-RAY-PARITY Step 10 timed this image on the P4 (board mode 2: 20.20 ms per frame).
+    assert.equal(sha(), "e7e33cd0c2cb8fcea41c7a2143a031b62dc8ba827814c83cdf503479e799d1e7");
+    // Step 8's image (22.43 ms): without shared homes and short forward branches.
+    assert.equal(sha(without(["shortBranches"], ["share"])), "7c660e876a8c1211b853e9c8b7aff4b2fd400b2431500fce753fa7e55d5ab201");
+    // Step 7's image (24.18 ms): also without loop rotation and constant homes.
+    assert.equal(sha(without(["shortBranches", "rotate"], ["share", "constants"])),
         "4e7eb52aee07cf8fd5e6a3a96733d100241b10fe445030793a73513229fb676c");
-    // Step 6's image (31.51 ms): the same policy without inlining and the Step 7 options.
-    assert.equal(createHash("sha256").update(image({inline: false, select: {...qualified.select, commute: false, rotate: false},
-        operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}})).digest("hex"),
+    // Step 6's image (31.51 ms): also without inlining and the Step 7 options.
+    assert.equal(sha(without(["shortBranches", "rotate", "commute"], ["share", "constants", "capacities", "nested"], {inline: false})),
         "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
@@ -372,4 +377,38 @@ function fill(out: buffer, buf: buffer, n: i32): i32 {
     assert.equal(trapStock.trap, true);
     assert.equal(trapCandidate.trap, true);
     assert.deepEqual(trapCandidate.bytes, trapStock.bytes);
+});
+
+test("short forward branches fall back to the long form beyond the conditional-branch range", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    // The if-arm in `far` is longer than 4 KiB of code, so its exit branch cannot be short.
+    const body = Array.from({length: 300}, (_, i) => `        s = s * 3 + ${i} - (s >> 4);`).join("\n");
+    const src = `function near(n: i32): i32 {
+    let s = 0;
+    for (let i = 0; i < n; i = i + 1) { if (i % 3 === 0) { s = s + i; } }
+    return s;
+}
+function far(n: i32): i32 {
+    let s = n;
+    if (n > 5) {
+${body}
+    }
+    return s;
+}`;
+    const options = {select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true,
+        commute: true, rotate: true, shortBranches: true}};
+    const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
+    const short = typedRv32.compile(src, [], undefined, options);
+    const long = typedRv32.compile(src, [], undefined, {...options, select: {...options.select, shortBranches: false}});
+    const run = (p, f, n) => typedRv32Interp.run(p, f, [n], new Uint8Array(64)).result;
+    for (const n of [0, 1, 5, 6, 17, 100]) {
+        assert.equal(run(short, "near", n), run(stock, "near", n), "near " + n);
+        assert.equal(run(short, "far", n), run(stock, "far", n), "far " + n);
+    }
+    // near uses short branches; far fell back and matches the long form exactly.
+    assert(words(short, "near").length < words(long, "near").length);
+    assert.deepEqual(words(short, "far"), words(long, "far"));
 });

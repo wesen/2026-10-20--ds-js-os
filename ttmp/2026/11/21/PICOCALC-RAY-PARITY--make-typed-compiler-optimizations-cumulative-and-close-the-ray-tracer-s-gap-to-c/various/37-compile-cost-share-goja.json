@@ -1,0 +1,113 @@
+{
+ "ms": {
+  "ray.step8": 74.2,
+  "ray.share": 89.8,
+  "ray.short": 86.2,
+  "chess.step8": 513.1,
+  "chess.share": 526,
+  "chess.short": 525.6,
+  "editor.step8": 1209.8,
+  "editor.share": 1292.4,
+  "editor.short": 1250.4,
+  "files.step8": 25.3,
+  "files.share": 25.8,
+  "files.short": 25.8,
+  "agenda.step8": 211.6,
+  "agenda.share": 216.3,
+  "agenda.short": 214.8
+ },
+ "bytes": {
+  "ray.step8": 8804,
+  "ray.share": 8340,
+  "ray.short": 8004,
+  "chess.step8": 40680,
+  "chess.share": 39880,
+  "chess.short": 37912,
+  "editor.step8": 88500,
+  "editor.share": 86580,
+  "editor.short": 80600,
+  "files.step8": 3752,
+  "files.share": 3700,
+  "files.short": 3208,
+  "agenda.step8": 24728,
+  "agenda.share": 23868,
+  "agenda.short": 22320
+ },
+ "arms": {
+  "step8": {
+   "policy": "stock",
+   "inlineGuardedReturns": true,
+   "inline": true,
+   "operandLocations": {
+    "forward": true,
+    "capacity": true,
+    "homes": true,
+    "saved": true,
+    "direct": true,
+    "capacities": true,
+    "nested": true,
+    "constants": true
+   },
+   "select": {
+    "immediates": true,
+    "divisions": true,
+    "branches": true,
+    "results": true,
+    "leafParams": true,
+    "commute": true,
+    "rotate": true
+   }
+  },
+  "share": {
+   "policy": "stock",
+   "inlineGuardedReturns": true,
+   "inline": true,
+   "operandLocations": {
+    "forward": true,
+    "capacity": true,
+    "homes": true,
+    "saved": true,
+    "direct": true,
+    "capacities": true,
+    "nested": true,
+    "constants": true,
+    "share": true
+   },
+   "select": {
+    "immediates": true,
+    "divisions": true,
+    "branches": true,
+    "results": true,
+    "leafParams": true,
+    "commute": true,
+    "rotate": true
+   }
+  },
+  "short": {
+   "policy": "stock",
+   "inlineGuardedReturns": true,
+   "inline": true,
+   "operandLocations": {
+    "forward": true,
+    "capacity": true,
+    "homes": true,
+    "saved": true,
+    "direct": true,
+    "capacities": true,
+    "nested": true,
+    "constants": true,
+    "share": true
+   },
+   "select": {
+    "immediates": true,
+    "divisions": true,
+    "branches": true,
+    "results": true,
+    "leafParams": true,
+    "commute": true,
+    "rotate": true,
+    "shortBranches": true
+   }
+  }
+ }
+}
