@@ -1,0 +1,180 @@
+{
+ "stock": {
+  "policy": "stock"
+ },
+ "locations": {
+  "policy": "stock",
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true,
+   "saved": true,
+   "direct": true,
+   "capacities": false,
+   "nested": false,
+   "constants": false,
+   "share": false,
+   "pointers": false,
+   "split": false
+  },
+  "select": {
+   "immediates": false,
+   "divisions": false,
+   "branches": false,
+   "results": false,
+   "leafParams": false,
+   "commute": false,
+   "rotate": false,
+   "shortBranches": false,
+   "version": false
+  },
+  "inline": false,
+  "inlineGuardedReturns": true
+ },
+ "step6": {
+  "policy": "stock",
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true,
+   "saved": true,
+   "direct": true,
+   "capacities": false,
+   "nested": false,
+   "constants": false,
+   "share": false,
+   "pointers": false,
+   "split": false
+  },
+  "select": {
+   "immediates": true,
+   "divisions": true,
+   "branches": true,
+   "results": true,
+   "leafParams": true,
+   "commute": false,
+   "rotate": false,
+   "shortBranches": false,
+   "version": false
+  },
+  "inline": false,
+  "inlineGuardedReturns": true
+ },
+ "step7": {
+  "policy": "stock",
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true,
+   "saved": true,
+   "direct": true,
+   "capacities": true,
+   "nested": true,
+   "constants": false,
+   "share": false,
+   "pointers": false,
+   "split": false
+  },
+  "select": {
+   "immediates": true,
+   "divisions": true,
+   "branches": true,
+   "results": true,
+   "leafParams": true,
+   "commute": true,
+   "rotate": false,
+   "shortBranches": false,
+   "version": false
+  },
+  "inline": true,
+  "inlineGuardedReturns": true
+ },
+ "step8": {
+  "policy": "stock",
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true,
+   "saved": true,
+   "direct": true,
+   "capacities": true,
+   "nested": true,
+   "constants": true,
+   "share": false,
+   "pointers": false,
+   "split": false
+  },
+  "select": {
+   "immediates": true,
+   "divisions": true,
+   "branches": true,
+   "results": true,
+   "leafParams": true,
+   "commute": true,
+   "rotate": true,
+   "shortBranches": false,
+   "version": false
+  },
+  "inline": true,
+  "inlineGuardedReturns": true
+ },
+ "step10": {
+  "policy": "stock",
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true,
+   "saved": true,
+   "direct": true,
+   "capacities": true,
+   "nested": true,
+   "constants": true,
+   "share": true,
+   "pointers": false,
+   "split": false
+  },
+  "select": {
+   "immediates": true,
+   "divisions": true,
+   "branches": true,
+   "results": true,
+   "leafParams": true,
+   "commute": true,
+   "rotate": true,
+   "shortBranches": true,
+   "version": false
+  },
+  "inline": true,
+  "inlineGuardedReturns": true
+ },
+ "step11": {
+  "policy": "stock",
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true,
+   "saved": true,
+   "direct": true,
+   "capacities": true,
+   "nested": true,
+   "constants": true,
+   "share": true,
+   "pointers": true,
+   "split": false
+  },
+  "select": {
+   "immediates": true,
+   "divisions": true,
+   "branches": true,
+   "results": true,
+   "leafParams": true,
+   "commute": true,
+   "rotate": true,
+   "shortBranches": true,
+   "version": false
+  },
+  "inline": true,
+  "inlineGuardedReturns": true
+ },
+ "step13": {}
+}

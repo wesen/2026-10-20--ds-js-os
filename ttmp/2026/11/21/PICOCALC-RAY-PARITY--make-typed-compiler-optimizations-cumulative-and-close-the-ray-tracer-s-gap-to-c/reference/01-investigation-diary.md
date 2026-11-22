@@ -1039,3 +1039,35 @@ Board, against mode 0 (median of per-block savings; wins of 6):
 
 - `picocalc-os/compiler/typed-rv32.js`: `VERSION_LIMITS`, `opNext`, `opClose`, `versionLoops` (`transform`, `version`, `expression`, the guard terms, the fast body), `splitLocals`, `checkedAddress`'s `unchecked` path, `case 0xf3`, the forward path in `step`, and the `0xf3` cases in `planLocations`.
 - `picocalc-os/tests/typed-rv32.test.mjs`: the versioning test, and the pointer-home test's `select`.
+
+## Step 14: The defaults broke the boot compiles of Agenda and Editor on the device
+
+The first playable firmware built with the Step 13 default (`2712684`) did not boot into its worlds. Agenda hit its 1.7 s compile deadline and Editor its 6 s deadline, so the manifest failed to load. Every gate of this ticket had passed: the host replays, the Chess oracle and the paired board run. None of them compiles the boot worlds on the device. The board run compiles only the ray tracer and a Chess kernel there. The device is back on the previous playable app (`e7b771aa…`, restored with the new `scripts/16-restore-playable.py`, eight worlds healthy). The measurement and the fix are now ticket PICOCALC-COMPILE-BUDGET.
+
+### Prompt Context
+
+**User prompt (verbatim):** "have you run the compiler on the device since all these improvements? or the resulting programs?"
+
+**Assistant interpretation:** Validate that the compiler and its programs work on the hardware, not only in the board benchmark.
+
+**Inferred user intent:** No regression of the handheld itself.
+
+### What I did
+
+- Built and installed the playable firmware; the install failed. See COMPILE-BUDGET diary Step 1 for the boot log and the restore.
+- Measured compile time per cumulative step:
+  - goja, as a workbench job: arms in `various/58-compile-cost-steps-arms.json`, 54 s for the whole job.
+  - jitless Node.
+- Saved the unfinished division-facts work (`select.facts`) as a patch in the scratchpad and reverted the compiler to `HEAD`: an analysis that only adds compile time waits until the budget is restored.
+
+### What didn't work
+
+- **The qualification gates.** A step's compile cost was checked on the device only for ray and the Chess kernel, and on the host in goja. Measured from `stock`, Step 13 compiles Agenda 4.6× slower and Editor 3.1× slower in jitless Node. goja said Editor grew only 1.6×, because on the device the lexer index is native and in goja it is not.
+
+### What I learned
+
+- Every step since Step 6 added compile time. The default, not just versioning, is over budget for the interactive worlds.
+
+### What should be done in the future
+
+- Add a gate before any default change: COMPILE-BUDGET's arms firmware, which compiles every boot world under every candidate policy on the P4.

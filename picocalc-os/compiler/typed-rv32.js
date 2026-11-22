@@ -922,10 +922,33 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
     let candidate = false;
     for (let i = tape.indexOf(0x10); i >= 0 && !candidate; i = tape.indexOf(0x10, i + 1)) candidate = library.has(tape[i + 1]);
     if (!candidate || (!anywhere && !tape.includes(0x03))) return null;
-    const bases = new Map(), out = [], stack = [], blocks = [];
-    let locals = fn.params.length + fn.nlocals, loops = 0, changed = false;
-    const push = entry => stack.push(entry);
-    const pop = n => { stack.length = Math.max(0, stack.length - n); };
+    // Until the first inlined call the output is a copy of the input, so the output length at
+    // a call is its offset: a scan of the call sites decides exactly whether any is inlined.
+    {
+        let loops = 0, site = false;
+        const opened = [];
+        for (let at = 0; at < tape.length && !site;) {
+            const opcode = tape[at], cells = OPERAND_CELLS[opcode];
+            if (cells < 0) return null;
+            if (opcode === 0x10 && (anywhere || loops > 0)) {
+                const callee = library.get(tape[at + 1]);
+                site = callee !== undefined && at + callee.code.length <= limits.callerCells &&
+                    loops + callee.loops <= limits.maxLoopDepth;
+            } else if (opcode >= 0x02 && opcode <= 0x04) {
+                opened.push(opcode);
+                if (opcode === 0x03) loops++;
+            } else if (opcode === 0x0b && opened.length && opened.pop() === 0x03) loops--;
+            at += 1 + cells;
+        }
+        if (!site) return null;
+    }
+    // Abstract operand stack, as parallel arrays: where each entry's cells start in the output,
+    // and whether it is a plain local.get (kind 1) or i32.const (kind 2) of `value`; kind 0 is
+    // any other value.
+    const bases = new Map(), out = [], blocks = [], stackAt = [], stackKind = [], stackValue = [];
+    let locals = fn.params.length + fn.nlocals, loops = 0, changed = false, sp = 0;
+    const push = (at, kind, value) => { stackAt[sp] = at; stackKind[sp] = kind; stackValue[sp] = value; sp++; };
+    const pop = n => { sp = Math.max(0, sp - n); };
     for (let at = 0; at < tape.length;) {
         const opcode = tape[at], cells = OPERAND_CELLS[opcode], a = tape[at + 1];
         if (cells < 0) return null;
@@ -936,28 +959,27 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
             const start = out.length;
             for (let k = 0; k <= cells; k++) out.push(tape[at + k]);
             at += 1 + cells;
-            // Abstract operand stack: the cells that produced each simple value.
-            if (opcode === 0x20) push({at: start, local: a});
-            else if (opcode === 0x41) push({at: start, constant: a});
+            if (opcode === 0x20) push(start, 1, a);
+            else if (opcode === 0x41) push(start, 2, a);
             else if (opcode === 0x21) {
                 pop(1);
-                for (let i = 0; i < stack.length; i++) if (stack[i]?.local === a) stack[i] = null;
+                for (let i = 0; i < sp; i++) if (stackKind[i] === 1 && stackValue[i] === a) stackKind[i] = 0;
             } else if (opcode === 0x1a || opcode === 0x0d) pop(1);
-            else if (opcode === 0x45 || opcode === 0x28 || opcode === 0x2f) { pop(1); push(null); }
-            else if ((opcode >= 0x46 && opcode <= 0x4f) || (opcode >= 0x6a && opcode <= 0x75)) { pop(2); push(null); }
+            else if (opcode === 0x45 || opcode === 0x28 || opcode === 0x2f) { pop(1); push(0, 0, 0); }
+            else if ((opcode >= 0x46 && opcode <= 0x4f) || (opcode >= 0x6a && opcode <= 0x75)) { pop(2); push(0, 0, 0); }
             else if (opcode === 0x36 || opcode === 0x3b) pop(2);
-            else if (opcode === 0xf1) push(null);
-            else if (opcode === 0x10) { pop(arity(a)); push(null); }
+            else if (opcode === 0xf1) push(0, 0, 0);
+            else if (opcode === 0x10) { pop(arity(a)); push(0, 0, 0); }
             else if (opcode >= 0x02 && opcode <= 0x04) {
                 if (opcode === 0x04) pop(1);
-                blocks.push({op: opcode, value: a === 0x7f, height: stack.length});
+                blocks.push({op: opcode, value: a === 0x7f, height: sp});
                 if (opcode === 0x03) loops++;
-            } else if (opcode === 0x05) stack.length = blocks.at(-1).height;
+            } else if (opcode === 0x05) sp = blocks.at(-1).height;
             else if (opcode === 0x0b && blocks.length) {
                 const block = blocks.pop();
                 if (block.op === 0x03) loops--;
-                stack.length = block.height;
-                if (block.value) push(null);
+                sp = block.height;
+                if (block.value) push(0, 0, 0);
             }
             continue;
         }
@@ -968,14 +990,21 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
             bases.set(callee, base);
             locals += callee.params + callee.nlocals;
         }
-        const args = stack.slice(stack.length - callee.params);
-        const subst = args.map((arg, i) => {
-            if (!arg || callee.written[i]) return undefined;
-            const cellsOk = arg.local !== undefined ? out[arg.at] === 0x20 && out[arg.at + 1] === arg.local
-                : out[arg.at] === 0x41 && out[arg.at + 1] === arg.constant;
-            if (!cellsOk || (arg.local === undefined && callee.addressed[i])) return undefined;
-            return arg;
-        });
+        // The arguments are the top callee.params entries (Array.prototype.slice semantics when
+        // the abstract stack is shorter).
+        let first = sp - callee.params;
+        if (first < 0) first = Math.max(0, sp + first);
+        const subst = [];
+        for (let i = first; i < sp; i++) {
+            const kind = stackKind[i], n = i - first;
+            let arg;
+            if (kind !== 0 && !callee.written[n]) {
+                const at0 = stackAt[i], value = stackValue[i];
+                if (kind === 1 ? out[at0] === 0x20 && out[at0 + 1] === value : out[at0] === 0x41 && out[at0 + 1] === value)
+                    if (kind === 1 || !callee.addressed[n]) arg = kind === 1 ? {at: at0, local: value} : {at: at0, constant: value};
+            }
+            subst.push(arg);
+        }
         for (const arg of subst.filter(Boolean).sort((x, y) => y.at - x.at)) out.splice(arg.at, 2);
         pop(callee.params);
         for (let i = callee.params - 1; i >= 0; i--) if (!subst[i]) out.push(0x21, base + i);
@@ -995,7 +1024,7 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
             else for (let j = n; j >= 0; j--) out.push(body[k - 1 - j]);
         }
         // The callee's final `end` closed its function; here it closes the inlined block.
-        push(null);
+        push(0, 0, 0);
         changed = true;
     }
     return changed ? {code: out, nlocals: locals - fn.params.length} : null;
