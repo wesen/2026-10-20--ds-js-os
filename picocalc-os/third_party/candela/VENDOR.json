@@ -121,7 +121,7 @@
     "picocalc-os/third_party/candela/content/presets/X-04-menger.md",
     "tools/gen/candela/gallery.json"
    ],
-   "sha256": "761845979baea65bb4c29c82db27fc625c26a2f0da08815705a1f2244682f40e"
+   "sha256": "a0039225a2afa28a769d9e9374108f29b8892af0e34de4ee7dc3b4cf092f431b"
   },
   "kernel/cdl_api.h": {
    "kind": "hand-written"
@@ -133,7 +133,7 @@
     "picocalc-os/third_party/candela/src/kernel.js",
     "tools/gen/candela/gallery.json"
    ],
-   "sha256": "d5503e45b7c7a39d31a9170c1c014610807a0e875611d74f9e07505243a6b7ad"
+   "sha256": "72db41f2ff7ab310e7b237e07f993d65095d6ccd50b98164d7e7d8a317cdf761"
   },
   "kernel/cdl_kernel.cpp": {
    "kind": "generated",
@@ -144,7 +144,7 @@
     "picocalc-os/third_party/candela/src/wgsl2glsl.js",
     "tools/gen/candela/translator/isa.js"
    ],
-   "sha256": "5254d943641411ca706a9adf5d0e9d6f16ad9a1a5c064ce29538a95881bbec5d"
+   "sha256": "5b667670554bdf00b2139d97c5e7d614f3132ef4cd5b1a77299ff911811199e3"
   },
   "kernel/cdl_kernel.h": {
    "kind": "generated",
@@ -155,7 +155,7 @@
     "picocalc-os/third_party/candela/src/wgsl2glsl.js",
     "tools/gen/candela/translator/isa.js"
    ],
-   "sha256": "dcc2a71b0117d3a922f7ee33d23e694e6a4d698c4655094066558c3a618add1d"
+   "sha256": "77ef43b1b378458e75e4d1e4e0b1e5742b0829528dc92f9587f8e5169f2a6726"
   },
   "kernel/cdl_math.h": {
    "kind": "hand-written"
@@ -172,7 +172,7 @@
     "picocalc-os/third_party/candela/src/wgsl2glsl.js",
     "tools/gen/candela/translator/isa.js"
    ],
-   "sha256": "a6669c2810ff994eabbd61323abbe06fbd9b22352abf98fd4dab7adb233be5cb"
+   "sha256": "b42399d54cfdf1bdf7eab576252e16d88811d13993e2211552c320696ba4f637"
   },
   "kernel/cdl_post.inc": {
    "kind": "hand-written"
@@ -189,7 +189,7 @@
     "picocalc-os/third_party/candela/src/wgsl2glsl.js",
     "tools/gen/candela/translator/isa.js"
    ],
-   "sha256": "c4a5b5946d8f63f3c0030b34eb4405f6da7bfbde574ce8ceea1d4117ca5b5049"
+   "sha256": "509832ba0d82c08e675b226f7aa0a88b9cdd584100efb8d61ed67fea4d4745dd"
   },
   "vm/cdl_vm.c": {
    "kind": "hand-written"
@@ -206,7 +206,7 @@
    "inputs": [
     "tools/gen/candela/translator/isa.js"
    ],
-   "sha256": "f80e8be45c02aed12545f810a10e41057101c9fc6a25d9f1b58c8fa7c4eca9e0"
+   "sha256": "28b2433a32b516df717d55509795bfcc0243bca1ecb3043182404fda98bc1333"
   }
  }
 }

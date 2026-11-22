@@ -81,7 +81,7 @@ outputs.set('gallery/candela_gallery_scenes.c', { text: g.c, generator: `${GEN}/
 // The firmware kernel's identity: the SHA-256 of fixedText() of the kernel.js it was generated from. The scenes were
 // prepared from the same kernel.js, so the digest scenes.mjs computed is the kernel's too; candela_gallery_p4.c
 // refuses a scene table compiled against another one.
-const fixedC = '/* cdl_fixed_kernel.c: written by PICOCALC-CANDELA-GALLERY scripts/02-vendor.py. The SHA-256 of Candela\'s fixedText()\n' +
+const fixedC = '/* cdl_fixed_kernel.c: written by tools/gen/candela/regenerate.mjs. The SHA-256 of Candela\'s fixedText()\n' +
   ' * (PRELUDE + SPECTRAL + ggxTableWGSL() + CORE + metalAt + hitAlbedo + hitEmission + PATH) of the kernel.js this\n' +
   ` * kernel was generated from (manifest.json pin src/kernel.js ${kernelPin}). */\n` +
   `const char cg_kernel_fixed_sha256[] = "${g.fixedKernelSha256}";\n`;

@@ -19,7 +19,8 @@
 //     into temporaries in WGSL's order; any other statement with two such calls fails. The same set decides
 //     which selects stay eager (2.).
 //
-// translate() parses; the emitters live in 02-gen-kernel.mjs and 03-gen-scene.mjs.
+// translate() parses; the emitter lives in ../kernel.mjs (and, for compiled scenes, in PICOCALC-CANDELA-CPU-KERNEL's
+// ticket script 03-gen-scene.mjs, which the firmware does not use).
 
 export const SCALARS = ['f32', 'i32', 'u32', 'bool'];
 export const VECTORS = ['vec2f', 'vec3f', 'vec4f', 'vec2i'];
