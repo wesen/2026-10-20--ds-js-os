@@ -201,9 +201,9 @@ test("the default policy applies the qualified options and stock reproduces the 
     const src = readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8");
     const qualified = {inlineGuardedReturns: true, inline: true,
         operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
-            constants: true, share: true, pointers: true},
+            constants: true, share: true, pointers: true, split: true},
         select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true, rotate: true,
-            shortBranches: true}};
+            shortBranches: true, version: true}};
     const image = options => typedRv32.compile(src, [], 65536, options).image;
     // The default with some qualified fields switched off.
     const without = (select, locations, rest = {}) => ({...rest,
@@ -217,18 +217,22 @@ test("the default policy applies the qualified options and stock reproduces the 
     assert.deepEqual(image({operandLocations: undefined}), image());
     assert.equal(image({policy: "stock"}).length, 9564);
     const sha = options => createHash("sha256").update(image(options)).digest("hex");
-    // PICOCALC-RAY-PARITY Step 11 timed this image on the P4 (board mode 1: 19.31 ms per frame).
-    assert.equal(sha(), "4fa61ed11a0c1f940b8a4e8ff74c27e443d432184ec3eac8e3dac4831ce2d984");
-    // Step 10's image (20.20 ms): without pointer homes.
-    assert.equal(sha(without([], ["pointers"])), "e7e33cd0c2cb8fcea41c7a2143a031b62dc8ba827814c83cdf503479e799d1e7");
+    // PICOCALC-RAY-PARITY Step 13 timed this image on the P4 (board mode 2: 16.26 ms per frame).
+    assert.equal(sha(), "d9c25ef928d70c4ca46f065a18396c6f3df6fafaaf021bd2e840318be844b8f3");
+    // Step 11's image (19.31 ms): without versioned loops and split locals.
+    assert.equal(sha(without(["version"], ["split"])), "4fa61ed11a0c1f940b8a4e8ff74c27e443d432184ec3eac8e3dac4831ce2d984");
+    // Step 10's image (20.20 ms): also without pointer homes.
+    assert.equal(sha(without(["version"], ["split", "pointers"])), "e7e33cd0c2cb8fcea41c7a2143a031b62dc8ba827814c83cdf503479e799d1e7");
     // Step 8's image (22.43 ms): also without shared homes and short forward branches.
-    assert.equal(sha(without(["shortBranches"], ["pointers", "share"])), "7c660e876a8c1211b853e9c8b7aff4b2fd400b2431500fce753fa7e55d5ab201");
+    assert.equal(sha(without(["version", "shortBranches"], ["split", "pointers", "share"])),
+        "7c660e876a8c1211b853e9c8b7aff4b2fd400b2431500fce753fa7e55d5ab201");
     // Step 7's image (24.18 ms): also without loop rotation and constant homes.
-    assert.equal(sha(without(["shortBranches", "rotate"], ["pointers", "share", "constants"])),
+    assert.equal(sha(without(["version", "shortBranches", "rotate"], ["split", "pointers", "share", "constants"])),
         "4e7eb52aee07cf8fd5e6a3a96733d100241b10fe445030793a73513229fb676c");
     // Step 6's image (31.51 ms): also without inlining and the Step 7 options.
-    assert.equal(sha(without(["shortBranches", "rotate", "commute"], ["pointers", "share", "constants", "capacities", "nested"],
-        {inline: false})), "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
+    assert.equal(sha(without(["version", "shortBranches", "rotate", "commute"],
+        ["split", "pointers", "share", "constants", "capacities", "nested"], {inline: false})),
+        "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
 
@@ -458,8 +462,11 @@ function fill(work: buffer, n: i32): i32 {
 }`;
     const L = {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
         constants: true, share: true};
-    const plain = typedRv32.compile(src, [], undefined, {operandLocations: L});
-    const pointed = typedRv32.compile(src, [], undefined, {operandLocations: {...L, pointers: true}});
+    // Without versioned loops: in their fast copies these small loops need no pointer homes.
+    const select = {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true,
+        rotate: true, shortBranches: true};
+    const plain = typedRv32.compile(src, [], undefined, {operandLocations: L, select});
+    const pointed = typedRv32.compile(src, [], undefined, {operandLocations: {...L, pointers: true}, select});
     assert.notDeepEqual(pointed.image, plain.image);
     const cells = 40;
     function run(p, f, n) {

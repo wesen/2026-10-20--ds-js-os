@@ -924,3 +924,118 @@ This step also starts using the merged workbench (PICOCALC-TRACE-WORKBENCH) for 
 ### Code review instructions
 
 - `scripts/10-stage-board.py` (`--internal-work-last` patch), `scripts/14-c-frame-instructions.mjs` (default `-O3` and the comment on why), `scripts/15-score-board-workbench.js`.
+
+## Step 13: Versioned loops and live-range splitting
+
+Phase 3's second half removes the bounds checks themselves. A counted loop whose accesses are provably in range for every iteration is now emitted twice, behind one guard: a fast copy with those accesses unchecked, and the original. On its own the transform made the frame slower (5.58 M → 7.43 M host instructions). The two copies shared every local id, so each temporary's live interval spanned both copies and the `share` interval test failed everywhere. Stack loads in `LitRow` rose from 103 k to 613 k. A live-range split pass, which gives every region-confined web of a local its own id, fixed that.
+
+On the P4 the two together cut the frame from 19.34 to 16.26 ms (−16.0%, 6/6 blocks, every scene 14.8–17.6%), the primary pass by 23% and the predicate from 173.4 to 161.4 cycles. Typed is at 2.11× the C frame. The price is compile time: ray cold compile on the device rose from 0.86 to 1.45 s (+70%). Both are now the default.
+
+**Commits:** 43759d1 added both as opt-in, with `observeTape` and per-PC counts from `frameProfile`. a0d3025 moved the workbench scripts to an `args` object. The default change is in the commit that records this step.
+
+### Prompt Context
+
+**User prompts (verbatim), received during this step:**
+
+- "try to use the REPL as much as possible, building up a collection of scripts and all, noting all the things that are bad / could be improved / are good, and try to port your existing tools to it too, I kind of want to make it the centerpiece of our compiler optimization workflow. Keep a detailed report document as you go, taking notes, inside the docmgr ticket, in addition to your diary. Take veyr detailed note if possible."
+- "once you feel confident you can step up to more advanced stuff / raytracing wise, feel free to look at ~/Downloads/candela* which is our latest hyper advanced raytracer, and take over ideas from there / make it possible to run candela programs on the esp32p4 / subset of the JS API. You can use subagents if you want, but each subagent needs to keep at least a diary, and things have to be split up in tickets and have design docs."
+- "you can go nutty mode in the experiments you do as long as things are propelry organized, and work once a milestone is reached, gets a vault report."
+- "have you run the compiler on the device since all these improvements? or the resulting programs?"
+
+**Assistant interpretation:**
+
+- Measurements and analysis move into the workbench, with a field-notes document (`reference/02-workbench-field-notes-…`).
+- Candela becomes a separately ticketed survey and design. A subagent owns it, with its own diary.
+- Each milestone gets a vault report.
+- The playable firmware must catch up with the new compiler.
+
+**Inferred user intent:** A fast Typed ray tracer, a workflow organized around the REPL, and a path to much more capable rendering.
+
+### What I did
+
+- **`versionLoops(code, params)`, after `rotateLoops`.** It matches the rotated shape `block; get k; (const n | get N); lt; eqz; br_if 0; loop; B; get k; …; lt; br_if 0; end; end`.
+  - **Loop requirements.** The body must end in `k = k + s` (1 ≤ s ≤ 64), with no other write of k or N in the loop, and the body must be at most 2,000 cells.
+  - **Eligible accesses** are `CHK r t` whose index local t was just set from:
+    - k + c, c + k or k;
+    - an affine local a·k + b + c. An affine local is written once in B, by one of six expression shapes, and read only after that write inside its region;
+    - M + a·k + b, with M unwritten in the loop;
+    - M + c;
+    - a constant.
+
+    The receiver r must be an unwritten parameter, with a ≤ 1024 and 0 ≤ b ≤ 2^20.
+  - **The guard** runs once after the first condition test:
+    1. k ≥ 0, omitted when `const c; set k` with c ≥ 0 precedes the loop.
+    2. N ≤ 2^20 when N is a local.
+    3. Per receiver, a·N + (b − a) ≥ cap fails. When N is a constant, the largest index is folded into one constant.
+    4. For M-forms: cap ≥ 0, M ≥ 0, and a·N + (b − a) ≥ cap − M fails.
+
+    Every term stays below 2^31.
+  - **Emitted shape.** `block; C; eqz; br_if 0; block (guard terms … br_if 0); loop B′ C br_if 0 end; br 1; end; loop B C br_if 0 end; end`. In B′, branches that leave the loop get one more level. Eligible accesses become `0xf3 r t j`: when t is single-use, the constant of `x + j` moves into j and the `const; add` disappears. B′ is transformed again, so inner loops version inside the fast copy only.
+- **`0xf3` (unchecked address)** in the planner (reads, forwarding, pointer homes with k + j, share occurrences) and the emitter (forward and plain paths; no capacity load and no `bltu`; `lhu 4+2j(base + 2t)` when a load follows). With `version`, `get r; load32 0` of a buffer with a capacity home reads the home.
+- **`splitLocals(code, params, nlocals)` (`operandLocations.split`), after versioning.** It walks the tape with a region path (`else` starts a new region). Occurrences of a local form webs: a web starts at a write and takes every later occurrence whose region path extends the write's. A read outside the current web makes the local unsplittable. Each web after the first gets a fresh id. No web can read another web's writes, because in structured code its starting write precedes its other occurrences on every path through its region.
+- **Tests.** `versioned loops and split locals keep results, stores and traps identical` covers 7 functions, one per index form plus an early `return`, nested loops, stores and a negative or huge start or base. It compares against stock at 37 sizes, 8 or more of them trapping, and asserts that every function got an unchecked copy, through `observeTape`.
+- **Board.** `various/52-board-modes-version.json`: mode 0 Step 11 (`4fa61ed1…`), mode 1 + `split`, mode 2 + `split` + `version`. Imported to `various/55-board-version`, scored in the workbench to `various/56-board-version-scores.json`. The 36 on-device cold compiles all matched their host images, as `11-import-board.py` asserts for every cold row.
+
+### Why
+
+- After Step 11, `bltu` and the index arithmetic in front of it cost about 975 k instructions per frame.
+- `LitRow` held 384,589 of the 541,956 checks, mostly in the inlined `InShadow` sphere loop (`shadow = 4·sphere + 21`, then `shadow + 0..3`).
+
+### What worked
+
+Host frame (reference digest), from `scripts/workbench/frame-profile.js`, which agreed with the Node profiler:
+
+| arm | instructions | bounds checks | stack loads | image |
+|---|---:|---:|---:|---:|
+| Step 11 default | 5,578,770 | 541,956 | 104,711 | 8,048 B |
+| + split | 5,504,927 | 541,956 | 85,427 | 8,028 B |
+| + version (no split) | 7,429,040 | 32,683 | 629,283 | 14,144 B |
+| + version + split | **4,888,369** | 32,683 | 105,834 | 11,964 B |
+
+Chess engine oracle (6981/6981 words): 128,741,180 → 128,716,438 (split) → 128,152,624 (both).
+
+Board, against mode 0 (median of per-block savings; wins of 6):
+
+| | mode 1: split | mode 2: split + version |
+|---|---:|---:|
+| frame (19,339 µs) | 19,102.5 (1.27%) | **16,256 (15.98%)** |
+| primary pass (5,276.5 µs) | 0.26% (4 wins) | 23.08% |
+| shade pass (24,221 µs) | −0.02% (3) | 7.74% |
+| shadow predicate (173.4 cycles) | 173.8 (−0.16%) | 161.4 (6.92%) |
+| ray cold compile (856,965 µs) | −7.45% | −69.78% (1,454,961.5 µs) |
+| Chess cold compile (153,855.5 µs) | −6.81% | −23.86% |
+
+- Mode 2 scenes: 14.82% to 17.62%, all 6/6. Chess evaluate: identical images, 0.2% (a control). C references: frame 7,720 µs, checked predicate 135.5 cycles. Restored `e7b771aa…`, eight worlds healthy. Diagnostic app SHA-256 `79bb6fb5be5221fce74b000052c28b93c204e51d6ac150b0edbb1c36d41640ec`.
+- goja compile cost (`various/54-compile-cost-version-goja.json`): ray +73%, Files +81%, Agenda +21%, Chess +16%, Editor +15%; `split` alone +4% to +11%.
+- Tests: 145 pass. Replays: 24/24 PASS (`various/57-replays-version-default.log`).
+
+### What didn't work
+
+- **Versioning without splitting** (above): 33% more instructions. Duplicated code needs separate live ranges, or the interval test sees one long interval per temporary.
+- **The pointer-home test's assumption.** Once versioning was the default, its small loops got unchecked fast copies, and pointer homes no longer changed the image (`notDeepStrictEqual` failed, with every value equal). The test now pins the unversioned selection, since it tests pointer homes alone.
+- **A workbench parameter leak** spoiled two compile-cost runs. See the field notes, entry 5.
+
+### What I learned
+
+- **The remaining per-pixel waste is signed arithmetic on values that are never negative.** The hot listing (`scripts/workbench/hot-code.js`) shows each floor pixel spending:
+  - 4 instructions on `x / 16` and `y / 16` each, 4 on `% 2`;
+  - two sign fix-ups per `/ 255` and 4 more on each `/ 8` or `/ 4` in `typedRayPack`.
+
+  With `x ≥ 0` known these would be `srai`, `andi` and nothing. GCC's value-range propagation knows it, because `x` counts up from 0.
+- **The guard runs on every floor pixel** (8 instructions), because `count` is reloaded from `work` per pixel.
+
+### What warrants a second pair of eyes
+
+- **The region rule in `splitLocals` assumes structured control flow.** A branch can only leave a region, never enter one in the middle. Typed tapes have no other kind, but a future transform that emits a jump into a region would break the rule.
+- **The guard's overflow argument** (all terms below 2^31) depends on the limits in `VERSION_LIMITS`. Raising them needs the argument redone.
+
+### What should be done in the future
+
+- **Non-negativity facts** for division and remainder by constants (next).
+- **Compile cost of versioning:** the doubled loops pass through every later phase, and `regionEnd` rescans per affine definition.
+- **Rebuild and install the playable firmware with the new default** (task `xxxn`): the board runs restore `e7b771aa…`, which predates this ticket.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `VERSION_LIMITS`, `opNext`, `opClose`, `versionLoops` (`transform`, `version`, `expression`, the guard terms, the fast body), `splitLocals`, `checkedAddress`'s `unchecked` path, `case 0xf3`, the forward path in `step`, and the `0xf3` cases in `planLocations`.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the versioning test, and the pointer-home test's `select`.

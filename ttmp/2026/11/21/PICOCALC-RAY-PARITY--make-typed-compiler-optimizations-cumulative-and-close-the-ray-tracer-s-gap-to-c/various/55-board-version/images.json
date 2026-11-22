@@ -1,0 +1,131 @@
+[
+ {
+  "family": "ray",
+  "mode": "({\"policy\": \"stock\", \"inlineGuardedReturns\": true, \"inline\": true, \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true}})",
+  "sha": "4fa61ed11a0c1f940b8a4e8ff74c27e443d432184ec3eac8e3dac4831ce2d984",
+  "bytes": 8048,
+  "entries": {
+   "typedRayStride": 0,
+   "typedRaySphereFits": 140,
+   "typedRayLampFits": 204,
+   "typedRayAbs": 264,
+   "typedRaySetObject": 292,
+   "typedRaySetObjects": 524,
+   "typedRayBuildGeometry": 804,
+   "typedRayBuildLight": 1104,
+   "typedRayBuildTables": 1760,
+   "typedRayPrepare": 1844,
+   "typedRayComputeRow": 1952,
+   "typedRayInShadow": 2472,
+   "typedRaySphereScale": 3020,
+   "typedRayPack": 3392,
+   "typedRayPixel": 3592,
+   "typedRayLitRow": 4056,
+   "typedRaySaveAudit": 5832,
+   "typedRayFrame": 6032,
+   "typedRayRender": 6364,
+   "typedRayTrace": 6940,
+   "typedRayShade": 7412
+  }
+ },
+ {
+  "family": "chess",
+  "mode": "({\"policy\": \"stock\", \"inlineGuardedReturns\": true, \"inline\": true, \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true}})",
+  "sha": "a2eda1adb7742a051bff993b5abb31b4c6fbc18b00d167c5c2832188da1c382c",
+  "bytes": 1344,
+  "entries": {
+   "chessSquare": 0,
+   "chessSide": 32,
+   "chessValue": 84,
+   "chessAbs": 196,
+   "chessCenter": 224,
+   "chessEvaluate": 308
+  }
+ },
+ {
+  "family": "ray",
+  "mode": "({\"policy\": \"stock\", \"inlineGuardedReturns\": true, \"inline\": true, \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true}})",
+  "sha": "8eb1cf4ddf0f8dac36ff8e02dab2fa287073924045b7aeb32fe7ca1541d320f4",
+  "bytes": 8028,
+  "entries": {
+   "typedRayStride": 0,
+   "typedRaySphereFits": 140,
+   "typedRayLampFits": 204,
+   "typedRayAbs": 264,
+   "typedRaySetObject": 292,
+   "typedRaySetObjects": 524,
+   "typedRayBuildGeometry": 804,
+   "typedRayBuildLight": 1104,
+   "typedRayBuildTables": 1760,
+   "typedRayPrepare": 1844,
+   "typedRayComputeRow": 1952,
+   "typedRayInShadow": 2472,
+   "typedRaySphereScale": 3020,
+   "typedRayPack": 3392,
+   "typedRayPixel": 3592,
+   "typedRayLitRow": 4056,
+   "typedRaySaveAudit": 5812,
+   "typedRayFrame": 6012,
+   "typedRayRender": 6344,
+   "typedRayTrace": 6920,
+   "typedRayShade": 7392
+  }
+ },
+ {
+  "family": "chess",
+  "mode": "({\"policy\": \"stock\", \"inlineGuardedReturns\": true, \"inline\": true, \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true}})",
+  "sha": "a2eda1adb7742a051bff993b5abb31b4c6fbc18b00d167c5c2832188da1c382c",
+  "bytes": 1344,
+  "entries": {
+   "chessSquare": 0,
+   "chessSide": 32,
+   "chessValue": 84,
+   "chessAbs": 196,
+   "chessCenter": 224,
+   "chessEvaluate": 308
+  }
+ },
+ {
+  "family": "ray",
+  "mode": "({\"policy\": \"stock\", \"inlineGuardedReturns\": true, \"inline\": true, \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true}})",
+  "sha": "d9c25ef928d70c4ca46f065a18396c6f3df6fafaaf021bd2e840318be844b8f3",
+  "bytes": 11964,
+  "entries": {
+   "typedRayStride": 0,
+   "typedRaySphereFits": 140,
+   "typedRayLampFits": 204,
+   "typedRayAbs": 264,
+   "typedRaySetObject": 292,
+   "typedRaySetObjects": 524,
+   "typedRayBuildGeometry": 804,
+   "typedRayBuildLight": 1308,
+   "typedRayBuildTables": 2192,
+   "typedRayPrepare": 2276,
+   "typedRayComputeRow": 2384,
+   "typedRayInShadow": 3412,
+   "typedRaySphereScale": 4248,
+   "typedRayPack": 4620,
+   "typedRayPixel": 4820,
+   "typedRayLitRow": 5284,
+   "typedRaySaveAudit": 8900,
+   "typedRayFrame": 9304,
+   "typedRayRender": 9636,
+   "typedRayTrace": 10388,
+   "typedRayShade": 11044
+  }
+ },
+ {
+  "family": "chess",
+  "mode": "({\"policy\": \"stock\", \"inlineGuardedReturns\": true, \"inline\": true, \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true}})",
+  "sha": "a2eda1adb7742a051bff993b5abb31b4c6fbc18b00d167c5c2832188da1c382c",
+  "bytes": 1344,
+  "entries": {
+   "chessSquare": 0,
+   "chessSide": 32,
+   "chessValue": 84,
+   "chessAbs": 196,
+   "chessCenter": 224,
+   "chessEvaluate": 308
+  }
+ }
+]
