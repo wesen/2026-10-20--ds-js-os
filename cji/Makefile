@@ -23,7 +23,7 @@ clean:
 RV32    := build/rv32
 RVSLJIT := -DSLJIT_CONFIG_RISCV_32=1 -DSLJIT_CONFIG_RISCV_COMPRESSED=200 -DSLJIT_EXECUTABLE_ALLOCATOR=0 -DSLJIT_IS_FPU_AVAILABLE=0 -DSLJIT_VERBOSE=1 -DSLJIT_ARGUMENT_CHECKS=1 -include runtime/rv32_exec.h
 RVCLANG := clang --target=riscv32-unknown-elf -march=rv32imc -mabi=ilp32 -O2 -nostdinc \
-	-isystem $(shell clang -print-resource-dir)/include -isystem ../bench/emu/fw/include -Iruntime -fno-pic -mno-relax
+	-isystem $(shell clang -print-resource-dir)/include -isystem tools/rv32/fw/include -Iruntime -fno-pic -mno-relax
 
 rv32: slas-rv32 $(RV32)/rv32emu $(RV32)/fw-test.elf
 
@@ -39,17 +39,17 @@ $(RV32)/rv32emu: ../bench/emu/emu.c
 	$(CC) -std=gnu11 -O2 -Wall -o $@ $< -lm
 
 # CJI-4 part 2: every test firmware runs the soft-float and 64-bit integer helpers (and floor, ceil, trunc, round,
-# fabs) as code, ../bench/emu/fw/softfloat.c, as the board's libgcc does; hostcalls.S's stubs for them are weak, so a
+# fabs) as code, tools/rv32/fw/softfloat.c, as the board's libgcc does; hostcalls.S's stubs for them are weak, so a
 # firmware linked without softfloat.o answers them by host call (ttmp/CJI-4-worlds-on-the-board/scripts/softfloat-both.sh).
 FWLIB := $(RV32)/libc.o $(RV32)/hostcalls.o $(RV32)/softfloat.o
 
-$(RV32)/fw-test.elf: Makefile runtime/runtime.c runtime/runtime.h runtime/cji_elf.h ../bench/emu/fw/libc.c tools/rv32/fw/main.c ../bench/emu/fw/hostcalls.S ../bench/emu/fw/softfloat.c $(wildcard ../bench/emu/fw/include/*.h)
+$(RV32)/fw-test.elf: Makefile runtime/runtime.c runtime/runtime.h runtime/cji_elf.h tools/rv32/fw/libc.c tools/rv32/fw/main.c tools/rv32/fw/hostcalls.S tools/rv32/fw/softfloat.c $(wildcard tools/rv32/fw/include/*.h)
 	mkdir -p $(RV32)
 	$(RVCLANG) -c runtime/runtime.c -o $(RV32)/runtime.o
-	$(RVCLANG) -c ../bench/emu/fw/libc.c -o $(RV32)/libc.o
+	$(RVCLANG) -c tools/rv32/fw/libc.c -o $(RV32)/libc.o
 	$(RVCLANG) -c tools/rv32/fw/main.c -o $(RV32)/main.o
-	$(RVCLANG) -c ../bench/emu/fw/hostcalls.S -o $(RV32)/hostcalls.o
-	$(RVCLANG) -c ../bench/emu/fw/softfloat.c -o $(RV32)/softfloat.o
+	$(RVCLANG) -c tools/rv32/fw/hostcalls.S -o $(RV32)/hostcalls.o
+	$(RVCLANG) -c tools/rv32/fw/softfloat.c -o $(RV32)/softfloat.o
 	ld.lld -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/main.o $(RV32)/runtime.o $(FWLIB)
 
 .PHONY: rv32
@@ -163,7 +163,7 @@ $(BOARD)/inc/elf.h: /usr/include/elf.h
 	sed -e '/#include <features.h>/d' -e 's/^__BEGIN_DECLS$$//' -e 's/^__END_DECLS$$//' $< > $@
 
 $(BOARD)/slas.o: Makefile runtime/slas.c runtime/rv32.c runtime/rv32_obj.c runtime/rv32_mod.c runtime/cji_elf.h runtime/runtime.h \
-		tools/rv32/fw/board_exec.h $(BOARD)/inc/elf.h $(wildcard ../bench/emu/fw/include/*.h ../bench/emu/fw/include/sys/*.h)
+		tools/rv32/fw/board_exec.h $(BOARD)/inc/elf.h $(wildcard tools/rv32/fw/include/*.h tools/rv32/fw/include/sys/*.h)
 	$(BOARDCC) -w $(BOARD_SLJIT) $(BOARD_REGION) -DCJI_RV32 -DCJI_BOARD -Dmain=slas_main -Derror_shape=slas_error_shape \
 		-I$(SLJIT) -c runtime/slas.c -o $@
 

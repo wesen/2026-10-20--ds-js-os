@@ -165,7 +165,7 @@ fi
 # -fvisibility=hidden, linked -shared -e app_main -z max-page-size=16 --strip-all (as picocalc-os's CMake
 # builds natives/*.c, with clang and ld.lld for riscv32-esp-elf-gcc)
 cl="clang --target=riscv32-unknown-elf -march=rv32imafc -mabi=ilp32f -Os -fPIC -fvisibility=hidden -ffunction-sections
-	-fdata-sections -nostdinc -isystem $(clang -print-resource-dir)/include -isystem ../bench/emu/fw/include -I$pc/sdk"
+	-fdata-sections -nostdinc -isystem $(clang -print-resource-dir)/include -isystem tools/rv32/fw/include -I$pc/sdk"
 $cl -c tools/rv32/fw/ref_module.c -o $out/ref_module.o
 $cl -c "$pc/sdk/nw_elf.c" -o $out/nw_elf.o
 ld.lld -m elf32lriscv -shared -e app_main --gc-sections -z max-page-size=16 --strip-all -o $out/ref_module.so \

@@ -11,7 +11,7 @@
 	ret
 .endm
 /* (CJI-4: the soft-float and 64-bit integer helpers, and floor, ceil, trunc, round and fabs, are weak: a firmware linked
-   with bench/emu/fw/softfloat.o runs them as code instead, as the board does) */
+   with tools/rv32/fw/softfloat.o runs them as code instead, as the board does) */
 .macro HCW name num
 	.weak \name
 	.type \name, @function
