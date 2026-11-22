@@ -1,4 +1,4 @@
-/* query.js — compiler-evidence query library for the PicoCalc LLVM row archive.
+/* query.js — compiler-evidence query library for a PicoCalc LLVM pass-dump archive.
  * Runs inside the Goja trace REPL. The host injects one bridge object, __trace.
  * Public globals: q (query language), a (the archive), profiles (execution summaries).
  * Evaluation is synchronous: q.run(plan) or plan.run(). Nothing here prints to stdout.
@@ -6,6 +6,11 @@
 (function (root, bridge) {
   'use strict';
   const VERSION = '0.1.0';
+  // The mounted capture's name, from its ticket directory (the manifest has no title).
+  const ARCHIVE_NAME = (() => {
+    try { return bridge && typeof bridge.describe === 'function' ? bridge.describe().name : 'an LLVM pass-dump archive'; }
+    catch (err) { return 'an LLVM pass-dump archive'; }
+  })();
 
   // ───────────────────────── errors and names ─────────────────────────
   function QueryError(code, message, extra) {
@@ -675,7 +680,7 @@
     for (let i = 0; i < keys.length; i++) {
       const events = idx.streams.get(keys[i]).events;
       for (let j = 0; j < events.length; j++) {
-        if (d.fn !== null && !covers(events[j], d.fn)) continue;
+        if (d.fn !== null && !covers(events[j], nameAt(d, events[j]))) continue;
         if (visit(events[j])) return;
       }
     }
@@ -714,7 +719,7 @@
         throw QueryError('ordinalOutOfRange', 'no event with ordinal ' + this._ordinal + ' in ' + d.variant + '/' + d.phase +
           ' (ordinals ' + first + '..' + last + ', ' + s.events.length + ' events)', { valid: [first, last] });
       }
-      let inSelection = d.fn === null || covers(e, d.fn);
+      let inSelection = d.fn === null || covers(e, nameAt(d, e));
       if (inSelection && this._rows !== this._rows._base) {
         inSelection = false;
         this._rows._each(ctx, r => { if (r.ordinal === this._ordinal) inSelection = true; return r.ordinal >= this._ordinal; });
@@ -761,13 +766,55 @@
     });
     return names.sort();
   }
+  // ── function renames ──
+  // The archive records a rename when a module print defines a new name that the previous module print
+  // declared as an alias of a function that is now gone (GlobalOpt's alias resolution), or that has exactly
+  // the body the vanished function last had. A rename that changes the body and leaves no alias is not seen.
+  const renameCache = new Map();
+  function renamesOf(variant) {
+    if (!renameCache.has(variant))
+      renameCache.set(variant, bridge && typeof bridge.renames === 'function' ? bridge.renames(variant) : []);
+    return renameCache.get(variant).map(r => Object.assign({}, r));
+  }
+  // Earlier names of fn, newest first.
+  function aliasChain(variant, fn) {
+    const out = [], seen = new Set([fn]);
+    let cur = fn;
+    for (;;) {
+      const r = renamesOf(variant).filter(x => x.to === cur).sort((x, y) => (x.phase === y.phase ? y.ordinal - x.ordinal : x.phase === 'backend' ? -1 : 1))[0];
+      if (!r || seen.has(r.from)) return out;
+      out.push({ name: r.from, renamedTo: r.to, phase: r.phase, ordinal: r.ordinal, pass: r.pass, method: r.method,
+        aliasOrdinal: r.aliasOrdinal === undefined ? null : r.aliasOrdinal, ref: r.ref });
+      seen.add(r.from);
+      cur = r.from;
+    }
+  }
+  // Segments of a followed timeline in one stream, oldest first: events before `before` carry `name`.
+  function followSegments(variant, phase, fn) {
+    return aliasChain(variant, fn).filter(x => x.phase === phase)
+      .map(x => ({ name: x.name, before: x.ordinal, method: x.method })).sort((x, y) => x.before - y.before);
+  }
+  function nameAt(d, e) {
+    if (d.follow) for (let i = 0; i < d.follow.length; i++) if (e.ordinal < d.follow[i].before) return d.follow[i].name;
+    return d.fn;
+  }
+  function renameAt(d, e) {
+    for (let i = 0; i < d.follow.length; i++)
+      if (e.ordinal === d.follow[i].before) return { from: d.follow[i].name, to: i + 1 < d.follow.length ? d.follow[i + 1].name : d.fn, method: d.follow[i].method };
+    return null;
+  }
   class FunctionHandle {
     constructor(variant, name) { this.variant = variant; this.name = name; }
-    timeline(phase) {
+    timeline(phase, options) {
       const p = normalizePhase(this.variant, requireString(phase, 'timeline(phase)', 'row.timeline("middle")'));
-      return new EventSelection({ variant: this.variant, phase: p, fn: this.name },
-        'a.variant("' + this.variant + '").function("' + this.name + '").timeline("' + p + '")');
+      if (options !== undefined && (options === null || typeof options !== 'object' || Object.keys(options).some(k => k !== 'follow')))
+        throw QueryError('badArgument', 'timeline(phase, options) takes { follow: true }', { fix: 'kernel.timeline("middle", { follow: true })' });
+      const segments = options && options.follow ? followSegments(this.variant, p, this.name) : [];
+      return new EventSelection({ variant: this.variant, phase: p, fn: this.name, follow: segments.length ? segments : null },
+        'a.variant("' + this.variant + '").function("' + this.name + '").timeline("' + p + '"' + (options && options.follow ? ', { follow: true }' : '') + ')');
     }
+    // Earlier names of this function, newest first: [{name, renamedTo, phase, ordinal, pass, method, aliasOrdinal, ref}].
+    aliases() { return aliasChain(this.variant, this.name); }
     events(phase) { return this.timeline(phase); }
     argument(i) { return new ArgumentRef(this, i); }
     initialState() { return new InitialModule(this.variant).state(this.name); }
@@ -783,6 +830,8 @@
       return new EventSelection({ variant: this.name, phase: p, fn: null }, 'a.variant("' + this.name + '").events("' + p + '")');
     }
     functions() { return knownFunctions(this.name); }
+    // Function renames in this variant, middle before backend: [{phase, ordinal, pass, from, to, method, aliasOrdinal?, bodySHA256?, ref}].
+    renames() { return renamesOf(this.name); }
     functionNamed(name) {
       requireString(name, 'function(name)', 'run.function("row")');
       let known = knownFunctions(this.name, false);
@@ -819,7 +868,7 @@
     },
     stats() { return callBridge('stats', []); },
     help() { return helpText('archive'); },
-    toJSON() { return { archive: 'PicoCalc LLVM row archive', variants: index().variants, use: 'a.help()' }; },
+    toJSON() { return { archive: ARCHIVE_NAME, variants: index().variants, use: 'a.help()' }; },
   };
 
   // ───────────────────────── LLVM IR subset parser ─────────────────────────
@@ -1167,18 +1216,21 @@
     _target(ctx, fnHint, optionalFn) {
       const e = this._pick._event(ctx);
       const fn = chooseFunction(this._pick._function(), fnHint, resolveScope(e), this._label, optionalFn);
-      if (this._side === 'after' || fn === null) return { event: e, fn, of: e };
+      const d = this._pick._rows && this._pick._rows._domain;
+      const nameOf = d && d.follow && fn === d.fn ? ev => nameAt(d, ev) : () => fn;
+      if (this._side === 'after' || fn === null) return { event: e, fn: nameOf(e), followedAs: fn, of: e };
       const events = stream(e.variant, e.phase).events;
       let prev = null;
-      for (let i = 0; i < events.length && events[i].ordinal < e.ordinal; i++) if (covers(events[i], fn)) prev = events[i];
-      return { event: prev, fn, of: e, derived: true };
+      for (let i = 0; i < events.length && events[i].ordinal < e.ordinal; i++) if (covers(events[i], nameOf(events[i]))) prev = events[i];
+      return { event: prev, fn: prev ? nameOf(prev) : fn, followedAs: fn, of: e, derived: true };
     }
     _snapshot(ctx, fnHint, level) {
       const t = this._target(ctx, fnHint);
       if (!t.event)
         return { status: 'unavailable', reason: 'noEarlierPrint', why: UNAVAILABLE_WHY.noEarlierPrint, fn: t.fn, level,
           side: 'before', of: t.of.ordinal, source: sourceWitness(t.of), fix: 'a.variant("' + t.of.variant + '").initialModule() is the module given to the pipeline' };
-      const snap = level === 'machine' ? machineSnapshot(t.event, t.fn) : irSnapshot(t.event, t.fn);
+      let snap = level === 'machine' ? machineSnapshot(t.event, t.fn) : irSnapshot(t.event, t.fn);
+      if (t.followedAs && t.fn !== t.followedAs) snap = Object.assign({}, snap, { aliasOf: t.followedAs });
       return t.derived ? Object.assign({}, snap, { side: 'before', derivedFrom: t.event.ordinal, of: t.of.ordinal }) : snap;
     }
     _eval(ctx) {
@@ -1275,7 +1327,7 @@
     describe() { return this.fn + '.argument(' + this.index + ')'; }
     toJSON() { return { argument: this.index, function: this.fn }; }
     resolve(snap) {
-      if (snap.fn !== this.fn) throw QueryError('functionMismatch', this.describe() + ' cannot be resolved in a snapshot of ' + snap.fn);
+      if (snap.fn !== this.fn && snap.aliasOf !== this.fn) throw QueryError('functionMismatch', this.describe() + ' cannot be resolved in a snapshot of ' + snap.fn);
       const p = snap.params[this.index];
       if (!p) throw QueryError('noSuchArgument', this.fn + ' has ' + snap.params.length + ' parameters in this snapshot: ' + snap.params.map(x => x.name).join(', '));
       if (!p.name) throw QueryError('unsupported', 'parameter ' + this.index + ' of ' + this.fn + ' has no printed name in ' + snap.define.text);
@@ -1420,17 +1472,25 @@
     const fn = chooseFunction(sel._domain.fn, metric._spec.fn, null, sel._label);
     return new MeasureRows(sel, metric, fn);
   }
-  function measureEvent(e, metric, fn) {
+  function measureEvent(e, metric, fn, d) {
     const m = metric._spec;
-    const snap = m.level === 'machine' ? machineSnapshot(e, fn) : irSnapshot(e, fn);
+    const name = d && d.follow && fn === d.fn ? nameAt(d, e) : fn;
+    let snap = m.level === 'machine' ? machineSnapshot(e, name) : irSnapshot(e, name);
+    if (name !== fn) snap = Object.assign({}, snap, { aliasOf: fn });
     const v = snap.status === 'available' ? computeMetric(metric, snap) : { status: snap.status, value: null, reason: snap.reason };
-    return { variant: e.variant, phase: e.phase, ordinal: e.ordinal, pass: e.pass, header: e.header, function: fn,
+    const row = { variant: e.variant, phase: e.phase, ordinal: e.ordinal, pass: e.pass, header: e.header, function: name,
       status: v.status, value: v.value, reason: v.reason || null, coverage: snap.coverage || null, unit: m.unit, ref: e.ref };
+    if (d && d.follow) {
+      row.followedAs = fn;
+      const r = renameAt(d, e);
+      if (r) row.rename = r;
+    }
+    return row;
   }
   class MeasureRows extends Rows {
     constructor(sel, metric, fn) {
       super('measurements', sel._label + '.measure(' + metric._spec.label + ')',
-        (ctx, visit) => sel._each(ctx, e => visit(measureEvent(e, metric, fn))),
+        (ctx, visit) => sel._each(ctx, e => visit(measureEvent(e, metric, fn, sel._domain))),
         { unit: metric._spec.unit, what: 'measurement' });
       this._sel = sel; this._metric = metric; this._fn = fn;
     }
@@ -1471,6 +1531,10 @@
       fromPass: prev ? prev.pass : null, before: prev ? prev.value : null, after: cur.value, delta: null,
       changed: null, transition: null, status: null, reason: null, skipped: null, skippedOrdinals: null, endpointDelta: null,
       unit: cur.unit, ref: cur.ref };
+    if (cur.followedAs) {      // a followed timeline: the name the function had at this ordinal, and the rename here
+      out.function = cur.function;
+      if (cur.rename) out.rename = cur.rename;
+    }
     if (cur.status !== 'available') { out.status = cur.status; out.reason = cur.reason || cur.status; return out; }   // absent | unavailable | unsupported
     if (!prev) { out.status = 'first'; out.reason = 'no earlier row in this selection'; return out; }
     if (prev.status !== 'available') { out.status = 'unknown'; out.reason = 'previous row ' + prev.ordinal + ' is ' + prev.status + ' (' + prev.reason + ')'; out.before = null; return out; }
@@ -2233,7 +2297,7 @@
   function liveList(fn) { try { return fn(); } catch (err) { return '(unavailable: ' + err.message.split('\n')[0] + ')'; } }
   const TOPICS = {
     index: () => [
-      'q — compiler-evidence queries over the PicoCalc LLVM row archive (release ' + VERSION + '). Globals: q, a (archive), profiles.',
+      'q — compiler-evidence queries over ' + ARCHIVE_NAME + ' (release ' + VERSION + '). Globals: q, a (archive), profiles.',
       'Plans are lazy; evaluate synchronously with q.run(plan) or plan.run(). Results are plain objects with status, unit and witnesses.',
       'Eager calls (….describe(), profiles.arms(), run.functions()) return values at once; q.run returns a describe() descriptor unchanged (q.help("plans")).',
       '  q.run(a.events().count())                                // all header records, with byStream',
@@ -2245,6 +2309,12 @@
       '  q.run(profiles.arm("checked-gcc").region("row").workload("opening-160-rows").total("instructions"))',
       'Topics: q.help("plans" | "events" | "timeline" | "states" | "metrics" | "changes" | "machine" | "profiles" | "compare" | "capabilities" | "params" | "results" | "errors" | "cache").',
       'Every object answers .help(). Statuses: available · absent (module print lacks the function) · unavailable (capture lacks it) · unsupported (parser limit).',
+      ...(root.compiler && typeof root.compiler.help === 'function'
+        ? ['The Typed compiler at a git revision or the working tree, several side by side: compiler.help().'] : []),
+      ...(root.repo && typeof root.repo.help === 'function'
+        ? ['Read-only repository files, now or at a git revision: repo.help(); files mounted at startup: mounts.help().'] : []),
+      ...(root.stats && typeof root.stats.help === 'function'
+        ? ['Medians, quantiles and paired block comparisons shared by every study: stats.help().'] : []),
       ...(root.simd && typeof root.simd.help === 'function'
         ? ['SIMD compiler decision ranges and guest PC counts: simd.help() (' + (root.simd.help().available ? 'study available' : 'no SIMD study mounted') + ').'] : []),
       'Physical ESP32-P4 timings are a separate global, never mixed into profiles (guest instruction counts): ' + liveList(() => {
@@ -2276,6 +2346,9 @@
       '  machine.where(e => e.passId === "virtregrewriter").select("ordinal", "passId", "scope", "ref")',
       '  run.functions()   row.argument(0)   row.initialState()   row.with(q.fragment("name.v1").on("irFunction", { m: fn => metric }))',
       'Filtering never renumbers. Measuring a filtered timeline marks non-adjacent pairs as gaps (see q.help("changes")).',
+      'Renames: run.renames() lists functions that continued under another name (GlobalOpt resolving an alias, or an identical body).',
+      '  kernel.aliases()   // earlier names, e.g. [{ name: "checked_shadow", ordinal: 17, method: "alias" }]',
+      '  kernel.timeline("middle", { follow: true })   // earlier names before each rename; measure() rows carry function, followedAs and rename',
     ].join('\n'),
     states: () => [
       'A state is the program after an event (its print) or before it (= after the previous print of the same function, derivedFrom).',
@@ -2433,7 +2506,7 @@
     return Object.keys(cache).map(k => cache[k].stats()).concat([{ name: 'resolvedScopes', entries: resolvedScopes.size }]);
   }
   function status() {
-    const methods = ['events', 'text', 'profile', 'stats', 'initialModule', 'profileSHA'];
+    const methods = ['events', 'text', 'profile', 'stats', 'initialModule', 'profileSHA', 'renames'];
     return { version: VERSION, bridge: methods.filter(m => bridge && typeof bridge[m] === 'function'),
       archive: liveList(() => ({ variants: index().variants, streams: archive.streams() })), caches: cacheStats(), host: liveList(() => callBridge('stats', [])) };
   }

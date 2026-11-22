@@ -155,6 +155,51 @@ func TestHTTPProtocol(t *testing.T) {
 	}
 }
 
+// A running service describes itself: the inventory its owner supplied, the
+// open session count and the per-cell limits. GET / lists the routes.
+func TestInfoReportsInventorySessionsAndLimits(t *testing.T) {
+	s, err := New(context.Background(), func(vm *goja.Runtime) error { return nil }, zerolog.Nop(),
+		WithInventory(func() map[string]any { return map[string]any{"archive": map[string]string{"path": "/x"}} }))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer s.Close(context.Background())
+	h := Handler(s, zerolog.Nop())
+	get := func(path string) map[string]any {
+		w := httptest.NewRecorder()
+		h.ServeHTTP(w, httptest.NewRequest(http.MethodGet, "http://127.0.0.1:3791"+path, nil))
+		var body map[string]any
+		if w.Code != http.StatusOK || json.Unmarshal(w.Body.Bytes(), &body) != nil {
+			t.Fatalf("GET %s: %d %s", path, w.Code, w.Body)
+		}
+		return body
+	}
+	w := httptest.NewRecorder()
+	h.ServeHTTP(w, httptest.NewRequest(http.MethodPost, "http://127.0.0.1:3791/sessions", nil))
+	if w.Code != http.StatusCreated {
+		t.Fatal(w.Code)
+	}
+	info := get("/info")
+	sessions := info["sessions"].(map[string]any)
+	limits := info["limits"].(map[string]any)
+	if info["service"] != "trace-repl" || info["archive"].(map[string]any)["path"] != "/x" ||
+		sessions["open"] != 1.0 || sessions["max"] != float64(MaxSessions) ||
+		limits["sourceBytes"] != float64(MaxSourceBytes) || limits["resultBytes"] != float64(MaxResultBytes) || limits["cellSeconds"] != 15.0 {
+		t.Fatalf("info: %v", info)
+	}
+	if routes := get("/")["routes"].([]any); len(routes) == 0 || !strings.Contains(routes[0].(string), "/info") {
+		t.Fatalf("routes: %v", routes)
+	}
+	// The inventory is loopback-only like every other route.
+	r := httptest.NewRequest(http.MethodGet, "http://127.0.0.1:3791/info", nil)
+	r.Header.Set("Origin", "http://example.org")
+	w = httptest.NewRecorder()
+	h.ServeHTTP(w, r)
+	if w.Code != http.StatusForbidden {
+		t.Fatal(w.Code)
+	}
+}
+
 func TestClosingSessionInterruptsActiveCell(t *testing.T) {
 	started := make(chan struct{})
 	s, err := New(context.Background(), func(vm *goja.Runtime) error {

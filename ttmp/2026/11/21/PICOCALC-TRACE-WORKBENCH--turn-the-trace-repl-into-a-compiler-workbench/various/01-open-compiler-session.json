@@ -1,0 +1,13 @@
+{
+ "ok": true,
+ "value": {
+  "base": "eaf087281dbad1183f23eff353145d1c8a413e64",
+  "work": "32130289737f9338dc56593d7803a54a69370b9a",
+  "rv32": [
+   "2d8ec343098f6869ecb4de8a6262e88adaee51e6306b7bbafcd3325f450887d1",
+   "79f494e0ebaf23c098ec6f1f98252a422a4b3ffda8cfe04fd02b372917c799a1"
+  ],
+  "inputs": 38,
+  "bytes": 330186
+ }
+}

@@ -1,0 +1,598 @@
+{
+ "ok": true,
+ "value": {
+  "base": "eaf087281dbad1183f23eff353145d1c8a413e64",
+  "candidate": "32130289737f9338dc56593d7803a54a69370b9a",
+  "rv32": {
+   "base": "2d8ec343098f6869ecb4de8a6262e88adaee51e6306b7bbafcd3325f450887d1",
+   "candidate": "79f494e0ebaf23c098ec6f1f98252a422a4b3ffda8cfe04fd02b372917c799a1"
+  },
+  "inputs": 38,
+  "inputBytes": 330186,
+  "compiles": 836,
+  "seconds": 32.492,
+  "compiledInputs": [
+   "ray",
+   "world:chess",
+   "world:editor",
+   "world:agenda",
+   "world:files",
+   "worlds/agenda/reminder.typed",
+   "worlds/candela/builders.typed",
+   "worlds/chess/painter-3d.typed",
+   "worlds/chess/painter.typed",
+   "worlds/chess/position.typed",
+   "worlds/editor/empty.typed",
+   "worlds/editor/layout.typed",
+   "worlds/files/files.typed",
+   "worlds/raytrace/raytrace.typed"
+  ],
+  "byArm": {
+   "default": {
+    "identical": 14,
+    "errorsIdentical": 24,
+    "mismatches": 0
+   },
+   "forward": {
+    "identical": 14,
+    "errorsIdentical": 24,
+    "mismatches": 0
+   },
+   "capacity": {
+    "identical": 14,
+    "errorsIdentical": 24,
+    "mismatches": 0
+   },
+   "homes": {
+    "identical": 14,
+    "errorsIdentical": 24,
+    "mismatches": 0
+   },
+   "all": {
+    "identical": 14,
+    "errorsIdentical": 24,
+    "mismatches": 0
+   },
+   "allGuarded": {
+    "identical": 14,
+    "errorsIdentical": 24,
+    "mismatches": 0
+   },
+   "allBuffered": {
+    "identical": 14,
+    "errorsIdentical": 24,
+    "mismatches": 0
+   },
+   "stock": {
+    "identical": 14,
+    "errorsIdentical": 24,
+    "mismatches": 0
+   },
+   "saved": {
+    "identical": 0,
+    "errorsIdentical": 24,
+    "mismatches": 14
+   },
+   "direct": {
+    "identical": 1,
+    "errorsIdentical": 24,
+    "mismatches": 13
+   },
+   "savedDirect": {
+    "identical": 0,
+    "errorsIdentical": 24,
+    "mismatches": 14
+   }
+  },
+  "rayParityArms": {
+   "arms": [
+    "default",
+    "forward",
+    "capacity",
+    "homes",
+    "all",
+    "allGuarded",
+    "allBuffered"
+   ],
+   "measured": {
+    "identical": 98,
+    "errorsIdentical": 168,
+    "mismatches": 0
+   },
+   "recorded": {
+    "identical": 98,
+    "errorsIdentical": 168,
+    "mismatches": 0
+   },
+   "recordedFrom": {
+    "path": "ttmp/2026/11/21/PICOCALC-RAY-PARITY--make-typed-compiler-optimizations-cumulative-and-close-the-ray-tracer-s-gap-to-c/various/06-phase1-equivalence-vs-eaf0872.json",
+    "sha256": "c9296b7bc95348f6f37c8c91b276dbc71a0817862a15b735c6fd0c8c2b2e9ffd"
+   },
+   "agrees": true
+  },
+  "stockAndDefaultIdentical": true,
+  "newOptInArms": {
+   "identical": 1,
+   "errorsIdentical": 72,
+   "mismatches": 41
+  },
+  "mismatches": [
+   {
+    "name": "ray",
+    "arm": "saved",
+    "base": 8632,
+    "candidate": 8984
+   },
+   {
+    "name": "ray",
+    "arm": "direct",
+    "base": 8632,
+    "candidate": 8280
+   },
+   {
+    "name": "ray",
+    "arm": "savedDirect",
+    "base": 8632,
+    "candidate": 8048
+   },
+   {
+    "name": "world:chess",
+    "arm": "saved",
+    "base": 45348,
+    "candidate": 45712
+   },
+   {
+    "name": "world:chess",
+    "arm": "direct",
+    "base": 45348,
+    "candidate": 45108
+   },
+   {
+    "name": "world:chess",
+    "arm": "savedDirect",
+    "base": 45348,
+    "candidate": 42120
+   },
+   {
+    "name": "world:editor",
+    "arm": "saved",
+    "base": 74188,
+    "candidate": 75416
+   },
+   {
+    "name": "world:editor",
+    "arm": "direct",
+    "base": 74188,
+    "candidate": 73488
+   },
+   {
+    "name": "world:editor",
+    "arm": "savedDirect",
+    "base": 74188,
+    "candidate": 67552
+   },
+   {
+    "name": "world:agenda",
+    "arm": "saved",
+    "base": 15004,
+    "candidate": 15472
+   },
+   {
+    "name": "world:agenda",
+    "arm": "direct",
+    "base": 15004,
+    "candidate": 14884
+   },
+   {
+    "name": "world:agenda",
+    "arm": "savedDirect",
+    "base": 15004,
+    "candidate": 13776
+   },
+   {
+    "name": "world:files",
+    "arm": "saved",
+    "base": 2908,
+    "candidate": 2952
+   },
+   {
+    "name": "world:files",
+    "arm": "direct",
+    "base": 2908,
+    "candidate": 2868
+   },
+   {
+    "name": "world:files",
+    "arm": "savedDirect",
+    "base": 2908,
+    "candidate": 2644
+   },
+   {
+    "name": "worlds/agenda/reminder.typed",
+    "arm": "saved",
+    "base": 5624,
+    "candidate": 5732
+   },
+   {
+    "name": "worlds/agenda/reminder.typed",
+    "arm": "direct",
+    "base": 5624,
+    "candidate": 5524
+   },
+   {
+    "name": "worlds/agenda/reminder.typed",
+    "arm": "savedDirect",
+    "base": 5624,
+    "candidate": 5056
+   },
+   {
+    "name": "worlds/candela/builders.typed",
+    "arm": "saved",
+    "base": 5852,
+    "candidate": 5848
+   },
+   {
+    "name": "worlds/candela/builders.typed",
+    "arm": "direct",
+    "base": 5852,
+    "candidate": 5760
+   },
+   {
+    "name": "worlds/candela/builders.typed",
+    "arm": "savedDirect",
+    "base": 5852,
+    "candidate": 5668
+   },
+   {
+    "name": "worlds/chess/painter-3d.typed",
+    "arm": "saved",
+    "base": 21128,
+    "candidate": 21300
+   },
+   {
+    "name": "worlds/chess/painter-3d.typed",
+    "arm": "direct",
+    "base": 21128,
+    "candidate": 20948
+   },
+   {
+    "name": "worlds/chess/painter-3d.typed",
+    "arm": "savedDirect",
+    "base": 21128,
+    "candidate": 18416
+   },
+   {
+    "name": "worlds/chess/painter.typed",
+    "arm": "saved",
+    "base": 8876,
+    "candidate": 8868
+   },
+   {
+    "name": "worlds/chess/painter.typed",
+    "arm": "direct",
+    "base": 8876,
+    "candidate": 8692
+   },
+   {
+    "name": "worlds/chess/painter.typed",
+    "arm": "savedDirect",
+    "base": 8876,
+    "candidate": 8176
+   },
+   {
+    "name": "worlds/chess/position.typed",
+    "arm": "saved",
+    "base": 6592,
+    "candidate": 6564
+   },
+   {
+    "name": "worlds/chess/position.typed",
+    "arm": "direct",
+    "base": 6592,
+    "candidate": 6576
+   },
+   {
+    "name": "worlds/chess/position.typed",
+    "arm": "savedDirect",
+    "base": 6592,
+    "candidate": 6112
+   },
+   {
+    "name": "worlds/editor/empty.typed",
+    "arm": "saved",
+    "base": 1888,
+    "candidate": 1888
+   },
+   {
+    "name": "worlds/editor/empty.typed",
+    "arm": "direct",
+    "base": 1888,
+    "candidate": 1880
+   },
+   {
+    "name": "worlds/editor/empty.typed",
+    "arm": "savedDirect",
+    "base": 1888,
+    "candidate": 1880
+   },
+   {
+    "name": "worlds/editor/layout.typed",
+    "arm": "saved",
+    "base": 1588,
+    "candidate": 1688
+   },
+   {
+    "name": "worlds/editor/layout.typed",
+    "arm": "savedDirect",
+    "base": 1588,
+    "candidate": 1544
+   },
+   {
+    "name": "worlds/files/files.typed",
+    "arm": "saved",
+    "base": 2908,
+    "candidate": 2952
+   },
+   {
+    "name": "worlds/files/files.typed",
+    "arm": "direct",
+    "base": 2908,
+    "candidate": 2868
+   },
+   {
+    "name": "worlds/files/files.typed",
+    "arm": "savedDirect",
+    "base": 2908,
+    "candidate": 2644
+   },
+   {
+    "name": "worlds/raytrace/raytrace.typed",
+    "arm": "saved",
+    "base": 8632,
+    "candidate": 8984
+   },
+   {
+    "name": "worlds/raytrace/raytrace.typed",
+    "arm": "direct",
+    "base": 8632,
+    "candidate": 8280
+   },
+   {
+    "name": "worlds/raytrace/raytrace.typed",
+    "arm": "savedDirect",
+    "base": 8632,
+    "candidate": 8048
+   }
+  ],
+  "rows": [
+   {
+    "name": "ray",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "world:chess",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "world:editor",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "world:agenda",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "world:files",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "worlds/agenda/entry.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/agenda/reminder.typed",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "worlds/candela/builders.typed",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "worlds/candela/fluent-types.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/candela/fluent.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/candela/hand.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/candela/materials.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/candela/pattern-types.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/candela/patterns.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/chess/chess.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/chess/mobile-view.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/chess/moves.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/chess/painter-3d.typed",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "worlds/chess/painter.typed",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "worlds/chess/position.typed",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "worlds/chess/search.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/chess/state.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/chess/view.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/editor/document-view.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/editor/edit.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/editor/editor.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/editor/empty.typed",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "worlds/editor/find.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/editor/layout.typed",
+    "identical": 9,
+    "errorsIdentical": 0,
+    "mismatches": 2
+   },
+   {
+    "name": "worlds/editor/markdown.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/editor/positions.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/editor/preview.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/editor/state.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/editor/view.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/files/files.typed",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   },
+   {
+    "name": "worlds/raytrace/material-frame.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/raytrace/material-phases.typed",
+    "identical": 0,
+    "errorsIdentical": 11,
+    "mismatches": 0
+   },
+   {
+    "name": "worlds/raytrace/raytrace.typed",
+    "identical": 8,
+    "errorsIdentical": 0,
+    "mismatches": 3
+   }
+  ]
+ }
+}

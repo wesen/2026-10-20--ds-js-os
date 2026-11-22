@@ -1,0 +1,155 @@
+{
+ "ok": true,
+ "value": {
+  "base": "eaf087281dbad1183f23eff353145d1c8a413e64",
+  "candidate": "32130289737f9338dc56593d7803a54a69370b9a",
+  "seconds": 17.889,
+  "medians": {
+   "ray.stock": 20.4,
+   "ray.previous": 21.4,
+   "ray.candidate": 23.5,
+   "chess.stock": 348.1,
+   "chess.previous": 349.7,
+   "chess.candidate": 371.7,
+   "editor.stock": 886.4,
+   "editor.previous": 900.2,
+   "editor.candidate": 911.7
+  },
+  "summaries": {
+   "ray.stock": {
+    "n": 9,
+    "min": 19.8,
+    "q1": 20.2,
+    "median": 20.4,
+    "q3": 20.8,
+    "max": 26.1,
+    "mean": 21
+   },
+   "ray.previous": {
+    "n": 9,
+    "min": 20.6,
+    "q1": 21.1,
+    "median": 21.4,
+    "q3": 22,
+    "max": 22.9,
+    "mean": 21.6
+   },
+   "ray.candidate": {
+    "n": 9,
+    "min": 22.4,
+    "q1": 23.3,
+    "median": 23.5,
+    "q3": 24.1,
+    "max": 25.7,
+    "mean": 23.7
+   },
+   "chess.stock": {
+    "n": 5,
+    "min": 340.3,
+    "q1": 345.7,
+    "median": 348.1,
+    "q3": 349.8,
+    "max": 357.9,
+    "mean": 348.4
+   },
+   "chess.previous": {
+    "n": 5,
+    "min": 349.5,
+    "q1": 349.7,
+    "median": 349.7,
+    "q3": 350.4,
+    "max": 350.6,
+    "mean": 350
+   },
+   "chess.candidate": {
+    "n": 5,
+    "min": 349.7,
+    "q1": 354,
+    "median": 371.7,
+    "q3": 382.3,
+    "max": 397.6,
+    "mean": 371.1
+   },
+   "editor.stock": {
+    "n": 3,
+    "min": 886.1,
+    "q1": 886.2,
+    "median": 886.4,
+    "q3": 896.1,
+    "max": 905.8,
+    "mean": 892.7
+   },
+   "editor.previous": {
+    "n": 3,
+    "min": 895.8,
+    "q1": 898,
+    "median": 900.2,
+    "q3": 910.5,
+    "max": 920.7,
+    "mean": 905.6
+   },
+   "editor.candidate": {
+    "n": 3,
+    "min": 901.2,
+    "q1": 906.5,
+    "median": 911.7,
+    "q3": 918.4,
+    "max": 925.1,
+    "mean": 912.7
+   }
+  },
+  "paired": {
+   "ray.stock->previous": {
+    "pairs": 9,
+    "medianPercentSaved": -3.79,
+    "wins": 1,
+    "losses": 8
+   },
+   "ray.previous->candidate": {
+    "pairs": 9,
+    "medianPercentSaved": -9.32,
+    "wins": 0,
+    "losses": 9
+   },
+   "chess.stock->previous": {
+    "pairs": 5,
+    "medianPercentSaved": -0.65,
+    "wins": 2,
+    "losses": 3
+   },
+   "chess.previous->candidate": {
+    "pairs": 5,
+    "medianPercentSaved": -6.08,
+    "wins": 0,
+    "losses": 5
+   },
+   "editor.stock->previous": {
+    "pairs": 3,
+    "medianPercentSaved": -1.56,
+    "wins": 0,
+    "losses": 3
+   },
+   "editor.previous->candidate": {
+    "pairs": 3,
+    "medianPercentSaved": -1.77,
+    "wins": 1,
+    "losses": 2
+   }
+  },
+  "rayParityMedians": {
+   "sha256": "e56009c50f9dd166c08a618bdbe823d911ef8c0ef18012360057f652dca63b7b",
+   "values": {
+    "ray.stock": 50.1,
+    "ray.previous": 54.6,
+    "ray.candidate": 55.8,
+    "chess.stock": 742.3,
+    "chess.previous": 796.8,
+    "chess.candidate": 806.5,
+    "editor.stock": 838.2,
+    "editor.previous": 879.1,
+    "editor.candidate": 830.2
+   }
+  },
+  "method": "median of n interleaved compiles after one warm-up round; paired: median of per-round percentage saved (stats.paired)"
+ }
+}
