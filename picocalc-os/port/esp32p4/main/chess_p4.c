@@ -4,7 +4,10 @@
 #include "p4.h"
 
 char *p4_chess_compile(size_t *length) {
-  static const p4_compile_limits limits = {.heap_bytes = 4 * 1024 * 1024, .duration_us = 6000000};
+  // With the 3D painter, "default" compiles Chess in 4.66 s on the P4, "balanced" in 3.76 s
+  // (PICOCALC-COMPILE-BUDGET Step 6); loop versioning saves the engine only 0.45%.
+  static const p4_compile_limits limits = {.heap_bytes = 4 * 1024 * 1024, .duration_us = 6000000,
+                                           .policy = "balanced"};
   vtime_t started = port_clock();
   size_t source_length = 0, reactor_length = 0;
   char *source = p4_bundle_read("chess/chess.typed", &source_length, NULL, 0);

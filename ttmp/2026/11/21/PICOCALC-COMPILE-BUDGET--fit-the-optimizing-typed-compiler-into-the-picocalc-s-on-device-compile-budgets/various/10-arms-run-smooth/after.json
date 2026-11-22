@@ -1,0 +1,42 @@
+{
+  "sha256": "7b1181b4bb497a28669e33dbee36f23cb1c4e4940a59b3503266dc3481a8013b",
+  "imageSha256": "4b3b4406221ca5c8d3a5d7c8a195db3c3bfecc7592545704df321c4104f14899",
+  "health": {
+    "worlds": [
+      "agenda",
+      "chess",
+      "compositor",
+      "display",
+      "editor",
+      "files",
+      "keyboard",
+      "snake"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 4453546,
+      "relocate_us": 1240,
+      "native_us": 1427,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "i2c": {
+      "busyMs": 1741.83,
+      "transfers": 287,
+      "bytes": 1152,
+      "errors": 0
+    },
+    "spi": {
+      "busyMs": 121.33,
+      "transfers": 30,
+      "bytes": 482842,
+      "errors": 0
+    }
+  }
+}

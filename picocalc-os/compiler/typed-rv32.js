@@ -1883,6 +1883,15 @@ const POLICIES = Object.freeze({
         select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true}),
         inline: false,
     }),
+    // "balanced" is "default" without loop versioning and split locals (RAY-PARITY's Step 11 set),
+    // for worlds with a long boot compile whose loops gain little from versioning: Chess with the
+    // 3D painter compiles in 3.76 s instead of 4.66 s on the P4 (6 s deadline), and versioning saves
+    // its engine 0.45% of instructions (PICOCALC-COMPILE-BUDGET Step 6).
+    balanced: Object.freeze({
+        ...DEFAULT_POLICY,
+        operandLocations: Object.freeze({...DEFAULT_POLICY.operandLocations, split: false}),
+        select: Object.freeze({...DEFAULT_POLICY.select, version: false}),
+    }),
     default: DEFAULT_POLICY,
     // "kernel" is "default" plus what only a compute kernel can afford to compile: the division
     // facts cost Chess's boot compile about a quarter more, past its budget, but take the ray

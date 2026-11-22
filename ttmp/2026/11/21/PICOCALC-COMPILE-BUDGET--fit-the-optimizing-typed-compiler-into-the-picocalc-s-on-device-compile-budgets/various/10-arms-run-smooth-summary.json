@@ -1,0 +1,422 @@
+{
+ "files.stock": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 164795,
+  "minUs": 164795,
+  "maxUs": 164795,
+  "peakBytes": 742776,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step6": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 184118,
+  "minUs": 184118,
+  "maxUs": 184118,
+  "peakBytes": 742776,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step7": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 252239,
+  "minUs": 252239,
+  "maxUs": 252239,
+  "peakBytes": 765448,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step8": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 296739,
+  "minUs": 296739,
+  "maxUs": 296739,
+  "peakBytes": 791448,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step11": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 322308,
+  "minUs": 322308,
+  "maxUs": 322308,
+  "peakBytes": 794556,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step13": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 398417,
+  "minUs": 398417,
+  "maxUs": 398417,
+  "peakBytes": 815084,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.kernel": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 408349,
+  "minUs": 408349,
+  "maxUs": 408349,
+  "peakBytes": 815596,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "agenda.stock": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 499554,
+  "minUs": 499554,
+  "maxUs": 499554,
+  "peakBytes": 1029252,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "agenda.step6": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 640197,
+  "minUs": 640197,
+  "maxUs": 640197,
+  "peakBytes": 1047156,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "agenda.step7": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 1317880,
+  "minUs": 1317880,
+  "maxUs": 1317880,
+  "peakBytes": 1337320,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": false
+ },
+ "agenda.step8": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 1587547,
+  "minUs": 1587547,
+  "maxUs": 1587547,
+  "peakBytes": 1488976,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": false
+ },
+ "agenda.step11": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 1949829,
+  "minUs": 1949829,
+  "maxUs": 1949829,
+  "peakBytes": 1519220,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": false
+ },
+ "agenda.step13": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 2371458,
+  "minUs": 2371458,
+  "maxUs": 2371458,
+  "peakBytes": 1633564,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": false
+ },
+ "agenda.kernel": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 2871432,
+  "minUs": 2871432,
+  "maxUs": 2871432,
+  "peakBytes": 1645756,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": false
+ },
+ "editor.stock": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 2459088,
+  "minUs": 2459088,
+  "maxUs": 2459088,
+  "peakBytes": 2752840,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": true
+ },
+ "editor.step6": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 2941510,
+  "minUs": 2941510,
+  "maxUs": 2941510,
+  "peakBytes": 2831464,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": true
+ },
+ "editor.step7": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 4629426,
+  "minUs": 4629426,
+  "maxUs": 4629426,
+  "peakBytes": 3194948,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ },
+ "editor.step8": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 5359748,
+  "minUs": 5359748,
+  "maxUs": 5359748,
+  "peakBytes": 3659596,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ },
+ "editor.step11": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 6057216,
+  "minUs": 6057216,
+  "maxUs": 6057216,
+  "peakBytes": 3714796,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ },
+ "editor.step13": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 7370087,
+  "minUs": 7370087,
+  "maxUs": 7370087,
+  "peakBytes": 3875608,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ },
+ "editor.kernel": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 7714496,
+  "minUs": 7714496,
+  "maxUs": 7714496,
+  "peakBytes": 3874520,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ },
+ "chess.stock": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 1806136,
+  "minUs": 1806136,
+  "maxUs": 1806136,
+  "peakBytes": 2168972,
+  "bytes": [
+   274892
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": true
+ },
+ "chess.step6": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 2183348,
+  "minUs": 2183348,
+  "maxUs": 2183348,
+  "peakBytes": 2211716,
+  "bytes": [
+   274892
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": true
+ },
+ "chess.step7": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 3157916,
+  "minUs": 3157916,
+  "maxUs": 3157916,
+  "peakBytes": 2427856,
+  "bytes": [
+   274892
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": true
+ },
+ "chess.step8": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 3389355,
+  "minUs": 3389355,
+  "maxUs": 3389355,
+  "peakBytes": 2624968,
+  "bytes": [
+   274892
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": true
+ },
+ "chess.step11": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 3761382,
+  "minUs": 3761382,
+  "maxUs": 3761382,
+  "peakBytes": 2671912,
+  "bytes": [
+   274892
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": true
+ },
+ "chess.step13": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 4661370,
+  "minUs": 4661370,
+  "maxUs": 4661370,
+  "peakBytes": 2792040,
+  "bytes": [
+   274892
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ },
+ "chess.kernel": {
+  "n": 1,
+  "ok": 1,
+  "medianUs": 5365094,
+  "minUs": 5365094,
+  "maxUs": 5365094,
+  "peakBytes": 2807200,
+  "bytes": [
+   274892
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ }
+}

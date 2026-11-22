@@ -219,8 +219,10 @@ test("the default policy applies the qualified options and stock reproduces the 
     const sha = options => createHash("sha256").update(image(options)).digest("hex");
     // PICOCALC-RAY-PARITY Step 13 timed this image on the P4 (board mode 2: 16.26 ms per frame).
     assert.equal(sha(), "d9c25ef928d70c4ca46f065a18396c6f3df6fafaaf021bd2e840318be844b8f3");
-    // Step 11's image (19.31 ms): without versioned loops and split locals.
+    // Step 11's image (19.31 ms): without versioned loops and split locals. The named "balanced"
+    // policy, which Chess compiles with on the device, is exactly this set.
     assert.equal(sha(without(["version"], ["split"])), "4fa61ed11a0c1f940b8a4e8ff74c27e443d432184ec3eac8e3dac4831ce2d984");
+    assert.equal(sha({policy: "balanced"}), "4fa61ed11a0c1f940b8a4e8ff74c27e443d432184ec3eac8e3dac4831ce2d984");
     // Step 10's image (20.20 ms): also without pointer homes.
     assert.equal(sha(without(["version"], ["split", "pointers"])), "e7e33cd0c2cb8fcea41c7a2143a031b62dc8ba827814c83cdf503479e799d1e7");
     // Step 8's image (22.43 ms): also without shared homes and short forward branches.

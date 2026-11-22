@@ -1,0 +1,146 @@
+{
+  "revision": "cf177af67aa0e46c9f1a9a3e12a3dacae3b6c4bb",
+  "dirty": false,
+  "arms": [
+    "stock",
+    "step6",
+    "step7",
+    "step8",
+    "step11",
+    "step13",
+    "kernel"
+  ],
+  "rounds": 1,
+  "armOptions": {
+    "stock": {
+      "policy": "stock"
+    },
+    "step6": {
+      "policy": "stock",
+      "operandLocations": {
+        "forward": true,
+        "capacity": true,
+        "homes": true,
+        "saved": true,
+        "direct": true,
+        "capacities": false,
+        "nested": false,
+        "constants": false,
+        "share": false,
+        "pointers": false,
+        "split": false
+      },
+      "select": {
+        "immediates": true,
+        "divisions": true,
+        "branches": true,
+        "results": true,
+        "leafParams": true,
+        "commute": false,
+        "rotate": false,
+        "shortBranches": false,
+        "version": false
+      },
+      "inline": false,
+      "inlineGuardedReturns": true
+    },
+    "step7": {
+      "policy": "stock",
+      "operandLocations": {
+        "forward": true,
+        "capacity": true,
+        "homes": true,
+        "saved": true,
+        "direct": true,
+        "capacities": true,
+        "nested": true,
+        "constants": false,
+        "share": false,
+        "pointers": false,
+        "split": false
+      },
+      "select": {
+        "immediates": true,
+        "divisions": true,
+        "branches": true,
+        "results": true,
+        "leafParams": true,
+        "commute": true,
+        "rotate": false,
+        "shortBranches": false,
+        "version": false
+      },
+      "inline": true,
+      "inlineGuardedReturns": true
+    },
+    "step8": {
+      "policy": "stock",
+      "operandLocations": {
+        "forward": true,
+        "capacity": true,
+        "homes": true,
+        "saved": true,
+        "direct": true,
+        "capacities": true,
+        "nested": true,
+        "constants": true,
+        "share": false,
+        "pointers": false,
+        "split": false
+      },
+      "select": {
+        "immediates": true,
+        "divisions": true,
+        "branches": true,
+        "results": true,
+        "leafParams": true,
+        "commute": true,
+        "rotate": true,
+        "shortBranches": false,
+        "version": false
+      },
+      "inline": true,
+      "inlineGuardedReturns": true
+    },
+    "step11": {
+      "policy": "stock",
+      "operandLocations": {
+        "forward": true,
+        "capacity": true,
+        "homes": true,
+        "saved": true,
+        "direct": true,
+        "capacities": true,
+        "nested": true,
+        "constants": true,
+        "share": true,
+        "pointers": true,
+        "split": false
+      },
+      "select": {
+        "immediates": true,
+        "divisions": true,
+        "branches": true,
+        "results": true,
+        "leafParams": true,
+        "commute": true,
+        "rotate": true,
+        "shortBranches": true,
+        "version": false
+      },
+      "inline": true,
+      "inlineGuardedReturns": true
+    },
+    "step13": {},
+    "kernel": {
+      "policy": "kernel"
+    }
+  },
+  "firmwareSha256": "4b3b4406221ca5c8d3a5d7c8a195db3c3bfecc7592545704df321c4104f14899",
+  "compilerSha256": {
+    "typed-wasm.js": "f96790be276dd8a63e4b7492dcf715e2e800787d0e180080b18ef89722b1914a",
+    "typed-async.js": "59470a2c52b76e323d404be6f5c0bc998980f44dd00bc3c511f3c3ed76d1d893",
+    "typed-rv32.js": "c65be285b8348f41ce17b7f6f9eb596316a34716298edfe04a451402fcc0ec3d",
+    "typed-world.js": "bdd2a9606eb8bda5c3cfe481aaca94fbb2e63178f334eb9074ce7f36dfa33978"
+  }
+}
