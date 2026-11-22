@@ -394,3 +394,104 @@ Board results, paired over 6 blocks (median of per-block savings; wins of 6):
 
 - Board run directory (scratch, not kept): `/tmp/claude-1000/…/scratchpad/board-run-1`. Its `bench.log` is preserved as `various/13-board/bench.log.gz`.
 - Frame rows: `SHROW frame <fixture> <phase> <block> <arm> <µs>`, where arm 0 is scalar C and arm 1+m is mode m. Predicate rows: `SHROW pred <fixture> <kind> <block> <arm> <calls> <cycles>`, where arms 0–2 are C variants and arm 3+m is mode m. Chess compares arms 0 and NMODE−1.
+
+## Step 6: Instruction selection (Phase 1b)
+
+After Phase 1 I classified every instruction the opening frame executes, using the interpreter's per-word counts. The waste was in instruction selection, not register allocation. Of 11.10 M instructions:
+
+- 1.79 M were `li` loading a literal for the very next operation.
+- 1.10 M were `mv`.
+- 735 k were `jal` instructions. Every conditional branch was an inverted short branch over a jump.
+- 222 k were divides, 217 k of them by constants (255, 8, 4, 16, 2, 3).
+
+The new option group `select` addresses each of these. It cut the frame to 9.00 M instructions. On the P4, the frame fell from 39.48 to 31.51 ms (−20.2%, all 12 scenes and 6/6 blocks), the shadow predicate fell from 247.7 to 212.8 cycles, and Chess evaluation was 31.2% faster. Cold compile was unchanged. `select` is now the default.
+
+**Commit (code):** b3bc86f, "feat(rv32): opt-in instruction selection (select option group)". The default change is recorded in Step 7.
+
+### Prompt Context
+
+**User prompt (verbatim):** "Continue with your work, commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)". The user also asked for the REPL work to go to a subagent and, later, for that subagent to write a vault report. Both are handled in PICOCALC-TRACE-WORKBENCH.
+**Assistant interpretation:** Continue toward C parity on the ray tracer, letting the measurements choose the next change.
+**Inferred user intent:** A fast Typed ray tracer.
+
+### What I did
+
+- Wrote a scratch classifier: it compiles the frame, runs it, and sums executed words by class (`li`, `mv`, ALU, loads and stores through `sp`, branches, `jal`, mul, div). A second scratch script counts divides per function: Pack 153,600, Pixel 43,747 div and 19,477 rem, SphereScale 5,488 (variable divisor).
+- Implemented `select` in `typed-rv32.js`:
+  - `selectConstant` looks one operation ahead from a literal. It handles `IMMEDIATE_FORMS` (add, sub, mul by 1 or 2^k, shl, shr_s, lt_s, le_s, ge_s, ge_u, eq), reads a literal 0 as `x0` through `pushHome(ZERO)`, and hands division to `divideByConstant`.
+  - `divideByConstant` uses a biased shift for 2^k, `mulh` with a Hacker's Delight magic number (`divisionMagic`, exact in doubles) for other positive constants, and a mask for remainder by 2^k.
+  - `fuseBranch` and `PREDICATES` are ported from PICOCALC-RV32-BRANCH `02-predicate-fusion.patch`. I added `ne` and a `materialize()` before the branch, which direct reads require.
+  - `branch()` emits an in-range backward branch directly.
+  - `destination()` and `result()` compute a result in its home when the next operation is `local.set` of a homed local, except at a forwarding point.
+  - `LeafCode` uses `pushHome(A0 + i)` under `leafParams`.
+  - `constant()` drops the `addi rd,rd,0` after a `lui` whose low part is zero, only under `immediates`, which keeps stock byte-identical.
+- `tools/rv32-interp.js` gained `mulh` and `mulhu`. The first division profile faulted with `Rv32Fault: unsupported M instruction at 0x5dc`.
+- Tests: a differential test (`instruction selection matches stock code…`) runs three functions on 65 edge-case and pseudo-random inputs. It covers comparisons around ±2048, 22 divisors and a frameless leaf, compares every result with stock, and asserts that no divide remains. `scripts/09-division-sweep.mjs` compiles `n / d` and `n % 2^k` for 300 divisors (all powers of two, the ray's constants, primes, 2^31−1 and random values) and compares 130,200 results with JavaScript truncating division: 0 mismatches (`various/15-division-sweep.json`).
+- Holdout: the Chess engine oracle under each part (below).
+- Board: `scripts/10-stage-board.py BUILD MODES PIN` generalizes 06. It takes a modes file and the control's pin, and widens `cold.c`'s `cell` buffer to 1024 bytes. Modes are in `various/17-board-modes-select.json`: 0 = Phase 1 default (pin `01c7bf07…`, Step 5's mode 3), 1 = `select` without divisions, 2 = divisions only, 3 = all. `scripts/11-import-board.py` and `12-score-board.{py,js}` import any number of modes and score every mode against mode 0 in a REPL session.
+- Added `select` to `POLICIES.default`. Ran the 24 replays with it (`various/16-replays-select-default.log`), then updated the tests. `select: false` isolates the guarded-return test and the stock comparison. The explicit-option PIE pins now say `select:false`. A new pin covers the default image `6b854512…`.
+
+### Why
+
+- C's code for the same algorithm has none of these instructions. GCC folds literals into immediates, divides by constants with `mulh`, and branches on comparisons directly.
+
+### What worked
+
+Host frame (instructions; all reproduce `430f0d50…`): Phase 1 default 11,098,863. Adding `immediates` gives 10,315,885, `branches` 10,281,616, `results` 10,555,838, `leafParams` 11,098,855, `divisions` 10,958,839, and all five 8,997,126. The image shrinks from 8048 to 6792 B.
+
+Chess engine oracle (instructions; 6981/6981 words each): 248,624,574, then 189,993,759 without divisions, 247,080,568 with divisions only, and 188,553,911 with all (−24.2%).
+
+Board (`various/20-board-select-scores.json`; median of per-block savings against mode 0, wins out of 6):
+
+| | mode 1: no divisions | mode 2: divisions only | mode 3: all |
+|---|---:|---:|---:|
+| frame (39,483 µs control) | 33,974.5 (13.96%, 6) | 36,231.5 (8.29%, 6) | **31,510.5 (20.19%, 6)** |
+| primary pass (10,130.5 µs) | 21.27%, 6 | 0.19%, 5 | 20.95%, 6 |
+| shade pass (34,796.5 µs) | 11.80%, 6 | 8.63%, 6 | 19.27%, 6 |
+| shadow predicate (247.67 cycles) | 212.78 (14.11%) | 247.91 (−0.09%) | 212.85 (14.11%) |
+| ray cold compile (344,072 µs) | +0.04% | −0.34% | −0.24% |
+| Chess cold compile (84,040.5 µs) | −2.01% | −0.85% | −0.11% |
+| ray compile peak | 933,524 B in every mode | | |
+
+- All 12 scenes for mode 3 saved between 19.78% and 20.39%, each with 6/6 wins. Chess evaluation (mode 0 against 3): 5,556.4 → 3,820.0 cycles per call (−31.24%, 6/6).
+- References in the same firmware: scalar C frame 7,723 µs, checked C predicate 135.3 cycles. Typed is now 4.08× C on the frame and 1.57× on the predicate.
+- All 48 cold-compile rows were present; widening the buffer worked. The device was restored to `e7b771aa…` and passed the health check. Diagnostic app SHA-256: `3489cb4eb16a31c51fd8e75a5eed1d55cb18d5743a88697d701712912bb07fe3`.
+- Tests: 141 pass, 0 fail. Replays: 24/24 PASS with `select` in the default.
+
+### What didn't work
+
+- The first board build failed at its own pin: `AssertionError … actual: '6b8545125fa8d2d0…'`. `resolveOptions` merges a mode's fields *over the default policy*, and the working-tree default already contained `select`, so mode 0 silently got it. Every mode now starts from `"policy": "stock"`. A board mode must not depend on what "default" means at the time of the build; Step 5's file was safe only because the default had not yet gained a new field.
+- Two tests failed after the default change. Both assumed the default touched only the options they named. `normalize`'s code changed under `select`, and `{operandLocations: false, inlineGuardedReturns: false}` no longer equals stock. Both now pass `select: false` explicitly.
+- Typed has no `<<` operator and no `?:`. My first differential source used both and failed with `SyntaxError: 13:54: expected identifier` and `10:19: invalid token`.
+
+### What I learned
+
+- Instruction counts understate the cost of a divide on the P4 by a large factor. Divisions removed 1.3% of executed instructions and 8.3% of frame time. That is about 3.25 ms for 217 k divides, roughly 5 cycles saved per divide net of the replacement sequence. Earlier labs never measured divide latency. Any future change that adds or removes divides must be judged on the board.
+- Most of the "codegen factor" in the guide's gap decomposition was instruction selection, which the stack-machine lowering never attempted. Register allocation (Phase 1) and selection (Phase 1b) together took the frame from 46.0 to 31.5 ms.
+
+### What was tricky to build
+
+- Every new sequence uses only `t6` as scratch, and reads its operand before or in the same instruction that first writes the result. That allows the result to land in the operand's own home (`x = x / 8`). `pop(T5)` never returns `t6`, and I checked each sequence against that rule.
+- A literal 0 read as `x0` is a pending direct read whose "home" is register 0. Every consumer of `this.direct` compares against `undefined`, not against falsy, so `x0` is handled. Calls do not spill it, and `materialize` copies it like any home.
+- Fusion bypasses `step()`'s control-opcode `materialize()`, because it consumes the `if`/`br_if` itself. It must materialize after popping its operands and before branching.
+
+### What warrants a second pair of eyes
+
+- `divisionMagic` uses doubles. Every intermediate value stays below 2^34, and the sweep checks 300 divisors, but a reviewer should confirm the bound for divisors near 2^31.
+- `le_s` with an immediate uses `c + 1`. The guard `c < 2047 && c >= -2049` keeps `c + 1` inside the 12-bit range, and `c` can never be `INT_MAX` there.
+
+### What should be done in the future
+
+- Inline small hot callees: the frame still makes 77,131 calls. Step 7 starts this.
+- Fold `x / a / b` into `x / (a*b)` when the product does not overflow. GCC does this, and Pack has it three times.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `PREDICATES`, `IMMEDIATE_FORMS`, `divisionMagic`, `constant`, `destination`, `result`, `selectConstant`, `divideByConstant`, `fusible`, `branchTarget`, `fuseBranch`, `begin`, `branch`, the two lines at the top of `step`'s switch, the `case 0x20`, `0x41`, `0x45` and load cases, `LeafCode.step`, and `lowerLeaf` and `emitter.select` wiring.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the last test, and the default pin.
+- Run: `node $T/scripts/09-division-sweep.mjs`; `python3 $T/scripts/12-score-board.py 3795 $T/various/19-board-select /tmp/x.json`.
+
+### Technical details
+
+- Magic examples: d=255 → M = −2,139,062,143 (as signed), s = 7, `add` correction on. d=3 → M = 1,431,655,766, s = 0.
+- Branch kinds (funct3): 0 beq, 1 bne, 4 blt, 5 bge, 6 bltu, 7 bgeu. `kind ^ 1` negates.

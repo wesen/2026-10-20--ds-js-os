@@ -854,6 +854,7 @@ const POLICIES = Object.freeze({
     default: Object.freeze({
         inlineGuardedReturns: true,
         operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true}),
+        select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true}),
     }),
     stock: Object.freeze({}),
 });

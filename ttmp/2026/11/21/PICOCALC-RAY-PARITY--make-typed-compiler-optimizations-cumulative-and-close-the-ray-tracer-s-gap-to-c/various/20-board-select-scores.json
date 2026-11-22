@@ -1,0 +1,229 @@
+{
+ "session": "session-be6e7d16-c6d0-45b6-bcf2-b095531d0e00",
+ "scores": {
+  "cFrameUs": 7723,
+  "checkedCPredicateCycles": 135.32694973558557,
+  "chess": {
+   "control": 5556.364583333333,
+   "candidate": 3819.9791666666665,
+   "savedPct": 31.24,
+   "wins": 6
+  },
+  "mode1": {
+   "frame": {
+    "control": 39483,
+    "candidate": 33974.5,
+    "savedPct": 13.96,
+    "wins": 6
+   },
+   "primary": {
+    "control": 10130.5,
+    "candidate": 7973,
+    "savedPct": 21.27,
+    "wins": 6
+   },
+   "shade": {
+    "control": 34796.5,
+    "candidate": 30688.5,
+    "savedPct": 11.8,
+    "wins": 6
+   },
+   "predicate": {
+    "control": 247.66768496174976,
+    "candidate": 212.78004826205267,
+    "savedPct": 14.11,
+    "wins": 6
+   },
+   "compileRay": {
+    "control": 344072,
+    "candidate": 343997,
+    "savedPct": 0.04,
+    "wins": 4
+   },
+   "compileChess": {
+    "control": 84040.5,
+    "candidate": 85747.5,
+    "savedPct": -2.01,
+    "wins": 0
+   },
+   "peakRay": {
+    "control": 933524,
+    "candidate": 933524,
+    "savedPct": 0,
+    "wins": 0
+   },
+   "scenesSavedPct": [
+    13.96,
+    13.74,
+    13.97,
+    13.67,
+    13.74,
+    14.03,
+    14.02,
+    13.99,
+    13.99,
+    13.57,
+    13.85,
+    13.82
+   ],
+   "sceneWins": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  "mode2": {
+   "frame": {
+    "control": 39483,
+    "candidate": 36231.5,
+    "savedPct": 8.29,
+    "wins": 6
+   },
+   "primary": {
+    "control": 10130.5,
+    "candidate": 10100,
+    "savedPct": 0.19,
+    "wins": 5
+   },
+   "shade": {
+    "control": 34796.5,
+    "candidate": 31774,
+    "savedPct": 8.63,
+    "wins": 6
+   },
+   "predicate": {
+    "control": 247.66768496174976,
+    "candidate": 247.90871284078656,
+    "savedPct": -0.09,
+    "wins": 2
+   },
+   "compileRay": {
+    "control": 344072,
+    "candidate": 345228.5,
+    "savedPct": -0.34,
+    "wins": 0
+   },
+   "compileChess": {
+    "control": 84040.5,
+    "candidate": 84757.5,
+    "savedPct": -0.85,
+    "wins": 0
+   },
+   "peakRay": {
+    "control": 933524,
+    "candidate": 933524,
+    "savedPct": 0,
+    "wins": 0
+   },
+   "scenesSavedPct": [
+    8.29,
+    8.1,
+    7.83,
+    7.54,
+    8.17,
+    8.65,
+    9,
+    8.84,
+    8.74,
+    8.48,
+    8.76,
+    8.81
+   ],
+   "sceneWins": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  },
+  "mode3": {
+   "frame": {
+    "control": 39483,
+    "candidate": 31510.5,
+    "savedPct": 20.19,
+    "wins": 6
+   },
+   "primary": {
+    "control": 10130.5,
+    "candidate": 8003.5,
+    "savedPct": 20.95,
+    "wins": 6
+   },
+   "shade": {
+    "control": 34796.5,
+    "candidate": 28082.5,
+    "savedPct": 19.27,
+    "wins": 6
+   },
+   "predicate": {
+    "control": 247.66768496174976,
+    "candidate": 212.8462802279612,
+    "savedPct": 14.11,
+    "wins": 6
+   },
+   "compileRay": {
+    "control": 344072,
+    "candidate": 344928,
+    "savedPct": -0.24,
+    "wins": 0
+   },
+   "compileChess": {
+    "control": 84040.5,
+    "candidate": 84141.5,
+    "savedPct": -0.11,
+    "wins": 0
+   },
+   "peakRay": {
+    "control": 933524,
+    "candidate": 933524,
+    "savedPct": 0,
+    "wins": 0
+   },
+   "scenesSavedPct": [
+    20.19,
+    19.86,
+    19.96,
+    19.78,
+    19.92,
+    20.27,
+    20.34,
+    20.2,
+    20.39,
+    19.99,
+    20.29,
+    20.22
+   ],
+   "sceneWins": [
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6,
+    6
+   ]
+  }
+ }
+}

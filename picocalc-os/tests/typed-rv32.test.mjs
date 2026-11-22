@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import {createHash} from "node:crypto";
 import {readFileSync} from "node:fs";
 import test from "node:test";
 import {createContext, runInContext} from "node:vm";
@@ -163,7 +164,8 @@ test("guarded scalar returns are proved from an earlier body and applied to sele
     `;
     const events = [];
     const control = typedRv32.compile(source, [], undefined, {policy: "stock"});
-    const options = {inlineGuardedReturns: name => name === "selected" || name === "early",
+    // select changes every function, including normalize; this test isolates the guarded inliner.
+    const options = {inlineGuardedReturns: name => name === "selected" || name === "early", select: false,
         inspect:{function:"selected",emit:e => events.push(e)}};
     const candidate = typedRv32.compile(source, [], undefined, options);
     const calls = (p, fn) => words(p, fn).filter(w => opcode(w) === 0x6f && destination(w) === 1).length;
@@ -175,7 +177,7 @@ test("guarded scalar returns are proved from an earlier body and applied to sele
     const emission = events.find(e => e.target === "rv32" && e.kind === "emission");
     assert(emission.ranges.some(r => r.decisions?.some(d => d.includes("guarded return"))));
     assert.deepEqual(candidate.image, typedRv32.compile(source, [], undefined, {...options, streamFunctions:false}).image);
-    assert.deepEqual(control.image, typedRv32.compile(source, [], undefined, {inlineGuardedReturns:false}).image);
+    assert.deepEqual(control.image, typedRv32.compile(source, [], undefined, {inlineGuardedReturns:false, select:false}).image);
     // The default policy inlines every proved helper; the explicit selector narrows it.
     assert.equal(calls(typedRv32.compile(source), "ordinary"), 0);
 });
@@ -197,15 +199,19 @@ test("a checked constant read can use a halfword displacement and a dominating c
 test("the default policy applies the qualified options and stock reproduces the earlier default", () => {
     const {typedRv32} = compiler();
     const src = readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8");
-    const qualified = {inlineGuardedReturns: true, operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}};
+    const qualified = {inlineGuardedReturns: true, operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true},
+        select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true}};
     const image = options => typedRv32.compile(src, [], 65536, options).image;
     assert.deepEqual(image(), image({policy: "stock", ...qualified}));
     assert.deepEqual(image({policy: "default"}), image());
     assert.notDeepEqual(image({policy: "stock"}), image());
     // Explicit fields override the policy, and an explicit undefined leaves it unchanged.
-    assert.deepEqual(image({operandLocations: false, inlineGuardedReturns: false}), image({policy: "stock"}));
+    assert.deepEqual(image({operandLocations: false, inlineGuardedReturns: false, select: false}), image({policy: "stock"}));
     assert.deepEqual(image({operandLocations: undefined}), image());
     assert.equal(image({policy: "stock"}).length, 9564);
+    // PICOCALC-RAY-PARITY Step 6 timed this image on the P4 (board mode 3: 31.51 ms per frame).
+    assert.equal(createHash("sha256").update(image()).digest("hex"),
+        "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
 
