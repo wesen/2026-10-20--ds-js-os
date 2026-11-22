@@ -344,3 +344,25 @@ I added `results.save/load/list`, backed by a new package `pkg/traceresults` and
 ### Technical details
 
 - Record fields: `name, saved, session, unit, job, script {sha256, bytes}, args, repo {root, head}, compilers [{requested, revision, key, files [{path, sha256}]}], value`.
+
+## Step 6: Milestone report in the vault, and closeout
+
+The I1 + I2 milestone (with I5, I6 and I2b also done) is written up as a textbook-style deep dive in the vault and pushed. The ticket's documents, scripts and evidence are committed, and the service on 3811 is stopped.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Requested milestone: a vault report once I1 and I2 are done and tested, committed alone and pushed.
+**Inferred user intent:** A durable explanation of how the native interpreter was made identical to the reference and how parameters were made leak-free.
+
+### Evidence and commits
+- Code and docs on `worktree-agent-ac1fc97c8047752b6`: `16fb394` (ticket and design), `849166a` (I1), `0791eeb` (I2), `c38e429` (I6), `887f6d0` (`--arg` fix), `30820a6` (I5, I2b), `1b3f4fe` (diary, as-built design, scripts, evidence).
+- Validation at `30820a6`: `go vet ./...`, `go test ./...` and `go test -race ./...` pass (traceapi 47.9 s; 150.5 s under the race detector); `gofmt -l pkg cmd` is empty; `docmgr doctor --ticket PICOCALC-WORKBENCH-NATIVE` passes.
+- Vault: `Projects/2026/11/21/PROJECT REPORT - PicoCalc Compiler - A Native RV32 Interpreter and Per-Cell Parameters for the Compiler Workbench - A Technical Deep Dive.md`, vault commit `fcb7bcf`. The first push was rejected (`! [rejected] main -> main (fetch first)`, another session had pushed); `git pull --rebase` and a second push succeeded. Only the report was staged; an untracked `_assets/picocalc-candela-translated-kernel-previews.png` from another session was left alone.
+
+### Noteworthy decisions or failures
+- The code repository was not pushed, as the brief requires.
+- The service on 127.0.0.1:3811 was stopped with `$SCRATCH/stop_service.py 3811`, which checks the port range and that the listening process is this session's scratchpad build before sending SIGTERM.
+
+### Remaining requirements and next action
+- I3b (the opcode-table export) is a proposal in design Section 8; it needs a change to `picocalc-os/compiler/typed-rv32.js`, which was out of scope.
+- Merging the branch into `main` is for the parent agent.
