@@ -24,3 +24,13 @@ Phase B2 implemented (67ac952, a995693, 6aaca8e, 7c78312): Candela generators pr
 
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/tools/gen/candela/regenerate.mjs — Entry point and --check gate
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-REPO-LAYOUT--give-every-piece-of-code-one-home-and-keep-ttmp-as-the-work-log/reference/02-phase-b2-candela-generators-diary.md — Phase B2 diary
+
+## 2026-11-22
+
+Phases A-I implemented: bench/ (host gates, board harness reproducing RAY-PARITY run 15), PLAYABLE.json with profiles and a store, compiler/ and apps/ and firmware/ moves, make test, docs/, AGENTS.md, ticket hygiene. Reproducible playable f8f36bd1 (f2e67ee) installed; gallery 18/18 digests on the device.
+
+### Related Files
+
+- /home/manuel/code/wesen/2026-10-20--ds-js-os/Makefile — the repository's entry points
+- /home/manuel/code/wesen/2026-10-20--ds-js-os/bench/README.md — measurement infrastructure
+- /home/manuel/code/wesen/2026-10-20--ds-js-os/firmware/PLAYABLE.json — the installed playable firmware

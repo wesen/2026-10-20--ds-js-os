@@ -398,3 +398,14 @@ No questions are open. New ones go here as they come up during the phases.
 | RV32 backend sources | `picocalc-os/compiler/rv32/README.md`, `build.mjs` |
 | Trace REPL module table | `pkg/tracecompiler/compiler.go` lines 38–44, `TypedSources` near line 213 |
 | Emulators | `cji/tools/rv32/emu.c` (`rv32emu`, replays), `picocalc-os/tools/rv32-interp.js` (reference), `pkg/tracerv32` (Go, tested against the reference) |
+
+## 10. Implementation notes (2026-11-22)
+
+The phases were implemented in the order A, B, B2, C, E, D, F (first), G, H, I; the diary (`reference/01-investigation-diary.md`, Steps 4 to 8) records each gate. The result departs from Section 4.1 in these places:
+
+- **`bench/emu/` holds only `emu.c`.** cji's freestanding C runtime (`tools/rv32/fw/{libc.c,hostcalls.S,softfloat.c,include}`) stays in `compiler/cji/`, because the firmware's device-compiler tool links it; `bench/emu/Makefile` builds the replays' three objects from there.
+- **The QuickJS Candela worlds are in `apps/js/worlds/`,** not inside `apps/js/picocalc/`: the P4 build bundles everything under its JS root, so inside it they would enter every profile's device filesystem.
+- **Phase E ran before Phase D,** so the Typed worlds moved once (`picocalc-os/worlds` → `apps/typed`) and the trace REPL's world-root table has two entries.
+- **Not moved:** `cmd/trace-repl` and `pkg/trace*` (the `tools/trace-repl/` row), the firmware's own tests (`firmware/tests/`, not split into `tests/{apps,native}`) and the device tools (`firmware/tools/{p4cap,p4put,s3cap,provision_agent}.py`). Each is a pure move with no gate attached; they remain for a later change.
+- **Profiles:** `playable`, `candela-world`, `offline`, `agent`, `agent-elf`. There is no `bench` profile; the board study app is its own ESP-IDF project (`bench/board/app`).
+- **Added:** reproducible firmware images (Section 5.3 assumed digests would change with paths; with prefix maps they do not), `bench/board/gallery.py` for the gallery's device gate, and `ttmp/ACTIVE.md`.
