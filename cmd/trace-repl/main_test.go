@@ -114,7 +114,11 @@ func TestInfoNamesTheMountedCapture(t *testing.T) {
 	archive := evidenceRoot(t, "PICOCALC-ROW-IR--*")
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	service, err := newService(ctx, settings{Archive: archive, DeviceStudy: evidenceRoot(t, "PICOCALC-PIE-LOOPS--*")}, zerolog.Nop())
+	board := filepath.Join(t.TempDir(), "rows.json")
+	if err := os.WriteFile(board, []byte(`[1,2,3]`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	service, err := newService(ctx, settings{Archive: archive, DeviceStudy: evidenceRoot(t, "PICOCALC-PIE-LOOPS--*"), Mounts: []string{"board=" + board}}, zerolog.Nop())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -141,6 +145,8 @@ func TestInfoNamesTheMountedCapture(t *testing.T) {
 			Pairs int
 		}
 		SIMDStudy *struct{ Path string }
+		Repo      struct{ Root, Head string }
+		Mounts    []struct{ Name, Path, SHA256 string }
 		Sessions  struct{ Open, Max int }
 		Limits    struct{ SourceBytes, ResultBytes int }
 	}
@@ -151,7 +157,9 @@ func TestInfoNamesTheMountedCapture(t *testing.T) {
 	abs, _ := filepath.Abs(archive)
 	if info.Archive.Path != abs || info.Archive.Label.Ticket != "PICOCALC-ROW-IR" || len(info.Archive.Streams) != 6 ||
 		info.DeviceStudy == nil || info.DeviceStudy.Pairs == 0 || !filepath.IsAbs(info.DeviceStudy.Path) || info.SIMDStudy != nil ||
-		info.Sessions.Max != 32 || info.Limits.SourceBytes != 64<<10 || info.Build == nil {
+		info.Sessions.Max != 32 || info.Limits.SourceBytes != 64<<10 || info.Build == nil ||
+		len(info.Mounts) != 1 || info.Mounts[0].Name != "board" || info.Mounts[0].Path != board || len(info.Repo.Head) != 40 ||
+		!strings.HasSuffix(abs, strings.TrimPrefix(archive, "../../")) || !strings.HasPrefix(abs, info.Repo.Root) {
 		t.Fatalf("info: %+v", info)
 	}
 	if err := client(ctx, settings{Addr: ln.Addr().String()}, "info"); err != nil {
@@ -164,7 +172,7 @@ func TestInfoNamesTheMountedCapture(t *testing.T) {
 	var session struct{ ID string }
 	_ = json.NewDecoder(resp.Body).Decode(&session)
 	resp.Body.Close()
-	body, _ := json.Marshal(map[string]string{"source": "[q.help().split('\\n')[0], a.toJSON().archive]"})
+	body, _ := json.Marshal(map[string]string{"source": "[q.help().split('\\n')[0], a.toJSON().archive, String(mounts.board.json().length)]"})
 	resp, err = http.Post(base+"/sessions/"+session.ID+"/eval", "application/json", bytes.NewReader(body))
 	if err != nil {
 		t.Fatal(err)
@@ -176,7 +184,7 @@ func TestInfoNamesTheMountedCapture(t *testing.T) {
 	_ = json.NewDecoder(resp.Body).Decode(&result)
 	resp.Body.Close()
 	name := "PICOCALC-ROW-IR (Trace the ray row through GCC and LLVM optimization passes)"
-	if !result.OK || !strings.Contains(result.Value[0], "queries over "+name) || result.Value[1] != name {
+	if !result.OK || !strings.Contains(result.Value[0], "queries over "+name) || result.Value[1] != name || result.Value[2] != "3" {
 		t.Fatalf("help title: %+v", result)
 	}
 }
@@ -235,6 +243,7 @@ func TestPublicCommandGrammar(t *testing.T) {
 	}{
 		{[]string{"serve", "--help"}, "", "--archive"},
 		{[]string{"serve", "--help"}, "", "--simd-study"},
+		{[]string{"serve", "--help"}, "", "--mount"},
 		{[]string{"eval", "--help"}, "", "--session"},
 		{[]string{"serve", "--archive", ".", "--addr", "0.0.0.0:3791"}, "loopback", ""},
 		{[]string{"eval", "--code", "1+1"}, "session", ""},
@@ -257,5 +266,30 @@ func TestPublicCommandGrammar(t *testing.T) {
 		if !strings.Contains(out.String(), tc.wantOutput) {
 			t.Fatalf("%v: missing %s in %q", tc.args, tc.wantOutput, out.String())
 		}
+	}
+}
+
+// --mount takes NAME=PATH once per name; --repo must be a directory.
+func TestMountAndRepoFlagsAreChecked(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "x.json")
+	if err := os.WriteFile(file, []byte("{}"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	for _, tc := range []struct {
+		cfg  settings
+		want string
+	}{
+		{settings{Mounts: []string{"no-equals-sign"}}, "use NAME=PATH"},
+		{settings{Mounts: []string{"x=" + file, "x=" + file}}, "given twice"},
+		{settings{Mounts: []string{"x-y=" + file}}, "JavaScript identifier"},
+		{settings{Repo: file}, "not a directory"},
+	} {
+		if _, err := openRepo(tc.cfg); err == nil || !strings.Contains(err.Error(), tc.want) {
+			t.Errorf("%+v: %v; want %q", tc.cfg, err, tc.want)
+		}
+	}
+	repo, err := openRepo(settings{Mounts: []string{"x=" + file}})
+	if err != nil || len(repo.Mounts()) != 1 || len(repo.Head()) != 40 {
+		t.Fatalf("default repository: %v %v", repo, err)
 	}
 }

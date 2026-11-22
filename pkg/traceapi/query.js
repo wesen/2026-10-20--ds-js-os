@@ -2250,6 +2250,8 @@
       '  q.run(profiles.arm("checked-gcc").region("row").workload("opening-160-rows").total("instructions"))',
       'Topics: q.help("plans" | "events" | "timeline" | "states" | "metrics" | "changes" | "machine" | "profiles" | "compare" | "capabilities" | "params" | "results" | "errors" | "cache").',
       'Every object answers .help(). Statuses: available · absent (module print lacks the function) · unavailable (capture lacks it) · unsupported (parser limit).',
+      ...(root.repo && typeof root.repo.help === 'function'
+        ? ['Read-only repository files, now or at a git revision: repo.help(); files mounted at startup: mounts.help().'] : []),
       ...(root.stats && typeof root.stats.help === 'function'
         ? ['Medians, quantiles and paired block comparisons shared by every study: stats.help().'] : []),
       ...(root.simd && typeof root.simd.help === 'function'

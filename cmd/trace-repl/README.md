@@ -52,6 +52,18 @@ lab.physicsPair("contact", 128, "grouped-scalar", "grouped-pie")
 
 The director loader adds the `lab` binding only in its new session. The `simd` provider is available in every session of the mounted study. [Study index](../../ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/index.md)
 
+## Read repository files and mounted inputs
+
+A session reads its own inputs instead of receiving them through `eval`. `repo.read(path)` returns a working-tree file as `{path, revision: "worktree", sha256, bytes, gzip, text}`, and `.json()` parses its text. `repo.show(rev, path)` returns the same object for a git revision, with the full commit SHA in `revision`. `repo.list(path, rev?)` lists a directory and `repo.resolve(rev)` names a commit. Paths are relative to the repository root and may not leave it, also not through a symlink; `.git` is not readable. Files are capped at 32 MiB, and a `.gz` file is inflated while its `sha256` and `bytes` describe the compressed file. Content at a revision is cached for all sessions; working-tree reads are not.
+
+The repository is `--repo DIR`, or by default the git work tree that contains the server's current directory. For a file elsewhere, pass `--mount NAME=PATH` (repeatable) when starting the server. The file is read and digested before the server listens, appears in `GET /info`, and is `mounts.NAME` in every session. `mounts.list()` describes all mounts without their text.
+
+```js
+const rows = repo.read("ttmp/2026/11/21/PICOCALC-RAY-PARITY--…/various/13-board/rows.json").json()
+repo.show("eaf0872", "picocalc-os/compiler/typed-rv32.js").sha256
+mounts.board.json()          // started with --mount board=/tmp/bench/rows.json
+```
+
 ## Shared statistics
 
 Every session has a `stats` global, so studies stop re-implementing medians and paired comparisons. `stats.median`, `stats.mean`, `stats.quantile(xs, p)` (linear interpolation, R type 7) and `stats.summary(xs)` refuse empty arrays and non-finite values. `stats.paired(rows, {key, control, candidate, value, better})` pairs one control row with one candidate row per key, for example per load block, and returns the median of the per-pair percentage saved, `100 * (1 - candidate / control)`, with wins, losses and ties. It also returns `percentSavedOfMedians`, the change between the two arm medians, which is a different number. It refuses rows that match both arms, duplicate keys within an arm and keys present in only one arm, and names them. `stats.help()` lists the rest.
@@ -70,7 +82,7 @@ Several services often run side by side on different ports. `trace-repl info --a
 | Request | Response |
 | --- | --- |
 | `GET /` | HTTP 200, the list of routes |
-| `GET /info` | HTTP 200, `{"service","build","archive","deviceStudy","simdStudy","sessions":{"open","max"},"limits":{"sourceBytes","resultBytes","cellSeconds"},"started"}` |
+| `GET /info` | HTTP 200, `{"service","build","repo":{"root","head"},"mounts","archive","deviceStudy","simdStudy","sessions":{"open","max"},"limits":{"sourceBytes","resultBytes","cellSeconds"},"started"}` |
 | `POST /sessions` with empty body | HTTP 201, `{"id":"session-…"}` |
 | `POST /sessions/{id}/eval` with `Content-Type: application/json` and `{"source":"7 * 6"}` | HTTP 200, `{"ok":true,"value":42}` |
 | JS parse or evaluation error | HTTP 200, `{"ok":false,"error":"…"}`. A subsequent valid cell can still run. |

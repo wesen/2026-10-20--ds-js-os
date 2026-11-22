@@ -14,6 +14,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"runtime/debug"
+	"strings"
 	"syscall"
 	"time"
 
@@ -27,6 +28,7 @@ import (
 	"github.com/go-go-golems/picocalc-trace/pkg/tracearchive"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracehardware"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracerepl"
+	"github.com/go-go-golems/picocalc-trace/pkg/tracerepo"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracesimd"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -37,13 +39,15 @@ import (
 const defaultAddr = "127.0.0.1:3791"
 
 type settings struct {
-	Addr        string `glazed:"addr"`
-	Archive     string `glazed:"archive"`
-	DeviceStudy string `glazed:"device-study"`
-	SIMDStudy   string `glazed:"simd-study"`
-	Session     string `glazed:"session"`
-	Code        string `glazed:"code"`
-	LogLevel    string `glazed:"log-level"`
+	Addr        string   `glazed:"addr"`
+	Archive     string   `glazed:"archive"`
+	DeviceStudy string   `glazed:"device-study"`
+	SIMDStudy   string   `glazed:"simd-study"`
+	Repo        string   `glazed:"repo"`
+	Mounts      []string `glazed:"mount"`
+	Session     string   `glazed:"session"`
+	Code        string   `glazed:"code"`
+	LogLevel    string   `glazed:"log-level"`
 }
 
 type command struct {
@@ -76,11 +80,13 @@ func root() (*cobra.Command, error) {
 	archive := fields.New("archive", fields.TypeString, fields.WithRequired(true), fields.WithHelp("Path to the PICOCALC-ROW-IR ticket directory"))
 	device := fields.New("device-study", fields.TypeString, fields.WithHelp("Optional PICOCALC-PIE-LOOPS ticket directory containing measured physical trials"))
 	simd := fields.New("simd-study", fields.TypeString, fields.WithHelp("Optional p4-simd-evidence-v1 JSON file of SIMD decisions, RV32 images and per-PC traces"))
+	repo := fields.New("repo", fields.TypeString, fields.WithHelp("Repository whose files repo.read/show/list and compiler.at may read (default: the git work tree containing the current directory)"))
+	mount := fields.New("mount", fields.TypeStringList, fields.WithHelp("NAME=PATH: one more read-only file, digested at startup and bound as mounts.NAME; repeat for more"))
 	level := fields.New("log-level", fields.TypeString, fields.WithDefault("info"), fields.WithHelp("Server log level (debug, info, warn, error)"))
 	code := fields.New("code", fields.TypeString, fields.WithHelp("JavaScript cell; omit to read stdin"))
 	defs := []*command{
 		{
-			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, simd, level)),
+			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, simd, repo, mount, level)),
 			serve,
 		},
 		{
@@ -166,9 +172,20 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 	} else {
 		logger.Info().Msg("no --simd-study: simd.* reports SIMD attribution as unavailable")
 	}
-	inputs := inventory{archive: archive, hardware: hardware, hardwarePath: absPath(cfg.DeviceStudy), simd: simd, simdPath: absPath(cfg.SIMDStudy)}
+	repo, err := openRepo(cfg)
+	if err != nil {
+		return nil, err
+	}
+	for _, m := range repo.Mounts() {
+		logger.Info().Str("name", m.Name).Str("path", m.Path).Str("sha256", m.SHA256).Int("bytes", m.Bytes).Msg("mounted read-only file")
+	}
+	logger.Info().Str("root", repo.Root()).Str("head", repo.Head()).Msg("repository available read-only")
+	inputs := inventory{archive: archive, hardware: hardware, hardwarePath: absPath(cfg.DeviceStudy), simd: simd, simdPath: absPath(cfg.SIMDStudy), repo: repo}
 	return tracerepl.New(ctx, func(vm *goja.Runtime) error {
 		if err := traceapi.Install(vm, archive); err != nil {
+			return err
+		}
+		if err := traceapi.InstallRepo(vm, repo); err != nil {
 			return err
 		}
 		if err := traceapi.InstallHardware(vm, hardware); err != nil {
@@ -189,11 +206,46 @@ type inventory struct {
 	hardwarePath string
 	simd         *tracesimd.Study
 	simdPath     string
+	repo         *tracerepo.Repo
+}
+
+// openRepo confines file access to --repo, or to the git work tree that
+// contains the current directory, and reads every --mount now.
+func openRepo(cfg settings) (*tracerepo.Repo, error) {
+	root := cfg.Repo
+	if root == "" {
+		cwd, err := os.Getwd()
+		if err != nil {
+			return nil, err
+		}
+		if root, err = tracerepo.Discover(cwd); err != nil {
+			return nil, err
+		}
+	}
+	mounts := map[string]string{}
+	for _, spec := range cfg.Mounts {
+		name, file, ok := strings.Cut(spec, "=")
+		if !ok || name == "" || file == "" {
+			return nil, errors.Errorf("--mount %q: use NAME=PATH", spec)
+		}
+		if _, dup := mounts[name]; dup {
+			return nil, errors.Errorf("--mount %s given twice", name)
+		}
+		mounts[name] = file
+	}
+	repo, err := tracerepo.Open(root, mounts)
+	return repo, errors.Wrap(err, "open repository")
 }
 
 func (in inventory) describe() map[string]any {
+	mounts := []tracerepo.MountInfo{}
+	for _, m := range in.repo.Mounts() {
+		mounts = append(mounts, m.Info())
+	}
 	info := map[string]any{
-		"build": buildInfo(),
+		"repo":   map[string]any{"root": in.repo.Root(), "head": in.repo.Head()},
+		"mounts": mounts,
+		"build":  buildInfo(),
 		"archive": map[string]any{
 			"path": in.archive.Dir(), "label": in.archive.Label(), "manifestSHA256": in.archive.ManifestSHA256(),
 			"streams": in.archive.Streams(),
