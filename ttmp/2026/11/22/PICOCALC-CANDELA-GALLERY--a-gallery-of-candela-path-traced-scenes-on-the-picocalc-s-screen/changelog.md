@@ -29,3 +29,11 @@ Device placement run: digests of B-01, R-01, W-02, X-04, S-02 equal RV32 referen
 ### Related Files
 
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-a2a22bb8f46d24aa3/ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/various/device-03-placement/summary-tables.txt — placement table
+
+## 2026-11-22
+
+Full device run of a396d3b: 18/18 digests equal RV32; per-scene timings; probe 16.9% of core 1 taken; keys change the scene; worlds healthy (keyboard and display off by user). Gallery image 28d9a812... left installed; /tmp/picocalc-current-playable.txt updated (60761c2)
+
+### Related Files
+
+- /home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-a2a22bb8f46d24aa3/ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/various/device-04-a396d3b/summary-tables.txt — per-scene timings and agreement

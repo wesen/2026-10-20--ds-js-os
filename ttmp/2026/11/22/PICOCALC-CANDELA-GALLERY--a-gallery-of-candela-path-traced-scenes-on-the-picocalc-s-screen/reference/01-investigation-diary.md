@@ -219,3 +219,52 @@ The worker took about 13,100 cycles per sample for B-01 where CPU-KERNEL's stand
 
 ### Technical details
 - Placement image 2fd89ccd... (based on 627d608, an experiment; not installed).
+
+## Step 5: Measure all 18 scenes on the device, and leave the gallery installed
+
+I built the image from a396d3b on main 5c01d81 and ran the whole measurement with `--leave-installed`: digests of all 18 scenes, a probe of core 1, 30 s of each scene with a screen capture, two injected keys, health before and after. Every digest equals the RV32 reference, the worlds stayed healthy, and the image stays on the board as the new playable firmware.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Measure per scene (first image, seconds per pass, samples per second, peak heap), check the device against the host, and install the gallery if every existing world is healthy (keyboard and display aside). The coordinator relayed mid-task that the user allows installing the latest firmware at any time, and asked for a rebase onto main 5c01d81 first, and to restore (if needed) to whatever the pointer file says.
+**Inferred user intent:** The scenes on the handheld for everyday viewing, with evidence that they are Candela's and that nothing else broke.
+**Commit (code):** a396d3b (image); evidence 60761c2.
+
+### What I did
+- `bash picocalc-os/port/esp32p4/build-smooth-chess.sh /tmp/picocalc-candela-gallery-a396d3b/build -D PICOCALC_CANDELA_GALLERY=ON` → app `28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6`.
+- `python3 -B scripts/06-run-device.py --image /tmp/picocalc-candela-gallery-a396d3b/build --out various/device-04-a396d3b --digest-passes 4 --scene-seconds 30 --variant-scenes B-01 --leave-installed` (09:37-10:06, under the board lock).
+- `scripts/07-summarize.py` (tables), `scripts/09-contact-sheet.py` (captures on one sheet), `scripts/10-strip-shots.py` (the log's 70,920 base64 capture lines, 5.7 MB, replaced by one line per capture; the PNGs hold the pixels and run.json their CRCs). Raw `.rgb565` copies removed with a checked Python script.
+- Reran `05-same-without-option.py` against 5c01d81 at a396d3b: 19 of 19 sources equal.
+
+### Why
+- One run covers everything the brief asks to measure, on the image that is to stay installed.
+
+### What worked
+- Digests: 18 of 18 scenes equal RV32 in frame 0, accumulation and display. x86-64: R-01, E-02, W-02, X-04, S-02, X-03 equal in all three; G-02 equal frame and accumulation, different display (libm `log2f`); eleven differ from frame 0 (libm); mean luminance within 7e-5.
+- Timings (scene phase): B-01 first image 312 ms (coarse sub-pass at 163 ms), 0.88 s per later pass, 28,806 samples/s, 12,469 cycles per sample. The 160 x 160 scenes: first image 295-400 ms, later passes 0.67-2.63 s. The 80 x 80 scenes: first image 110-1,677 ms, later passes 0.62-13.5 s; R-04 and G-03 finish one pass in 21.7 and 25.6 s. Display 124-131 ms at 160 x 160, 54-62 ms at 80 x 80. Peak heap per scene: 541-558 KB PSRAM and 4.0-5.1 KB internal (160), 235-272 KB and 4.1-9.6 KB (80).
+- Probe with the gallery on screen and paused: 16.94% of core 1 taken by others, 917 gaps per second, longest 35.5 ms. During the 988 s scene phase the kernel's lane was busy 19.6%: keyboard driver 8.40% (keyboard off), compositor 4.13%, Snake 1.53%, sysmon 1.12%, gallery world 0.87%.
+- `key right 60` ended B-01 with reason `next`; `key left 60` ended R-01 with reason `previous`.
+- Health (off-by-user): Snake, Files, Editor, Agenda, Chess idle, no restarts, no error, before, at boot (6 s wait) and after. The pointer file now names `/tmp/picocalc-candela-gallery-a396d3b/build 28d9a812...`.
+
+### What didn't work
+- `frame0CyclesPerSample` in the digest record is wrong for X-03, R-04 and G-03: `esp_cpu_get_cycle_count()` is 32-bit and wraps every 11.9 s, and their frame 0 takes longer (R-04 reports 462,133 against 1,130,492 for the 4 passes). The 4-pass figure is summed per row in 64 bits and is right; the summaries use only that one. Not fixed in the installed image.
+
+### What I learned
+- The keyboard driver, polling a keyboard that is off, is the largest single user of core 1 besides the gallery (8.4%).
+- With fewer displays (a396d3b), B-01 reached 56 passes in its first 60 s instead of 49, at 12,376 cycles per sample instead of 13,086.
+
+### What was tricky to build
+- The scene records arrive when the next scene starts, so the summary takes the record that ended with `chosen` (the scene phase); the boot-time B-01 (ended by time, partly while a capture paused it) is ignored.
+
+### What warrants a second pair of eyes
+- The gallery comes to the front after every boot (at most 30 tries in the first 30 s, until it has been in front once). With the keyboard back on, F1 leaves it; it does not come back by itself until the next boot.
+
+### What should be done in the future
+- Milestone B (design doc Section 10).
+
+### Code review instructions
+- `python3 -I scripts/07-summarize.py various/device-04-a396d3b various/references/host-4-passes.jsonl various/references/rv32-4-passes.jsonl OUT.json --md OUT.txt`.
+
+### Technical details
+- Restore target before the run: `/tmp/picocalc-playable-3353264/build 8acb94cc18ac1c174691c458a173a05be7cf9fb05d32d5531a6035c5dfcf4636` (main 3353264). Now installed: `/tmp/picocalc-candela-gallery-a396d3b/build 28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6`.

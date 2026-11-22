@@ -169,7 +169,103 @@ Against `main` at 5c01d81: 19 of 19 sources equal (`various/identity/05-same-wit
 
 ## 9. Results
 
-To be filled in from the device runs.
+Device run `various/device-04-a396d3b/` (image `28d9a812...`, commit a396d3b on main 5c01d81): health before and after, a screen capture, `gallery digest ID 4` for every scene, a 5 s probe of core 1, each scene shown for 30 s from its start and captured, injected Left and Right keys, health again. The board lock was held throughout. The image stayed installed (Section 9.6).
+
+### 9.1 What is on the screen
+
+![The 18 scenes as the device's framebuffer held them after 30 s each](../various/device-04-a396d3b/contact-sheet.png)
+
+Every capture is the compositor's framebuffer (`shot`), so it is what the panel would show; the panel itself is off. After 30 s the 160 x 160 scenes have 10-38 samples per pixel and the 80 x 80 scenes 1-43. B-01, L-03, E-02 and F-01 are clean at that point, the Cornell box and the volumes still noisy, and the heightfields R-04 and G-03 have finished their first pass only.
+
+### 9.2 Timings per scene
+
+From each scene's record in the scene phase (`scripts/07-summarize.py`; `various/device-04-a396d3b/summary-tables.txt`). First image: from the start of the scene to the first published frame (the coarse 1/16 sub-pass, metered, displayed). Later pass: median time of passes after the first. Samples per second and cycles per sample over the worker's render calls, wall time, so they include everything else that ran on core 1 meanwhile. Display: one tone map, upscale and publish. Peak heap: the drop of the free heap from the scene's start to its minimum (all tasks; `heap_caps_monitor_local_minimum_free_size_start`). The three 320 x 320 frames and the display image (665,600 bytes of PSRAM) are allocated once, when the gallery is first shown, and are not in these numbers.
+
+| Scene | Size | First image (ms) | Coarse / half (ms) | First full pass (s) | Later pass (s) | Samples/s | Cycles/sample | Display (ms) | Peak heap PSRAM / internal (bytes) |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| B-01 | 160 | 312 | 163 / 493 | 1.36 | 0.88 | 28,806 | 12,469 | 125.8 | 541,720 / 4,044 |
+| R-01 | 160 | 359 | 239 / 676 | 1.91 | 1.381 | 18,293 | 19,650 | 127.7 | 542,528 / 4,044 |
+| L-03 | 160 | 317 | 198 / 471 | 1.23 | 0.692 | 36,135 | 9,938 | 126.6 | 558,460 / 5,120 |
+| G-01 | 160 | 362 | 246 / 684 | 1.94 | 1.419 | 17,687 | 20,325 | 124.5 | 545,172 / 4,168 |
+| E-02 | 160 | 314 | 185 / 443 | 1.19 | 0.672 | 37,089 | 9,692 | 126.8 | 542,016 / 4,268 |
+| W-02 | 160 | 386 | 227 / 842 | 2.74 | 2.135 | 11,865 | 30,304 | 127.3 | 545,748 / 4,204 |
+| F-01 | 160 | 295 | 167 / 556 | 1.53 | 1.022 | 24,522 | 14,642 | 131.1 | 542,096 / 4,144 |
+| V-02 | 160 | 378 | 220 / 700 | 2.50 | 1.899 | 13,303 | 27,027 | 127.6 | 542,200 / 4,044 |
+| G-02 | 160 | 400 | 280 / 909 | 3.24 | 2.628 | 9,755 | 36,868 | 126.3 | 541,976 / 5,080 |
+| X-04 | 80 | 241 | 141 / 503 | 1.56 | 1.329 | 4,818 | 74,660 | 61.2 | 236,920 / 4,188 |
+| S-02 | 80 | 155 | 103 / 307 | 1.07 | 0.871 | 7,264 | 49,497 | 59.7 | 271,856 / 4,120 |
+| R-05 | 80 | 110 | 58 / 222 | 0.79 | 0.624 | 10,132 | 35,479 | 60.2 | 239,592 / 4,316 |
+| V-03 | 80 | 253 | 204 / 552 | 1.91 | 1.687 | 3,774 | 95,294 | 56.9 | 234,832 / 5,276 |
+| V-04 | 80 | 258 | 203 / 923 | 3.44 | 3.232 | 1,967 | 182,939 | 54.4 | 236,952 / 5,196 |
+| R-08 | 80 | 392 | 342 / 1169 | 4.24 | 3.975 | 1,645 | 218,704 | 58.9 | 237,176 / 4,264 |
+| X-03 | 80 | 941 | 860 / 3608 | 14.31 | 13.537 | 486 | 740,457 | 58.3 | 269,816 / 6,880 |
+| R-04 | 80 | 1358 | 1309 / 5449 | 21.72 | - | 340 | 1,060,159 | 62.4 | 236,920 / 9,564 |
+| G-03 | 80 | 1677 | 1628 / 6368 | 25.59 | - | 298 | 1,209,502 | 54.3 | 236,836 / 9,584 |
+
+### 9.3 Agreement with the host
+
+`gallery digest ID 4` renders frame 0 row by row, then 4 passes as the gallery does (with its sub-passes and meter), and prints the frame-0 digest, the accumulation's digest and the fast display's digest. The references are the same sources built for x86-64 and for RV32 (`scripts/04-build-ref.py`, `various/references/`).
+
+| Scene | Passes | Device frame 0 | acc | display | = RV32 | = x86-64 (frame 0, acc, display) | Mean luminance ratio | Cycles/sample | RV32 instr/sample | CPI |
+|---|---:|---|---|---|---|---|---:|---:|---:|---:|
+| B-01 | 4 | e2ba6956 | 3b52c63c | 23d7885f | yes | no/no/yes | 1.0 | 13,071 | 5743.6 | 2.276 |
+| R-01 | 4 | e8421c97 | 2ac5b8e1 | 1d7de02e | yes | yes/yes/yes | 1.0 | 19,938 | 11061.5 | 1.802 |
+| L-03 | 4 | 16cb13f0 | bfc2a34a | e95af902 | yes | no/no/yes | 0.999999999 | 10,251 | 4567.3 | 2.244 |
+| G-01 | 4 | 4af50eb8 | 68d5a13d | 7e548c18 | yes | no/no/yes | 1.0 | 20,550 | 9785.6 | 2.1 |
+| E-02 | 4 | de9e22b5 | 6edba2ef | 74c3f85c | yes | yes/yes/yes | 1.0 | 10,244 | 5517.2 | 1.857 |
+| W-02 | 4 | 34a669ff | 865eba2b | dd654b4c | yes | yes/yes/yes | 1.0 | 30,296 | 16004.6 | 1.893 |
+| F-01 | 4 | 4dd2f3eb | 1982b77b | 00d099a0 | yes | no/no/no | 1.0 | 15,110 | 6795.6 | 2.223 |
+| V-02 | 4 | 9482ee60 | 76ffc818 | 1b6b5329 | yes | no/no/yes | 1.0 | 26,984 | 14333.6 | 1.883 |
+| G-02 | 4 | 7834364c | 81a65012 | ada1739a | yes | yes/yes/no | 1.0 | 37,166 | 18686.9 | 1.989 |
+| X-04 | 4 | 2b9af109 | a0aafa50 | 450d2ead | yes | yes/yes/yes | 1.0 | 74,340 | 40442.0 | 1.838 |
+| S-02 | 4 | e32b0f6b | a4d9bc0b | 4785e5ad | yes | yes/yes/yes | 1.0 | 48,596 | 25566.9 | 1.901 |
+| R-05 | 4 | 74d02e3d | 261b0649 | 658822ca | yes | no/no/yes | 1.0 | 35,214 | 17583.4 | 2.003 |
+| V-03 | 4 | 5b10021a | a9569209 | b995fd34 | yes | no/no/no | 1.00003291 | 92,436 | 53164.7 | 1.739 |
+| V-04 | 4 | f700ca37 | c4ca0369 | 38566376 | yes | no/no/yes | 1.0 | 177,060 | 100950.1 | 1.754 |
+| R-08 | 4 | 426121c5 | 67be6e6b | 280382f5 | yes | no/no/yes | 1.0 | 220,067 | 122808.0 | 1.792 |
+| X-03 | 4 | 390c87ec | 4f975e1b | 74f26c85 | yes | yes/yes/yes | 1.0 | 753,131 | 396477.5 | 1.9 |
+| R-04 | 4 | a53bf8ab | 76562f1c | cab1ca27 | yes | no/no/no | 0.999929676 | 1,130,492 | 650101.2 | 1.739 |
+| G-03 | 4 | 23c854f6 | b87782c2 | 1ead113e | yes | no/no/no | 1.000018635 | 1,338,734 | 791855.0 | 1.691 |
+
+All 18 scenes equal the RV32 references in all three digests: the device runs the code that was counted, bit for bit. Against x86-64, R-01, E-02, W-02, X-04, S-02 and X-03 are equal in all three; G-02 has the same frame and accumulation but a different display; the other eleven differ from frame 0 on. The x86-64 and RV32 builds differ only in their libm (glibc against newlib): SECTIONS traced the frame differences to `acosf` in the sky table, and G-02 shows that `log2f` in the display differs too. Mean luminance after 4 passes agrees within 7e-5 in every scene.
+
+CPI here is the worker's wall-clock cycles over the counted instructions, 1.69-2.28; it includes the rest of the firmware's use of core 1 (Section 9.4). Above the kernel task, B-01 runs at 8,647 cycles per sample, CPI 1.51, inside CPU-KERNEL's standalone 1.28-1.72.
+
+### 9.4 What sharing core 1 costs
+
+Digests of the same scene on the same boot, PSRAM stack below the kernel task (the worker's conditions), internal-RAM stack below it, and above it (`various/device-03-placement/` for five scenes; B-01 again in device-04):
+
+| Scene | PSRAM stack | Internal stack | Above the kernel task | Same digests |
+|---|---:|---:|---:|---|
+| B-01 | 13,545 | 13,219 | 8,622 | yes |
+| R-01 | 20,687 | 20,429 | 14,662 | yes |
+| W-02 | 31,592 | 31,016 | 21,861 | yes |
+| X-04 | 77,983 | 77,204 | 55,934 | yes |
+| S-02 | 51,775 | 50,360 | 35,769 | yes |
+| B-01 (device-04) | 13,071 | 12,782 | 8,647 | yes |
+
+The stack's placement is worth 1.0-2.7%. Sharing the core is worth 28-36%. Of that:
+
+- **Direct preemption, 17%.** `gallery probe 5000` (a priority-1 loop on core 1 that counts every step longer than 1 us), with the gallery on screen and paused: 16.94% of the time went to other tasks and interrupts, in 917 gaps per second (3,912 under 10 us, 80 under 100 us, 431 under 1 ms, 143 under 10 ms, 17 longer; the longest 35.5 ms).
+- **The kernel task, 19.6%.** Over the 988 s scene phase (`stats` before and after), the dispatch lane was busy 19.6% of the time. The largest users: the keyboard driver, 8.40%, polling the keyboard the user has switched off (I2C0 busy 29.4% of the time); the compositor, 4.13%, which copies the 320 x 320 frame at each repaint; Snake 1.53%; sysmon 1.12%; the gallery world 0.87%; logs 0.83%; the launcher 0.61%; the display driver 0.42%.
+- **The rest, about 11-19%,** is what the kernel task's work leaves in the caches: the worker's code and scene data are evicted and fetched again after each preemption.
+
+The worker therefore stays where it is: below the kernel task, so no world waits for the renderer, with its stack in PSRAM, because the internal heap has about 70 KB free while the gallery runs (`internalFree0` 70,479-71,283).
+
+### 9.5 Keys
+
+`key right 60` on the console injects a key where the keyboard driver reads it. It ended B-01 with reason `next` and started R-01; `key left 60` ended R-01 with reason `previous`. The path is the one a physical key takes: driver, compositor, gallery world, `skip`, `gfx_gallery`, worker.
+
+### 9.6 Health and installation
+
+Health with `board_health(..., "off-by-user")`: keyboard and display recorded as off by user; Snake, Files, Editor, Agenda and Chess judged. Before (main's 8acb94cc), after the gallery image booted (6 s wait for the boot compiles), and after the whole run: all five idle with no restarts and no error. Of the 30 worlds at the end, only `nat-import` is stopped ("it links to path_open, which picocalc-os does not give a module", 5 crashes); main's playable image showed the same 5 crashes in its `stats` before the flash (uptime 338 s), so this is not the gallery's. The run script then left the image installed and wrote `/tmp/picocalc-current-playable.txt`:
+
+```text
+/tmp/picocalc-candela-gallery-a396d3b/build 28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6
+```
+
+It replaces main's 3353264 build (`8acb94cc...`), from which it differs only by the option. After a boot the gallery comes to the front by itself and cycles through the 18 scenes; F1 returns to the launcher, and `p` opens the gallery again.
+
 
 ## 10. Milestone B
 
