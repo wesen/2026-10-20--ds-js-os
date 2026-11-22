@@ -28,4 +28,4 @@ Device placement run: digests of B-01, R-01, W-02, X-04, S-02 equal RV32 referen
 
 ### Related Files
 
-- /home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-a2a22bb8f46d24aa3/ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/various/device-03-placement/summary.md — placement table
+- /home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-a2a22bb8f46d24aa3/ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/various/device-03-placement/summary-tables.txt — placement table
