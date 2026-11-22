@@ -77,10 +77,25 @@ base.typedRv32.compile(ray, [], 96 * 1024).image.length // 8632
 work.typedRv32.compile(ray, [], 96 * 1024, {operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}}).image.length // 8048
 work.rayBench.frameProfile(work.typedRv32.compile(ray, [], 96 * 1024)).steps
 work.world("chess").text                               // assembled from worlds/chess/source.list
+work.world("agenda")                                   // {name, layout: "builtin", text, files}: reminder.typed + "\n" + entry.typed
 work.files                                             // [{path, sha256, bytes, line}]
 ```
 
-A revision object also has `typedWasm`, `typedAsync`, `typedWorld`, `typedPieLoops`, `interp` (`typedRv32Interp`), `globals` (every name the files published, such as `compileTypedWorldRv32`), `read(path)`, `typedSources()`, `missing` (optional files absent at that revision; the two tools exist from `eaf0872` on) and `where(line)`, which maps a `compiler@REV:LINE` stack position to a file and line. A commit is evaluated once per session and `compiler.at` returns the same object again. `"worktree"` re-reads the files on every call. `GET /info` lists the cached commits.
+A revision object also has `typedWasm`, `typedAsync`, `typedWorld`, `typedPieLoops`, `interp` (`typedRv32Interp`), `globals` (every name the files published, such as `compileTypedWorldRv32`), `read(path)`, `typedSources()`, `missing` (optional files absent at that revision; the two tools exist from `eaf0872` on) and `where(line)`, which maps a `compiler@REV:LINE` stack position to a file and line. `world(name)` assembles `worlds/NAME/source.list`; Files and Agenda have none, so they use built-in layouts taken from the P4 firmware (`files/files.typed` alone; `agenda/reminder.typed`, a newline and `agenda/entry.typed`), and the result's `layout` says which applied. `compiler.loaded()` lists every set of compiler files the session loaded, with their digests. A commit is evaluated once per session and `compiler.at` returns the same object again. `"worktree"` re-reads the files on every call. `GET /info` lists the cached commits.
+
+## Interpret RV32 natively
+
+`rv32` is the RV32 reference interpreter, `picocalc-os/tools/rv32-interp.js`, run in Go. `rv32.run(program, entry, args, memoryBytes, options)`, `rv32.profile(program, counts)` and `rv32.classify(word, next, after)` have the reference's signatures and results: the same `result`, `trap`, `at`, `steps`, `bytes`, `registers`, per-PC `counts` and fault messages, with `counts` a `Uint32Array`, `bytes` a `Uint8Array` view without the stack and `registers` an `Int32Array`. Faults throw `rv32.Rv32Fault`, which also carries `err.at` and `err.steps`. The ray tracer's opening frame takes about 50 ms instead of 12–45 s for the reference in goja. A run still stops at the cell or job deadline, even with `limit: Infinity`.
+
+`compiler.at(rev).native.rayBench` is that revision's `tools/typed-ray-bench.js` with `typedRv32Interp` bound to `rv32`: the revision's memory layout, arguments and checks, on the native interpreter. `compiler.at(rev).rayBench` keeps the reference, so one cell can compare the two.
+
+```js
+const c = compiler.at("worktree"), program = c.typedRv32.compile(c.ray, [], 65536)
+const frame = c.native.rayBench.openingFrame(program)      // {trap: false, result: 1, steps, counts, bytes, registers}
+rv32.profile(program, frame.counts).filter(r => r.steps)   // per-function rows, as typedRv32Interp.profile
+```
+
+The equivalence is tested on 4,000 seeded random programs against the reference in the same VM, and on the opening frame of the default and `{policy: "stock"}` compiles against digests recorded from the reference under Node (`pkg/traceapi/rv32_test.go`). Entry offsets must be integers, as `typedRv32.compile` produces them.
 
 ## Read repository files and mounted inputs
 
@@ -111,14 +126,41 @@ go run ./cmd/trace-repl job --session "$sid" --job-id "$job" --stop    # interru
 
 Interrupting `eval --job` with Ctrl-C stops the job on the service as well. Closing the session stops its job with the reason "job stopped because its session was closed".
 
+## Pass parameters to a cell or job
+
+A cell or job receives its parameters in the global `args`, a fresh object per cell. A cell sent without parameters sees `{}`, never an earlier cell's values, so a reusable script cannot pick up a parameter that another script left behind.
+
+```sh
+trace-repl eval --session "$sid" --arg rev='"worktree"' --arg arms='{"base": {}, "split": {"operandLocations": {"split": true}}}' < frame-profile.js
+trace-repl eval --session "$sid" --job --args-file arms.json --arg rev='"eaf0872"' < compile-cost.js
+```
+
+`--arg NAME=JSON` is repeatable; `NAME` is a JavaScript identifier and the value is JSON, so a string needs its quotes (`--arg rev='"worktree"'`). `--args-file PATH` reads one JSON object, and `--arg` replaces its fields. The parameters may be at most 64 KiB. A job's view records the `args` it was submitted with and the SHA-256 and size of its source (`sourceSHA256`, `sourceBytes`).
+
+`args` cannot be shadowed: a top-level `let`, `const`, `class` or `function` named `args` is a syntax or type error, and `delete` or `Object.defineProperty` cannot change it. Assigning `globalThis.args = {...}` still works for the rest of that cell, so scripts that set their own parameters keep working.
+
+## Save results
+
+`results.save(name, value)` writes the value as `NAME.json` in the service's `--results` directory (default: the user cache directory's `picocalc-trace-repl/results`, so saving never writes into the repository). The record names what produced the value: the session, whether a cell or a job saved it (and the job's ID), the SHA-256 and size of that cell's or job's source, its `args`, the repository root and the commit checked out at that moment, and every compiler revision the session loaded (`compiler.loaded()`, with file digests, so a `"worktree"` result identifies the exact uncommitted files). A save replaces an earlier record of the same name, atomically.
+
+```js
+results.save("frame-profile-split", out)   // → {name, path, sha256, bytes, saved}
+results.load("frame-profile-split").value   // the whole record is {name, saved, session, unit, job, script, args, repo, compilers, value}
+results.list()                              // [{name, path, sha256, bytes, saved}]
+```
+
+From the shell, `trace-repl results --addr …` lists the records and `--name NAME` prints one, so a client no longer redirects stdout and unwraps `{"ok", "value"}`. Names are 1–128 letters, digits, `.`, `_` or `-`, starting with a letter or digit.
+
 ## Shared statistics
 
 Every session has a `stats` global, so studies stop re-implementing medians and paired comparisons. `stats.median`, `stats.mean`, `stats.quantile(xs, p)` (linear interpolation, R type 7) and `stats.summary(xs)` refuse empty arrays and non-finite values. `stats.paired(rows, {key, control, candidate, value, better})` pairs one control row with one candidate row per key, for example per load block, and returns the median of the per-pair percentage saved, `100 * (1 - candidate / control)`, with wins, losses and ties. It also returns `percentSavedOfMedians`, the change between the two arm medians, which is a different number. It refuses rows that match both arms, duplicate keys within an arm and keys present in only one arm, and names them. `stats.help()` lists the rest.
 
 ```js
 stats.paired(rows, {key: "block", control: r => r.arm === 2, candidate: r => r.arm === 3, value: "value"})
-// → {pairs: 6, controlMedian, candidateMedian, medianPercentSaved, percentSavedOfMedians, wins, losses, ties, method, perPair}
+// → {pairs: 6, controlMedian, candidateMedian, medianPercentSaved, percentSavedOfMedians, wins, losses, ties, method, spread, blocks, perPair}
 ```
+
+`blocks` is the per-block detail, sorted by key: `[{key, control, candidate, savedPct, outcome}]`, with `outcome` `"win"`, `"loss"` or `"tie"` relative to `better`. `spread` is `stats.summary` of the blocks' `savedPct`, to judge how far the blocks disagree. `perPair` holds the same pairs as `{key, control, candidate, percentSaved}` for older scripts.
 
 ## Find out what a running service mounted
 
@@ -129,18 +171,21 @@ Several services often run side by side on different ports. `trace-repl info --a
 | Request | Response |
 | --- | --- |
 | `GET /` | HTTP 200, the list of routes |
-| `GET /info` | HTTP 200, `{"service","build","repo":{"root","head"},"mounts","compiler":{"modules","cachedCommits"},"archive","deviceStudy","simdStudy","sessions":{"open","max","idleSeconds"},"limits":{"sourceBytes","resultBytes","cellSeconds","jobSeconds"},"started"}` |
+| `GET /info` | HTTP 200, `{"service","build","repo":{"root","head"},"mounts","compiler":{"modules","cachedCommits"},"archive","deviceStudy","simdStudy","sessions":{"open","max","idleSeconds"},"limits":{"sourceBytes","resultBytes","argsBytes","cellSeconds","jobSeconds"},"results":{"dir"},"started"}` |
 | `POST /sessions` with empty body | HTTP 201, `{"id":"session-…"}`; HTTP 429 at 32 open sessions |
 | `GET /sessions` | HTTP 200, `[{"id","created","lastUsed","idleSeconds","cells","jobs","activeJob","busy"}]`, oldest first |
 | `POST /sessions/{id}/eval` with `Content-Type: application/json` and `{"source":"7 * 6"}` | HTTP 200, `{"ok":true,"value":42}` |
+| the same with `{"source":"args.n + 1","args":{"n":41}}` | HTTP 200, `{"ok":true,"value":42}`; `args` must be one JSON object (HTTP 400 otherwise, 413 over 64 KiB) |
 | JS parse or evaluation error | HTTP 200, `{"ok":false,"error":"…"}`. A subsequent valid cell can still run. |
 | Unknown session | HTTP 404 with a JSON error; for a session unloaded after `--idle`, the error says `session … expired after 2h0m0s idle` |
-| `POST /sessions/{id}/jobs` with `{"source":"…","timeoutSeconds":600}` (`timeoutSeconds` optional) | HTTP 202, `{"job":"job-…","state":"queued","timeoutSeconds":600,…}` |
-| `GET /sessions/{id}/jobs/{job}` | HTTP 200, `{"job","session","state","submitted","started","finished","timeoutSeconds","elapsedSeconds","result"}`; `state` is `queued`, `running`, `done`, `failed` or `stopped`, and `result` is a cell result once finished |
+| `POST /sessions/{id}/jobs` with `{"source":"…","args":{…},"timeoutSeconds":600}` (`args` and `timeoutSeconds` optional) | HTTP 202, `{"job":"job-…","state":"queued","timeoutSeconds":600,…}` |
+| `GET /sessions/{id}/jobs/{job}` | HTTP 200, `{"job","session","state","submitted","started","finished","timeoutSeconds","elapsedSeconds","sourceSHA256","sourceBytes","args","result"}`; `state` is `queued`, `running`, `done`, `failed` or `stopped`, and `result` is a cell result once finished |
 | `GET /sessions/{id}/jobs` | HTTP 200, the session's jobs without results, oldest first |
 | `DELETE /sessions/{id}/jobs/{job}` | HTTP 200, the job after it stopped (waits up to 5 s) |
 | `eval` or a job sent while a job holds the session | HTTP 409, `{"ok":false,"error":"session is busy with job …","job":"job-…"}` |
 | `DELETE /sessions/{id}` | HTTP 204 |
+| `GET /results` | HTTP 200, `[{"name","path","sha256","bytes","saved"}]` sorted by name |
+| `GET /results/{name}` | HTTP 200, the record as stored; HTTP 404 for an unknown name |
 
 A declaration produces `"value":null,"kind":"undefined"`. A cell can emit `console.log`, `info`, `debug`, `warn` or `error`, which appear in the response's optional `console` array. End a cell with a data value to see it as JSON. Return `undefined` explicitly when you want to keep a large binding without transporting its contents. For example, `const values = [1,2,3]; undefined`, followed by `values.length` in a new cell. Redeclaring a top-level lexical binding is a JavaScript error. Use `let` for names that you want to reassign. A cell that fails after declaring a top-level `let`, `const` or `class` leaves that name unusable for the rest of the session; the error names it, and a new name or a new session recovers.
 

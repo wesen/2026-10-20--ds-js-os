@@ -88,6 +88,29 @@ func TestStatsPairedComparison(t *testing.T) {
 	}
 }
 
+// I6: the per-block view a report needs to judge spread, under the names the
+// field notes asked for, agreeing with perPair and with the summary counts.
+func TestStatsPairedBlocksAndSpread(t *testing.T) {
+	vm := statsVM(t)
+	v, err := vm.RunString(`(() => {
+	  const p = stats.paired(rows, {key: 'block', control: r => r.arm === 0, candidate: r => r.arm === 1, value: 'value'});
+	  const h = stats.paired(rows, {key: 'block', control: r => r.arm === 0, candidate: r => r.arm === 1, value: 'value', better: 'higher'});
+	  return JSON.stringify({blocks: p.blocks.map(b => [b.key, b.control, b.candidate, +b.savedPct.toFixed(6), b.outcome]),
+	    spread: Object.fromEntries(Object.entries(p.spread).map(([k, x]) => [k, +x.toFixed(6)])),
+	    agrees: p.blocks.every((b, i) => b.savedPct === p.perPair[i].percentSaved && b.key === p.perPair[i].key),
+	    counts: ['win', 'loss', 'tie'].map(o => p.blocks.filter(b => b.outcome === o).length).join() === [p.wins, p.losses, p.ties].join(),
+	    higher: h.blocks.map(b => b.outcome).join()});
+	})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := `{"blocks":[[0,100,90,10,"win"],[1,110,99,10,"win"],[2,120,96,20,"win"],[3,100,105,-5,"loss"],[4,200,150,25,"win"],[5,100,100,0,"tie"]],` +
+		`"spread":{"n":6,"min":-5,"q1":2.5,"median":10,"q3":17.5,"max":25,"mean":10},"agrees":true,"counts":true,"higher":"loss,loss,loss,win,loss,tie"}`
+	if v.String() != want {
+		t.Fatalf("got  %s\nwant %s", v, want)
+	}
+}
+
 func TestStatsRefusesWhatItCannotSummarize(t *testing.T) {
 	vm := statsVM(t)
 	for expr, want := range map[string]string{

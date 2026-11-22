@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"time"
 
@@ -51,6 +52,7 @@ type Job struct {
 	started   time.Time
 	finished  time.Time
 	timeout   time.Duration
+	unit      Unit
 	result    *Result
 	err       string
 	cancel    context.CancelCauseFunc
@@ -67,12 +69,18 @@ type JobView struct {
 	Finished       *time.Time `json:"finished,omitempty"`
 	TimeoutSeconds float64    `json:"timeoutSeconds"`
 	ElapsedSeconds float64    `json:"elapsedSeconds"`
-	Result         *Result    `json:"result,omitempty"`
-	Error          string     `json:"error,omitempty"`
+	// What was submitted: the source's digest and size and the args, so a job's
+	// result can be traced to its exact script and parameters.
+	SourceSHA256 string          `json:"sourceSHA256"`
+	SourceBytes  int             `json:"sourceBytes"`
+	Args         json.RawMessage `json:"args,omitempty"`
+	Result       *Result         `json:"result,omitempty"`
+	Error        string          `json:"error,omitempty"`
 }
 
 func (j *Job) view(withResult bool) JobView {
-	v := JobView{ID: j.id, Session: j.session, State: j.state, Submitted: j.submitted, TimeoutSeconds: j.timeout.Seconds(), Error: j.err}
+	v := JobView{ID: j.id, Session: j.session, State: j.state, Submitted: j.submitted, TimeoutSeconds: j.timeout.Seconds(), Error: j.err,
+		SourceSHA256: j.unit.SourceSHA256, SourceBytes: j.unit.SourceBytes, Args: j.unit.Args}
 	if !j.started.IsZero() {
 		started := j.started
 		v.Started = &started
@@ -156,8 +164,17 @@ func (s *Service) missing(id string) error {
 // Submit starts source as a background job in the session and returns at
 // once. timeout <= 0 means the service maximum; a longer one is capped to it.
 func (s *Service) Submit(id, source string, timeout time.Duration) (JobView, error) {
-	if len(source) > MaxSourceBytes {
+	return s.SubmitCell(id, Cell{Source: source}, timeout)
+}
+
+// SubmitCell is Submit with parameters: cell.Args becomes the job's args and
+// is recorded in its view.
+func (s *Service) SubmitCell(id string, cell Cell, timeout time.Duration) (JobView, error) {
+	if len(cell.Source) > MaxSourceBytes {
 		return JobView{}, errors.Errorf("source exceeds %d bytes", MaxSourceBytes)
+	}
+	if err := ValidateArgs(cell.Args); err != nil {
+		return JobView{}, err
 	}
 	if timeout <= 0 || timeout > s.maxJob {
 		timeout = s.maxJob
@@ -173,7 +190,9 @@ func (s *Service) Submit(id, source string, timeout time.Duration) (JobView, err
 		return JobView{}, &BusyError{Job: e.active.id}
 	}
 	ctx, cancel := context.WithCancelCause(s.lifetime)
-	job := &Job{id: newID("job-"), session: id, state: JobQueued, submitted: time.Now().UTC(), timeout: timeout, cancel: cancel, done: make(chan struct{})}
+	jobID := newID("job-")
+	job := &Job{id: jobID, session: id, state: JobQueued, submitted: time.Now().UTC(), timeout: timeout, cancel: cancel, done: make(chan struct{}),
+		unit: newUnit(id, "job", jobID, cell)}
 	e.active = job
 	e.busy++
 	e.jobCount++
@@ -192,7 +211,7 @@ func (s *Service) Submit(id, source string, timeout time.Duration) (JobView, err
 		defer cancel(nil)
 		runCtx, stop := context.WithTimeout(ctx, timeout)
 		defer stop()
-		result, err := s.run(runCtx, id, source, "job", timeout, func() {
+		result, err := s.run(runCtx, job.unit, cell, timeout, func() {
 			s.mu.Lock()
 			job.state, job.started = JobRunning, time.Now().UTC()
 			s.mu.Unlock()

@@ -1,0 +1,206 @@
+{
+  "name": "compile-cost-2712684",
+  "saved": "2026-11-22T03:58:23.152371984Z",
+  "session": "session-aa46722a-8ea9-43a7-822a-87969c25d299",
+  "unit": "job",
+  "job": "job-f0bd5451cda00503",
+  "script": {
+    "sha256": "61b4747195713e57fc623d0550e9b6814d037b4d8d8925bf8a9d64acd81833f8",
+    "bytes": 2864
+  },
+  "args": {
+    "arms": {
+      "base": {},
+      "noSplit": {
+        "operandLocations": {
+          "split": false
+        }
+      },
+      "noVersion": {
+        "select": {
+          "version": false
+        }
+      }
+    },
+    "rev": "2712684",
+    "save": "compile-cost-2712684"
+  },
+  "repo": {
+    "head": "0791eeb5f97c857b6d96b773c09bc763a6e7a412",
+    "root": "/home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-ac1fc97c8047752b6"
+  },
+  "compilers": [
+    {
+      "requested": "2712684",
+      "revision": "271268448ec6d270ba50a8e84c1d461e8b11695f",
+      "key": "d6b204f78558d393df9657eebcfac8d1188dfe8d7eb6d0df7617a1d6cdb0913f",
+      "files": [
+        {
+          "path": "picocalc-os/compiler/typed-wasm.js",
+          "sha256": "f96790be276dd8a63e4b7492dcf715e2e800787d0e180080b18ef89722b1914a"
+        },
+        {
+          "path": "picocalc-os/compiler/typed-async.js",
+          "sha256": "59470a2c52b76e323d404be6f5c0bc998980f44dd00bc3c511f3c3ed76d1d893"
+        },
+        {
+          "path": "picocalc-os/compiler/typed-world.js",
+          "sha256": "bdd2a9606eb8bda5c3cfe481aaca94fbb2e63178f334eb9074ce7f36dfa33978"
+        },
+        {
+          "path": "picocalc-os/compiler/typed-rv32.js",
+          "sha256": "8c2ffed1b2945749bd999a6b0e89fdd7721087e36f1616d7ad4fc3b86ac0bb70"
+        },
+        {
+          "path": "picocalc-os/compiler/typed-pie-loops.js",
+          "sha256": "6004373a45eafe6ee732487306a158d4d4e8b40e512b9d14653f5b71a847ae12"
+        },
+        {
+          "path": "picocalc-os/tools/rv32-interp.js",
+          "sha256": "4f1920fcee6ce77f9d9ca9cdafc567138239d00db682c7d92ddad52bbf968fae"
+        },
+        {
+          "path": "picocalc-os/tools/typed-ray-bench.js",
+          "sha256": "ec642741a02e514d1751a5ffa15cf69f7903ccb3873dd28bcc923e1a9eace46b"
+        }
+      ]
+    }
+  ],
+  "value": {
+    "revision": "271268448ec6d270ba50a8e84c1d461e8b11695f",
+    "layouts": {
+      "ray": "raytrace.typed",
+      "chess": "source.list",
+      "editor": "source.list",
+      "files": "builtin",
+      "agenda": "builtin"
+    },
+    "medians": {
+      "ray.base": 146.6,
+      "ray.noSplit": 127.5,
+      "ray.noVersion": 86.1,
+      "chess.base": 624.9,
+      "chess.noSplit": 579.1,
+      "chess.noVersion": 540.9,
+      "editor.base": 1368.7,
+      "editor.noSplit": 1371.8,
+      "editor.noVersion": 1182.3,
+      "files.base": 35.7,
+      "files.noSplit": 30,
+      "files.noVersion": 23.8,
+      "agenda.base": 301.4,
+      "agenda.noSplit": 284.4,
+      "agenda.noVersion": 232.1
+    },
+    "bytes": {
+      "ray.base": 11964,
+      "ray.noSplit": 18132,
+      "ray.noVersion": 10492,
+      "chess.base": 40508,
+      "chess.noSplit": 50812,
+      "chess.noVersion": 46720,
+      "editor.base": 78212,
+      "editor.noSplit": 99696,
+      "editor.noVersion": 84404,
+      "files.base": 3444,
+      "files.noSplit": 4324,
+      "files.noVersion": 3448,
+      "agenda.base": 21724,
+      "agenda.noSplit": 27488,
+      "agenda.noVersion": 23664
+    },
+    "paired": {
+      "ray.base-\u003enoSplit": {
+        "pairs": 7,
+        "medianPercentSaved": 19.64,
+        "wins": 7,
+        "spread": [
+          8.68,
+          21.6
+        ]
+      },
+      "ray.base-\u003enoVersion": {
+        "pairs": 7,
+        "medianPercentSaved": 43.5,
+        "wins": 7,
+        "spread": [
+          32.21,
+          51.36
+        ]
+      },
+      "chess.base-\u003enoSplit": {
+        "pairs": 3,
+        "medianPercentSaved": 7.32,
+        "wins": 3,
+        "spread": [
+          5,
+          13.85
+        ]
+      },
+      "chess.base-\u003enoVersion": {
+        "pairs": 3,
+        "medianPercentSaved": 13.44,
+        "wins": 3,
+        "spread": [
+          4.37,
+          17.5
+        ]
+      },
+      "editor.base-\u003enoSplit": {
+        "pairs": 3,
+        "medianPercentSaved": 4.31,
+        "wins": 2,
+        "spread": [
+          -0.23,
+          4.74
+        ]
+      },
+      "editor.base-\u003enoVersion": {
+        "pairs": 3,
+        "medianPercentSaved": 12.61,
+        "wins": 3,
+        "spread": [
+          9.91,
+          13.62
+        ]
+      },
+      "files.base-\u003enoSplit": {
+        "pairs": 3,
+        "medianPercentSaved": 17.44,
+        "wins": 3,
+        "spread": [
+          15.51,
+          34.18
+        ]
+      },
+      "files.base-\u003enoVersion": {
+        "pairs": 3,
+        "medianPercentSaved": 36.32,
+        "wins": 3,
+        "spread": [
+          33.06,
+          38.05
+        ]
+      },
+      "agenda.base-\u003enoSplit": {
+        "pairs": 3,
+        "medianPercentSaved": 12.12,
+        "wins": 3,
+        "spread": [
+          4.79,
+          12.46
+        ]
+      },
+      "agenda.base-\u003enoVersion": {
+        "pairs": 3,
+        "medianPercentSaved": 24.54,
+        "wins": 3,
+        "spread": [
+          22.31,
+          29.91
+        ]
+      }
+    },
+    "seconds": 29.6
+  }
+}

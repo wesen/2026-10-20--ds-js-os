@@ -350,3 +350,59 @@ func TestEvalJobThroughTheClient(t *testing.T) {
 		t.Fatalf("bad --idle accepted: %v", err)
 	}
 }
+
+// --arg values reach the client verbatim: a pflag StringSlice would split
+// {"a": 1, "b": 2} at the comma and choke on the quotes.
+func TestArgFlagKeepsJSONIntact(t *testing.T) {
+	root, err := root()
+	if err != nil {
+		t.Fatal(err)
+	}
+	eval, _, err := root.Find([]string{"eval"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := eval.ParseFlags([]string{"--arg", `arms={"a": 1, "b": "x,y"}`, "--arg", `rev="worktree"`}); err != nil {
+		t.Fatal(err)
+	}
+	got, err := eval.Flags().GetStringArray("arg")
+	if err != nil || len(got) != 2 || got[0] != `arms={"a": 1, "b": "x,y"}` || got[1] != `rev="worktree"` {
+		t.Fatalf("%q %v", got, err)
+	}
+}
+
+// --arg and --args-file build one args object; bad names, values and files are refused.
+func TestCellArgsFlags(t *testing.T) {
+	dir := t.TempDir()
+	file := filepath.Join(dir, "args.json")
+	if err := os.WriteFile(file, []byte(`{"rev": "eaf0872", "rounds": {"ray": 7}}`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	list := filepath.Join(dir, "list.json")
+	if err := os.WriteFile(list, []byte(`[1, 2]`), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	got, err := cellArgs(settings{ArgsFile: file, Args: []string{`rev="worktree"`, `arms={"base": {}}`}})
+	if err != nil || string(got) != `{"arms":{"base":{}},"rev":"worktree","rounds":{"ray":7}}` {
+		t.Fatalf("%s %v", got, err)
+	}
+	if got, err := cellArgs(settings{}); got != nil || err != nil {
+		t.Fatalf("no flags: %s %v", got, err)
+	}
+	for _, tc := range []struct {
+		cfg  settings
+		want string
+	}{
+		{settings{Args: []string{"rev"}}, "NAME=JSON"},
+		{settings{Args: []string{"a-b=1"}}, "JavaScript identifier"},
+		{settings{Args: []string{"__proto__={}"}}, "JavaScript identifier"},
+		{settings{Args: []string{"rev=worktree"}}, `--arg rev='"worktree"'`},
+		{settings{Args: []string{"n=1", "n=2"}}, "given twice"},
+		{settings{ArgsFile: list}, "one JSON object"},
+		{settings{ArgsFile: filepath.Join(dir, "missing.json")}, "--args-file"},
+	} {
+		if _, err := cellArgs(tc.cfg); err == nil || !strings.Contains(err.Error(), tc.want) {
+			t.Errorf("%+v: %v; want %q", tc.cfg, err, tc.want)
+		}
+	}
+}

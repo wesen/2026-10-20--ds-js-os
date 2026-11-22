@@ -114,6 +114,9 @@
     }).sort(byKey);
     const sign = better === 'lower' ? 1 : -1;
     const controlMedian = median(perPair.map(p => p.control)), candidateMedian = median(perPair.map(p => p.candidate));
+    // The per-block view: the same pairs under the names reports use, with each pair's outcome.
+    const blocks = perPair.map(p => ({ key: p.key, control: p.control, candidate: p.candidate, savedPct: p.percentSaved,
+      outcome: p.control === p.candidate ? 'tie' : sign * (p.control - p.candidate) > 0 ? 'win' : 'loss' }));
     return {
       pairs: perPair.length,
       controlMedian, candidateMedian,
@@ -124,6 +127,8 @@
       ties: perPair.filter(p => p.control === p.candidate).length,
       better,
       method: 'median of per-pair percentage saved, 100 * (1 - candidate / control); wins count pairs where the candidate is ' + better,
+      spread: summary(blocks.map(b => b.savedPct)),
+      blocks,
       perPair,
     };
   }
@@ -136,7 +141,9 @@
     '  stats.percentSaved(control, candidate)   100 * (1 - candidate / control)',
     '  stats.paired(rows, {key, control, candidate, value, better})',
     '      key, value: field name or row => value; control, candidate: row => boolean; better: "lower" (default) | "higher"',
-    '      → {pairs, controlMedian, candidateMedian, medianPercentSaved, percentSavedOfMedians, wins, losses, ties, method, perPair}',
+    '      → {pairs, controlMedian, candidateMedian, medianPercentSaved, percentSavedOfMedians, wins, losses, ties, better, method, spread, blocks, perPair}',
+    '      blocks: [{key, control, candidate, savedPct, outcome: "win" | "loss" | "tie"}] sorted by key; spread: stats.summary of savedPct;',
+    '      perPair: the same pairs as [{key, control, candidate, percentSaved}] (kept for older scripts)',
     '      refuses rows matching both arms, duplicate keys in one arm and keys present in only one arm.',
     'Errors carry err.code: notAnArray, empty, notFinite, badArgument, badKey, ambiguousRow, duplicatePair, unmatchedKey, zeroControl.',
   ].join('\n');
