@@ -1,0 +1,33 @@
+{
+ "preset": "G-01",
+ "title": "G-01-primitives",
+ "width": 160,
+ "height": 160,
+ "rows": [
+  41,
+  66,
+  6,
+  14,
+  1
+ ],
+ "ev": null,
+ "exposureMode": "auto",
+ "physicalEV": 12.965784284662087,
+ "engine": "realtime",
+ "maxDepth": 5,
+ "rrAfter": 2,
+ "integrator": "path",
+ "objects": 11,
+ "materials": 7,
+ "wgslLines": 1563,
+ "post": [
+  "denoise",
+  "tonemap:agx"
+ ],
+ "cid": "G_01",
+ "spectral": false,
+ "customKernel": false,
+ "sectionFunctions": 12,
+ "sectionWGSLLines": 150,
+ "dataBytes": 2072
+}

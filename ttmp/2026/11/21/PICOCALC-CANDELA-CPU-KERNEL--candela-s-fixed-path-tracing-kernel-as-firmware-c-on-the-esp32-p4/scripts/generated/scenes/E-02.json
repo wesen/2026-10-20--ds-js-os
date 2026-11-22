@@ -1,0 +1,30 @@
+{
+ "preset": "E-02",
+ "title": "E-02-toon",
+ "width": 160,
+ "height": 160,
+ "rows": [
+  41,
+  24,
+  6,
+  6,
+  1
+ ],
+ "ev": null,
+ "exposureMode": "auto",
+ "physicalEV": 12.965784284662087,
+ "engine": "realtime",
+ "integrator": "custom",
+ "objects": 4,
+ "materials": 4,
+ "wgslLines": 1533,
+ "post": [
+  "tonemap:agx"
+ ],
+ "cid": "E_02",
+ "spectral": false,
+ "customKernel": true,
+ "sectionFunctions": 9,
+ "sectionWGSLLines": 120,
+ "dataBytes": 1272
+}

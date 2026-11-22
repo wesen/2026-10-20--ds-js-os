@@ -1,0 +1,96 @@
+{
+ "pin": {
+  "archive": "873b2dd4bb9c32cac08751baf9fa6960ee4377306a04b2e118a8969dd940df5d",
+  "src/kernel.js": "253d242df1a8827903e218c9ad119558d313f92da9f582ec3a25a6b8f7fb45c4",
+  "src/compile.js": "6f5926cc1b8fe98a5ec3e3eb5dae0cc02efae75e67b115c99acca33aa2368f90",
+  "src/render.js": "a71df1b9404280196282c580d8436d1406d0193bc8744705e0c535d0c66e090a"
+ },
+ "unpinned": [],
+ "kernel": {
+  "wgslLines": 1425,
+  "functions": 107,
+  "structs": [
+   "Frame",
+   "Hit",
+   "Lobe",
+   "TraceR",
+   "BS",
+   "LS",
+   "Ray",
+   "PathOut",
+   "PixOut"
+  ],
+  "globals": [
+   "rngS",
+   "gTime",
+   "gLam",
+   "gTau",
+   "gTri",
+   "gBary"
+  ],
+  "consts": [
+   "PI",
+   "TAU",
+   "INV_PI",
+   "BIG",
+   "EPS"
+  ]
+ },
+ "sectionAPI": [
+  "fbm3",
+  "fmodp",
+  "fmodp3",
+  "fresnelDielectric",
+  "hitAlbedo",
+  "lobeNone",
+  "lum",
+  "metalAt",
+  "noise3",
+  "occluded",
+  "safeNorm",
+  "sellmeier",
+  "tangentWorld",
+  "traceScene",
+  "voronoi3"
+ ],
+ "dispatch": [
+  "evalMaterial",
+  "sdUser",
+  "heightAt",
+  "densityOf",
+  "customKernel"
+ ],
+ "overrides": [
+  {
+   "fn": "hash3",
+   "switch": "CDL_INT_HASH",
+   "how": "cpu/cdl_overrides.inc cdl_cpu_hash3"
+  },
+  {
+   "fn": "hash13",
+   "switch": "CDL_INT_HASH",
+   "how": "cpu/cdl_overrides.inc cdl_cpu_hash13"
+  },
+  {
+   "fn": "voronoi3",
+   "switch": "CDL_INT_HASH",
+   "how": "rewrite 'fract(sin(cell.x * 7.1 + cell.y * 157.3 + cell.z * 113.7) * 43758.5453)' -> 'hash13(cell)'"
+  },
+  {
+   "fn": "skyL",
+   "switch": "CDL_SKY_TABLE",
+   "how": "cpu/cdl_overrides.inc cdl_cpu_skyL"
+  }
+ ],
+ "post": {
+  "wgslLines": 128,
+  "functions": 12,
+  "overrides": [
+   {
+    "fn": "atrousW",
+    "switch": "CDL_POW32",
+    "how": "rewrite 'pow(dn, sn)' -> 'powSn(dn, sn)'"
+   }
+  ]
+ }
+}

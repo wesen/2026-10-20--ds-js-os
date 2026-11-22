@@ -1,0 +1,33 @@
+{
+ "preset": "R-01",
+ "title": "R-01-cornell",
+ "width": 160,
+ "height": 160,
+ "rows": [
+  41,
+  48,
+  6,
+  14,
+  1
+ ],
+ "ev": null,
+ "exposureMode": "auto",
+ "physicalEV": 12.965784284662087,
+ "engine": "realtime",
+ "maxDepth": 5,
+ "rrAfter": 2,
+ "integrator": "path",
+ "objects": 8,
+ "materials": 4,
+ "wgslLines": 1495,
+ "post": [
+  "denoise",
+  "tonemap:agx"
+ ],
+ "cid": "R_01",
+ "spectral": false,
+ "customKernel": false,
+ "sectionFunctions": 9,
+ "sectionWGSLLines": 82,
+ "dataBytes": 1784
+}

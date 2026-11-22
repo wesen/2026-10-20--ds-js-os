@@ -1,0 +1,33 @@
+{
+ "preset": "L-03",
+ "title": "L-03-sun-and-sky",
+ "width": 160,
+ "height": 160,
+ "rows": [
+  41,
+  18,
+  6,
+  2,
+  1
+ ],
+ "ev": null,
+ "exposureMode": "auto",
+ "physicalEV": 12.965784284662087,
+ "engine": "realtime",
+ "maxDepth": 5,
+ "rrAfter": 2,
+ "integrator": "path",
+ "objects": 3,
+ "materials": 3,
+ "wgslLines": 1487,
+ "post": [
+  "denoise",
+  "tonemap:agx"
+ ],
+ "cid": "L_03",
+ "spectral": false,
+ "customKernel": false,
+ "sectionFunctions": 8,
+ "sectionWGSLLines": 74,
+ "dataBytes": 1112
+}

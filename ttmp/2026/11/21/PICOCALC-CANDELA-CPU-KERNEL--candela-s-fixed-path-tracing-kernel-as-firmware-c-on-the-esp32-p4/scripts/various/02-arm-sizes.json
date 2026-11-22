@@ -1,0 +1,128 @@
+{
+ "wgsl": {
+  "text": 49078,
+  "iram": 0,
+  "rodata": 2744,
+  "data": 16,
+  "bss": 52
+ },
+ "lazy": {
+  "text": 49356,
+  "iram": 0,
+  "rodata": 2744,
+  "data": 16,
+  "bss": 52
+ },
+ "noinit": {
+  "text": 49506,
+  "iram": 0,
+  "rodata": 2744,
+  "data": 16,
+  "bss": 52
+ },
+ "floor": {
+  "text": 52172,
+  "iram": 0,
+  "rodata": 2768,
+  "data": 16,
+  "bss": 52
+ },
+ "trig": {
+  "text": 59776,
+  "iram": 0,
+  "rodata": 2836,
+  "data": 16,
+  "bss": 52
+ },
+ "exp": {
+  "text": 63158,
+  "iram": 0,
+  "rodata": 2900,
+  "data": 16,
+  "bss": 52
+ },
+ "hash": {
+  "text": 61872,
+  "iram": 0,
+  "rodata": 2840,
+  "data": 16,
+  "bss": 52
+ },
+ "cpu": {
+  "text": 63036,
+  "iram": 0,
+  "rodata": 2888,
+  "data": 16,
+  "bss": 56
+ },
+ "cpu-lazy": {
+  "text": 62998,
+  "iram": 0,
+  "rodata": 2888,
+  "data": 16,
+  "bss": 56
+ },
+ "cpu-noinit": {
+  "text": 62884,
+  "iram": 0,
+  "rodata": 2888,
+  "data": 16,
+  "bss": 56
+ },
+ "cpu-floor": {
+  "text": 60774,
+  "iram": 0,
+  "rodata": 2880,
+  "data": 16,
+  "bss": 56
+ },
+ "cpu-trig": {
+  "text": 56752,
+  "iram": 0,
+  "rodata": 2820,
+  "data": 16,
+  "bss": 56
+ },
+ "cpu-exp": {
+  "text": 59636,
+  "iram": 0,
+  "rodata": 2824,
+  "data": 16,
+  "bss": 56
+ },
+ "cpu-hash": {
+  "text": 64322,
+  "iram": 0,
+  "rodata": 2948,
+  "data": 16,
+  "bss": 56
+ },
+ "cpu-O3": {
+  "text": 73268,
+  "iram": 0,
+  "rodata": 2896,
+  "data": 16,
+  "bss": 56
+ },
+ "cpu-iram": {
+  "text": 18,
+  "iram": 62922,
+  "rodata": 2888,
+  "data": 16,
+  "bss": 56
+ },
+ "mono": {
+  "text": 308610,
+  "iram": 0,
+  "rodata": 10760,
+  "data": 96,
+  "bss": 240
+ },
+ "proto": {
+  "text": 231952,
+  "iram": 0,
+  "rodata": 10400,
+  "data": 96,
+  "bss": 216
+ }
+}

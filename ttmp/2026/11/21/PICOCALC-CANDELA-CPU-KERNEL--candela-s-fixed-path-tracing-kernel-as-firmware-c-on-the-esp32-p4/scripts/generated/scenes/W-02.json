@@ -1,0 +1,33 @@
+{
+ "preset": "W-02",
+ "title": "W-02-world",
+ "width": 80,
+ "height": 80,
+ "rows": [
+  41,
+  90,
+  6,
+  26,
+  1
+ ],
+ "ev": null,
+ "exposureMode": "auto",
+ "physicalEV": 12.965784284662087,
+ "engine": "realtime",
+ "maxDepth": 5,
+ "rrAfter": 2,
+ "integrator": "path",
+ "objects": 15,
+ "materials": 9,
+ "wgslLines": 1673,
+ "post": [
+  "denoise",
+  "tonemap:agx"
+ ],
+ "cid": "W_02",
+ "spectral": false,
+ "customKernel": false,
+ "sectionFunctions": 14,
+ "sectionWGSLLines": 260,
+ "dataBytes": 2648
+}

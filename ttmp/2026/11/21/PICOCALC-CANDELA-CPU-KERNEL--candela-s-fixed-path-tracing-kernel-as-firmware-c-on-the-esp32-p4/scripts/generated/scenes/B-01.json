@@ -1,0 +1,33 @@
+{
+ "preset": "B-01",
+ "title": "B-01-hello-sphere",
+ "width": 160,
+ "height": 160,
+ "rows": [
+  41,
+  12,
+  6,
+  2,
+  1
+ ],
+ "ev": null,
+ "exposureMode": "auto",
+ "physicalEV": 12.965784284662087,
+ "engine": "realtime",
+ "maxDepth": 5,
+ "rrAfter": 2,
+ "integrator": "path",
+ "objects": 2,
+ "materials": 2,
+ "wgslLines": 1468,
+ "post": [
+  "denoise",
+  "tonemap:agx"
+ ],
+ "cid": "B_01",
+ "spectral": false,
+ "customKernel": false,
+ "sectionFunctions": 7,
+ "sectionWGSLLines": 55,
+ "dataBytes": 1016
+}
