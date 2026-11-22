@@ -10,7 +10,7 @@ and a difference between two uses is a parameter, not a copy.
 | `host/ray-profile.mjs` | Opening ray frame under named policies or options; must reproduce `reference/ray-opening.json` |
 | `host/chess-engine.mjs GCC EMU` | Chess engine oracle: 6,981 words against chess 1.11.2, plus executed instructions |
 | `host/replays/run.sh [--options JSON]` | The 24 host workflows (Files, Agenda, Editor; WASM and RV32 on rv32emu) |
-| `emu/` | `rv32emu`, plus cji's freestanding C runtime built for it (`cji/tools/rv32/fw/`); `make -C bench/emu` |
+| `emu/` | `rv32emu`, plus cji's freestanding C runtime built for it (`compiler/cji/tools/rv32/fw/`); `make -C bench/emu` |
 | `board/` | The ESP32-P4 harness and the device library (flash, health, restore, install) |
 | `reference/` | Fixtures and expected digests: opening frame, frame fixtures, Chess positions |
 | `lib/` | `repo.mjs` (repository paths), `compiler.mjs` (loads the compiler; applies `TYPED_RV32_OPTIONS`), `toolchain.sh` |

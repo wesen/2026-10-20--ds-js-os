@@ -1,4 +1,4 @@
-/* rv32.js — a native RV32 interpreter with the semantics of picocalc-os/tools/rv32-interp.js.
+/* rv32.js — a native RV32 interpreter with the semantics of bench/host/rv32-interp.js.
  * The host injects one bridge object, __rv32, and deletes it after this script runs.
  * Public global: rv32 = {run, profile, classify, Rv32Fault, help}, the same interface as
  * typedRv32Interp. run() executes the reference's setup statements here, unchanged, and hands
@@ -78,7 +78,7 @@
   const classify = (word, nextWord, afterWord) => bridge.classify(word, nextWord, afterWord);
 
   const HELP = [
-    'rv32 — the RV32 reference interpreter (picocalc-os/tools/rv32-interp.js), run natively in Go.',
+    'rv32 — the RV32 reference interpreter (bench/host/rv32-interp.js), run natively in Go.',
     '  rv32.run(program, entry, args, memoryBytes, {stackBytes, limit, imports, handlers, counts})',
     '      → {trap: false, result, steps, counts, bytes, registers} or {trap: true, at, steps, counts, bytes, registers}',
     '      faults throw rv32.Rv32Fault with the reference\'s message, plus err.at and err.steps',

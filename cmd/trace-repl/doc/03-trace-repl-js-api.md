@@ -320,7 +320,7 @@ A revision object, `const c = compiler.at(rev)`:
 | --- | --- |
 | `compile(source, imports, memoryBytes, options?)` | Compiles Typed source. Returns `{image: Uint8Array, entries: {name: byteOffset}, records, enums, distinct, relocations, importCount, signatures}`. |
 | `options.policy` | A named policy: `stock`, `interactive`, `balanced`, `default` or `kernel`. Other top-level option keys replace the policy's key wholesale. |
-| `options.operandLocations`, `options.select` | Individual backend switches; the module table in `picocalc-os/compiler/rv32/README.md` names the pass behind each one. |
+| `options.operandLocations`, `options.select` | Individual backend switches; the module table in `compiler/typed/rv32/README.md` names the pass behind each one. |
 | `options.observeTape(name, phase, code, nlocals)` | Called with a copy of each function's tape after each transform. |
 | `options.observePlan(name, plan)` | Called with each function's operand-location plan: `homes`, `scores` and, under pointer-only sources, `skips`. |
 | `policies` | The named policies as frozen objects. |
@@ -336,7 +336,7 @@ A revision object, `const c = compiler.at(rev)`:
 
 ## rv32: the native interpreter
 
-`rv32` is `picocalc-os/tools/rv32-interp.js` implemented in Go. It produces the same results, bytes, registers, trap flags, fault messages and per-PC counts as the reference.
+`rv32` is `bench/host/rv32-interp.js` implemented in Go. It produces the same results, bytes, registers, trap flags, fault messages and per-PC counts as the reference.
 
 | Member | Description |
 | --- | --- |
@@ -448,4 +448,4 @@ Refusals are thrown as `QueryError` with the message `[code] message\n  fix: ...
 - `trace-repl help trace-repl-user-guide`: plans, states, timelines, units and statuses explained.
 - `trace-repl help trace-repl-query-examples`: these members in 25 complete scripts.
 - `trace-repl help trace-repl-cli-and-http`: commands, flags, limits and HTTP routes.
-- `picocalc-os/compiler/rv32/README.md`: the RV32 backend's modules, policies and option switches.
+- `compiler/typed/rv32/README.md`: the RV32 backend's modules, policies and option switches.

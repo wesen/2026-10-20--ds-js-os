@@ -218,14 +218,14 @@ set_source_files_properties(
 # any peripheral or test selections made above.
 if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES OR PICOCALC_TYPED_EDITOR OR PICOCALC_TYPED_CHESS)
     target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c typed_lex_index.c)
-    list(APPEND BUNDLE_EXTRA "typed/wasm.js=${OS}/compiler/typed-wasm.js")
-    list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-wasm.js")
+    list(APPEND BUNDLE_EXTRA "typed/wasm.js=${OS}/../compiler/typed/typed-wasm.js")
+    list(APPEND BUNDLE_EXTRA_DEPS "${OS}/../compiler/typed/typed-wasm.js")
     if(PICOCALC_RV32_AGENDA OR PICOCALC_RV32_FILES OR PICOCALC_RV32_EDITOR OR PICOCALC_RV32_CHESS)
         if(NOT PICOCALC_RV32_STREAM_FUNCTIONS)
             set_property(SOURCE typed_p4.c APPEND PROPERTY COMPILE_DEFINITIONS PICOCALC_RV32_BUFFER_FUNCTIONS=1)
         endif()
-        list(APPEND BUNDLE_EXTRA "typed/rv32.js=${OS}/compiler/typed-rv32.js")
-        list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-rv32.js")
+        list(APPEND BUNDLE_EXTRA "typed/rv32.js=${OS}/../compiler/typed/typed-rv32.js")
+        list(APPEND BUNDLE_EXTRA_DEPS "${OS}/../compiler/typed/typed-rv32.js")
     endif()
     if(PICOCALC_NATIVE_ELF)
         set(typed_manifest "${system_json}")
@@ -239,9 +239,9 @@ endif()
 
 if(PICOCALC_TYPED_EDITOR OR PICOCALC_TYPED_CHESS)
     list(APPEND BUNDLE_EXTRA
-        "typed/async.js=${OS}/compiler/typed-async.js"
-        "typed/world.js=${OS}/compiler/typed-world.js")
-    list(APPEND BUNDLE_EXTRA_DEPS "${OS}/compiler/typed-async.js" "${OS}/compiler/typed-world.js")
+        "typed/async.js=${OS}/../compiler/typed/typed-async.js"
+        "typed/world.js=${OS}/../compiler/typed/typed-world.js")
+    list(APPEND BUNDLE_EXTRA_DEPS "${OS}/../compiler/typed/typed-async.js" "${OS}/../compiler/typed/typed-world.js")
 endif()
 
 if(PICOCALC_RV32_EDITOR OR PICOCALC_RV32_CHESS)
@@ -269,7 +269,7 @@ if(PICOCALC_CHESS_3D AND PICOCALC_RV32_CHESS)
     target_link_libraries(${COMPONENT_LIB} PRIVATE idf::espressif__elf_loader)
     set(candela_dir ${OS}/worlds/candela)
     set(candela_slot ${CMAKE_CURRENT_BINARY_DIR}/candela-slot.elf)
-    set(candela_link ${OS}/compiler/candela.js)
+    set(candela_link ${OS}/worlds/candela/link.js)
     set(candela_stub ${CMAKE_CURRENT_LIST_DIR}/candela_slot.c ${CMAKE_CURRENT_LIST_DIR}/candela_slot.S)
     add_custom_command(OUTPUT ${candela_slot}
         COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o ${candela_slot} ${candela_stub}
@@ -279,11 +279,11 @@ if(PICOCALC_CHESS_3D AND PICOCALC_RV32_CHESS)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_RAY=1)
     target_sources(${COMPONENT_LIB} PRIVATE typed_ray_p4.c typed_ray_material_bench.c)
     set(ray_source ${OS}/worlds/raytrace/raytrace.typed)
-    set(ray_linker ${OS}/compiler/raytrace.js)
+    set(ray_linker ${OS}/worlds/raytrace/link.js)
     list(APPEND BUNDLE_EXTRA "typed-ray/main.typed=${ray_source}" "typed-ray/link.js=${ray_linker}")
     list(APPEND BUNDLE_EXTRA_DEPS ${ray_source} ${ray_linker})
     set(ray_material ${CMAKE_CURRENT_BINARY_DIR}/typed-ray-material.typed)
-    set(ray_material_link ${OS}/compiler/raytrace-material.js)
+    set(ray_material_link ${OS}/worlds/raytrace/link-material.js)
     add_custom_command(OUTPUT ${ray_material}
         COMMAND ${PYTHON} ${OS}/worlds/raytrace/assemble-material.py ${ray_material}
         DEPENDS ${OS}/worlds/raytrace/assemble-material.py ${OS}/worlds/raytrace/raytrace.typed
@@ -316,7 +316,7 @@ if(PICOCALC_MOBILE_PAINTER)
     target_link_libraries(${COMPONENT_LIB} PRIVATE idf::espressif__elf_loader)
     set(painter_slot "${CMAKE_CURRENT_BINARY_DIR}/mobile-painter-slot.elf")
     set(painter_sources "${CMAKE_CURRENT_LIST_DIR}/mobile_painter_slot.c" "${CMAKE_CURRENT_LIST_DIR}/mobile_painter_slot.S")
-    set(painter_link "${OS}/compiler/mobile-painter.js")
+    set(painter_link "${OS}/worlds/chess/link-painter.js")
     set(painter_slot_flags)
     if(PICOCALC_CHESS_3D)
         target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_CHESS_3D=1)

@@ -8,11 +8,11 @@ import {fileURLToPath} from "node:url";
 import test from "node:test";
 import vm from "node:vm";
 
-const cli=fileURLToPath(new URL("../tools/typed-inspect.mjs",import.meta.url));
+const cli=fileURLToPath(new URL("../../compiler/typed/tools/typed-inspect.mjs",import.meta.url));
 function compiler() {
     const ctx=vm.createContext({});
     for(const f of ["typed-wasm","typed-async","typed-rv32"])
-        vm.runInContext(fs.readFileSync(new URL("../compiler/"+f+".js",import.meta.url),"utf8"),ctx);
+        vm.runInContext(fs.readFileSync(new URL("../../compiler/typed/"+f+".js",import.meta.url),"utf8"),ctx);
     return ctx;
 }
 const source=`

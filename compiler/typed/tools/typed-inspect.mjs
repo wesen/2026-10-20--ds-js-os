@@ -7,9 +7,9 @@ import {decode,hex} from "./typed-inspect/rv32.mjs";
 
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const read = file => fs.readFileSync(file,"utf8");
-const usage = `node picocalc-os/tools/typed-inspect.mjs SOURCE [--function NAME] [--target both|wasm|rv32]
+const usage = `node compiler/typed/tools/typed-inspect.mjs SOURCE [--function NAME] [--target both|wasm|rv32]
     [--jsonl] [--profile PC-COUNTS.json] [--backend RV32.js] [--buffered] [--pie-loops scalar|pie] [--imports SDK.json] [--hot N]
-node picocalc-os/tools/typed-inspect.mjs diff BEFORE.jsonl AFTER.jsonl
+node compiler/typed/tools/typed-inspect.mjs diff BEFORE.jsonl AFTER.jsonl
 
 Offsets are bytes in the final Wasm module or RV32 image. A profile supplies
 {imageSha256, counts:[[pc,executions], ...]} for one execution of the native image.
@@ -108,7 +108,7 @@ function inspect(file,v) {
     const source=read(file), ctx=vm.createContext({});
     if (v["pie-loops"] && target==="wasm") throw Error("--pie-loops requires a native target");
     for(const name of ["typed-wasm","typed-async",...(v["pie-loops"]?["typed-pie-loops"]:[]),"typed-rv32"]) {
-        const path=name==="typed-rv32" && v.backend?v.backend:new URL("../compiler/"+name+".js",import.meta.url);
+        const path=name==="typed-rv32" && v.backend?v.backend:new URL("../"+name+".js",import.meta.url);
         vm.runInContext(read(path),ctx,{filename:String(path)});
     }
     const output=[];

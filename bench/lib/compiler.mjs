@@ -25,4 +25,4 @@ if (defaults) {
     });
 }
 for (const file of ["typed-wasm.js", "typed-async.js", "typed-rv32.js", "typed-world.js", "typed-pie-loops.js"])
-    await import(pathToFileURL(repoPath("picocalc-os/compiler", file)).href);
+    await import(pathToFileURL(repoPath("compiler/typed", file)).href);

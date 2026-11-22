@@ -153,10 +153,10 @@ test-apps:
 	$(NODE) tests/calc.test.mjs
 	$(NODE) tests/agenda.test.mjs
 	$(NODE) tests/sysapps.test.mjs
-	$(NODE) tests/typed-rv32.test.mjs
-	$(NODE) tests/typed-wasm-inspect.test.mjs
-	$(NODE) tests/typed-inspect.test.mjs
-	$(NODE) tests/typed-pie-loops.test.mjs
+	$(NODE) ../tests/compiler/typed-rv32.test.mjs
+	$(NODE) ../tests/compiler/typed-wasm-inspect.test.mjs
+	$(NODE) ../tests/compiler/typed-inspect.test.mjs
+	$(NODE) ../tests/compiler/typed-pie-loops.test.mjs
 
 # The wall clock through the host binary: clock.wall/set/zone, Date, -w and -z.
 test-clock: $(BIN)

@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import "../compiler/typed-wasm.js";
-import "../compiler/typed-async.js";
-import "../compiler/typed-rv32.js";
+import "../../compiler/typed/typed-wasm.js";
+import "../../compiler/typed/typed-async.js";
+import "../../compiler/typed/typed-rv32.js";
 
 function capture(name) {
     const events = [];

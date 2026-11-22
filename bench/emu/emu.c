@@ -177,7 +177,7 @@ static int format(char *out, size_t n, const char *f, uint32_t ap)
 	return (int)len;
 }
 
-/* ---- the calls the firmware's library makes (cji/tools/rv32/fw/hostcalls.S numbers them) ---- */
+/* ---- the calls the firmware's library makes (compiler/cji/tools/rv32/fw/hostcalls.S numbers them) ---- */
 static double dreg(int i) { uint64_t b = x[i] | (uint64_t)x[i + 1] << 32; double d; memcpy(&d, &b, 8); return d; }
 static void dret(double d) { uint64_t b; memcpy(&b, &d, 8); x[10] = (uint32_t)b; x[11] = (uint32_t)(b >> 32); }
 static float freg(int i) { float f; memcpy(&f, &x[i], 4); return f; }

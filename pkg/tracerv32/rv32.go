@@ -1,6 +1,6 @@
 // Package tracerv32 runs RV32 images of the Typed compiler's RV32 backend
-// (picocalc-os/compiler/typed-rv32.js) natively, with the semantics of the
-// reference interpreter picocalc-os/tools/rv32-interp.js.
+// (compiler/typed/typed-rv32.js) natively, with the semantics of the
+// reference interpreter bench/host/rv32-interp.js.
 //
 // The reference stays authoritative: this package implements its loop
 // statement by statement, including its subset (RV32IM without mulhsu, divu

@@ -34,7 +34,7 @@ slas-rv32: Makefile runtime/slas.c runtime/rv32.c runtime/rv32_obj.c runtime/rv3
 	$(CC) -std=gnu11 -O2 -g -Iruntime -c runtime/runtime.c -o $(RV32)/runtime-host.o
 	$(CC) -o $@ $(RV32)/slas.o $(RV32)/sljitLir.o $(RV32)/runtime-host.o -lm
 
-$(RV32)/rv32emu: ../bench/emu/emu.c
+$(RV32)/rv32emu: ../../bench/emu/emu.c
 	mkdir -p $(RV32)
 	$(CC) -std=gnu11 -O2 -Wall -o $@ $< -lm
 
@@ -59,7 +59,7 @@ $(RV32)/fw-test.elf: Makefile runtime/runtime.c runtime/runtime.h runtime/cji_el
 # speaks picocalc-os's sdk/nw_elf.h (tools/rv32/fw/nw_main.c, printing as tools/nw_fake.c does), and the
 # table of names a module may link to (tools/rv32/resolve-table.mjs), which the emulator's loader searches
 # as the board's resolve() would. picocalc-os's sdk headers come from its checkout (read only).
-PICOCALC ?= $(CURDIR)/../picocalc-os
+PICOCALC ?= $(CURDIR)/../../picocalc-os
 NWFLAGS := -I$(PICOCALC)/sdk -Itools
 NATIVE_ELF := $(PICOCALC)/port/esp32p4/optional/native_elf/native_elf_p4.c
 # a module's malloc and the rest are the kernel's charging allocator (as native_elf_p4.c maps them to m_malloc)

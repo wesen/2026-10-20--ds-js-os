@@ -6,7 +6,7 @@ be scripted and have its screen captured without the hardware.
 
 The [compiler research index](../ttmp/2026/11/19/PICOCALC-COMPILER-THESIS--cold-compilation-and-bounded-analyses-on-the-picocalc/reference/02-picocalc-compiler-research-index-and-open-directions.md) connects the native roadmap, language designs, and measured results for CJI, Wasm, and RV32.
 
-To inspect generated code from the repository root, run `node picocalc-os/tools/typed-inspect.mjs SOURCE --function NAME`. The [inspector guide](../ttmp/2026/11/21/PICOCALC-COMPILER-INSPECT--inspect-typed-wasm-and-rv32-emission/design-doc/01-experimental-design-and-implementation-guide.md) covers Wasm byte offsets, RV32 disassembly, and joining execution counts to a source line.
+To inspect generated code from the repository root, run `node compiler/typed/tools/typed-inspect.mjs SOURCE --function NAME`. The [inspector guide](../ttmp/2026/11/21/PICOCALC-COMPILER-INSPECT--inspect-typed-wasm-and-rv32-emission/design-doc/01-experimental-design-and-implementation-guide.md) covers Wasm byte offsets, RV32 disassembly, and joining execution counts to a source line.
 
 For the ray tracer, add `--pie-loops pie` to inspect inferred ESP32-P4 packed subtraction, or `--pie-loops scalar` for the matched scalar schedule. The [worked comparison](../ttmp/2026/11/21/PICOCALC-PIE-LOOPS--infer-and-lower-packed-loop-regions-in-unchanged-typed-programs/various/host/comparison.md) follows the same source through the frontend tape and both native schedules.
 

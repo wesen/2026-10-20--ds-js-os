@@ -36,7 +36,7 @@ func rv32VM(t *testing.T) *goja.Runtime {
 	if err := traceapi.InstallCompiler(vm, tracecompiler.New(repo)); err != nil {
 		t.Fatal(err)
 	}
-	reference, err := os.ReadFile(filepath.Join(root, "picocalc-os/tools/rv32-interp.js"))
+	reference, err := os.ReadFile(filepath.Join(root, "bench/host/rv32-interp.js"))
 	if err != nil {
 		t.Fatal(err)
 	}
