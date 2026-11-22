@@ -322,3 +322,104 @@ This step moved the three gates that every compiler change runs out of five tick
 ### Technical details
 
 - Toolchain: `/home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-gcc` and `bench/emu/build/rv32emu` (48,176 bytes).
+
+## Step 6: Phase B (PLAYABLE.json, profiles, the store) and the board half of Phase A
+
+This step gave the device state one record and the board one harness. `picocalc-os/PLAYABLE.json` names the build the PicoCalc is left on, and `~/.cache/picocalc/firmware/<sha>/` holds its files. `bench/board/device.py` replaces the importlib chain across five tickets. `port/esp32p4/build.sh PROFILE` replaces `build-smooth-chess.sh`, and every profile now builds reproducibly. The harness reproduced RAY-PARITY's board run 15 within run-to-run noise, then restored the playable image with every world healthy.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 4.
+
+**Assistant interpretation:** Phase B (design Section 5.3), then the board gate of Phase A (Sections 5.1 and 5.2).
+
+**Inferred user intent:** No more `/tmp` restore pointers and no more copied device code. One command restores the handheld.
+
+**Commits (code):**
+- `d338f4a`: PLAYABLE.json, profiles, store, device library, Makefile.
+- `e8ccbb1`: return cji's runtime.
+- `45649b7`: board harness and the revision-aware `compiler.at`.
+
+### What I did
+
+- **The device library and the store.** Wrote `bench/board/device.py`:
+  - `Console` (from SNAKE-INTEGRATION), `esp` and `hold` (NATIVE-PROMOTION), `settle` and `install` (RAY-PARITY 16/17);
+  - health with `peripherals="on"` or `"off-by-user"` (CANDELA-WORLD);
+  - `run_app`, the SIMD-LAB `02-run-board.py` flow.
+
+  `bench/board/playable.py` handles status, store, install and restore.
+- **Seeding the record.** Seeded `PLAYABLE.json` from the image already on the board, with `install --health-only --profile playable --commit a396d3b`. That image is 28d9a812…, the gallery build. Health passed with the peripherals on: all eight worlds and the I2C keyboard probe.
+- **Profiles.** `profiles/{playable,candela-world,offline,agent,agent-elf}.env` feed `build.sh`, which writes `picocalc-build.json` into the build directory.
+  - The agent profiles start from their tracked full `sdkconfig.agent*`, copied into the build directory, instead of writing into the source tree.
+  - `build-smooth-chess.sh` is removed. Its two mentions in CMake error messages now name `profiles/playable.env`.
+- **Reproducible builds.**
+  - `sdkconfig.reproducible` (`CONFIG_APP_REPRODUCIBLE_BUILD=y`) applies to every profile.
+  - The P4 `CMakeLists.txt` adds `-fmacro-prefix-map` and `-fdebug-prefix-map` for the repository root and the build directory. ESP-IDF maps only its own tree and the project directory, but the firmware compiles `nucleus/`, `third_party/` and generated bundles from outside both.
+- **The root Makefile.** Targets: `test-host`, `firmware PROFILE=`, `playable`, `install-playable`, `restore-playable`.
+- **The board harness.** `bench/board/{stage.mjs,build.sh,run.py,rows.py,score.js}` and `bench/board/app/`.
+  - `scripts/05-promote-board-harness.py` promoted the app: `bench.c`, `cold.c` and `layout.inc` from SHADOW-CODEGEN; the CMake project and `sdkconfig.defaults` from SIMD-LAB; `holdout.mjs` as `chess-holdout.mjs`.
+  - RAY-PARITY's two copy-time patches are now parameters. `cold_inputs.h` carries each mode's whole compile expression as data (`cells[]`), so `cold.c` has no fixed buffer. `"internalWorkLast"` in the study defines `INTERNAL_WORK_LAST`.
+- **The study file.** `bench/board/studies/ray-parity-run15-reuse-args.json` holds run 15's two modes, copied from `88-board-modes-reuse.json`, with pins for both ray images.
+
+### Why
+
+- **Restores from the store.** A board study must restore an image whose files exist. Each earlier ticket restored from a `/tmp` build tree named in a pointer file, and those trees disappear.
+- **One digest per commit.** Reproducible images make "the playable build of commit X" one digest, which a second machine can check.
+
+### What worked
+
+- **The playable build** at `e8ccbb1` took 11 min 16 s. It produced app `bab5c48afbf6051a8b4bbba0741e777203d8ea3f25987fef2056adeb2d106d2e`, partition table `72721dc3…` (unchanged), and no `/home/manuel` or `/tmp/picocalc` string in the image. The version is the fixed `picocalc-p4-smooth-chess-202611`, with an empty time and date.
+- **The probe.** `run.py --probe` held the firmware and verified the board's app slot and partition table against the store, then checked health: `probe ok: the board runs the recorded playable image 28d9a8124187 and is healthy (on)` (`various/02-probe`).
+- **Staging.** `stage.mjs` on the run 15 study reproduces run 15's images exactly: ray `8eaa4060…` (11,632 B) and `4323938e…` (11,544 B), Chess `e056eeb5…` twice. The app built in 3 min 28 s.
+- **The board run.** It took 4 min 36 s. `rows.py` counts matched exactly: pred 480, frame 648, chess 72, cold 24 each. `score.js` ran in the trace REPL (`various/05-board-run15-scores.json`):
+
+| | run 15 (RAY-PARITY Step 21) | this run |
+|---|---:|---:|
+| C frame | 7,733 µs | 7,730.5 µs |
+| control frame | 11,164.5 µs | 11,162.5 µs |
+| candidate frame | 10,986 µs | 10,996.5 µs |
+| paired saving | 1.59 %, 6/6 | 1.49 %, 6/6 |
+| Chess, mode 0 vs mode 1 | 0.12 %, 3/6 | 0.01 %, 3/6 |
+| ray compile | 2,025,030 → 2,024,388.5 µs | 2,017,128 → 2,018,578.5 µs |
+
+- All 12 scenes won 6/6 again.
+- The run restored `28d9a812…` from the store. Health passed with the peripherals on and nothing restarting after settle.
+
+### What didn't work
+
+- **The first playable build broke on Phase A's move.** It failed after 28 s:
+
+  ```
+  ninja: error: '/home/manuel/code/wesen/2026-10-20--ds-js-os/cji/tools/rv32/fw/libc.c', needed by 'cji/tool/compiler.elf.z', missing and no known rule to make it
+  ```
+
+  Step 5 had moved cji's freestanding C runtime to `bench/emu/fw/`, but the firmware's device-compiler tool links it (`port/esp32p4/compiler/build-tool.sh`), and the P4 CMake lists it. Step 5's reference check had searched only `cji/`. `scripts/04-return-cji-runtime.py` moved the files back, and `bench/emu/Makefile` now builds the replays' three objects from `cji/tools/rv32/fw/`. This differs from the design's Section 4.1 row "`cji/tools/rv32/` (emulator, firmware stubs) → `bench/emu/`": only `emu.c` moved.
+- **A wrong dirty flag.** The first `picocalc-build.json` said `"dirty": true`, because `build.sh` checked the tree after the 11-minute build, by which time I had edited Go files. It now records the commit and state before `idf.py` runs.
+- **A seed-script slip.** My first `build-smooth-chess.sh` removal script edited the README and then stopped at its assertion: two CMake messages still named the script. The script was rerun after fixing those.
+
+### What I learned
+
+- **Session API.** The trace REPL service has no `/v1/sessions` route. Sessions are opened with `trace-repl open --addr`.
+- **Scope of variables in ESP-IDF.** Variables set in the project `CMakeLists.txt` before `project()`, such as `CJI_ROOT`, are visible in `main/CMakeLists.txt`.
+
+### What was tricky to build
+
+- **Ordering in `--probe`.** It has to hold the firmware before `verify_flash`, as `run_app` does. Without the hold, esptool and a running firmware console share the port.
+
+### What warrants a second pair of eyes
+
+- **Unchecked reproducibility.** It is asserted from the prefix maps and the empty time and date fields. A second build of `e8ccbb1` from a separate checkout at another path is running to check it (Step 7).
+- **`PLAYABLE.json` still records `28d9a812…`.** The new `bab5c48a…` is stored but not installed. It goes on the device after Phase D's firmware move, as the design requires, together with whatever that move changes.
+
+### What should be done in the future
+
+- **Missing `bench` profile.** The design names one; no such configuration exists in the repository today. The board study app is its own ESP-IDF project (`bench/board/app`).
+
+### Code review instructions
+
+- `python3 bench/board/playable.py status`, then `python3 bench/board/run.py --probe DIR`.
+- `node bench/board/stage.mjs bench/board/studies/ray-parity-run15-reuse-args.json DIR` must print the four digests above.
+
+### Technical details
+
+- Evidence: `various/01-seed-playable`, `02-probe`, `03-board-run15-capture` (without `bench.log`, which `04` keeps gzipped), `04-board-run15` and `05-board-run15-scores.json`.

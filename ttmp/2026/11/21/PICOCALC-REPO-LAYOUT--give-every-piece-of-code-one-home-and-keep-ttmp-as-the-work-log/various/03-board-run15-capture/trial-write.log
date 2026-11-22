@@ -1,0 +1,60 @@
+esptool.py v4.10.0
+Serial port /dev/ttyACM0
+Connecting.....
+Chip is ESP32-P4 (revision v1.3)
+Features: High-Performance MCU
+Crystal is 40MHz
+MAC: e8:f6:0a:e0:ec:9f
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 921600
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00010000 to 0x00181fff...
+Compressed 1511808 bytes to 641783...
+Writing at 0x00010000... (2 %)
+Writing at 0x0001b293... (5 %)
+Writing at 0x00076849... (7 %)
+Writing at 0x00087a0c... (10 %)
+Writing at 0x0009652a... (12 %)
+Writing at 0x000a5085... (15 %)
+Writing at 0x000b154f... (17 %)
+Writing at 0x000b6eca... (20 %)
+Writing at 0x000bb9f4... (22 %)
+Writing at 0x000c2311... (25 %)
+Writing at 0x000c8490... (27 %)
+Writing at 0x000d193d... (30 %)
+Writing at 0x000d6f4a... (32 %)
+Writing at 0x000dd977... (35 %)
+Writing at 0x000e5751... (37 %)
+Writing at 0x000eb7d3... (40 %)
+Writing at 0x000f1977... (42 %)
+Writing at 0x000f728d... (45 %)
+Writing at 0x000fd003... (47 %)
+Writing at 0x00102dae... (50 %)
+Writing at 0x00108bda... (52 %)
+Writing at 0x0010e768... (55 %)
+Writing at 0x001150f2... (57 %)
+Writing at 0x0011cd5d... (60 %)
+Writing at 0x00122f0e... (62 %)
+Writing at 0x00128b95... (65 %)
+Writing at 0x0012e930... (67 %)
+Writing at 0x00134856... (70 %)
+Writing at 0x0013ab26... (72 %)
+Writing at 0x00140a97... (75 %)
+Writing at 0x00146767... (77 %)
+Writing at 0x0014c0a2... (80 %)
+Writing at 0x0015155e... (82 %)
+Writing at 0x00156e04... (85 %)
+Writing at 0x0015d273... (87 %)
+Writing at 0x00163a57... (90 %)
+Writing at 0x0016b816... (92 %)
+Writing at 0x0017284f... (95 %)
+Writing at 0x0017884a... (97 %)
+Writing at 0x0017ed17... (100 %)
+Wrote 1511808 bytes (641783 compressed) at 0x00010000 in 13.7 seconds (effective 879.7 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Staying in bootloader.
