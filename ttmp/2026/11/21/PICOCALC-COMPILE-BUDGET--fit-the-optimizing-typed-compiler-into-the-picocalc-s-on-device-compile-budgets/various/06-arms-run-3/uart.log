@@ -1,0 +1,727 @@
+load:0x4ff2abd0,len:0xd88
+load:0x4ff2cbd0,len:0x3310
+entry 0x4ff2abda
+I (25) boot: ESP-IDF v5.4.2 2nd stage bootloader
+I (26) boot: compile time Nov  1 2026 16:48:47
+I (26) boot: Multicore bootloader
+I (27) boot: chip revision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40170020 size=317924h (3242276) map
+I (638) esp_image: segment 1: paddr=0032794c vaddr=30100000 size=00068h (   104) load
+I (640) esp_image: segment 2: paddr=003279bc vaddr=4ff00000 size=0865ch ( 34396) load
+I (650) esp_image: segment 3: paddr=00330020 vaddr=40000020 size=1641d4h (1458644) map
+I (893) esp_image: segment 4: paddr=004941fc vaddr=4ff0865c size=0bb88h ( 48008) load
+I (904) esp_image: segment 5: paddr=0049fd8c vaddr=4ff14200 size=04ff4h ( 20468) load
+I (914) boot: Loaded app from partition at offset 0x10000
+I (915) boot: Disabling RNG early entropy source...
+I (925) hex_psram: vendor id    : 0x0d (AP)
+I (925) hex_psram: Latency      : 0x01 (Fixed)
+I (926) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (926) hex_psram: dev id       : 0x03 (generation 4)
+I (931) hex_psram: density      : 0x07 (256 Mbit)
+I (935) hex_psram: good-die     : 0x06 (Pass)
+I (939) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (944) hex_psram: BurstType    : 0x00 ( Wrap)
+I (948) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (953) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (957) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (962) hex_psram: DriveStrength: 0x00 (1/1)
+I (967) MSPI DQS: tuning success, best phase id is 0
+I (1139) MSPI DQS: tuning success, best delayline id is 17
+I (1139) esp_psram: Found 32MB PSRAM device
+I (1140) esp_psram: Speed: 200MHz
+I (1140) hex_psram: psram CS IO is dedicated
+I (1144) cpu_start: Multicore app
+I (2053) esp_psram: SPI SRAM memory test OK
+I (2063) cpu_start: Pro cpu start user code
+I (2063) cpu_start: cpu freq: 360000000 Hz
+I (2063) app_init: Application information:
+I (2063) app_init: Project name:     picocalc-os-p4
+I (2068) app_init: App version:      1
+I (2071) app_init: Compile time:     Nov 21 2026 00:02:22
+I (2076) app_init: ELF file SHA256:  9d5d7caa7...
+I (2081) app_init: ESP-IDF:          v5.4.2
+I (2085) efuse_init: Min chip rev:     v0.1
+I (2088) efuse_init: Max chip rev:     v1.99 
+I (2093) efuse_init: Chip rev:         v1.3
+I (2097) heap_init: Initializing. RAM available for dynamic allocation:
+I (2103) heap_init: At 4FF29730 len 00011890 (70 KiB): RAM
+I (2108) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (2113) heap_init: At 4FF50FA0 len 0004F060 (316 KiB): RAM
+I (2119) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (2124) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (2131) spi_flash: detected chip: generic
+W (2134) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (2144) spi_flash: flash io: dio
+I (2148) main_task: Started on CPU0
+I (2151) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (2159) main_task: Calling app_main()
+I (2162) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+heap: internal 405655 free (largest 319488), psram 33551748 free (largest 33030144)
+I (2221) fs: /files: 7900 KB, 7892 KB free (mounted in 21 ms)
+I (2223) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2224) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2419) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+I (2420) main_task: Returned from app_main()
+[   158.469] calibration on the real clock: the 100k loop took 112.9 ms (the model says 133), fib(20) 30.3 ms (the model says 29.1)
+candela native compiler functions=streamed
+candela compile source=candela/callback.typed status=ok us=562747 peak_js_bytes=772660 module_bytes=66816
+I (3145) ELF: ELF loader version: 2.0.0
+I (3147) ELF: elf->entry=0x48015ed8
+CANLOAD {"stage":2,"compileUs":564217,"relocateUs":3655,"installTotalUs":568137,"imageBytes":66816,"elfSegmentBytes":66092,"residentStructBytes":732,"sourceBytes":15942,"graphBytes":612,"psramMonitored":1,"psramPeakDeltaBytes":858548}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=608457 peak_js_bytes=829812 module_bytes=66364
+agenda boot source_start_us=745790
+files native compiler functions=streamed
+files compile source=bundle status=ok us=317156 peak_js_bytes=570512 module_bytes=24424
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2404208 peak_js_bytes=2541764 module_bytes=242124
+chess native compiler functions=streamed
+chess compile source=bundle status=ok us=1938387 peak_js_bytes=1989132 module_bytes=274892
+[  6140.743] booting 24 worlds from js/system.typed-agenda.json
+[  6153.215] booting 5 worlds from js/system.elf.json
+agenda stage before-cji-restore us=5408686
+agenda stage before-dispatch us=5409316
+quickjs prelude cache bytes=44957 build_us=52956
+agenda stage world-init us=5899941
+agenda stage world-init-done us=5906798
+[  6994.490] toplog: hello from the top level
+[  6998.180] nat-echo: TEST kind ok 
+[  6998.904] nat-echo: TEST provide ok 
+[  6999.379] nat-echo: TEST every ok 
+[  6999.884] nat-echo: TEST title ok 
+[  7000.446] nat-echo: TEST icon ok 
+[  7002.170] nat-echo: TEST about ok 
+[  7002.714] nat-echo: TEST icon-object err an icon is a JSON array of drawing operations, at most 1024 bytes
+[  7012.695] nat-echo: TEST key-upper err a shortcut key is one of a-z and 0-9
+[  7022.552] nat-echo: TEST init done
+E (9445) ELF: Can't find common path_open
+[  7025.426] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":7025.426,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+I (9479) bus: spi2: panel device at 40000000 Hz requested, 40000 kHz actual
+[  7092.567] nat-echo: TEST start self=nat-echo clock=running
+[  7094.051] nat-bench: BENCH loop n=1000 us=35 r=122468
+[  7094.810] nat-bench: BENCH loop n=4000 us=137 r=498743
+[  7096.066] nat-bench: BENCH loop n=16000 us=539 r=2028337
+E (9548) ELF: Can't find common path_open
+[  7128.807] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":7128.807,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+[  7187.528] nat-echo: TEST ticks 3 timer=0
+E (9608) i2c.master: I2C transaction unexpected nack detected
+E (9610) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (9612) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (9615) i2c.master: I2C transaction unexpected nack detected
+[  7198.614] keyboard: i2c: i2c0 0x1f: ESP_ERR_INVALID_STATE
+E (9623) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+agenda stage file-submitted us=6460030
+E (9633) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (9645) i2c.master: I2C transaction unexpected nack detected
+[  7227.712] power: i2c: i2c0 0x1f: ESP_ERR_INVALID_STATE
+E (9653) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+agenda stage file-returned us=6489842
+E (9664) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (9676) i2c.master: I2C transaction unexpected nack detected
+E (9677) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (9685) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (9696) i2c.master: I2C transaction unexpected nack detected
+E (9698) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (9705) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (9722) i2c.master: I2C transaction unexpected nack detected
+E (9723) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (9726) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+agenda stage settle us=6560200
+agenda response us=6570105 world_bytes=185535
+agenda frame turn_us=9914 world_bytes=185535
+agenda compositor kind=draw total_us=16838 segments=1 reply_wait_us=0 reply_wait_segments=0
+agenda compositor kind=worlds.status total_us=1968 segments=1 reply_wait_us=0 reply_wait_segments=0
+agenda compositor kind=other total_us=19196 segments=2 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=keyboard engine=2 first_us=5409841 total_us=10736 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=6458 reply_wait_segments=4
+agenda boot-world name=power engine=2 first_us=5420902 total_us=11176 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=2085 reply_wait_segments=1
+agenda boot-world name=display engine=2 first_us=5432407 total_us=9705 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=1910 reply_wait_segments=2
+agenda boot-world name=compositor engine=2 first_us=5442488 total_us=28313 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=agent engine=2 first_us=5471217 total_us=41637 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=127 reply_wait_segments=1
+agenda boot-world name=chat engine=0 first_us=5513242 total_us=97596 attempts=1 js_setup_us=7217 js_prelude_us=62211 js_source_us=25439 js_init_us=2577 reply_wait_us=23070 reply_wait_segments=4
+agenda boot-world name=launcher engine=0 first_us=5611292 total_us=35182 attempts=1 js_setup_us=6845 js_prelude_us=8323 js_source_us=17472 js_init_us=2398 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=files engine=2 first_us=5646907 total_us=2920 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=433 reply_wait_segments=1
+agenda boot-world name=editor engine=2 first_us=5650091 total_us=14253 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=calc engine=0 first_us=5664717 total_us=234674 attempts=1 js_setup_us=7000 js_prelude_us=8313 js_source_us=214855 js_init_us=4369 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=agenda engine=2 first_us=5899932 total_us=7692 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=settings engine=2 first_us=5908011 total_us=20661 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=logs engine=0 first_us=5929107 total_us=32531 attempts=1 js_setup_us=7174 js_prelude_us=8416 js_source_us=14184 js_init_us=2642 reply_wait_us=4669 reply_wait_segments=1
+agenda boot-world name=loader engine=0 first_us=5962071 total_us=39264 attempts=1 js_setup_us=6822 js_prelude_us=8281 js_source_us=21276 js_init_us=2753 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=sysmon engine=0 first_us=6001805 total_us=39758 attempts=1 js_setup_us=6740 js_prelude_us=8453 js_source_us=21665 js_init_us=2769 reply_wait_us=4187 reply_wait_segments=1
+agenda boot-world name=repl engine=0 first_us=6042008 total_us=27458 attempts=1 js_setup_us=6728 js_prelude_us=8394 js_source_us=9536 js_init_us=2693 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=sandbox engine=0 first_us=6069873 total_us=23528 attempts=1 js_setup_us=6694 js_prelude_us=8333 js_source_us=6258 js_init_us=2134 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=snake engine=2 first_us=6093814 total_us=13515 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=2610 reply_wait_segments=2
+agenda boot-world name=faults engine=0 first_us=6107732 total_us=30430 attempts=1 js_setup_us=7210 js_prelude_us=8485 js_source_us=12071 js_init_us=2522 reply_wait_us=7613 reply_wait_segments=2
+agenda boot-world name=flaky engine=2 first_us=6138619 total_us=8403 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=raytrace engine=0 first_us=6147405 total_us=26048 attempts=1 js_setup_us=7040 js_prelude_us=8361 js_source_us=7942 js_init_us=2591 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=keys engine=0 first_us=6173879 total_us=26854 attempts=1 js_setup_us=6877 js_prelude_us=8320 js_source_us=9273 js_init_us=2244 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=about engine=0 first_us=6201215 total_us=25614 attempts=1 js_setup_us=6980 js_prelude_us=8434 js_source_us=7750 js_init_us=2340 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=chess engine=2 first_us=6227332 total_us=15299 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=3568 reply_wait_segments=1
+agenda boot-world name=toplog engine=2 first_us=6243034 total_us=8181 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=nat-echo engine=2 first_us=6251480 total_us=25739 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=nat-bench engine=2 first_us=6277425 total_us=271 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=nat-import engine=2 first_us=6277742 total_us=4856 attempts=2 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=nat-dial engine=2 first_us=6308252 total_us=577 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=1383 reply_wait_segments=1
+E (10240) ELF: Can't find common path_open
+[  7820.915] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":7820.915,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":3,"mem_kb":0,"limit_kb":64}
+E (10270) i2c.master: I2C transaction unexpected nack detected
+E (10271) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10278) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10294) i2c.master: I2C transaction unexpected nack detected
+E (10295) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10299) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10316) i2c.master: I2C transaction unexpected nack detected
+E (10317) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10319) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10340) i2c.master: I2C transaction unexpected nack detected
+E (10341) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10343) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10352) i2c.master: I2C transaction unexpected nack detected
+E (10353) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10359) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10377) i2c.master: I2C transaction unexpected nack detected
+E (10379) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10381) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10394) i2c.master: I2C transaction unexpected nack detected
+E (10396) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10398) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10413) i2c.master: I2C transaction unexpected nack detected
+E (10414) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10419) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10459) i2c.master: I2C transaction unexpected nack detected
+E (10460) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10462) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10470) i2c.master: I2C transaction unexpected nack detected
+E (10472) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10480) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10498) i2c.master: I2C transaction unexpected nack detected
+E (10500) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10501) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10517) i2c.master: I2C transaction unexpected nack detected
+E (10518) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10520) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10532) i2c.master: I2C transaction unexpected nack detected
+E (10534) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10540) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10553) i2c.master: I2C transaction unexpected nack detected
+E (10555) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10560) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10608) i2c.master: I2C transaction unexpected nack detected
+E (10610) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10611) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10620) i2c.master: I2C transaction unexpected nack detected
+E (10622) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10631) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10640) i2c.master: I2C transaction unexpected nack detected
+E (10641) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10643) ELF: Can't find common path_open
+[  8227.092] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+E (10646) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+#OCT1 {"ev":"fault","t":8227.092,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+E (10697) i2c.master: I2C transaction unexpected nack detected
+E (10698) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10700) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10724) i2c.master: I2C transaction unexpected nack detected
+E (10726) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10728) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10779) i2c.master: I2C transaction unexpected nack detected
+E (10782) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10786) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10796) i2c.master: I2C transaction unexpected nack detected
+E (10798) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10800) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10823) i2c.master: I2C transaction unexpected nack detected
+E (10826) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10828) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10846) i2c.master: I2C transaction unexpected nack detected
+E (10848) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10850) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10901) i2c.master: I2C transaction unexpected nack detected
+E (10904) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10907) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10936) i2c.master: I2C transaction unexpected nack detected
+E (10938) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10940) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10951) i2c.master: I2C transaction unexpected nack detected
+E (10952) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10957) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10971) i2c.master: I2C transaction unexpected nack detected
+E (10972) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10977) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (10992) i2c.master: I2C transaction unexpected nack detected
+E (10993) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (10997) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11012) i2c.master: I2C transaction unexpected nack detected
+E (11013) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11017) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11032) i2c.master: I2C transaction unexpected nack detected
+E (11033) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11038) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11051) i2c.master: I2C transaction unexpected nack detected
+E (11052) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11058) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11071) i2c.master: I2C transaction unexpected nack detected
+E (11072) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11078) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11091) i2c.master: I2C transaction unexpected nack detected
+E (11092) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11098) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11111) i2c.master: I2C transaction unexpected nack detected
+E (11112) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11118) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11131) i2c.master: I2C transaction unexpected nack detected
+E (11132) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11139) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11150) i2c.master: I2C transaction unexpected nack detected
+E (11151) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11158) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11171) i2c.master: I2C transaction unexpected nack detected
+E (11172) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11178) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11191) i2c.master: I2C transaction unexpected nack detected
+E (11193) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11199) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11210) i2c.master: I2C transaction unexpected nack detected
+E (11212) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11219) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11231) i2c.master: I2C transaction unexpected nack detected
+E (11232) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11239) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11251) i2c.master: I2C transaction unexpected nack detected
+E (11252) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11259) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11271) i2c.master: I2C transaction unexpected nack detected
+E (11272) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11279) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11291) i2c.master: I2C transaction unexpected nack detected
+E (11292) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11300) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+mobile-painter native compiler functions=streamed
+E (11311) i2c.master: I2C transaction unexpected nack detected
+E (11313) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11321) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11335) i2c.master: I2C transaction unexpected nack detected
+E (11336) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11341) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11356) i2c.master: I2C transaction unexpected nack detected
+E (11357) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11361) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11376) i2c.master: I2C transaction unexpected nack detected
+E (11377) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11382) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11396) i2c.master: I2C transaction unexpected nack detected
+E (11398) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11402) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11417) i2c.master: I2C transaction unexpected nack detected
+E (11418) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11423) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11437) i2c.master: I2C transaction unexpected nack detected
+E (11439) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11443) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11449) ELF: Can't find common path_open
+[  9033.747] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":9033.747,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+[  9033.747] nat-import crashed 5 times in ten seconds; it stays stopped
+E (11489) i2c.master: I2C transaction unexpected nack detected
+E (11495) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11497) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11527) i2c.master: I2C transaction unexpected nack detected
+E (11530) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11534) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11542) i2c.master: I2C transaction unexpected nack detected
+E (11544) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11549) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11555) i2c.master: I2C transaction unexpected nack detected
+E (11559) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11569) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11578) i2c.master: I2C transaction unexpected nack detected
+E (11580) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11589) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11595) i2c.master: I2C transaction unexpected nack detected
+E (11599) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11609) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11616) i2c.master: I2C transaction unexpected nack detected
+E (11620) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11630) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11637) i2c.master: I2C transaction unexpected nack detected
+E (11640) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11650) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11656) i2c.master: I2C transaction unexpected nack detected
+E (11661) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11671) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11677) i2c.master: I2C transaction unexpected nack detected
+E (11681) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11682) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11696) i2c.master: I2C transaction unexpected nack detected
+E (11701) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11703) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11718) i2c.master: I2C transaction unexpected nack detected
+E (11722) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11723) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11737) i2c.master: I2C transaction unexpected nack detected
+E (11742) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11743) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11757) i2c.master: I2C transaction unexpected nack detected
+E (11763) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11764) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11778) i2c.master: I2C transaction unexpected nack detected
+E (11783) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11784) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11798) i2c.master: I2C transaction unexpected nack detected
+E (11804) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11805) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11820) i2c.master: I2C transaction unexpected nack detected
+E (11824) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11826) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11840) i2c.master: I2C transaction unexpected nack detected
+E (11845) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11846) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11861) i2c.master: I2C transaction unexpected nack detected
+E (11862) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11866) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11881) i2c.master: I2C transaction unexpected nack detected
+E (11882) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11886) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11901) i2c.master: I2C transaction unexpected nack detected
+E (11903) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11907) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11921) i2c.master: I2C transaction unexpected nack detected
+E (11922) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11927) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11942) i2c.master: I2C transaction unexpected nack detected
+E (11943) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11948) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11963) i2c.master: I2C transaction unexpected nack detected
+E (11964) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11968) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (11982) i2c.master: I2C transaction unexpected nack detected
+E (11983) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (11988) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12004) i2c.master: I2C transaction unexpected nack detected
+E (12005) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12009) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12024) i2c.master: I2C transaction unexpected nack detected
+E (12025) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12029) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12045) i2c.master: I2C transaction unexpected nack detected
+E (12046) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12050) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12065) i2c.master: I2C transaction unexpected nack detected
+E (12066) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12070) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12085) i2c.master: I2C transaction unexpected nack detected
+E (12086) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12091) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+mobile-painter compile source=screen-message status=ok us=1473723 peak_js_bytes=743416 module_bytes=33840
+E (12106) i2c.master: I2C transaction unexpected nack detected
+E (12111) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12121) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12126) i2c.master: I2C transaction unexpected nack detected
+E (12132) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12142) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12147) i2c.master: I2C transaction unexpected nack detected
+E (12152) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12162) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12165) i2c.master: I2C transaction unexpected nack detected
+E (12173) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12182) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12187) i2c.master: I2C transaction unexpected nack detected
+E (12193) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12203) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12206) i2c.master: I2C transaction unexpected nack detected
+E (12214) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12223) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12228) i2c.master: I2C transaction unexpected nack detected
+E (12234) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12235) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12248) i2c.master: I2C transaction unexpected nack detected
+E (12254) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12255) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12267) i2c.master: I2C transaction unexpected nack detected
+E (12275) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12276) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12287) i2c.master: I2C transaction unexpected nack detected
+E (12295) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12296) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12308) i2c.master: I2C transaction unexpected nack detected
+E (12316) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12316) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12328) i2c.master: I2C transaction unexpected nack detected
+E (12336) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12337) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12349) i2c.master: I2C transaction unexpected nack detected
+E (12357) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12357) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12374) i2c.master: I2C transaction unexpected nack detected
+E (12377) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12378) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12391) i2c.master: I2C transaction unexpected nack detected
+E (12398) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12398) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12412) i2c.master: I2C transaction unexpected nack detected
+E (12412) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12419) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12431) i2c.master: I2C transaction unexpected nack detected
+E (12431) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12439) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12451) i2c.master: I2C transaction unexpected nack detected
+E (12452) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12460) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12472) i2c.master: I2C transaction unexpected nack detected
+E (12473) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12480) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12493) i2c.master: I2C transaction unexpected nack detected
+E (12494) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12500) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12512) i2c.master: I2C transaction unexpected nack detected
+E (12513) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12521) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12533) i2c.master: I2C transaction unexpected nack detected
+E (12533) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12541) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12553) i2c.master: I2C transaction unexpected nack detected
+E (12554) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12562) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12574) i2c.master: I2C transaction unexpected nack detected
+E (12574) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12582) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12596) i2c.master: I2C transaction unexpected nack detected
+E (12596) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12603) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12615) i2c.master: I2C transaction unexpected nack detected
+E (12615) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12623) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12637) i2c.master: I2C transaction unexpected nack detected
+E (12638) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12644) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12656) i2c.master: I2C transaction unexpected nack detected
+E (12656) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12664) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12668) i2c.master: I2C transaction unexpected nack detected
+E (12675) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12684) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12690) i2c.master: I2C transaction unexpected nack detected
+E (12695) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12705) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12708) i2c.master: I2C transaction unexpected nack detected
+E (12716) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12725) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12731) i2c.master: I2C transaction unexpected nack detected
+E (12736) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12746) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12749) i2c.master: I2C transaction unexpected nack detected
+E (12756) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12766) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12769) i2c.master: I2C transaction unexpected nack detected
+E (12777) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12787) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12789) i2c.master: I2C transaction unexpected nack detected
+E (12797) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12807) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12810) i2c.master: I2C transaction unexpected nack detected
+E (12818) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12819) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12853) i2c.master: I2C transaction unexpected nack detected
+E (12856) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12858) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12888) i2c.master: I2C transaction unexpected nack detected
+E (12890) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12892) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12898) i2c.master: I2C transaction unexpected nack detected
+E (12899) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12905) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12918) i2c.master: I2C transaction unexpected nack detected
+E (12918) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12926) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12937) i2c.master: I2C transaction unexpected nack detected
+E (12938) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12946) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12958) i2c.master: I2C transaction unexpected nack detected
+E (12959) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12967) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12978) i2c.master: I2C transaction unexpected nack detected
+E (12979) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (12987) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (12999) i2c.master: I2C transaction unexpected nack detected
+E (13000) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (13007) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (13021) i2c.master: I2C transaction unexpected nack detected
+E (13022) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+unknown command ÿ (try help)
+#OK ÿ
+E (13028) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":129,"msgs":130,"cpu_ms":318.508,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":1,"msgs":1,"cpu_ms":24.196,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":8,"msgs":8,"cpu_ms":73.801,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"idle","turns":47,"msgs":47,"cpu_ms":532.720,"mem_kb":425.1,"limit_kb":768,"mbox":0,"mbox_peak":23,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":33,"msgs":33,"cpu_ms":72.411,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":148.055,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":3,"msgs":3,"cpu_ms":95.459,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":4.373,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.721,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.128,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":1,"msgs":1,"cpu_ms":26.591,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":4,"msgs":4,"cpu_ms":37.640,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":7,"msgs":7,"cpu_ms":63.485,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":4,"msgs":4,"cpu_ms":79.954,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":7,"msgs":7,"cpu_ms":74.998,"mem_kb":217.8,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.458,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.528,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":26,"msgs":26,"cpu_ms":64.465,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":55.300,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.516,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.048,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":3,"msgs":3,"cpu_ms":37.445,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":3,"msgs":3,"cpu_ms":33.067,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":18.867,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.239,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":28.757,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":3.015,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":19.901,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":4,"msgs":4,"cpu_ms":5.297,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+E (13738) i2c.master: I2C transaction unexpected nack detected
+E (13739) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (13745) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (13757) i2c.master: I2C transaction unexpected nack detected
+E (13759) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (13766) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":0,"rejects":0,"compile_us":1478859,"relocate_us":1384,"native_us":2742,"raster_us":0,"image_bytes":33840}
+#OK painter
+E (13777) i2c.master: I2C transaction unexpected nack detected
+E (13796) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (13806) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (13810) i2c.master: I2C transaction unexpected nack detected
+E (13817) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":132,"msgs":133,"cpu_ms":325.600,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":2,"msgs":2,"cpu_ms":25.344,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":8,"msgs":8,"cpu_ms":73.801,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"idle","turns":49,"msgs":49,"cpu_ms":543.163,"mem_kb":425.1,"limit_kb":768,"mbox":0,"mbox_peak":23,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":35,"msgs":35,"cpu_ms":72.784,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":148.055,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":3,"msgs":3,"cpu_ms":95.459,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":4.373,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.721,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.128,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":1,"msgs":1,"cpu_ms":26.591,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":5,"msgs":5,"cpu_ms":41.003,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":8,"msgs":8,"cpu_ms":68.068,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":5,"msgs":5,"cpu_ms":81.710,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":8,"msgs":8,"cpu_ms":78.419,"mem_kb":217.8,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.458,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.528,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":28,"msgs":28,"cpu_ms":66.596,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":55.300,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.516,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.048,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":4,"msgs":4,"cpu_ms":38.906,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":4,"msgs":4,"cpu_ms":33.531,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":18.867,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.239,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":28.757,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":3.015,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":19.901,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":5,"msgs":5,"cpu_ms":6.751,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+E (13826) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+#OK worlds
+E (14528) i2c.master: I2C transaction unexpected nack detected
+E (14534) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14536) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+t = 12125.7 ms, lane busy 2228.0 ms (18.4%), 334 turns, 32 published, 61 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   idle           134    329.22     67.3    320    0  
+  power       driver   idle             2     25.34     77.2    320    0  
+  display     driver   idle             8     73.80     73.8    320    0  
+  compositor  service  idle            50    543.36    425.1    768    0  
+  agent       service  idle            37     73.39    771.0   1536    0  
+  chat        app      idle             8    148.06    238.8    768    0  
+  launcher    app      idle             3     95.46    264.7    384    0  
+  files       app      idle             1      4.37     68.2    384    0  
+  editor      app      idle             1     14.72    711.8    768    0  
+  calc        app      idle             1    241.13    568.9   1024    0  
+  agenda      app      idle             1     26.59    181.2    384    0  
+  settings    app      idle             6     44.17    190.1    384    0  
+  logs        app      idle             9     72.89    214.3    384    0  
+  loader      app      idle             6     83.42    230.2    384    0  
+  sysmon      app      idle             9     81.85    217.8    512    0  
+  repl        app      idle             0     27.46    209.0    384    0  
+  sandbox     service  idle             0     23.53    206.1    512    0  
+  snake       app      idle            29     68.02     98.3    320    0  
+  faults      app      idle             5     55.30    216.0    384    0  
+  flaky       service  idle             1      8.52     48.3    320    0  
+  raytrace    app      idle             0     26.05    207.6    320    0  
+  keys        app      idle             5     40.55    208.0    320    0  
+  about       app      idle             5     33.93    208.2    320    0  
+  chess       app      idle             1     18.87    743.8    768    0  
+  toplog      service  idle             1      8.24     41.3    320    0  
+  nat-echo    service  idle             4     28.76     28.2     64    0  
+  nat-bench   service  idle             1      3.02      2.7     64    0  
+  nat-import  world    stopped          0     19.90      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle             6      8.08     14.3     64    0  
+  bus i2c0  busy  2863.94 ms, 136 transfers, 547 bytes, 136 errors
+  bus spi2  busy   123.84 ms, 66 transfers, 360229 bytes, 0 errors
+#OK stats
+E (14771) i2c.master: I2C transaction unexpected nack detected
+E (14779) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14780) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14797) i2c.master: I2C transaction unexpected nack detected
+E (14800) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14800) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14812) i2c.master: I2C transaction unexpected nack detected
+E (14820) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14822) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14836) i2c.master: I2C transaction unexpected nack detected
+E (14840) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14841) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14853) i2c.master: I2C transaction unexpected nack detected
+E (14861) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14862) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14873) i2c.master: I2C transaction unexpected nack detected
+E (14881) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14882) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14895) i2c.master: I2C transaction unexpected nack detected
+E (14895) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14902) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14914) i2c.master: I2C transaction unexpected nack detected
+E (14915) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14923) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14935) i2c.master: I2C transaction unexpected nack detected
+E (14936) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14943) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14956) i2c.master: I2C transaction unexpected nack detected
+E (14956) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14964) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14976) i2c.master: I2C transaction unexpected nack detected
+E (14976) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (14984) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (14998) i2c.master: I2C transaction unexpected nack detected
+E (14998) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15005) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15017) i2c.master: I2C transaction unexpected nack detected
+E (15017) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15025) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15037) i2c.master: I2C transaction unexpected nack detected
+E (15038) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15046) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15057) i2c.master: I2C transaction unexpected nack detected
+E (15058) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15066) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15078) i2c.master: I2C transaction unexpected nack detected
+E (15079) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15087) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15103) i2c.master: I2C transaction unexpected nack detected
+E (15104) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15107) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15120) i2c.master: I2C transaction unexpected nack detected
+E (15120) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15127) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15142) i2c.master: I2C transaction unexpected nack detected
+E (15143) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15148) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15151) i2c.master: I2C transaction unexpected nack detected
+E (15158) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15168) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15176) i2c.master: I2C transaction unexpected nack detected
+E (15179) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15189) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15192) i2c.master: I2C transaction unexpected nack detected
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":155,"msgs":156,"cpu_ms":356.105,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":2,"msgs":2,"cpu_ms":25.344,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":8,"msgs":8,"cpu_ms":73.801,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"idle","turns":53,"msgs":53,"cpu_ms":555.104,"mem_kb":425.1,"limit_kb":768,"mbox":0,"mbox_peak":23,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":42,"msgs":42,"cpu_ms":74.189,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":148.055,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":4,"msgs":4,"cpu_ms":107.602,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":4.373,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.721,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.128,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":1,"msgs":1,"cpu_ms":26.591,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":7,"msgs":7,"cpu_ms":47.883,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":11,"msgs":11,"cpu_ms":80.887,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":7,"msgs":7,"cpu_ms":86.841,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":10,"msgs":10,"cpu_ms":85.852,"mem_kb":217.8,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.458,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.528,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":33,"msgs":33,"cpu_ms":73.768,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":55.300,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.516,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.048,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":5,"msgs":5,"cpu_ms":40.550,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":5,"msgs":5,"cpu_ms":33.927,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":18.867,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.239,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":28.757,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":3.015,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":19.901,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":6,"msgs":6,"cpu_ms":8.077,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+E (15199) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (15906) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (15913) i2c.master: I2C transaction unexpected nack detected
+t = 13493.5 ms, lane busy 2322.8 ms (17.2%), 381 turns, 33 published, 61 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+E (15916) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+  keyboard    driver   waiting        156    359.03     67.3    320    0  
+  power       driver   idle             2     25.34     77.2    320    0  
+E (15937) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+  display     driver   idle             8     73.80     73.8    320    0  
+  compositor  service  idle            54    555.37    425.1    768    0  
+  agent       service  idle            43     75.20    771.0   1536    0  
+  chat        app      idle             8    148.06    238.8    768    0  
+  launcher    app      idle             4    107.60    264.7    384    0  
+  files       app      idle             1      4.37     68.2    384    0  
+  editor      app      idle             1     14.72    711.8    768    0  
+  calc        app      idle             1    241.13    568.9   1024    0  
+  agenda      app      idle             1     26.59    181.2    384    0  
+  settings    app      idle             7     47.88    190.1    384    0  
+  logs        app      idle            11     80.89    214.3    384    0  
+  loader      app      idle             7     86.84    230.2    384    0  
+  sysmon      app      idle            11     90.59    217.8    512    0  
+  repl        app      idle             0     27.46    209.0    384    0  
+  sandbox     service  idle             0     23.53    206.1    512    0  
+  snake       app      idle            34     76.03     98.3    320    0  
+  faults      app      idle             5     55.30    216.0    384    0  
+  flaky       service  idle             1      8.52     48.3    320    0  
+  raytrace    app      idle             0     26.05    207.6    320    0  
+  keys        app      idle             6     44.59    208.0    320    0  
+  about       app      idle             6     35.89    208.2    320    0  
+  chess       app      idle             1     18.87    743.8    768    0  
+  toplog      service  idle             1      8.24     41.3    320    0  
+  nat-echo    service  idle             4     28.76     28.2     64    0  
+  nat-bench   service  idle             1      3.02      2.7     64    0  
+  nat-import  world    stopped          0     19.90      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle             7      9.25     14.3     64    0  
+  bus i2c0  busy  3966.24 ms, 158 transfers, 635 bytes, 158 errors
+  bus spi2  busy   123.84 ms, 66 transfers, 360229 bytes, 0 errors
+#OK stats

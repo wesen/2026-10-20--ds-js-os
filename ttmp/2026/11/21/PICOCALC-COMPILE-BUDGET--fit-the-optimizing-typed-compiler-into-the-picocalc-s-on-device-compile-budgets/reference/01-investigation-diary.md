@@ -158,3 +158,39 @@ The times are about 0.03 s higher than run 1's. `typed-rv32.js` gained the facts
   - Editor: `interactive` (3.40 s; step7 would take 5.10 s).
   - Chess: `default` (4.34 s of 4.50 s, the thinnest margin).
 - **Evaluation is the next lever.** It costs the same under every policy, and every boot repeats it four times. Caching each compiler source as QuickJS bytecode after its first evaluation would remove most of it from the later compiles of a boot.
+
+## Step 4: A bytecode cache removes most of the evaluation cost; the keyboard bus then stops answering
+
+`eb70b4e` caches each compiler source as QuickJS bytecode. The first runtime to evaluate a source compiles it with `JS_EVAL_FLAG_COMPILE_ONLY` and keeps `JS_WriteObject`'s output in PSRAM, outside every compiler heap. Later runtimes call `JS_ReadObject` and `JS_EvalFunction` instead of parsing. Run 3 measured it: every module digest equals run 2's, and evaluation fell from 0.41–0.53 s to 0.05–0.06 s for every compile after a source's first. The run then failed its final health check. Every I2C transfer to the keyboard controller errors, and it keeps doing so across ESP32 resets after the verified playable app is back on flash.
+
+### What I did
+
+- Implemented the cache in `typed_p4.c`: a fixed table of 8 entries filled under a mutex and never freed, with a fallback to parsing if a read fails. Rebuilt the arms image incrementally. Its receipt (`various/06-arms-run-3-receipt.json`) says `36446bc`, dirty: the tree held exactly the cache change, committed seconds later as `eb70b4e`.
+- Ran `02-run-arms-firmware.py --boots 1 --seconds 200` (`various/06-arms-run-3/`).
+- After the failed health check, probed the board without flashing (SIMD-LAB `02-run-board.py --probe`; copy in `various/07-probe-after-run-3/`). Same failure.
+
+### What worked
+
+| World | step6, run 2 → run 3 | step13, run 2 → run 3 | evaluation, run 2 → run 3 |
+|---|---:|---:|---:|
+| Files | 0.55 → 0.18 s | 0.77 → 0.40 s | 0.41 → 0.05 |
+| Agenda | 1.01 → 0.65 | 2.75 → 2.38 | 0.41 → 0.05 (the first compile of the boot: 0.49) |
+| Editor | 3.40 → 2.92 | 7.89 → 7.39 | 0.53 → 0.06 (first: 0.20, for `async.js` and `world.js`) |
+| Chess | 1.98 → 1.51 | 4.34 → 3.86 | 0.53 → 0.06 |
+
+With the cache, each world's own compile is: Editor under `interactive` 2.91 s, Chess under `default` 3.86 s. Agenda is the boot's first compile, so it still parses: about 1.1 s under `interactive`.
+
+### What didn't work
+
+- **The final health check**, in `board_common.health` → `input_ready`:
+
+  ```text
+  ValueError: physical keyboard I2C0 did not qualify: {'busyMs': 2863.94, 'transfers': 136, 'bytes': 547, 'errors': 136} -> {'busyMs': 3966.24, 'transfers': 158, 'bytes': 635, 'errors': 158}
+  ```
+
+  `restore-verify.log` confirms that the app slot and the partition table match `/tmp/picocalc-scalar-breakdown-verified/build` (`e7b771aa…`). The probe a few minutes later showed 3,090 transfers and 3,090 errors.
+- Every earlier restore tonight passed this check: runs 1 and 2, and board run 10. The keyboard's microcontroller is not reset by an ESP32 reset, and it is either hung or unpowered, for example a drained battery while the ESP32-P4 runs on USB. Either way someone has to power-cycle the device. Device work stops until then.
+
+### What I learned
+
+- Agenda's step7 arm now takes 1.34 s with the cache, just over its 1.28 s target. A cache kept in flash across boots would also remove Agenda's first-compile parse.

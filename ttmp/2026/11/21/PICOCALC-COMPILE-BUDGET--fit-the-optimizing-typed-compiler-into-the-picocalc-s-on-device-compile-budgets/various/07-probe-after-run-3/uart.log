@@ -1,0 +1,2093 @@
+ transaction unexpected nack detected
+E (16195) i2c.master: s_i failed
+E (61668) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61679) i2c.master: I2C transaction unexpected nack detected
+E (61687) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61688) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61700) i2c.master: I2C transaction unexpected nack detected
+E (61708) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61708) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61723) i2c.master: I2C transaction unexpected nack detected
+E (61724) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61729) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61741) i2c.master: I2C transaction unexpected nack detected
+E (61741) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61749) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61763) i2c.master: I2C transaction unexpected nack detected
+E (61763) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61770) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61782) i2c.master: I2C transaction unexpected nack detected
+E (61783) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61790) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61802) i2c.master: I2C transaction unexpected nack detected
+E (61803) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61811) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61822) i2c.master: I2C transaction unexpected nack detected
+E (61823) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61831) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61843) i2c.master: I2C transaction unexpected nack detected
+E (61843) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61851) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61864) i2c.master: I2C transaction unexpected nack detected
+E (61864) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61872) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61884) i2c.master: I2C transaction unexpected nack detected
+E (61885) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61892) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61904) i2c.master: I2C transaction unexpected nack detected
+E (61905) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61913) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61925) i2c.master: I2C transaction unexpected nack detected
+E (61925) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61933) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61946) i2c.master: I2C transaction unexpected nack detected
+E (61946) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61954) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61968) i2c.master: I2C transaction unexpected nack detected
+E (61969) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61974) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61986) i2c.master: I2C transaction unexpected nack detected
+E (61987) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (61995) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (61997) i2c.master: I2C transaction unexpected nack detected
+E (62005) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62015) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62018) i2c.master: I2C transaction unexpected nack detected
+E (62026) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62035) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62038) i2c.master: I2C transaction unexpected nack detected
+E (62046) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62056) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62059) i2c.master: I2C transaction unexpected nack detected
+E (62066) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62076) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62080) i2c.master: I2C transaction unexpected nack detected
+E (62087) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62097) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62103) i2c.master: I2C transaction unexpected nack detected
+E (62107) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62117) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62120) i2c.master: I2C transaction unexpected nack detected
+E (62128) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62138) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62143) i2c.master: I2C transaction unexpected nack detected
+E (62148) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62149) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62161) i2c.master: I2C transaction unexpected nack detected
+E (62169) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62170) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62184) i2c.master: I2C transaction unexpected nack detected
+E (62189) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62190) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62203) i2c.master: I2C transaction unexpected nack detected
+E (62210) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62211) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62225) i2c.master: I2C transaction unexpected nack detected
+E (62230) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62231) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62243) i2c.master: I2C transaction unexpected nack detected
+E (62251) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62251) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62263) i2c.master: I2C transaction unexpected nack detected
+E (62271) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62272) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62284) i2c.master: I2C transaction unexpected nack detected
+E (62291) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62292) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62304) i2c.master: I2C transaction unexpected nack detected
+E (62312) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62313) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62324) i2c.master: I2C transaction unexpected nack detected
+E (62325) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62333) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62345) i2c.master: I2C transaction unexpected nack detected
+E (62345) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62353) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62365) i2c.master: I2C transaction unexpected nack detected
+E (62366) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62374) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62387) i2c.master: I2C transaction unexpected nack detected
+E (62388) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62395) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62409) i2c.master: I2C transaction unexpected nack detected
+E (62410) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62415) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62428) i2c.master: I2C transaction unexpected nack detected
+E (62429) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62435) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62448) i2c.master: I2C transaction unexpected nack detected
+E (62449) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62456) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62468) i2c.master: I2C transaction unexpected nack detected
+E (62469) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62476) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62490) i2c.master: I2C transaction unexpected nack detected
+E (62491) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62497) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62509) i2c.master: I2C transaction unexpected nack detected
+E (62510) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62517) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62530) i2c.master: I2C transaction unexpected nack detected
+E (62531) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62538) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62550) i2c.master: I2C transaction unexpected nack detected
+E (62550) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62558) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62570) i2c.master: I2C transaction unexpected nack detected
+E (62571) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62578) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62588) i2c.master: I2C transaction unexpected nack detected
+E (62589) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62599) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62609) i2c.master: I2C transaction unexpected nack detected
+E (62610) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62619) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62630) i2c.master: I2C transaction unexpected nack detected
+E (62631) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62640) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62650) i2c.master: I2C transaction unexpected nack detected
+E (62651) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62660) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62669) i2c.master: I2C transaction unexpected nack detected
+E (62671) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62680) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62689) i2c.master: I2C transaction unexpected nack detected
+E (62691) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62701) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62708) i2c.master: I2C transaction unexpected nack detected
+E (62712) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62721) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62729) i2c.master: I2C transaction unexpected nack detected
+E (62732) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62742) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62749) i2c.master: I2C transaction unexpected nack detected
+E (62752) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62753) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62768) i2c.master: I2C transaction unexpected nack detected
+E (62773) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62774) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62788) i2c.master: I2C transaction unexpected nack detected
+E (62793) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62794) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62809) i2c.master: I2C transaction unexpected nack detected
+E (62814) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62815) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62830) i2c.master: I2C transaction unexpected nack detected
+E (62834) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62835) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62849) i2c.master: I2C transaction unexpected nack detected
+E (62855) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62855) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62868) i2c.master: I2C transaction unexpected nack detected
+E (62875) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62876) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62888) i2c.master: I2C transaction unexpected nack detected
+E (62895) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62896) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62908) i2c.master: I2C transaction unexpected nack detected
+E (62916) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62917) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62929) i2c.master: I2C transaction unexpected nack detected
+E (62929) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62937) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62949) i2c.master: I2C transaction unexpected nack detected
+E (62950) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62958) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62971) i2c.master: I2C transaction unexpected nack detected
+E (62972) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62978) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (62990) i2c.master: I2C transaction unexpected nack detected
+E (62991) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (62998) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63010) i2c.master: I2C transaction unexpected nack detected
+E (63011) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63019) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63031) i2c.master: I2C transaction unexpected nack detected
+E (63031) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63039) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63051) i2c.master: I2C transaction unexpected nack detected
+E (63052) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63060) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63072) i2c.master: I2C transaction unexpected nack detected
+E (63073) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63080) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63092) i2c.master: I2C transaction unexpected nack detected
+E (63093) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63101) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63115) i2c.master: I2C transaction unexpected nack detected
+E (63116) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63121) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63136) i2c.master: I2C transaction unexpected nack detected
+E (63137) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63142) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63154) i2c.master: I2C transaction unexpected nack detected
+E (63154) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63162) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63176) i2c.master: I2C transaction unexpected nack detected
+E (63177) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63183) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63189) i2c.master: I2C transaction unexpected nack detected
+E (63193) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63203) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63208) i2c.master: I2C transaction unexpected nack detected
+E (63214) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63223) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63229) i2c.master: I2C transaction unexpected nack detected
+E (63234) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63244) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63248) i2c.master: I2C transaction unexpected nack detected
+E (63254) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63264) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63268) i2c.master: I2C transaction unexpected nack detected
+E (63275) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63285) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63289) i2c.master: I2C transaction unexpected nack detected
+E (63295) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63305) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63308) i2c.master: I2C transaction unexpected nack detected
+E (63316) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63326) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63328) i2c.master: I2C transaction unexpected nack detected
+E (63336) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63337) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63349) i2c.master: I2C transaction unexpected nack detected
+E (63357) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63357) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63374) i2c.master: I2C transaction unexpected nack detected
+E (63377) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63378) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63391) i2c.master: I2C transaction unexpected nack detected
+E (63398) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63399) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63412) i2c.master: I2C transaction unexpected nack detected
+E (63418) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63419) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63431) i2c.master: I2C transaction unexpected nack detected
+E (63438) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63439) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63451) i2c.master: I2C transaction unexpected nack detected
+E (63459) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63460) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63471) i2c.master: I2C transaction unexpected nack detected
+E (63479) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63480) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63493) i2c.master: I2C transaction unexpected nack detected
+E (63500) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63501) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63513) i2c.master: I2C transaction unexpected nack detected
+E (63514) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63521) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63533) i2c.master: I2C transaction unexpected nack detected
+E (63534) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63541) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63553) i2c.master: I2C transaction unexpected nack detected
+E (63554) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63562) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63574) i2c.master: I2C transaction unexpected nack detected
+E (63574) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63582) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63594) i2c.master: I2C transaction unexpected nack detected
+E (63595) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63603) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63614) i2c.master: I2C transaction unexpected nack detected
+E (63615) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63623) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63635) i2c.master: I2C transaction unexpected nack detected
+E (63636) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63644) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63656) i2c.master: I2C transaction unexpected nack detected
+E (63657) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63664) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63676) i2c.master: I2C transaction unexpected nack detected
+E (63677) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63685) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63697) i2c.master: I2C transaction unexpected nack detected
+E (63698) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63705) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63720) i2c.master: I2C transaction unexpected nack detected
+E (63721) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63726) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63738) i2c.master: I2C transaction unexpected nack detected
+E (63738) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63746) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63758) i2c.master: I2C transaction unexpected nack detected
+E (63758) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63766) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63778) i2c.master: I2C transaction unexpected nack detected
+E (63779) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63787) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63789) i2c.master: I2C transaction unexpected nack detected
+E (63797) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63807) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63810) i2c.master: I2C transaction unexpected nack detected
+E (63818) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63828) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63830) i2c.master: I2C transaction unexpected nack detected
+E (63838) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63848) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63852) i2c.master: I2C transaction unexpected nack detected
+E (63859) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63869) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63871) i2c.master: I2C transaction unexpected nack detected
+E (63879) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63889) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63892) i2c.master: I2C transaction unexpected nack detected
+E (63900) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63909) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63912) i2c.master: I2C transaction unexpected nack detected
+E (63920) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63930) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63933) i2c.master: I2C transaction unexpected nack detected
+E (63940) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63941) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63953) i2c.master: I2C transaction unexpected nack detected
+E (63961) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63962) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63973) i2c.master: I2C transaction unexpected nack detected
+E (63981) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (63982) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (63995) i2c.master: I2C transaction unexpected nack detected
+E (64002) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64003) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64015) i2c.master: I2C transaction unexpected nack detected
+E (64022) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64023) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64035) i2c.master: I2C transaction unexpected nack detected
+E (64043) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64043) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64057) i2c.master: I2C transaction unexpected nack detected
+E (64063) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64064) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64076) i2c.master: I2C transaction unexpected nack detected
+E (64084) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64084) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64096) i2c.master: I2C transaction unexpected nack detected
+E (64104) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64105) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64118) i2c.master: I2C transaction unexpected nack detected
+E (64119) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64125) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64139) i2c.master: I2C transaction unexpected nack detected
+E (64140) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64146) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64158) i2c.master: I2C transaction unexpected nack detected
+E (64158) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64166) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64180) i2c.master: I2C transaction unexpected nack detected
+E (64182) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64187) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64200) i2c.master: I2C transaction unexpected nack detected
+E (64201) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64207) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64222) i2c.master: I2C transaction unexpected nack detected
+E (64223) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64227) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64239) i2c.master: I2C transaction unexpected nack detected
+E (64240) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64248) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64260) i2c.master: I2C transaction unexpected nack detected
+E (64260) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64268) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64282) i2c.master: I2C transaction unexpected nack detected
+E (64283) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64289) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64301) i2c.master: I2C transaction unexpected nack detected
+E (64302) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64309) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64321) i2c.master: I2C transaction unexpected nack detected
+E (64322) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64330) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64341) i2c.master: I2C transaction unexpected nack detected
+E (64342) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64350) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64362) i2c.master: I2C transaction unexpected nack detected
+E (64363) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64371) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64376) i2c.master: I2C transaction unexpected nack detected
+E (64381) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64391) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64395) i2c.master: I2C transaction unexpected nack detected
+E (64402) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64411) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64416) i2c.master: I2C transaction unexpected nack detected
+E (64422) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64432) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64435) i2c.master: I2C transaction unexpected nack detected
+E (64442) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64452) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64455) i2c.master: I2C transaction unexpected nack detected
+E (64463) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64473) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64475) i2c.master: I2C transaction unexpected nack detected
+E (64483) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64493) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64499) i2c.master: I2C transaction unexpected nack detected
+E (64504) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64514) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64517) i2c.master: I2C transaction unexpected nack detected
+E (64524) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64525) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64537) i2c.master: I2C transaction unexpected nack detected
+E (64545) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64545) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64558) i2c.master: I2C transaction unexpected nack detected
+E (64565) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64566) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64578) i2c.master: I2C transaction unexpected nack detected
+E (64586) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64586) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64598) i2c.master: I2C transaction unexpected nack detected
+E (64606) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64607) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64619) i2c.master: I2C transaction unexpected nack detected
+E (64626) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64627) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64641) i2c.master: I2C transaction unexpected nack detected
+E (64647) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64648) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64659) i2c.master: I2C transaction unexpected nack detected
+E (64667) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64668) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64680) i2c.master: I2C transaction unexpected nack detected
+E (64688) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64689) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64701) i2c.master: I2C transaction unexpected nack detected
+E (64701) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64709) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64723) i2c.master: I2C transaction unexpected nack detected
+E (64724) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64729) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64741) i2c.master: I2C transaction unexpected nack detected
+E (64742) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64750) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64762) i2c.master: I2C transaction unexpected nack detected
+E (64762) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64770) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64782) i2c.master: I2C transaction unexpected nack detected
+E (64783) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64791) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64803) i2c.master: I2C transaction unexpected nack detected
+E (64803) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64811) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64831) i2c.master: I2C transaction unexpected nack detected
+E (64832) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64835) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64849) i2c.master: I2C transaction unexpected nack detected
+E (64850) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64855) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64869) i2c.master: I2C transaction unexpected nack detected
+E (64870) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64875) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64889) i2c.master: I2C transaction unexpected nack detected
+E (64889) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64895) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64908) i2c.master: I2C transaction unexpected nack detected
+E (64909) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64915) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64928) i2c.master: I2C transaction unexpected nack detected
+E (64929) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64936) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64949) i2c.master: I2C transaction unexpected nack detected
+E (64950) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64956) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64968) i2c.master: I2C transaction unexpected nack detected
+E (64969) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64976) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (64988) i2c.master: I2C transaction unexpected nack detected
+E (64989) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (64996) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65008) i2c.master: I2C transaction unexpected nack detected
+E (65009) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65016) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65028) i2c.master: I2C transaction unexpected nack detected
+E (65029) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65036) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65049) i2c.master: I2C transaction unexpected nack detected
+E (65050) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65056) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65069) i2c.master: I2C transaction unexpected nack detected
+E (65069) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65076) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65088) i2c.master: I2C transaction unexpected nack detected
+E (65089) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65097) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65109) i2c.master: I2C transaction unexpected nack detected
+E (65110) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65117) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65128) i2c.master: I2C transaction unexpected nack detected
+E (65130) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65137) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65150) i2c.master: I2C transaction unexpected nack detected
+E (65151) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65157) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65170) i2c.master: I2C transaction unexpected nack detected
+E (65171) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65177) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65190) i2c.master: I2C transaction unexpected nack detected
+E (65191) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65197) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65209) i2c.master: I2C transaction unexpected nack detected
+E (65210) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65217) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65229) i2c.master: I2C transaction unexpected nack detected
+E (65230) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65238) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65249) i2c.master: I2C transaction unexpected nack detected
+E (65249) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65258) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65269) i2c.master: I2C transaction unexpected nack detected
+E (65270) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65278) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65289) i2c.master: I2C transaction unexpected nack detected
+E (65290) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65298) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65309) i2c.master: I2C transaction unexpected nack detected
+E (65310) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65318) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65328) i2c.master: I2C transaction unexpected nack detected
+E (65329) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65338) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65348) i2c.master: I2C transaction unexpected nack detected
+E (65349) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65358) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65369) i2c.master: I2C transaction unexpected nack detected
+E (65370) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65379) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65390) i2c.master: I2C transaction unexpected nack detected
+E (65391) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65399) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65410) i2c.master: I2C transaction unexpected nack detected
+E (65411) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65419) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65429) i2c.master: I2C transaction unexpected nack detected
+E (65430) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65439) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65449) i2c.master: I2C transaction unexpected nack detected
+E (65450) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65459) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65469) i2c.master: I2C transaction unexpected nack detected
+E (65470) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65480) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65495) i2c.master: I2C transaction unexpected nack detected
+E (65497) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65499) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65509) i2c.master: I2C transaction unexpected nack detected
+E (65510) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65519) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65528) i2c.master: I2C transaction unexpected nack detected
+E (65530) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65540) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65548) i2c.master: I2C transaction unexpected nack detected
+E (65550) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65560) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65568) i2c.master: I2C transaction unexpected nack detected
+E (65571) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65581) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65588) i2c.master: I2C transaction unexpected nack detected
+E (65591) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65601) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65609) i2c.master: I2C transaction unexpected nack detected
+E (65612) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65613) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65628) i2c.master: I2C transaction unexpected nack detected
+E (65633) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65634) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65649) i2c.master: I2C transaction unexpected nack detected
+E (65653) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65653) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65668) i2c.master: I2C transaction unexpected nack detected
+E (65673) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65674) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65688) i2c.master: I2C transaction unexpected nack detected
+E (65694) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65694) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65709) i2c.master: I2C transaction unexpected nack detected
+E (65714) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65715) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65730) i2c.master: I2C transaction unexpected nack detected
+E (65735) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65735) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65748) i2c.master: I2C transaction unexpected nack detected
+E (65755) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65756) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65768) i2c.master: I2C transaction unexpected nack detected
+E (65775) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65776) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65788) i2c.master: I2C transaction unexpected nack detected
+E (65789) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65797) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65809) i2c.master: I2C transaction unexpected nack detected
+E (65809) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65817) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65829) i2c.master: I2C transaction unexpected nack detected
+E (65830) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65837) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65850) i2c.master: I2C transaction unexpected nack detected
+E (65851) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65858) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65870) i2c.master: I2C transaction unexpected nack detected
+E (65870) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65878) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65890) i2c.master: I2C transaction unexpected nack detected
+E (65891) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65899) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65911) i2c.master: I2C transaction unexpected nack detected
+E (65911) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65919) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65933) i2c.master: I2C transaction unexpected nack detected
+E (65934) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65940) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65952) i2c.master: I2C transaction unexpected nack detected
+E (65952) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65960) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65972) i2c.master: I2C transaction unexpected nack detected
+E (65973) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (65981) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (65993) i2c.master: I2C transaction unexpected nack detected
+E (65993) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66001) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66013) i2c.master: I2C transaction unexpected nack detected
+E (66014) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66022) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66034) i2c.master: I2C transaction unexpected nack detected
+E (66034) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66042) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66049) i2c.master: I2C transaction unexpected nack detected
+E (66052) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66062) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66068) i2c.master: I2C transaction unexpected nack detected
+E (66073) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66083) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66088) i2c.master: I2C transaction unexpected nack detected
+E (66093) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66103) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66109) i2c.master: I2C transaction unexpected nack detected
+E (66114) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66124) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66129) i2c.master: I2C transaction unexpected nack detected
+E (66134) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66144) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66150) i2c.master: I2C transaction unexpected nack detected
+E (66155) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66165) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66168) i2c.master: I2C transaction unexpected nack detected
+E (66175) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66185) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66189) i2c.master: I2C transaction unexpected nack detected
+E (66196) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66196) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66208) i2c.master: I2C transaction unexpected nack detected
+E (66216) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66217) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66231) i2c.master: I2C transaction unexpected nack detected
+E (66237) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66237) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66249) i2c.master: I2C transaction unexpected nack detected
+E (66257) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66258) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66270) i2c.master: I2C transaction unexpected nack detected
+E (66277) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66278) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66291) i2c.master: I2C transaction unexpected nack detected
+E (66298) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66299) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66311) i2c.master: I2C transaction unexpected nack detected
+E (66318) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66319) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66331) i2c.master: I2C transaction unexpected nack detected
+E (66339) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66340) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66351) i2c.master: I2C transaction unexpected nack detected
+E (66359) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66360) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66375) i2c.master: I2C transaction unexpected nack detected
+E (66376) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66380) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66392) i2c.master: I2C transaction unexpected nack detected
+E (66393) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66401) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66414) i2c.master: I2C transaction unexpected nack detected
+E (66415) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66421) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66433) i2c.master: I2C transaction unexpected nack detected
+E (66434) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66442) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66454) i2c.master: I2C transaction unexpected nack detected
+E (66454) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66462) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66474) i2c.master: I2C transaction unexpected nack detected
+E (66475) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66483) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66496) i2c.master: I2C transaction unexpected nack detected
+E (66497) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66503) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66515) i2c.master: I2C transaction unexpected nack detected
+E (66516) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66523) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66535) i2c.master: I2C transaction unexpected nack detected
+E (66536) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66544) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66556) i2c.master: I2C transaction unexpected nack detected
+E (66556) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66564) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66576) i2c.master: I2C transaction unexpected nack detected
+E (66577) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66585) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66598) i2c.master: I2C transaction unexpected nack detected
+E (66599) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66605) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66617) i2c.master: I2C transaction unexpected nack detected
+E (66618) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66626) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66640) i2c.master: I2C transaction unexpected nack detected
+E (66641) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66646) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66649) i2c.master: I2C transaction unexpected nack detected
+E (66657) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66667) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66669) i2c.master: I2C transaction unexpected nack detected
+E (66677) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66687) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66690) i2c.master: I2C transaction unexpected nack detected
+E (66698) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66708) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66718) i2c.master: I2C transaction unexpected nack detected
+E (66719) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66728) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66731) i2c.master: I2C transaction unexpected nack detected
+E (66738) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66748) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66751) i2c.master: I2C transaction unexpected nack detected
+E (66759) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66769) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66771) i2c.master: I2C transaction unexpected nack detected
+E (66779) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66789) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66792) i2c.master: I2C transaction unexpected nack detected
+E (66800) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66810) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66814) i2c.master: I2C transaction unexpected nack detected
+E (66821) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66822) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66836) i2c.master: I2C transaction unexpected nack detected
+E (66840) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66841) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66853) i2c.master: I2C transaction unexpected nack detected
+E (66861) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66862) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66874) i2c.master: I2C transaction unexpected nack detected
+E (66881) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66882) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66894) i2c.master: I2C transaction unexpected nack detected
+E (66902) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66903) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66914) i2c.master: I2C transaction unexpected nack detected
+E (66922) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66923) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66935) i2c.master: I2C transaction unexpected nack detected
+E (66943) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66943) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66955) i2c.master: I2C transaction unexpected nack detected
+E (66963) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66964) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66976) i2c.master: I2C transaction unexpected nack detected
+E (66984) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (66984) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (66996) i2c.master: I2C transaction unexpected nack detected
+E (66997) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67005) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67017) i2c.master: I2C transaction unexpected nack detected
+E (67017) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67025) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67038) i2c.master: I2C transaction unexpected nack detected
+E (67038) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67046) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67057) i2c.master: I2C transaction unexpected nack detected
+E (67058) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67066) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67078) i2c.master: I2C transaction unexpected nack detected
+E (67079) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67087) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67102) i2c.master: I2C transaction unexpected nack detected
+E (67102) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67107) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67119) i2c.master: I2C transaction unexpected nack detected
+E (67120) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67127) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67142) i2c.master: I2C transaction unexpected nack detected
+E (67143) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67148) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67160) i2c.master: I2C transaction unexpected nack detected
+E (67161) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67168) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67183) i2c.master: I2C transaction unexpected nack detected
+E (67184) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67189) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67201) i2c.master: I2C transaction unexpected nack detected
+E (67201) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67210) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67224) i2c.master: I2C transaction unexpected nack detected
+E (67225) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67230) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67242) i2c.master: I2C transaction unexpected nack detected
+E (67242) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67250) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67255) i2c.master: I2C transaction unexpected nack detected
+E (67261) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67271) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67273) i2c.master: I2C transaction unexpected nack detected
+E (67281) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67291) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67294) i2c.master: I2C transaction unexpected nack detected
+E (67302) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67311) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67314) i2c.master: I2C transaction unexpected nack detected
+E (67322) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67332) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67335) i2c.master: I2C transaction unexpected nack detected
+E (67342) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67352) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67355) i2c.master: I2C transaction unexpected nack detected
+E (67363) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67373) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67378) i2c.master: I2C transaction unexpected nack detected
+E (67383) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67393) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67399) i2c.master: I2C transaction unexpected nack detected
+E (67404) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67405) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67416) i2c.master: I2C transaction unexpected nack detected
+E (67424) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67425) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67437) i2c.master: I2C transaction unexpected nack detected
+E (67445) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67445) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67458) i2c.master: I2C transaction unexpected nack detected
+E (67465) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67466) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67480) i2c.master: I2C transaction unexpected nack detected
+E (67486) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67487) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67499) i2c.master: I2C transaction unexpected nack detected
+E (67506) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67507) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67519) i2c.master: I2C transaction unexpected nack detected
+E (67527) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67527) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67539) i2c.master: I2C transaction unexpected nack detected
+E (67547) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67548) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67559) i2c.master: I2C transaction unexpected nack detected
+E (67567) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67568) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67582) i2c.master: I2C transaction unexpected nack detected
+E (67583) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67589) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67601) i2c.master: I2C transaction unexpected nack detected
+E (67601) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67609) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67621) i2c.master: I2C transaction unexpected nack detected
+E (67622) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67630) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67643) i2c.master: I2C transaction unexpected nack detected
+E (67644) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67650) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67662) i2c.master: I2C transaction unexpected nack detected
+E (67663) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67670) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67682) i2c.master: I2C transaction unexpected nack detected
+E (67683) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67691) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67703) i2c.master: I2C transaction unexpected nack detected
+E (67704) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67712) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67726) i2c.master: I2C transaction unexpected nack detected
+E (67727) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67732) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67744) i2c.master: I2C transaction unexpected nack detected
+E (67745) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67752) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67764) i2c.master: I2C transaction unexpected nack detected
+E (67765) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67773) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67785) i2c.master: I2C transaction unexpected nack detected
+E (67785) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67793) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67805) i2c.master: I2C transaction unexpected nack detected
+E (67806) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67813) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67825) i2c.master: I2C transaction unexpected nack detected
+E (67826) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67834) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67846) i2c.master: I2C transaction unexpected nack detected
+E (67846) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67854) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67857) i2c.master: I2C transaction unexpected nack detected
+E (67865) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67875) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67878) i2c.master: I2C transaction unexpected nack detected
+E (67885) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67895) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67898) i2c.master: I2C transaction unexpected nack detected
+E (67906) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67916) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67919) i2c.master: I2C transaction unexpected nack detected
+E (67926) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67936) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67939) i2c.master: I2C transaction unexpected nack detected
+E (67947) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67957) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67959) i2c.master: I2C transaction unexpected nack detected
+E (67967) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67977) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (67980) i2c.master: I2C transaction unexpected nack detected
+E (67988) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (67998) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68000) i2c.master: I2C transaction unexpected nack detected
+E (68008) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68009) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68023) i2c.master: I2C transaction unexpected nack detected
+E (68029) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68029) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68041) i2c.master: I2C transaction unexpected nack detected
+E (68049) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68050) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68061) i2c.master: I2C transaction unexpected nack detected
+E (68069) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68070) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68082) i2c.master: I2C transaction unexpected nack detected
+E (68090) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68091) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68104) i2c.master: I2C transaction unexpected nack detected
+E (68110) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68111) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68123) i2c.master: I2C transaction unexpected nack detected
+E (68131) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68133) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68145) i2c.master: I2C transaction unexpected nack detected
+E (68151) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68152) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68164) i2c.master: I2C transaction unexpected nack detected
+E (68172) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68173) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68186) i2c.master: I2C transaction unexpected nack detected
+E (68187) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68193) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68205) i2c.master: I2C transaction unexpected nack detected
+E (68205) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68214) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68228) i2c.master: I2C transaction unexpected nack detected
+E (68228) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68234) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68246) i2c.master: I2C transaction unexpected nack detected
+E (68247) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68254) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68266) i2c.master: I2C transaction unexpected nack detected
+E (68267) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68275) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68287) i2c.master: I2C transaction unexpected nack detected
+E (68287) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68295) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68307) i2c.master: I2C transaction unexpected nack detected
+E (68308) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68316) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68328) i2c.master: I2C transaction unexpected nack detected
+E (68329) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68336) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68348) i2c.master: I2C transaction unexpected nack detected
+E (68349) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68356) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68368) i2c.master: I2C transaction unexpected nack detected
+E (68370) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68377) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68390) i2c.master: I2C transaction unexpected nack detected
+E (68391) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68397) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68411) i2c.master: I2C transaction unexpected nack detected
+E (68412) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68418) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68430) i2c.master: I2C transaction unexpected nack detected
+E (68430) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68438) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68449) i2c.master: I2C transaction unexpected nack detected
+E (68450) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68459) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68470) i2c.master: I2C transaction unexpected nack detected
+E (68471) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68479) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68491) i2c.master: I2C transaction unexpected nack detected
+E (68491) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68500) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68509) i2c.master: I2C transaction unexpected nack detected
+E (68510) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68520) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68528) i2c.master: I2C transaction unexpected nack detected
+E (68531) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68540) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68548) i2c.master: I2C transaction unexpected nack detected
+E (68551) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68561) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68569) i2c.master: I2C transaction unexpected nack detected
+E (68571) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68581) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68589) i2c.master: I2C transaction unexpected nack detected
+E (68592) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68593) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68604) i2c.master: I2C transaction unexpected nack detected
+E (68612) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68613) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68624) i2c.master: I2C transaction unexpected nack detected
+E (68633) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68634) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68647) i2c.master: I2C transaction unexpected nack detected
+E (68653) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68654) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68666) i2c.master: I2C transaction unexpected nack detected
+E (68674) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68675) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68687) i2c.master: I2C transaction unexpected nack detected
+E (68694) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68695) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68707) i2c.master: I2C transaction unexpected nack detected
+E (68715) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68716) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68730) i2c.master: I2C transaction unexpected nack detected
+E (68735) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68736) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68748) i2c.master: I2C transaction unexpected nack detected
+E (68755) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68756) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68768) i2c.master: I2C transaction unexpected nack detected
+E (68769) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68777) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68789) i2c.master: I2C transaction unexpected nack detected
+E (68790) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68797) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68809) i2c.master: I2C transaction unexpected nack detected
+E (68810) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68818) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68833) i2c.master: I2C transaction unexpected nack detected
+E (68834) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68838) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68850) i2c.master: I2C transaction unexpected nack detected
+E (68851) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68858) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68870) i2c.master: I2C transaction unexpected nack detected
+E (68871) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68879) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68891) i2c.master: I2C transaction unexpected nack detected
+E (68892) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68899) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68913) i2c.master: I2C transaction unexpected nack detected
+E (68914) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68920) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68932) i2c.master: I2C transaction unexpected nack detected
+E (68933) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68940) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68952) i2c.master: I2C transaction unexpected nack detected
+E (68953) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68961) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68972) i2c.master: I2C transaction unexpected nack detected
+E (68973) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (68981) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (68993) i2c.master: I2C transaction unexpected nack detected
+E (68994) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69002) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69014) i2c.master: I2C transaction unexpected nack detected
+E (69015) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69022) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69034) i2c.master: I2C transaction unexpected nack detected
+E (69035) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69042) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69048) i2c.master: I2C transaction unexpected nack detected
+E (69053) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69063) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69068) i2c.master: I2C transaction unexpected nack detected
+E (69073) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69083) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69088) i2c.master: I2C transaction unexpected nack detected
+E (69094) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69104) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69109) i2c.master: I2C transaction unexpected nack detected
+E (69114) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69124) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69129) i2c.master: I2C transaction unexpected nack detected
+E (69135) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69145) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69149) i2c.master: I2C transaction unexpected nack detected
+E (69155) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69165) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69168) i2c.master: I2C transaction unexpected nack detected
+E (69176) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69186) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69190) i2c.master: I2C transaction unexpected nack detected
+E (69196) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69197) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69210) i2c.master: I2C transaction unexpected nack detected
+E (69217) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69218) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69231) i2c.master: I2C transaction unexpected nack detected
+E (69237) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69238) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69250) i2c.master: I2C transaction unexpected nack detected
+E (69257) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69258) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69270) i2c.master: I2C transaction unexpected nack detected
+E (69278) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69279) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69291) i2c.master: I2C transaction unexpected nack detected
+E (69298) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69299) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69311) i2c.master: I2C transaction unexpected nack detected
+E (69319) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69320) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69331) i2c.master: I2C transaction unexpected nack detected
+E (69339) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69340) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69353) i2c.master: I2C transaction unexpected nack detected
+E (69360) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69361) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69374) i2c.master: I2C transaction unexpected nack detected
+E (69375) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69381) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69393) i2c.master: I2C transaction unexpected nack detected
+E (69394) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69401) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69414) i2c.master: I2C transaction unexpected nack detected
+E (69415) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69422) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69434) i2c.master: I2C transaction unexpected nack detected
+E (69434) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69442) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69454) i2c.master: I2C transaction unexpected nack detected
+E (69455) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69463) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69475) i2c.master: I2C transaction unexpected nack detected
+E (69475) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69483) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69497) i2c.master: I2C transaction unexpected nack detected
+E (69498) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69504) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69516) i2c.master: I2C transaction unexpected nack detected
+E (69517) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69524) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69536) i2c.master: I2C transaction unexpected nack detected
+E (69537) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69544) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69559) i2c.master: I2C transaction unexpected nack detected
+E (69560) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69565) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69577) i2c.master: I2C transaction unexpected nack detected
+E (69578) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69585) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69597) i2c.master: I2C transaction unexpected nack detected
+E (69598) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69606) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69618) i2c.master: I2C transaction unexpected nack detected
+E (69618) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69626) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69629) i2c.master: I2C transaction unexpected nack detected
+E (69637) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69647) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69651) i2c.master: I2C transaction unexpected nack detected
+E (69657) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69667) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69672) i2c.master: I2C transaction unexpected nack detected
+E (69678) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69688) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69691) i2c.master: I2C transaction unexpected nack detected
+E (69698) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69708) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69718) i2c.master: I2C transaction unexpected nack detected
+E (69719) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69728) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69731) i2c.master: I2C transaction unexpected nack detected
+E (69739) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69749) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69751) i2c.master: I2C transaction unexpected nack detected
+E (69759) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69769) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69772) i2c.master: I2C transaction unexpected nack detected
+E (69780) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69789) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69793) i2c.master: I2C transaction unexpected nack detected
+E (69800) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69810) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69813) i2c.master: I2C transaction unexpected nack detected
+E (69820) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69821) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69833) i2c.master: I2C transaction unexpected nack detected
+E (69841) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69842) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69853) i2c.master: I2C transaction unexpected nack detected
+E (69861) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69862) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69874) i2c.master: I2C transaction unexpected nack detected
+E (69882) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69883) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69895) i2c.master: I2C transaction unexpected nack detected
+E (69902) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69903) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69915) i2c.master: I2C transaction unexpected nack detected
+E (69923) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69923) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69935) i2c.master: I2C transaction unexpected nack detected
+E (69943) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69944) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69956) i2c.master: I2C transaction unexpected nack detected
+E (69964) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69964) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69976) i2c.master: I2C transaction unexpected nack detected
+E (69984) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (69985) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (69998) i2c.master: I2C transaction unexpected nack detected
+E (69999) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70005) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70017) i2c.master: I2C transaction unexpected nack detected
+E (70018) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70026) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70037) i2c.master: I2C transaction unexpected nack detected
+E (70038) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70046) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70058) i2c.master: I2C transaction unexpected nack detected
+E (70058) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70066) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70079) i2c.master: I2C transaction unexpected nack detected
+E (70080) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70087) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70102) i2c.master: I2C transaction unexpected nack detected
+E (70103) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70108) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70121) i2c.master: I2C transaction unexpected nack detected
+E (70122) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70128) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70142) i2c.master: I2C transaction unexpected nack detected
+E (70143) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70148) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70160) i2c.master: I2C transaction unexpected nack detected
+E (70161) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70169) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70183) i2c.master: I2C transaction unexpected nack detected
+E (70184) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70189) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70201) i2c.master: I2C transaction unexpected nack detected
+E (70202) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70210) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70223) i2c.master: I2C transaction unexpected nack detected
+E (70224) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70230) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70242) i2c.master: I2C transaction unexpected nack detected
+E (70243) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70251) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70253) i2c.master: I2C transaction unexpected nack detected
+E (70261) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70271) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70274) i2c.master: I2C transaction unexpected nack detected
+E (70282) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70291) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70294) i2c.master: I2C transaction unexpected nack detected
+E (70302) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70312) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70315) i2c.master: I2C transaction unexpected nack detected
+E (70322) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70332) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70336) i2c.master: I2C transaction unexpected nack detected
+E (70343) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70353) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70356) i2c.master: I2C transaction unexpected nack detected
+E (70363) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70373) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70378) i2c.master: I2C transaction unexpected nack detected
+E (70384) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70394) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70398) i2c.master: I2C transaction unexpected nack detected
+E (70404) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70405) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70417) i2c.master: I2C transaction unexpected nack detected
+E (70425) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70425) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70438) i2c.master: I2C transaction unexpected nack detected
+E (70445) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70446) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70458) i2c.master: I2C transaction unexpected nack detected
+E (70466) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70466) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70489) i2c.master: I2C transaction unexpected nack detected
+E (70490) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70493) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70509) i2c.master: I2C transaction unexpected nack detected
+E (70509) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70513) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70528) i2c.master: I2C transaction unexpected nack detected
+E (70529) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70534) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70549) i2c.master: I2C transaction unexpected nack detected
+E (70550) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70554) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70569) i2c.master: I2C transaction unexpected nack detected
+E (70569) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70574) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70588) i2c.master: I2C transaction unexpected nack detected
+E (70589) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70594) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70608) i2c.master: I2C transaction unexpected nack detected
+E (70609) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70614) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70628) i2c.master: I2C transaction unexpected nack detected
+E (70630) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70634) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70650) i2c.master: I2C transaction unexpected nack detected
+E (70651) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70654) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70669) i2c.master: I2C transaction unexpected nack detected
+E (70670) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70675) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70688) i2c.master: I2C transaction unexpected nack detected
+E (70689) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70695) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70708) i2c.master: I2C transaction unexpected nack detected
+E (70710) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70715) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70729) i2c.master: I2C transaction unexpected nack detected
+E (70730) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70735) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70748) i2c.master: I2C transaction unexpected nack detected
+E (70749) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70755) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70769) i2c.master: I2C transaction unexpected nack detected
+E (70770) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70775) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70788) i2c.master: I2C transaction unexpected nack detected
+E (70789) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70795) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70808) i2c.master: I2C transaction unexpected nack detected
+E (70809) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70816) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70830) i2c.master: I2C transaction unexpected nack detected
+E (70831) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70836) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70849) i2c.master: I2C transaction unexpected nack detected
+E (70849) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70856) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70868) i2c.master: I2C transaction unexpected nack detected
+E (70869) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70876) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70889) i2c.master: I2C transaction unexpected nack detected
+E (70889) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70896) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70908) i2c.master: I2C transaction unexpected nack detected
+E (70909) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70916) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70928) i2c.master: I2C transaction unexpected nack detected
+E (70929) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70936) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70949) i2c.master: I2C transaction unexpected nack detected
+E (70950) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70956) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70968) i2c.master: I2C transaction unexpected nack detected
+E (70969) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70977) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (70989) i2c.master: I2C transaction unexpected nack detected
+E (70990) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (70997) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71008) i2c.master: I2C transaction unexpected nack detected
+E (71009) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71017) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71028) i2c.master: I2C transaction unexpected nack detected
+E (71029) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71037) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71048) i2c.master: I2C transaction unexpected nack detected
+E (71049) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71057) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71069) i2c.master: I2C transaction unexpected nack detected
+E (71070) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71077) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71089) i2c.master: I2C transaction unexpected nack detected
+E (71090) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71098) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71109) i2c.master: I2C transaction unexpected nack detected
+E (71110) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71118) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71129) i2c.master: I2C transaction unexpected nack detected
+E (71130) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71138) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71149) i2c.master: I2C transaction unexpected nack detected
+E (71150) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71158) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71169) i2c.master: I2C transaction unexpected nack detected
+E (71171) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71178) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71189) i2c.master: I2C transaction unexpected nack detected
+E (71190) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71198) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71210) i2c.master: I2C transaction unexpected nack detected
+E (71211) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71218) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71230) i2c.master: I2C transaction unexpected nack detected
+E (71231) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71238) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71249) i2c.master: I2C transaction unexpected nack detected
+E (71249) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71258) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71269) i2c.master: I2C transaction unexpected nack detected
+E (71269) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71279) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71289) i2c.master: I2C transaction unexpected nack detected
+E (71289) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71299) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71309) i2c.master: I2C transaction unexpected nack detected
+E (71309) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71319) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71329) i2c.master: I2C transaction unexpected nack detected
+E (71330) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71339) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71349) i2c.master: I2C transaction unexpected nack detected
+E (71350) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71359) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71370) i2c.master: I2C transaction unexpected nack detected
+E (71371) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71379) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71389) i2c.master: I2C transaction unexpected nack detected
+E (71390) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71399) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71410) i2c.master: I2C transaction unexpected nack detected
+E (71410) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71420) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71430) i2c.master: I2C transaction unexpected nack detected
+E (71431) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71440) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71448) i2c.master: I2C transaction unexpected nack detected
+E (71450) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71460) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71468) i2c.master: I2C transaction unexpected nack detected
+E (71471) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71481) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71490) i2c.master: I2C transaction unexpected nack detected
+E (71491) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71500) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71509) i2c.master: I2C transaction unexpected nack detected
+E (71511) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71521) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71529) i2c.master: I2C transaction unexpected nack detected
+E (71531) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71541) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71549) i2c.master: I2C transaction unexpected nack detected
+E (71552) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71561) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71568) i2c.master: I2C transaction unexpected nack detected
+E (71572) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71582) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71589) i2c.master: I2C transaction unexpected nack detected
+E (71592) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71593) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71608) i2c.master: I2C transaction unexpected nack detected
+E (71613) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71614) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71628) i2c.master: I2C transaction unexpected nack detected
+E (71634) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71635) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71649) i2c.master: I2C transaction unexpected nack detected
+E (71654) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71655) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71668) i2c.master: I2C transaction unexpected nack detected
+E (71674) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71675) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71688) i2c.master: I2C transaction unexpected nack detected
+E (71695) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71695) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71708) i2c.master: I2C transaction unexpected nack detected
+E (71715) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71716) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71730) i2c.master: I2C transaction unexpected nack detected
+E (71736) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71736) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71748) i2c.master: I2C transaction unexpected nack detected
+E (71756) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71757) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71769) i2c.master: I2C transaction unexpected nack detected
+E (71770) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71777) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71789) i2c.master: I2C transaction unexpected nack detected
+E (71790) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71798) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71811) i2c.master: I2C transaction unexpected nack detected
+E (71811) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71818) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71830) i2c.master: I2C transaction unexpected nack detected
+E (71831) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71839) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71850) i2c.master: I2C transaction unexpected nack detected
+E (71851) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71859) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71872) i2c.master: I2C transaction unexpected nack detected
+E (71873) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71879) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71892) i2c.master: I2C transaction unexpected nack detected
+E (71892) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71900) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71912) i2c.master: I2C transaction unexpected nack detected
+E (71912) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71920) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71932) i2c.master: I2C transaction unexpected nack detected
+E (71933) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71941) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71953) i2c.master: I2C transaction unexpected nack detected
+E (71953) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71961) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71973) i2c.master: I2C transaction unexpected nack detected
+E (71974) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (71982) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (71994) i2c.master: I2C transaction unexpected nack detected
+E (71995) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72002) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72014) i2c.master: I2C transaction unexpected nack detected
+E (72015) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72023) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72028) i2c.master: I2C transaction unexpected nack detected
+E (72033) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72043) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72048) i2c.master: I2C transaction unexpected nack detected
+E (72054) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72063) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72068) i2c.master: I2C transaction unexpected nack detected
+E (72074) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72084) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72089) i2c.master: I2C transaction unexpected nack detected
+E (72095) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72105) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72110) i2c.master: I2C transaction unexpected nack detected
+E (72115) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72125) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72128) i2c.master: I2C transaction unexpected nack detected
+E (72135) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72145) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72150) i2c.master: I2C transaction unexpected nack detected
+E (72156) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72166) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72169) i2c.master: I2C transaction unexpected nack detected
+E (72176) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72177) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72190) i2c.master: I2C transaction unexpected nack detected
+E (72197) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72198) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72211) i2c.master: I2C transaction unexpected nack detected
+E (72217) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72218) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72232) i2c.master: I2C transaction unexpected nack detected
+E (72238) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72238) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72250) i2c.master: I2C transaction unexpected nack detected
+E (72258) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72259) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72271) i2c.master: I2C transaction unexpected nack detected
+E (72279) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72279) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72291) i2c.master: I2C transaction unexpected nack detected
+E (72299) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72300) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72312) i2c.master: I2C transaction unexpected nack detected
+E (72319) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72320) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72332) i2c.master: I2C transaction unexpected nack detected
+E (72340) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72341) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72352) i2c.master: I2C transaction unexpected nack detected
+E (72353) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72361) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72375) i2c.master: I2C transaction unexpected nack detected
+E (72376) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72382) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72394) i2c.master: I2C transaction unexpected nack detected
+E (72395) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72402) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72415) i2c.master: I2C transaction unexpected nack detected
+E (72416) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72422) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72435) i2c.master: I2C transaction unexpected nack detected
+E (72435) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72443) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72455) i2c.master: I2C transaction unexpected nack detected
+E (72455) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72463) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72475) i2c.master: I2C transaction unexpected nack detected
+E (72476) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72484) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72497) i2c.master: I2C transaction unexpected nack detected
+E (72498) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72504) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72516) i2c.master: I2C transaction unexpected nack detected
+E (72517) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72525) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72537) i2c.master: I2C transaction unexpected nack detected
+E (72538) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72545) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72557) i2c.master: I2C transaction unexpected nack detected
+E (72558) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72565) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72577) i2c.master: I2C transaction unexpected nack detected
+E (72578) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72586) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72598) i2c.master: I2C transaction unexpected nack detected
+E (72598) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72606) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72618) i2c.master: I2C transaction unexpected nack detected
+E (72619) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72627) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72637) i2c.master: I2C transaction unexpected nack detected
+E (72638) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72647) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72652) i2c.master: I2C transaction unexpected nack detected
+E (72658) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72668) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72671) i2c.master: I2C transaction unexpected nack detected
+E (72678) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72688) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72691) i2c.master: I2C transaction unexpected nack detected
+E (72699) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72709) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72719) i2c.master: I2C transaction unexpected nack detected
+E (72720) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72728) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72731) i2c.master: I2C transaction unexpected nack detected
+E (72739) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72749) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72752) i2c.master: I2C transaction unexpected nack detected
+E (72759) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72769) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72772) i2c.master: I2C transaction unexpected nack detected
+E (72780) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72790) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72793) i2c.master: I2C transaction unexpected nack detected
+E (72800) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72810) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72813) i2c.master: I2C transaction unexpected nack detected
+E (72821) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72822) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72836) i2c.master: I2C transaction unexpected nack detected
+E (72841) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72842) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72854) i2c.master: I2C transaction unexpected nack detected
+E (72862) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72863) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72875) i2c.master: I2C transaction unexpected nack detected
+E (72882) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72883) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72895) i2c.master: I2C transaction unexpected nack detected
+E (72903) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72903) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72915) i2c.master: I2C transaction unexpected nack detected
+E (72923) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72924) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72936) i2c.master: I2C transaction unexpected nack detected
+E (72943) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72944) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72957) i2c.master: I2C transaction unexpected nack detected
+E (72964) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72965) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72977) i2c.master: I2C transaction unexpected nack detected
+E (72984) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (72985) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (72997) i2c.master: I2C transaction unexpected nack detected
+E (72998) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73006) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73017) i2c.master: I2C transaction unexpected nack detected
+E (73018) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73026) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73038) i2c.master: I2C transaction unexpected nack detected
+E (73038) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73046) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73058) i2c.master: I2C transaction unexpected nack detected
+E (73059) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73067) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73080) i2c.master: I2C transaction unexpected nack detected
+E (73081) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73087) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73101) i2c.master: I2C transaction unexpected nack detected
+E (73102) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73108) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73120) i2c.master: I2C transaction unexpected nack detected
+E (73120) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73128) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73142) i2c.master: I2C transaction unexpected nack detected
+E (73143) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73149) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73161) i2c.master: I2C transaction unexpected nack detected
+E (73161) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73169) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73183) i2c.master: I2C transaction unexpected nack detected
+E (73184) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73190) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73202) i2c.master: I2C transaction unexpected nack detected
+E (73203) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73210) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73224) i2c.master: I2C transaction unexpected nack detected
+E (73225) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73230) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73243) i2c.master: I2C transaction unexpected nack detected
+E (73244) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73251) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73254) i2c.master: I2C transaction unexpected nack detected
+E (73261) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73271) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73274) i2c.master: I2C transaction unexpected nack detected
+E (73282) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73292) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73295) i2c.master: I2C transaction unexpected nack detected
+E (73302) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73312) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73315) i2c.master: I2C transaction unexpected nack detected
+E (73323) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73333) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73335) i2c.master: I2C transaction unexpected nack detected
+E (73343) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73353) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73356) i2c.master: I2C transaction unexpected nack detected
+E (73364) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73374) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73378) i2c.master: I2C transaction unexpected nack detected
+E (73384) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73394) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73399) i2c.master: I2C transaction unexpected nack detected
+E (73405) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73405) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73418) i2c.master: I2C transaction unexpected nack detected
+E (73425) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73426) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73438) i2c.master: I2C transaction unexpected nack detected
+E (73445) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73446) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73458) i2c.master: I2C transaction unexpected nack detected
+E (73466) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73467) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73495) i2c.master: I2C transaction unexpected nack detected
+E (73496) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73497) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73509) i2c.master: I2C transaction unexpected nack detected
+E (73509) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73511) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73529) i2c.master: I2C transaction unexpected nack detected
+E (73530) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73532) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73549) i2c.master: I2C transaction unexpected nack detected
+E (73550) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73552) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73568) i2c.master: I2C transaction unexpected nack detected
+E (73569) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73573) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73588) i2c.master: I2C transaction unexpected nack detected
+E (73589) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73593) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73604) i2c.master: I2C transaction unexpected nack detected
+E (73605) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73614) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73625) i2c.master: I2C transaction unexpected nack detected
+E (73626) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73634) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73648) i2c.master: I2C transaction unexpected nack detected
+E (73648) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73655) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73666) i2c.master: I2C transaction unexpected nack detected
+E (73667) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73675) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73687) i2c.master: I2C transaction unexpected nack detected
+E (73688) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73696) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73698) i2c.master: I2C transaction unexpected nack detected
+E (73706) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73716) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73722) i2c.master: I2C transaction unexpected nack detected
+E (73727) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73736) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73740) i2c.master: I2C transaction unexpected nack detected
+E (73747) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73757) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73760) i2c.master: I2C transaction unexpected nack detected
+E (73767) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73777) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73780) i2c.master: I2C transaction unexpected nack detected
+E (73788) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73798) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73801) i2c.master: I2C transaction unexpected nack detected
+E (73808) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73818) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73821) i2c.master: I2C transaction unexpected nack detected
+E (73829) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73839) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73842) i2c.master: I2C transaction unexpected nack detected
+E (73849) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73850) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73862) i2c.master: I2C transaction unexpected nack detected
+E (73870) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73870) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73882) i2c.master: I2C transaction unexpected nack detected
+E (73890) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73891) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73903) i2c.master: I2C transaction unexpected nack detected
+E (73911) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73911) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73923) i2c.master: I2C transaction unexpected nack detected
+E (73931) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73932) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73943) i2c.master: I2C transaction unexpected nack detected
+E (73951) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73952) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73966) i2c.master: I2C transaction unexpected nack detected
+E (73972) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73973) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (73985) i2c.master: I2C transaction unexpected nack detected
+E (73992) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (73993) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74005) i2c.master: I2C transaction unexpected nack detected
+E (74013) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74014) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74025) i2c.master: I2C transaction unexpected nack detected
+E (74026) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74034) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74046) i2c.master: I2C transaction unexpected nack detected
+E (74046) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74054) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74068) i2c.master: I2C transaction unexpected nack detected
+E (74068) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74075) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74087) i2c.master: I2C transaction unexpected nack detected
+E (74087) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74095) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74109) i2c.master: I2C transaction unexpected nack detected
+E (74110) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74116) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74129) i2c.master: I2C transaction unexpected nack detected
+E (74131) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74136) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74150) i2c.master: I2C transaction unexpected nack detected
+E (74151) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74157) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74169) i2c.master: I2C transaction unexpected nack detected
+E (74170) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74177) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74191) i2c.master: I2C transaction unexpected nack detected
+E (74191) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74198) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74217) i2c.master: I2C transaction unexpected nack detected
+E (74218) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74220) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74228) i2c.master: I2C transaction unexpected nack detected
+E (74231) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74241) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74248) i2c.master: I2C transaction unexpected nack detected
+E (74251) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74261) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74268) i2c.master: I2C transaction unexpected nack detected
+E (74272) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74282) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74289) i2c.master: I2C transaction unexpected nack detected
+E (74292) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74302) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74308) i2c.master: I2C transaction unexpected nack detected
+E (74312) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74313) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74328) i2c.master: I2C transaction unexpected nack detected
+E (74333) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74334) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74348) i2c.master: I2C transaction unexpected nack detected
+E (74353) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74354) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74368) i2c.master: I2C transaction unexpected nack detected
+E (74374) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74375) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74389) i2c.master: I2C transaction unexpected nack detected
+E (74395) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74396) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74409) i2c.master: I2C transaction unexpected nack detected
+E (74415) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74416) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74428) i2c.master: I2C transaction unexpected nack detected
+E (74435) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74436) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74448) i2c.master: I2C transaction unexpected nack detected
+E (74456) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74456) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74468) i2c.master: I2C transaction unexpected nack detected
+E (74476) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74477) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74490) i2c.master: I2C transaction unexpected nack detected
+E (74491) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74497) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74510) i2c.master: I2C transaction unexpected nack detected
+E (74511) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74518) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74530) i2c.master: I2C transaction unexpected nack detected
+E (74531) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74538) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74550) i2c.master: I2C transaction unexpected nack detected
+E (74551) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74559) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74570) i2c.master: I2C transaction unexpected nack detected
+E (74571) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74579) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74591) i2c.master: I2C transaction unexpected nack detected
+E (74592) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74599) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74611) i2c.master: I2C transaction unexpected nack detected
+E (74612) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74620) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74636) i2c.master: I2C transaction unexpected nack detected
+E (74637) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74640) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74653) i2c.master: I2C transaction unexpected nack detected
+E (74653) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74661) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74673) i2c.master: I2C transaction unexpected nack detected
+E (74673) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (74681) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (74693) i2c.master: I2C transaction unexpected nack detected
+E (74694) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":3051,"msgs":3052,"cpu_ms":3522.673,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":14,"msgs":14,"cpu_ms":39.852,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":9,"msgs":9,"cpu_ms":79.803,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"idle","turns":233,"msgs":233,"cpu_ms":1347.308,"mem_kb":425.1,"limit_kb":768,"mbox":0,"mbox_peak":23,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":630,"msgs":630,"cpu_ms":198.171,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":148.055,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":33,"msgs":33,"cpu_ms":462.761,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":4.373,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.721,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.128,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":5,"msgs":5,"cpu_ms":27.057,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":66,"msgs":66,"cpu_ms":249.599,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":129,"msgs":129,"cpu_ms":572.811,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":66,"msgs":66,"cpu_ms":307.768,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":129,"msgs":129,"cpu_ms":696.936,"mem_kb":219.9,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.458,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.528,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":567,"msgs":567,"cpu_ms":905.608,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":55.300,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.516,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.048,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":65,"msgs":65,"cpu_ms":250.075,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":65,"msgs":65,"cpu_ms":136.523,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":18.867,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.239,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":28.757,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":3.015,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":19.901,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":66,"msgs":66,"cpu_ms":69.445,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+E (74702) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":0,"rejects":0,"compile_us":1478859,"relocate_us":1384,"native_us":2742,"raster_us":0,"image_bytes":33840}
+#OK painter
+E (75429) i2c.master: I2C transaction unexpected nack detected
+E (75431) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (75438) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":3052,"msgs":3053,"cpu_ms":3526.546,"mem_kb":67.3,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":14,"msgs":14,"cpu_ms":39.852,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":9,"msgs":9,"cpu_ms":79.803,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"idle","turns":234,"msgs":234,"cpu_ms":1347.555,"mem_kb":425.1,"limit_kb":768,"mbox":0,"mbox_peak":23,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":631,"msgs":631,"cpu_ms":199.165,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":148.055,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":34,"msgs":34,"cpu_ms":474.759,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":4.373,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.721,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.128,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":5,"msgs":5,"cpu_ms":27.057,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":67,"msgs":67,"cpu_ms":253.943,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":130,"msgs":130,"cpu_ms":576.972,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":67,"msgs":67,"cpu_ms":310.138,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":131,"msgs":131,"cpu_ms":705.472,"mem_kb":219.9,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.458,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.528,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":568,"msgs":568,"cpu_ms":907.900,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":55.300,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.516,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.048,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":65,"msgs":65,"cpu_ms":250.075,"mem_kb":208.0,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":65,"msgs":65,"cpu_ms":136.523,"mem_kb":208.2,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":18.867,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.239,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":28.757,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":3.015,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":19.901,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":66,"msgs":66,"cpu_ms":69.445,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+E (76151) i2c.master: I2C transaction unexpected nack detected
+E (76153) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76155) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+t = 73744.7 ms, lane busy 9554.8 ms (13.0%), 5170 turns, 93 published, 124 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   waiting       3053   3529.83     67.3    320    0  
+  power       driver   idle            14     39.85     77.2    320    0  
+  display     driver   idle             9     79.80     73.8    320    0  
+  compositor  service  idle           236   1358.49    425.1    768    0  
+  agent       service  idle           632    199.44    771.0   1536    0  
+  chat        app      idle             8    148.06    238.8    768    0  
+  launcher    app      idle            34    474.76    264.7    384    0  
+  files       app      idle             1      4.37     68.2    384    0  
+  editor      app      idle             1     14.72    711.8    768    0  
+  calc        app      idle             1    241.13    568.9   1024    0  
+  agenda      app      idle             5     27.06    181.2    384    0  
+  settings    app      idle            67    253.94    190.1    384    0  
+  logs        app      idle           130    576.97    214.3    384    0  
+  loader      app      idle            67    310.14    230.2    384    0  
+  sysmon      app      idle           131    705.47    219.9    512    0  
+  repl        app      idle             0     27.46    209.0    384    0  
+  sandbox     service  idle             0     23.53    206.1    512    0  
+  snake       app      idle           569    909.58     98.3    320    0  
+  faults      app      idle             5     55.30    216.0    384    0  
+  flaky       service  idle             1      8.52     48.3    320    0  
+  raytrace    app      idle             0     26.05    207.6    320    0  
+  keys        app      idle            66    252.39    208.0    320    0  
+  about       app      idle            66    138.54    208.2    320    0  
+  chess       app      idle             1     18.87    743.8    768    0  
+  toplog      service  idle             1      8.24     41.3    320    0  
+  nat-echo    service  idle             4     28.76     28.2     64    0  
+  nat-bench   service  idle             1      3.02      2.7     64    0  
+  nat-import  world    stopped          0     19.90      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle            67     70.65     14.3     64    0  
+  bus i2c0  busy 54360.32 ms, 3068 transfers, 12287 bytes, 3068 errors
+  bus spi2  busy   135.18 ms, 70 transfers, 398304 bytes, 0 errors
+#OK stats
+E (76393) i2c.master: I2C transaction unexpected nack detected
+E (76395) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76401) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76415) i2c.master: I2C transaction unexpected nack detected
+E (76416) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76421) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76435) i2c.master: I2C transaction unexpected nack detected
+E (76436) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76441) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76453) i2c.master: I2C transaction unexpected nack detected
+E (76454) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76462) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76474) i2c.master: I2C transaction unexpected nack detected
+E (76474) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76482) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76496) i2c.master: I2C transaction unexpected nack detected
+E (76496) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76503) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76515) i2c.master: I2C transaction unexpected nack detected
+E (76515) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76523) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76535) i2c.master: I2C transaction unexpected nack detected
+E (76536) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76544) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76555) i2c.master: I2C transaction unexpected nack detected
+E (76556) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76564) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76576) i2c.master: I2C transaction unexpected nack detected
+E (76576) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76584) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76588) i2c.master: I2C transaction unexpected nack detected
+E (76595) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76605) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76609) i2c.master: I2C transaction unexpected nack detected
+E (76615) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76625) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76629) i2c.master: I2C transaction unexpected nack detected
+E (76636) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76646) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76650) i2c.master: I2C transaction unexpected nack detected
+E (76656) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76666) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76669) i2c.master: I2C transaction unexpected nack detected
+E (76677) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76687) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76690) i2c.master: I2C transaction unexpected nack detected
+E (76697) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76707) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76718) i2c.master: I2C transaction unexpected nack detected
+E (76720) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76726) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76729) i2c.master: I2C transaction unexpected nack detected
+E (76737) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76747) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76750) i2c.master: I2C transaction unexpected nack detected
+E (76757) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76767) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76770) i2c.master: I2C transaction unexpected nack detected
+E (76778) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76788) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+E (76791) i2c.master: I2C transaction unexpected nack detected
+E (76798) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (76808) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"idle","turns":3075,"msgs":3075,"cpu_ms":3554.647,"mem_kb":67.3,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":14,"msgs":14,"cpu_ms":39.852,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":9,"msgs":9,"cpu_ms":79.803,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"idle","turns":238,"msgs":238,"cpu_ms":1369.732,"mem_kb":425.1,"limit_kb":768,"mbox":0,"mbox_peak":23,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":637,"msgs":637,"cpu_ms":200.438,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":148.055,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":34,"msgs":34,"cpu_ms":474.759,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":4.373,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.721,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.128,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":5,"msgs":5,"cpu_ms":27.057,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":68,"msgs":68,"cpu_ms":258.446,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":132,"msgs":132,"cpu_ms":585.814,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":68,"msgs":68,"cpu_ms":313.615,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":133,"msgs":133,"cpu_ms":714.212,"mem_kb":219.9,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.458,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.528,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":573,"msgs":573,"cpu_ms":916.582,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":55.300,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.516,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.048,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":67,"msgs":67,"cpu_ms":256.222,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":67,"msgs":67,"cpu_ms":138.983,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":18.867,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.239,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":28.757,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":3.015,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":19.901,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":68,"msgs":68,"cpu_ms":71.756,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+E (77507) i2c.master: I2C transaction unexpected nack detected
+E (77516) i2c.master: s_i2c_synchronous_transaction(945): I2C transaction failed
+E (77526) i2c.master: i2c_master_multi_buffer_transmit(1207): I2C transaction failed
+t = 75106.5 ms, lane busy 9654.2 ms (12.9%), 5218 turns, 94 published, 125 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   waiting       3075   3555.54     67.3    320    0  
+  power       driver   idle            14     39.85     77.2    320    0  
+  display     driver   idle             9     79.80     73.8    320    0  
+  compositor  service  idle           239   1369.94    425.1    768    0  
+  agent       service  idle           638    200.56    771.0   1536    0  
+  chat        app      idle             8    148.06    238.8    768    0  
+  launcher    app      idle            35    487.27    264.7    384    0  
+  files       app      idle             1      4.37     68.2    384    0  
+  editor      app      idle             1     14.72    711.8    768    0  
+  calc        app      idle             1    241.13    568.9   1024    0  
+  agenda      app      idle             5     27.06    181.2    384    0  
+  settings    app      idle            69    262.38    190.1    384    0  
+  logs        app      idle           133    590.07    214.3    384    0  
+  loader      app      idle            68    313.62    230.2    384    0  
+  sysmon      app      idle           133    714.21    219.9    512    0  
+  repl        app      idle             0     27.46    209.0    384    0  
+  sandbox     service  idle             0     23.53    206.1    512    0  
+  snake       app      idle           574    919.09     98.3    320    0  
+  faults      app      idle             5     55.30    216.0    384    0  
+  flaky       service  idle             1      8.52     48.3    320    0  
+  raytrace    app      idle             0     26.05    207.6    320    0  
+  keys        app      idle            67    256.22    208.0    320    0  
+  about       app      idle            67    138.98    208.2    320    0  
+  chess       app      idle             1     18.87    743.8    768    0  
+  toplog      service  idle             1      8.24     41.3    320    0  
+  nat-echo    service  idle             4     28.76     28.2     64    0  
+  nat-bench   service  idle             1      3.02      2.7     64    0  
+  nat-import  world    stopped          0     19.90      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle            68     71.76     14.3     64    0  
+  bus i2c0  busy 54767.87 ms, 3090 transfers, 12375 bytes, 3090 errors
+  bus spi2  busy   135.18 ms, 70 transfers, 398304 bytes, 0 errors
+#OK stats
+E (77756) i
