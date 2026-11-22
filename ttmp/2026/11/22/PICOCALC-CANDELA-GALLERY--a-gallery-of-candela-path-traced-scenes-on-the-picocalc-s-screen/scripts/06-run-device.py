@@ -10,7 +10,9 @@ read the restore target from /tmp/picocalc-current-playable.txt; check both buil
 health; hold I2C; write and verify the gallery app at 0x10000 only (the verify resets the board); record its health;
 capture the screen once the gallery has drawn (console "shot", the compositor's framebuffer, so it works with the
 panel off). Then
-  digests  "gallery digest ID N" per scene: frame-0, accumulation and display digests, cycles per sample;
+  digests  "gallery digest ID N" per scene: frame-0, accumulation and display digests, cycles per sample (for
+           --variant-scenes also "internal" and "quiet": the digest task's stack in internal RAM, and above the kernel
+           task, so the cost of the worker's conditions shows within one boot);
   scenes   "gallery scene ID" per scene, kept on screen for --scene-seconds (or until it ends), with a screen capture:
            the renderer's own first, pass and scene records (time to first image, s/pass, samples/s, heap).
 Finally record health again. The user has switched the keyboard and display off on purpose, so health is judged
@@ -88,6 +90,48 @@ def wait_for(console, rec, until, timeout):
     return None
 
 
+def shot(console, rec, label, out, timeout=180):
+    """Console "shot" with a longer deadline than the shared Console.shot (15 s): a path-traced frame has almost no
+    runs, so its RLE is about 400 KB (550 KB of base64) and takes longer than that over the console. The gallery is
+    paused meanwhile (no CGAL lines, no new frames) and resumed after; CGAL lines that still arrive are recorded."""
+    import base64
+    import struct
+    import zlib
+    u = release.unit
+    command(console, rec, "gallery pause")
+    t0 = time.monotonic()
+    console.send("shot")
+    deadline = t0 + timeout
+    data, size, end, ack = [], None, None, False
+    while not (end and ack):
+        line = console.line(deadline)
+        if rec.take(line.decode(errors="replace")) is not None:
+            continue
+        if line == b"#OK shot":
+            ack = True
+        elif line.startswith(b"#SHOT "):
+            size = tuple(map(int, line.split()[1:]))
+        elif line.startswith(b"#END "):
+            end = line.split()
+        elif size and not end and u.RLE.fullmatch(line):
+            data.append(line.strip())
+    seconds = time.monotonic() - t0
+    command(console, rec, "gallery resume")
+    w, h = size
+    encoded = base64.b64decode(b"".join(data), validate=True)
+    pixels = bytearray()
+    for run, color in struct.iter_unpack("<HH", encoded):
+        if not run or len(pixels) + run * 2 > w * h * 2:
+            raise ValueError(f"invalid framebuffer RLE for {label}")
+        pixels.extend(struct.pack("<H", color) * run)
+    crc = zlib.crc32(pixels)
+    if (w, h) != (320, 320) or len(pixels) != w * h * 2 or crc != int(end[1], 16):
+        raise ValueError(f"invalid framebuffer CRC or geometry for {label}")
+    (out / (label + ".rgb565")).write_bytes(pixels)
+    u.png(out / (label + ".png"), w, h, pixels)
+    return {"crc32": f"{crc:08x}", "sha256": u.digest(pixels), "rleBytes": len(encoded), "seconds": round(seconds, 1)}
+
+
 def command(console, rec, line, timeout=10):
     """A console command; CGAL lines that arrive meanwhile are recorded."""
     out = console.command(line, timeout=timeout)
@@ -104,6 +148,7 @@ def main():
     ap.add_argument("--digest-passes", type=int, default=4)
     ap.add_argument("--scene-seconds", type=float, default=30)
     ap.add_argument("--scenes", default="")
+    ap.add_argument("--variant-scenes", default="", help="scenes whose digest is also run with an internal-RAM stack, and above the kernel task")
     ap.add_argument("--skip-digests", action="store_true")
     ap.add_argument("--skip-scenes", action="store_true")
     ap.add_argument("--leave-installed", action="store_true")
@@ -142,7 +187,7 @@ def main():
             first = wait_for(console, rec, lambda r: r.get("ev") == "first", 60)
             run["firstSeen"] = first
             time.sleep(4)
-            run["shots"] = {"boot": console.shot("boot", a.out)}
+            run["shots"] = {"boot": shot(console, rec, "boot", a.out)}
             command(console, rec, "gallery list")
             ids = [r["id"] for r in map(json.loads, (a.out / "cgal.jsonl").read_text().splitlines()) if r.get("ev") == "scene-list"]
             ids = list(dict.fromkeys(ids))
@@ -151,11 +196,13 @@ def main():
             run["scenes"] = ids
             save(a.out / "run.json", run)
             if not a.skip_digests:
+                variants = [i for i in a.variant_scenes.split(",") if i]
                 for sid in ids:
-                    rec.step = f"digest-{sid}"
-                    command(console, rec, f"gallery digest {sid} {a.digest_passes}")
-                    r = wait_for(console, rec, lambda r: r.get("ev") in ("digest", "error"), 400)
-                    print(f"digest {sid}: {r}", flush=True)
+                    for v in ["psram"] + (["internal", "quiet"] if sid in variants else []):
+                        rec.step = f"digest-{sid}-{v}"
+                        command(console, rec, f"gallery digest {sid} {a.digest_passes} {v}")
+                        r = wait_for(console, rec, lambda r: r.get("ev") in ("digest", "error"), 600)
+                        print(f"digest {sid} {v}: {r}", flush=True)
             if not a.skip_scenes:
                 for sid in ids:
                     rec.step = f"scene-{sid}"
@@ -165,7 +212,7 @@ def main():
                     rest = a.scene_seconds - (time.monotonic() - t0)
                     if rest > 0:
                         wait_for(console, rec, lambda r: r.get("ev") == "scene" and r.get("id") == sid, rest)
-                    run["shots"][sid] = console.shot(f"scene-{sid}", a.out)
+                    run["shots"][sid] = shot(console, rec, f"scene-{sid}", a.out)
                     print(f"scene {sid}: {round(time.monotonic() - t0, 1)} s", flush=True)
                 rec.step = "scene-end"
                 command(console, rec, "gallery scene B-01")   # ends the last measured scene (its record) and restarts the gallery
@@ -175,7 +222,7 @@ def main():
                 (a.out / f"end-{cmd}.txt").write_text("\n".join(command(console, rec, cmd, timeout=10)) + "\n")
             health = healthy(console)
             save(a.out / "candidate-after.json", {"health": health})
-            run["shots"]["end"] = console.shot("end", a.out)
+            run["shots"]["end"] = shot(console, rec, "end", a.out)
             save(a.out / "run.json", run)
             if a.leave_installed:
                 # board_health raised if a judged world was unhealthy; it did not, so the gallery stays

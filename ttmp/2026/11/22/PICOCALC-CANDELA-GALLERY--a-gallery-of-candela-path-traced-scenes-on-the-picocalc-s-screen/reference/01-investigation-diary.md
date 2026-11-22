@@ -68,3 +68,55 @@ The goal is to put real Candela path-traced scenes on the PicoCalc's own screen.
 ### Technical details
 - Restore target at the start: `/tmp/picocalc-current-playable.txt` = `/tmp/picocalc-playable-smooth-chess-676ae95/build b22a807d7c1e72227847b7762de09b927b5a86f537d8a1f434c77d618a69f62c`.
 - Toolchain for host RV32 references: `esp-14.2.0_20241119` (the one ESP-IDF 5.4.2 selects).
+
+## Step 2: Prepare 18 presets on the host and reproduce the earlier tickets' digests
+
+I wrote the host side first, so that every later device number has a reference: a Node script that turns presets into the firmware's scene table, a vendoring script for the kernel and interpreter, the renderer core as plain C, and a reference driver that runs that core on x86-64 and in the RV32 counting interpreter. The scene data and the renderer reproduce the frame digests that CPU-KERNEL and SECTIONS recorded, so the gallery renders the same scenes those tickets measured.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Prepare the presets (packed arrays plus section bytecode) on the host, starting with CPU-KERNEL's six and adding SECTIONS' verified presets as the budget allows.
+**Inferred user intent:** A gallery that shows real Candela output, verifiably the same as the earlier tickets' renders.
+**Commit (code):** 9d53673 — "candela-gallery: ticket, host preparation of 18 presets, vendored kernel and interpreter"
+
+### What I did
+- `scripts/01-prepare-scenes.mjs`: imports CPU-KERNEL's `lib/candela.mjs` (`exportScene`, pin check) and SECTIONS' `translator/index.js` (`translateProgram`) read-only; packs each preset at 160 or 80 pixels; reads tone map, post passes, exposure mode, EV and tan(fov/2) as `src/viewport.js` does; checks the fixed-kernel digest `8925739795c7...942d`; writes `candela_gallery_scenes.c` and `scenes.json`.
+- `scripts/02-vendor.py`: copies `cdl_kernel.{h,cpp}`, `cdl_post.cpp`, `manifest.json`, the `cpu/` headers, `cdl_vm.{h,c}`, `cdl_vm_isa.h`, `cdl_vm_ck_math.h` into `picocalc-os/third_party/candela/{kernel,vm}`, records each SHA-256 in `VENDOR.json`, writes `kernel/cdl_fixed_kernel.c` after checking that the scenes were prepared with the kernel.js the kernel was generated from (`253d242d...`). `--check` verifies.
+- `picocalc-os/nucleus/candela_gallery.{h,c}` (renderer core) and `candela_gallery_instance.cpp` (one per kernel instance: SECTIONS' adapter with the caller's register file).
+- `scripts/03-gallery-ref.c` and `scripts/04-build-ref.py`: the core, the table and two instances (`cg` RGB, `cgs` spectral) built with `-O2 -ffp-contract=off -fno-math-errno -fwrapv` for x86-64 and for RV32 (`esp-14.2.0_20241119`, the counting interpreter from SECTIONS' `harness/`).
+
+### Why
+- The device's digests need references from the same sources; building the firmware's own core on the host gives that without a second implementation.
+
+### What worked
+- 18 presets prepare in 3.8 s; 39,644 bytes of scene data and bytecode in all.
+- x86-64 frame-0 digests equal SECTIONS' host records: B-01 `df6d3f85`, R-01 `e8421c97`, L-03 `585a3f2f`, G-01 `211878db`, E-02 `de9e22b5` (160 x 160), X-04 `2b9af109`, S-02 `e32b0f6b`, V-04 `02677786`, R-04 `aa40e023` (80 x 80). So the packed data equals CPU-KERNEL's `exportScene` output and the interpreter path equals SECTIONS'.
+- RV32 frame-0 digest of B-01 `e2ba6956` equals SECTIONS' `rv32-nofma` record; the 1-pass display digest `bcf3a8e8` is the same on x86-64 and RV32.
+- The table-based AgX display differs from CPU-KERNEL's generated `displayPx` in at most 282 of 25,600 pixels (F-01), each by one RGB565 step, over all 18 scenes at 4 passes.
+
+### What didn't work
+- K-04 and K-08: `exportScene` produced 18,171,296 and 17,057,600 bytes. Their meshes pack into 1,135,111 and 1,065,550 static SD rows; that does not fit the 8 MB app partition, so both are left out (comment in `GALLERY`).
+- First table: `invalid suffix "f" on integer constant` for `0f` (JavaScript prints `0`); fixed with a float-literal helper (`flit`).
+- `04-build-ref.py rv32`: `ValueError: invalid literal for int() with base 10: ' sphere"'` — the title "Hello, sphere" has a comma; sizes are now parsed with a regular expression.
+- A C comment containing `--*/scripts` closed itself; reworded.
+
+### What I learned
+- At 4 and 64 passes (host contact sheets in the scratchpad) every scene is recognisable; the spectral S-02 and R-05 stay visibly noisy at 64 spp.
+- RV32 instructions per sample of pass 0 with the 1/16 sub-passes are 5,810 for B-01 against 4,954 for SECTIONS' row-major frame 0: per-pixel `render_span` calls cost about 15% in pass 0 only.
+
+### What was tricky to build
+- The sky-table workspace must start zeroed: `cdl_sky_bind` compares a tag and the uniform rows to decide whether to rebuild, so a fresh allocation with stale bytes could skip the build. `cg_begin` zeroes it when it allocates it.
+
+### What warrants a second pair of eyes
+- `cg_meter` counts only sampled pixels during pass 0, and the gallery meters the first coarse image in addition to Candela's 2, 8 and 32 spp. Both are deliberate deviations from `viewport.js`, so that the first image is not shown at EV 12.
+
+### What should be done in the future
+- N/A
+
+### Code review instructions
+- `node scripts/01-prepare-scenes.mjs <candela-run> <out>`; `python3 -I scripts/02-vendor.py --check <out>/candela_gallery_scenes.c`; `python3 -I scripts/04-build-ref.py host <work> 4 <imgdir>`.
+
+### Technical details
+- Gallery order: B-01, R-01, L-03, G-01, E-02, W-02, F-01, V-02, G-02 (160); X-04, S-02, R-05, V-03, V-04, R-08, X-03, R-04, G-03 (80).
+- Host microseconds per sample at 4 passes: B-01 0.70, R-01 1.65, W-02 2.83, X-04 4.66, V-04 10.5, R-08 14.4, X-03 31.9, G-03 63.2, R-04 71.3.

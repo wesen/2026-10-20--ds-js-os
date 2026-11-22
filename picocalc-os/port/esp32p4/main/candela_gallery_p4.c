@@ -13,8 +13,8 @@
 // starts. The gallery world's skip counter (a key) moves to the next or previous scene at once.
 //
 // UART records, one JSON object per line after "CGAL ": scene (when a scene ends), first (its first image), pass,
-// digest (console: gallery digest ID PASSES), status, error. Console: gallery status|next|prev|scene ID|pause|resume|
-// digest ID PASSES|list.
+// digest (console: gallery digest ID PASSES [psram|internal|quiet]), status, error. Console: gallery status|next|prev|
+// scene ID|pause|resume|digest ID PASSES [psram|internal|quiet]|list.
 #include "candela_gallery.h"
 #include "esp_cpu.h"
 #include "esp_heap_caps.h"
@@ -36,7 +36,7 @@ extern const char cg_kernel_fixed_sha256[];
 enum { SIDE = 320, TARGET_PASSES = 64, HOLD_MS = 6000, MAX_SHOW_MS = 60000, VISIBLE_MS = 2000,
        PASS_DISPLAY_MS = 400, LONG_DISPLAY_MS = 1500, STACK = 24 * 1024, PRIORITY = 1 };
 enum { C_STEP, C_SCENE, C_PAUSE, C_RESUME, C_DIGEST, C_STATUS };
-typedef struct { int op, a, b; } command;
+typedef struct { int op, a, b, c; } command;
 
 static QueueHandle_t commands;
 static uint16_t *frames[3];
@@ -184,8 +184,14 @@ static void status(void) {
 // The agreement measurement: a plain 1 spp pass at frame index 0 (CPU-KERNEL's frame digest), then the progressive
 // render to the given number of passes as the gallery runs it, without displays: its accumulation digest, the fast
 // display's digest, and the cycles per sample of the passes.
-static void digest(int k, int passes) {
-  cdl_pixout *line = big(sizeof(cdl_pixout) * CG_MAX_SIDE);
+//
+// The digest runs on a helper task on core 1 whose stack placement and priority the console chooses, so that one boot
+// measures the same scene with the worker's conditions (PSRAM stack, below the kernel task), with an internal-RAM
+// stack, and with nothing else on core 1 (above the kernel task, which then waits the few seconds the digest takes).
+enum { V_PSRAM, V_INTERNAL, V_QUIET };
+static const char *const VARIANT[] = {"psram", "internal", "quiet"};
+static void digest(int k, int passes, int variant) {
+  cdl_pixout *line = (variant == V_PSRAM ? big : fast)(sizeof(cdl_pixout) * CG_MAX_SIDE);
   const cg_scene_desc *d = &cg_scenes[k];
   if (!line) { snprintf(err, sizeof err, "out of memory"); record_error("digest"); return; }
   if (cg_begin(&st, d, instance_for(d), &ALLOC, err, sizeof err)) { record_error("digest"); heap_caps_free(line); return; }
@@ -206,12 +212,32 @@ static void digest(int k, int passes) {
   const uint32_t dsp = cg_fnv(2166136261u, disp, sizeof(uint16_t) * st.w * st.h);
   printf("CGAL {\"ev\":\"digest\",\"id\":\"%s\",\"w\":%d,\"h\":%d,\"frame0\":\"%08" PRIx32 "\",\"frame0MeanLum\":%.9g,\"frame0CyclesPerSample\":%.1f,"
          "\"passes\":%u,\"acc\":\"%08" PRIx32 "\",\"meanLum\":%.9g,\"disp\":\"%08" PRIx32 "\",\"ev100\":%.9g,\"cyclesPerSample\":%.1f,"
-         "\"seconds\":%.3f,\"samples\":%" PRIu64 "}\n",
+         "\"seconds\":%.3f,\"samples\":%" PRIu64 ",\"variant\":\"%s\"}\n",
          d->id, st.w, st.h, f0, lum0, (double)frame0_cycles / (st.w * st.h), st.pass, acc, lum, dsp, st.ev,
-         (double)cycles / (double)st.samples, (t1 - t0) / 1e6, st.samples);
+         (double)cycles / (double)st.samples, (t1 - t0) / 1e6, st.samples, VARIANT[variant]);
   fflush(stdout);
   cg_end(&st);
   heap_caps_free(line);
+}
+
+typedef struct { int k, passes, variant; TaskHandle_t waiter; } digest_job;
+static void digest_task(void *arg) {
+  digest_job *j = arg;
+  digest(j->k, j->passes, j->variant);
+  xTaskNotifyGive(j->waiter);
+  vTaskSuspend(NULL);   // the worker deletes this task once notified
+}
+static void digest_on_helper(int k, int passes, int variant) {
+  digest_job j = {k, passes, variant, xTaskGetCurrentTaskHandle()};
+  TaskHandle_t h = NULL;
+  const UBaseType_t caps = variant == V_PSRAM ? MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT : MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT;
+  if (xTaskCreatePinnedToCoreWithCaps(digest_task, "gallery-d", STACK, &j, variant == V_QUIET ? 6 : PRIORITY, &h, 1, caps) != pdPASS) {
+    snprintf(err, sizeof err, "no %s stack for the digest", VARIANT[variant]);
+    record_error("digest");
+    return;
+  }
+  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+  vTaskDeleteWithCaps(h);
 }
 
 static int next_index(int k, int delta) {
@@ -235,7 +261,7 @@ static void handle(const command *c) {
       const int resume = current;
       end_scene("digest");
       current = -1;
-      digest(c->a, c->b);
+      digest_on_helper(c->a, c->b, c->c);
       begin_scene(resume < 0 ? 0 : resume);
       break;
     }
@@ -314,9 +340,9 @@ static int find(const char *id) {
 }
 
 void p4_gallery_console(const char *args) {
-  char a[16] = "", b[16] = ""; int n = 0;
-  const int got = sscanf(args, "%15s %15s %d", a, b, &n);
-  command c = {C_STATUS, 0, 0};
+  char a[16] = "", b[16] = "", v[16] = "psram"; int n = 0;
+  const int got = sscanf(args, "%15s %15s %d %15s", a, b, &n, v);
+  command c = {C_STATUS, 0, 0, 0};
   if (got < 1 || !strcmp(a, "status")) c.op = C_STATUS;
   else if (!strcmp(a, "next")) { c.op = C_STEP; c.a = 1; }
   else if (!strcmp(a, "prev")) { c.op = C_STEP; c.a = -1; }
@@ -328,8 +354,11 @@ void p4_gallery_console(const char *args) {
              cg_scenes[k].id, cg_scenes[k].title, cg_scenes[k].w, cg_scenes[k].h, cg_scenes[k].spectral);
     return;
   } else if (!strcmp(a, "scene") && got >= 2 && find(b) >= 0) { c.op = C_SCENE; c.a = find(b); }
-  else if (!strcmp(a, "digest") && got == 3 && find(b) >= 0 && n >= 1 && n <= 1024) { c.op = C_DIGEST; c.a = find(b); c.b = n; }
-  else { puts("gallery status|next|prev|pause|resume|list|scene ID|digest ID PASSES"); return; }
+  else if (!strcmp(a, "digest") && got >= 3 && find(b) >= 0 && n >= 1 && n <= 1024 &&
+           (!strcmp(v, "psram") || !strcmp(v, "internal") || !strcmp(v, "quiet"))) {
+    c.op = C_DIGEST; c.a = find(b); c.b = n; c.c = !strcmp(v, "psram") ? V_PSRAM : !strcmp(v, "internal") ? V_INTERNAL : V_QUIET;
+  }
+  else { puts("gallery status|next|prev|pause|resume|list|scene ID|digest ID PASSES [psram|internal|quiet]"); return; }
   p4_gallery_start();
   if (!commands || xQueueSend(commands, &c, 0) != pdTRUE) puts("gallery: not running or busy");
 }
