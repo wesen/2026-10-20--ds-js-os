@@ -1,0 +1,1076 @@
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"idle","turns":16110,"msgs":16110,"cpu_ms":15839.382,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":66,"msgs":66,"cpu_ms":67.914,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":9,"msgs":9,"cpu_ms":73.067,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"idle","turns":1013,"msgs":1013,"cpu_ms":4261.831,"mem_kb":425.1,"limit_kb":768,"mbox":0,"mbox_peak":23,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":3232,"msgs":3232,"cpu_ms":656.847,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":141.997,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":163,"msgs":163,"cpu_ms":1970.505,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":3.897,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.515,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":240.104,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":22,"msgs":22,"cpu_ms":14.438,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":326,"msgs":326,"cpu_ms":1088.209,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":649,"msgs":649,"cpu_ms":2696.998,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":326,"msgs":326,"cpu_ms":1184.432,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":649,"msgs":649,"cpu_ms":3333.958,"mem_kb":219.9,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.443,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.557,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":2935,"msgs":2935,"cpu_ms":4210.496,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":55.440,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.630,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.087,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":325,"msgs":325,"cpu_ms":1102.356,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":325,"msgs":325,"cpu_ms":512.418,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":18.194,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.304,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":28.574,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":3.022,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":17.707,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":326,"msgs":326,"cpu_ms":345.095,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":0,"rejects":0,"compile_us":5155351,"relocate_us":1268,"native_us":1427,"raster_us":0,"image_bytes":33840}
+#OK painter
+t = 338225.4 ms, lane busy 38017.6 ms (11.2%), 26512 turns, 353 published, 384 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   idle         16113  15849.15     67.3    320    0  
+  power       driver   idle            66     67.91     77.2    320    0  
+  display     driver   idle             9     73.07     73.8    320    0  
+  compositor  service  idle          1014   4262.05    425.1    768    0  
+  agent       service  idle          3233    657.00    771.0   1536    0  
+  chat        app      idle             8    142.00    238.8    768    0  
+  launcher    app      idle           164   1982.48    264.7    384    0  
+  files       app      idle             1      3.90     68.2    384    0  
+  editor      app      idle             1     14.52    711.8    768    0  
+  calc        app      idle             1    240.10    568.9   1024    0  
+  agenda      app      idle            22     14.44    181.2    384    0  
+  settings    app      idle           327   1092.14    190.1    384    0  
+  logs        app      idle           650   2701.30    214.3    384    0  
+  loader      app      idle           327   1186.89    230.2    384    0  
+  sysmon      app      idle           650   3339.22    219.9    512    0  
+  repl        app      idle             0     27.44    209.0    384    0  
+  sandbox     service  idle             0     23.56    206.1    512    0  
+  snake       app      idle          2936   4212.77     98.3    320    0  
+  faults      app      idle             5     55.44    216.0    384    0  
+  flaky       service  idle             1      8.63     48.3    320    0  
+  raytrace    app      idle             0     26.09    207.6    320    0  
+  keys        app      idle           326   1104.15    208.0    320    0  
+  about       app      idle           325    512.42    208.2    320    0  
+  chess       app      idle             1     18.19    743.8    768    0  
+  toplog      service  idle             1      8.30     41.3    320    0  
+  nat-echo    service  idle             4     28.57     28.2     64    0  
+  nat-bench   service  idle             1      3.02      2.7     64    0  
+  nat-import  world    stopped          0     17.71      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle           326    345.10     14.3     64    0  
+  bus i2c0  busy 88398.15 ms, 16179 transfers, 64783 bytes, 0 errors
+  bus spi2  busy   116.45 ms, 70 transfers, 401984 bytes, 0 errors
+#OK stats
+i2c0 held between transactions; reboot or flash now
+#OK hold
+3ce0,len:0x15f0
+load:0x4ff2abd0,len:0xd88
+load:0x4ff2cbd0,len:0x3310
+entry 0x4ff2abda
+I (25) boot: ESP-IDF v5.4.2 2nd stage bootloader
+I (26) boot: compile time Nov  1 2026 16:48:47
+I (26) boot: Multicore bootloader
+I (27) boot: chip revision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40190020 size=30957ch (3183996) map
+I (629) esp_image: segment 1: paddr=003195a4 vaddr=30100000 size=00068h (   104) load
+I (631) esp_image: segment 2: paddr=00319614 vaddr=4ff00000 size=06a04h ( 27140) load
+I (639) esp_image: segment 3: paddr=00320020 vaddr=40000020 size=18d000h (1626112) map
+I (911) esp_image: segment 4: paddr=004ad028 vaddr=4ff06a04 size=0d7e0h ( 55264) load
+I (923) esp_image: segment 5: paddr=004ba810 vaddr=4ff14200 size=0502ch ( 20524) load
+I (933) boot: Loaded app from partition at offset 0x10000
+I (933) boot: Disabling RNG early entropy source...
+I (944) hex_psram: vendor id    : 0x0d (AP)
+I (944) hex_psram: Latency      : 0x01 (Fixed)
+I (945) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (945) hex_psram: dev id       : 0x03 (generation 4)
+I (950) hex_psram: density      : 0x07 (256 Mbit)
+I (954) hex_psram: good-die     : 0x06 (Pass)
+I (958) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (963) hex_psram: BurstType    : 0x00 ( Wrap)
+I (967) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (972) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (976) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (981) hex_psram: DriveStrength: 0x00 (1/1)
+I (986) MSPI DQS: tuning success, best phase id is 0
+I (1158) MSPI DQS: tuning success, best delayline id is 17
+I (1159) esp_psram: Found 32MB PSRAM device
+I (1159) esp_psram: Speed: 200MHz
+I (1160) hex_psram: psram CS IO is dedicated
+I (1163) cpu_start: Multicore app
+I (2072) esp_psram: SPI SRAM memory test OK
+I (2082) cpu_start: Pro cpu start user code
+I (2082) cpu_start: cpu freq: 360000000 Hz
+I (2082) app_init: Application information:
+I (2082) app_init: Project name:     picocalc-os-p4
+I (2087) app_init: App version:      a396d3b
+I (2091) app_init: Compile time:     Nov 22 2026 09:36:16
+I (2096) app_init: ELF file SHA256:  596921b6d...
+I (2100) app_init: ESP-IDF:          v5.4.2
+I (2104) efuse_init: Min chip rev:     v0.1
+I (2108) efuse_init: Max chip rev:     v1.99 
+I (2112) efuse_init: Chip rev:         v1.3
+I (2116) heap_init: Initializing. RAM available for dynamic allocation:
+I (2123) heap_init: At 4FF29760 len 00011860 (70 KiB): RAM
+I (2128) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (2133) heap_init: At 4FF566C0 len 00049940 (294 KiB): RAM
+I (2138) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (2143) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (2151) spi_flash: detected chip: generic
+W (2154) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (2164) spi_flash: flash io: dio
+I (2168) main_task: Started on CPU0
+I (2171) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (2179) main_task: Calling app_main()
+I (2182) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+heap: internal 383291 free (largest 294912), psram 33551748 free (largest 33030144)
+I (2242) fs: /files: 7900 KB, 7892 KB free (mounted in 21 ms)
+I (2243) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2245) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2439) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+I (2440) main_task: Returned from app_main()
+[   159.226] calibration on the real clock: the 100k loop took 112.9 ms (the model says 133), fib(20) 30.5 ms (the model says 29.1)
+typed compiler bytecode: typed/wasm.js 236247 bytes
+typed compiler bytecode: typed/rv32.js 464026 bytes
+typed compiler bytecode: candela/link.js 1874 bytes
+candela native compiler functions=streamed
+candela compile source=candela/callback.typed status=ok us=2184482 peak_js_bytes=1594672 module_bytes=66816
+I (4787) ELF: ELF loader version: 2.0.0
+I (4790) ELF: elf->entry=0x48230b18
+CANLOAD {"stage":2,"compileUs":2185968,"relocateUs":3829,"installTotalUs":2190020,"imageBytes":66816,"elfSegmentBytes":66092,"residentStructBytes":732,"sourceBytes":15942,"graphBytes":612,"psramMonitored":1,"psramPeakDeltaBytes":2418608}
+typed compiler bytecode: agenda/compile.js 5525 bytes
+agenda native compiler functions=streamed
+agenda native compiler policy=interactive
+agenda compile source=bundle status=ok us=678993 peak_js_bytes=1151716 module_bytes=66364
+agenda boot source_start_us=2368392
+typed compiler bytecode: files/compile.js 3147 bytes
+files native compiler functions=streamed
+files compile source=bundle status=ok us=430529 peak_js_bytes=935848 module_bytes=24424
+typed compiler bytecode: typed/async.js 166436 bytes
+typed compiler bytecode: typed/world.js 9924 bytes
+editor native compiler functions=streamed
+editor native compiler policy=interactive
+editor compile source=bundle status=ok us=3187122 peak_js_bytes=2997424 module_bytes=242124
+chess native compiler functions=streamed
+chess native compiler policy=balanced
+chess compile source=bundle status=ok us=3903413 peak_js_bytes=2959660 module_bytes=274892
+[ 10696.746] booting 25 worlds from js/system.typed-agenda.json
+[ 10709.257] booting 5 worlds from js/system.elf.json
+agenda stage before-cji-restore us=8342150
+agenda stage before-dispatch us=8342788
+unknown command ÿ (try help)
+#OK ÿ
+[{"name":"keyboard","kind":"world","engine":"native","title":"keyboard","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"world","engine":"native","title":"power","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"world","engine":"native","title":"display","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"world","engine":"native","title":"compositor","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"world","engine":"native","title":"agent","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":1536,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"world","engine":"js","title":"chat","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"world","engine":"js","title":"launcher","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"world","engine":"native","title":"files","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"world","engine":"native","title":"editor","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"world","engine":"js","title":"calc","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"world","engine":"native","title":"agenda","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"world","engine":"native","title":"settings","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"world","engine":"js","title":"logs","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"world","engine":"js","title":"loader","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"world","engine":"js","title":"sysmon","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"world","engine":"js","title":"repl","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"world","engine":"js","title":"sandbox","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"world","engine":"native","title":"snake","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"world","engine":"js","title":"faults","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"world","engine":"native","title":"flaky","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"world","engine":"js","title":"raytrace","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"world","engine":"js","title":"keys","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"world","engine":"js","title":"about","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"world","engine":"native","title":"chess","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"gallery","kind":"world","engine":"js","title":"gallery","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"candela-gallery/gallery.js","claims":[]},{"name":"toplog","kind":"world","engine":"native","title":"toplog","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"world","engine":"native","title":"nat-echo","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"world","engine":"native","title":"nat-bench","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"world","engine":"native","title":"nat-dial","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+quickjs prelude cache bytes=44957 build_us=53870
+agenda stage world-init us=9554025
+agenda stage world-init-done us=9560930
+[ 12297.587] toplog: hello from the top level
+[ 12301.249] nat-echo: TEST kind ok 
+[ 12301.955] nat-echo: TEST provide ok 
+[ 12302.428] nat-echo: TEST every ok 
+[ 12302.951] nat-echo: TEST title ok 
+[ 12303.498] nat-echo: TEST icon ok 
+[ 12303.948] nat-echo: TEST about ok 
+[ 12304.491] nat-echo: TEST icon-object err an icon is a JSON array of drawing operations, at most 1024 bytes
+[ 12312.613] nat-echo: TEST key-upper err a shortcut key is one of a-z and 0-9
+[ 12322.466] nat-echo: TEST init done
+E (14765) ELF: Can't find common path_open
+[ 12332.409] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":12332.409,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+I (14799) bus: spi2: panel device at 40000000 Hz requested, 40000 kHz actual
+[ 12392.390] nat-echo: TEST start self=nat-echo clock=running
+[ 12393.918] nat-bench: BENCH loop n=1000 us=35 r=122468
+[ 12394.680] nat-bench: BENCH loop n=4000 us=135 r=498743
+[ 12395.834] nat-bench: BENCH loop n=16000 us=535 r=2028337
+E (14914) ELF: Can't find common path_open
+[ 12474.544] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":12474.544,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+[ 12491.871] nat-echo: TEST ticks 3 timer=0
+agenda stage file-submitted us=10134167
+agenda stage file-returned us=10228956
+agenda stage settle us=10229819
+agenda response us=10230752 world_bytes=185535
+agenda frame turn_us=934 world_bytes=185535
+agenda compositor kind=draw total_us=16797 segments=1 reply_wait_us=0 reply_wait_segments=0
+agenda compositor kind=worlds.status total_us=2005 segments=1 reply_wait_us=0 reply_wait_segments=0
+agenda compositor kind=other total_us=19239 segments=2 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=keyboard engine=2 first_us=9063015 total_us=10680 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=power engine=2 first_us=9074033 total_us=11206 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=display engine=2 first_us=9085575 total_us=9739 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=compositor engine=2 first_us=9095710 total_us=28422 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=agent engine=2 first_us=9124547 total_us=40610 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=chat engine=0 first_us=9165564 total_us=98657 attempts=1 js_setup_us=7213 js_prelude_us=63356 js_source_us=25345 js_init_us=2584 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=launcher engine=0 first_us=9264703 total_us=34860 attempts=1 js_setup_us=6671 js_prelude_us=8291 js_source_us=17471 js_init_us=2276 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=files engine=2 first_us=9300020 total_us=2848 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=editor engine=2 first_us=9303139 total_us=14186 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=calc engine=0 first_us=9317728 total_us=235704 attempts=1 js_setup_us=7064 js_prelude_us=8242 js_source_us=215973 js_init_us=4282 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=agenda engine=2 first_us=9554015 total_us=7746 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=settings engine=2 first_us=9562174 total_us=20999 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=logs engine=0 first_us=9583608 total_us=32448 attempts=1 js_setup_us=7188 js_prelude_us=8419 js_source_us=14108 js_init_us=2618 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=loader engine=0 first_us=9616510 total_us=39046 attempts=1 js_setup_us=6662 js_prelude_us=8364 js_source_us=21167 js_init_us=2706 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=sysmon engine=0 first_us=9656050 total_us=39832 attempts=1 js_setup_us=6727 js_prelude_us=8457 js_source_us=21807 js_init_us=2696 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=repl engine=0 first_us=9696354 total_us=27555 attempts=1 js_setup_us=6742 js_prelude_us=8348 js_source_us=9600 js_init_us=2751 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=sandbox engine=0 first_us=9724339 total_us=23601 attempts=1 js_setup_us=6671 js_prelude_us=8305 js_source_us=6357 js_init_us=2160 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=snake engine=2 first_us=9748380 total_us=13459 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=faults engine=0 first_us=9762260 total_us=30104 attempts=1 js_setup_us=7024 js_prelude_us=8394 js_source_us=12039 js_init_us=2514 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=flaky engine=2 first_us=9792845 total_us=8535 attempts=1 js_setup_us=0 js_prelude_us=0 js_source_us=0 js_init_us=0 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=raytrace engine=0 first_us=9801744 total_us=26113 attempts=1 js_setup_us=7044 js_prelude_us=8372 js_source_us=7947 js_init_us=2633 reply_wait_us=0 reply_wait_segments=0
+agenda boot-64}
+ does not give a module","crashes":3,"mem_kb":0,"limit_kb":s=1 js_setup_us=6704 js_prelude_us=8317 js_source_us=9288 js_init_us=2222 reply_wait_us=0 reply_wait_segments=0
+agenda boot-world name=about engine=0 first_us=9855463 total_us=25659 attempts=1 js_setup_us=6836 js_prelude_us=8472 js_source_us=7874 js_init_64}
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":23,"msgs":24,"cpu_ms":77.073,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":1,"msgs":1,"cpu_ms":14.255,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"waiting","turns":3,"msgs":4,"cpu_ms":30.491,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"waiting","turns":32,"msgs":33,"cpu_ms":204.250,"mem_kb":363.8,"limit_kb":768,"mbox":1,"mbox_peak":28,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":8,"msgs":8,"cpu_ms":58.010,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":6,"msgs":6,"cpu_ms":130.645,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":1,"msgs":1,"cpu_ms":73.638,"mem_kb":264.7,"limit_kb":384,"mbox":1,"mbox_peak":1,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":3.973,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.613,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.774,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":1,"msgs":1,"cpu_ms":10.250,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":2,"msgs":2,"cpu_ms":28.129,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":2,"msgs":2,"cpu_ms":39.910,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":2,"msgs":2,"cpu_ms":67.800,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":3,"msgs":3,"cpu_ms":52.814,"mem_kb":217.8,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.555,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.601,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":6,"msgs":6,"cpu_ms":24.045,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":3,"msgs":3,"cpu_ms":44.393,"mem_kb":212.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.643,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.113,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":1,"msgs":1,"cpu_ms":29.425,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":1,"msgs":1,"cpu_ms":28.374,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":17.719,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"gallery","kind":"app","engine":"js","title":"Candela","state":"idle","turns":4,"msgs":4,"cpu_ms":35.583,"mem_kb":206.1,"limit_kb":320,"mbox":1,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"candela-gallery/gallery.js","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.703,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":25.028,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":4.656,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"restarting","turns":0,"msgs":0,"cpu_ms":14.284,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":1,"msgs":1,"cpu_ms":1.840,"mem_kb":14.3,"limit_kb":64,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+E (16605) ELF: Can't find common path_open
+[ 14169.292] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":14169.292,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+typed compiler bytecode: painter/link.js 1183 bytes
+mobile-painter native compiler functions=streamed
+E (17412) ELF: Can't find common path_open
+[ 14973.102] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":14973.102,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+[ 14973.102] nat-import crashed 5 times in ten seconds; it stays stopped
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":121,"msgs":122,"cpu_ms":380.424,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":1,"msgs":1,"cpu_ms":14.255,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":6,"msgs":6,"cpu_ms":46.944,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"idle","turns":66,"msgs":66,"cpu_ms":586.294,"mem_kb":427.8,"limit_kb":768,"mbox":0,"mbox_peak":28,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":29,"msgs":29,"cpu_ms":67.397,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":140.499,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":4,"msgs":4,"cpu_ms":104.670,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":3.973,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.613,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.774,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":1,"msgs":1,"cpu_ms":10.250,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":5,"msgs":5,"cpu_ms":39.802,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":7,"msgs":7,"cpu_ms":58.154,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":5,"msgs":5,"cpu_ms":79.021,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":8,"msgs":8,"cpu_ms":80.212,"mem_kb":217.8,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.555,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.601,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":24,"msgs":24,"cpu_ms":63.054,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":54.820,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.643,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.113,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":4,"msgs":4,"cpu_ms":38.605,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":3,"msgs":3,"cpu_ms":30.972,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":17.719,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"gallery","kind":"app","engine":"js","title":"Candela","state":"idle","turns":14,"msgs":14,"cpu_ms":51.062,"mem_kb":206.1,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"candela-gallery/gallery.js","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.703,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":25.028,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":4.656,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":23.280,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":4,"msgs":4,"cpu_ms":5.450,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+mobile-painter compile source=screen-message status=ok us=5500361 peak_js_bytes=1734872 module_bytes=33840
+CGAL {"ev":"first","id":"B-01","ms":234.1,"sub":1,"pass":0,"ev100":14.9748,"skyRebuilt":1}
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"idle","turns":224,"msgs":224,"cpu_ms":705.291,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":2,"msgs":2,"cpu_ms":15.283,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":6,"msgs":6,"cpu_ms":46.944,"mem_kb":73.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"idle","turns":83,"msgs":83,"cpu_ms":718.649,"mem_kb":427.8,"limit_kb":768,"mbox":0,"mbox_peak":28,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":50,"msgs":50,"cpu_ms":74.965,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":140.499,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":5,"msgs":5,"cpu_ms":115.772,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":3.973,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.613,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.774,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":1,"msgs":1,"cpu_ms":10.250,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":8,"msgs":8,"cpu_ms":50.388,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":12,"msgs":12,"cpu_ms":75.797,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":7,"msgs":7,"cpu_ms":85.377,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":13,"msgs":13,"cpu_ms":105.548,"mem_kb":217.8,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.555,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.601,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":44,"msgs":44,"cpu_ms":105.745,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":54.820,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.643,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.113,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":6,"msgs":6,"cpu_ms":44.051,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":6,"msgs":6,"cpu_ms":35.812,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":17.719,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"gallery","kind":"app","engine":"js","title":"Candela","state":"idle","turns":23,"msgs":23,"cpu_ms":65.514,"mem_kb":206.1,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"candela-gallery/gallery.js","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.703,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":25.028,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":4.656,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":23.280,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":7,"msgs":7,"cpu_ms":9.146,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":0,"rejects":0,"compile_us":5501877,"relocate_us":1460,"native_us":1433,"raster_us":0,"image_bytes":33840}
+#OK painter
+t = 19747.1 ms, lane busy 2943.1 ms (14.9%), 533 turns, 51 published, 93 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   waiting        227    715.03     67.3    320    0  
+  power       driver   idle             2     15.28     77.2    320    0  
+  display     driver   waiting          6     52.98     73.8    320    0  
+  compositor  service  waiting         85    743.99    427.8    768    0  
+  agent       service  idle            52     75.39    771.0   1536    0  
+  chat        app      idle             8    140.50    238.8    768    0  
+  launcher    app      idle             5    115.77    264.7    384    0  
+  files       app      idle             1      3.97     68.2    384    0  
+  editor      app      idle             1     14.61    711.8    768    0  
+  calc        app      idle             1    241.77    568.9   1024    0  
+  agenda      app      idle             1     10.25    181.2    384    0  
+  settings    app      idle             8     50.39    190.1    384    0  
+  logs        app      idle            13     80.01    214.3    384    0  
+  loader      app      idle             8     87.16    230.2    384    0  
+  sysmon      app      idle            14    111.37    217.8    512    0  
+  repl        app      idle             0     27.55    209.0    384    0  
+  sandbox     service  idle             0     23.60    206.1    512    0  
+  snake       app      idle            45    108.14     98.3    320    0  
+  faults      app      idle             5     54.82    216.0    384    0  
+  flaky       service  idle             1      8.64     48.3    320    0  
+  raytrace    app      idle             0     26.11    207.6    320    0  
+  keys        app      idle             6     44.05    208.0    320    0  
+  about       app      idle             6     35.81    208.2    320    0  
+  chess       app      idle             1     17.72    743.8    768    0  
+  gallery     app      idle            24     67.38    206.1    320    0  
+  toplog      service  idle             1      8.70     41.3    320    0  
+  nat-echo    service  idle             4     25.03     28.2     64    0  
+  nat-bench   service  idle             1      4.66      2.7     64    0  
+  nat-import  world    stopped          0     23.28      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle             7      9.15     14.3     64    0  
+  bus i2c0  busy  1399.83 ms, 229 transfers, 919 bytes, 0 errors
+  bus spi2  busy   158.01 ms, 41 transfers, 647581 bytes, 0 errors
+#OK stats
+CGAL {"ev":"pass","id":"B-01","pass":1,"renderMs":805.9,"cyclesPerSample":11286.6,"ev100":14.9748}
+CGAL {"ev":"pass","id":"B-01","pass":2,"renderMs":1859.1,"cyclesPerSample":13037.9,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":3,"renderMs":2760.2,"cyclesPerSample":12908.9,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":4,"renderMs":3619.1,"cyclesPerSample":12696.1,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":5,"renderMs":4504.3,"cyclesPerSample":12642.2,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":6,"renderMs":5376.2,"cyclesPerSample":12575.3,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":7,"renderMs":6258.0,"cyclesPerSample":12547.5,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":8,"renderMs":7288.6,"cyclesPerSample":12788.0,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":9,"renderMs":8171.5,"cyclesPerSample":12744.1,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":10,"renderMs":9037.9,"cyclesPerSample":12686.0,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":11,"renderMs":9957.2,"cyclesPerSample":12706.0,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":12,"renderMs":10816.4,"cyclesPerSample":12652.4,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":13,"renderMs":11723.0,"cyclesPerSample":12658.3,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":14,"renderMs":12533.5,"cyclesPerSample":12566.8,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":15,"renderMs":13387.5,"cyclesPerSample":12528.4,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":16,"renderMs":14256.2,"cyclesPerSample":12506.2,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":17,"renderMs":15138.8,"cyclesPerSample":12498.2,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":18,"renderMs":16019.8,"cyclesPerSample":12490.8,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":19,"renderMs":16900.2,"cyclesPerSample":12484.0,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":20,"renderMs":17771.7,"cyclesPerSample":12471.5,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":21,"renderMs":18684.8,"cyclesPerSample":12488.1,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":22,"renderMs":19553.3,"cyclesPerSample":12474.7,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":23,"renderMs":20433.3,"cyclesPerSample":12469.4,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":24,"renderMs":21273.1,"cyclesPerSample":12441.0,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":25,"renderMs":22160.4,"cyclesPerSample":12441.7,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":26,"renderMs":23058.6,"cyclesPerSample":12447.1,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":27,"renderMs":23887.1,"cyclesPerSample":12416.9,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":28,"renderMs":24813.8,"cyclesPerSample":12438.1,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":29,"renderMs":25657.4,"cyclesPerSample":12417.6,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":30,"renderMs":26540.6,"cyclesPerSample":12417.0,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":31,"renderMs":27360.8,"cyclesPerSample":12387.9,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":32,"renderMs":28426.4,"cyclesPerSample":12468.5,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":33,"renderMs":29307.7,"cyclesPerSample":12465.5,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":34,"renderMs":30187.2,"cyclesPerSample":12462.0,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":35,"renderMs":31045.3,"cyclesPerSample":12450.1,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":36,"renderMs":31981.8,"cyclesPerSample":12469.5,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":37,"renderMs":32838.9,"cyclesPerSample":12457.7,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":38,"renderMs":33700.1,"cyclesPerSample":12448.1,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":39,"renderMs":34543.2,"cyclesPerSample":12432.4,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":40,"renderMs":35443.4,"cyclesPerSample":12437.6,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":41,"renderMs":36340.7,"cyclesPerSample":12441.5,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":42,"renderMs":37183.1,"cyclesPerSample":12426.8,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":43,"renderMs":38070.9,"cyclesPerSample":12427.7,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":44,"renderMs":38951.8,"cyclesPerSample":12426.3,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":45,"renderMs":39829.8,"cyclesPerSample":12424.1,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":46,"renderMs":40681.6,"cyclesPerSample":12414.0,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":47,"renderMs":41559.3,"cyclesPerSample":12412.0,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":48,"renderMs":42476.7,"cyclesPerSample":12421.8,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":49,"renderMs":43348.5,"cyclesPerSample":12416.9,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":50,"renderMs":44232.8,"cyclesPerSample":12416.9,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":51,"renderMs":45128.0,"cyclesPerSample":12419.9,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":52,"renderMs":45966.1,"cyclesPerSample":12407.3,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":53,"renderMs":46907.4,"cyclesPerSample":12422.5,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":54,"renderMs":47735.7,"cyclesPerSample":12407.8,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":55,"renderMs":48633.4,"cyclesPerSample":12411.4,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":56,"renderMs":49508.8,"cyclesPerSample":12409.2,"ev100":15.3723}
+CGAL {"ev":"scene","id":"B-01","w":160,"h":160,"reason":"time","passes":56,"samples":1443360,"firstImageMs":234.1,"coarseMs":126.4,"halfMs":5572.6,"pass1Ms":6251.0,"renderMs":49711.2,"shownMs":60002.3,"secPerPass":0.8817,"samplesPerSec":29034.9,"cyclesPerSample":12375.7,"displays":38,"displayMs":4909.0,"displayCyclesMean":44522289,"skyRebuilt":1,"ev100":15.3723,"metered":4,"meanLum":8467.25,"internalFree0":70451,"internalMinFree":61239,"psramFree0":21391528,"psramMinFree":19749128,"internalPeakUse":9212,"psramPeakUse":1642400}
+CGAL {"ev":"first","id":"R-01","ms":330.6,"sub":1,"pass":0,"ev100":8.5206,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"R-01","pass":1,"renderMs":1531.5,"cyclesPerSample":21489.2,"ev100":8.5206}
+CGAL {"ev":"pass","id":"R-01","pass":2,"renderMs":3043.0,"cyclesPerSample":21361.0,"ev100":8.3467}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 3619 lines stripped (the capture is the PNG beside this log)
+#END 385c5407 51562
+#OK gallery
+CGAL {"ev":"scene-list","index":0,"id":"B-01","title":"Hello, sphere","w":160,"h":160,"spectral":0}
+CGAL {"ev":"scene-list","index":1,"id":"R-01","title":"The Cornell box","w":160,"h":160,"spectral":0}
+CGAL {"ev":"scene-list","index":2,"id":"L-03","title":"The sun and the sky","w":160,"h":160,"spectral":0}
+CGAL {"ev":"scene-list","index":3,"id":"G-01","title":"Analytic primitives","w":160,"h":160,"spectral":0}
+CGAL {"ev":"scene-list","index":4,"id":"E-02","title":"A custom integrator: toon shading","w":160,"h":160,"spectral":0}
+CGAL {"ev":"scene-list","index":5,"id":"W-02","title":"Talk to the world","w":160,"h":160,"spectral":0}
+CGAL {"ev":"scene-list","index":6,"id":"F-01","title":"Checker, stripes, ramps","w":160,"h":160,"spectral":0}
+CGAL {"ev":"scene-list","index":7,"id":"V-02","title":"Phase functions","w":160,"h":160,"spectral":0}
+CGAL {"ev":"scene-list","index":8,"id":"G-02","title":"Your own distance field","w":160,"h":160,"spectral":0}
+CGAL {"ev":"scene-list","index":9,"id":"X-04","title":"Menger sponge","w":80,"h":80,"spectral":0}
+CGAL {"ev":"scene-list","index":10,"id":"S-02","title":"Diamond fire","w":80,"h":80,"spectral":1}
+CGAL {"ev":"scene-list","index":11,"id":"R-05","title":"Jewellery on velvet","w":80,"h":80,"spectral":1}
+CGAL {"ev":"scene-list","index":12,"id":"V-03","title":"Smoke: a heterogeneous volume","w":80,"h":80,"spectral":0}
+CGAL {"ev":"scene-list","index":13,"id":"V-04","title":"A cloud","w":80,"h":80,"spectral":0}
+CGAL {"ev":"scene-list","index":14,"id":"R-08","title":"Zen garden","w":80,"h":80,"spectral":0}
+CGAL {"ev":"scene-list","index":15,"id":"X-03","title":"A procedural planet","w":80,"h":80,"spectral":0}
+CGAL {"ev":"scene-list","index":16,"id":"R-04","title":"Dunes at golden hour","w":80,"h":80,"spectral":0}
+CGAL {"ev":"scene-list","index":17,"id":"G-03","title":"Heightfield terrain","w":80,"h":80,"spectral":0}
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":2,"samples":66240,"firstImageMs":330.6,"coarseMs":166.5,"halfMs":601.4,"pass1Ms":1851.1,"renderMs":3929.8,"shownMs":4733.3,"secPerPass":1.5188,"samplesPerSec":16855.7,"cyclesPerSample":21325.1,"displays":5,"displayMs":635.3,"displayCyclesMean":45484194,"skyRebuilt":1,"ev100":8.3467,"metered":2,"meanLum":61.8679,"internalFree0":70863,"internalMinFree":66923,"psramFree0":22059924,"psramMinFree":21312632,"internalPeakUse":3940,"psramPeakUse":747292}
+CGAL {"ev":"digest","id":"B-01","w":160,"h":160,"frame0":"e2ba6956","frame0MeanLum":8406.89544,"frame0CyclesPerSample":11403.8,"passes":4,"acc":"3b52c63c","meanLum":8511.44124,"disp":"23d7885f","ev100":15.3618046,"cyclesPerSample":13070.9,"seconds":3.719,"samples":102400,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70991,"internalMinFree":70539,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":452,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"B-01","w":160,"h":160,"frame0":"e2ba6956","frame0MeanLum":8406.89544,"frame0CyclesPerSample":11650.2,"passes":4,"acc":"3b52c63c","meanLum":8511.44124,"disp":"23d7885f","ev100":15.3618046,"cyclesPerSample":12781.8,"seconds":3.636,"samples":102400,"variant":"internal"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70971,"internalMinFree":70419,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":552,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"B-01","w":160,"h":160,"frame0":"e2ba6956","frame0MeanLum":8406.89544,"frame0CyclesPerSample":8227.3,"passes":4,"acc":"3b52c63c","meanLum":8511.44124,"disp":"23d7885f","ev100":15.3618046,"cyclesPerSample":8647.1,"seconds":2.460,"samples":102400,"variant":"quiet"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70979,"internalMinFree":69995,"psramFree0":21855120,"psramMinFree":21427288,"internalPeakUse":984,"psramPeakUse":427832}
+CGAL {"ev":"digest","id":"R-01","w":160,"h":160,"frame0":"e8421c97","frame0MeanLum":63.714543,"frame0CyclesPerSample":18668.6,"passes":4,"acc":"2ac5b8e1","meanLum":62.0379497,"disp":"1d7de02e","ev100":8.34674494,"cyclesPerSample":19937.9,"seconds":5.679,"samples":102400,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":320,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":16.0,"shownMs":13.2,"secPerPass":0.0000,"samplesPerSec":19977.5,"cyclesPerSample":17878.7,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":0,"ev100":12.0000,"metered":0,"meanLum":0.050251,"internalFree0":70991,"internalMinFree":70107,"psramFree0":21855120,"psramMinFree":21410936,"internalPeakUse":884,"psramPeakUse":444184}
+CGAL {"ev":"digest","id":"L-03","w":160,"h":160,"frame0":"16cb13f0","frame0MeanLum":9445.0545,"frame0CyclesPerSample":9635.4,"passes":4,"acc":"bfc2a34a","meanLum":9467.63478,"disp":"e95af902","ev100":16.1636437,"cyclesPerSample":10250.6,"seconds":2.916,"samples":102400,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70983,"internalMinFree":70627,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":356,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"G-01","w":160,"h":160,"frame0":"4af50eb8","frame0MeanLum":11649.2574,"frame0CyclesPerSample":19355.3,"passes":4,"acc":"68d5a13d","meanLum":11594.3241,"disp":"7e548c18","ev100":16.3263756,"cyclesPerSample":20550.3,"seconds":5.846,"samples":102400,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70971,"internalMinFree":70615,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":356,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"E-02","w":160,"h":160,"frame0":"de9e22b5","frame0MeanLum":0.444935534,"frame0CyclesPerSample":9571.2,"passes":4,"acc":"6edba2ef","meanLum":0.444963749,"disp":"74c3f85c","ev100":1.33111636,"cyclesPerSample":10244.3,"seconds":2.914,"samples":102400,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70971,"internalMinFree":70423,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":548,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"W-02","w":160,"h":160,"frame0":"34a669ff","frame0MeanLum":15.7079681,"frame0CyclesPerSample":28715.2,"passes":4,"acc":"865eba2b","meanLum":15.5241421,"disp":"dd654b4c","ev100":4.3477875,"cyclesPerSample":30296.1,"seconds":8.618,"samples":102400,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":320,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":11.2,"shownMs":12.3,"secPerPass":0.0000,"samplesPerSec":28469.8,"cyclesPerSample":12589.5,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":0,"ev100":12.0000,"metered":0,"meanLum":0.050251,"internalFree0":70967,"internalMinFree":70411,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":556,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"F-01","w":160,"h":160,"frame0":"4dd2f3eb","frame0MeanLum":8205.69342,"frame0CyclesPerSample":13649.8,"passes":4,"acc":"1982b77b","meanLum":8185.92001,"disp":"00d099a0","ev100":15.6120594,"cyclesPerSample":15109.7,"seconds":4.298,"samples":102400,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70959,"internalMinFree":70495,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":464,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"V-02","w":160,"h":160,"frame0":"9482ee60","frame0MeanLum":161.891958,"frame0CyclesPerSample":25666.6,"passes":4,"acc":"76ffc818","meanLum":163.57964,"disp":"1b6b5329","ev100":9.52518496,"cyclesPerSample":26984.5,"seconds":7.676,"samples":102400,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":360,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":15.3,"shownMs":15.2,"secPerPass":0.0000,"samplesPerSec":23515.6,"cyclesPerSample":15256.3,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":0,"ev100":12.0000,"metered":0,"meanLum":0.0872375,"internalFree0":70971,"internalMinFree":70411,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":560,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"G-02","w":160,"h":160,"frame0":"7834364c","frame0MeanLum":46.8123834,"frame0CyclesPerSample":35982.9,"passes":4,"acc":"81a65012","meanLum":46.6839727,"disp":"ada1739a","ev100":8.39601048,"cyclesPerSample":37166.4,"seconds":10.573,"samples":102400,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":360,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":13.6,"shownMs":14.8,"secPerPass":0.0000,"samplesPerSec":26540.8,"cyclesPerSample":13512.4,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":0,"ev100":12.0000,"metered":0,"meanLum":0.0872375,"internalFree0":70983,"internalMinFree":70399,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":584,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"X-04","w":80,"h":80,"frame0":"2b9af109","frame0MeanLum":2443.21145,"frame0CyclesPerSample":70804.4,"passes":4,"acc":"a0aafa50","meanLum":2417.46993,"disp":"450d2ead","ev100":12.9090618,"cyclesPerSample":74340.1,"seconds":5.287,"samples":25600,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70971,"internalMinFree":70615,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":356,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"S-02","w":80,"h":80,"frame0":"e32b0f6b","frame0MeanLum":282.201178,"frame0CyclesPerSample":47857.5,"passes":4,"acc":"a4d9bc0b","meanLum":200.70751,"disp":"4785e5ad","ev100":4.61396072,"cyclesPerSample":48596.0,"seconds":3.456,"samples":25600,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70987,"internalMinFree":70595,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":392,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"R-05","w":80,"h":80,"frame0":"74d02e3d","frame0MeanLum":3.36202248,"frame0CyclesPerSample":32779.5,"passes":4,"acc":"261b0649","meanLum":4.92694434,"disp":"658822ca","ev100":3.13992084,"cyclesPerSample":35214.4,"seconds":2.504,"samples":25600,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70979,"internalMinFree":70011,"psramFree0":21855120,"psramMinFree":21442348,"internalPeakUse":968,"psramPeakUse":412772}
+CGAL {"ev":"digest","id":"V-03","w":80,"h":80,"frame0":"5b10021a","frame0MeanLum":1260.68955,"frame0CyclesPerSample":91199.8,"passes":4,"acc":"a9569209","meanLum":1254.08428,"disp":"b995fd34","ev100":12.0962195,"cyclesPerSample":92436.5,"seconds":6.574,"samples":25600,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70987,"internalMinFree":67391,"psramFree0":21855120,"psramMinFree":21441328,"internalPeakUse":3596,"psramPeakUse":413792}
+CGAL {"ev":"digest","id":"V-04","w":80,"h":80,"frame0":"f700ca37","frame0MeanLum":14244.9329,"frame0CyclesPerSample":173683.5,"passes":4,"acc":"c4ca0369","meanLum":14194.0953,"disp":"38566376","ev100":16.3997005,"cyclesPerSample":177060.0,"seconds":12.592,"samples":25600,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70983,"internalMinFree":70523,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":460,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"R-08","w":80,"h":80,"frame0":"426121c5","frame0MeanLum":5434.69364,"frame0CyclesPerSample":218358.3,"passes":4,"acc":"67be6e6b","meanLum":5430.94174,"disp":"280382f5","ev100":15.0614069,"cyclesPerSample":220066.8,"seconds":15.650,"samples":25600,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70983,"internalMinFree":70627,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":356,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"X-03","w":80,"h":80,"frame0":"390c87ec","frame0MeanLum":907.865,"frame0CyclesPerSample":84971.8,"passes":4,"acc":"4f975e1b","meanLum":914.715455,"disp":"74f26c85","ev100":14.5,"cyclesPerSample":753131.0,"seconds":53.557,"samples":25600,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70983,"internalMinFree":70547,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":436,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"R-04","w":80,"h":80,"frame0":"a53bf8ab","frame0MeanLum":3275.29607,"frame0CyclesPerSample":462132.7,"passes":4,"acc":"76562f1c","meanLum":3272.89081,"disp":"cab1ca27","ev100":14.4603575,"cyclesPerSample":1130492.1,"seconds":80.392,"samples":25600,"variant":"psram"}
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"digest","passes":0,"samples":0,"firstImageMs":-1.0,"coarseMs":-1.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":0.0,"shownMs":0.0,"secPerPass":0.0000,"samplesPerSec":0.0,"cyclesPerSample":0.0,"displays":0,"displayMs":0.0,"displayCyclesMean":0,"skyRebuilt":1,"ev100":12.0000,"metered":0,"meanLum":0,"internalFree0":70991,"internalMinFree":70567,"psramFree0":21855120,"psramMinFree":21443692,"internalPeakUse":424,"psramPeakUse":411428}
+CGAL {"ev":"digest","id":"G-03","w":80,"h":80,"frame0":"23c854f6","frame0MeanLum":7079.08961,"frame0CyclesPerSample":666325.3,"passes":4,"acc":"b87782c2","meanLum":7063.16686,"disp":"1ead113e","ev100":15.3374183,"cyclesPerSample":1338733.6,"seconds":95.201,"samples":25600,"variant":"psram"}
+#OK gallery
+#OK gallery
+CGAL {"ev":"probe","ms":5000,"stolenPct":16.94,"gaps":4583,"gapsPerSecond":916.6,"meanGapUs":184.8,"longestGapUs":35451.7,"buckets":[3912,80,431,143,17]}
+#OK gallery
+t = 528965.1 ms, lane busy 102693.1 ms (19.4%), 46086 turns, 1571 published, 2709 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   waiting      25512  46135.98     67.3    320    0  
+  power       driver   idle           104    171.19     77.2    320    0  
+  display     driver   idle            90    661.52     73.8    320    0  
+  compositor  service  idle          3632  20755.08    427.8    768    0  
+  agent       service  idle          5111   1367.71    771.0   1536    0  
+  chat        app      idle             8    140.50    238.8    768    0  
+  launcher    app      idle           259   3174.65    264.7    384    0  
+  files       app      idle             1      3.97     68.2    384    0  
+  editor      app      idle             1     14.61    711.8    768    0  
+  calc        app      idle             1    241.77    568.9   1024    0  
+  agenda      app      idle            35     17.21    181.2    384    0  
+  settings    app      idle           515   1820.39    190.1    384    0  
+  logs        app      idle          1026   4264.36    214.3    384    0  
+  loader      app      idle           515   2083.64    230.2    384    0  
+  sysmon      app      idle          1027   5601.65    219.9    512    0  
+  repl        app      idle             0     27.55    209.0    384    0  
+  sandbox     service  idle             0     23.60    206.1    512    0  
+  snake       app      idle          4644   7992.96     98.3    320    0  
+  faults      app      idle             5     54.82    216.0    384    0  
+  flaky       service  idle             1      8.64     48.3    320    0  
+  raytrace    app      idle             0     26.11    207.6    320    0  
+  keys        app      idle           514   1829.72    208.0    320    0  
+  about       app      idle           514   1030.17    208.2    320    0  
+  chess       app      idle             1     17.72    743.8    768    0  
+  gallery     app      idle          2049   4565.10    206.1    320    0  
+  toplog      service  idle             1      8.70     41.3    320    0  
+  nat-echo    service  idle             4     25.03     28.2     64    0  
+  nat-bench   service  idle             1      4.66      2.7     64    0  
+  nat-import  world    stopped          0     23.28      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle           515    600.80     14.3     64    0  
+  bus i2c0  busy 151255.22 ms, 25616 transfers, 102569 bytes, 0 errors
+  bus spi2  busy  1753.60 ms, 930 transfers, 7101359 bytes, 0 errors
+#OK stats
+#OK gallery
+CGAL {"ev":"first","id":"R-01","ms":5273.3,"sub":1,"pass":0,"ev100":8.5206,"skyRebuilt":1}
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"chosen","passes":0,"samples":1600,"firstImageMs":5273.3,"coarseMs":5177.0,"halfMs":-1.0,"pass1Ms":-1.0,"renderMs":121.4,"shownMs":5132.9,"secPerPass":0.0000,"samplesPerSec":13181.7,"cyclesPerSample":27278.7,"displays":1,"displayMs":96.3,"displayCyclesMean":34646544,"skyRebuilt":1,"ev100":8.5206,"metered":1,"meanLum":3.52488,"internalFree0":70979,"internalMinFree":66643,"psramFree0":21855120,"psramMinFree":21308532,"internalPeakUse":4336,"psramPeakUse":546588}
+CGAL {"ev":"first","id":"B-01","ms":311.8,"sub":1,"pass":0,"ev100":14.9748,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"B-01","pass":1,"renderMs":1064.7,"cyclesPerSample":14927.7,"ev100":14.9748}
+CGAL {"ev":"pass","id":"B-01","pass":2,"renderMs":2124.6,"cyclesPerSample":14874.2,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":3,"renderMs":3001.1,"cyclesPerSample":14010.0,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":4,"renderMs":3903.0,"cyclesPerSample":13673.0,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":5,"renderMs":4776.7,"cyclesPerSample":13391.7,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":6,"renderMs":5634.4,"cyclesPerSample":13166.9,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":7,"renderMs":6520.4,"cyclesPerSample":13059.6,"ev100":15.3618}
+CGAL {"ev":"pass","id":"B-01","pass":8,"renderMs":7590.5,"cyclesPerSample":13305.6,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":9,"renderMs":8458.7,"cyclesPerSample":13181.6,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":10,"renderMs":9354.6,"cyclesPerSample":13116.8,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":11,"renderMs":10239.8,"cyclesPerSample":13054.2,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":12,"renderMs":11123.2,"cyclesPerSample":12999.9,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":13,"renderMs":12006.0,"cyclesPerSample":12953.3,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":14,"renderMs":12903.4,"cyclesPerSample":12927.9,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":15,"renderMs":13776.2,"cyclesPerSample":12883.1,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":16,"renderMs":14618.5,"cyclesPerSample":12817.0,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":17,"renderMs":15465.2,"cyclesPerSample":12762.3,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":18,"renderMs":16309.1,"cyclesPerSample":12711.5,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":19,"renderMs":17191.7,"cyclesPerSample":12694.7,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":20,"renderMs":18053.6,"cyclesPerSample":12665.0,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":21,"renderMs":18984.7,"cyclesPerSample":12684.3,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":22,"renderMs":19822.5,"cyclesPerSample":12642.5,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":23,"renderMs":20718.7,"cyclesPerSample":12639.9,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":24,"renderMs":21613.9,"cyclesPerSample":12636.9,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":25,"renderMs":22488.4,"cyclesPerSample":12622.5,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":26,"renderMs":23344.3,"cyclesPerSample":12599.2,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":27,"renderMs":24196.4,"cyclesPerSample":12575.7,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":28,"renderMs":25049.4,"cyclesPerSample":12552.5,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":29,"renderMs":25925.6,"cyclesPerSample":12543.9,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":30,"renderMs":26787.8,"cyclesPerSample":12528.3,"ev100":15.3679}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 3310 lines stripped (the capture is the PNG beside this log)
+#END 71e43dc8 47163
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"B-01","w":160,"h":160,"reason":"chosen","passes":30,"samples":782240,"firstImageMs":311.8,"coarseMs":162.9,"halfMs":492.9,"pass1Ms":1362.5,"renderMs":27155.9,"shownMs":30095.7,"secPerPass":0.8887,"samplesPerSec":28805.6,"cyclesPerSample":12469.3,"displays":22,"displayMs":2768.1,"displayCyclesMean":44933161,"skyRebuilt":1,"ev100":15.3679,"metered":3,"meanLum":8461.15,"internalFree0":70927,"internalMinFree":66883,"psramFree0":21855120,"psramMinFree":21313400,"internalPeakUse":4044,"psramPeakUse":541720}
+CGAL {"ev":"first","id":"R-01","ms":359.0,"sub":1,"pass":0,"ev100":8.5206,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"R-01","pass":1,"renderMs":1632.9,"cyclesPerSample":22913.5,"ev100":8.5206}
+CGAL {"ev":"pass","id":"R-01","pass":2,"renderMs":3143.3,"cyclesPerSample":22065.8,"ev100":8.3467}
+CGAL {"ev":"pass","id":"R-01","pass":3,"renderMs":4508.4,"cyclesPerSample":21102.2,"ev100":8.3467}
+CGAL {"ev":"pass","id":"R-01","pass":4,"renderMs":5876.0,"cyclesPerSample":20629.3,"ev100":8.3467}
+CGAL {"ev":"pass","id":"R-01","pass":5,"renderMs":7239.9,"cyclesPerSample":20334.9,"ev100":8.3467}
+CGAL {"ev":"pass","id":"R-01","pass":6,"renderMs":8593.5,"cyclesPerSample":20110.7,"ev100":8.3467}
+CGAL {"ev":"pass","id":"R-01","pass":7,"renderMs":9965.2,"cyclesPerSample":19990.5,"ev100":8.3467}
+CGAL {"ev":"pass","id":"R-01","pass":8,"renderMs":11476.7,"cyclesPerSample":20145.6,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":9,"renderMs":12857.4,"cyclesPerSample":20062.1,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":10,"renderMs":14245.1,"cyclesPerSample":20003.5,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":11,"renderMs":15606.7,"cyclesPerSample":19923.0,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":12,"renderMs":16998.0,"cyclesPerSample":19891.5,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":13,"renderMs":18381.2,"cyclesPerSample":19854.3,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":14,"renderMs":19769.3,"cyclesPerSample":19828.9,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":15,"renderMs":21127.8,"cyclesPerSample":19779.2,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":16,"renderMs":22520.2,"cyclesPerSample":19764.0,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":17,"renderMs":23914.7,"cyclesPerSample":19752.4,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":18,"renderMs":25289.7,"cyclesPerSample":19727.1,"ev100":8.3742}
+CGAL {"ev":"pass","id":"R-01","pass":19,"renderMs":26666.2,"cyclesPerSample":19706.5,"ev100":8.3742}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 3088 lines stripped (the capture is the PNG beside this log)
+#END 8406101b 43991
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"chosen","passes":19,"samples":495200,"firstImageMs":359.0,"coarseMs":239.2,"halfMs":676.0,"pass1Ms":1906.2,"renderMs":27070.3,"shownMs":29939.4,"secPerPass":1.3994,"samplesPerSec":18293.1,"cyclesPerSample":19649.7,"displays":22,"displayMs":2808.7,"displayCyclesMean":45140157,"skyRebuilt":1,"ev100":8.3742,"metered":3,"meanLum":62.2815,"internalFree0":70971,"internalMinFree":66927,"psramFree0":21855120,"psramMinFree":21312592,"internalPeakUse":4044,"psramPeakUse":542528}
+CGAL {"ev":"first","id":"L-03","ms":316.6,"sub":1,"pass":0,"ev100":15.9390,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"L-03","pass":1,"renderMs":911.8,"cyclesPerSample":12727.3,"ev100":15.9390}
+CGAL {"ev":"pass","id":"L-03","pass":2,"renderMs":1764.2,"cyclesPerSample":12348.9,"ev100":16.1636}
+CGAL {"ev":"pass","id":"L-03","pass":3,"renderMs":2441.0,"cyclesPerSample":11399.8,"ev100":16.1636}
+CGAL {"ev":"pass","id":"L-03","pass":4,"renderMs":3119.7,"cyclesPerSample":10931.6,"ev100":16.1636}
+CGAL {"ev":"pass","id":"L-03","pass":5,"renderMs":3856.1,"cyclesPerSample":10812.9,"ev100":16.1636}
+CGAL {"ev":"pass","id":"L-03","pass":6,"renderMs":4529.2,"cyclesPerSample":10585.5,"ev100":16.1636}
+CGAL {"ev":"pass","id":"L-03","pass":7,"renderMs":5229.0,"cyclesPerSample":10476.7,"ev100":16.1636}
+CGAL {"ev":"pass","id":"L-03","pass":8,"renderMs":6064.7,"cyclesPerSample":10634.1,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":9,"renderMs":6738.7,"cyclesPerSample":10503.8,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":10,"renderMs":7419.2,"cyclesPerSample":10408.7,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":11,"renderMs":8140.8,"cyclesPerSample":10366.6,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":12,"renderMs":8786.4,"cyclesPerSample":10258.0,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":13,"renderMs":9483.3,"cyclesPerSample":10221.5,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":14,"renderMs":10193.4,"cyclesPerSample":10203.3,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":15,"renderMs":10880.0,"cyclesPerSample":10165.7,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":16,"renderMs":11571.6,"cyclesPerSample":10137.2,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":17,"renderMs":12257.9,"cyclesPerSample":10107.6,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":18,"renderMs":12956.2,"cyclesPerSample":10090.7,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":19,"renderMs":13644.3,"cyclesPerSample":10066.3,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":20,"renderMs":14314.5,"cyclesPerSample":10033.4,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":21,"renderMs":15004.8,"cyclesPerSample":10017.1,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":22,"renderMs":15708.2,"cyclesPerSample":10010.6,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":23,"renderMs":16400.7,"cyclesPerSample":9998.0,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":24,"renderMs":17098.1,"cyclesPerSample":9989.0,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":25,"renderMs":17766.3,"cyclesPerSample":9964.6,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":26,"renderMs":18471.1,"cyclesPerSample":9961.9,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":27,"renderMs":19167.9,"cyclesPerSample":9955.3,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":28,"renderMs":19841.7,"cyclesPerSample":9937.6,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":29,"renderMs":20526.7,"cyclesPerSample":9926.5,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":30,"renderMs":21236.1,"cyclesPerSample":9927.5,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":31,"renderMs":21926.5,"cyclesPerSample":9919.9,"ev100":16.1648}
+CGAL {"ev":"pass","id":"L-03","pass":32,"renderMs":22783.1,"cyclesPerSample":9985.8,"ev100":16.1669}
+CGAL {"ev":"pass","id":"L-03","pass":33,"renderMs":23476.6,"cyclesPerSample":9978.3,"ev100":16.1669}
+CGAL {"ev":"pass","id":"L-03","pass":34,"renderMs":24148.8,"cyclesPerSample":9962.3,"ev100":16.1669}
+CGAL {"ev":"pass","id":"L-03","pass":35,"renderMs":24883.7,"cyclesPerSample":9972.5,"ev100":16.1669}
+CGAL {"ev":"pass","id":"L-03","pass":36,"renderMs":25540.2,"cyclesPerSample":9951.5,"ev100":16.1669}
+CGAL {"ev":"pass","id":"L-03","pass":37,"renderMs":26259.2,"cyclesPerSample":9955.3,"ev100":16.1669}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 2188 lines stripped (the capture is the PNG beside this log)
+#END 0e7458df 31173
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"L-03","w":160,"h":160,"reason":"chosen","passes":37,"samples":972640,"firstImageMs":316.6,"coarseMs":198.5,"halfMs":470.6,"pass1Ms":1232.6,"renderMs":26917.0,"shownMs":29968.0,"secPerPass":0.7085,"samplesPerSec":36134.8,"cyclesPerSample":9937.9,"displays":23,"displayMs":2910.9,"displayCyclesMean":44834316,"skyRebuilt":1,"ev100":16.1669,"metered":4,"meanLum":9471.82,"internalFree0":70987,"internalMinFree":65867,"psramFree0":21855120,"psramMinFree":21296660,"internalPeakUse":5120,"psramPeakUse":558460}
+CGAL {"ev":"first","id":"G-01","ms":362.3,"sub":1,"pass":0,"ev100":16.0232,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"G-01","pass":1,"renderMs":1666.6,"cyclesPerSample":23384.0,"ev100":16.0232}
+CGAL {"ev":"pass","id":"G-01","pass":2,"renderMs":3281.2,"cyclesPerSample":23031.0,"ev100":16.3264}
+CGAL {"ev":"pass","id":"G-01","pass":3,"renderMs":4677.6,"cyclesPerSample":21890.8,"ev100":16.3264}
+CGAL {"ev":"pass","id":"G-01","pass":4,"renderMs":6097.1,"cyclesPerSample":21401.5,"ev100":16.3264}
+CGAL {"ev":"pass","id":"G-01","pass":5,"renderMs":7524.5,"cyclesPerSample":21130.8,"ev100":16.3264}
+CGAL {"ev":"pass","id":"G-01","pass":6,"renderMs":8942.6,"cyclesPerSample":20927.7,"ev100":16.3264}
+CGAL {"ev":"pass","id":"G-01","pass":7,"renderMs":10354.2,"cyclesPerSample":20767.0,"ev100":16.3264}
+CGAL {"ev":"pass","id":"G-01","pass":8,"renderMs":11913.3,"cyclesPerSample":20908.5,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":9,"renderMs":13351.0,"cyclesPerSample":20828.7,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":10,"renderMs":14748.2,"cyclesPerSample":20707.8,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":11,"renderMs":16166.7,"cyclesPerSample":20634.0,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":12,"renderMs":17568.0,"cyclesPerSample":20553.1,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":13,"renderMs":18996.0,"cyclesPerSample":20514.7,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":14,"renderMs":20420.2,"cyclesPerSample":20482.3,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":15,"renderMs":21831.1,"cyclesPerSample":20437.7,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":16,"renderMs":23239.6,"cyclesPerSample":20395.0,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":17,"renderMs":24640.0,"cyclesPerSample":20352.1,"ev100":16.3292}
+CGAL {"ev":"pass","id":"G-01","pass":18,"renderMs":26073.1,"cyclesPerSample":20339.6,"ev100":16.3292}
+#OK gallery
+#SHOT 320 320
+#OK shot
+#SHOT-DATA 3753 lines stripped (the capture is the PNG beside this log)
+#END 99cb749a 53471
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"G-01","w":160,"h":160,"reason":"chosen","passes":18,"samples":482080,"firstImageMs":362.3,"coarseMs":246.4,"halfMs":683.6,"pass1Ms":1941.3,"renderMs":27256.7,"shownMs":30028.7,"secPerPass":1.4474,"samplesPerSec":17686.6,"cyclesPerSample":20324.6,"displays":21,"displayMs":2613.5,"displayCyclesMean":43999835,"skyRebuilt":1,"ev100":16.3292,"metered":3,"meanLum":11580.4,"internalFree0":70987,"internalMinFree":66819,"psramFree0":21855120,"psramMinFree":21309948,"internalPeakUse":4168,"psramPeakUse":545172}
+CGAL {"ev":"first","id":"E-02","ms":314.3,"sub":1,"pass":0,"ev100":1.3308,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"E-02","pass":1,"renderMs":852.5,"cyclesPerSample":11952.7,"ev100":1.3308}
+CGAL {"ev":"pass","id":"E-02","pass":2,"renderMs":1704.4,"cyclesPerSample":11959.8,"ev100":1.3311}
+CGAL {"ev":"pass","id":"E-02","pass":3,"renderMs":2377.0,"cyclesPerSample":11122.1,"ev100":1.3311}
+CGAL {"ev":"pass","id":"E-02","pass":4,"renderMs":3023.5,"cyclesPerSample":10611.4,"ev100":1.3311}
+CGAL {"ev":"pass","id":"E-02","pass":5,"renderMs":3721.0,"cyclesPerSample":10448.4,"ev100":1.3311}
+CGAL {"ev":"pass","id":"E-02","pass":6,"renderMs":4362.7,"cyclesPerSample":10209.1,"ev100":1.3311}
+CGAL {"ev":"pass","id":"E-02","pass":7,"renderMs":5028.0,"cyclesPerSample":10085.4,"ev100":1.3311}
+CGAL {"ev":"pass","id":"E-02","pass":8,"renderMs":5862.9,"cyclesPerSample":10290.8,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":9,"renderMs":6540.9,"cyclesPerSample":10205.5,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":10,"renderMs":7205.1,"cyclesPerSample":10117.7,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":11,"renderMs":7905.4,"cyclesPerSample":10092.0,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":12,"renderMs":8551.4,"cyclesPerSample":10007.0,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":13,"renderMs":9241.9,"cyclesPerSample":9982.5,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":14,"renderMs":9887.3,"cyclesPerSample":9916.9,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":15,"renderMs":10594.1,"cyclesPerSample":9917.6,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":16,"renderMs":11245.5,"cyclesPerSample":9869.5,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":17,"renderMs":11889.8,"cyclesPerSample":9821.2,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":18,"renderMs":12587.4,"cyclesPerSample":9819.8,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":19,"renderMs":13269.0,"cyclesPerSample":9806.8,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":20,"renderMs":13931.3,"cyclesPerSample":9781.3,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":21,"renderMs":14597.4,"cyclesPerSample":9761.0,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":22,"renderMs":15287.5,"cyclesPerSample":9757.9,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":23,"renderMs":15959.0,"cyclesPerSample":9743.7,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":24,"renderMs":16645.4,"cyclesPerSample":9739.3,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":25,"renderMs":17289.7,"cyclesPerSample":9711.4,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":26,"renderMs":17989.2,"cyclesPerSample":9715.7,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":27,"renderMs":18657.8,"cyclesPerSample":9702.1,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":28,"renderMs":19330.1,"cyclesPerSample":9692.8,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":29,"renderMs":20008.5,"cyclesPerSample":9687.1,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":30,"renderMs":20669.9,"cyclesPerSample":9673.8,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":31,"renderMs":21327.7,"cyclesPerSample":9659.8,"ev100":1.3315}
+CGAL {"ev":"pass","id":"E-02","pass":32,"renderMs":22171.4,"cyclesPerSample":9728.3,"ev100":1.3328}
+CGAL {"ev":"pass","id":"E-02","pass":33,"renderMs":22821.2,"cyclesPerSample":9710.1,"ev100":1.3328}
+CGAL {"ev":"pass","id":"E-02","pass":34,"renderMs":23508.4,"cyclesPerSample":9708.4,"ev100":1.3328}
+CGAL {"ev":"pass","id":"E-02","pass":35,"renderMs":24178.3,"cyclesPerSample":9699.8,"ev100":1.3328}
+CGAL {"ev":"pass","id":"E-02","pass":36,"renderMs":24848.0,"cyclesPerSample":9691.6,"ev100":1.3328}
+CGAL {"ev":"pass","id":"E-02","pass":37,"renderMs":25523.7,"cyclesPerSample":9686.2,"ev100":1.3328}
+CGAL {"ev":"pass","id":"E-02","pass":38,"renderMs":26217.0,"cyclesPerSample":9687.6,"ev100":1.3328}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 615 lines stripped (the capture is the PNG beside this log)
+#END 21c9674a 8763
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"E-02","w":160,"h":160,"reason":"chosen","passes":38,"samples":994080,"firstImageMs":314.3,"coarseMs":185.4,"halfMs":442.9,"pass1Ms":1191.9,"renderMs":26802.6,"shownMs":29997.3,"secPerPass":0.6902,"samplesPerSec":37089.0,"cyclesPerSample":9691.9,"displays":24,"displayMs":3042.1,"displayCyclesMean":44968508,"skyRebuilt":1,"ev100":1.3328,"metered":4,"meanLum":0.445015,"internalFree0":70967,"internalMinFree":66699,"psramFree0":21855120,"psramMinFree":21313104,"internalPeakUse":4268,"psramPeakUse":542016}
+CGAL {"ev":"first","id":"W-02","ms":385.8,"sub":1,"pass":0,"ev100":3.7849,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"W-02","pass":1,"renderMs":2310.1,"cyclesPerSample":32418.5,"ev100":3.7849}
+CGAL {"ev":"pass","id":"W-02","pass":2,"renderMs":4615.1,"cyclesPerSample":32400.1,"ev100":4.3478}
+CGAL {"ev":"pass","id":"W-02","pass":3,"renderMs":6741.4,"cyclesPerSample":31556.0,"ev100":4.3478}
+CGAL {"ev":"pass","id":"W-02","pass":4,"renderMs":8873.0,"cyclesPerSample":31152.3,"ev100":4.3478}
+CGAL {"ev":"pass","id":"W-02","pass":5,"renderMs":10992.5,"cyclesPerSample":30876.5,"ev100":4.3478}
+CGAL {"ev":"pass","id":"W-02","pass":6,"renderMs":13106.3,"cyclesPerSample":30679.2,"ev100":4.3478}
+CGAL {"ev":"pass","id":"W-02","pass":7,"renderMs":15243.5,"cyclesPerSample":30585.1,"ev100":4.3478}
+CGAL {"ev":"pass","id":"W-02","pass":8,"renderMs":17544.3,"cyclesPerSample":30802.2,"ev100":4.3624}
+CGAL {"ev":"pass","id":"W-02","pass":9,"renderMs":19722.1,"cyclesPerSample":30778.8,"ev100":4.3624}
+CGAL {"ev":"pass","id":"W-02","pass":10,"renderMs":21777.9,"cyclesPerSample":30585.0,"ev100":4.3624}
+CGAL {"ev":"pass","id":"W-02","pass":11,"renderMs":23946.6,"cyclesPerSample":30574.2,"ev100":4.3624}
+CGAL {"ev":"pass","id":"W-02","pass":12,"renderMs":26081.4,"cyclesPerSample":30525.3,"ev100":4.3624}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 5498 lines stripped (the capture is the PNG beside this log)
+#END d2310d31 78342
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"W-02","w":160,"h":160,"reason":"chosen","passes":12,"samples":319520,"firstImageMs":385.8,"coarseMs":226.8,"halfMs":841.6,"pass1Ms":2744.6,"renderMs":26930.4,"shownMs":29856.1,"secPerPass":2.1577,"samplesPerSec":11864.7,"cyclesPerSample":30303.6,"displays":23,"displayMs":2928.1,"displayCyclesMean":45714601,"skyRebuilt":1,"ev100":4.3624,"metered":3,"meanLum":15.5366,"internalFree0":70911,"internalMinFree":66707,"psramFree0":21855120,"psramMinFree":21309372,"internalPeakUse":4204,"psramPeakUse":545748}
+CGAL {"ev":"first","id":"F-01","ms":295.0,"sub":1,"pass":0,"ev100":14.9432,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"F-01","pass":1,"renderMs":1247.5,"cyclesPerSample":17474.5,"ev100":14.9432}
+CGAL {"ev":"pass","id":"F-01","pass":2,"renderMs":2449.8,"cyclesPerSample":17179.1,"ev100":15.6121}
+CGAL {"ev":"pass","id":"F-01","pass":3,"renderMs":3459.2,"cyclesPerSample":16176.5,"ev100":15.6121}
+CGAL {"ev":"pass","id":"F-01","pass":4,"renderMs":4492.5,"cyclesPerSample":15758.9,"ev100":15.6121}
+CGAL {"ev":"pass","id":"F-01","pass":5,"renderMs":5507.9,"cyclesPerSample":15458.4,"ev100":15.6121}
+CGAL {"ev":"pass","id":"F-01","pass":6,"renderMs":6545.8,"cyclesPerSample":15310.7,"ev100":15.6121}
+CGAL {"ev":"pass","id":"F-01","pass":7,"renderMs":7542.6,"cyclesPerSample":15122.6,"ev100":15.6121}
+CGAL {"ev":"pass","id":"F-01","pass":8,"renderMs":8710.5,"cyclesPerSample":15282.5,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":9,"renderMs":9776.0,"cyclesPerSample":15244.7,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":10,"renderMs":10798.0,"cyclesPerSample":15155.0,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":11,"renderMs":11812.8,"cyclesPerSample":15071.2,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":12,"renderMs":12821.2,"cyclesPerSample":14991.2,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":13,"renderMs":13853.7,"cyclesPerSample":14953.2,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":14,"renderMs":14871.1,"cyclesPerSample":14905.4,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":15,"renderMs":15882.2,"cyclesPerSample":14858.2,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":16,"renderMs":16931.0,"cyclesPerSample":14848.5,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":17,"renderMs":17971.9,"cyclesPerSample":14834.8,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":18,"renderMs":18991.1,"cyclesPerSample":14792.7,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":19,"renderMs":20012.6,"cyclesPerSample":14767.9,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":20,"renderMs":21033.8,"cyclesPerSample":14746.4,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":21,"renderMs":22036.8,"cyclesPerSample":14714.7,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":22,"renderMs":23109.2,"cyclesPerSample":14730.3,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":23,"renderMs":24141.5,"cyclesPerSample":14720.1,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":24,"renderMs":25146.0,"cyclesPerSample":14694.3,"ev100":15.6166}
+CGAL {"ev":"pass","id":"F-01","pass":25,"renderMs":26222.7,"cyclesPerSample":14711.2,"ev100":15.6166}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 3684 lines stripped (the capture is the PNG beside this log)
+#END a6693000 52486
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"F-01","w":160,"h":160,"reason":"chosen","passes":25,"samples":660640,"firstImageMs":295.0,"coarseMs":167.0,"halfMs":555.8,"pass1Ms":1528.2,"renderMs":26940.7,"shownMs":29889.0,"secPerPass":1.0440,"samplesPerSec":24522.0,"cyclesPerSample":14642.2,"displays":22,"displayMs":2884.7,"displayCyclesMean":46971579,"skyRebuilt":1,"ev100":15.6166,"metered":3,"meanLum":8171.29,"internalFree0":70927,"internalMinFree":66783,"psramFree0":21855120,"psramMinFree":21313024,"internalPeakUse":4144,"psramPeakUse":542096}
+CGAL {"ev":"first","id":"V-02","ms":378.3,"sub":1,"pass":0,"ev100":8.5723,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"V-02","pass":1,"renderMs":2016.9,"cyclesPerSample":28309.5,"ev100":8.5723}
+CGAL {"ev":"pass","id":"V-02","pass":2,"renderMs":4074.1,"cyclesPerSample":28595.1,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":3,"renderMs":5967.9,"cyclesPerSample":27921.6,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":4,"renderMs":7874.8,"cyclesPerSample":27638.3,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":5,"renderMs":9710.4,"cyclesPerSample":27267.8,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":6,"renderMs":11634.0,"cyclesPerSample":27224.7,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":7,"renderMs":13498.7,"cyclesPerSample":27078.1,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":8,"renderMs":15588.6,"cyclesPerSample":27362.6,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":9,"renderMs":17492.3,"cyclesPerSample":27294.0,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":10,"renderMs":19344.6,"cyclesPerSample":27166.7,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":11,"renderMs":21261.5,"cyclesPerSample":27143.9,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":12,"renderMs":23133.2,"cyclesPerSample":27073.1,"ev100":9.5252}
+CGAL {"ev":"pass","id":"V-02","pass":13,"renderMs":25003.6,"cyclesPerSample":27011.9,"ev100":9.5252}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 3196 lines stripped (the capture is the PNG beside this log)
+#END 26419414 45529
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"V-02","w":160,"h":160,"reason":"chosen","passes":13,"samples":357440,"firstImageMs":378.3,"coarseMs":220.0,"halfMs":700.4,"pass1Ms":2500.0,"renderMs":26868.8,"shownMs":29945.9,"secPerPass":1.9244,"samplesPerSec":13303.2,"cyclesPerSample":27026.6,"displays":23,"displayMs":2935.4,"displayCyclesMean":45802163,"skyRebuilt":1,"ev100":9.5252,"metered":3,"meanLum":164.415,"internalFree0":70927,"internalMinFree":66883,"psramFree0":21855120,"psramMinFree":21312920,"internalPeakUse":4044,"psramPeakUse":542200}
+CGAL {"ev":"first","id":"G-02","ms":399.8,"sub":1,"pass":0,"ev100":7.8187,"skyRebuilt":0}
+CGAL {"ev":"pass","id":"G-02","pass":1,"renderMs":2843.8,"cyclesPerSample":39932.0,"ev100":7.8187}
+CGAL {"ev":"pass","id":"G-02","pass":2,"renderMs":5695.2,"cyclesPerSample":40002.0,"ev100":8.3960}
+CGAL {"ev":"pass","id":"G-02","pass":3,"renderMs":8286.9,"cyclesPerSample":38807.8,"ev100":8.3960}
+CGAL {"ev":"pass","id":"G-02","pass":4,"renderMs":10926.1,"cyclesPerSample":38377.7,"ev100":8.3960}
+CGAL {"ev":"pass","id":"G-02","pass":5,"renderMs":13523.3,"cyclesPerSample":37999.0,"ev100":8.3960}
+CGAL {"ev":"pass","id":"G-02","pass":6,"renderMs":16146.9,"cyclesPerSample":37805.3,"ev100":8.3960}
+CGAL {"ev":"pass","id":"G-02","pass":7,"renderMs":18808.1,"cyclesPerSample":37742.2,"ev100":8.3960}
+CGAL {"ev":"pass","id":"G-02","pass":8,"renderMs":21578.0,"cyclesPerSample":37890.2,"ev100":8.4133}
+CGAL {"ev":"pass","id":"G-02","pass":9,"renderMs":24205.6,"cyclesPerSample":37782.4,"ev100":8.4133}
+CGAL {"ev":"pass","id":"G-02","pass":10,"renderMs":26823.8,"cyclesPerSample":37683.4,"ev100":8.4133}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 4106 lines stripped (the capture is the PNG beside this log)
+#END 0bd335ac 58498
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"G-02","w":160,"h":160,"reason":"chosen","passes":10,"samples":266560,"firstImageMs":399.8,"coarseMs":279.6,"halfMs":908.6,"pass1Ms":3240.4,"renderMs":27325.7,"shownMs":30010.3,"secPerPass":2.6243,"samplesPerSec":9754.9,"cyclesPerSample":36867.7,"displays":21,"displayMs":2651.6,"displayCyclesMean":45298783,"skyRebuilt":0,"ev100":8.4133,"metered":3,"meanLum":46.6624,"internalFree0":70987,"internalMinFree":65907,"psramFree0":21855120,"psramMinFree":21313144,"internalPeakUse":5080,"psramPeakUse":541976}
+CGAL {"ev":"first","id":"X-04","ms":241.1,"sub":1,"pass":0,"ev100":12.0132,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"X-04","pass":1,"renderMs":1375.3,"cyclesPerSample":77236.2,"ev100":12.0132}
+CGAL {"ev":"pass","id":"X-04","pass":2,"renderMs":2755.7,"cyclesPerSample":77415.5,"ev100":12.9091}
+CGAL {"ev":"pass","id":"X-04","pass":3,"renderMs":4125.5,"cyclesPerSample":77273.0,"ev100":12.9091}
+CGAL {"ev":"pass","id":"X-04","pass":4,"renderMs":5459.7,"cyclesPerSample":76703.9,"ev100":12.9091}
+CGAL {"ev":"pass","id":"X-04","pass":5,"renderMs":6772.3,"cyclesPerSample":76117.4,"ev100":12.9091}
+CGAL {"ev":"pass","id":"X-04","pass":6,"renderMs":8099.0,"cyclesPerSample":75859.5,"ev100":12.9091}
+CGAL {"ev":"pass","id":"X-04","pass":7,"renderMs":9393.5,"cyclesPerSample":75415.8,"ev100":12.9091}
+CGAL {"ev":"pass","id":"X-04","pass":8,"renderMs":10805.9,"cyclesPerSample":75912.4,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":9,"renderMs":12169.0,"cyclesPerSample":75983.6,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":10,"renderMs":13517.6,"cyclesPerSample":75961.4,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":11,"renderMs":14827.8,"cyclesPerSample":75750.6,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":12,"renderMs":16145.1,"cyclesPerSample":75608.0,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":13,"renderMs":17511.3,"cyclesPerSample":75698.4,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":14,"renderMs":18838.1,"cyclesPerSample":75618.3,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":15,"renderMs":20119.3,"cyclesPerSample":75377.4,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":16,"renderMs":21453.9,"cyclesPerSample":75354.9,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":17,"renderMs":22759.9,"cyclesPerSample":75240.4,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":18,"renderMs":24090.3,"cyclesPerSample":75214.4,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":19,"renderMs":25439.2,"cyclesPerSample":75246.3,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":20,"renderMs":26748.7,"cyclesPerSample":75164.1,"ev100":13.1700}
+CGAL {"ev":"pass","id":"X-04","pass":21,"renderMs":28063.1,"cyclesPerSample":75102.6,"ev100":13.1700}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 3652 lines stripped (the capture is the PNG beside this log)
+#END 00cec279 52035
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"X-04","w":80,"h":80,"reason":"chosen","passes":21,"samples":136880,"firstImageMs":241.1,"coarseMs":141.2,"halfMs":503.4,"pass1Ms":1557.6,"renderMs":28412.3,"shownMs":29940.7,"secPerPass":1.3285,"samplesPerSec":4817.6,"cyclesPerSample":74659.6,"displays":24,"displayMs":1467.8,"displayCyclesMean":21245152,"skyRebuilt":1,"ev100":13.1700,"metered":3,"meanLum":2427.91,"internalFree0":70991,"internalMinFree":66803,"psramFree0":21855120,"psramMinFree":21618200,"internalPeakUse":4188,"psramPeakUse":236920}
+CGAL {"ev":"first","id":"S-02","ms":154.8,"sub":1,"pass":0,"ev100":4.4440,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"S-02","pass":1,"renderMs":929.4,"cyclesPerSample":52182.4,"ev100":4.4440}
+CGAL {"ev":"pass","id":"S-02","pass":2,"renderMs":1885.1,"cyclesPerSample":52944.2,"ev100":4.6140}
+CGAL {"ev":"pass","id":"S-02","pass":3,"renderMs":2766.7,"cyclesPerSample":51810.4,"ev100":4.6140}
+CGAL {"ev":"pass","id":"S-02","pass":4,"renderMs":3636.8,"cyclesPerSample":51081.3,"ev100":4.6140}
+CGAL {"ev":"pass","id":"S-02","pass":5,"renderMs":4485.6,"cyclesPerSample":50404.9,"ev100":4.6140}
+CGAL {"ev":"pass","id":"S-02","pass":6,"renderMs":5342.5,"cyclesPerSample":50030.1,"ev100":4.6140}
+CGAL {"ev":"pass","id":"S-02","pass":7,"renderMs":6188.1,"cyclesPerSample":49671.0,"ev100":4.6140}
+CGAL {"ev":"pass","id":"S-02","pass":8,"renderMs":7175.9,"cyclesPerSample":50400.7,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":9,"renderMs":8023.5,"cyclesPerSample":50092.8,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":10,"renderMs":8908.3,"cyclesPerSample":50041.2,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":11,"renderMs":9769.2,"cyclesPerSample":49890.4,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":12,"renderMs":10661.0,"cyclesPerSample":49909.2,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":13,"renderMs":11495.0,"cyclesPerSample":49674.7,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":14,"renderMs":12346.1,"cyclesPerSample":49542.7,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":15,"renderMs":13207.3,"cyclesPerSample":49466.4,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":16,"renderMs":14097.0,"cyclesPerSample":49499.3,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":17,"renderMs":14978.4,"cyclesPerSample":49498.6,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":18,"renderMs":15873.8,"cyclesPerSample":49544.1,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":19,"renderMs":16757.7,"cyclesPerSample":49550.9,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":20,"renderMs":17649.0,"cyclesPerSample":49577.2,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":21,"renderMs":18508.2,"cyclesPerSample":49515.6,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":22,"renderMs":19343.1,"cyclesPerSample":49397.4,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":23,"renderMs":20233.0,"cyclesPerSample":49423.9,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":24,"renderMs":21090.8,"cyclesPerSample":49371.1,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":25,"renderMs":21976.4,"cyclesPerSample":49377.9,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":26,"renderMs":22848.8,"cyclesPerSample":49364.2,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":27,"renderMs":23747.8,"cyclesPerSample":49406.9,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":28,"renderMs":24584.6,"cyclesPerSample":49321.7,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":29,"renderMs":25433.5,"cyclesPerSample":49266.0,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":30,"renderMs":26294.2,"cyclesPerSample":49235.9,"ev100":5.2661}
+CGAL {"ev":"pass","id":"S-02","pass":31,"renderMs":27188.9,"cyclesPerSample":49269.3,"ev100":5.2661}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 6768 lines stripped (the capture is the PNG beside this log)
+#END ea2155f1 96441
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"S-02","w":80,"h":80,"reason":"chosen","passes":31,"samples":203280,"firstImageMs":154.8,"coarseMs":102.9,"halfMs":307.0,"pass1Ms":1069.0,"renderMs":27986.0,"shownMs":30183.8,"secPerPass":0.8811,"samplesPerSec":7263.6,"cyclesPerSample":49496.6,"displays":34,"displayMs":2029.5,"displayCyclesMean":20624521,"skyRebuilt":1,"ev100":5.2661,"metered":3,"meanLum":110.641,"internalFree0":70927,"internalMinFree":66807,"psramFree0":21855120,"psramMinFree":21583264,"internalPeakUse":4120,"psramPeakUse":271856}
+CGAL {"ev":"first","id":"R-05","ms":109.6,"sub":1,"pass":0,"ev100":2.2188,"skyRebuilt":0}
+CGAL {"ev":"pass","id":"R-05","pass":1,"renderMs":684.3,"cyclesPerSample":38314.2,"ev100":2.2188}
+CGAL {"ev":"pass","id":"R-05","pass":2,"renderMs":1402.9,"cyclesPerSample":39347.4,"ev100":3.1399}
+CGAL {"ev":"pass","id":"R-05","pass":3,"renderMs":2008.5,"cyclesPerSample":37541.0,"ev100":3.1399}
+CGAL {"ev":"pass","id":"R-05","pass":4,"renderMs":2675.6,"cyclesPerSample":37525.9,"ev100":3.1399}
+CGAL {"ev":"pass","id":"R-05","pass":5,"renderMs":3296.6,"cyclesPerSample":36998.2,"ev100":3.1399}
+CGAL {"ev":"pass","id":"R-05","pass":6,"renderMs":3897.5,"cyclesPerSample":36459.4,"ev100":3.1399}
+CGAL {"ev":"pass","id":"R-05","pass":7,"renderMs":4543.4,"cyclesPerSample":36434.9,"ev100":3.1399}
+CGAL {"ev":"pass","id":"R-05","pass":8,"renderMs":5240.7,"cyclesPerSample":36778.3,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":9,"renderMs":5877.3,"cyclesPerSample":36666.5,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":10,"renderMs":6509.6,"cyclesPerSample":36552.6,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":11,"renderMs":7140.8,"cyclesPerSample":36443.7,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":12,"renderMs":7763.8,"cyclesPerSample":36323.5,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":13,"renderMs":8391.2,"cyclesPerSample":36240.8,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":14,"renderMs":9028.4,"cyclesPerSample":36209.1,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":15,"renderMs":9618.2,"cyclesPerSample":36004.6,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":16,"renderMs":10236.1,"cyclesPerSample":35924.0,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":17,"renderMs":10903.6,"cyclesPerSample":36016.8,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":18,"renderMs":11512.6,"cyclesPerSample":35916.7,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":19,"renderMs":12131.7,"cyclesPerSample":35856.9,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":20,"renderMs":12774.9,"cyclesPerSample":35871.0,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":21,"renderMs":13385.6,"cyclesPerSample":35796.9,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":22,"renderMs":14005.6,"cyclesPerSample":35753.0,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":23,"renderMs":14615.3,"cyclesPerSample":35687.9,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":24,"renderMs":15244.3,"cyclesPerSample":35673.3,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":25,"renderMs":15899.2,"cyclesPerSample":35718.3,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":26,"renderMs":16505.3,"cyclesPerSample":35653.6,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":27,"renderMs":17130.8,"cyclesPerSample":35634.5,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":28,"renderMs":17782.9,"cyclesPerSample":35670.3,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":29,"renderMs":18398.1,"cyclesPerSample":35632.2,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":30,"renderMs":19029.0,"cyclesPerSample":35626.1,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":31,"renderMs":19638.8,"cyclesPerSample":35582.0,"ev100":3.6104}
+CGAL {"ev":"pass","id":"R-05","pass":32,"renderMs":20309.2,"cyclesPerSample":35645.7,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":33,"renderMs":20959.8,"cyclesPerSample":35673.3,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":34,"renderMs":21568.8,"cyclesPerSample":35630.2,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":35,"renderMs":22157.3,"cyclesPerSample":35557.1,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":36,"renderMs":22799.4,"cyclesPerSample":35571.6,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":37,"renderMs":23406.7,"cyclesPerSample":35532.3,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":38,"renderMs":23986.0,"cyclesPerSample":35453.7,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":39,"renderMs":24624.0,"cyclesPerSample":35463.8,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":40,"renderMs":25245.2,"cyclesPerSample":35449.7,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":41,"renderMs":25848.1,"cyclesPerSample":35411.3,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":42,"renderMs":26484.0,"cyclesPerSample":35418.9,"ev100":3.7494}
+CGAL {"ev":"pass","id":"R-05","pass":43,"renderMs":27096.3,"cyclesPerSample":35395.0,"ev100":3.7494}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 6376 lines stripped (the capture is the PNG beside this log)
+#END 36c64a8d 90848
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"R-05","w":80,"h":80,"reason":"chosen","passes":43,"samples":277040,"firstImageMs":109.6,"coarseMs":58.4,"halfMs":222.4,"pass1Ms":791.1,"renderMs":27342.4,"shownMs":30112.1,"secPerPass":0.6316,"samplesPerSec":10132.2,"cyclesPerSample":35479.4,"displays":44,"displayMs":2648.4,"displayCyclesMean":20874630,"skyRebuilt":0,"ev100":3.7494,"metered":4,"meanLum":8.46147,"internalFree0":70907,"internalMinFree":66591,"psramFree0":21855120,"psramMinFree":21615528,"internalPeakUse":4316,"psramPeakUse":239592}
+CGAL {"ev":"first","id":"V-03","ms":252.7,"sub":1,"pass":0,"ev100":11.2865,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"V-03","pass":1,"renderMs":1766.3,"cyclesPerSample":99193.5,"ev100":11.2865}
+CGAL {"ev":"pass","id":"V-03","pass":2,"renderMs":3557.3,"cyclesPerSample":99905.8,"ev100":12.0962}
+CGAL {"ev":"pass","id":"V-03","pass":3,"renderMs":5187.7,"cyclesPerSample":97150.4,"ev100":12.0962}
+CGAL {"ev":"pass","id":"V-03","pass":4,"renderMs":6820.0,"cyclesPerSample":95799.7,"ev100":12.0962}
+CGAL {"ev":"pass","id":"V-03","pass":5,"renderMs":8460.3,"cyclesPerSample":95066.2,"ev100":12.0962}
+CGAL {"ev":"pass","id":"V-03","pass":6,"renderMs":10167.0,"cyclesPerSample":95210.5,"ev100":12.0962}
+CGAL {"ev":"pass","id":"V-03","pass":7,"renderMs":11758.0,"cyclesPerSample":94381.1,"ev100":12.0962}
+CGAL {"ev":"pass","id":"V-03","pass":8,"renderMs":13568.3,"cyclesPerSample":95295.7,"ev100":12.1940}
+CGAL {"ev":"pass","id":"V-03","pass":9,"renderMs":15306.8,"cyclesPerSample":95565.4,"ev100":12.1940}
+CGAL {"ev":"pass","id":"V-03","pass":10,"renderMs":17011.6,"cyclesPerSample":95591.5,"ev100":12.1940}
+CGAL {"ev":"pass","id":"V-03","pass":11,"renderMs":18655.9,"cyclesPerSample":95303.2,"ev100":12.1940}
+CGAL {"ev":"pass","id":"V-03","pass":12,"renderMs":20330.9,"cyclesPerSample":95207.3,"ev100":12.1940}
+CGAL {"ev":"pass","id":"V-03","pass":13,"renderMs":22022.1,"cyclesPerSample":95196.1,"ev100":12.1940}
+CGAL {"ev":"pass","id":"V-03","pass":14,"renderMs":23645.4,"cyclesPerSample":94913.7,"ev100":12.1940}
+CGAL {"ev":"pass","id":"V-03","pass":15,"renderMs":25392.0,"cyclesPerSample":95131.7,"ev100":12.1940}
+CGAL {"ev":"pass","id":"V-03","pass":16,"renderMs":27078.5,"cyclesPerSample":95110.9,"ev100":12.1940}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 2607 lines stripped (the capture is the PNG beside this log)
+#END 6f0ce743 37144
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"V-03","w":80,"h":80,"reason":"chosen","passes":16,"samples":107760,"firstImageMs":252.7,"coarseMs":204.4,"halfMs":552.1,"pass1Ms":1912.1,"renderMs":28550.3,"shownMs":30091.5,"secPerPass":1.6956,"samplesPerSec":3774.4,"cyclesPerSample":95293.5,"displays":25,"displayMs":1423.6,"displayCyclesMean":20285924,"skyRebuilt":1,"ev100":12.1940,"metered":3,"meanLum":1260.46,"internalFree0":70979,"internalMinFree":65703,"psramFree0":21855120,"psramMinFree":21620288,"internalPeakUse":5276,"psramPeakUse":234832}
+CGAL {"ev":"first","id":"V-04","ms":257.6,"sub":1,"pass":0,"ev100":16.1012,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"V-04","pass":1,"renderMs":3235.6,"cyclesPerSample":181761.6,"ev100":16.1012}
+CGAL {"ev":"pass","id":"V-04","pass":2,"renderMs":6532.5,"cyclesPerSample":183566.5,"ev100":16.3997}
+CGAL {"ev":"pass","id":"V-04","pass":3,"renderMs":9691.2,"cyclesPerSample":181547.3,"ev100":16.3997}
+CGAL {"ev":"pass","id":"V-04","pass":4,"renderMs":12912.9,"cyclesPerSample":181446.4,"ev100":16.3997}
+CGAL {"ev":"pass","id":"V-04","pass":5,"renderMs":16220.9,"cyclesPerSample":182357.6,"ev100":16.3997}
+CGAL {"ev":"pass","id":"V-04","pass":6,"renderMs":19452.0,"cyclesPerSample":182244.7,"ev100":16.3997}
+CGAL {"ev":"pass","id":"V-04","pass":7,"renderMs":22718.4,"cyclesPerSample":182447.3,"ev100":16.3997}
+CGAL {"ev":"pass","id":"V-04","pass":8,"renderMs":25950.7,"cyclesPerSample":182358.6,"ev100":16.4973}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 2861 lines stripped (the capture is the PNG beside this log)
+#END b82eaf78 40763
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"V-04","w":80,"h":80,"reason":"chosen","passes":8,"samples":56480,"firstImageMs":257.6,"coarseMs":203.4,"halfMs":922.6,"pass1Ms":3436.5,"renderMs":28717.4,"shownMs":30072.1,"secPerPass":3.2541,"samplesPerSec":1966.8,"cyclesPerSample":182939.1,"displays":24,"displayMs":1306.2,"displayCyclesMean":19429724,"skyRebuilt":1,"ev100":16.4973,"metered":3,"meanLum":14196.4,"internalFree0":70991,"internalMinFree":65795,"psramFree0":21855120,"psramMinFree":21618168,"internalPeakUse":5196,"psramPeakUse":236952}
+CGAL {"ev":"first","id":"R-08","ms":391.5,"sub":1,"pass":0,"ev100":14.7891,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"R-08","pass":1,"renderMs":4015.2,"cyclesPerSample":225627.3,"ev100":14.7891}
+CGAL {"ev":"pass","id":"R-08","pass":2,"renderMs":8073.0,"cyclesPerSample":226897.8,"ev100":15.0614}
+CGAL {"ev":"pass","id":"R-08","pass":3,"renderMs":12034.1,"cyclesPerSample":225507.4,"ev100":15.0614}
+CGAL {"ev":"pass","id":"R-08","pass":4,"renderMs":16020.2,"cyclesPerSample":225164.5,"ev100":15.0614}
+CGAL {"ev":"pass","id":"R-08","pass":5,"renderMs":19936.3,"cyclesPerSample":224171.1,"ev100":15.0614}
+CGAL {"ev":"pass","id":"R-08","pass":6,"renderMs":23910.7,"cyclesPerSample":224054.2,"ev100":15.0614}
+CGAL {"ev":"pass","id":"R-08","pass":7,"renderMs":27886.7,"cyclesPerSample":223984.1,"ev100":15.0614}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 3354 lines stripped (the capture is the PNG beside this log)
+#END b4bce9c4 47781
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"R-08","w":80,"h":80,"reason":"chosen","passes":7,"samples":47280,"firstImageMs":391.5,"coarseMs":342.2,"halfMs":1169.3,"pass1Ms":4241.3,"renderMs":28736.7,"shownMs":30024.6,"secPerPass":3.8899,"samplesPerSec":1645.3,"cyclesPerSample":218704.4,"displays":23,"displayMs":1355.7,"displayCyclesMean":20995499,"skyRebuilt":1,"ev100":15.0614,"metered":2,"meanLum":5425.92,"internalFree0":70987,"internalMinFree":66723,"psramFree0":21855120,"psramMinFree":21617944,"internalPeakUse":4264,"psramPeakUse":237176}
+CGAL {"ev":"first","id":"X-03","ms":941.3,"sub":1,"pass":0,"ev100":14.5000,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"X-03","pass":1,"renderMs":13748.4,"cyclesPerSample":772965.3,"ev100":14.5000}
+CGAL {"ev":"pass","id":"X-03","pass":2,"renderMs":27285.7,"cyclesPerSample":767165.4,"ev100":14.5000}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 2099 lines stripped (the capture is the PNG beside this log)
+#END ca9cfd7d 29900
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"X-03","w":80,"h":80,"reason":"chosen","passes":2,"samples":14080,"firstImageMs":941.3,"coarseMs":860.3,"halfMs":3607.7,"pass1Ms":14311.2,"renderMs":28969.2,"shownMs":29911.8,"secPerPass":13.1678,"samplesPerSec":486.0,"cyclesPerSample":740457.1,"displays":21,"displayMs":1224.1,"displayCyclesMean":20915676,"skyRebuilt":1,"ev100":14.5000,"metered":0,"meanLum":919.734,"internalFree0":70919,"internalMinFree":64039,"psramFree0":21855120,"psramMinFree":21585304,"internalPeakUse":6880,"psramPeakUse":269816}
+CGAL {"ev":"first","id":"R-04","ms":1357.5,"sub":1,"pass":0,"ev100":14.3653,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"R-04","pass":1,"renderMs":20770.6,"cyclesPerSample":1167883.0,"ev100":14.3653}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 4449 lines stripped (the capture is the PNG beside this log)
+#END 0c76a849 63389
+#OK gallery
+#OK gallery
+CGAL {"ev":"scene","id":"R-04","w":80,"h":80,"reason":"chosen","passes":1,"samples":9840,"firstImageMs":1357.5,"coarseMs":1309.0,"halfMs":5449.4,"pass1Ms":21717.8,"renderMs":28986.8,"shownMs":29565.5,"secPerPass":18.8532,"samplesPerSec":339.5,"cyclesPerSample":1060159.3,"displays":20,"displayMs":1248.3,"displayCyclesMean":22368712,"skyRebuilt":1,"ev100":14.3653,"metered":1,"meanLum":3284.61,"internalFree0":70987,"internalMinFree":61423,"psramFree0":21822352,"psramMinFree":21585432,"internalPeakUse":9564,"psramPeakUse":236920}
+CGAL {"ev":"first","id":"G-03","ms":1676.7,"sub":1,"pass":0,"ev100":15.1720,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"G-03","pass":1,"renderMs":24633.8,"cyclesPerSample":1385095.7,"ev100":15.1720}
+#OK gallery
+#OK shot
+#SHOT 320 320
+#SHOT-DATA 4123 lines stripped (the capture is the PNG beside this log)
+#END e078f796 58748
+#OK gallery
+t = 1516629.5 ms, lane busy 295965.9 ms (19.5%), 135400 turns, 4535 published, 8220 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   idle         74886 129144.97     67.3    320    0  
+  power       driver   idle           302    444.80     77.2    320    0  
+  display     driver   idle           661   4783.65    105.8    320    0  
+  compositor  service  idle         10548  61581.34    427.8    768    0  
+  agent       service  idle         14986   3720.98    771.0   1536    0  
+  chat        app      idle             8    140.50    238.8    768    0  
+  launcher    app      idle           753   9157.89    264.7    384    0  
+  files       app      idle             1      3.97     68.2    384    0  
+  editor      app      idle             1     14.61    711.8    768    0  
+  calc        app      idle             1    241.77    568.9   1024    0  
+  agenda      app      idle           101     30.99    181.2    384    0  
+  settings    app      idle          1502   5255.92    190.1    384    0  
+  logs        app      idle          3002  12469.09    214.3    384    0  
+  loader      app      idle          1503   5943.52    230.2    384    0  
+  sysmon      app      idle          3003  16675.01    219.9    512    0  
+  repl        app      idle             0     27.55    209.0    384    0  
+  sandbox     service  idle             0     23.60    206.1    512    0  
+  snake       app      idle         13622  23091.00     98.3    320    0  
+  faults      app      idle             5     54.82    216.0    384    0  
+  flaky       service  idle             1      8.64     48.3    320    0  
+  raytrace    app      idle             0     26.11    207.6    320    0  
+  keys        app      idle          1502   5299.05    208.0    320    0  
+  about       app      idle          1502   2893.90    208.2    320    0  
+  chess       app      idle             1     17.72    743.8    768    0  
+  gallery     app      idle          6000  13121.22    206.1    320    0  
+  toplog      service  idle             1      8.70     41.3    320    0  
+  nat-echo    service  idle             4     25.03     28.2     64    0  
+  nat-bench   service  idle             1      4.66      2.7     64    0  
+  nat-import  world    stopped          0     23.28      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle          1503   1731.57     14.3     64    0  
+  bus i2c0  busy 441317.91 ms, 75188 transfers, 301055 bytes, 0 errors
+  bus spi2  busy 16291.78 ms, 6586 transfers, 67900619 bytes, 0 errors
+#OK stats
+#OK gallery
+CGAL {"ev":"scene","id":"G-03","w":80,"h":80,"reason":"chosen","passes":1,"samples":8800,"firstImageMs":1676.7,"coarseMs":1627.5,"halfMs":6367.5,"pass1Ms":25587.1,"renderMs":29576.2,"shownMs":29709.8,"secPerPass":21.5100,"samplesPerSec":297.5,"cyclesPerSample":1209501.5,"displays":20,"displayMs":1085.7,"displayCyclesMean":19504353,"skyRebuilt":1,"ev100":15.1720,"metered":1,"meanLum":7077.91,"internalFree0":70919,"internalMinFree":61335,"psramFree0":21822312,"psramMinFree":21585476,"internalPeakUse":9584,"psramPeakUse":236836}
+CGAL {"ev":"first","id":"B-01","ms":321.9,"sub":1,"pass":0,"ev100":14.9748,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"B-01","pass":1,"renderMs":1063.8,"cyclesPerSample":14914.7,"ev100":14.9748}
+CGAL {"ev":"pass","id":"B-01","pass":2,"renderMs":2112.1,"cyclesPerSample":14818.0,"ev100":15.3618}
+#OK key
+CGAL {"ev":"scene","id":"B-01","w":160,"h":160,"reason":"next","passes":2,"samples":71840,"firstImageMs":321.9,"coarseMs":169.4,"halfMs":498.3,"pass1Ms":1373.6,"renderMs":2840.5,"shownMs":3343.4,"secPerPass":1.0122,"samplesPerSec":25291.3,"cyclesPerSample":14205.2,"displays":4,"displayMs":489.4,"displayCyclesMean":43727752,"skyRebuilt":1,"ev100":15.3618,"metered":2,"meanLum":8514.56,"internalFree0":70927,"internalMinFree":66943,"psramFree0":21822300,"psramMinFree":21243708,"internalPeakUse":3984,"psramPeakUse":578592}
+CGAL {"ev":"first","id":"R-01","ms":357.8,"sub":1,"pass":0,"ev100":8.5206,"skyRebuilt":1}
+CGAL {"ev":"pass","id":"R-01","pass":1,"renderMs":1579.5,"cyclesPerSample":22148.7,"ev100":8.5206}
+#OK key
+CGAL {"ev":"scene","id":"R-01","w":160,"h":160,"reason":"previous","passes":1,"samples":42080,"firstImageMs":357.8,"coarseMs":197.3,"halfMs":660.1,"pass1Ms":1950.3,"renderMs":2582.4,"shownMs":3031.2,"secPerPass":1.5711,"samplesPerSec":16294.6,"cyclesPerSample":22045.5,"displays":3,"displayMs":418.3,"displayCyclesMean":49742289,"skyRebuilt":1,"ev100":8.5206,"metered":1,"meanLum":61.8506,"internalFree0":70927,"internalMinFree":66807,"psramFree0":21822300,"psramMinFree":21279812,"internalPeakUse":4120,"psramPeakUse":542488}
+t = 1523975.1 ms, lane busy 297872.2 ms (19.5%), 136075 turns, 4566 published, 8287 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   idle         75243 130059.09     67.3    320    0  
+  power       driver   idle           303    447.06     77.2    320    0  
+  display     driver   idle           671   4841.69    105.8    320    0  
+  compositor  service  idle         10613  61976.31    427.8    768    0  
+  agent       service  idle         15059   3746.78    771.0   1536    0  
+  chat        app      idle             8    140.50    238.8    768    0  
+  launcher    app      idle           757   9206.88    264.7    384    0  
+  files       app      idle             1      3.97     68.2    384    0  
+  editor      app      idle             1     14.61    711.8    768    0  
+  calc        app      idle             1    241.77    568.9   1024    0  
+  agenda      app      idle           101     30.99    181.2    384    0  
+  settings    app      idle          1510   5285.31    190.1    384    0  
+  logs        app      idle          3016  12527.24    214.3    384    0  
+  loader      app      idle          1510   5972.40    230.2    384    0  
+  sysmon      app      idle          3017  16754.42    219.9    512    0  
+  repl        app      idle             0     27.55    209.0    384    0  
+  sandbox     service  idle             0     23.60    206.1    512    0  
+  snake       app      idle         13688  23221.39     98.3    320    0  
+  faults      app      idle             5     54.82    216.0    384    0  
+  flaky       service  idle             1      8.64     48.3    320    0  
+  raytrace    app      idle             0     26.11    207.6    320    0  
+  keys        app      idle          1513   5337.71    208.0    320    0  
+  about       app      idle          1509   2908.84    208.2    320    0  
+  chess       app      idle             1     17.72    743.8    768    0  
+  gallery     app      idle          6031  13194.99    206.1    320    0  
+  toplog      service  idle             1      8.70     41.3    320    0  
+  nat-echo    service  idle             4     25.03     28.2     64    0  
+  nat-bench   service  idle             1      4.66      2.7     64    0  
+  nat-import  world    stopped          0     23.28      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle          1510   1740.16     14.3     64    0  
+  bus i2c0  busy 443468.12 ms, 75550 transfers, 302508 bytes, 0 errors
+  bus spi2  busy 16537.48 ms, 6634 transfers, 68971267 bytes, 0 errors
+#OK stats
+heap: internal 70063 free (largest 31744), psram 21411672 free (largest 20447232)
+#OK heap
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":75245,"msgs":75246,"cpu_ms":130067.555,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":303,"msgs":303,"cpu_ms":447.065,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"waiting","turns":671,"msgs":672,"cpu_ms":4844.284,"mem_kb":105.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"waiting","turns":10615,"msgs":10616,"cpu_ms":61992.030,"mem_kb":427.8,"limit_kb":768,"mbox":0,"mbox_peak":28,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":15061,"msgs":15061,"cpu_ms":3747.135,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":140.499,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":757,"msgs":757,"cpu_ms":9206.884,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":3.973,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.613,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.774,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":101,"msgs":101,"cpu_ms":30.987,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":1510,"msgs":1510,"cpu_ms":5285.306,"mem_kb":190.1,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":3017,"msgs":3017,"cpu_ms":12531.485,"mem_kb":214.3,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":1511,"msgs":1511,"cpu_ms":5974.206,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":3018,"msgs":3018,"cpu_ms":16760.053,"mem_kb":219.9,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.555,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.601,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":13688,"msgs":13688,"cpu_ms":23221.391,"mem_kb":98.3,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":54.820,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.643,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.113,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":1513,"msgs":1513,"cpu_ms":5337.709,"mem_kb":208.0,"limit_kb":320,"mbox":1,"mbox_peak":1,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":1509,"msgs":1509,"cpu_ms":2908.839,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":17.719,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"gallery","kind":"app","engine":"js","title":"Candela","state":"idle","turns":6032,"msgs":6032,"cpu_ms":13196.889,"mem_kb":206.1,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"candela-gallery/gallery.js","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.703,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":25.028,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":4.656,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":23.280,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":1510,"msgs":1510,"cpu_ms":1740.164,"mem_kb":14.3,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"idle","turns":75247,"msgs":75247,"cpu_ms":130071.063,"mem_kb":67.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":303,"msgs":303,"cpu_ms":447.065,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"idle","turns":672,"msgs":672,"cpu_ms":4847.819,"mem_kb":105.8,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"waiting","turns":10618,"msgs":10619,"cpu_ms":62008.915,"mem_kb":427.8,"limit_kb":768,"mbox":0,"mbox_peak":28,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":15062,"msgs":15062,"cpu_ms":3747.456,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":8,"msgs":8,"cpu_ms":140.499,"mem_kb":238.8,"limit_kb":768,"mbox":0,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":757,"msgs":757,"cpu_ms":9206.884,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":1,"msgs":1,"cpu_ms":3.973,"mem_kb":68.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":1,"msgs":1,"cpu_ms":14.613,"mem_kb":711.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":1,"msgs":1,"cpu_ms":241.774,"mem_kb":568.9,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":101,"msgs":101,"cpu_ms":30.987,"mem_kb":181.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":1510,"msgs":1510,"cpu_ms":5285.306,"mem_kb":190.1,"limit_kb":384,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":3017,"msgs":3017,"cpu_ms":12531.485,"mem_kb":214.3,"limit_kb":384,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":1511,"msgs":1511,"cpu_ms":5974.206,"mem_kb":230.2,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":3018,"msgs":3018,"cpu_ms":16760.053,"mem_kb":219.9,"limit_kb":512,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.555,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.601,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":13689,"msgs":13689,"cpu_ms":23222.636,"mem_kb":98.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":5,"msgs":5,"cpu_ms":54.820,"mem_kb":216.0,"limit_kb":384,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.643,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.113,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":1514,"msgs":1514,"cpu_ms":5341.455,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":1510,"msgs":1510,"cpu_ms":2909.638,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":1,"msgs":1,"cpu_ms":17.719,"mem_kb":743.8,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"gallery","kind":"app","engine":"js","title":"Candela","state":"idle","turns":6033,"msgs":6033,"cpu_ms":13197.488,"mem_kb":206.1,"limit_kb":320,"mbox":0,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"candela-gallery/gallery.js","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.703,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":4,"msgs":4,"cpu_ms":25.028,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":4.656,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"stopped","turns":0,"msgs":0,"cpu_ms":23.280,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":1510,"msgs":1510,"cpu_ms":1740.164,"mem_kb":14.3,"limit_kb":64,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+{"sources":1,"compiles":1,"installed":true,"packets":1,"calls":1,"paints":0,"rejects":0,"compile_us":5501877,"relocate_us":1460,"native_us":1433,"raster_us":0,"image_bytes":33840}
+#OK painter
+t = 1525754.3 ms, lane busy 297985.2 ms (19.5%), 136109 turns, 4570 published, 8295 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   idle         75250 130081.45     67.3    320    0  
+  power       driver   idle           303    447.06     77.2    320    0  
+  display     driver   waiting        672   4851.07    105.8    320    0  
+  compositor  service  waiting      10618  62008.92    427.8    768    0  
+  agent       service  idle         15064   3748.20    771.0   1536    0  
+  chat        app      idle             8    140.50    238.8    768    0  
+  launcher    app      idle           757   9206.88    264.7    384    0  
+  files       app      idle             1      3.97     68.2    384    0  
+  editor      app      idle             1     14.61    711.8    768    0  
+  calc        app      idle             1    241.77    568.9   1024    0  
+  agenda      app      idle           101     30.99    181.2    384    0  
+  settings    app      idle          1511   5290.31    190.1    384    0  
+  logs        app      idle          3018  12535.87    214.3    384    0  
+  loader      app      idle          1512   5978.39    230.2    384    0  
+  sysmon      app      idle          3019  16765.72    219.9    512    0  
+  repl        app      idle             0     27.55    209.0    384    0  
+  sandbox     service  idle             0     23.60    206.1    512    0  
+  snake       app      idle         13690  23224.44     98.3    320    0  
+  faults      app      idle             5     54.82    216.0    384    0  
+  flaky       service  idle             1      8.64     48.3    320    0  
+  raytrace    app      idle             0     26.11    207.6    320    0  
+  keys        app      idle          1515   5344.41    208.0    320    0  
+  about       app      idle          1510   2909.64    208.2    320    0  
+  chess       app      idle             1     17.72    743.8    768    0  
+  gallery     app      idle          6034  13199.25    206.1    320    0  
+  toplog      service  idle             1      8.70     41.3    320    0  
+  nat-echo    service  idle             4     25.03     28.2     64    0  
+  nat-bench   service  idle             1      4.66      2.7     64    0  
+  nat-import  world    stopped          0     23.28      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle          1511   1741.63     14.3     64    0  
+  bus i2c0  busy 443517.32 ms, 75557 transfers, 302536 bytes, 0 errors
+  bus spi2  busy 16540.11 ms, 6641 transfers, 68976649 bytes, 0 errors
+#OK stats
+#OK gallery
+#SHOT 320 320
+#OK shot
+CGAL {"ev":"first","id":"B-01","ms":289.9,"sub":1,"pass":0,"ev100":14.9748,"skyRebuilt":1}
+#SHOT-DATA 1574 lines stripped (the capture is the PNG beside this log)
+#END 162990f8 22427
+#OK gallery

@@ -1,0 +1,209 @@
+{
+  "image": "/tmp/picocalc-candela-gallery-a396d3b/build",
+  "imageSha256": "28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6",
+  "port": "/dev/ttyACM0",
+  "started": 1795358316.4911647,
+  "args": {
+    "image": "/tmp/picocalc-candela-gallery-a396d3b/build",
+    "out": "ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/various/device-04-a396d3b",
+    "port": "/dev/ttyACM0",
+    "digest_passes": 4,
+    "scene_seconds": 30.0,
+    "scenes": "",
+    "variant_scenes": "B-01",
+    "skip_digests": false,
+    "skip_scenes": false,
+    "leave_installed": true
+  },
+  "restore": "/tmp/picocalc-playable-3353264/build",
+  "restoreSha256": "8acb94cc18ac1c174691c458a173a05be7cf9fb05d32d5531a6035c5dfcf4636",
+  "locked": 1795358316.494949,
+  "bootDrainedAt": 32.33548617362976,
+  "firstSeen": {
+    "ev": "first",
+    "id": "R-01",
+    "ms": 330.6,
+    "sub": 1,
+    "pass": 0,
+    "ev100": 8.5206,
+    "skyRebuilt": 1
+  },
+  "shots": {
+    "boot": {
+      "crc32": "385c5407",
+      "sha256": "18b349b59e157df1428727df92a0428def0f770ff73032b414938cc51741cd27",
+      "rleBytes": 206248,
+      "seconds": 24.5
+    },
+    "B-01": {
+      "crc32": "71e43dc8",
+      "sha256": "b75fc0889ee4c20916022ab8a1f4dff02beb65f8a3c7da9151b1510f086850f4",
+      "rleBytes": 188652,
+      "seconds": 22.4
+    },
+    "R-01": {
+      "crc32": "8406101b",
+      "sha256": "3cd889fb5a6397dfa5f95ab285a0f9d6f879c75208aff1e72810396bc58528b7",
+      "rleBytes": 175964,
+      "seconds": 20.9
+    },
+    "L-03": {
+      "crc32": "0e7458df",
+      "sha256": "9a9d8f6e87312f60979e912ea8cc97314995d2e9b70546e48a55628a7c7ebd3e",
+      "rleBytes": 124692,
+      "seconds": 14.8
+    },
+    "G-01": {
+      "crc32": "99cb749a",
+      "sha256": "f74cd06c04d9f8010e72c8fd4c1a0fd55a0b97cde1d1de0482e11a45022c257c",
+      "rleBytes": 213884,
+      "seconds": 25.4
+    },
+    "E-02": {
+      "crc32": "21c9674a",
+      "sha256": "acab1b107df4fd5d349d270c25e994f33c1dabd5c03099575bb279db82a1639e",
+      "rleBytes": 35052,
+      "seconds": 4.2
+    },
+    "W-02": {
+      "crc32": "d2310d31",
+      "sha256": "ddb756d69e20ca62002cc801e6372a19a2f2c3ec0ab901d1ef55c9f701770e9f",
+      "rleBytes": 313368,
+      "seconds": 37.3
+    },
+    "F-01": {
+      "crc32": "a6693000",
+      "sha256": "53ffc8080422ac3d2408275330d00ea3d8fab8744e462d9e9eaefc0302f9841f",
+      "rleBytes": 209944,
+      "seconds": 25.0
+    },
+    "V-02": {
+      "crc32": "26419414",
+      "sha256": "58eba369aaf26229b6cf58efddc44515e86d3245276748bd3a05a2822e2966c2",
+      "rleBytes": 182116,
+      "seconds": 21.7
+    },
+    "G-02": {
+      "crc32": "0bd335ac",
+      "sha256": "e9e004d73794d7d2c4deb6f46e86548c9990ca2fc0570f5a88ab835abe64b4c2",
+      "rleBytes": 233992,
+      "seconds": 27.8
+    },
+    "X-04": {
+      "crc32": "00cec279",
+      "sha256": "bc32c150fff608185681e48656f2c83dccf117e79500f43a5dc8e7d7bc52b6af",
+      "rleBytes": 208140,
+      "seconds": 24.8
+    },
+    "S-02": {
+      "crc32": "ea2155f1",
+      "sha256": "c3753755cea48c926299d34db590c7e55568e65a7db804af60a6b5189a2e2a84",
+      "rleBytes": 385764,
+      "seconds": 45.9
+    },
+    "R-05": {
+      "crc32": "36c64a8d",
+      "sha256": "899afb8a5f980c959cbdccb6ab800f58331e2b69b0d51263e9dd50a1326f71da",
+      "rleBytes": 363392,
+      "seconds": 43.2
+    },
+    "V-03": {
+      "crc32": "6f0ce743",
+      "sha256": "ba0163cde56cf587d790d1efda4de95d0f69f0f2770788eddee8a65e1749130c",
+      "rleBytes": 148576,
+      "seconds": 17.7
+    },
+    "V-04": {
+      "crc32": "b82eaf78",
+      "sha256": "6ca513266e08f14d6791852b128fcf426025399bf0c2b2024b92474a88a8f9bf",
+      "rleBytes": 163052,
+      "seconds": 19.4
+    },
+    "R-08": {
+      "crc32": "b4bce9c4",
+      "sha256": "7f30ca2a116dd2c7fc34f8b91156bdf358e3816bd02dea479da474e65745d9ce",
+      "rleBytes": 191124,
+      "seconds": 22.7
+    },
+    "X-03": {
+      "crc32": "ca9cfd7d",
+      "sha256": "8efedb559ea192418d052d7f883dbbf725418f20a4cc36490e52a6d73330b117",
+      "rleBytes": 119600,
+      "seconds": 14.2
+    },
+    "R-04": {
+      "crc32": "0c76a849",
+      "sha256": "24c60f6e15b564ef798ed9b44a92664fbd8bf7846f0cb52cbd63053b1dde1c63",
+      "rleBytes": 253556,
+      "seconds": 30.2
+    },
+    "G-03": {
+      "crc32": "e078f796",
+      "sha256": "b633c212381d0d52de31aa830b197a5cb5ea28b35db2597e400065ed4fc8140b",
+      "rleBytes": 234992,
+      "seconds": 27.9
+    },
+    "end": {
+      "crc32": "162990f8",
+      "sha256": "ed1f8642517ac4cfefaf86a84feb55562dff5cb10438b1672161c836835192f8",
+      "rleBytes": 89708,
+      "seconds": 10.7
+    }
+  },
+  "scenes": [
+    "B-01",
+    "R-01",
+    "L-03",
+    "G-01",
+    "E-02",
+    "W-02",
+    "F-01",
+    "V-02",
+    "G-02",
+    "X-04",
+    "S-02",
+    "R-05",
+    "V-03",
+    "V-04",
+    "R-08",
+    "X-03",
+    "R-04",
+    "G-03"
+  ],
+  "probe": {
+    "ev": "probe",
+    "ms": 5000,
+    "stolenPct": 16.94,
+    "gaps": 4583,
+    "gapsPerSecond": 916.6,
+    "meanGapUs": 184.8,
+    "longestGapUs": 35451.7,
+    "buckets": [
+      3912,
+      80,
+      431,
+      143,
+      17
+    ]
+  },
+  "scenesStarted": 1795358960.7958105,
+  "scenesEnded": 1795359948.4939687,
+  "keys": {
+    "right": {
+      "reason": "next",
+      "sceneRecord": true,
+      "endedScene": "B-01"
+    },
+    "left": {
+      "reason": "previous",
+      "sceneRecord": true,
+      "endedScene": "R-01"
+    }
+  },
+  "leftInstalled": {
+    "build": "/tmp/picocalc-candela-gallery-a396d3b/build",
+    "sha256": "28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6",
+    "previous": "/tmp/picocalc-playable-3353264/build 8acb94cc18ac1c174691c458a173a05be7cf9fb05d32d5531a6035c5dfcf4636"
+  },
+  "finished": 1795359968.3834057
+}
