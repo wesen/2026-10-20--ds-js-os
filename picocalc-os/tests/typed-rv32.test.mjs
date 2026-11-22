@@ -240,7 +240,7 @@ test("the default policy applies the qualified options and stock reproduces the 
     // The "kernel" policy adds division facts (board run 10 timed that image at 15.27 ms, Step 15),
     // value sets (board run 11: 13.84 ms, Step 17), hoisted loop invariants (board run 12:
     // 12.45 ms, Step 18), and fused conjunctions with loads into homes (below).
-    const kernel = typedRv32.policies.kernel, before = {...kernel.operandLocations, pointerOnly: false};
+    const kernel = typedRv32.policies.kernel, before = {...kernel.operandLocations, pointerOnly: false, reuseArgs: false};
     const step19 = {...kernel.select, induction: false}, step18 = {...step19, conjunctions: false, loadHomes: false};
     const old = select => sha({policy: "kernel", select, operandLocations: before});
     assert.equal(old({...step18, sets: false, hoist: false}), "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
@@ -249,7 +249,10 @@ test("the default policy applies the qualified options and stock reproduces the 
     // Fused conjunctions and loads into homes (board run 13: 11.43 ms, Step 19).
     assert.equal(old(step19), "245edbc1333519b3d78baa792e2317a6ba407f36fff682b078dd653bc5f097a0");
     // Induction variables and pointer-only sources (board run 14: 11.17 ms, Step 20).
-    assert.equal(sha({policy: "kernel"}), "8eaa40605e4bca96872b309aa87a39bfaf6312079822f9c1e4a134a63398fcdc");
+    assert.equal(sha({policy: "kernel", operandLocations: {...kernel.operandLocations, reuseArgs: false}}),
+        "8eaa40605e4bca96872b309aa87a39bfaf6312079822f9c1e4a134a63398fcdc");
+    // Locals in the argument registers of unhomed parameters (board run 15: 10.99 ms, Step 21).
+    assert.equal(sha({policy: "kernel"}), "4323938e38a4ef2a44c80103bf43680b506195762d6faa0f5834b41c86e9d2a5");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
 
@@ -1011,5 +1014,90 @@ test("induction variables and pointer-only sources keep results, stores and trap
         assert.deepEqual(run(candidate, f, n, cells), expected, `${f} n=${n} cells=${cells}`);
         traps += expected.trap;
     }
+    assert(traps >= 6, "short buffers reach the bounds");
+});
+
+test("locals in the argument registers of unhomed parameters keep results, stores and traps identical", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    // Each function reads some parameters once, outside its loop (no home), and keeps more
+    // values live in the loop than there are spare registers. late reads its parameters after
+    // the loop, from their slots; early before; both and stored mix them with stores.
+    const src = `function late(w: buffer, n: i32, b: i32, c: i32): i32 {
+    let s = 0;
+    let t = 1;
+    let u = 2;
+    let v = 3;
+    let z = 5;
+    for (let i = 0; i < n; i = i + 1) {
+        const p = w.charCodeAt(i);
+        const q = w.charCodeAt(i + 1);
+        s = s + p * t - q * u;
+        t = t + v;
+        u = u + z;
+        v = 1 - v;
+        z = z + p - q;
+    }
+    return s + b * 7 - c + t + u + v + z;
+}
+function early(w: buffer, n: i32, b: i32, c: i32): i32 {
+    const base = b + c;
+    let s = base;
+    let t = 0;
+    let u = 9;
+    let v = 2;
+    let x = 7;
+    let y = 1;
+    for (let i = 0; i < n; i = i + 1) {
+        const p = w.charCodeAt(i);
+        const q = w.charCodeAt(i + 2);
+        const r = w.charCodeAt(i + 1);
+        s = s + p * q - r + t * u - v * x + y;
+        t = t + p;
+        u = u - r;
+        v = v + q;
+        x = x - p + 1;
+        y = y + v - x;
+    }
+    return s + t - u + v - x + y;
+}
+function stored(w: buffer, n: i32, b: i32, c: i32): i32 {
+    let s = 0;
+    let t = 4;
+    for (let i = 0; i < n; i = i + 1) {
+        const p = w.charCodeAt(i);
+        const q = w.charCodeAt(i + 1);
+        w.setCharCodeAt(i, p + q + t);
+        s = s + p - q * t;
+        t = t + 3;
+    }
+    w.setCharCodeAt(0, b);
+    return s + c;
+}`;
+    const kernel = typedRv32.policies.kernel;
+    assert(kernel.operandLocations.reuseArgs, "kernel reuses argument registers");
+    const reusing = new Set();
+    const candidate = typedRv32.compile(src, [], undefined, {policy: "kernel", observePlan: (fn, plan) => {
+        // a1..a3 (11..13) holding a plain local while parameter 1..3 lives elsewhere (or in its slot).
+        for (const [id, reg] of plan.homes) if (typeof id === "number" && id >= 4 && reg >= 11 && reg <= 13 && plan.homes.get(reg - 10) !== reg) reusing.add(fn);
+    }});
+    assert.deepEqual([...reusing].sort(), ["early", "late", "stored"], "every function puts a local in a parameter's register");
+    const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
+    function run(p, f, n, cells, b, c) {
+        const mem = new Uint8Array(4096), view = new DataView(mem.buffer);
+        view.setUint32(1024, cells, true);
+        for (let i = 0; i < cells; i++) view.setUint16(1028 + 2 * i, 40 + (i * 11) % 29, true);
+        const out = typedRv32Interp.run(p, f, [1024, n, b, c], mem);
+        return {result: out.result, trap: Boolean(out.trap), bytes: Array.from(out.bytes.subarray(1024, 1028 + 2 * cells))};
+    }
+    let traps = 0;
+    for (const f of ["late", "early", "stored"]) for (const n of [0, 1, 5, 9, -3]) for (const cells of [30, 8, 3])
+        for (const [b, c] of [[0, 0], [17, -4], [-123456, 99]]) {
+            const expected = run(stock, f, n, cells, b, c);
+            assert.deepEqual(run(candidate, f, n, cells, b, c), expected, `${f} n=${n} cells=${cells} b=${b} c=${c}`);
+            traps += expected.trap;
+        }
     assert(traps >= 6, "short buffers reach the bounds");
 });

@@ -1452,3 +1452,56 @@ The remaining waste in `LitRow` is register pressure. I tested four ideas in scr
   - `pointersAfterWrite` (the constant shortcut) and `step()` (`previousOp`, `currentOp`, the skip hook);
   - `POLICIES.kernel`.
 - `picocalc-os/tests/typed-rv32.test.mjs`: the new test and the restated pins.
+
+## Step 21: Locals in the argument registers of parameters without homes, and the frame reaches 1.42× C
+
+Step 20's scratch experiments found one register that `LitRow` never used. `stride` arrives in `a3`, is read once to compute `row`, and is too cold for a home, so the prologue stores it to its slot. Yet `a3` stayed out of the allocator's free list, which for a leaf starts after the last parameter. With `operandLocations.reuseArgs`, such a register becomes free once the prologue has stored its parameter. On the P4 the frame fell from 11.16 to 10.99 ms (−1.59%, 6/6 blocks, every scene 0.49–2.06%) at no compile cost. Typed is at 1.42× the C frame.
+
+### What I did
+
+- **`planSavedHomes`, under `reuseArgs`.** For a leaf, the argument register `a_p` (1 ≤ p < the cached-capacity limit) of each parameter not homed in it goes on the free list at cost 0, marked `localsOnly`.
+  - **Only plain locals may take it**, first written in the body: ids from `fn.params.length` up. Parameter, capacity and pointer homes are filled in the prologue from the incoming registers, which must still hold their parameters at that point. A parameter moved into a reused `a_p` could also overwrite parameter p before the prologue stores it.
+  - **Sharing respects the mark.** A register opened by a plain local in a reused `a_p` accepts further sharers only if they are plain locals too.
+  - **Assignment** takes the first free register the value may use, instead of the head of the list.
+- **Safety review.** The emitter's expression stack is `t0`–`t4`, with `T5` and `T6` as scratch; `a0` is scratch and never reused. Guarded-return helpers expanded inline use only those. `leafParams`, which reads parameters in place, applies only to frameless leaves, which have no plan. The prologue's `writeLocal(A0 + i, i)` runs before the body, so every unhomed parameter is in its slot before any local is written.
+- **Test** `locals in the argument registers of unhomed parameters keep results, stores and traps identical`: three leaves with four parameters, each reading two of them once, before the loop (`early`), after it (`late`), or around stores (`stored`), and each keeping more values live in the loop than there are spare registers.
+  - The test requires that every function put a plain local in some `a1`–`a3` whose parameter lives elsewhere.
+  - All three match `stock` over five counts, three buffer sizes and three parameter pairs, including traps.
+  - The first version required that the parameter have no home at all. In `early`, `b` and `c` do get homes, in `a4` and `a5`, shared with locals whose intervals don't overlap, while locals took `a2` and `a3`. The test now checks that the parameter's home is not its own argument register.
+- **Pins.** The older kernel pins name `reuseArgs: false`; Step 20's image `8eaa4060…` is pinned with `reuseArgs: false`, and `{policy: "kernel"}` is `4323938e…`. `interactive`, `balanced` and `default` are unchanged.
+- **Gates:** 151/151 tests; 24/24 replays with `kernel` as the default (`various/89-replays-kernel-reuse.log`); Chess engine oracle 6981/6981 words, 118,361,847 instructions, unchanged (`various/90-chess-oracle-kernel-reuse.log`).
+- **Board run 15:** modes `various/88-board-modes-reuse.json` (mode 0 is run 14's `8eaa4060…`, mode 1 adds `reuseArgs`, `4323938e…`). Build log `various/91-board-build-reuse.log`. Imported to `various/92-board-reuse`, scored to `various/93-board-reuse-scores.json`. Restored to `b22a807d…` with eight healthy worlds.
+
+### What worked
+
+| | run 14 (`kernel` + induction) | + reuseArgs |
+|---|---:|---:|
+| host frame instructions | 3,278,213 | 3,239,635 (−38,578) |
+| `LitRow` | 2,337,939 | 2,299,371 |
+| image bytes | 11,632 | 11,544 |
+| P4 frame (6 blocks) | 11.16 ms | 10.99 ms (−1.59%, 6/6) |
+| ratio to C (7.73 ms) | 1.44× | 1.42× |
+| primary pass | 4,041 µs | 4,002 µs (−0.92%, 6/6) |
+| shadow predicate | 145.4 cycles | 145.6 (unchanged, 1/6) |
+| ray compile on the P4 | 2.03 s | 2.02 s (unchanged) |
+| Chess evaluation kernel | 1,966 µs | 1,967 µs (unchanged) |
+
+In `LitRow`, `a3` now holds the sphere count. The saved register it held before goes to `dz`, whose spill to slot 272 (one store and three loads per sphere hit) disappears.
+
+### What didn't work
+
+- Nothing at the device. Combining this with cold weights for slow loop copies (Step 20) was worse than this change alone, so the cold weights stay out.
+
+### What I learned
+
+- The free list is part of the allocator's model, and it was incomplete. Other registers may be idle in the same way: `s0` is never a home ("s0 stays free"), and `a0` is the emitter's scratch.
+
+### What warrants a second pair of eyes
+
+- `localsOnly` relies on the ids of plain locals starting at `fn.params.length`, and on capacity (`-1 - p`), constant (`"c…"`) and pointer (`"p…"`) keys not being numbers at or above it.
+- `lastIncoming` excludes `a7` when a capacity is cached there.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `planSavedHomes` (`reuseArgs`, `localsOnly`, `plain`, the `findIndex` assignment) and its call in `planLocations`; `POLICIES.kernel`.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the new test and the restated pins.

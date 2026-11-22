@@ -1,0 +1,659 @@
+{
+  "rv32Options": {
+    "policy": "kernel"
+  },
+  "engineInstructions": 118361847,
+  "engineImageBytes": 19892,
+  "reference": "chess 1.11.2",
+  "targets": [
+    "wasm",
+    "rv32"
+  ],
+  "rows": [
+    {
+      "name": "opening",
+      "legal": 20,
+      "inCheck": false,
+      "perft": [
+        20,
+        400,
+        8902
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "a2a3",
+          "nodes": 21,
+          "score": 0,
+          "completed": 1,
+          "steps": 3,
+          "packed": 3112
+        },
+        {
+          "mode": "quiescence",
+          "move": "b1c3",
+          "nodes": 21,
+          "score": 30,
+          "completed": 1,
+          "steps": 3,
+          "packed": 3690
+        },
+        {
+          "mode": "deepening",
+          "move": "b1c3",
+          "nodes": 871,
+          "score": 30,
+          "completed": 3,
+          "steps": 102,
+          "packed": 3690
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "a2a3",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 3112
+        }
+      ]
+    },
+    {
+      "name": "castling-both-sides",
+      "legal": 26,
+      "inCheck": false,
+      "perft": [
+        26,
+        568,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "a1a8",
+          "nodes": 27,
+          "score": 500,
+          "completed": 1,
+          "steps": 3,
+          "packed": 3584
+        },
+        {
+          "mode": "quiescence",
+          "move": "a1a8",
+          "nodes": 44,
+          "score": 992,
+          "completed": 1,
+          "steps": 8,
+          "packed": 3584
+        },
+        {
+          "mode": "deepening",
+          "move": "a1a8",
+          "nodes": 546,
+          "score": 998,
+          "completed": 3,
+          "steps": 100,
+          "packed": 3584
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "a1b1",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 3641
+        }
+      ]
+    },
+    {
+      "name": "castling-through-attack",
+      "legal": 23,
+      "inCheck": false,
+      "perft": [
+        23,
+        271,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "a1b1",
+          "nodes": 24,
+          "score": 500,
+          "completed": 1,
+          "steps": 3,
+          "packed": 3641
+        },
+        {
+          "mode": "quiescence",
+          "move": "a1a7",
+          "nodes": 27,
+          "score": 510,
+          "completed": 1,
+          "steps": 4,
+          "packed": 3592
+        },
+        {
+          "mode": "deepening",
+          "move": "a1a7",
+          "nodes": 1415,
+          "score": 522,
+          "completed": 3,
+          "steps": 212,
+          "packed": 3592
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "a1b1",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 3641
+        }
+      ]
+    },
+    {
+      "name": "en-passant-pinned",
+      "legal": 6,
+      "inCheck": false,
+      "perft": [
+        6,
+        77,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "e5e6",
+          "nodes": 7,
+          "score": -500,
+          "completed": 1,
+          "steps": 1,
+          "packed": 1812
+        },
+        {
+          "mode": "quiescence",
+          "move": "e1e2",
+          "nodes": 23,
+          "score": -598,
+          "completed": 1,
+          "steps": 4,
+          "packed": 3892
+        },
+        {
+          "mode": "deepening",
+          "move": "e1e2",
+          "nodes": 367,
+          "score": -606,
+          "completed": 3,
+          "steps": 53,
+          "packed": 3892
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "e5e6",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 1812
+        }
+      ]
+    },
+    {
+      "name": "en-passant-legal",
+      "legal": 7,
+      "inCheck": false,
+      "perft": [
+        7,
+        27,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "e5d6",
+          "nodes": 8,
+          "score": 100,
+          "completed": 1,
+          "steps": 1,
+          "packed": 1811
+        },
+        {
+          "mode": "quiescence",
+          "move": "e5d6",
+          "nodes": 8,
+          "score": 162,
+          "completed": 1,
+          "steps": 1,
+          "packed": 1811
+        },
+        {
+          "mode": "deepening",
+          "move": "e5d6",
+          "nodes": 103,
+          "score": 154,
+          "completed": 3,
+          "steps": 13,
+          "packed": 1811
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "e5e6",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 1812
+        }
+      ]
+    },
+    {
+      "name": "promotion-and-underpromotion",
+      "legal": 9,
+      "inCheck": false,
+      "perft": [
+        9,
+        41,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "a7a8q",
+          "nodes": 10,
+          "score": 950,
+          "completed": 1,
+          "steps": 2,
+          "packed": 4608
+        },
+        {
+          "mode": "quiescence",
+          "move": "a7a8q",
+          "nodes": 14,
+          "score": 942,
+          "completed": 1,
+          "steps": 2,
+          "packed": 4608
+        },
+        {
+          "mode": "deepening",
+          "move": "a7a8q",
+          "nodes": 284,
+          "score": 954,
+          "completed": 3,
+          "steps": 41,
+          "packed": 4608
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "a7a8q",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 4608
+        }
+      ]
+    },
+    {
+      "name": "mate-in-one",
+      "legal": 20,
+      "inCheck": false,
+      "perft": [
+        20,
+        153,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "e1e8",
+          "nodes": 21,
+          "score": 29999,
+          "completed": 1,
+          "steps": 3,
+          "packed": 3844
+        },
+        {
+          "mode": "quiescence",
+          "move": "e1e8",
+          "nodes": 21,
+          "score": 29999,
+          "completed": 1,
+          "steps": 3,
+          "packed": 3844
+        },
+        {
+          "mode": "deepening",
+          "move": "e1e8",
+          "nodes": 21,
+          "score": 29999,
+          "completed": 1,
+          "steps": 3,
+          "packed": 3844
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "f2f3",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 3437
+        }
+      ]
+    },
+    {
+      "name": "mate-in-one-black",
+      "legal": 20,
+      "inCheck": false,
+      "perft": [
+        20,
+        153,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "e8e1",
+          "nodes": 21,
+          "score": 29999,
+          "completed": 1,
+          "steps": 3,
+          "packed": 316
+        },
+        {
+          "mode": "quiescence",
+          "move": "e8e1",
+          "nodes": 21,
+          "score": 29999,
+          "completed": 1,
+          "steps": 3,
+          "packed": 316
+        },
+        {
+          "mode": "deepening",
+          "move": "e8e1",
+          "nodes": 21,
+          "score": 29999,
+          "completed": 1,
+          "steps": 3,
+          "packed": 316
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "e8f8",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 261
+        }
+      ]
+    },
+    {
+      "name": "quiet-mate-in-two",
+      "legal": 31,
+      "inCheck": false,
+      "perft": [
+        31,
+        67,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "d6e6",
+          "nodes": 32,
+          "score": 950,
+          "completed": 1,
+          "steps": 4,
+          "packed": 1236
+        },
+        {
+          "mode": "quiescence",
+          "move": "d6d5",
+          "nodes": 38,
+          "score": 1010,
+          "completed": 1,
+          "steps": 5,
+          "packed": 1243
+        },
+        {
+          "mode": "deepening",
+          "move": "d6c7",
+          "nodes": 1344,
+          "score": 29997,
+          "completed": 3,
+          "steps": 179,
+          "packed": 1226
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "d6e6",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 1236
+        }
+      ]
+    },
+    {
+      "name": "stalemate",
+      "legal": 0,
+      "inCheck": false,
+      "perft": [
+        0,
+        0,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": null,
+          "nodes": 0,
+          "score": 0,
+          "completed": 0,
+          "steps": 0,
+          "packed": 0
+        },
+        {
+          "mode": "quiescence",
+          "move": null,
+          "nodes": 0,
+          "score": 0,
+          "completed": 0,
+          "steps": 0,
+          "packed": 0
+        },
+        {
+          "mode": "deepening",
+          "move": null,
+          "nodes": 0,
+          "score": 0,
+          "completed": 0,
+          "steps": 0,
+          "packed": 0
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": null,
+          "nodes": 0,
+          "score": 0,
+          "completed": 0,
+          "steps": 0,
+          "packed": 0
+        }
+      ]
+    },
+    {
+      "name": "checkmate",
+      "legal": 0,
+      "inCheck": true,
+      "perft": [
+        0,
+        0,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": null,
+          "nodes": 0,
+          "score": -30000,
+          "completed": 0,
+          "steps": 0,
+          "packed": 0
+        },
+        {
+          "mode": "quiescence",
+          "move": null,
+          "nodes": 0,
+          "score": -30000,
+          "completed": 0,
+          "steps": 0,
+          "packed": 0
+        },
+        {
+          "mode": "deepening",
+          "move": null,
+          "nodes": 0,
+          "score": -30000,
+          "completed": 0,
+          "steps": 0,
+          "packed": 0
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": null,
+          "nodes": 0,
+          "score": -30000,
+          "completed": 0,
+          "steps": 0,
+          "packed": 0
+        }
+      ]
+    },
+    {
+      "name": "defended-rook",
+      "legal": 24,
+      "inCheck": false,
+      "perft": [
+        24,
+        380,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "d1d5",
+          "nodes": 25,
+          "score": 450,
+          "completed": 1,
+          "steps": 3,
+          "packed": 3803
+        },
+        {
+          "mode": "quiescence",
+          "move": "f2f4",
+          "nodes": 26,
+          "score": 342,
+          "completed": 1,
+          "steps": 3,
+          "packed": 3429
+        },
+        {
+          "mode": "deepening",
+          "move": "f2f4",
+          "nodes": 1600,
+          "score": 324,
+          "completed": 2,
+          "steps": 209,
+          "packed": 3429
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "f2f3",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 3437
+        }
+      ]
+    },
+    {
+      "name": "kiwipete",
+      "legal": 48,
+      "inCheck": false,
+      "perft": [
+        48,
+        2039,
+        -1
+      ],
+      "search": [
+        {
+          "mode": "material-only",
+          "move": "e2a6",
+          "nodes": 49,
+          "score": 335,
+          "completed": 1,
+          "steps": 6,
+          "packed": 3344
+        },
+        {
+          "mode": "quiescence",
+          "move": "e2a6",
+          "nodes": 159,
+          "score": 163,
+          "completed": 1,
+          "steps": 22,
+          "packed": 3344
+        },
+        {
+          "mode": "deepening",
+          "move": "e2a6",
+          "nodes": 1600,
+          "score": 16,
+          "completed": 2,
+          "steps": 294,
+          "packed": 3344
+        },
+        {
+          "mode": "budget-exhaustion",
+          "move": "d5d6",
+          "nodes": 1,
+          "score": 0,
+          "completed": 0,
+          "steps": 3,
+          "packed": 1747
+        }
+      ]
+    }
+  ],
+  "wordsMatched": 6981,
+  "quietLeafAblation": {
+    "target": "wasm",
+    "position": "defended-rook",
+    "withQuietExtension": {
+      "move": "f2f4",
+      "nodes": 26,
+      "score": 342
+    },
+    "withoutQuietExtension": {
+      "move": "d1d5",
+      "nodes": 25,
+      "score": 456
+    }
+  },
+  "mateLabels": [
+    "Checkmate - White wins",
+    "Checkmate - Black wins"
+  ],
+  "engineSourceSha256": "dd0acd9536d41d2c4ff033ba79c252749744aef2510cc0f3c6bcbe515332e44f"
+}
+exit 0

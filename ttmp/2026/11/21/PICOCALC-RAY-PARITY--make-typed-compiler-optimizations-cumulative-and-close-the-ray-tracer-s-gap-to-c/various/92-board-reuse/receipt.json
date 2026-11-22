@@ -1,0 +1,28 @@
+{
+  "modes": 2,
+  "counts": {
+    "pred": 480,
+    "frame": 648,
+    "chess": 72,
+    "compileUs": 24,
+    "totalUs": 24,
+    "peakBytes": 24
+  },
+  "image": {
+    "sha256": "35f57f2922c5862fb16e663334b18711b9dace4e6a748c68bbcec42e0f30ff3d",
+    "bytes": 1512016,
+    "port": "/dev/ttyACM0"
+  },
+  "restored": "b22a807d7c1e72227847b7762de09b927b5a86f537d8a1f434c77d618a69f62c",
+  "worlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "logSHA": "77a0a8c5a0eb3cef2caea4c9703f424b55faf0dafd5d70677d910b670c9318c6"
+}

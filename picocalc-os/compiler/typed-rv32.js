@@ -2544,7 +2544,7 @@ function planLocations(fn, options, inlineCall) {
             }
         }
     }
-    if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined, intervals);
+    if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined, intervals, options.reuseArgs);
     else if (options.homes && leaf) {
         let reg = A0 + Math.max(1, fn.params.length);
         const end = A0 + (receiver === undefined ? 8 : 7);
@@ -2617,7 +2617,7 @@ const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27);
 // in sorted order and costs rise along the free list, so the first unaffordable local
 // ends the assignment.
 const SAVED_MARGIN = 2;
-function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals) {
+function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reuseArgs) {
     const free = [], opened = [];
     // share: a register already holding homes takes another local whose live interval
     // overlaps none of theirs, at no further cost. Keys without an interval (capacities,
@@ -2632,24 +2632,31 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals) {
         }
         for (let reg = A0 + Math.max(1, fn.params.length); reg < A0 + (capacityCached ? 7 : 8); reg++)
             free.push({reg, cost: 0});
+        // reuseArgs: the argument register of a parameter without its own home there is free once
+        // the prologue has written the parameter to its slot or home. Only a plain local, first
+        // written in the body, may take it: parameter, capacity and pointer homes are filled in
+        // the prologue, from the incoming registers (RAY-PARITY Step 21).
+        if (reuseArgs) for (let p = 1; p < lastIncoming; p++) if (!homes.has(p)) free.push({reg: A0 + p, cost: 0, localsOnly: true});
     }
     for (const reg of SAVED_REGISTERS) free.push({reg, cost: 2});
     for (const [id, score] of [...scores].sort((a, b) => b[1] - a[1])) {
         if (homes.has(id)) continue;
         const own = span(id);
-        const shared = intervals && score >= 1 ? opened.find(r => disjoint(r, own)) : undefined;
+        const plain = typeof id === "number" && id >= fn.params.length;
+        const shared = intervals && score >= 1 ? opened.find(r => (plain || !r.localsOnly) && disjoint(r, own)) : undefined;
         if (shared) {
             homes.set(id, shared.reg);
             shared.spans.push(own);
             continue;
         }
-        if (!free.length || score <= (free[0].cost ? SAVED_MARGIN * free[0].cost : 1)) {
+        const at = free.findIndex(f => plain || !f.localsOnly);
+        if (at < 0 || score <= (free[at].cost ? SAVED_MARGIN * free[at].cost : 1)) {
             if (intervals) continue;
             break;
         }
-        const reg = free.shift().reg;
+        const [{reg, localsOnly}] = free.splice(at, 1);
         homes.set(id, reg);
-        opened.push({reg, spans: [own]});
+        opened.push({reg, spans: [own], localsOnly});
     }
 }
 
@@ -2695,10 +2702,11 @@ const POLICIES = Object.freeze({
     // for 6% more compile time (Step 17), hoisted loop invariants to 12.45 ms for 11% more
     // (Step 18), fused conjunctions and loads into homes to 11.43 ms for 1% more (Step 19).
     // Induction variables with pointer-only sources take it to 11.17 ms for 1.5% more (Step 20).
-    // The ray tracer uses it.
+    // Locals in the argument registers of unhomed parameters take it to 10.99 ms at no compile
+    // cost (Step 21). The ray tracer uses it.
     kernel: Object.freeze({
         ...DEFAULT_POLICY,
-        operandLocations: Object.freeze({...DEFAULT_POLICY.operandLocations, pointerOnly: true}),
+        operandLocations: Object.freeze({...DEFAULT_POLICY.operandLocations, pointerOnly: true, reuseArgs: true}),
         select: Object.freeze({...DEFAULT_POLICY.select, facts: true, sets: true, hoist: true,
             conjunctions: true, loadHomes: true, induction: true}),
     }),

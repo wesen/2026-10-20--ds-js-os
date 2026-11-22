@@ -1,0 +1,88 @@
+[
+ {
+  "family": "ray",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true, \"pointerOnly\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true, \"sets\": true, \"hoist\": true, \"conjunctions\": true, \"loadHomes\": true, \"induction\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "8eaa40605e4bca96872b309aa87a39bfaf6312079822f9c1e4a134a63398fcdc",
+  "bytes": 11632,
+  "entries": {
+   "typedRayStride": 0,
+   "typedRaySphereFits": 136,
+   "typedRayLampFits": 200,
+   "typedRayAbs": 260,
+   "typedRaySetObject": 288,
+   "typedRaySetObjects": 520,
+   "typedRayBuildGeometry": 800,
+   "typedRayBuildLight": 1332,
+   "typedRayBuildTables": 2188,
+   "typedRayPrepare": 2272,
+   "typedRayComputeRow": 2380,
+   "typedRayInShadow": 3408,
+   "typedRaySphereScale": 4268,
+   "typedRayPack": 4640,
+   "typedRayPixel": 4840,
+   "typedRayLitRow": 5300,
+   "typedRaySaveAudit": 8568,
+   "typedRayFrame": 8972,
+   "typedRayRender": 9304,
+   "typedRayTrace": 10056,
+   "typedRayShade": 10712
+  }
+ },
+ {
+  "family": "chess",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true, \"pointerOnly\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true, \"sets\": true, \"hoist\": true, \"conjunctions\": true, \"loadHomes\": true, \"induction\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "e056eeb5ab22b376e96905132f1d068665cd7eec2d7dbe62c9bdfb3eef6c8aad",
+  "bytes": 1204,
+  "entries": {
+   "chessSquare": 0,
+   "chessSide": 32,
+   "chessValue": 84,
+   "chessAbs": 196,
+   "chessCenter": 224,
+   "chessEvaluate": 308
+  }
+ },
+ {
+  "family": "ray",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true, \"pointerOnly\": true, \"reuseArgs\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true, \"sets\": true, \"hoist\": true, \"conjunctions\": true, \"loadHomes\": true, \"induction\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "4323938e38a4ef2a44c80103bf43680b506195762d6faa0f5834b41c86e9d2a5",
+  "bytes": 11544,
+  "entries": {
+   "typedRayStride": 0,
+   "typedRaySphereFits": 136,
+   "typedRayLampFits": 200,
+   "typedRayAbs": 260,
+   "typedRaySetObject": 288,
+   "typedRaySetObjects": 512,
+   "typedRayBuildGeometry": 792,
+   "typedRayBuildLight": 1324,
+   "typedRayBuildTables": 2164,
+   "typedRayPrepare": 2248,
+   "typedRayComputeRow": 2356,
+   "typedRayInShadow": 3384,
+   "typedRaySphereScale": 4244,
+   "typedRayPack": 4576,
+   "typedRayPixel": 4776,
+   "typedRayLitRow": 5236,
+   "typedRaySaveAudit": 8480,
+   "typedRayFrame": 8884,
+   "typedRayRender": 9216,
+   "typedRayTrace": 9968,
+   "typedRayShade": 10624
+  }
+ },
+ {
+  "family": "chess",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true, \"pointerOnly\": true, \"reuseArgs\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true, \"sets\": true, \"hoist\": true, \"conjunctions\": true, \"loadHomes\": true, \"induction\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "e056eeb5ab22b376e96905132f1d068665cd7eec2d7dbe62c9bdfb3eef6c8aad",
+  "bytes": 1204,
+  "entries": {
+   "chessSquare": 0,
+   "chessSide": 32,
+   "chessValue": 84,
+   "chessAbs": 196,
+   "chessCenter": 224,
+   "chessEvaluate": 308
+  }
+ }
+]
