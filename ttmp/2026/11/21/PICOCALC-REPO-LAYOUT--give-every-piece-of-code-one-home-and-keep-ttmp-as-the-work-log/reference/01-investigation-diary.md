@@ -423,3 +423,104 @@ This step gave the device state one record and the board one harness. `picocalc-
 ### Technical details
 
 - Evidence: `various/01-seed-playable`, `02-probe`, `03-board-run15-capture` (without `bench.log`, which `04` keeps gzipped), `04-board-run15` and `05-board-run15-scores.json`.
+
+## Step 7: Phases C, B2, E and D (the moves), and the reproducible-build check
+
+This step moved the code. The compilers went to `compiler/` (C). The Candela generators came in from the subagent's branch (B2). The applications and tours went to `apps/` (E). `picocalc-os/` became `firmware/` (D). Each move was one checked Python script with a dry run; each was gated on the host before the next started. On the way, the reproducibility check failed on the device-compiler tool, which embedded the checkout path; fixing it is the other result of this step.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 4.
+
+**Assistant interpretation:** Phases C, B2, E and D of the design, each with its gate.
+
+**Inferred user intent:** The layout of design Section 3, with nothing broken on the way.
+
+**Commits (code):**
+- `94b3ef2`: the tool's prefix map.
+- `2b0b6e2`: Phase C.
+- `8622336`: the B2 merge.
+- `e67a005`: Phase E.
+- `f2e67ee`: Phase D.
+
+### What I did
+
+- **Reproducibility check.** Built `e8ccbb1` a second time from a worktree at `/tmp/picocalc-repro-e8ccbb1`, into another build directory, and compared the two build trees file by file.
+- **Phase C** (`scripts/06-phase-c-move-compiler.py`):
+  - `compiler/typed/` (with `rv32/` and `tools/`), `compiler/cji/`, `tests/compiler/`;
+  - `bench/host/{rv32-interp,typed-ray-bench}.js`;
+  - the four link adapters beside their worlds.
+- **Phase B2.** Reviewed the subagent's branch (`worktree-agent-a2366777e9f91bc67`, five commits) and merged it with `--no-ff`; the merge was clean. `regenerate.mjs --check` passes; Node tests pass 96/96.
+- **Phase E before D** (`scripts/07-phase-e-move-apps.py`, then `08` for three replays):
+  - `apps/typed/` for the six Typed worlds;
+  - `apps/js/{picocalc,papers3}` for the JS roots;
+  - `apps/js/worlds/` for the two QuickJS Candela worlds;
+  - `apps/tours/{picocalc,agent,papers3}` for the tours.
+- **Phase D** (`scripts/09-phase-d-rename-firmware.py`): one `git mv picocalc-os firmware`, plus the path forms outside the tree.
+- **The scripts.** Each holds the move list and exact edits (each asserting its count), applies prefix rules everywhere outside `ttmp/`, and shields text that reads old revisions. Examples: `chess-holdout.mjs` reading `57b2d9f:picocalc-os/worlds/chess`, the trace REPL tests at `eaf0872`, and example 23's `old` path.
+
+### Why
+
+- **E before D.** The Typed worlds then move once, `picocalc-os/worlds` → `apps/typed`. The trace REPL's revision table needs only two world roots, not three.
+- **Where the QuickJS Candela worlds go.** They sit in `apps/js/worlds/`, not inside `apps/js/picocalc/` as the design's Section 4.1 had them, because the P4 build bundles everything under its JS root into the device filesystem (`GLOB_RECURSE ${OS}/js/*`).
+
+### What worked
+
+- **Phase C.**
+  - All nine moved compiler and link files kept their digests; the bundle's generated header line was deliberately left alone.
+  - `build.mjs --check`, tests/compiler 4/4 files, host gates (3,239,635 / `430f0d50`, 6,981 words, 24/24), run 15's staged images and `go test ./...` all pass.
+  - `compiler.at` loads both old and new revisions (`TestCompilerRevisionsCoexistInOneSession` at `eaf0872`, `3213028` and `14c95b5`, plus the worktree).
+- **Phase E.**
+  - `make shots` gives 79 files, 76 byte-identical. The other three (`91-logs.png`, `93-logs-held.png`, `uart.log`) differ by the boot line `booting 23 worlds from ../apps/js/picocalc/system.json`, which the log screens render.
+  - The `CANDELA=1 candela` staging is identical (27 files). test-apps 96/96; test-clock, test-sys and test-fs pass.
+- **Phase D.**
+  - `make shots` is 79/79 identical to Phase E. The Candela staging is identical to before Phase E. All host gates pass again.
+  - `VENDOR.json` was regenerated: two generator inputs mention the tree in comments. The seven generated sources are unchanged.
+
+### What didn't work
+
+- **The second checkout built a different image.**
+
+  ```
+  cb36a2824cfc369e3e7a2411b34643825b38f3538a8cd0eb7a54b86f7e309760  /tmp/picocalc-playable-e8ccbb1-repro/picocalc-os-p4.bin
+  bab5c48afbf6051a8b4bbba0741e777203d8ea3f25987fef2056adeb2d106d2e  /tmp/picocalc-playable-e8ccbb1/picocalc-os-p4.bin
+  ```
+
+  Comparing the build trees narrowed it to `cji/tool/compiler.elf` → `sljitLir.o`, whose strings held `Assertion failed at /home/manuel/code/wesen/2026-10-20--ds-js-os/cji/runtime/sljit/sljitLir.c:%d`. `build-tool.sh` compiles the device-compiler tool with clang outside ESP-IDF, so the prefix maps of Step 6 never reached it. `-ffile-prefix-map` for the cji root and the tool directory gives the same `compiler.elf` (`e6f5e7b7…`) from the main tree and from a `/tmp` worktree (`94b3ef2`). A full second playable build at Phase D's commit is part of the profile builds (Step 8).
+- **A commit with half its changes.** The first Phase C commit held only the 194 renames: `git add -A ... cji ...` died with `fatal: pathspec 'cji' did not match any files`, because `cji/` no longer existed, and `git commit` still committed what `git mv` had staged. Since it was local, I amended it with the rewrites.
+- **Wrong rewrites caught by the gates.**
+  - **Phase C, typed-inspect.** `typed-inspect.mjs` looked for `../compiler/typed-wasm.js` beside itself: `ENOENT ... compiler/typed/compiler/typed-wasm.js`. The fix was `../`.
+  - **Phase C, a Go test.** The script changed an expectation in `compiler_test.go` that checks `where()` at revision `eaf0872`, where the old path is correct; it was put back.
+  - **Phase E.** Three replays build JS paths as `join(os, 'js', file)`, a form 07 did not know: 9/24 workflows, then 24/24 after `08`.
+  - **Phase D.** `repo_test.go` reads `repo.read('picocalc-os')` in the worktree; it now reads `firmware`.
+
+### What I learned
+
+- **Pre-existing failures** (each checked at commits before the move):
+  - `test_dial_on_the_launcher_from_the_manifest_and_from_storage` fails identically at `889a9b2`, at `2b0b6e2` and after the moves: `['Dial', 'n', False] != ['u-dial', '', True]`.
+  - The PaperS3 host build fails to link: `undefined reference to port_tz_set`, `port_net_scan`, `port_net_join`.
+  - `make -C compiler/cji test` runs `node run-tests.js`, which has never been in git history.
+  - `ld.lld` is not installed system-wide. `build-tool.sh` finds it through `rustc`'s `gcc-ld` directory, so the firmware builds, but `make -C compiler/cji build/rv32/fw-test.elf` does not.
+
+### What was tricky to build
+
+- **Moving cji's C runtime.** The firmware's device-compiler tool links the runtime that Step 5 had moved, so it went back (Step 6), and Phase C moved it with the rest of cji.
+- **Reads of old revisions.** Rewriting by prefix had to skip the text that reads old revisions. A rewritten historical read fails only when a test reads that revision, so the shield list is explicit and short.
+
+### What warrants a second pair of eyes
+
+- **Design deviations.** `bench/emu/` holds only `emu.c`. The QuickJS Candela worlds live in `apps/js/worlds/`. Phase E ran before Phase D. Section 4.1's rows need a note.
+
+### What should be done in the future
+
+- **Phase G and the pre-existing failures.** Phase G's `make test` must decide what to do with the launcher test and cji's missing runner.
+
+### Code review instructions
+
+- `git show --stat 2b0b6e2 e67a005 f2e67ee`, then each script's docstring in `scripts/06`–`09`.
+- `make -C firmware shots` and `bench/host/gates.sh --options '{"policy":"kernel"}'`.
+
+### Technical details
+
+- Host evidence (scratch): `shots-before`, `shots-after`, `shots-d` and the Candela staging digests.
+- The profile builds at `f2e67ee` are running in worktrees `/tmp/picocalc-wt-*`.
