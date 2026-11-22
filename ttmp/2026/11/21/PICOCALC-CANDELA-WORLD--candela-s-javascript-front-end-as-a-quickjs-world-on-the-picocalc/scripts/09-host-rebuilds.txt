@@ -1,0 +1,15 @@
+# picocalc-host script: B-01 built ten times in one runtime (heap after each), then the parameter paths
+wait 1500
+send candela rebuilds {"id":"B-01","n":10}
+wait 8000
+send candela build {"id":"L-03"}
+wait 500
+send candela param {"id":"elevation","value":0.5}
+wait 500
+send candela build {"id":"E-03"}
+wait 500
+send candela param {"id":"depth","value":6}
+wait 1000
+send candela status
+wait 200
+quit

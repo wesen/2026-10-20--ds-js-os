@@ -176,6 +176,15 @@ void console_exec(char *line) {
     p4_typed_ray_console(rest);
   }
 #endif
+#if PICOCALC_CANDELA_WORLD
+  else if (!strcmp(cmd, "send")) {   // send WORLD TYPE [JSON]: a message from outside, as picocalc-host's scripts can
+    char to[NAME_LEN] = "", type[NAME_LEN] = ""; int m = 0;
+    sscanf(rest, "%31s %31s %n", to, type, &m);
+    world_t *W = world_by_name(to);
+    if (!W || !type[0]) printf("send WORLD TYPE [JSON]: no world called %s\n", to);
+    else defer_deliver(W, new_msg(M_ON, type, m && rest[m] ? rest + m : NULL, -1));
+  }
+#endif
   else if (!strcmp(cmd, "raybench")) p4_raybench(rest);
 #if PICOCALC_CANDELA
   else if (!strcmp(cmd, "candela")) p4_candela_console(rest);

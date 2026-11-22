@@ -85,7 +85,7 @@ char *port_candela_status_json(void) {
   snprintf(j, 640, "{\"renderer\":\"stub\",\"running\":%s,\"scene\":\"%s\",\"gen\":%u,\"pass\":%u,\"sceneBytes\":%u,"
            "\"fieldBytes\":%u,\"matBytes\":%u,\"fixedKernel\":\"%s\",\"tonemap\":\"%s\",\"exposure\":\"%s\","
            "\"starts\":%llu,\"updates\":%llu,\"stops\":%llu,\"passes\":%llu,\"refused\":%llu,\"lastRefusal\":\"%s\"}",
-           R.world >= 0 ? "true" : "false", R.program ? R.program->scene_id : "", R.gen, R.pass, R.scene ? R.scene->bytes : 0,
+           R.world >= 0 ? "true" : "false", R.program ? R.program->scene_id : "", (unsigned)R.gen, (unsigned)R.pass, R.scene ? (unsigned)R.scene->bytes : 0u,
            R.program ? (unsigned)R.program->field_len : 0, R.program ? (unsigned)R.program->mat_len : 0,
            R.program ? R.program->fixed_kernel_sha256 : "", R.program ? R.program->tonemap : "", R.program ? R.program->exposure : "",
            (unsigned long long)R.starts, (unsigned long long)R.updates, (unsigned long long)R.stops,

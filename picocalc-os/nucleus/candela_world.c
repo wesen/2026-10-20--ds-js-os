@@ -433,7 +433,7 @@ void candela_world_frame(int world, uint32_t gen, uint32_t pass, uint32_t spp, v
   world_t *W = world_by_id(world);
   if (!W || W->status == W_STOPPED || !W->vm) return;
   char j[128];
-  snprintf(j, sizeof j, "{\"gen\":%u,\"pass\":%u,\"spp\":%u,\"us\":%lld}", gen, pass, spp, (long long)pass_us);
+  snprintf(j, sizeof j, "{\"gen\":%u,\"pass\":%u,\"spp\":%u,\"us\":%lld}", (unsigned)gen, (unsigned)pass, (unsigned)spp, (long long)pass_us);
   defer_deliver(W, new_msg(M_ON, "candela.frame", j, -1));
 }
 
