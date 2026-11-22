@@ -2,7 +2,10 @@
 // usage (repo root): node 14-c-frame-instructions.mjs <P4-GCC> <rv32emu> [GCC flags...]
 // GCC builds picocalc-os/nucleus/raytrace_demo.c with scripts/14-c-frame-runner.c twice, with
 // and without the render (-DBASELINE); the difference is the frame. The board's C frame is the
-// same call, built by ESP-IDF with CONFIG_COMPILER_OPTIMIZATION_PERF (-O2). The C pixels must
+// same call: SHADOW-CODEGEN's 02-build.sh copies raytrace_demo.c into the app as production.inc,
+// bench.c includes it, and main/CMakeLists.txt adds -O3 after ESP-IDF's -O2, so -O3 is the
+// default here (-march there is rv32imafc_zicsr_zifencei_xesppie; the scalar frame uses
+// neither F nor PIE, and C only changes code size). The C pixels must
 // equal the Typed opening frame's pixel cells. Typed options come from TYPED_RV32_OPTIONS.
 import {execFileSync, spawnSync} from "node:child_process";
 import {mkdtempSync, readFileSync, writeFileSync, rmSync} from "node:fs";
@@ -13,7 +16,7 @@ import {runInThisContext} from "node:vm";
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "../../../../../..");
 const [gcc, emu, ...extra] = process.argv.slice(2);
-const flags = extra.length ? extra : ["-O2"];
+const flags = extra.length ? extra : ["-O3"];
 const temp = mkdtempSync(join(tmpdir(), "ray-c-frame-"));
 try {
     writeFileSync(join(temp, "sdkconfig.h"), "");

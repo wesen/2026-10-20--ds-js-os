@@ -865,3 +865,62 @@ Host frame (reference digest): 5,884,011 → 5,651,384 with `r[L + k]` only, **5
 - `picocalc-os/compiler/typed-rv32.js`: `pointerFrom`, `pointersAfterWrite`, `checkedAddress`, `destination`/`result`, `case 0x21`, the pointer-home prologue loop, and in `planLocations` the `options.pointers` block of the walk, the group section before `planSavedHomes`, and the `pointers`/`pointerWrites`/`increments` maps after it.
 - `picocalc-os/tests/typed-rv32.test.mjs`: the pointer-home test; the five default pins.
 - `scripts/14-c-frame-instructions.mjs`, `scripts/14-c-frame-runner.c`.
+
+## Step 12: Work-buffer placement is not the gap, and the C reference is -O3
+
+Step 11 found Typed at 1.75× C in instructions but 2.50× in time, and named the PSRAM placement of the harness's `work` buffer as the first hypothesis. A paired board run moved only that buffer to internal RAM, and the frame changed by 0.2%. The hypothesis is wrong.
+
+While checking the board's C build flags, I found that Step 11 used the wrong C reference. SHADOW-CODEGEN's `02-build.sh` copies `nucleus/raytrace_demo.c` into the app as `production.inc`, `bench.c` includes it, and `main/CMakeLists.txt` adds `-O3` after ESP-IDF's `-O2`. The board's C frame is GCC `-O3`: 2,450,039 instructions, not 3,194,201. With that reference Typed is 2.28× C in instructions and 2.50× in time. About 90% of the gap is instruction count, and cycles per instruction differ by about 10% (Typed about 1.25, C about 1.13). Step 11's table and its conclusion that a large part of the gap is cost per instruction are wrong. I left that entry unchanged; this step corrects it.
+
+This step also starts using the merged workbench (PICOCALC-TRACE-WORKBENCH) for board scoring.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 6. During this step the user asked "the REPL updates have been done, right? can you benefit from them?". Yes: the workbench is merged (2953d57), and this step moves scoring onto it.
+**Assistant interpretation:** Test the Step 11 hypothesis before building on it; adopt the workbench where it replaces my own code.
+**Inferred user intent:** C parity, and a REPL that earns its keep.
+
+### What I did
+
+- `10-stage-board.py … --internal-work-last`: patches the staged `bench.c` so that the last mode's Typed frame arm gets `wint`, a `work` surface from `heap_caps_aligned_alloc(64, …, MALLOC_CAP_INTERNAL|MALLOC_CAP_8BIT)`. Predicates, Chess and the C arm keep the PSRAM buffer. `various/45-board-modes-placement.json` gives both modes the same options (the Step 10 default, pin `e7e33cd0…`), so mode 1 differs from mode 0 only in where `work` lives.
+- Read the board's compile flags from `compile_commands.json` and `main/CMakeLists.txt`. `bench.c` (and with it `raytrace_demo.c`) builds with `-march=rv32imafc_zicsr_zifencei_xesppie -mabi=ilp32f -O2 -O3`. `scripts/14-c-frame-instructions.mjs` now defaults to `-O3`; its `-O3` row for the current default is appended to `various/44-c-frame-instructions.jsonl`.
+- Started a workbench service from main: `trace-repl` built at a6cd14c, serving port 3796 with the PICOCALC-ROW-IR archive. `GET /info` reports `build.revision` a6cd14c, a 15 s cell limit and a 600 s job limit.
+- `scripts/15-score-board-workbench.js`: `12-score-board` as one cell. It reads `rows.json` and `receipt.json` with `repo.read` and does every comparison with `stats.paired`. On the Step 11 rows (`various/47-board-pointers`) it reproduces `various/48-board-pointers-scores.json` field for field. It scored this step's run (`various/50-board-placement` → `various/51-board-placement-scores.json`).
+
+### Why
+
+- If placement had explained the cycles-per-instruction difference, the fix would have been in the world's allocation, not in the compiler.
+
+### What worked
+
+| | P4, PSRAM `work` → internal `work` (identical images) |
+|---|---:|
+| frame | 20,173.5 → 20,134 µs (0.20%), scenes 0.05–0.29% |
+| primary pass | 0.70% |
+| shade pass | 0.10% (4 wins) |
+| predicate, Chess, cold compile (unchanged `work`: controls) | −0.01%, 0.11%, −0.01% |
+
+- The 6/6 frame wins show a real but negligible effect: the 4 KB `work` buffer stays in the data cache. The C frame was 7,719 µs. Restored `e7b771aa…`, eight worlds healthy. Diagnostic app SHA-256 `87f93557c4ca31e6d8b373862be5570b0bc536cf564310a197f450c85e2999f2`.
+- Corrected comparison:
+
+| | instructions | P4 time | cycles per instruction |
+|---|---:|---:|---:|
+| C, GCC -O3 (the board's build) | 2,450,039 | 7.73 ms | ≈ 1.13 |
+| Typed default (Step 11) | 5,578,770 (2.28×) | 19.31 ms (2.50×) | ≈ 1.25 |
+
+### What didn't work
+
+- **Step 11's C reference.** I took ESP-IDF's `CONFIG_COMPILER_OPTIMIZATION_PERF` (`-O2`) as the C frame's level without reading the component's own `target_compile_options`. The lesson is to read the board build's `compile_commands.json`, not the sdkconfig.
+
+### What I learned
+
+- **The remaining gap is instructions.** Closing it means executing about 3.1 M fewer instructions per frame. Removing bounds checks and their index arithmetic in versioned loops is worth up to about 1 M.
+- **Hand-written scoring code is no longer needed.** `stats.paired` and `repo.read` reproduce `12-score-board` exactly, without shipping the rows through `eval`.
+
+### What should be done in the future
+
+- **Phase 3 part 2, versioned loops.** `LitRow` holds 384,589 of the 541,956 checks per frame and `ComputeRow` 155,812. In `LitRow` most checks are in the inlined `InShadow` sphere loop: `shadow = 21 + 4·sphere`, then `shadow + 0..3`, an affine index. The constant indices `work[16..19]` are reloaded on every floor pixel. The versioning guard must handle affine locals and constant indices, not just `x + k`.
+
+### Code review instructions
+
+- `scripts/10-stage-board.py` (`--internal-work-last` patch), `scripts/14-c-frame-instructions.mjs` (default `-O3` and the comment on why), `scripts/15-score-board-workbench.js`.

@@ -2,3 +2,4 @@
 {"gccFlags":["-O2"],"cFrameInstructions":3194201,"typedFrameInstructions":5578770,"ratio":1.747,"pixelsEqual":true}
 {"gccFlags":["-O3"],"cFrameInstructions":2450039,"typedFrameInstructions":5884011,"ratio":2.402,"pixelsEqual":true}
 {"gccFlags":["-O2"],"cFrameInstructions":3194201,"typedFrameInstructions":15532634,"ratio":4.863,"pixelsEqual":true}
+{"gccFlags":["-O3"],"cFrameInstructions":2450039,"typedFrameInstructions":5578770,"ratio":2.277,"pixelsEqual":true}
