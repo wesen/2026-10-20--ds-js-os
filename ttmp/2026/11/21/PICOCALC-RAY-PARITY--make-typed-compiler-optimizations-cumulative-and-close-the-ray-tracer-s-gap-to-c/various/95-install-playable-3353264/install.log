@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-RAY-PARITY--make-typed-compiler-optimizations-cumulative-and-close-the-ray-tracer-s-gap-to-c/scripts/17-install-playable.py", line 32, in <module>
+    save(args.out / "after.json", {"build": str(build), "sha256": sha, "health": board_health(console, args.peripherals)})
+                                                                                 ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/21/PICOCALC-CANDELA-WORLD--candela-s-javascript-front-end-as-a-quickjs-world-on-the-picocalc/scripts/lib/board_health.py", line 33, in board_health
+    raise RuntimeError(f"native worlds unhealthy with peripherals off: {[(k, seen[k]) for k in bad]}")
+RuntimeError: native worlds unhealthy with peripherals off: [('snake', {'engine': 'native', 'file': 'natives/snake.elf', 'state': 'restarting', 'restarts': 0, 'last_error': ''}), ('files', {'engine': 'native', 'file': 'files/compiled.bin', 'state': 'restarting', 'restarts': 0, 'last_error': ''}), ('editor', {'engine': 'native', 'file': 'editor/compiled.bin', 'state': 'restarting', 'restarts': 0, 'last_error': ''}), ('agenda', {'engine': 'native', 'file': 'agenda/compiled.bin', 'state': 'restarting', 'restarts': 0, 'last_error': ''}), ('chess', {'engine': 'native', 'file': 'chess/compiled.bin', 'state': 'restarting', 'restarts': 0, 'last_error': ''})]
