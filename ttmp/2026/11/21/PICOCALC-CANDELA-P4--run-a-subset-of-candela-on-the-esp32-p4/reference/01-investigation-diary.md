@@ -449,3 +449,55 @@ With the kernel counts, numeric models, entry-call counts and the QuickJS study'
 ### Technical details
 
 - Ticket directories: `ttmp/2026/11/21/PICOCALC-CANDELA-{CPU-KERNEL,SECTIONS,WORLD,FIRST-LIGHT}--*` and `ttmp/2026/11/21/PICOCALC-TYPED-F32--*`.
+
+## Step 8: The QuickJS study's final numbers, and the vault report
+
+The QuickJS subagent (its own diary: `reference/02-quickjs-front-end-diary.md`, nine steps) finished with a full timing campaign. Its final numbers replaced the preliminary ones I had used from its diary: on a less loaded host, B-01's memoised build is 2.0 ms in 32-bit QuickJS (not 4-15 ms), loading is 16 ms (not 27 ms), and the module heap is 1.37 MB. It also offered a better device scale than my factor of 61: the nucleus's own on-device calibration programs (`nucleus/vm.c`: 133 ms for the 100k loop, 31 ms for `fib(20)`) run 33-44 times slower than the 32-bit host build. The two factors agree once each is applied to the matching host width (61 against 64-bit, 33-44 against 32-bit), and both put B-01's device build near 70-120 ms rather than the 0.25-0.9 s I had first written.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** deliverable 5 (milestone vault report), and keep every figure in the documents traceable to the final evidence.
+**Inferred user intent:** a durable report the user can read without the ticket open.
+
+### What I did
+
+- Rewrote design Section 5 (front-end decision) around the final figures: both scale factors and why they agree; GGX table at least 123-161 s on the device; B-01 build about 67-88 ms (117-123 ms from the 64-bit factor); pack 4-15 ms; load 0.5-1.0 s; heap fails at 1 MB, loads at 2 MB, B-01 peaks at 1.65 MB; S-04 needs 69 KB of C stack; M-12 14.7 s, X-02 pack 2.4-2.9 s on the host. Updated the decisions table, the world-resources table, the risks, the WORLD stub, and added "The front end's cost" to the analysis.
+- Committed the subagent's files (scripts/quickjs, various/03-*, its diary); it had committed nothing itself, as instructed.
+- Wrote the vault report `Projects/2026/11/21/PROJECT REPORT - PicoCalc Candela - What a Physically Based Path Tracer Costs on a 360 MHz Handheld - A Technical Deep Dive.md` with the preview figure in `_assets/picocalc-candela-translated-kernel-previews.png`.
+
+### Why
+
+- Estimates built on a loaded host's preliminary timings would have overstated device build time by a factor of three to ten and pushed the design toward unnecessary build splitting.
+
+### What worked
+
+- `docmgr doctor --ticket PICOCALC-CANDELA-P4`: all checks pass once `various/03-quickjs-front-end.json` exists.
+
+### What didn't work
+
+- My preliminary design text quoted the subagent's in-progress diary (B-01 4-15 ms on a host with load average up to 15; M-12 24 s; X-02 pack about 4 s). The final campaign measured CPU time on a less loaded host; every such figure was replaced.
+
+### What I learned
+
+- A host-to-device factor is only meaningful against the matching host build width: 64-bit QuickJS runs the calibration loop in 2.08 ms, 32-bit in 3.04 ms.
+
+### What was tricky to build
+
+- Not double-counting: the subagent's figures are CPU times (median of three processes) and wall times for `pack`; the documents say which.
+
+### What warrants a second pair of eyes
+
+- All device front-end estimates come from integer-heavy calibration programs; Candela's builds compute in doubles, which the P4 does in software. They are lower bounds until the WORLD ticket measures them.
+
+### What should be done in the future
+
+- The follow-up tickets carry the implementation; see the design's Section 10.
+
+### Code review instructions
+
+- Compare design Section 5 with `various/03-quickjs-front-end.txt` line by line.
+
+### Technical details
+
+- Subagent files: `scripts/quickjs/{build.sh,candela-qjs.c,crt-i386.S,driver.mjs,run.py,summarize.py,packdiff.py}`, `various/03-quickjs-front-end.{json,txt}`, `various/03-quickjs-front-end-raw-{A,B,C}.jsonl.gz`.

@@ -1,0 +1,88 @@
+Candela's front end in the PicoCalc's QuickJS, on the x86-64 host
+==================================================================
+QuickJS: picocalc-os/third_party/quickjs, VERSION 2026-06-04, with the three picocalc-os patches in its PATCHES file (interrupt counter init 1000, counter getters, ESP_PLATFORM timezone path)
+flags: -O2 -fwrapv -fno-strict-aliasing -w -D_GNU_SOURCE -DCONFIG_VERSION="2026-06-04" (the device: CONFIG_COMPILER_OPTIMIZATION_PERF, -fwrapv -fno-strict-aliasing)
+32-bit: -m32 -msse2 -mfpmath=sse -fno-pie -fno-stack-protector, an empty gnu/stubs-32.h, crt-i386.S, linked by path against /usr/lib32/libc.so.6 libm.so.6 libgcc_s.so.1 (libc6-dev-i386 is not installed)
+host: 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz, Linux 6.8.0-149-generic, gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, Node v24.18.0, governor powersave
+
+Findings
+- The GGX table dominates: 1,476 ms (64-bit) / 3,680 ms (32-bit) of CPU and 26,738,461 steps per compile, 99.97% of B-01's steps. With it computed once, B-01 builds in 1.92 / 2.02 ms.
+- Simple scenes (B-01, R-01, F-01, A-01, L-03, W-02, G-01), table memoized, 32-bit: 2.02-6.82 ms per cold build, pack under 1.5 ms, heap peak 1,650-1,746 KB with Candela loaded (about 1,368 KB of that is Candela's modules).
+- Heavy scenes, 32-bit, memoized: K-01 4,047 ms cold, peak 44,950 KB, kept 42,697 KB; K-09 6,561 ms cold, peak 54,634 KB, kept 50,841 KB; X-02 339 ms cold, peak 9,869 KB, kept 16,021 KB; X-02's pack() alone 2,854 ms per call (BVH rebuilt each pack).
+- All presets: 105/105 build in QuickJS with one shim (atob, for K-09); generated WGSL and diagnostics are byte-identical to Node's for all of them.
+- Limits a world would hit: Candela alone needs about 1,375 KB charged (a world's default limit is 1,024 KB: import fails); C stack up to 69 KB in 32-bit (S-04 over the P4's 56 KB), deeper in 64-bit.
+- QuickJS-specific: no atob; `//# sourceURL` is ignored, so diag.js callSite() cannot see user frames (<input>:line:col) in a bundled build.
+
+Module load (import src/candela.js, 15 modules), median of 5 fresh processes
+  qjs64  import 15.78 ms (cpu 15.78), of which compile 15.17 ms; heap: empty runtime 149 KB, after import 1,538 KB requested / 1,545 KB charged
+  qjs32  import 16.09 ms (cpu 16.06), of which compile 15.42 ms; heap: empty runtime 143 KB, after import 1,368 KB requested / 1,375 KB charged
+  node   import 15.21 ms (cpu 17.26), of which compile - ms; heap: empty runtime - KB, after import 7,841 KB requested / - KB charged
+
+GGX albedo table (kernel.js ggxAlbedoTable, 16x16x512x16 samples), recomputed by every compile
+  qjs64  1477.62 ms wall, 1475.91 ms cpu (min 1279.28), 26,738,461 steps; calibration loop100k 2.08 ms, fib20 0.7 ms
+  qjs32  3695.2 ms wall, 3680.43 ms cpu (min 3377.82), 26,738,461 steps; calibration loop100k 3.04 ms, fib20 0.93 ms
+  node   125.94 ms wall, 142.64 ms cpu (min 112.98), - steps; calibration loop100k 1.63 ms, fib20 0.75 ms
+
+Per preset. Times in ms (CPU time of the process; wall in the JSON). cold = first build in a fresh process, median of
+3 processes; warm = later builds. "shipped" = Candela unchanged (each build recomputes the table); "memo" = table once.
+id    eng   shipped cold     warm memo cold    warm  steps(memo)   pack0   packT  WGSL B lines  peak KB  +build   kept
+B-01  64         1570.32  1576.63      1.92    1.78        7,762    0.23    0.09   64426  1468    1,847     283    174
+B-01  32         3826.14  4470.82      2.02    2.01        7,762    0.34    0.11   64426  1468    1,650     261    154
+B-01  node         141.2   111.68                                   2.03    0.08   64426  1468
+R-01  64         1673.81  1540.74      3.28    2.92       14,394    0.65     0.5   65380  1495    1,879     303    207
+R-01  32         3752.02  3295.89      3.24    3.19       14,394    1.11    0.81   65380  1495    1,663     273    183
+R-01  node        142.75   112.96                                   2.54    0.29   65380  1495
+F-01  64         1723.51  1660.56      2.94    2.58       13,777    0.23    0.11   66125  1511    1,875     311    205
+F-01  32         3632.93  3862.15      3.22    2.96       13,777    0.39    0.14   66125  1511    1,671     281    173
+F-01  node        137.15   121.01                                    2.1     0.1   66125  1511
+A-01  64            1580  1546.11         2     1.9        8,721    0.12    0.09   65701  1504    1,874     310    192
+A-01  32         4209.35  4218.78      2.48    2.18        8,721    0.16    0.12   65701  1504    1,665     279    175
+A-01  node         136.4   109.75                                   1.53    0.07   65701  1504
+L-03  64            1923  1872.24      2.57    2.36       12,099    0.23     0.1   65206  1487    1,873     305    188
+L-03  32         3464.68  3858.51      2.71    2.66       12,099    0.35    0.13   65206  1487    1,663     273    166
+L-03  node        137.27   106.56                                   2.15    0.08   65206  1487
+W-02  64         2519.78  2595.07      5.98     5.8       31,542    0.88    0.77   73808  1673    1,984     407    292
+W-02  32            5464  5474.62      6.82    6.49       31,542    1.41    1.19   73808  1673    1,746     351    248
+W-02  node        152.46   114.34                                    3.2    0.39   73808  1673
+G-01  64         2355.63  2285.43      5.84    5.69       31,996     0.5    0.36   68366  1563    1,905     340    246
+G-01  32         4932.56  4546.32       6.5     6.4       31,996    0.77    0.52   68366  1563    1,697     302    214
+G-01  node         147.4    115.4                                   2.88    0.21   68366  1563
+K-01  64         6289.65  2937.42   2811.35  487.73   43,553,614    0.73    0.69   78244  1811   49,421  47,851 42,811
+K-01  32        12551.98  6197.98   4046.54  738.54   43,553,614    0.92    0.87   78244  1811   44,950  43,555 42,697
+K-01  node        592.26   261.04                                   2.34    0.25   78244  1811
+X-02  64         2504.22  2705.91    365.51  344.87    3,480,338 2422.81 2317.93   64964  1480   15,357  13,781 25,265
+X-02  32         4197.95  3688.01    338.51     336    3,480,338 2827.53 2853.82   64964  1480    9,869   8,471 16,021
+X-02  node        226.57   201.08                                 163.27  122.17   64964  1480
+K-09  64               -        -   3457.36  1565.8   67,613,724    1.78    1.65   88811  2078   59,161  55,325 51,701
+K-09  32               -        -   6561.45 2675.86   67,613,724    2.63    2.71   88811  2078   54,634  50,973 50,841
+K-09  node       1215.82   779.12                                   3.06    0.65   88811  2078
+  peak KB = largest heap during the cold build, Candela's modules included (requested bytes); +build = above the
+  heap at the start of the build; kept = heap alive after the build and its packs. pack0 = first pack({time:0}) in the process,
+  packT = pack({time:2.5}), median over all builds (ms wall).
+
+All presets, qjs64: 105/105 built; total 26,184 ms wall, median 3.5 ms per preset (memo)
+  vs Node: WGSL identical 105/105, diagnostics identical 105/105, packed data differs in 17: C-01 D-02 G-04 G-05 K-01 K-02 K-03 K-04 K-05 K-06 K-07 K-08 K-09 L-09 R-02 R-05 X-02
+  slowest: M-12 14,136 ms, K-09 4,385 ms, K-02 2,415 ms, K-01 2,203 ms, K-04 694 ms, K-07 631 ms, K-05 502 ms, X-02 423 ms
+  largest build heap (above the heap at build start): K-01 47,574 KB, M-12 47,004 KB, K-09 37,721 KB, K-02 29,826 KB, X-02 13,396 KB, K-05 6,644 KB, K-07 6,077 KB, K-04 5,953 KB
+  C stack high-water: max 95 KB; over 56 KB: E-02 K-09 M-14 S-04 X-04; deepest: S-04 95 KB, X-04 73 KB, E-02 71 KB, K-09 58 KB, M-14 57 KB, R-08 54 KB
+All presets, qjs32: 105/105 built; total 33,570 ms wall, median 4.16 ms per preset (memo)
+  vs Node: WGSL identical 105/105, diagnostics identical 105/105, packed data differs in 17: C-01 D-02 G-04 G-05 K-01 K-02 K-03 K-04 K-05 K-06 K-07 K-08 K-09 L-09 R-02 R-05 X-02
+  slowest: M-12 14,692 ms, K-09 5,786 ms, K-01 5,298 ms, K-02 3,630 ms, K-07 1,184 ms, K-04 920 ms, K-05 631 ms, X-02 363 ms
+  largest build heap (above the heap at build start): K-01 43,306 KB, M-12 34,950 KB, K-09 33,417 KB, K-02 23,920 KB, X-02 8,082 KB, K-07 4,008 KB, K-05 3,765 KB, K-04 3,627 KB
+  C stack high-water: max 69 KB; over 56 KB: S-04; deepest: S-04 69 KB, X-04 54 KB, E-02 52 KB, K-09 41 KB, M-14 40 KB, R-08 40 KB
+All presets, node: 105/105 built; total 13,284 ms wall, median 100.41 ms per preset
+  slowest: M-12 935 ms, K-09 931 ms, K-01 431 ms, K-02 327 ms, K-07 276 ms, K-04 223 ms, X-02 162 ms, K-05 151 ms
+
+56 KB JS stack (qjs32): 14/15 presets build; failed: {'S-04': {'ok': False, 'error': 'stack overflow'}}
+56 KB JS stack (qjs64): 11/15 presets build; failed: {'K-09': {'ok': False, 'error': 'stack overflow'}, 'S-04': {'ok': False, 'error': 'stack overflow'}, 'X-04': {'ok': False, 'error': 'stack overflow'}, 'E-02': {'ok': False, 'error': 'stack overflow'}}
+memory limit 1024 KB: load -> FAILED: module rejected: InternalError: out of memory
+memory limit 2048 KB: load -> ok
+memory limit 4096 KB --memo-ggx: build B-01 1 -> ok
+
+For scale only, not a device measurement: the nucleus calibrates QuickJS on the ESP32-P4 at 133 ms for its
+100k loop and 31 ms for fib(20) (nucleus/vm.c). In 32-bit QuickJS here they take 3.04 and 0.93 ms of CPU,
+ratios 44x and 33x. The GGX table (3,680 ms here) would scale to about 123-161 s;
+B-01 with the table memoized (2.02 ms cold, 2.01 ms warm here) to about 67-88 ms cold.
+The table is double-precision float work; the P4 has no double-precision FPU, so if anything it scales worse than both.
+
+Host load average (1 min) while measuring: load/qjs64 3.52-3.52, load/qjs32 3.52-3.52, load/node 3.52-3.52, ggx/qjs64 3.51-3.52, ggx/qjs32 3.26-3.27, ggx/node 2.81-2.81, build/qjs64 2.18-6.62, build/qjs32 2.08-6.78, memo/qjs64 2.09-9.98, memo/qjs32 2.02-5.56, node/node 1.93-2.32, all/qjs64 1.85-1.85, all/qjs32 2.41-2.41, all/node 1.93-1.93, stack/qjs32 5.35-14.66, stack/qjs64 5.0-14.97, limit/qjs32 3.63-3.63
