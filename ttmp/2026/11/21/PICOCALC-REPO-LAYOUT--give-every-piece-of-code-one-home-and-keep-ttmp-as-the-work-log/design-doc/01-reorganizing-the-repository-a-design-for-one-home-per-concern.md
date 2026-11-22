@@ -24,7 +24,7 @@ RelatedFiles:
     - Path: pkg/tracecompiler/compiler.go
       Note: The trace REPL loads the compiler by fixed paths at any revision; the moves must keep compiler.at working
 ExternalSources: []
-Summary: "Why the repository is hard to work in, and a target layout, rules and phased migration that give every reusable piece of code one home while ttmp/ stays the docmgr work log. Written 2026-11-21, revised 2026-11-22 for the Candela, RV32-split, trace-workbench and RAY-PARITY work and three decided questions. Design only; nothing is moved yet."
+Summary: "Why the repository is hard to work in, and a target layout, rules and phased migration that give every reusable piece of code one home while ttmp/ stays the docmgr work log. Written 2026-11-21, revised 2026-11-22 for the Candela, RV32-split, trace-workbench and RAY-PARITY work; all five layout questions decided. Design only; nothing is moved yet."
 LastUpdated: 2026-11-22T13:30:00-05:00
 WhatFor: "Planning and reviewing the repository reorganization before any file moves"
 WhenToUse: "Before moving directories, promoting ticket scripts, adding a new harness, or vendoring generated code into the firmware"
@@ -43,7 +43,7 @@ The first version was written on 2026-11-21 (`243cc05`). This revision, on 2026-
 - the trace REPL's compiler workbench, with its embedded help pages;
 - further RAY-PARITY board and replay scripts.
 
-The revision also records three decisions that were open (Section 8). Every count below was measured again on 2026-11-22.
+The revision also records the decisions on all five questions that were open (Section 8). Every count below was measured again on 2026-11-22.
 
 ## 1. What the repository contains today
 
@@ -378,11 +378,10 @@ Decided on 2026-11-22:
 - **The ESP32-S3 PaperS3 target is still valuable.** It is kept and moves with the rest: `firmware/port/esp32s3-papers3`, `apps/js/papers3`, `apps/tours/papers3`, `firmware/sim/papers3`, and the `BOARD=papers3` path in the Makefile.
 - **The `out*` captures are results.** The 143 tracked files are removed in Phase F, and `out*/` is ignored. A check found nothing that compares against the tracked captures. The host native tests write `out/uart.log`, `out/before.png` and `out/after.png` during their own run and compare those with each other, so `out/` stays as an ignored working directory.
 - **`.docmgr-operations/` folders are ignored.** Phase F adds them to `.gitignore`. 45 tickets have one today.
+- **cji is kept.** It moves to `compiler/cji/` in Phase C, without `rv32emu`, which moves to `bench/emu/`. It stays live through the device compiler (`PICOCALC_DEVICE_COMPILER`), and its tests join `make test` in Phase G.
+- **The gallery build is kept.** `PICOCALC_CANDELA_GALLERY` stays a build option, and `profiles/playable.env` turns it on, so the playable firmware keeps the 18 scenes. Diagnostic profiles leave it off and spend no PSRAM or core-1 time on it. Its compositor edits still move into `compositor.js` in Phase B2, guarded so that a firmware without the gallery never takes the gallery path.
 
-Still open:
-
-- **cji's future.** It is live through the device compiler (`PICOCALC_DEVICE_COMPILER`) and its own tests. The proposal keeps it as `compiler/cji`. Archiving it behind a tag is possible only if the device compiler is dropped.
-- **The gallery option.** With its patch folded in (B2), `PICOCALC_CANDELA_GALLERY` could stay as an option of the playable profile, or the gallery could become unconditional. The recommendation is to keep the option, so that diagnostic profiles do not spend PSRAM or core 1 on it, and to set it in `profiles/playable.env`.
+No questions are open. New ones go here as they come up during the phases.
 
 ## 9. Reference
 

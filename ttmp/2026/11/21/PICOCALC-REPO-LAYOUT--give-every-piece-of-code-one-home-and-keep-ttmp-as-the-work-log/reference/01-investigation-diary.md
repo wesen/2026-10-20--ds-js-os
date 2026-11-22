@@ -169,3 +169,14 @@ Read the design document's Sections 2.1, 2.2, 2.6 and 2.7 (what is new), 4.2 (wh
 
 - Base of the comparison: `243cc05` (2026-11-21 20:26). Head at measurement: `5c2fb9c`.
 - The current playable image: app `28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6`, partition table `72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30`. The build tree is `/tmp/picocalc-candela-gallery-a396d3b/build`.
+
+## Step 3: Decide the last two open questions
+
+**User prompt (verbatim):** "yes, keep cji, and the gallery build"
+
+This milestone moved the two remaining questions in Section 8 to decided.
+
+- **cji** stays and moves to `compiler/cji/` in Phase C. `rv32emu` moves out of it, to `bench/emu/`.
+- **The gallery** stays a build option (`PICOCALC_CANDELA_GALLERY`), and `profiles/playable.env` turns it on. Diagnostic profiles leave it off. Its compositor edits still move into `compositor.js` in Phase B2, behind a check, so that a build without the gallery never takes the gallery path.
+
+Section 8 now has no open questions. Only the design document, this diary and the changelog changed.
