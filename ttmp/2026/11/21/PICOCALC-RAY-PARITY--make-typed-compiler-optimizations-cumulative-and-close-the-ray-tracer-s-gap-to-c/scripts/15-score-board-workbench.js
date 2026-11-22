@@ -1,12 +1,12 @@
 // 12-score-board as one workbench cell (PICOCALC-TRACE-WORKBENCH W2, W5): the rows are read
 // with repo.read and every comparison is stats.paired, so nothing is shipped into the session.
-//   (echo 'globalThis.BOARD = "ttmp/.../various/47-board-pointers"'; cat 15-score-board-workbench.js) |
+//   (echo 'globalThis.args = {board: "ttmp/.../various/47-board-pointers"};'; cat 15-score-board-workbench.js) |
 //       trace-repl eval --addr 127.0.0.1:PORT --session "$sid"
 // Mode 0 is the control; every other mode is compared with it, paired by block: the median of
 // per-block percentage savings, and wins out of 6. Chess compares mode 0 with the last mode.
 (() => {
-  const rows = repo.read(BOARD + "/rows.json").json();
-  const modes = repo.read(BOARD + "/receipt.json").json().modes;
+  const rows = repo.read(args.board + "/rows.json").json();
+  const modes = repo.read(args.board + "/receipt.json").json().modes;
   const offset = kind => kind === "pred" ? 3 : kind === "frame" ? 1 : 0;
   const pick = (kind, fixture, phase, arm) => r => r.kind === kind && r.fixture === fixture && r.phase === phase && r.arm === arm;
   const pair = (rowsIn, control, candidate) => {

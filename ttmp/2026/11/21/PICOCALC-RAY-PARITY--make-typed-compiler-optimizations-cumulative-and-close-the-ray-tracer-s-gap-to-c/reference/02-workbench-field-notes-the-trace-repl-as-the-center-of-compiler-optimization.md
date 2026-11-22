@@ -56,8 +56,9 @@ The workbench is the merged result of PICOCALC-TRACE-WORKBENCH (merge commit 295
 | Opening-frame profile, instruction mix, bounds-check count | `tools/typed-ray-profile.mjs` and scratch scripts (`mix.mjs`, `access.mjs`, `left.mjs`) in Node | Yes, as a job | `scripts/workbench/frame-profile.js` | 12.6 s per arm in goja, against about 0.5 s in Node |
 | Compile cost in goja | `13-compile-cost-arms.py`: one REPL cell per compile, to stay under the 15 s cell deadline | To port (as one job) | — | jobs remove the deadline workaround |
 | Planner equivalence across revisions | `02-planner-equivalence.{py,js}` with a baseline session | Ported by the subagent | TRACE-WORKBENCH `scripts/03-planner-equivalence.js` | `compiler.at` holds both revisions in one session |
-| Hot instruction listing and disassembly | scratch `hot.mjs` | To port | — | needs a small RV32 disassembler in the script |
-| Dump a function's tape after inlining and rotation | a scratch copy of `typed-rv32.js` with a `globalThis.__tapes` hook | Not possible yet | — | the compiler exposes no transformed tapes (improvement I3) |
+| Hot instruction listing and disassembly | scratch `hot.mjs`, `left.mjs` | Yes, as a job | `scripts/workbench/hot-code.js` | carries its own small RV32 disassembler |
+| Dump a function's tape after inlining, rotation, versioning or splitting | a scratch copy of `typed-rv32.js` with a `globalThis.__tapes` hook | Yes | `scripts/workbench/tape.js` | needed the new compiler hook `observeTape` (I3, done) |
+| Compile cost in goja (job form) | `13-compile-cost-arms.py` | Yes, as a job | `scripts/workbench/compile-cost.js` | arms from a board modes file via `repo.read` |
 | Chess engine oracle | `05-chess-engine-oracle.mjs`: GCC + rv32emu | No | — | needs native processes |
 | 24 host replays | `04-replays.sh` | No | — | needs `make`, GCC and rv32emu |
 | C frame instruction count | `14-c-frame-instructions.mjs`: GCC + rv32emu | No (results could be mounted) | — | needs native processes |
@@ -97,6 +98,39 @@ The workbench is the merged result of PICOCALC-TRACE-WORKBENCH (merge commit 295
   - A 12.6 s interpretation per arm makes a four-arm sweep about a minute. Iterating on a planner heuristic in the workbench is therefore slower than in Node.
   - A job holds the session (a second cell gets 409), so I cannot inspect a result while the next sweep runs, unless I open another session.
 
+### 2026-11-21, entry 4: transformed tapes, after adding a hook to the compiler
+
+- **Task:** look at `typedRayComputeRow` after `select.version`, to check that the guard bound and the fast copy are what the transform intends.
+- **What I did:**
+  - Added `options.observeTape(name, phase, code, nlocals)` to the compiler. It is called with a copy of the tape after `inline`, `commute`, `rotate`, `version` and `split`, cannot change the output, and the default image is unchanged.
+  - Wrote `scripts/workbench/tape.js`. It compiles with a hook that keeps one function's tapes and prints the chosen phase as an indented listing, with `CHK` for checked and `UNCHK` for unchecked accesses.
+- **Time:** 0.12 s for one compile and the listing. This is an ordinary cell, not a job.
+- **Result:** the listing showed the fast loop `UNCHK 0 3 1545` with the constant folded in, and the guard `const 1864; get 0; load32 2 0; ge; br_if 0`. That is 1705 + 159, the largest index of the loop.
+- **Good:** this replaced a hacked copy of `typed-rv32.js` (`globalThis.__tapes`) that I had to keep in sync by hand. With `compiler.at(rev)` the same script shows a tape at any commit that has the hook.
+- **Friction:**
+  - The compiler's operand-cell table (`OPERAND_CELLS`) is internal, so the script restates it. A new opcode has to be added in both places.
+  - `compiler.at` could expose the compiler's own tables, or the compiler could export an opcode description.
+  - Revisions older than the hook (before this commit) cannot be inspected this way.
+
+### 2026-11-21, entry 5: compile cost as one job, and a parameter leak between scripts
+
+- **Task:** measure the goja compile cost of `split` and `version` + `split` on all five programs (`various/54-compile-cost-version-goja.json`).
+- **What I did:** wrote `scripts/workbench/compile-cost.js`.
+  - It takes its arms from a board modes file through `repo.read(args.modes)` with `args.pick` naming the indices, so the arms are exactly the options flashed to the board.
+  - Each program gets a warm-up of every arm, then interleaved rounds paired by round with `stats.paired`.
+  - The whole sweep is one job: 33.7 s for 3 arms × 5 programs (ray 7 rounds, the others 3).
+- **What went wrong, in order:**
+  1. **`compiler.at(...).world("files")` fails:** `picocalc-os/worlds/files/source.list does not exist at worktree`. `world()` only assembles worlds with a `source.list` (Chess, Editor). Files and Agenda are single files or pairs, and `01-open-compiler-session.py` concatenates them by hand. The script now reads them with `c.read(path)`. Better: `world()` could accept the single-file layouts, or the worlds could all get a `source.list`.
+  2. **The first two successful runs measured the wrong thing.** Both reported a single arm named `default`. An earlier cell in the same session (the frame profile) had set `globalThis.ARMS = {default: {}}`. The compile-cost script checked `globalThis.ARMS` before `MODES`, so it silently used the stale value. Session globals persist across cells and jobs by design, and parameters passed as globals leak from one script into the next.
+- **Fix (convention):** every workbench script now reads its parameters from one object, `globalThis.args`, which each invocation assigns whole (`globalThis.args = {...}; <script>`). A stale field can no longer survive, because the whole object is replaced. `15-score-board-workbench.js` follows the same convention.
+- **Result:** ray +73% compile time with versioning, Files +81%, Chess +16%, Editor +15%, Agenda +21%; `split` alone +4% to +11%. Image bytes: versioned ray 8,048 → 11,964 B, and the Editor image shrinks 3% with `split`.
+- **Good:**
+  - Paired-by-round comparisons with `stats.paired` took four lines.
+  - Reading the arms from the board modes file removes a class of mistakes, where the host-measured arm differs from the flashed one.
+- **Bad:**
+  - Nothing stops a script from reading a global another script left behind. This is the strongest argument for I2: a real `args` channel recorded with each job.
+  - A failed job returns `{"ok": false, "error": …}` on stdout with exit status 1. My first post-processing one-liner assumed success and failed with `KeyError`. Every consumer has to check `ok`.
+
 ## Assessment so far
 
 ### Good
@@ -116,9 +150,11 @@ The workbench is the merged result of PICOCALC-TRACE-WORKBENCH (merge commit 295
 ### Improvements, in the order I would make them
 
 - **I1. A native RV32 interpreter as a workbench global** (`rv32.run(image, entry, args, memory, {counts: true})`). It would be Go, sharing nothing with the JavaScript interpreter except its tests. The JavaScript interpreter stays the reference, and a test checks that both agree on the opening frame and the Chess workload. Expected effect: frame profiles in well under a second, making the workbench faster than Node for sweeps.
-- **I2. Parameters for cells and jobs:** `trace-repl eval --arg NAME=JSON` (repeatable), visible as `args.NAME`, recorded with the job.
-- **I3. A tape observer in the compiler:** `options.observeTape(name, phase, code)` after each tape transform (inlining, commutation, rotation, versioning, splitting). It does not change output. The workbench script would then show what the planner saw.
-- **I4. Return the per-PC counts from `typedRayBench.frameProfile`,** so profilers need one interpretation. This is a one-line change in `tools/typed-ray-bench.js`, which `compiler.at` loads per revision.
+- **I2. Parameters for cells and jobs:** `trace-repl eval --arg NAME=JSON` (repeatable), visible as `args.NAME`, recorded with the job. Each cell would get a fresh `args`, so nothing leaks between scripts (entry 5). Until then, scripts read `globalThis.args`, assigned whole by each invocation.
+- **I2b. `compiler.at(...).world(name)` for every world layout,** including the single-file Files world and the two-file Agenda world (entry 5).
+- **I3 (done in the compiler).** A tape observer: `options.observeTape(name, phase, code, nlocals)` after each tape transform. `scripts/workbench/tape.js` uses it.
+- **I4 (done).** `typedRayBench.frameProfile` returns `counts`, so a profile needs one interpretation at revisions from this commit on. `frame-profile.js` still rebuilds the rows itself, so it also works at older revisions.
+- **I3b. Export the compiler's opcode table** (operand cells and names), so workbench scripts stop restating it.
 - **I5. A result store:** `results.save(name, value)` writing `$scratch/results/NAME.json` with the session, revision and script digest. The client would no longer redirect and unwrap.
 - **I6. Per-block detail from `stats.paired`** (`blocks: [{key, control, candidate, savedPct}]`), to judge spread without re-deriving it.
 - **I7. Mounted native results:** a documented convention for mounting the outputs of host-only steps (C counts, Chess oracle, replays), so a workbench report can cite them by digest.

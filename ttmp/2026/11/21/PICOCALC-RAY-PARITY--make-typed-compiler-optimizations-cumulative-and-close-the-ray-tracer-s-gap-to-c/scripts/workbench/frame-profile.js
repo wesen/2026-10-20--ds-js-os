@@ -1,12 +1,14 @@
 // Opening-frame profile of named compile arms, as one workbench job. Replaces
 // tools/typed-ray-profile.mjs and the scratch instruction-mix scripts for RAY-PARITY.
-//   (echo 'globalThis.ARMS = {name: {options}, ...}; globalThis.REV = "worktree"'; cat frame-profile.js) |
+//   (echo 'globalThis.args = {arms: {name: {options}, ...}, rev: "worktree"};'; cat frame-profile.js) |
 //       trace-repl eval --addr 127.0.0.1:PORT --session "$sid" --job --job-timeout 600
 // Per arm: executed instructions, image bytes, FNV-1a of the guest memory, the totals of
 // typedRayBench.frameProfile, the three hottest functions, and an instruction mix computed from
-// the per-PC counts. REV is a commit or "worktree" (compiler.at).
+// the per-PC counts. args.rev is a commit or "worktree" (compiler.at).
+// Parameters arrive in globalThis.args, which each invocation replaces whole: session globals
+// persist between cells, so a parameter left by an earlier script must not leak into this one.
 (() => {
-  const c = compiler.at(globalThis.REV ?? "worktree");
+  const c = compiler.at(args.rev ?? "worktree");
   const mix = (program, counts) => {
     const v = new DataView(program.image.buffer, program.image.byteOffset, program.image.byteLength);
     const m = {};
@@ -27,8 +29,8 @@
     }
     return m;
   };
-  const out = {revision: c.revision ?? globalThis.REV ?? "worktree", arms: {}};
-  for (const [name, options] of Object.entries(ARMS)) {
+  const out = {revision: c.revision ?? args.rev ?? "worktree", arms: {}};
+  for (const [name, options] of Object.entries(args.arms)) {
     const started = Date.now();
     const program = c.typedRv32.compile(c.ray, [], 65536, options);
     const compiled = Date.now();
