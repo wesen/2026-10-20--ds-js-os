@@ -23,8 +23,12 @@ import (
 	"github.com/go-go-golems/glazed/pkg/cli"
 	"github.com/go-go-golems/glazed/pkg/cmds"
 	"github.com/go-go-golems/glazed/pkg/cmds/fields"
+	"github.com/go-go-golems/glazed/pkg/cmds/logging"
 	"github.com/go-go-golems/glazed/pkg/cmds/schema"
 	"github.com/go-go-golems/glazed/pkg/cmds/values"
+	"github.com/go-go-golems/glazed/pkg/help"
+	help_cmd "github.com/go-go-golems/glazed/pkg/help/cmd"
+	"github.com/go-go-golems/picocalc-trace/cmd/trace-repl/doc"
 	"github.com/go-go-golems/picocalc-trace/pkg/traceapi"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracearchive"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracecompiler"
@@ -35,6 +39,7 @@ import (
 	"github.com/go-go-golems/picocalc-trace/pkg/tracesimd"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"golang.org/x/sync/errgroup"
 )
@@ -61,7 +66,6 @@ type settings struct {
 	Idle        string   `glazed:"idle"`
 	Results     string   `glazed:"results"`
 	Name        string   `glazed:"name"`
-	LogLevel    string   `glazed:"log-level"`
 }
 
 type command struct {
@@ -89,6 +93,21 @@ func root() (*cobra.Command, error) {
 		Short:         "Explore compiler traces in persistent JavaScript sessions",
 		SilenceUsage:  true,
 		SilenceErrors: true,
+		// --log-level, --log-format, --log-file and the other logging flags are
+		// root flags; serve logs through the logger they configure.
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			return logging.InitLoggerFromCobra(cmd)
+		},
+	}
+	if err := logging.AddLoggingSectionToRootCommand(root, "trace-repl"); err != nil {
+		return nil, err
+	}
+	helpSystem := help.NewHelpSystem()
+	if err := doc.AddDocToHelpSystem(helpSystem); err != nil {
+		return nil, err
+	}
+	if err := help_cmd.SetupCobraRootCommandE(helpSystem, root); err != nil {
+		return nil, err
 	}
 	addr := fields.New("addr", fields.TypeString, fields.WithDefault(defaultAddr), fields.WithHelp("Loopback host:port of the trace service"))
 	session := fields.New("session", fields.TypeString, fields.WithRequired(true), fields.WithHelp("ID printed by open"))
@@ -97,7 +116,6 @@ func root() (*cobra.Command, error) {
 	simd := fields.New("simd-study", fields.TypeString, fields.WithHelp("Optional p4-simd-evidence-v1 JSON file of SIMD decisions, RV32 images and per-PC traces"))
 	repo := fields.New("repo", fields.TypeString, fields.WithHelp("Repository whose files repo.read/show/list and compiler.at may read (default: the git work tree containing the current directory)"))
 	mount := fields.New("mount", fields.TypeStringList, fields.WithHelp("NAME=PATH: one more read-only file, digested at startup and bound as mounts.NAME; repeat for more"))
-	level := fields.New("log-level", fields.TypeString, fields.WithDefault("info"), fields.WithHelp("Server log level (debug, info, warn, error)"))
 	code := fields.New("code", fields.TypeString, fields.WithHelp("JavaScript cell; omit to read stdin"))
 	job := fields.New("job", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("Run the code as a background job with its own deadline and wait for its result"))
 	jobTimeout := fields.New("job-timeout", fields.TypeInteger, fields.WithDefault(0), fields.WithHelp("With --job: deadline in seconds (0 means the service's --max-job)"))
@@ -111,7 +129,7 @@ func root() (*cobra.Command, error) {
 	maxJob := fields.New("max-job", fields.TypeString, fields.WithDefault("10m"), fields.WithHelp("Longest deadline a background job may have (Go duration, e.g. 10m)"))
 	defs := []*command{
 		{
-			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, simd, repo, mount, results, maxJob, idle, level)),
+			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, simd, repo, mount, results, maxJob, idle)),
 			serve,
 		},
 		{
@@ -167,11 +185,7 @@ func root() (*cobra.Command, error) {
 }
 
 func serve(ctx context.Context, cfg settings) error {
-	level, err := zerolog.ParseLevel(cfg.LogLevel)
-	if err != nil {
-		return err
-	}
-	logger := zerolog.New(os.Stderr).Level(level).With().Timestamp().Logger()
+	logger := log.Logger
 	service, err := newService(ctx, cfg, logger)
 	if err != nil {
 		return err

@@ -2,6 +2,19 @@
 
 `trace-repl` opens the PicoCalc LLVM capture once on the host. Each session has its own JavaScript VM. Bind a query, a derived table or a closure to a variable and use it in later cells. Session variables last until the session closes or the server exits.
 
+## Documentation
+
+The binary carries four help pages, embedded from `doc/`:
+
+| Command | Page |
+| --- | --- |
+| `trace-repl help trace-repl-user-guide` | The user guide: sessions and cells, the evidence model, plans, states, timelines, units and statuses, the compiler workbench, jobs and results. |
+| `trace-repl help trace-repl-query-examples` | The 25 scripts in `examples/`, each with its real output. `examples/run-all.sh` runs them all in one session. |
+| `trace-repl help trace-repl-js-api` | The JavaScript API reference: every global, method, result shape, status and error code. |
+| `trace-repl help trace-repl-cli-and-http` | Commands, flags, logging, limits and the HTTP protocol. |
+
+`trace-repl help` lists them, and `trace-repl help --ui` browses them. The examples page is generated: after editing a script, run `python3 cmd/trace-repl/examples/gen-doc.py --bin BIN --addr ADDR` against a service on the ROW-IR archive. `doc/doc_test.go` fails when a script is not quoted verbatim. Logging flags (`--log-level`, `--log-format`, `--log-file`) belong to the root command and apply to `serve`.
+
 ## Start and query
 
 Run these commands from the repository root. The Go module uses the adjacent checkout `../go-go-golems/go-go-goja` (tested at tag `v0.10.7`). Go selects toolchain 1.26.10.
