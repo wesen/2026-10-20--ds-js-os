@@ -2,13 +2,16 @@
  * The host injects one bridge object, __compiler, and deletes it after this script runs.
  * Public global: compiler. compiler.at(rev) returns one revision's modules:
  *   {revision, files, missing, typedWasm, typedAsync, typedWorld, typedRv32, typedPieLoops,
- *    interp, rayBench, globals} plus read(path), world(name), typedSources(), ray and where(line).
+ *    interp, rayBench, globals} plus read(path), world(name), typedSources(), ray, native and where(line).
  * Two revisions in one session share nothing: each was evaluated in its own scope.
  */
 (function (root, bridge) {
   'use strict';
   const MODULES = bridge.modules();
   const RAY = 'picocalc-os/worlds/raytrace/raytrace.typed';
+  const BENCH = 'picocalc-os/tools/typed-ray-bench.js';
+  // The native interpreter, when the session has one (installed before this script).
+  const RV32 = root.rv32 || null;
   function file(o) {
     Object.defineProperty(o, 'json', { value: function () { return JSON.parse(this.text); } });
     return o;
@@ -21,6 +24,24 @@
     const b = { revision: rev, requested, files: raw.files, missing: raw.missing, key: raw.key, globals: raw.globals };
     for (const m of MODULES) b[m.alias] = raw.globals[m.binding] === undefined ? null : raw.globals[m.binding];
     const read = path => file(bridge.read(rev, String(path)));
+    let nativeTools;
+    const native = () => {
+      if (nativeTools) return nativeTools;
+      if (!RV32) throw new Error('[compiler] this session has no rv32 global, so there is no native interpreter');
+      let rayBench = null;
+      const loaded = raw.files.find(f => f.path === BENCH);
+      if (loaded) {
+        const bench = read(BENCH);
+        // "worktree" is re-read here; refuse a bench file that changed since compiler.at loaded it.
+        if (bench.sha256 !== loaded.sha256)
+          throw new Error('[compiler] ' + BENCH + ' changed since compiler.at("' + requested + '") loaded it; call compiler.at again');
+        const shadow = Object.create(null);
+        new Function('globalThis', 'typedRv32Interp', bench.text)(shadow, RV32);
+        rayBench = shadow.typedRayBench ?? null;
+      }
+      nativeTools = Object.freeze({ interp: RV32, rayBench });
+      return nativeTools;
+    };
     Object.defineProperties(b, {
       read: { value: read },
       // A world assembled the way the firmware build does: the files named in
@@ -39,6 +60,10 @@
         },
       },
       typedSources: { value: () => bridge.typedSources(rev) },
+      // The same revision's tools on the native interpreter: interp is rv32, and rayBench is this
+      // revision's tools/typed-ray-bench.js evaluated with typedRv32Interp bound to rv32, so the
+      // memory layout, arguments and checks stay the revision's and only the interpreter changes.
+      native: { get: () => native() },
       ray: { get: () => read(RAY).text },
       where: {
         value: line => {
@@ -58,6 +83,7 @@
     '  const base = compiler.at("eaf0872"), work = compiler.at("worktree")',
     '  work.typedRv32.compile(source, imports, 96 * 1024, options)   work.typedWorld.imports',
     '  work.interp (tools/rv32-interp.js)   work.rayBench.frameProfile(program) (tools/typed-ray-bench.js)',
+    '  work.native.interp (=== rv32)   work.native.rayBench   the same bench on the native interpreter',
     '  work.globals.compileTypedWorldRv32   every name the files published',
     '  work.ray   work.world("chess")   work.read(path)   work.typedSources()   sources at the same revision',
     '  work.files [{path, sha256, bytes, line}]   work.missing (optional files absent at that revision)',

@@ -226,6 +226,9 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 		if err := traceapi.InstallRepo(vm, repo); err != nil {
 			return err
 		}
+		if err := traceapi.InstallRV32(vm); err != nil {
+			return err
+		}
 		if err := traceapi.InstallCompiler(vm, compilers); err != nil {
 			return err
 		}
