@@ -5,6 +5,8 @@
 #include "p4.h"
 #include "typed_lex_index.h"
 #include "quickjs.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/semphr.h"
 
 #define COMPILER_LIMIT (2 * 1024 * 1024)
 #define COMPILER_US 1700000
@@ -54,12 +56,79 @@ static int compile_interrupt(JSRuntime *rt, void *opaque) {
   return port_clock() >= heap->deadline;
 }
 
+// Every compile runs in a fresh runtime that evaluates the compiler's own sources, 0.41 s to
+// 0.53 s on the P4 (PICOCALC-COMPILE-BUDGET Step 3). The first runtime to evaluate a source
+// keeps its QuickJS bytecode here, outside every compiler heap; later runtimes read the bytecode
+// instead of parsing. Bytecode does not depend on the runtime that wrote it, so the evaluated
+// functions, and the modules they compile, are the same either way. Entries are written once,
+// under the lock, and never freed.
+typedef struct {
+  char path[48];
+  uint8_t *bytes;
+  size_t length;
+} compiled_source;
+static compiled_source compiled_sources[8];
+static SemaphoreHandle_t compiled_lock;
+static portMUX_TYPE compiled_lock_init = portMUX_INITIALIZER_UNLOCKED;
+
+static compiled_source *compiled_find(const char *path, bool claim) {
+  taskENTER_CRITICAL(&compiled_lock_init);
+  if (!compiled_lock) compiled_lock = xSemaphoreCreateMutex();
+  taskEXIT_CRITICAL(&compiled_lock_init);
+  compiled_source *found = NULL;
+  xSemaphoreTake(compiled_lock, portMAX_DELAY);
+  for (size_t i = 0; i < sizeof(compiled_sources) / sizeof(*compiled_sources) && !found; i++) {
+    compiled_source *entry = &compiled_sources[i];
+    if (entry->path[0] && !strcmp(entry->path, path)) found = entry;
+    else if (!entry->path[0] && claim && strlen(path) < sizeof(entry->path)) {
+      strcpy(entry->path, path);
+      found = entry;
+    }
+  }
+  xSemaphoreGive(compiled_lock);
+  return found;
+}
+
 static bool eval_file(JSContext *ctx, const char *path) {
+  compiled_source *cached = compiled_find(path, false);
+  uint8_t *bytes = cached ? cached->bytes : NULL;
+  if (bytes) {
+    JSValue function = JS_ReadObject(ctx, bytes, cached->length, JS_READ_OBJ_BYTECODE);
+    if (!JS_IsException(function)) {
+      JSValue value = JS_EvalFunction(ctx, function);
+      bool ok = !JS_IsException(value);
+      JS_FreeValue(ctx, value);
+      return ok;
+    }
+    JS_FreeValue(ctx, JS_GetException(ctx));
+    printf("typed compiler bytecode: cannot read %s, parsing it\n", path);
+  }
   size_t length;
   char *text = p4_bundle_read(path, &length, NULL, 0);
   if (!text) return false;
-  JSValue value = JS_Eval(ctx, text, length, path, JS_EVAL_TYPE_GLOBAL);
+  JSValue function = JS_Eval(ctx, text, length, path, JS_EVAL_TYPE_GLOBAL | JS_EVAL_FLAG_COMPILE_ONLY);
   free(text);
+  if (JS_IsException(function)) return false;
+  if (!bytes) {
+    size_t size = 0;
+    uint8_t *written = JS_WriteObject(ctx, &size, function, JS_WRITE_OBJ_BYTECODE);
+    uint8_t *copy = written ? port_heap_malloc(size) : NULL;
+    if (copy) {
+      memcpy(copy, written, size);
+      compiled_source *entry = compiled_find(path, true);
+      xSemaphoreTake(compiled_lock, portMAX_DELAY);
+      if (entry && !entry->bytes) {
+        entry->length = size;
+        entry->bytes = copy;
+        copy = NULL;
+        printf("typed compiler bytecode: %s %u bytes\n", path, (unsigned)size);
+      }
+      xSemaphoreGive(compiled_lock);
+      if (copy) port_heap_free(copy);
+    }
+    if (written) js_free(ctx, written);
+  }
+  JSValue value = JS_EvalFunction(ctx, function);
   bool ok = !JS_IsException(value);
   JS_FreeValue(ctx, value);
   return ok;

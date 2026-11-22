@@ -60,7 +60,7 @@ def main():
     os_dir = checkout / "picocalc-os"
     main_dir = os_dir / "port/esp32p4/main"
     typed = main_dir / "typed_p4.c"
-    patch(typed, '#include "quickjs.h"\n', '#include "quickjs.h"\n#include "freertos/FreeRTOS.h"\n#include "freertos/task.h"\n')
+    patch(typed, '#include "freertos/semphr.h"\n', '#include "freertos/semphr.h"\n#include "freertos/task.h"\n')
     patch(typed, "char *p4_typed_compile(const char *app, const char *source_kind, const char *source,\n"
                  "                       size_t source_length, const char *linker, const char *entry, int engine,\n"
                  "                       const char *reactor, size_t reactor_length, size_t *length, vtime_t started,\n"
@@ -72,7 +72,7 @@ def main():
           "                       vtime_t *evaluated) {")
     patch(typed, "      !eval_file(ctx, linker)) goto rejected;\n",
           "      !eval_file(ctx, linker)) goto rejected;\n  if (evaluated) *evaluated = port_clock();\n")
-    patch(typed, "    .deadline = started + (limits ? limits->duration_us : COMPILER_US),",
+    patch(typed, "    .deadline = started + (limits && limits->duration_us ? limits->duration_us : COMPILER_US),",
           "    .deadline = started + 60000000,  /* COMPILE-BUDGET measurement image */")
     patch(typed, "  if (ready) result = JS_Call(ctx, function, JS_UNDEFINED, argc, args);",
           "  if (ready && arm) {\n"
