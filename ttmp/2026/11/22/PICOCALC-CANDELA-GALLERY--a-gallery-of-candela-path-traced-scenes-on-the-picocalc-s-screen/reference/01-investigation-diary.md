@@ -120,3 +120,56 @@ I wrote the host side first, so that every later device number has a reference: 
 ### Technical details
 - Gallery order: B-01, R-01, L-03, G-01, E-02, W-02, F-01, V-02, G-02 (160); X-04, S-02, R-05, V-03, V-04, R-08, X-03, R-04, G-03 (80).
 - Host microseconds per sample at 4 passes: B-01 0.70, R-01 1.65, W-02 2.83, X-04 4.66, V-04 10.5, R-08 14.4, X-03 31.9, G-03 63.2, R-04 71.3.
+
+## Step 3: Put the renderer in the firmware behind PICOCALC_CANDELA_GALLERY, and prove the playable build unchanged without it
+
+The gallery is one build option. With it, a worker task on core 1 renders the presets, `gfx_raytrace` draws its frames for a new selection (1000), a build-time copy of the compositor shows the gallery world full screen, and the console gets a `gallery` command. Without it, every source of the playable build preprocesses to the same bytes as main's, and the CMake configuration is the same.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Make the gallery reachable in the playable firmware behind a new option that is off by default, and show, as WORLD's scripts 13 and 14 did, that the option-off build is exactly the playable one.
+**Inferred user intent:** Scenes on the handheld's screen without risk to the everyday firmware.
+**Commit (code):** f3ef8fa (rebased from c417f9f) — "candela-gallery: renderer on core 1 behind PICOCALC_CANDELA_GALLERY"; 7e5d1ea (rebased) — digest variants and run-script fixes.
+
+### What I did
+- `port/esp32p4/main/candela_gallery_p4.c`: the worker (core 1, priority 1, below the kernel task's 5; 24 KB stack in PSRAM, as the painter's build worker), commands through a queue, a triple buffer of 320 x 320 RGB565 frames, CGAL records, the console command. The first `p4_gallery_take` (the compositor's first draw of the gallery) starts it, so a firmware whose gallery is never opened allocates nothing.
+- `nucleus/gfx.c`: `gfx_gallery()` copies the newest frame and draws a two-part caption over a darkened bottom strip; called for selection 1000 inside `gfx_raytrace`, both under `#if PICOCALC_CANDELA_GALLERY`.
+- `tools/candela-gallery-compositor.py`: four anchored edits to a build-tree copy of `worlds/compositor.js` (draw the gallery full screen when it has focus; validate its frames). The compositor source itself is not changed.
+- `worlds/candela-gallery/`: a 40-line world, key `p` in the launcher; Left/Right (or n, space, enter / b) change the scene.
+- CMake: the option, two kernel instances (`cg` RGB, `cgs` spectral) through `file(CONFIGURE)` wrappers with `CDL_NS`, `-ffp-contract=off -fno-math-errno -fwrapv` on kernel, interpreter and core.
+- `scripts/05-same-without-option.py` (preprocessed sources) and `scripts/08-same-build-files.py` (compile commands, build graph, manifests).
+- Rebased onto main 5c01d81 (the ray tracing app's "kernel" policy, 3353264) before the image to install, as the coordinator asked.
+
+### Why
+- A full-screen early return in a copy of the compositor keeps the playable compositor's bytes as they are; the option decides which copy is compiled.
+
+### What worked
+- First build with the option: 4,910,640-byte app, no errors.
+- `05-same-without-option.py <wt> 5c01d81 /tmp/picocalc-candela-gallery-off-5c01d81/build`: 19 of 19 sources the change reaches (gfx.c, main_p4.c and the 17 others that include p4.h) preprocess byte-identically. With the option, gfx.c differs in 19 preprocessed lines and main_p4.c in 3.
+- `08-same-build-files.py` against a fresh configure of main 5c01d81: compile commands, build.ninja and all five world manifests the same (paths, app version string, Python environment and git HEAD watch files set aside, and listed).
+
+### What didn't work
+- First proof: `DIFFERENT without the option: picocalc-os/port/esp32p4/main/main_p4.c`. The diff was one `ESP_ERROR_CHECK(uart_driver_install(...))` line: `__LINE__` had moved because I inserted lines above it. Fix: no added lines in main_p4.c. The console case is a macro (`P4_GALLERY_CONSOLE`, empty without the option, defined in p4.h) appended to an existing line, and the worker starts lazily, so `main()` needs no call.
+- The base copy's `__FILE__` named the temporary directory; mapped back with `-fmacro-prefix-map`, and the base p4.h is written next to the base source so quote includes find it.
+- `build.ninja` differed in `TARGET_PDB` lines when the option-off directory had been configured twice; two fresh configures agree. So both sides of the comparison must be first configures.
+- The first smoke run failed in the health check: `native worlds unhealthy with peripherals off: [('snake', {... 'state': 'restarting', 'restarts': 0, 'last_error': ''}), ...]`, 13 s after the reset, during the boot compiles (Candela 2.2 s, Agenda 0.7 s, Files 0.4 s, Editor 3.2 s, Chess 3.9 s). The run script now waits up to 90 s while worlds are only "restarting" with no restarts and no error (8 s were needed).
+- The second run reached the gallery (first image of B-01 233 ms after it opened) and then timed out in the screen capture: `TimeoutError: b'KpwBAKukAQ'`. A path-traced frame has almost no equal neighbours, so the framebuffer's RLE is about 400 KB; 2,203 lines of base64 had arrived in the shared helper's 15 s. The run script has its own capture with a 180 s deadline and pauses the gallery meanwhile. Both runs restored the playable image, healthy.
+
+### What I learned
+- B-01 on the device in the worker: 0.9 s per 160 x 160 pass, about 13,100 cycles per sample, against 5,744 RV32 instructions per sample at 4 passes (CPU-KERNEL's CPI of 1.28-1.72 would give 7,400-9,900). Step 4 measures where the difference goes.
+
+### What was tricky to build
+- Anything that adds a line to main_p4.c shifts `__LINE__` in the playable binary. The macro on an existing line is the smallest change that keeps it.
+
+### What warrants a second pair of eyes
+- The compositor patch is anchored on four exact strings; if compositor.js changes, the tool fails the build (each anchor must occur once), which is intended.
+
+### What should be done in the future
+- N/A
+
+### Code review instructions
+- `bash picocalc-os/port/esp32p4/build-smooth-chess.sh BUILD -D PICOCALC_CANDELA_GALLERY=ON`; then `python3 -I scripts/05-same-without-option.py WT 5c01d81 OFF_BUILD` and `python3 -I scripts/08-same-build-files.py BASE_SRC BASE_BUILD WT OFF_BUILD`.
+
+### Technical details
+- Smoke and first full run: `various/device-01-smoke/`, `various/device-02-full/` (candidate d099ee7a..., restored b22a807d...).

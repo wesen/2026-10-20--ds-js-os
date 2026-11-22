@@ -203,7 +203,16 @@ def main():
                         command(console, rec, f"gallery digest {sid} {a.digest_passes} {v}")
                         r = wait_for(console, rec, lambda r: r.get("ev") in ("digest", "error"), 600)
                         print(f"digest {sid} {v}: {r}", flush=True)
+            # what a priority-1 task on core 1 loses to the rest of the firmware while the gallery is on screen
+            rec.step = "probe"
+            command(console, rec, "gallery pause")
+            command(console, rec, "gallery probe 5000")
+            run["probe"] = wait_for(console, rec, lambda r: r.get("ev") in ("probe", "error"), 30)
+            command(console, rec, "gallery resume")
+            save(a.out / "run.json", run)
             if not a.skip_scenes:
+                (a.out / "start-stats.txt").write_text("\n".join(command(console, rec, "stats", timeout=10)) + "\n")
+                run["scenesStarted"] = time.time()
                 for sid in ids:
                     rec.step = f"scene-{sid}"
                     command(console, rec, f"gallery scene {sid}")
@@ -214,9 +223,21 @@ def main():
                         wait_for(console, rec, lambda r: r.get("ev") == "scene" and r.get("id") == sid, rest)
                     run["shots"][sid] = shot(console, rec, f"scene-{sid}", a.out)
                     print(f"scene {sid}: {round(time.monotonic() - t0, 1)} s", flush=True)
+                (a.out / "scenes-stats.txt").write_text("\n".join(command(console, rec, "stats", timeout=10)) + "\n")
+                run["scenesEnded"] = time.time()
                 rec.step = "scene-end"
                 command(console, rec, "gallery scene B-01")   # ends the last measured scene (its record) and restarts the gallery
                 wait_for(console, rec, lambda r: r.get("ev") == "first", 30)
+            # a key changes the scene: the console's "key" injects the press where the keyboard driver reads it (the
+            # keyboard itself is off), the compositor gives it to the gallery world, the world's skip counter moves
+            run["keys"] = {}
+            for key, reason in (("right", "next"), ("left", "previous")):
+                rec.step = f"key-{key}"
+                time.sleep(3)
+                command(console, rec, f"key {key} 60")
+                r = wait_for(console, rec, lambda r: r.get("ev") == "scene" and r.get("reason") == reason, 10)
+                run["keys"][key] = {"reason": reason, "sceneRecord": r is not None, "endedScene": r and r.get("id")}
+            save(a.out / "run.json", run)
             rec.step = "after"
             for cmd in ("stats", "heap", "worlds"):
                 (a.out / f"end-{cmd}.txt").write_text("\n".join(command(console, rec, cmd, timeout=10)) + "\n")

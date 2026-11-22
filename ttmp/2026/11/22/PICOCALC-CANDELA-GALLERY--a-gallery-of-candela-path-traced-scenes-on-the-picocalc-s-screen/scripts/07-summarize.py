@@ -7,7 +7,9 @@ RUN_DIR is 06-run-device.py's output (uart.log is read; every "CGAL {...}" line 
 HOST.jsonl is 04-build-ref.py host's output and RV32.jsonl its rv32 output, both at the device run's digest passes.
 Per scene: the scene record of the "scenes" step (time to first image, coarse and half images, first full pass, seconds
 per pass, samples per second, cycles per sample, displays, peak heap), the pass records (seconds per later pass), and
-the digest record next to the references: frame 0, accumulation and display digests, equal or not."""
+the digest record next to the references: frame 0, accumulation and display digests, equal or not. Digests run with
+the worker's conditions ("psram") are the agreement rows; scenes also run "internal" and "quiet" get a placement
+table: cycles per sample for each, and whether all three gave the same digests."""
 import json
 import re
 import statistics
@@ -39,12 +41,14 @@ def main():
     hostr = {r["id"]: r for r in map(json.loads, host.read_text().splitlines()) if "id" in r}
     rvr = {r["id"]: r for r in map(json.loads, rv32.read_text().splitlines()) if "id" in r}
     order = list(dict.fromkeys(r["id"] for r in recs if r.get("ev") == "scene-list"))
-    scenes, digests = {}, {}
+    scenes, digests, variants = {}, {}, {}
     for r in recs:
         if r.get("ev") == "scene" and r.get("reason") in ("chosen", "next", "previous", "time", "target", "digest") and r.get("passes", 0) >= 1:
             scenes.setdefault(r["id"], r)   # the first complete record of each scene
         if r.get("ev") == "digest":
-            digests[r["id"]] = r
+            variants.setdefault(r["id"], {})[r.get("variant", "psram")] = r
+            if r.get("variant", "psram") == "psram":
+                digests[r["id"]] = r
     passes = {}
     for r in recs:
         if r.get("ev") == "pass":
@@ -75,7 +79,14 @@ def main():
                            equalHostDisp=d["disp"] == h.get("dispFast"), hostMeanLum=h.get("meanLum"), deviceMeanLum=d["meanLum"],
                            meanLumRatio=round(d["meanLum"] / h["meanLum"], 9) if h.get("meanLum") else None)
         rows.append(row)
-    summary = {"run": str(run), "scenes": rows, "records": len(recs),
+    placement = []
+    for sid in order:
+        v = variants.get(sid, {})
+        if len(v) > 1:
+            same = len({(x["frame0"], x["acc"], x["disp"]) for x in v.values()}) == 1
+            placement.append({"id": sid, "sameDigests": same, **{f"{k}CyclesPerSample": x["cyclesPerSample"] for k, x in v.items()},
+                              **{f"{k}Seconds": x["seconds"] for k, x in v.items()}})
+    summary = {"run": str(run), "scenes": rows, "placement": placement, "records": len(recs),
                "errors": [r for r in recs if r.get("ev") == "error"]}
     out.write_text(json.dumps(summary, indent=1) + "\n")
     if md:
@@ -93,6 +104,12 @@ def main():
                 L.append(f"| {r['id']} | {r['digestPasses']} | {r['deviceFrame0']} | {r['deviceAcc']} | {r['deviceDisp']} | {'yes' if r.get('equalRv32') else 'no'} | "
                          f"{'/'.join('yes' if r.get(k) else 'no' for k in ('equalHostFrame0', 'equalHostAcc', 'equalHostDisp'))} | {r.get('meanLumRatio')} | "
                          f"{r['digestCyclesPerSample']:,.0f} | {r.get('rv32InstrPerSample')} | {r.get('cpi')} |")
+        if placement:
+            L += ["", "| Scene | PSRAM stack, below the kernel task | Internal stack, below the kernel task | Internal stack, above the kernel task | Same digests |",
+                  "|---|---:|---:|---:|---|"]
+            for r in placement:
+                L.append(f"| {r['id']} | {r.get('psramCyclesPerSample', 0):,.0f} | {r.get('internalCyclesPerSample', 0):,.0f} | "
+                         f"{r.get('quietCyclesPerSample', 0):,.0f} | {'yes' if r['sameDigests'] else 'no'} |")
         md.write_text("\n".join(L) + "\n")
     print(json.dumps({"scenes": len(rows), "withTimings": sum("firstImageMs" in r for r in rows), "withDigests": sum("deviceFrame0" in r for r in rows),
                       "equalRv32": sum(bool(r.get("equalRv32")) for r in rows), "errors": len(summary["errors"])}))

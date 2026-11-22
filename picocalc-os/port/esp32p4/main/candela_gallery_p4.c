@@ -14,7 +14,7 @@
 //
 // UART records, one JSON object per line after "CGAL ": scene (when a scene ends), first (its first image), pass,
 // digest (console: gallery digest ID PASSES [psram|internal|quiet]), status, error. Console: gallery status|next|prev|
-// scene ID|pause|resume|digest ID PASSES [psram|internal|quiet]|list.
+// scene ID|pause|resume|digest ID PASSES [psram|internal|quiet]|probe MS|list.
 #include "candela_gallery.h"
 #include "esp_cpu.h"
 #include "esp_heap_caps.h"
@@ -34,8 +34,8 @@ extern const cg_instance cg_gallery, cgs_gallery;
 extern const char cg_kernel_fixed_sha256[];
 
 enum { SIDE = 320, TARGET_PASSES = 64, HOLD_MS = 6000, MAX_SHOW_MS = 60000, VISIBLE_MS = 2000,
-       PASS_DISPLAY_MS = 400, LONG_DISPLAY_MS = 1500, STACK = 24 * 1024, PRIORITY = 1 };
-enum { C_STEP, C_SCENE, C_PAUSE, C_RESUME, C_DIGEST, C_STATUS };
+       PASS_DISPLAY_MS = 400, LONG_DISPLAY_MS = 1500, DISPLAY_SHARE = 10, STACK = 24 * 1024, PRIORITY = 1 };
+enum { C_STEP, C_SCENE, C_PAUSE, C_RESUME, C_DIGEST, C_STATUS, C_PROBE };
 typedef struct { int op, a, b, c; } command;
 
 static QueueHandle_t commands;
@@ -156,6 +156,14 @@ static bool begin_scene(int k) {
   return true;
 }
 
+// After the first four passes, a pass is shown once PASS_DISPLAY_MS have passed since the last display, and at least
+// DISPLAY_SHARE times as long as a display takes (one display, 160 x 160 tone mapped and upscaled, measured 131-145 ms
+// on the worker: it would otherwise take 14% of B-01's minute).
+static int64_t display_gap_us(void) {
+  const int64_t mean = sc.displays ? sc.display_us / sc.displays : 0;
+  return mean * DISPLAY_SHARE > PASS_DISPLAY_MS * 1000LL ? mean * DISPLAY_SHARE : PASS_DISPLAY_MS * 1000LL;
+}
+
 static void show(int64_t t) {
   const uint32_t c0 = esp_cpu_get_cycle_count();
   cg_display(&st, disp, CG_FAST);
@@ -240,6 +248,47 @@ static void digest_on_helper(int k, int passes, int variant) {
   vTaskDeleteWithCaps(h);
 }
 
+// What a task at the worker's priority on core 1 loses to everything else there (the kernel task, the painter's
+// build worker, interrupts): a loop reads the cycle counter for the given time, and every step longer than 1 us
+// (360 cycles; the loop's own step is a few cycles) counts as time taken by someone else. Buckets of the gaps:
+// < 10 us, < 100 us, < 1 ms, < 10 ms, longer.
+typedef struct { int ms; TaskHandle_t waiter; } probe_job;
+static void probe_task(void *arg) {
+  probe_job *j = arg;
+  const uint64_t span = (uint64_t)j->ms * 360000u;
+  uint64_t elapsed = 0, stolen = 0, longest = 0;
+  uint32_t n = 0, bucket[5] = {0};
+  uint32_t prev = esp_cpu_get_cycle_count();
+  while (elapsed < span) {
+    const uint32_t c = esp_cpu_get_cycle_count(), gap = c - prev;
+    prev = c;
+    elapsed += gap;
+    if (gap > 360) {
+      stolen += gap; n++;
+      if (gap > longest) longest = gap;
+      bucket[gap < 3600 ? 0 : gap < 36000 ? 1 : gap < 360000 ? 2 : gap < 3600000 ? 3 : 4]++;
+    }
+  }
+  printf("CGAL {\"ev\":\"probe\",\"ms\":%d,\"stolenPct\":%.2f,\"gaps\":%" PRIu32 ",\"gapsPerSecond\":%.1f,\"meanGapUs\":%.1f,"
+         "\"longestGapUs\":%.1f,\"buckets\":[%" PRIu32 ",%" PRIu32 ",%" PRIu32 ",%" PRIu32 ",%" PRIu32 "]}\n",
+         j->ms, 100.0 * stolen / elapsed, n, n / (elapsed / 360e6), n ? stolen / 360.0 / n : 0.0, longest / 360.0,
+         bucket[0], bucket[1], bucket[2], bucket[3], bucket[4]);
+  fflush(stdout);
+  xTaskNotifyGive(j->waiter);
+  vTaskSuspend(NULL);
+}
+static void probe(int ms) {
+  probe_job j = {ms, xTaskGetCurrentTaskHandle()};
+  TaskHandle_t h = NULL;
+  if (xTaskCreatePinnedToCoreWithCaps(probe_task, "gallery-p", 4096, &j, PRIORITY, &h, 1, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT) != pdPASS) {
+    snprintf(err, sizeof err, "no stack for the probe");
+    record_error("probe");
+    return;
+  }
+  ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+  vTaskDeleteWithCaps(h);
+}
+
 static int next_index(int k, int delta) {
   const int n = (int)cg_nscenes;
   return ((k + delta) % n + n) % n;
@@ -266,6 +315,7 @@ static void handle(const command *c) {
       break;
     }
     case C_STATUS: status(); break;
+    case C_PROBE: probe(c->a); break;
   }
 }
 
@@ -311,7 +361,7 @@ static void worker(void *arg) {
     }
     const bool coarse_ready = st.pass > 0 || st.sub >= 1;
     if (ev == CG_EV_COARSE || ev == CG_EV_HALF ||
-        (ev == CG_EV_PASS && (st.pass <= 4 || t1 - sc.last_display_us >= PASS_DISPLAY_MS * 1000LL || done)) ||
+        (ev == CG_EV_PASS && (st.pass <= 4 || t1 - sc.last_display_us >= display_gap_us() || done)) ||
         (coarse_ready && t1 - sc.last_display_us >= LONG_DISPLAY_MS * 1000LL))
       show(t1);
   }
@@ -348,6 +398,7 @@ void p4_gallery_console(const char *args) {
   else if (!strcmp(a, "prev")) { c.op = C_STEP; c.a = -1; }
   else if (!strcmp(a, "pause")) c.op = C_PAUSE;
   else if (!strcmp(a, "resume")) c.op = C_RESUME;
+  else if (!strcmp(a, "probe") && got >= 2 && atoi(b) >= 100 && atoi(b) <= 60000) { c.op = C_PROBE; c.a = atoi(b); }
   else if (!strcmp(a, "list")) {
     for (unsigned k = 0; k < cg_nscenes; k++)
       printf("CGAL {\"ev\":\"scene-list\",\"index\":%u,\"id\":\"%s\",\"title\":\"%s\",\"w\":%d,\"h\":%d,\"spectral\":%d}\n", k,
@@ -358,7 +409,7 @@ void p4_gallery_console(const char *args) {
            (!strcmp(v, "psram") || !strcmp(v, "internal") || !strcmp(v, "quiet"))) {
     c.op = C_DIGEST; c.a = find(b); c.b = n; c.c = !strcmp(v, "psram") ? V_PSRAM : !strcmp(v, "internal") ? V_INTERNAL : V_QUIET;
   }
-  else { puts("gallery status|next|prev|pause|resume|list|scene ID|digest ID PASSES [psram|internal|quiet]"); return; }
+  else { puts("gallery status|next|prev|pause|resume|list|scene ID|digest ID PASSES [psram|internal|quiet]|probe MS"); return; }
   p4_gallery_start();
   if (!commands || xQueueSend(commands, &c, 0) != pdTRUE) puts("gallery: not running or busy");
 }
