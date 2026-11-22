@@ -64,6 +64,20 @@ Add **--preflight** to validate the inputs without opening the serial port. The 
 
 ## Leave the current playable firmware installed
 
+> [!important] Updated 2026-11-21 (PICOCALC-COMPILE-BUDGET)
+> The everyday firmware also carries the rotatable 3D Chess painter, the application-delivered painter and the Candela world. `16-build-playable-firmware.sh` below predates those and builds the flat 2D board without them. Build the playable firmware with `picocalc-os/port/esp32p4/build-smooth-chess.sh` instead. It sets `PICOCALC_MOBILE_PAINTER=ON` and `PICOCALC_CHESS_3D=ON` and uses `sdkconfig.smooth-chess`. Install it with the same `17-install-playable-firmware.py`, whose `--work` directory must contain the build in `build/`:
+>
+> ~~~bash
+> work=$(mktemp -d /tmp/picocalc-playable.XXXXXX)
+> (source /home/manuel/esp/esp-idf-5.4.2/export.sh && bash picocalc-os/port/esp32p4/build-smooth-chess.sh "$work/build")
+> flock /tmp/pico-lab2-wave/original/serial.lock python3 -B "$chess_scripts/17-install-playable-firmware.py" \
+>     --work "$work" --port /dev/ttyACM0 \
+>     --partition-table /tmp/picocalc-eg-wave/original/partition-table.bin \
+>     --esptool /home/manuel/.espressif/python_env/idf5.4_py3.11_env/bin/esptool.py
+> ~~~
+>
+> On the device, Agenda and Editor compile with the `interactive` policy and the others with `default`. Before installing a firmware built with a new compiler default, run COMPILE-BUDGET's arms firmware, which checks every boot compile against its deadline.
+
 For everyday use, build with the current production compiler, the native Agenda, Files, Editor and Chess worlds, and the physical keyboard and display drivers. The two commands below select the offline firmware profile and flash the application partition at 0x10000. The install command checks the partition map, opens Chess from the launcher and saves a framebuffer capture and receipt in the build directory's `install/` folder.
 
 ~~~bash

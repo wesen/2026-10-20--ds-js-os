@@ -18,7 +18,8 @@ own "compile source=..." line reports; "peak" is the compiler heap's high-water 
 compile in this image gets a 60 s deadline in place of the 1.7 s / 6 s budgets, so slow arms
 finish and the default compile completes; the image is for measurement only. The heap limits
 are unchanged, so an arm that needs more heap than its world allows reports "failed".
-Builds the playable configuration (16-build-playable-firmware.sh's flags).
+Builds the everyday configuration (port/esp32p4/build-smooth-chess.sh's flags; runs 1-3 used the older
+flat-board flags of TYPED-CHESS's 16-build-playable-firmware.sh).
 """
 import argparse, hashlib, json, shutil, subprocess
 from pathlib import Path
@@ -124,8 +125,13 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
                             reactor, reactor_length, length, port_clock(), limits, NULL, NULL, NULL);
 }}
 """)
-    shutil.copyfile(REPO / "picocalc-os/port/esp32p4/sdkconfig.agent-elf", work / "sdkconfig")  # not tracked
-    flags = ["-D", f"SDKCONFIG={work / 'sdkconfig'}", "-D", "PICOCALC_HEADLESS=OFF", "-D", "PICOCALC_DEVICE_COMPILER=ON",
+    # The everyday firmware's configuration (port/esp32p4/build-smooth-chess.sh): 3D Chess, the delivered
+    # painter and Candela. Runs 1-3 used the older flat-board configuration (16-build-playable-firmware.sh).
+    port = os_dir / "port/esp32p4"
+    flags = ["-D", f"SDKCONFIG={work / 'sdkconfig.smooth-chess'}",
+             "-D", f"SDKCONFIG_DEFAULTS={port / 'sdkconfig.defaults'};{port / 'sdkconfig.smooth-chess'}",
+             "-D", "PICOCALC_MOBILE_PAINTER=ON", "-D", "PICOCALC_CHESS_3D=ON",
+             "-D", "PICOCALC_HEADLESS=OFF", "-D", "PICOCALC_DEVICE_COMPILER=ON",
              "-D", "PICOCALC_RV32_CHESS=ON", "-D", "PICOCALC_RV32_AGENDA=ON", "-D", "PICOCALC_RV32_EDITOR=ON",
              "-D", "PICOCALC_RV32_FILES=ON", "-D", "PICOCALC_RV32_STREAM_FUNCTIONS=ON", "-D", "PICOCALC_AGENT_WIFI=OFF"]
     with (work / "build.log").open("wb") as log:

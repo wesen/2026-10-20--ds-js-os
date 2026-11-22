@@ -194,3 +194,47 @@ With the cache, each world's own compile is: Editor under `interactive` 2.91 s, 
 ### What I learned
 
 - Agenda's step7 arm now takes 1.34 s with the cache, just over its 1.28 s target. A cache kept in flash across boots would also remove Agenda's first-compile parse.
+
+## Step 5: The new compiler on the everyday firmware, and the 3D Chess it nearly lost
+
+After the board was power-cycled, its keyboard answered again and the health probe passed. I installed a playable firmware built at `e7944d1` with TYPED-CHESS's recipe. Every boot compile fit its deadline. But Chess came up as the flat 2D board, and the user asked where the 3D chess had gone. The recipe that `AGENTS.md` points to predates the 3D painter. The firmware it replaced (`e7b771aa…`) had been built with `port/esp32p4/build-smooth-chess.sh`, which turns on the delivered painter, the rotatable 3D Chess painter and the Candela world. I rebuilt with that script and installed it. The 3D board is back, and every world boots on the new compiler.
+
+### Prompt Context
+
+**User prompts (verbatim):** "keyboard is back", "where is our nice 3d chess btw?", "it's fine you do whatever you think is best"
+
+**Assistant interpretation:** Install the new compiler's firmware without losing any feature of the firmware it replaces.
+
+### What I did
+
+- Probed health without flashing (`various/07-probe-after-run-3` shows the failure; the new probe passed, with eight worlds).
+- First install: `16-build-playable-firmware.sh` → `/tmp/picocalc-playable-compile-budget-e7944d1`, app `1a9d8549…`. Boot compiles: Agenda 1.11 s (`interactive`), Files 0.41 s, Editor 3.10 s (`interactive`), Chess 3.91 s. Screenshot: the flat board (`various/08-install-smooth-chess/flat-board-shot.png`).
+- Compared build flags. In the first build `PICOCALC_CHESS_3D` and `PICOCALC_MOBILE_PAINTER` were `OFF`. SCALAR-BREAKDOWN's `01-build.py`, which built `e7b771aa…`, extends `build-smooth-chess.sh`, and the Candela world is switched on by `PICOCALC_CHESS_3D`.
+- Second install: `build-smooth-chess.sh` → `/tmp/picocalc-playable-smooth-chess-3e738a4`, app `7b1181b4…`, installed with the same `17-install-playable-firmware.py`. Receipt, boot log and screenshot are in `various/08-install-smooth-chess/`.
+- Added a dated note to TYPED-CHESS's recipe (`reference/03-reproduce-chess.md`) pointing to `build-smooth-chess.sh`. Moved the arms stager to the same configuration.
+
+### What worked
+
+| World | Policy | Boot compile | Deadline | Previous firmware |
+|---|---|---:|---:|---:|
+| Candela | default | 2.00 s (the boot's first compile; parses the compiler) | 8 s | 0.56 s |
+| Agenda | interactive | 0.65 s | 1.7 s | 0.61 s |
+| Files | default | 0.41 s | 1.7 s | 0.32 s |
+| Editor | interactive | 3.06 s | 6 s | 2.40 s |
+| Chess, 3D | default | 4.69 s | 6 s | 1.94 s |
+
+Every native world reports no error, and the 3D board renders (`shot-1.png`).
+
+### What didn't work
+
+- The first install's recipe (above).
+
+### What I learned
+
+- **Chess with the 3D painter is outside the decision rule's margin:** 4.69 s is 78% of its 6 s deadline. Its source is larger than the flat board's (module 274,892 B against 242,124 B), and runs 1–3 measured the flat-board configuration. The next arms run uses `build-smooth-chess.sh`'s configuration.
+- **Candela is now the boot's first compile,** so it pays the source parse (about 0.5 s) and compiles under `default`. A bytecode cache kept in flash would remove the parse from every boot.
+
+### What should be done in the future
+
+- Run the arms firmware on the smooth-chess configuration. Then choose Chess's and Candela's policies by measurement, and keep or drop Chess's 22% margin.
+- Persist the bytecode cache in flash, keyed by the source digest.
