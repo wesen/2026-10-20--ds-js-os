@@ -429,6 +429,11 @@ function drawRayScene(fb, n) {
   fb.text(172, 279, "Light " + n.lx + ", " + n.ly, "s", C.ink);
 }
 
+// The Candela gallery (PICOCALC-CANDELA-GALLERY): the firmware's gallery renderer draws the screen. Only the world
+// "gallery" (built with PICOCALC_CANDELA_GALLERY) publishes these frames; skip is its scene counter, seq a frame id.
+function validGallery(n) { return n && n.t === "gallery" && rayCoord(n.seq, 0, 999999999) && rayCoord(n.skip, -1000000, 1000000); }
+function drawGallery(fb, n) { fb.raytrace(n.skip, 0, 0, 0, 1000); }
+
 function paint(s) {
   const fb = s.fb;
   const app = s.apps[s.focus];
@@ -440,6 +445,7 @@ function paint(s) {
     return;
   }
   s.paintedSnake = null;
+  if (s.focus === "gallery" && app && app.tree && !s.banner) { drawGallery(fb, app.tree); return; }
   fb.fill(0, 0, W, H, C.paper);
   // status bar: what is in front, the battery, the clock
   fb.fill(0, 0, W, TOP, C.bar);
@@ -457,6 +463,7 @@ function paint(s) {
     try {
       if (app.mobile) app.hints = fb.paintView(s.chessPhase);
       else if (s.focus === "raytrace") drawRayScene(fb, app.tree);
+      else if (s.focus === "gallery") drawGallery(fb, app.tree);
       else if (snake) {
         drawSnake(fb, app.tree);
         if (!s.banner) { s.paintedSnake = app; s.snakeClock = time; }
@@ -569,6 +576,7 @@ service("compositor")
     if (!f || f.app !== msg.from || !f.frame) return;
     const tree = f.frame.tree;
     if (f.app === "raytrace" && !validRayScene(tree)) return;
+    if (f.app === "gallery" && !validGallery(tree)) return;
     if (f.app === "snake" && (!tree || !validSnake(tree) || tree.t !== "snake")) return;
     s.frames++;
     s.apps[f.app] = { title: f.title, tree, hints: f.frame.hints };
