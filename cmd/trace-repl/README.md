@@ -52,6 +52,22 @@ lab.physicsPair("contact", 128, "grouped-scalar", "grouped-pie")
 
 The director loader adds the `lab` binding only in its new session. The `simd` provider is available in every session of the mounted study. [Study index](../../ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/index.md)
 
+## Load the Typed compiler at a revision
+
+`compiler.at(rev)` loads `picocalc-os/compiler/{typed-wasm,typed-async,typed-world,typed-rv32,typed-pie-loops}.js` and `picocalc-os/tools/{rv32-interp,typed-ray-bench}.js` at a git revision, and `compiler.at("worktree")` loads them from disk. Several revisions coexist in one session: the service evaluates each revision's files inside one function scope that shadows `globalThis`, so revisions share no module objects and nothing reaches the real global object. The compiled wrapper is shared by all sessions, and the 64 KiB cell limit does not apply to it.
+
+```js
+const base = compiler.at("eaf0872"), work = compiler.at("3213028")
+const ray = work.ray                                   // raytrace.typed at 3213028
+base.typedRv32.compile(ray, [], 96 * 1024).image.length // 8632
+work.typedRv32.compile(ray, [], 96 * 1024, {operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}}).image.length // 8048
+work.rayBench.frameProfile(work.typedRv32.compile(ray, [], 96 * 1024)).steps
+work.world("chess").text                               // assembled from worlds/chess/source.list
+work.files                                             // [{path, sha256, bytes, line}]
+```
+
+A revision object also has `typedWasm`, `typedAsync`, `typedWorld`, `typedPieLoops`, `interp` (`typedRv32Interp`), `globals` (every name the files published, such as `compileTypedWorldRv32`), `read(path)`, `typedSources()`, `missing` (optional files absent at that revision; the two tools exist from `eaf0872` on) and `where(line)`, which maps a `compiler@REV:LINE` stack position to a file and line. A commit is evaluated once per session and `compiler.at` returns the same object again. `"worktree"` re-reads the files on every call. `GET /info` lists the cached commits.
+
 ## Read repository files and mounted inputs
 
 A session reads its own inputs instead of receiving them through `eval`. `repo.read(path)` returns a working-tree file as `{path, revision: "worktree", sha256, bytes, gzip, text}`, and `.json()` parses its text. `repo.show(rev, path)` returns the same object for a git revision, with the full commit SHA in `revision`. `repo.list(path, rev?)` lists a directory and `repo.resolve(rev)` names a commit. Paths are relative to the repository root and may not leave it, also not through a symlink; `.git` is not readable. Files are capped at 32 MiB, and a `.gz` file is inflated while its `sha256` and `bytes` describe the compressed file. Content at a revision is cached for all sessions; working-tree reads are not.

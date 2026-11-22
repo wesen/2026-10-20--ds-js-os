@@ -26,6 +26,7 @@ import (
 	"github.com/go-go-golems/glazed/pkg/cmds/values"
 	"github.com/go-go-golems/picocalc-trace/pkg/traceapi"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracearchive"
+	"github.com/go-go-golems/picocalc-trace/pkg/tracecompiler"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracehardware"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracerepl"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracerepo"
@@ -180,12 +181,17 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 		logger.Info().Str("name", m.Name).Str("path", m.Path).Str("sha256", m.SHA256).Int("bytes", m.Bytes).Msg("mounted read-only file")
 	}
 	logger.Info().Str("root", repo.Root()).Str("head", repo.Head()).Msg("repository available read-only")
-	inputs := inventory{archive: archive, hardware: hardware, hardwarePath: absPath(cfg.DeviceStudy), simd: simd, simdPath: absPath(cfg.SIMDStudy), repo: repo}
+	compilers := tracecompiler.New(repo)
+	inputs := inventory{archive: archive, hardware: hardware, hardwarePath: absPath(cfg.DeviceStudy), simd: simd, simdPath: absPath(cfg.SIMDStudy),
+		repo: repo, compilers: compilers}
 	return tracerepl.New(ctx, func(vm *goja.Runtime) error {
 		if err := traceapi.Install(vm, archive); err != nil {
 			return err
 		}
 		if err := traceapi.InstallRepo(vm, repo); err != nil {
+			return err
+		}
+		if err := traceapi.InstallCompiler(vm, compilers); err != nil {
 			return err
 		}
 		if err := traceapi.InstallHardware(vm, hardware); err != nil {
@@ -207,6 +213,7 @@ type inventory struct {
 	simd         *tracesimd.Study
 	simdPath     string
 	repo         *tracerepo.Repo
+	compilers    *tracecompiler.Provider
 }
 
 // openRepo confines file access to --repo, or to the git work tree that
@@ -243,9 +250,10 @@ func (in inventory) describe() map[string]any {
 		mounts = append(mounts, m.Info())
 	}
 	info := map[string]any{
-		"repo":   map[string]any{"root": in.repo.Root(), "head": in.repo.Head()},
-		"mounts": mounts,
-		"build":  buildInfo(),
+		"repo":     map[string]any{"root": in.repo.Root(), "head": in.repo.Head()},
+		"mounts":   mounts,
+		"compiler": map[string]any{"modules": tracecompiler.Modules, "cachedCommits": in.compilers.Cached()},
+		"build":    buildInfo(),
 		"archive": map[string]any{
 			"path": in.archive.Dir(), "label": in.archive.Label(), "manifestSHA256": in.archive.ManifestSHA256(),
 			"streams": in.archive.Streams(),

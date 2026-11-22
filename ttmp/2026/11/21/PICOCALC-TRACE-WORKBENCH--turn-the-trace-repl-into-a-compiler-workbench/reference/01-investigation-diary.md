@@ -203,3 +203,122 @@ The guide was uploaded to reMarkable at the start of this step, by a small-model
 ### Technical details
 
 - `GET /info` keys: `service`, `started`, `build {goVersion, module, revision, revisionTime?, modified?}`, `archive {path, label {ticket, title, dir}, manifestSHA256, streams [{variant, phase, sha256, rawBytes, dumps}]}`, `deviceStudy {path, sourceSHA, firmwareSHA, pairs, loads} | null`, `simdStudy {path, sha256, empty, decisions, traces} | null`, `sessions {open, max}`, `limits {sourceBytes, resultBytes, cellSeconds}`.
+
+## Step 4: W5, one tested statistics library in every session
+
+Every session now has a `stats` global with the statistics compiler studies report. `stats.paired` is the important one. It pairs one control row with one candidate row per key, for example per counterbalanced load block, and returns the median of the per-pair percentage saved, which is the statistic the PicoCalc board reports use. Next to it, it reports the change between the two arm medians, because field note N7 found reports mixing the two. It refuses inputs that would make the number meaningless, and it names the offending keys.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Implement W5 as guide Section 5 step 2: an embedded `stats.js` with Go tests over fixed fixtures.
+**Inferred user intent:** Stop each study from re-implementing medians and paired comparisons slightly differently (N7).
+**Commit (code):** 0bee9f9 — "feat(trace-repl): shared stats global for medians and paired block comparisons"
+
+### What I did
+
+- `pkg/traceapi/stats.js`: `median`, `mean`, `quantile(xs, p)` (linear interpolation between order statistics, R type 7), `summary` (`{n, min, q1, median, q3, max, mean}`), `percentSaved(control, candidate)`, `paired(rows, {key, control, candidate, value, better})` and `help()`. The object is frozen.
+- `pkg/traceapi/stats.go`: `InstallStats(vm)`, which runs the embedded script. It needs no bridge, because it reads no evidence.
+- `cmd/trace-repl/main.go`: installs it after the SIMD provider. `query.js`: the help index points to `stats.help()`.
+- `pkg/traceapi/stats_test.go`: `TestStatsFixtures`, `TestStatsPairedComparison` (six blocks, two arms, wins/losses/ties, and `better: "higher"`), `TestStatsRefusesWhatItCannotSummarize` (nine refusals by error code and message).
+
+### Why
+
+- `paired` takes predicates for the two arms and accessors for the key and value, so the same call covers the board rows (`r.arm === 2` against `r.arm === 3`, keyed by `block`) and the compile-cost samples (keyed by repetition).
+- Error codes in brackets (`[unmatchedKey]`, `[duplicatePair]`) follow the query language's convention, so a researcher sees the same shape of message from both libraries.
+
+### What worked
+
+- The paired fixture gives per-block savings 10, 10, 20, −5, 25 and 0 percent, median 10. Its arm medians are 105 and 99.5, a 5.24% change. The test asserts both, which is exactly the distinction N7 described.
+- `go test ./...` and `go vet ./...` pass.
+
+### What didn't work
+
+- `TestStatsPairedComparison` first failed: `MedianPercentSaved:9.999999999999998`, compared with `!= 10`. `100 * (1 - 90 / 100)` is not exactly 10 in binary floating point. I kept the formula, because it is the same expression the RAY-PARITY board script used (`100 * (1 - b[i] / x)`), and reproducing its numbers to the last digit matters more than a round fixture. The test now compares with a tolerance of 1e-9.
+
+### What I learned
+
+- The old board script's `median` already averaged the two middle values of an even sample. `stats.median` does the same, so the board numbers can be reproduced exactly rather than approximately.
+
+### What was tricky to build
+
+- Deciding what a win is. For times and sizes lower is better, so a win is a pair whose candidate is below its control; `better: "higher"` reverses that. Ties are counted separately, so `wins + losses + ties = pairs`. The old script counted only `x > b[i]`, which equals `wins` here.
+
+### What warrants a second pair of eyes
+
+- `paired` refuses a control value of 0 instead of returning an infinite percentage. A study that measures something that can be 0 has to pick another statistic deliberately.
+
+### What should be done in the future
+
+- N/A for this step. The acceptance cells in Step 8 use `stats.paired` for the board and compile-cost numbers.
+
+### Code review instructions
+
+- Read `pkg/traceapi/stats.js` (`paired`) and run `go test ./pkg/traceapi -run Stats -v`.
+
+### Technical details
+
+- `paired` returns `{pairs, controlMedian, candidateMedian, medianPercentSaved, percentSavedOfMedians, wins, losses, ties, better, method, perPair: [{key, control, candidate, percentSaved}]}`, with `perPair` sorted by key.
+
+## Step 5: W2, read-only repository files and startup mounts
+
+A session can now read the inputs it needs instead of having them pushed through `eval` in 30,000-character chunks. `repo.read`, `repo.show`, `repo.list` and `repo.resolve` give confined, read-only access to one repository, in its working tree or at any git revision. `--mount NAME=PATH` adds a file from anywhere, read and digested before the server listens. Every returned file carries the SHA-256 of its stored bytes, so data in a session can be cited the same way archive references are.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Implement W2 as guide Section 5 step 3, with tests for escape attempts, the size cap and digests.
+**Inferred user intent:** Remove field note N5's workaround (`repl_client.py`'s chunked string binding) for everything except interactive snippets.
+**Commit (code):** 1607478 — "feat(trace-repl): read-only repo and --mount inputs with digests"
+
+### What I did
+
+- New package `pkg/tracerepo`: `Open(root, mounts)`, `Discover(dir)`, `Repo.Read`, `Show`, `List`, `Resolve`, `Head`, `Mounts`, `Mount`; types `File`, `Entry`, `Mount`, `MountInfo`.
+- `pkg/traceapi/repo.go` and `repo.js`: a temporary `__repo` bridge that is deleted after `repo.js` runs, as with `__trace`. File objects are built in Go with `vm.NewObject()`, and `repo.js` adds a non-enumerable `json()`. `mounts.NAME` is a lazy getter, cached per session. `mounts.list()` and `mounts.toJSON()` describe the mounts without their text.
+- `cmd/trace-repl/main.go`: flags `--repo` and `--mount` (a string list), `openRepo`, and `repo` and `mounts` in `/info`.
+- Tests: `pkg/tracerepo/repo_test.go` builds a two-commit git repository in a temp directory, with a gzip file, a symlink inside the tree and one pointing outside it. `TestReadIsConfinedToTheRepository`, `TestShowReadsCommittedContentAtARevision`, `TestListWorktreeAndRevision`, `TestMountsAreReadAndDigestedAtStartup`. `pkg/traceapi/repo_test.go` runs two VMs over this repository. `cmd/trace-repl/main_test.go` gains a mount in the `/info` test and `TestMountAndRepoFlagsAreChecked`.
+
+### Why
+
+- Git access shells out to `git` plumbing (`rev-parse`, `cat-file`, `ls-tree`) instead of adding go-git. The module cache may be offline, and plumbing output is stable. Every call runs with `GIT_OPTIONAL_LOCKS=0`, so nothing rewrites the index, and with a 30 s deadline.
+- `.git` paths are refused even though reading them would be harmless. The interface is about repository content, and `repo.show` is the way to reach committed content.
+- Revision names are checked against `^[A-Za-z0-9_][A-Za-z0-9._/@{}^~-]*$` and may not contain `..`, so a revision can never be parsed as an option or a range. `rev-parse` also gets `--end-of-options`.
+
+### What worked
+
+- All four `tracerepo` tests passed on the first run. They cover `../secret.txt`, `src/../../secret.txt`, an absolute path, a symlink out of the tree, `.git/config`, a directory, a missing file, an empty path, a sparse file one byte over the cap (refused from its size, before reading), a gzip file whose digest matches the stored bytes, revisions given as full SHA, abbreviated SHA, branch and `HEAD~1`, and the refusals `--output=/tmp/x`, `main..HEAD`, `worktree` and a full SHA of no commit.
+- The session test reads this repository: `repo.show('eaf0872', 'picocalc-os/compiler/typed-rv32.js').bytes` is 33,175, `repo.list('picocalc-os/tools', '25cd108')` has no `rv32-interp.js` and `eaf0872` has it, and an edit of `mounts.board.text` in one VM leaves the other VM's value unchanged.
+- `go test ./...` and `go vet ./...` pass.
+
+### What didn't work
+
+- `JSON.stringify(mounts)` first returned the mount fields in alphabetical order (`bytes, gzip, name, path, sha256`), because the bridge marshalled `map[string]any`, whose keys Go sorts. I replaced the maps with the struct `tracerepo.MountInfo`, which keeps the declared order. The same struct now serves `/info`.
+- A grammar test case I added, `serve --archive . --mount no-equals-sign`, could not test the mount parser: `serve` fails on the archive before it reads `--mount`. I removed it and test `openRepo` directly.
+- My first `openRepo` assertion named this worktree's directory (`agent-a2fb34f1ca31870f0`), which would fail after the merge. It now checks only that the default repository has a 40-character `HEAD`.
+
+### What I learned
+
+- The worktree guard rejects long shell heredocs and loops that contain `git`. Small Python edit scripts and the Edit tool work.
+
+### What was tricky to build
+
+- Confinement has to be checked after symlink resolution, not on the cleaned path. `src/escape.txt` cleans to a harmless path but resolves outside the tree. `inside()` runs `filepath.EvalSymlinks` and compares the result with the root, which was itself resolved at `Open`, so a root reached through a symlink still matches.
+- The revision cache must not grow without bound when a session reads large files at many revisions. It holds at most 256 MiB of text and starts over when a new entry would exceed that. Entries are immutable, so dropping one only costs a later git read.
+
+### What warrants a second pair of eyes
+
+- `Read` stats the file, then opens and reads it. A file replaced in between could exceed the cap. The read is limited to `MaxFileBytes + 1` and refuses anything longer, so the cap holds either way.
+- Strings from Go are passed to the VM without copying. JS strings are immutable, so this cannot leak a change between sessions, and each session gets its own file objects.
+
+### What should be done in the future
+
+- W1 builds on `Repo.Show` and `Repo.Read` for the compiler files.
+
+### Code review instructions
+
+- `pkg/tracerepo/repo.go`: `clean`, `inside`, `Read`, `Resolve`, `Show`, `List`, `git`.
+- Run `go test ./pkg/tracerepo ./pkg/traceapi -run 'Repo|Read|Show|List|Mount' -v`.
+
+### Technical details
+
+- File object: `{path, revision, sha256, bytes, gzip, text}` plus `json()`. `revision` is `"worktree"`, a full commit SHA, or `"mount"`. Caps: 32 MiB stored, 64 MiB inflated.

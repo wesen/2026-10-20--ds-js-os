@@ -44,7 +44,9 @@ func TestServeWiresVerifiedEvidenceAndOptionalDevice(t *testing.T) {
 			"simd.help().absent.startsWith('missingSIMDStudy')": "true",
 			"typeof require + typeof __trace + typeof fetch":    `"undefinedundefinedundefined"`,
 			"stats.median([3, 1, 2])":                           "2",
-			"q.help().includes('stats.help()')":                 "true",
+			"compiler.at('eaf0872').typedRv32.compile(compiler.at('eaf0872').ray, [], 96 * 1024).image.length": "8632",
+			"typeof performance.now":            `"function"`,
+			"q.help().includes('stats.help()')": "true",
 		}},
 		{evidenceRoot(t, "PICOCALC-PIE-LOOPS--*"), emptySIMD, map[string]string{
 			"hardware.help().available":                       "true",
