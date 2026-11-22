@@ -5,6 +5,23 @@ compilers that turn its applications into RV32 machine code on the handheld itse
 measurement infrastructure that decides which compiler work is worth keeping. `ttmp/` is the work log: tickets with
 designs, diaries and results. Nothing outside `ttmp/` imports, globs or copies ticket code.
 
+## The goal
+
+Build an operating system whose code is Typed, compiled to RV32 on the handheld, in order to learn how to compile code
+efficiently for RISC-V. When you decide where something is implemented:
+
+1. **Typed first.** Applications, services and compute kernels (rendering, Candela, Chess) are written in Typed.
+2. **QuickJS only as a fallback**, for code Typed cannot express yet. A boot app keeps a JavaScript version that runs
+   when its compile fails or misses its deadline.
+3. **C only if it cannot be avoided:** the nucleus and ports under the worlds, hardware access, the reactors' fixed
+   runtime, vendored engines. Or **as a benchmark:** the C ray tracer and Candela's generated C++ kernel are the
+   yardsticks Typed is measured against, not the implementations to keep.
+
+A feature Typed lacks (floats, bitwise operators, arrays) is a compiler task, not a reason to write C. Code now in C
+that could be Typed (Candela's kernel and scene sections, the app policy in the Agenda and Files reactors) is a
+migration target. Earlier designs that chose C for speed or convenience, such as PICOCALC-CANDELA-P4's
+"Why C and not Typed f32", predate this rule.
+
 ## Where things are
 
 | Path | What it holds |
