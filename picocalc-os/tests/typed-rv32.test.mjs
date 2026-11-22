@@ -412,3 +412,66 @@ ${body}
     assert(words(short, "near").length < words(long, "near").length);
     assert.deepEqual(words(short, "far"), words(long, "far"));
 });
+
+test("pointer homes keep checked accesses, stores and traps identical", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    // r[x + k] with an increment, r[i + k] with a recomputed index, r[b + k] from a
+    // parameter, r[h + x] from two locals, and stores through a pointer.
+    const src = `function sum(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let x = 0; x < n; x = x + 1) { s = s + work.charCodeAt(3 + x) + work.charCodeAt(5 + x); }
+    return s;
+}
+function four(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let k = 0; k < n; k = k + 1) {
+        const i = 2 + 4 * k;
+        s = s + work.charCodeAt(i) - work.charCodeAt(i + 2);
+        if (work.charCodeAt(i + 1) > 70) { s = s + work.charCodeAt(i + 3); }
+    }
+    return s;
+}
+function param(work: buffer, b: i32): i32 {
+    let s = 0;
+    for (let k = 0; k < 3; k = k + 1) { s = s + work.charCodeAt(b) * 3 + work.charCodeAt(b + 1) + work.charCodeAt(b + 2); }
+    return s;
+}
+function rows(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let r = 0; r < 3; r = r + 1) {
+        const h = 1 + r * n;
+        for (let x = 0; x < n; x = x + 1) { s = s + work.charCodeAt(h + x); }
+    }
+    return s;
+}
+function fill(work: buffer, n: i32): i32 {
+    for (let x = 0; x < n; x = x + 1) {
+        work.setCharCodeAt(10 + x, work.charCodeAt(x) + 1);
+        work.setCharCodeAt(11 + x, x);
+    }
+    return work.charCodeAt(10 + n);
+}`;
+    const L = {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
+        constants: true, share: true};
+    const plain = typedRv32.compile(src, [], undefined, {operandLocations: L});
+    const pointed = typedRv32.compile(src, [], undefined, {operandLocations: {...L, pointers: true}});
+    assert.notDeepEqual(pointed.image, plain.image);
+    const cells = 40;
+    function run(p, f, n) {
+        const mem = new Uint8Array(4096), view = new DataView(mem.buffer);
+        view.setUint32(1024, cells, true);
+        for (let i = 0; i < cells; i++) view.setUint16(1028 + 2 * i, 60 + (i * 7) % 23, true);
+        const out = typedRv32Interp.run(p, f, [1024, n], mem);
+        return {result: out.result, trap: Boolean(out.trap), bytes: Array.from(out.bytes.subarray(1024, 1028 + 2 * cells))};
+    }
+    for (const [f, sizes] of [["sum", [0, 1, 10, 34, 35, 36]], ["four", [0, 1, 9, 10, 11]], ["param", [0, 5, 37, 38, 39]],
+                              ["rows", [0, 5, 13, 14]], ["fill", [0, 5, 28, 29, 30]]])
+        for (const n of sizes) assert.deepEqual(run(pointed, f, n), run(plain, f, n), f + " " + n);
+    // Some sizes trap, so the comparison covered the trap point and the memory written before it.
+    assert.equal(run(plain, "sum", 36).trap, true);
+    assert.equal(run(plain, "fill", 30).trap, true);
+    assert.equal(run(plain, "fill", 29).trap, false);
+});

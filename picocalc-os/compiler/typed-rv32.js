@@ -130,6 +130,7 @@ class FunctionCode {
         if (!this.select?.results || !plan || tape[this.at] !== 0x21 || plan.forward.has(this.at)) return undefined;
         const home = plan.homes.get(tape[this.at + 1]);
         if (home === undefined) return undefined;
+        this.pendingWrite = [tape[this.at + 1], this.at];
         this.at += 2;
         this.materialize(home);
         return home;
@@ -138,6 +139,11 @@ class FunctionCode {
     // Push a result computed in resultRegister(), unless destination() stored it already.
     result(out, stored) {
         if (stored === undefined) this.push(out);
+        else if (this.pendingWrite) {
+            const [local, at] = this.pendingWrite;
+            this.pendingWrite = undefined;
+            this.pointersAfterWrite(local, at, stored);
+        }
     }
 
     move(to, from) {
@@ -177,18 +183,71 @@ class FunctionCode {
         this.direct[this.depth++] = home;
     }
 
-    checkedAddress(receiver, index, constant) {
-        const base = this.locations?.homes.get(receiver) ?? T6;
-        if (base === T6) this.readLocal(base, receiver);
+    // p = r + 4 + 2(L + K0), or r + 4 + 2(L + M) when other holds M, for a pointer home
+    // (operandLocations.pointers). base is read after value and other.
+    pointerFrom(p, value, base, K0, other) {
+        const offset = (4 + 2 * K0) | 0;
+        if (other === undefined) this.emit(instruction.i(0x13, p, 1, value, 1));
+        else {
+            this.emit(instruction.r(0x33, p, 0, value, other));
+            this.emit(instruction.i(0x13, p, 1, p, 1));
+        }
+        if (base === undefined) {
+            base = T6;
+            this.readLocal(T6, this.pendingBase);
+        }
+        this.emit(instruction.r(0x33, p, 0, p, base));
+        if (offset >= -2048 && offset <= 2047) {
+            if (offset) this.emit(instruction.i(0x13, p, 0, p, offset));
+        } else {
+            this.constant(T6, offset);
+            this.emit(instruction.r(0x33, p, 0, p, T6));
+        }
+    }
+
+    // After a write of local: keep every pointer home derived from it current.
+    pointersAfterWrite(local, at, value) {
+        const plan = this.locations, list = plan?.pointerWrites?.get(local);
+        if (!list) return;
+        const source = plan.homes.get(local) ?? value;
+        const step = plan.increments.get(at);
+        for (const {reg, r, K0, other} of list) {
+            if (step !== undefined) {
+                this.emit(instruction.i(0x13, reg, 0, reg, 2 * step));
+                continue;
+            }
+            let second;
+            if (other !== undefined) {
+                second = plan.homes.get(other);
+                if (second === undefined) {
+                    this.readLocal(T6, other);
+                    second = T6;
+                }
+            }
+            // An unhomed receiver is loaded into t6 once value and other are consumed.
+            this.pendingBase = r;
+            this.pointerFrom(reg, source, plan.homes.get(r), K0, second);
+        }
+    }
+
+    checkedAddress(receiver, index, constant, pointer) {
         const capacity = this.locations?.homes.get(-1 - receiver);
         const cached = this.locations?.receiver === receiver;
+        const reload = capacity === undefined && (!cached || !this.capacityReady);
+        const base = this.locations?.homes.get(receiver) ?? T6;
+        if (base === T6 && (reload || !pointer)) this.readLocal(base, receiver);
         const length = capacity ?? (cached ? A0 + 7 : A0);
-        if (capacity === undefined && (!cached || !this.capacityReady)) this.load(length, 0, base);
+        if (reload) this.load(length, 0, base);
         if (cached) this.capacityReady = true;
         this.emit(instruction.b(6, index, length, 8));
         this.emit(0x00100073);
         const out = this.resultRegister(), tape = this.program.code;
-        if (constant >= 0 && constant <= 1021 && tape[this.at] === 0x2f && tape[this.at+2] === 4) {
+        if (pointer) {
+            if (tape[this.at] === 0x2f && tape[this.at+2] === 4) {
+                this.at += 3;
+                this.load(out, pointer.disp, pointer.reg, 5);
+            } else this.emit(instruction.i(0x13, out, 0, pointer.reg, pointer.disp - 4));
+        } else if (constant >= 0 && constant <= 1021 && tape[this.at] === 0x2f && tape[this.at+2] === 4) {
             this.at += 3;
             this.load(out, 4 + 2 * constant, base, 5);
         } else {
@@ -443,6 +502,7 @@ class FunctionCode {
         const plan = this.locations;
         if (op >= 0x02 && op <= 0x0f) this.materialize();
         if (plan?.forward.has(this.at - 1)) {
+            const site = this.at - 1;
             const constant = op === 0x41 ? this.cell() : undefined;
             const constantHome = constant === undefined ? undefined : plan.homes.get("c" + constant);
             const index = constant === undefined ? this.pop(T5) : constantHome ?? T5;
@@ -453,7 +513,7 @@ class FunctionCode {
             this.at += 2; // destination local and checked-address opcode
             const receiver = this.cell();
             this.at++; // proven single-use index local
-            this.checkedAddress(receiver, index, constant);
+            this.checkedAddress(receiver, index, constant, constant === undefined ? plan.pointers?.get(site) : undefined);
             return false;
         }
         if (op === 0x20 && this.capacityReady && this.program.code[this.at] === plan.receiver &&
@@ -498,7 +558,12 @@ class FunctionCode {
             this.result(out, stored);
             break;
         }
-        case 0x21: this.writeLocal(this.pop(T5), this.cell()); break;
+        case 0x21: {
+            const value = this.pop(T5), local = this.cell();
+            this.writeLocal(value, local);
+            this.pointersAfterWrite(local, this.at - 2, value);
+            break;
+        }
         case 0x28: case 0x2f: case 0x36: case 0x3b: {
             this.cell(); // alignment hint
             const offset = this.cell();
@@ -575,9 +640,16 @@ class FunctionCode {
         for (let i = 0; i < count; i++) this.writeLocal(A0 + i, i);
         // Capacity homes belong to unwritten parameters, still in their argument registers here.
         for (const [id, reg] of this.locations?.homes ?? []) {
-            if (typeof id === "string") this.constant(reg, Number(id.slice(1)));
-            else if (id < 0) this.load(reg, 0, A0 - 1 - id);
+            if (typeof id === "string") {
+                if (id[0] === "c") this.constant(reg, Number(id.slice(1)));
+            } else if (id < 0) this.load(reg, 0, A0 - 1 - id);
         }
+        // Pointer homes of parameters, from the incoming argument registers.
+        for (const [local, list] of this.locations?.pointerWrites ?? [])
+            if (local < count) for (const {reg, r, K0, other} of list) {
+                if (other === undefined) this.pointerFrom(reg, A0 + local, A0 + r, K0);
+                else if (other < count && local < other) this.pointerFrom(reg, A0 + local, A0 + r, K0, A0 + other);
+            }
         while (this.at < this.program.code.length && !this.step(this.cell())) {}
         const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
@@ -1026,11 +1098,16 @@ function planLocations(fn, options, inlineCall) {
     // save and restore per call, so their estimate also halves under each enclosing if:
     // a value used only on a rarely taken path should stay in its slot.
     // nested: four times per enclosing loop level (at most three) instead of four for any loop.
-    function weigh(local, scale = 1) {
+    function weightNow(scale = 1) {
         const loopWeight = options.nested ? 4 ** Math.min(loops, 3) : loops ? 4 : 1;
-        const weight = loopWeight * (options.saved ? scale / (1 << Math.min(ifs, 3)) : 1);
-        scores.set(local, (scores.get(local) ?? 0) + weight);
+        return loopWeight * (options.saved ? scale / (1 << Math.min(ifs, 3)) : 1);
     }
+    function weigh(local, scale = 1) {
+        scores.set(local, (scores.get(local) ?? 0) + weightNow(scale));
+    }
+    // pointers: forwarded accesses r[L + k], every write of a local (with its increment when
+    // it is L = L + c), and locals read before any write in tape order.
+    const pointerAccesses = [], localWrites = [], readEarly = new Set(), hist = [];
     // capacities: each checked access to buffer local b scores b's capacity, key -1 - b.
     const capacityUses = new Map();
     function read(local) {
@@ -1060,6 +1137,31 @@ function planLocations(fn, options, inlineCall) {
         const a = cells > 0 ? tape[at] : undefined, b = cells > 1 ? tape[at + 1] : undefined;
         at += cells;
         if (at > tape.length) throw new Error("truncated Typed inspection operation");
+        if (options.pointers) {
+            if ((opcode === 0x20 || opcode === 0xf2) && !writes.has(a)) readEarly.add(a);
+            if (opcode === 0xf1) for (const x of [a, b]) if (!writes.has(x)) readEarly.add(x);
+            if (opcode === 0x21) {
+                const [y, x, prev] = hist.slice(-3);
+                let inc;
+                if (prev?.opcode === 0x6a && x && y) {
+                    if (x.opcode === 0x41 && y.opcode === 0x20 && y.a === a) inc = x.a;
+                    else if (x.opcode === 0x20 && x.a === a && y.opcode === 0x41) inc = y.a;
+                }
+                localWrites.push({L: a, at: offset, w: weightNow(), inc, depth: loops});
+            }
+            if (opcode === 0xf1 && prevOpcode === 0x21 && prevA === b) {
+                const [p4, p3, p2] = hist.slice(-4, -1);
+                // r[L], r[L + k], r[k + L] and r[L + M] for locals L and M.
+                let L, M, k = 0;
+                if (p2?.opcode === 0x20) L = p2.a;
+                else if (p2?.opcode === 0x6a && p3 && p4) {
+                    if (p3.opcode === 0x41 && p4.opcode === 0x20) { L = p4.a; k = p3.a; }
+                    else if (p3.opcode === 0x20 && p4.opcode === 0x41) { L = p3.a; k = p4.a; }
+                    else if (p3.opcode === 0x20 && p4.opcode === 0x20 && p3.a !== p4.a) { L = Math.min(p3.a, p4.a); M = Math.max(p3.a, p4.a); }
+                }
+                if (L !== undefined && L !== b && M !== b) pointerAccesses.push({at: prevOffset, r: a, L, M, k, w: weightNow(), depth: loops});
+            }
+        }
         if (options.share) {
             if (opcode === 0x20 || opcode === 0xf2) occur(a, offset, true);
             else if (opcode === 0x21) occur(a, offset, false);
@@ -1101,6 +1203,10 @@ function planLocations(fn, options, inlineCall) {
         if (opcode >= 0x02 && opcode <= 0x0f) straight = false;
         prev2Opcode = prevOpcode; prev2Offset = prevOffset;
         prevOpcode = opcode; prevOffset = offset; prevA = a;
+        if (options.pointers) {
+            hist.push({opcode, a});
+            if (hist.length > 4) hist.shift();
+        }
     }
     if (!options.capacity || !pure || !leaf || writes.has(receiver)) receiver = undefined;
     // A capacity register replaces a7 caching. A buffer's capacity header is written only by
@@ -1137,6 +1243,48 @@ function planLocations(fn, options, inlineCall) {
             for (const span of intervals.values())
                 if (span[0] < ls && span[1] >= ls && span[1] < le) span[1] = le;
     }
+    // pointers: for accesses r[L + k] to an unwritten parameter r, a home p = r + 4 + 2(L + K0)
+    // turns slli, add and lhu 4(.) into lhu 2(k - K0)(p). Every write of L updates p: an
+    // addi for L = L + c, otherwise a recompute. Addresses are computed modulo 2^32 as
+    // before, so p + 2(k - K0) is exactly r + 2(L + k) and the access is unchanged.
+    const groups = new Map();
+    if (options.pointers && options.saved) {
+        const params = fn.params.length;
+        for (const access of pointerAccesses) {
+            if (!forward.has(access.at) || access.r >= params || readEarly.has(access.L) || readEarly.has(access.M)) continue;
+            const key = "p" + access.r + ":" + access.L + (access.M === undefined ? "" : "+" + access.M);
+            if (!groups.has(key)) groups.set(key, {r: access.r, L: access.L, M: access.M, list: []});
+            groups.get(key).list.push(access);
+        }
+        for (const [key, g] of groups) {
+            const sorted = g.list.slice().sort((x, y) => x.k - y.k);
+            const total = sorted.reduce((sum, x) => sum + x.w, 0);
+            let seen = 0;
+            g.K0 = sorted[0].k;
+            for (const x of sorted) if ((seen += x.w) * 2 >= total) { g.K0 = x.k; break; }
+            g.covered = g.list.filter(x => Math.abs(x.k - g.K0) <= 1000);
+            const sources = g.M === undefined ? [g.L] : [g.L, g.M];
+            // Initialized in the prologue only when every source is a parameter.
+            let cost = sources.every(x => x < params) ? sources.length + 2 : 0;
+            // For r[L + M]: a write outside the accesses' innermost loop runs once per entry of
+            // that loop, so its weight is divided by a further 4 per level, as if inner loops
+            // ran 16 times. (Applied to r[L + k] too, it converts conditional accesses whose
+            // saving does not cover a per-iteration update.)
+            const depth = Math.max(...g.covered.map(x => x.depth));
+            for (const write of localWrites) if (sources.includes(write.L))
+                cost += write.w / (g.M === undefined ? 1 : 4 ** Math.max(0, depth - write.depth)) *
+                    (write.inc !== undefined && Math.abs(2 * write.inc) <= 2047 ? 1 : sources.length + 3);
+            const gain = 2 * g.covered.reduce((sum, x) => sum + x.w, 0) - cost;
+            if (gain < 2) continue;
+            scores.set(key, gain);
+            if (intervals) {
+                // p is written at every write of a source and read at the accesses, which
+                // also read the sources: the hull of the sources' intervals covers both.
+                const spans = sources.map(x => intervals.get(x) ?? [-Infinity, Infinity]);
+                intervals.set(key, [Math.min(...spans.map(x => x[0])), Math.max(...spans.map(x => x[1]))]);
+            }
+        }
+    }
     if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined, intervals);
     else if (options.homes && leaf) {
         let reg = A0 + Math.max(1, fn.params.length);
@@ -1146,7 +1294,20 @@ function planLocations(fn, options, inlineCall) {
             homes.set(id, reg++);
         }
     }
-    return {receiver,forward,homes,direct};
+    const pointers = new Map(), pointerWrites = new Map(), increments = new Map();
+    for (const [key, g] of groups) {
+        const reg = homes.get(key);
+        if (reg === undefined || !g.covered) continue;
+        for (const x of g.covered) pointers.set(x.at, {reg, disp: 2 * (x.k - g.K0)});
+        for (const [source, other] of g.M === undefined ? [[g.L, undefined]] : [[g.L, g.M], [g.M, g.L]]) {
+            if (!pointerWrites.has(source)) pointerWrites.set(source, []);
+            pointerWrites.get(source).push({reg, r: g.r, K0: g.K0, other});
+        }
+    }
+    for (const write of localWrites)
+        if (pointerWrites.has(write.L) && write.inc !== undefined && Math.abs(2 * write.inc) <= 2047)
+            increments.set(write.at, write.inc);
+    return {receiver,forward,homes,direct,pointers,pointerWrites,increments};
 }
 
 // Callee-saved registers a function may claim as homes. Each claimed register costs a
