@@ -2,6 +2,7 @@
 # Run after sourcing the ESP-IDF v5.4.2 environment.
 # Extra arguments go to idf.py after the playable configuration, e.g. -D PICOCALC_CANDELA_WORLD=ON for the
 # Candela world's measurement image (PICOCALC-CANDELA-WORLD). With none, the playable firmware is unchanged.
+# The playable firmware includes the Candela gallery (PICOCALC-CANDELA-GALLERY): 18 path-traced presets on screen.
 set -euo pipefail
 if [[ $# -lt 1 ]]; then
     echo "usage: build-smooth-chess.sh BUILD_DIRECTORY [-D OPTION=VALUE ...]" >&2
@@ -23,5 +24,6 @@ idf.py -C "$port" -B "$build" \
     -D PICOCALC_RV32_CHESS=ON -D PICOCALC_RV32_AGENDA=ON \
     -D PICOCALC_RV32_EDITOR=ON -D PICOCALC_RV32_FILES=ON \
     -D PICOCALC_RV32_STREAM_FUNCTIONS=ON -D PICOCALC_AGENT_WIFI=OFF \
-    -D PICOCALC_MOBILE_PAINTER=ON -D PICOCALC_CHESS_3D=ON "$@" build
+    -D PICOCALC_MOBILE_PAINTER=ON -D PICOCALC_CHESS_3D=ON \
+    -D PICOCALC_CANDELA_GALLERY=ON "$@" build
 sha256sum "$build/picocalc-os-p4.bin" "$build/partition_table/partition-table.bin"
