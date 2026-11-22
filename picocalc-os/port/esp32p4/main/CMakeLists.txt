@@ -387,10 +387,10 @@ if(PICOCALC_TYPED_CHESS)
     list(APPEND BUNDLE_EXTRA_DEPS "${chess_manifest_path}" "${chess_source}" "${chess_reactor}")
 endif()
 
-# Candela's front end as a QuickJS world (PICOCALC-CANDELA-WORLD). tools/candela-bc, built here for the build
-# machine from the same third_party/quickjs, compiles Candela's modules (third_party/candela) and the world's
-# (worlds/candela-world) to QuickJS bytecode; the bundle and the world's script go into js_bundle.c, and the world's
-# manifest entry (worlds/candela-world/manifest.json) is appended to the typed manifests written below.
+# Candela's front end as a QuickJS world (PICOCALC-CANDELA-WORLD). The repository's tools/gen/candela/candela-bc.c,
+# built here for the build machine from the same third_party/quickjs, compiles Candela's modules (third_party/candela)
+# and the world's (worlds/candela-world) to QuickJS bytecode; the bundle and the world's script go into js_bundle.c,
+# and the world's manifest entry (worlds/candela-world/manifest.json) is appended to the typed manifests written below.
 if(PICOCALC_CANDELA_WORLD)
     if(NOT PICOCALC_TYPED_CHESS)
         message(FATAL_ERROR "PICOCALC_CANDELA_WORLD rides on the typed Chess firmware (build-smooth-chess.sh)")
@@ -398,12 +398,13 @@ if(PICOCALC_CANDELA_WORLD)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_CANDELA_WORLD=1)
     target_sources(${COMPONENT_LIB} PRIVATE ${OS}/nucleus/candela_world.c ${OS}/nucleus/candela_render_stub.c)
     find_program(CANDELA_HOST_CC NAMES cc gcc clang REQUIRED)
+    get_filename_component(candela_gen "${OS}/../tools/gen/candela" ABSOLUTE)
     set(candela_bc ${CMAKE_CURRENT_BINARY_DIR}/candela-bc)
     set(candela_qjs ${QJS}/quickjs.c ${QJS}/libregexp.c ${QJS}/libunicode.c ${QJS}/cutils.c ${QJS}/dtoa.c)
     add_custom_command(OUTPUT ${candela_bc}
         COMMAND ${CANDELA_HOST_CC} -O2 -w -std=gnu11 -D_GNU_SOURCE -fwrapv -fno-strict-aliasing -I${QJS}
-                "-DCONFIG_VERSION=\"${QJS_VERSION}\"" -o ${candela_bc} ${OS}/tools/candela-bc.c ${candela_qjs} -lm -lpthread
-        DEPENDS ${OS}/tools/candela-bc.c ${candela_qjs} ${QJS}/quickjs.h VERBATIM)
+                "-DCONFIG_VERSION=\"${QJS_VERSION}\"" -o ${candela_bc} ${candela_gen}/candela-bc.c ${candela_qjs} -lm -lpthread
+        DEPENDS ${candela_gen}/candela-bc.c ${candela_qjs} ${QJS}/quickjs.h VERBATIM)
     set(candela_front ${CMAKE_CURRENT_BINARY_DIR}/candela-front.qbc)
     set(candela_list ${OS}/worlds/candela-world/bundle.list)
     file(GLOB candela_world_inputs CONFIGURE_DEPENDS ${OS}/third_party/candela/src/*.js ${OS}/third_party/candela/presets/*.js

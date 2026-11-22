@@ -61,7 +61,9 @@ endif
 
 # The Candela world (PICOCALC-CANDELA-WORLD): CANDELA=1 adds its host side to picocalc-host, in its own build
 # directory, and `make CANDELA=1 candela` stages a JS root with Candela's bytecode bundle and a manifest that runs
-# the world: ./build-candela/picocalc-host -j build-candela/candela-js SCRIPT
+# the world: ./build-candela/picocalc-host -j build-candela/candela-js SCRIPT. The bytecode compiler and the staging
+# script are build-machine tools in the repository's tools/gen/candela.
+CANDELA_GEN := ../tools/gen/candela
 ifeq ($(CANDELA),1)
   CFLAGS += -DPICOCALC_CANDELA_WORLD=1
   OS_SRC += nucleus/candela_world.c nucleus/candela_render_stub.c
@@ -135,12 +137,12 @@ $(GEN)/mqjs_stdlib.h: $(ENG)/nucleus_stdlib.c $(ENG)/mqjs_stdlib.c $(ENG)/mquick
 
 CANDELA_INPUTS := $(wildcard third_party/candela/src/*.js third_party/candela/presets/*.js worlds/candela-world/*.js \
                   worlds/candela-world/scenes/*.js) third_party/candela/PIN.json worlds/candela-world/bundle.list \
-                  worlds/candela-world/manifest.json tools/candela-stage.py
+                  worlds/candela-world/manifest.json $(CANDELA_GEN)/candela-stage.py
 candela: $(BIN) $(BUILD)/candela-js/candela/front.qbc
-$(BUILD)/candela-bc: tools/candela-bc.c $(ENG_OBJ)
-	$(CC) $(CFLAGS) -o $@ tools/candela-bc.c $(ENG_OBJ) -lm -lpthread
+$(BUILD)/candela-bc: $(CANDELA_GEN)/candela-bc.c $(ENG_OBJ)
+	$(CC) $(CFLAGS) -o $@ $(CANDELA_GEN)/candela-bc.c $(ENG_OBJ) -lm -lpthread
 $(BUILD)/candela-js/candela/front.qbc: $(BUILD)/candela-bc $(CANDELA_INPUTS) $(wildcard js/*.js js/*/*.js js/*.json)
-	$(PYTHON) -I tools/candela-stage.py $(BUILD) $(BUILD)/candela-bc
+	$(PYTHON) -I $(CANDELA_GEN)/candela-stage.py $(BUILD) $(BUILD)/candela-bc
 
 shots: $(BIN)
 	@mkdir -p $(OUT)

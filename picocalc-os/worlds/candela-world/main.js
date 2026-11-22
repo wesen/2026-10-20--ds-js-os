@@ -1,7 +1,7 @@
 // The Candela world: Candela scene programs on the PicoCalc (PICOCALC-CANDELA-WORLD).
 //
 // Candela's front end (candela.js and the 14 modules it imports) is QuickJS bytecode in the firmware
-// (candela/front.qbc, written by tools/candela-bc when the firmware is built). This script loads it on the
+// (candela/front.qbc, written by tools/gen/candela/candela-bc when the firmware is built). This script loads it on the
 // first message, through the module loader of nucleus/candela_world.c, and then runs scene files as Candela's
 // workbench host does: build, pack, parameters and time, with the program and buffers handed to the renderer.
 //
