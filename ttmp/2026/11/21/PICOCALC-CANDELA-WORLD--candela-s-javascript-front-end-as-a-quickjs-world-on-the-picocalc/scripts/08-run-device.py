@@ -2,7 +2,7 @@
 
 usage (any directory):
     python3 08-run-device.py --image BUILD --reference NODE_REFERENCE.json --probes PROBES.json --out DIR \
-        [--port /dev/ttyACM0] [--plan full|smoke|params]
+        [--port /dev/ttyACM0] [--plan full|smoke|params] [--peripherals on|off-by-user]
 
 BUILD is the measurement image's ESP-IDF build directory (build-smooth-chess.sh BUILD -D PICOCALC_CANDELA_WORLD=ON).
 The restore image is read from /tmp/picocalc-current-playable.txt ("<build dir> <app sha256>") once the lock is held.
@@ -10,8 +10,9 @@ Under the shared serial lock (board_common.acquire, as PICOCALC-SIMD-LAB's 02-ru
 PICOCALC-COMPILE-BUDGET's 02-run-arms-firmware.py do): check both builds; record the playable image's health; quiesce
 I2C (hold); write and verify the measurement app at 0x10000 only; check its health; send the plan's messages to the
 candela world (console: send candela TYPE JSON) and collect its "CW {json}" records and any fault frame; then, in a
-finally clause, quiesce, write and verify the playable app and record its health. A health check that finds the
-keyboard's I2C transfers failing stops the run (board_common.health raises).
+finally clause, quiesce, write and verify the playable app and record its health. With --peripherals on, a health
+check that finds the keyboard's I2C transfers failing stops the run (board_common.health raises); with off-by-user
+(the user switched the keyboard and display off on purpose) they are recorded as "off by user" (lib/board_health.py).
 
 Writes DIR/uart.log (every byte read), DIR/cw.jsonl (each record with the step that produced it), DIR/before.json,
 DIR/candidate.json, DIR/after.json, DIR/start-heap.txt and DIR/end-{stats,heap,worlds}.txt (the measurement image's
@@ -28,7 +29,9 @@ ticket = Path(__file__).resolve().parents[1]
 repo = next(p for p in ticket.parents if (p / ".git").exists())
 device = next((repo / "ttmp/2026/11/20").glob("PICOCALC-RAYTRACE--*")) / "scripts/device"
 sys.path.insert(0, str(device))
-from board_common import acquire, check_build, health, release, save  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent / "lib"))
+from board_common import acquire, check_build, release, save  # noqa: E402
+from board_health import board_health  # noqa: E402
 
 DONE = {"load": {"load"}, "build": {"build"}, "param": {"param"}, "time": {"time"}, "status": {"status"},
         "params": {"params"}, "scenes": {"scenes"}, "rebuilds": {"suite-end"}, "stop": {"stop"}}
@@ -87,6 +90,8 @@ def main():
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--port", default="/dev/ttyACM0")
     ap.add_argument("--plan", choices=("full", "smoke", "params"), default="full")
+    ap.add_argument("--peripherals", choices=("on", "off-by-user"), default="on",
+                    help="off-by-user: the keyboard and display are off on purpose; health is recorded without them")
     a = ap.parse_args()
     image_sha = hashlib.sha256((a.image / release.APP).read_bytes()).hexdigest()
     check_build(a.image, image_sha)
@@ -105,7 +110,7 @@ def main():
             return release.unit.Console(a.port, log)
         console = connect()
         try:
-            save(a.out / "before.json", {"sha256": restore_sha, "health": health(console)})
+            save(a.out / "before.json", {"sha256": restore_sha, "health": board_health(console, a.peripherals)})
         finally:
             console.close()
         console = connect()
@@ -114,7 +119,7 @@ def main():
             release.esp("write_flash", a.image, a.out, "candidate-write", a.port)
             release.esp("verify_flash", a.image, a.out, "candidate-verify", a.port)   # hard reset
             console = connect()
-            save(a.out / "candidate.json", {"sha256": image_sha, "health": health(console)})
+            save(a.out / "candidate.json", {"sha256": image_sha, "health": board_health(console, a.peripherals)})
             (a.out / "start-heap.txt").write_text("\n".join(console.command("heap", timeout=10)) + "\n")
             misses = 0
             for step, typ, payload, timeout in msgs:
@@ -151,7 +156,7 @@ def main():
                     break
             for cmd in ("stats", "heap", "worlds"):
                 (a.out / f"end-{cmd}.txt").write_text("\n".join(console.command(cmd, timeout=10)) + "\n")
-            save(a.out / "candidate-after.json", {"health": health(console)})
+            save(a.out / "candidate-after.json", {"health": board_health(console, a.peripherals)})
             release.hold(console)
         finally:
             try:
@@ -162,7 +167,7 @@ def main():
             release.esp("verify_flash", restore, a.out, "restore-verify", a.port)
             console = connect()
             try:
-                save(a.out / "after.json", {"sha256": restore_sha, "health": health(console)})
+                save(a.out / "after.json", {"sha256": restore_sha, "health": board_health(console, a.peripherals)})
             finally:
                 console.close()
     run["finished"] = time.time()

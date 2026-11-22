@@ -12,10 +12,12 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/nucleus/candela_world.c
-      Note: Bytecode module loader, the __candela host object, SHA-256, the renderer calls
     - Path: picocalc-os/nucleus/candela_render.h
       Note: The seam between the world and the firmware renderer (FIRST-LIGHT implements it)
+    - Path: picocalc-os/nucleus/candela_world.c
+      Note: Bytecode module loader, the __candela host object, SHA-256, the renderer calls
+    - Path: picocalc-os/third_party/candela/PIN.json
+      Note: The vendored Candela front end and T0 scenes, with their digests
     - Path: picocalc-os/tools/candela-bc.c
       Note: Build-time compiler of the world's ES modules to QuickJS bytecode, GGX table evaluation
     - Path: picocalc-os/worlds/candela-world/runner.js
@@ -24,13 +26,15 @@ RelatedFiles:
       Note: atob, performance, console, and the file-named Function
     - Path: picocalc-os/worlds/candela-world/subset.js
       Note: The T0 subset check, Candela-style E790 diagnostics
-    - Path: picocalc-os/third_party/candela/PIN.json
-      Note: The vendored Candela front end and T0 scenes, with their digests
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-WORLD--candela-s-javascript-front-end-as-a-quickjs-world-on-the-picocalc/scripts/08-run-device.py
+      Note: Measurement run with restore and peripherals option
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-WORLD--candela-s-javascript-front-end-as-a-quickjs-world-on-the-picocalc/various/device-04-final/summary.json
+      Note: Section 9 numbers (final device run)
 ExternalSources: []
-Summary: "As-built design of the Candela world: Candela's 15 front-end modules compiled to QuickJS bytecode when the firmware is built and loaded through a module loader; shims for atob, performance, console and file-named Function; the GGX table evaluated at build time; a T0 subset check; a long-segment budget for builds; and render.start/update/stop host functions with a stub renderer and frame events."
+Summary: 'As-built design of the Candela world: Candela''s 15 front-end modules compiled to QuickJS bytecode when the firmware is built and loaded through a module loader; shims for atob, performance, console and file-named Function; the GGX table evaluated at build time; a T0 subset check; a long-segment budget for builds; and render.start/update/stop host functions with a stub renderer and frame events.'
 LastUpdated: 2026-11-22T02:00:00-05:00
-WhatFor: "How the Candela world is built, loaded and run, what each firmware change does, and what PICOCALC-CANDELA-FIRST-LIGHT must wire up"
-WhenToUse: "Before changing the Candela world, its bundle, its host object or the renderer seam; before starting FIRST-LIGHT"
+WhatFor: How the Candela world is built, loaded and run, what each firmware change does, and what PICOCALC-CANDELA-FIRST-LIGHT must wire up
+WhenToUse: Before changing the Candela world, its bundle, its host object or the renderer seam; before starting FIRST-LIGHT
 ---
 
 # Run Candela's unchanged JavaScript front end as a QuickJS world on the PicoCalc
@@ -40,6 +44,8 @@ WhenToUse: "Before changing the Candela world, its bundle, its host object or th
 A Candela scene program is a JavaScript module written against Candela's own API. Running it means three steps: execute the module and its build-stage code, compile the resulting component tree into a WGSL program, and pack the scene into five float buffers. This ticket puts all three on the PicoCalc's ESP32-P4, in a QuickJS world, with Candela's sources unchanged, and hands the result to the firmware renderer through host functions. Animation time and parameters keep running in the world after the build.
 
 The acceptance measurements are on the device (Section 9): module load time from bytecode, B-01's build, compile and pack times, peak heap and C stack, every T0 preset built within the world's limits with WGSL and packed-data digests equal to Node's, and a dynamic parameter change re-packed within one 50 ms turn.
+
+All of them were met on the device (Section 9). Candela loads from bytecode in 175 ms; B-01 builds in 124-128 ms, compiles in 70-87 ms and packs in 6-22 ms; 27 of the 28 T0 presets build within 4 MB, a 4 s long segment and 56 KB of C stack (peak 1.78 MB and 23 KB), and 26 of those 27 have WGSL, packed-data, frame-uniform and section digests equal to Node's (D-02 calls `Math.random()`); M-12 runs a 100-million-step Monte Carlo test in its scene file and is stopped. A B-01 slider re-packs in a 14-15 ms segment.
 
 ## 2. What the world is made of
 
@@ -136,6 +142,8 @@ A local export takes precedence over `export *`, so these two names replace kern
 7. `host.render.start(program, buffers, options)`.
 
 `setParam(id, value)` moves a slider as Candela's `Host.onParam` does: a dynamic parameter re-packs (`repack(time)`: `pack`, frame uniforms, `render.update`), a static one rebuilds with the slider values kept. `repack(time)` also serves animation time (`compiled.animation(t)` poses). No T0 preset has an animation or behaviours; the path is the same as for a parameter.
+
+A re-pack runs in an ordinary turn unless the scene's last pack took more than `PACK_LONG_MS` = 25 ms, half the manifest's 50 ms budget; then `repack()` asks for a long segment first and reports `long: true`. The device measurements forced this rule: pack cost on the P4 ranges from 6.2 ms (B-01) to 377 ms (L-05), and M-03's slider used 49.1-49.7 ms of a 50 ms turn before the rule existed (Section 9). The first pack in a fresh runtime is slower than later ones, so the forecast errs towards a long segment.
 
 ### Frame uniforms (`world:frame.js`)
 
@@ -251,7 +259,82 @@ The stub (`candela_render_stub.c`) checks the scene (magic, uniforms and objects
 
 ## 9. Device measurements
 
-See Section 10 of the diary and `various/` for the raw records. [Filled in after the device run.]
+Measured on the PicoCalc's ESP32-P4 (360 MHz, QuickJS world on the kernel task) with the measurement image built from commit `c0bd0f3` (`build-smooth-chess.sh BUILD -D PICOCALC_CANDELA_WORLD=ON`, app SHA-256 `63a87a165d1b25281ada60e85cd560eee3d4d37e8d1b09472d9a97bf08f9e5e5`), run `various/device-04-final` (`scripts/08-run-device.py --plan full`, summarised by `scripts/10-summarize-device.py` into `summary.json`). Earlier runs (`device-01-smoke`, `device-02-full`, `device-03-params`) agree to within a few percent; `device-02-full` used the image before the two fixes of the diary's Step 7. The playable firmware (`b22a807d...`) was written and verified after every run.
+
+### Acceptance
+
+| Measurement | Result |
+|---|---|
+| Module load from bytecode, fresh runtime (3 runs) | 175.3-175.5 ms, of which `JS_ReadObject` 47.8-48.0 ms; 21 modules, 470,349 bytes |
+| Heap after load | 1,107,372-1,107,392 bytes (peak during load 1,112,492) |
+| B-01 build, fresh runtime (3) / warm (3) | 123.8-126.6 ms / 124.4-128.0 ms |
+| B-01 `compile()` alone, fresh / warm | 85.5-87.1 ms / 69.6-71.1 ms |
+| B-01 first pack, fresh / warm; `pack({time: 2.5})` | 21.9 ms / 6.3-6.5 ms; 4.5-4.8 ms |
+| B-01 heap peak during a build | 1,399,084 bytes (+291,692 over the loaded runtime) |
+| C stack during a build / a pack | B-01 20,668 / 9,296 bytes; all T0 at most 23,392 (C-02) / 12,800 bytes; limit 56 KB |
+| T0 presets built within the limits | 27 of 28 (M-12 stopped by the 4 s long segment) |
+| Digests equal to Node (WGSL, 6 arrays at t = 0 and t = 2.5, frame uniforms, sections, fixed kernel) | 26 of 27 built presets and B-01p; D-02 differs in `O` and `BV` only |
+| Highest heap peak, all T0 | 1,777,440 bytes (R-07), 43% of 4 MB |
+| Longest build | R-07, 1,103 ms |
+| B-01 dynamic parameter (B-01p roughness, 5 moves) | pack 6.9-7.2 ms; whole segment 14.0-15.4 ms, an ordinary 50 ms turn |
+
+### Per scene
+
+| Scene | Build ms | Compile ms | First pack ms | Peak heap | Digests |
+|---|---|---|---|---|---|
+| A-03 | 138.5 | 54.5 | 7.3 | 1,574,692 | equal |
+| B-01 | 126.5 | 68.6 | 6.2 | 1,569,840 | equal |
+| B-03 | 205.9 | 102.5 | 64.8 | 1,586,144 | equal |
+| B-04 | 177.1 | 97.0 | 7.4 | 1,617,736 | equal |
+| B-05 | 203.7 | 125.6 | 9.5 | 1,603,064 | equal |
+| C-02 | 787.9 | 132.4 | 167.3 | 1,695,780 | equal |
+| C-03 | 313.8 | 125.8 | 62.2 | 1,748,900 | equal |
+| C-04 | 250.5 | 141.2 | 10.0 | 1,711,808 | equal |
+| D-01 | 178.8 | 93.0 | 101.0 | 1,660,760 | equal |
+| D-02 | 289.8 | 171.3 | 12.7 | 1,641,452 | O, BV differ (`Math.random`) |
+| E-03 | 204.6 | 94.9 | 64.2 | 1,646,476 | equal |
+| E-04 | 174.4 | 54.3 | 21.0 | 1,654,084 | equal |
+| G-06 | 205.2 | 103.9 | 41.6 | 1,658,644 | equal |
+| L-01 | 151.2 | 71.0 | 116.9 | 1,650,504 | equal |
+| L-02 | 191.5 | 98.7 | 9.6 | 1,655,676 | equal |
+| L-03 | 179.4 | 95.3 | 7.0 | 1,653,992 | equal |
+| L-04 | 202.6 | 96.2 | 18.3 | 1,652,336 | equal |
+| L-05 | 208.2 | 54.1 | 377.1 | 1,653,412 | equal |
+| L-06 | 263.0 | 149.0 | 111.4 | 1,665,836 | equal |
+| L-07 | 217.3 | 122.8 | 10.4 | 1,658,236 | equal |
+| L-08 | 158.2 | 73.9 | 46.8 | 1,648,540 | equal |
+| M-01 | 579.5 | 384.0 | 29.9 | 1,701,268 | equal |
+| M-02 | 214.5 | 71.7 | 19.3 | 1,711,564 | equal |
+| M-03 | 186.0 | 53.4 | 38.4 | 1,673,780 | equal |
+| M-09 | 133.1 | 51.1 | 40.7 | 1,657,796 | equal |
+| M-12 | stopped at 4,000 ms | | | | not built |
+| R-01 | 196.7 | 112.5 | 64.4 | 1,408,480 | equal |
+| R-07 | 1,103.5 | 732.0 | 88.7 | 1,777,440 | equal |
+| B-01p | 131.7 | 68.9 | 6.5 | 1,737,016 | equal |
+
+The scenes ran one after another in one runtime (after M-12's restart, a fresh one), so the peak heap includes what earlier builds left for the collector. Build time includes running the scene file and `compile()`; the compile column is a second, separate `compile()` of the same scene.
+
+### Parameters, time and rebuilds
+
+| Change | Pack ms | Segment ms | Segment kind |
+|---|---|---|---|
+| B-01p roughness (5) | 6.9-7.2 | 14.0-15.4 | ordinary |
+| L-03 sun elevation (3) | 7.2-7.4 | 14.3-15.6 | ordinary |
+| D-02 gloss (2) | 13.2-13.3 | 21.7-21.9 | ordinary |
+| M-03 floor IOR (3) | 38.6-38.9 | 49.0-49.1 | long (last pack > 25 ms) |
+| M-09 roughness along (3) | 40.7-40.8 | 47.7-49.2 | long |
+| L-05 animation time (2) | 270.2-270.3 | 280.5-281.1 | long |
+| E-03 depth (static: rebuild) | | 427.9 total | long |
+
+Ten B-01 rebuilds in one runtime: 124.8-126.7 ms each; heap after each 1,538,176 bytes, then 1,523,064-1,523,088, no growth. The world's heap is in PSRAM; internal RAM free went from 93,335 to 87,727 bytes over the whole run (before `run_report` freed its record, the full run ended at 36,871).
+
+### Diagnostics
+
+The five probes of `scripts/06-diag-probes.json` give on the device exactly what the host simulator gives (Section 5): E000 at scene.js:4, E104 at scene.js:4, E790 at scene.js:5 twice, E001 at scene.js:1.
+
+### Device health
+
+The playable app was health-checked before each run, and the measurement image after flashing and after its plan; the keyboard's I2C counters showed no errors in all of these. During the final restore the user switched the PicoCalc's keyboard and display off on purpose: the restored app's I2C transfers all failed (11,087 of 11,087), so `after.json` was recorded with `scripts/12-after-health.py --peripherals off-by-user`: app `b22a807d...` verified in flash, the native Files, Editor, Agenda, Chess and Snake worlds running without restarts, the painter compiled once without rejects, keyboard and display "off by user".
 
 ## 10. Firmware changes and how to build the measurement image
 
@@ -287,3 +370,5 @@ cd picocalc-os && make CANDELA=1 candela
 - D-02 calls `Math.random()` while building; the prelude seeds `Math.random` per world, so D-02's packed objects and BVH differ from Node's (WGSL equal). Candela warns about it (W501).
 - M-12 runs a Monte Carlo furnace test in its scene file (100 million steps); it cannot finish in a long segment of 4 s and is not a device scene.
 - The C stack figure includes up to one interrupt context frame below the deepest JavaScript frame (the RISC-V port saves context on the task stack).
+- Pack cost is scene-dependent on the device (6 to 377 ms) and grows with objects and lights. Heavy scenes re-pack in long segments (Section 4), which hold the lane; an interactive slider on L-05 would update about three times a second. Candela's `pack()` recomputes light normalisation and the BVH on every call; a cache keyed by the parameters a light or object actually depends on would make most re-packs cheap, but it is a change to Candela.
+- The renderer seam is exercised only by the stub. The real renderer will take more than the stub's microseconds per update, and runs on another core; FIRST-LIGHT has to keep `render.update` from blocking the kernel task.

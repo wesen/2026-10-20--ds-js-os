@@ -165,3 +165,65 @@ The first device run was a smoke plan: one load, B-01 cold and three times warm,
 
 ### What I learned
 - The first pack in a fresh runtime costs 3.5 times a later one (3,086 against 785 steps): QuickJS builds shapes and inline caches the first time `pack()`'s code runs.
+
+## Step 7: The full plan, a re-pack that almost missed its turn, and a leak
+
+The full plan (three fresh runtimes, all 28 T0 presets plus B-01p measured, parameters on four scenes, a static rebuild, ten rebuilds, the five diagnostic probes) ran without a timeout, and the device was restored and healthy. It answered the acceptance questions, and it showed two things the host could not: re-pack cost varies by a factor of 60 between T0 scenes, and the world leaked every record it printed.
+
+### What I did
+- `08-run-device.py ... --out various/device-02-full --plan full`; `10-summarize-device.py various/device-02-full various/02-node-reference.json --out various/device-02-full/summary.json`.
+- Profiled `pack()` in Node (`--cpu-prof`, scratch scripts, not kept) and tabulated device pack time against steps and object counts.
+- `runner.js`: `repack()` asks for a long segment when the scene's last pack took more than `PACK_LONG_MS` = 25 ms (half the manifest's 50 ms turn), and reports `long`.
+- `candela_world.c` `run_report`: free the record's JSON.
+- `08-run-device.py --plan params` (`various/device-03-params`) to check the policy with the old report code.
+- `make CANDELA=1 SAN=1 candela`, then scripts 03, 05, 06, 09 and 11 under AddressSanitizer and UBSan: no reports.
+
+### What worked
+- Module load in three fresh runtimes: 176.7, 175.6, 175.2 ms (`JS_ReadObject` 48.0-48.2 ms); heap 1,107,260-1,107,272 bytes after load.
+- B-01 cold in three fresh runtimes: build 124.5-125.9 ms, compile 85.7-86.1 ms, first pack 21.9 ms. Warm: build 122.3-126.0 ms, compile 69.1-69.7 ms, pack 6.2-6.3 ms.
+- Suite: 28 of 29 reference scenes built; 27 equal to Node on all 15 digests and the fixed-kernel digest; D-02 differs in `O` and `BV` only (as on the host). Longest build R-07 1,097 ms; heap peak 1,773,260 bytes (R-07); C stack at most 23,392 bytes (C-02) during a build and 12,800 during a pack.
+- M-12: `ran past its long segment budget of 4000 ms`, the world restarted, and R-01 built next.
+- Ten B-01 rebuilds in one runtime: 124.5-125.7 ms each; heap after each 1,534,004, then 1,518,892-1,518,896 bytes, no growth.
+- Probes on the device: `E000@scene.js:4`, `E104@scene.js:4`, `E790@scene.js:5` (torus), `E790@scene.js:5` (surface field), `E001@scene.js:1`, the same as the host.
+- E-03's static `depth` parameter: a rebuild of 421.7 ms in a long segment.
+
+### What didn't work
+- M-03's dynamic `n` re-packed in an ordinary turn with 49.1-49.7 ms of the 50 ms used (pack 38.8-39.1 ms). It did not overrun, but only by a few hundred microseconds.
+- Internal RAM free at the end of the runs: smoke 75,687 bytes, full 36,871 bytes (`end-heap.txt`). `run_report` printed `d->json` and never freed it; `apply_deferred` frees only the effect (`free(d)`), and every run function in `kernel.c`/`vm.c` frees or passes on its own fields. Records are 0.3-3 KB, under `CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=4096`, so they came from internal RAM first.
+
+### What I learned
+- Pack cost on the P4, by scene (first pack in a warm runtime): B-01 6.2 ms, L-03 7.0, D-02 12.7, E-04 20.8, M-03 38.2, M-09 40.7, L-01 118, C-02 173, L-05 379 ms. It follows the object count (BVH build, one inverse matrix per object) and the lights (L-05 has seven). In Node, M-09's pack is only 3.4 times B-01's; on the device it is 6.6 times.
+- With the policy (`device-03-params`): B-01p 13.6-15.3 ms and D-02 21.8-22.2 ms per segment, ordinary turns; M-03 48.4-48.8 ms and M-09 48.7-49.4 ms, long segments; an L-05 time change 280.7-282.3 ms, long segment. Without the policy L-05 would have been torn down.
+
+### What warrants a second pair of eyes
+- `PACK_LONG_MS` uses the scene's last pack time as the forecast for the next. The first pack in a fresh runtime is up to 3.5 times slower than later ones (B-01: 21.9 against 6.2 ms), so the forecast errs towards long segments, never towards an overrun, for the scenes measured.
+
+### Code review instructions
+- `picocalc-os/worlds/candela-world/runner.js` `repack()`; `picocalc-os/nucleus/candela_world.c` `run_report()`.
+- `python3 -I scripts/10-summarize-device.py various/device-02-full various/02-node-reference.json`
+
+## Step 8: The final run, and the keyboard switched off mid-restore
+
+The final run used the image built from `c0bd0f3` (both fixes), app SHA-256 `63a87a165d1b25281ada60e85cd560eee3d4d37e8d1b09472d9a97bf08f9e5e5`, with the parameter-policy steps folded into the full plan and the heap read before and after. Every step answered. The design document's Section 9 reports this run.
+
+### What I did
+- `PYTHONDONTWRITEBYTECODE=1 python3 scripts/08-run-device.py --image fw1/build ... --out various/device-04-final --plan full`
+- `python3 -I scripts/10-summarize-device.py various/device-04-final various/02-node-reference.json --out various/device-04-final/summary.json`
+- Removed the `__pycache__` directories my first device run had left under three 2026-11-20 tickets' `scripts/device/` (a checked script in the scratchpad; they were untracked and held only `.pyc` files).
+
+### What worked
+- Load 175.3-175.5 ms; B-01 build 123.8-128.0 ms; suite as before (27 of 28 built, 26 + B-01p equal, D-02 random, M-12 stopped).
+- Re-pack policy on the device: B-01p, L-03 and D-02 in ordinary turns (14.0-21.9 ms segments); M-03, M-09 and L-05 in long segments (47.7-49.2 ms, 280.5-281.1 ms).
+- Internal RAM free 93,335 bytes before the plan, 87,727 after (with the leak, the full run had ended at 36,871).
+
+### What didn't work
+- The run's last health check, on the restored playable app, raised:
+  ```
+  ValueError: physical keyboard I2C0 did not qualify: {'busyMs': 3878.76, 'transfers': 230, 'bytes': 923, 'errors': 230} -> {'busyMs': 5011.94, 'transfers': 254, 'bytes': 1020, 'errors': 254}
+  ```
+  The restore itself had completed: `restore-verify.log` shows `verify OK (digest matched)` for the app (4,626,128 bytes at 0x10000) and the partition table. The measurement image's own checks just before (`candidate-after.json`) had 743 transfers and 0 errors.
+- The coordinator then reported that the user had switched the PicoCalc's display and keyboard off on purpose, and that keyboard I2C and display failures are now expected and are to be recorded as "off by user", not debugged.
+
+### What I did about it
+- `scripts/lib/board_health.py`: `board_health(console, "off-by-user")` skips the keyboard probe, records keyboard, display and compositor without judging them, and still requires the other native worlds and the painter to be healthy. `08-run-device.py --peripherals off-by-user` uses it.
+- `scripts/12-after-health.py --out various/device-04-final/after.json --peripherals off-by-user` (under the lock, no flashing): app `b22a807d...`; Snake, Files, Editor, Agenda and Chess native, idle, no restarts; painter compiled once, no rejects; I2C 11,087 transfers, 11,087 errors; keyboard and display "off by user".

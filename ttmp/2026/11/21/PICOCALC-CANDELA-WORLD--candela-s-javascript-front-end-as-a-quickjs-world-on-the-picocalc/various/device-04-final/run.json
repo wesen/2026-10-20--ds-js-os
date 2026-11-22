@@ -1,0 +1,11 @@
+{
+  "image": "/tmp/claude-1000/-home-manuel-code-wesen-2026-10-20--ds-js-os/8cb22ffd-b9b3-49d6-975e-44f61fbbbf0b/scratchpad/cw/fw1/build",
+  "imageSha256": "63a87a165d1b25281ada60e85cd560eee3d4d37e8d1b09472d9a97bf08f9e5e5",
+  "port": "/dev/ttyACM0",
+  "plan": "full",
+  "steps": 74,
+  "started": 1795329816.5982335,
+  "restore": "/tmp/picocalc-playable-smooth-chess-676ae95/build",
+  "restoreSha256": "b22a807d7c1e72227847b7762de09b927b5a86f537d8a1f434c77d618a69f62c",
+  "locked": 1795329816.6054862
+}
