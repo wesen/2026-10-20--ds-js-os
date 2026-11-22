@@ -4,7 +4,7 @@
 usage: python3 -I 08-tonemap-png.py WIDTH HEIGHT IN.rgbf OUT.png [OTHER.rgbf]
 
 The frame holds scene-referred radiance (Candela's photometric units: a sunlit card is ~10^4 nit).
-This is a preview, not Candela's post pass: exposure puts the log-average luminance at 0.18, then
+This is a preview, not Candela's post pass: exposure puts the log-average luminance of the lit pixels at 0.18, then
 x / (1 + x) and the sRGB transfer curve. With OTHER.rgbf it also prints how far the two frames are
 apart (mean absolute relative difference of luminance and the share of pixels within 1 %), which
 is how the host and RV32 builds of the same kernel are compared."""
@@ -25,7 +25,8 @@ def load(path):
 
 px = load(src)
 lum = [0.2126 * px[3 * i] + 0.7152 * px[3 * i + 1] + 0.0722 * px[3 * i + 2] for i in range(w * h)]
-logavg = math.exp(sum(math.log(max(v, 1e-6)) for v in lum) / len(lum))
+lit = [v for v in lum if v > 1e-4 * max(lum)] or [1.0]   # ignore black background (a Cornell box's outside)
+logavg = math.exp(sum(math.log(v) for v in lit) / len(lit))
 k = 0.18 / max(logavg, 1e-9)
 
 

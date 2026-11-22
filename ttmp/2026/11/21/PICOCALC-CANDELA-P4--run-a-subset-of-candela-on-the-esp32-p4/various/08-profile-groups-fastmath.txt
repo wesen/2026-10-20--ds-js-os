@@ -1,0 +1,15 @@
+/tmp/claude-1000/-home-manuel-code-wesen-2026-10-20--ds-js-os/8cb22ffd-b9b3-49d6-975e-44f61fbbbf0b/scratchpad/native/B-01/rv32-160x160-s1-O2-DCDL_FAST_MATH.prof.tsv: 6173 instructions per sample
+      1906   30.9%  traversal and intersection
+      1656   26.8%  environment and sun
+      1068   17.3%  path loop, camera, RNG (main)
+       433    7.0%  materials and lobes
+       433    7.0%  libm sin/cos/tan
+       360    5.8%  light sampling and MIS
+       300    4.9%  libm floor/misc
+/tmp/claude-1000/-home-manuel-code-wesen-2026-10-20--ds-js-os/8cb22ffd-b9b3-49d6-975e-44f61fbbbf0b/scratchpad/native/W-02/rv32-160x160-s1-O2-DCDL_FAST_MATH.prof.tsv: 14967 instructions per sample
+      8560   57.2%  traversal and intersection
+      3624   24.2%  materials and lobes
+      1393    9.3%  path loop, camera, RNG (main)
+       859    5.7%  light sampling and MIS
+       454    3.0%  libm floor/misc
+        62    0.4%  environment and sun

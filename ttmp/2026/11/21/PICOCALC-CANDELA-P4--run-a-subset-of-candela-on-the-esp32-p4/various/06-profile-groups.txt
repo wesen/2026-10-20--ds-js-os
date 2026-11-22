@@ -1,0 +1,35 @@
+B-01/rv32-160x160-s1-O2.prof.tsv: 8160 instructions per sample
+      2192   26.9%  libm sin/cos/tan
+      1906   23.4%  traversal and intersection
+      1283   15.7%  libm exp/log/pow
+       931   11.4%  path loop, camera, RNG (main)
+       767    9.4%  environment and sun
+       366    4.5%  materials and lobes
+       358    4.4%  libm floor/misc
+       339    4.2%  light sampling and MIS
+R-01/rv32-160x160-s1-O2.prof.tsv: 9525 instructions per sample
+      6423   67.4%  traversal and intersection
+      1079   11.3%  path loop, camera, RNG (main)
+       580    6.1%  light sampling and MIS
+       527    5.5%  libm sin/cos/tan
+       512    5.4%  materials and lobes
+       346    3.6%  libm floor/misc
+        58    0.6%  environment and sun
+G-01/rv32-160x160-s1-O2.prof.tsv: 11287 instructions per sample
+      5241   46.4%  traversal and intersection
+      2027   18.0%  libm sin/cos/tan
+      1128   10.0%  libm exp/log/pow
+       982    8.7%  path loop, camera, RNG (main)
+       678    6.0%  environment and sun
+       418    3.7%  materials and lobes
+       413    3.7%  light sampling and MIS
+       385    3.4%  libm floor/misc
+W-02/rv32-160x160-s1-O2.prof.tsv: 78776 instructions per sample
+     58001   73.6%  trig argument reduction (large sin)
+      8560   10.9%  traversal and intersection
+      5177    6.6%  libm sin/cos/tan
+      2686    3.4%  libm floor/misc
+      2208    2.8%  materials and lobes
+      1245    1.6%  path loop, camera, RNG (main)
+       822    1.0%  light sampling and MIS
+        70    0.1%  environment and sun

@@ -126,14 +126,35 @@ ${swz('vec4f')}
 ${swzDefs()}
 // scalar built-ins: GCC builtins, so sqrt, abs, min and max become single RV32F instructions
 // (with -fno-math-errno) and the transcendental functions call newlib's single-precision libm
+inline f32 ffloor(f32 x) { if (!(x > -2.1e9f && x < 2.1e9f)) return x; const f32 t = f32(i32(x)); return t > x ? t - 1.0f : t; }   // RV32F has no floor instruction
 inline f32 abs(f32 a) { return __builtin_fabsf(a); }   inline i32 abs(i32 a) { return a < 0 ? -a : a; }
-inline f32 sqrt(f32 a) { return __builtin_sqrtf(a); }  inline f32 floor(f32 a) { return __builtin_floorf(a); }
-inline f32 ceil(f32 a) { return __builtin_ceilf(a); }  inline f32 fract(f32 a) { return a - __builtin_floorf(a); }
+inline f32 sqrt(f32 a) { return __builtin_sqrtf(a); }
+#ifdef CDL_FAST_MATH
+inline f32 floor(f32 a) { return ffloor(a); }
+#else
+inline f32 floor(f32 a) { return __builtin_floorf(a); }
+#endif
+inline f32 ceil(f32 a) { return __builtin_ceilf(a); }  inline f32 fract(f32 a) { return a - floor(a); }
+#ifdef CDL_FAST_MATH
+// CPU-target approximations (an experiment, not Candela's semantics): one-step range reduction and
+// short polynomials instead of newlib's exact reduction. Max error about 4e-6 for sin/cos on [-pi, pi]
+// and 2e-7 relative for exp; for the large arguments of the sin-based hashes the result is a different,
+// still uniform, pseudo-random value (WGSL leaves sin's accuracy for large arguments unspecified too).
+inline f32 sin(f32 x) { const f32 k = ffloor(x * 0.15915494f + 0.5f); x = x - k * 6.2831853f;
+  if (x > 1.5707963f) x = 3.1415927f - x; else if (x < -1.5707963f) x = -3.1415927f - x;
+  const f32 x2 = x * x; return x * (1.0f + x2 * (-0.16666667f + x2 * (0.0083333310f + x2 * (-0.00019840874f + x2 * 2.7525562e-6f)))); }
+inline f32 cos(f32 x) { return sin(x + 1.5707963f); }
+inline f32 exp(f32 x) { if (x < -87.0f) return 0.0f; if (x > 88.0f) x = 88.0f; const f32 y = x * 1.4426950f; const f32 n = ffloor(y), t = y - n;
+  const f32 p = 1.0f + t * (0.69314718f + t * (0.24022652f + t * (0.055504109f + t * (0.0096181291f + t * 0.0013333558f))));
+  union { f32 f; i32 i; } u; u.i = (i32(n) + 127) << 23; return p * u.f; }
+#else
 inline f32 sin(f32 a) { return __builtin_sinf(a); }    inline f32 cos(f32 a) { return __builtin_cosf(a); }
+inline f32 exp(f32 a) { return __builtin_expf(a); }
+#endif
 inline f32 tan(f32 a) { return __builtin_tanf(a); }    inline f32 asin(f32 a) { return __builtin_asinf(a); }
 inline f32 acos(f32 a) { return __builtin_acosf(a); }  inline f32 atan(f32 a) { return __builtin_atanf(a); }
 inline f32 atan2(f32 a, f32 b) { return __builtin_atan2f(a, b); }
-inline f32 exp(f32 a) { return __builtin_expf(a); }    inline f32 exp2(f32 a) { return __builtin_exp2f(a); }
+inline f32 exp2(f32 a) { return __builtin_exp2f(a); }
 inline f32 log(f32 a) { return __builtin_logf(a); }    inline f32 log2(f32 a) { return __builtin_log2f(a); }
 inline f32 pow(f32 a, f32 b) { return __builtin_powf(a, b); }
 inline f32 min(f32 a, f32 b) { return __builtin_fminf(a, b); } inline f32 max(f32 a, f32 b) { return __builtin_fmaxf(a, b); }

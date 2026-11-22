@@ -202,3 +202,132 @@ All 105 presets build (9.3 s in Node). 28 need only the T0 kernel (analytic quad
 ### Technical details
 
 - T0 presets: A-03 B-01 B-03 B-04 B-05 C-02 C-03 C-04 D-01 D-02 E-03 E-04 G-06 L-01 L-02 L-03 L-04 L-05 L-06 L-07 L-08 M-01 M-02 M-03 M-09 M-12 R-01 R-07.
+
+## Step 4: Candela's own kernel as C++ on RV32, counted per sample
+
+To give the cost model real numbers I ran Candela's generated program, not a re-implementation, on the ESP32-P4's instruction set. A small translator turns `compiled.shared` (WGSL) into C++, the same move the DGX Spark report designed for CUDA; the ESP GCC compiles it for `rv32imafc/ilp32f` (the multilib the PicoCalc firmware links); a new counting interpreter executes it and attributes instructions to functions. The same C++ also builds natively, which gives a reference image.
+
+It works on the first ten presets tried. B-01 costs 8,160 RV32 instructions per camera sample at -O2 (7,100 at -O3); the range over nine path-traced presets is 6,170-11,290 at -O3, plus W-02 at 78,800 because its wood pattern's sine-based hash calls newlib's exact argument reduction for large arguments. Host and RV32 frames agree in mean luminance to within 0.7% at one sample per pixel (they differ pixel by pixel because single-precision libm results differ and steer random choices differently).
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** a measured or estimated cost model, with operations per sample for a representative preset.
+**Inferred user intent:** numbers strong enough to choose a resolution and a numeric model.
+
+### What I did
+
+- `scripts/03-export-scene.mjs`: builds a preset in Node, sets uniform rows 0-5, 20-21 as `src/viewport.js` does before a dispatch, and writes `kernel.wgsl`, `scene.bin` (U, O, LI, BV, SD rows; SD merges `SDs` and `SDd` at `dynBase` like `render.js` `uploadSD`) and `scene.json`.
+- `scripts/04-wgsl2cpp.mjs`: the translator (rules in its header). It hoists structs, prototypes every function, turns struct parameters into `const&`, rewrites declarations, arrays and loops, appends `f` to float literals, turns multi-component swizzles into methods, generates a vector prologue with only the swizzles used, and wraps everything in `namespace cdl`.
+- `scripts/05-harness.cpp`: binds the buffers to `U`, `objF`, `litF`, `bvhF`, `sdF` and calls `renderPixel` per pixel; host and bare-metal RV32 variants.
+- `scripts/06-rv32imfc-count.c`: RV32I+M+F+C interpreter (C expanded to 32-bit encodings), CSRs fflags/frm/fcsr, write/exit system calls, counts by instruction class and per function from the ELF symbol table.
+- `scripts/07-run-kernel.sh`: export, translate, host build and run, RV32 build (and a `-DBASELINE` build subtracted), count, PNG preview and host-versus-RV32 comparison; one JSON line per run.
+- `scripts/08-tonemap-png.py` (preview and comparison) and `scripts/12-profile-groups.py` (per-sample profile by kernel part).
+- Runs: ten presets x {-O2, -O3} at 160 x 160, 1 spp: `various/04-kernel-counts.jsonl`; profiles grouped in `various/06-profile-groups.txt`; previews rendered with the translated kernel on the host at 64 spp (Cornell box, primitives, patterns, the wood table, metals, toon).
+
+### Why
+
+- Hand-porting a "representative" kernel would measure my port. Translating the generated WGSL measures Candela's actual work, including its material code, and it is also a prototype of one implementation path (a firmware C kernel produced from `kernel.js` at build time).
+- rv32emu rejects F and C instructions, so it cannot run this code; the counting interpreter fills that gap. Counts are not cycles; Step 6 turns them into a time range.
+
+### What worked
+
+- Per-sample instructions (-O2 / -O3): B-01 8,160 / 7,100; R-01 9,525 / 9,354; L-03 7,250 / 6,136; M-02 8,472 / 8,378; G-01 11,287 / 10,289; F-01 8,924 / 7,892; A-01 6,267 / 6,173; M-04 7,465 / 7,374; E-02 (toon, one bounce) 3,608 / 3,503; W-02 78,776 / 78,624. Code size: 42-47 KB of `.text` including newlib's libm.
+- B-01 at -O2 by kernel part: libm sin/cos 27% (cosine-hemisphere and cone sampling call `cosf`/`sinf` with arguments up to 2 pi, which take newlib's `__ieee754_rem_pio2f` path), traversal 23%, exp (the Preetham sky's Perez function) 16%, path loop and camera 11%, environment 9%, materials 4.5%, light sampling 4%. R-01 (Cornell box): traversal 67%.
+- Mean-luminance ratio RV32/host: 0.9928-1.0017 over the ten presets; E-02 (deterministic toon) agrees on 100% of pixels within 1%.
+
+### What didn't work
+
+- First native run: `Exit code 136` (SIGFPE). gdb: `cdl::hdriTexel (x0=0, y0=0) at kernel.cpp:1273: const i32 x = ((x0 % W) + W) % W;` called from `hdriPdf` from `tracePath`. Cause: WGSL's `select(f, t, c)` evaluates both arguments, so the kernel computes `hdriPdf(rd)` even without an HDRI (W = 0); a GPU does not trap on integer division by zero, x86 does. Fix: translate `select` into a conditional (as wgsl2glsl does), except when an argument calls `rnd()`, where the eager template keeps the GPU's random stream (one case: `gTau` in `renderPixel`).
+- First translation left `let` inside one-line functions (`rnd2`, `safeNorm`, `misW`): the function-header branch skipped declaration rewriting for the rest of the line. Fixed with a shared `decl()` rewrite.
+- Swizzle methods in `vec2f` returning the incomplete `vec3f` failed to compile; declarations now stay in the struct and definitions follow all three structs.
+- Host build: `conflicting declaration of 'int abs(int)' with 'C' linkage` once `stdio.h`/`stdlib.h` were included; fixed by the `cdl` namespace.
+- The ESP link warns `__getreent is not implemented and will always fail` (newlib's errno); no run reached it.
+
+### What I learned
+
+- A CPU target should not inherit GPU idioms blindly: eager `select`, zero-initialized structs (`memset` was 3.5% of B-01), and sine-based hashes (`hash3`, `hash13`) are cheap on a GPU and expensive on an in-order CPU with a software libm.
+- Transcendentals, not intersections, dominate the outdoor presets. The kernel's own geometry and shading are a minority of the work.
+
+### What was tricky to build
+
+- The compressed-instruction expansion: newlib's libm for this multilib is built with C, so the interpreter must decode C.FLW/C.FSW and the SP-relative forms; immediates were cross-checked bit by bit against the specification's tables (comments in `expand`).
+- Making the RV32 counts comparable: a `-DBASELINE` build with no pixel loop is subtracted, so startup and output are excluded.
+
+### What warrants a second pair of eyes
+
+- `06-rv32imfc-count.c` is new code. Evidence that it executes correctly: ten complete path-traced frames whose mean luminance matches the host build, and a deterministic preset (E-02) that matches pixel for pixel within 1%. FMA rounding uses the host's `fmaf`; rounding modes for `fcvt` follow the rm field.
+
+### What should be done in the future
+
+- Quantify the numeric models on kernel fragments (Step 5) and the effect of CPU-specific math (Step 6).
+
+### Code review instructions
+
+- `scripts/07-run-kernel.sh <candela-copy> <work> B-01 160 160 1 -O2` reproduces the B-01 line; the work directory holds the C++, ELF, profile and PNGs.
+
+### Technical details
+
+- Toolchain: `riscv32-esp-elf-g++` from esp-14.2.0_20260121, `-march=rv32imafc_zicsr_zifencei -mabi=ilp32f -fno-math-errno -fno-exceptions -fno-rtti -msmall-data-limit=0 -mno-relax -nostartfiles -static -Wl,-Ttext=0x10000`, linked with newlib `-lm -lc -lgcc`.
+- B-01 frame: 208,885,265 instructions for 25,600 samples; 46% of instructions are floating-point (loads/stores included); 93 `fdiv.s` and 17 `fsqrt.s` per sample.
+
+## Step 5: Five numeric models on three kernel fragments
+
+The design must choose between an f32 type in Typed (RV32F code), fixed point in Typed's existing i32, and interpreting Candela's IR in C firmware. I took three fragments of Candela's kernel (the object-space sphere test from `hitObj`, the GGX term from `evalLobe`, `safeNorm`) and implemented each five ways: f32 on the FPU, the same source as soft-float, Q16.16 with 64-bit intermediates, Q16.16 restricted to 32-bit operations (what Typed's i32 can express), and a C interpreter for a register bytecode with one instruction per fx node. Each runs on 2,000 deterministic inputs; RV32 counts come from the interpreter, accuracy from host runs against double precision.
+
+The answer is not close. f32 on the FPU costs 14-49 instructions per call with relative errors around 1e-7. The 32-bit-only fixed point is cheaper than 64-bit fixed point but wrong (median relative error 38-94%, and 153 of 481 sphere hits disagree about hit or miss). 64-bit fixed point is 9-50x the f32 cost, and for GGX its 99th-percentile error is 16x the true value because D overflows at small roughness. Soft-float is 90-130x. The bytecode interpreter is 7-20x.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** "include a small host experiment if it settles the question (for example, timing one Candela kernel's math in fixed point vs f32 in C compiled with the ESP32-P4 GCC ...)".
+**Inferred user intent:** settle the numeric model with evidence rather than preference.
+
+### What I did
+
+- `scripts/09-numeric-bench.c` (arms REF/F32/SOFT/Q16/Q16T/VM, kernels SPHERE/GGX/NORM), `scripts/11-libm-cost.c` (newlib per-call costs), `scripts/10-numeric-bench.sh` (builds: F32 and VM for rv32imafc/ilp32f; SOFT, Q16, Q16T for rv32imc/ilp32; all -O2; baselines subtracted; accuracy from host builds). Result: `various/05-numeric-bench.jsonl`.
+
+### Why
+
+- Fragments isolate the arithmetic: the full-kernel counts in Step 4 already show which work dominates, but only fragments let five numeric models run the same computation.
+
+### What worked
+
+- Instructions per call (RV32, -O2) and host accuracy:
+
+| Kernel | F32 | SOFT | Q16 (64-bit) | Q16T (32-bit) | VM |
+|---|---:|---:|---:|---:|---:|
+| SPHERE | 23 | 2,121 | 215 | 95, median error 94%, 153/481 hit/miss wrong | 338 |
+| GGX | 49 | 6,277 | 2,439, p99 error 16x | 848, median error 77% | 958 |
+| NORM | 14 | 1,793 | 799 | 427, median error 38% | 99 |
+
+- newlib (rv32imafc) per call: expf 101, logf 89, powf 325, cosf/sinf on [0, 2 pi) 111-112, sinf of a large argument (hash13) 1,961, acosf 91, atan2f 142, floorf 25, tanf 72; sqrtf is one `fsqrt.s`.
+
+### What didn't work
+
+- First run reported `SPHERE F32 817.35` instructions per call with only 0.04 `fdiv.s` per call. Cause: in the `-DBASELINE` build GCC removed the unused input generation, so the subtraction counted the inputs' soft-double arithmetic as kernel work; and most rays missed the sphere. Fix: the baseline keeps the inputs live (`out[i] = I[i][0]`), and rays now aim near the sphere (about a quarter hit). The libm baseline had the same defect (`r = a + b` now).
+
+### What I learned
+
+- Typed cannot reach Candela's arithmetic through i32: 32-bit fixed point loses the answer, and 64-bit fixed point needs operations Typed lacks while still overflowing on physically ordinary inputs (GGX's D peaks at 1/(pi alpha^2): 1.2e5 at roughness 0.04 and 1.3e6 at Candela's minimum alpha of 0.0005; sun radiance is 1.8e9 in the census).
+- An interpreter is viable only for a small share of a sample's work (a material field evaluated once per hit), not for the kernel.
+
+### What was tricky to build
+
+- Fair fixed point: products and quotients in Q16 use `int64_t` (mul/mulh and `__divdi3`), the square root is digit-by-digit on a 64-bit radicand; Q16T pre-shifts operands. A table-driven reciprocal square root would cut Q16's sqrt cost, but not its range problem.
+
+### What warrants a second pair of eyes
+
+- The VM's per-node cost (about 20 instructions) reflects a plain `switch` interpreter over global register arrays; a threaded interpreter might halve it. It would still be several times the compiled f32 code.
+
+### What should be done in the future
+
+- Turn instructions into a time range (Step 6) and check CPU-specific math (fast sin/cos/exp and an integer hash).
+
+### Code review instructions
+
+- `scripts/10-numeric-bench.sh <work> <out.jsonl>` (about three minutes).
+
+### Technical details
+
+- Inputs: origins in [-8, 8]^3 aimed within 1.6 radii of the sphere centre, radii 0.3-2; unit wo, wi in the upper hemisphere; alpha = 0.05 + 0.95 u^2.
