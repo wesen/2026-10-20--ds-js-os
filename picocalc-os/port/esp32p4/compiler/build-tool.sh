@@ -9,9 +9,11 @@ make -C "$c" build/rv32/stage1/stage1-ilp32.o
 fw=$c/tools/rv32/fw
 sljit=$c/runtime/sljit
 sed -e '/#include <features.h>/d' -e 's/^__BEGIN_DECLS$//' -e 's/^__END_DECLS$//' /usr/include/elf.h > "$out/inc/elf.h"
+# -ffile-prefix-map: SLJIT's assertions print __FILE__; without the map the tool (and so the firmware image) embeds
+# the checkout's absolute path, and two checkouts of one commit build different images.
 compile() {
- clang --target=riscv32-unknown-elf -march=rv32imc -mabi=ilp32 -Os -nostdinc \
-    -isystem "$(clang -print-resource-dir)/include" -isystem "$fw/include" \
+ clang --target=riscv32-unknown-elf -march=rv32imc -mabi=ilp32 -Os -nostdinc -ffile-prefix-map="$c"=/cji \
+    -ffile-prefix-map="$here"=/tool -isystem "$(clang -print-resource-dir)/include" -isystem "$fw/include" \
     -I"$out/inc" -I"$c/runtime" -I"$sljit" -I"$here" -fPIC -fvisibility=hidden \
     -fstack-usage -ffunction-sections -fdata-sections -fno-builtin -mno-relax "$@"
 }
