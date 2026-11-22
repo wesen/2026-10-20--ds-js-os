@@ -32,20 +32,24 @@ export function resolveAliases(code) {
 }
 
 // ---- dead-code removal: pure instructions whose destinations are never read ----
+// One backward pass: removing an instruction releases its sources, whose producers come earlier.
 export function dce(code) {
-  for (;;) {
-    const read = new Set();
-    for (const ins of code) roles(ins).forEach((k, i) => { if ((k === 's' || k === 'x') && ins.a[i].r) read.add(ins.a[i].r); });
-    let removed = 0;
-    for (let i = code.length - 1; i >= 0; i--) {
-      const ins = code[i];
-      if (!isPure(ins)) continue;
-      const rl = roles(ins);
-      const defs = ins.a.filter((x, k) => rl[k] === 'd');
-      if (defs.every(x => x.r && !read.has(x.r) && x.r.kind !== 'ret' && x.r.kind !== 'arg')) { code.splice(i, 1); removed++; }
-    }
-    if (!removed) return code;
+  const rl = code.map(roles), uses = new Map();
+  code.forEach((ins, k) => rl[k].forEach((r, i) => { if ((r === 's' || r === 'x') && ins.a[i].r) uses.set(ins.a[i].r, (uses.get(ins.a[i].r) || 0) + 1); }));
+  const keep = new Array(code.length).fill(true);
+  for (let k = code.length - 1; k >= 0; k--) {
+    const ins = code[k];
+    if (!isPure(ins)) continue;
+    let dead = true;
+    for (let i = 0; i < ins.a.length && dead; i++) if (rl[k][i] === 'd') { const x = ins.a[i]; if (!x.r || uses.get(x.r) > 0 || x.r.kind === 'ret' || x.r.kind === 'arg') dead = false; }
+    if (!dead) continue;
+    keep[k] = false;
+    rl[k].forEach((r, i) => { if ((r === 's' || r === 'x') && ins.a[i].r) uses.set(ins.a[i].r, uses.get(ins.a[i].r) - 1); });
   }
+  let w = 0;
+  for (let k = 0; k < code.length; k++) if (keep[k]) code[w++] = code[k];
+  code.length = w;
+  return code;
 }
 
 // ---- fusions (design Section 5.5) ----
@@ -54,7 +58,6 @@ function useCounts(code) {
   for (const ins of code) roles(ins).forEach((k, i) => { if ((k === 's' || k === 'x') && ins.a[i].r) n.set(ins.a[i].r, (n.get(ins.a[i].r) || 0) + 1); });
   return n;
 }
-const isConstVal = (x, v) => x.r && x.r.kind === 'const' && x.r.words.length - x.o >= 1 && x.r.words[x.o] === v.bits && x.r.words[x.o + 0] !== undefined;
 const F1 = (() => { const f = new Float32Array(1), u = new Uint32Array(f.buffer); return v => { f[0] = v; return u[0]; }; })();
 const constIs = (x, v) => x.r && x.r.kind === 'const' && x.r.words[x.o] === F1(v);
 // the instruction defining operand x (as a whole temporary) between `from` and `to`, with no label or redefinition in between
@@ -78,82 +81,85 @@ function stable(code, i, j) {
   }
   return true;
 }
-export function fuse(code, stats) {
-  let changed = true;
-  while (changed) {
-    changed = false;
-    const uses = useCounts(code);
-    for (let j = 0; j < code.length; j++) {
-      const ins = code[j];
-      // fresnelDielectric(clamp(dot(a, b), 0, 1), eta) -> FRESDOT
-      if (ins.op === 'CALL' && ins.H === ISA.KFUNC.fresnelDielectric) {
-        const ic = producer(code, ins.a[1], j, uses);
-        if (ic >= 0 && code[ic].op === 'CLAMP' && constIs(code[ic].a[2], 0) && constIs(code[ic].a[3], 1)) {
-          const id = producer(code, code[ic].a[1], ic, uses);
-          if (id >= 0 && code[id].op === 'DOT3' && stable(code, id, j) && stable(code, ic, j)) {
-            const fused = { op: 'FRESDOT', H: 0, a: [ins.a[0], code[id].a[1], code[id].a[2], ins.a[2]] };
-            code[j] = fused; code.splice(ic, 1); code.splice(id, 1);
-            stats.FRESDOT = (stats.FRESDOT || 0) + 1; changed = true; break;
-          }
-        }
-      }
-      // step(duty, fract(x * n)) -> STRIPES
-      if (ins.op === 'STEP') {
-        const ifr = producer(code, ins.a[2], j, uses);
-        if (ifr >= 0 && code[ifr].op === 'FRACT') {
-          const im = producer(code, code[ifr].a[1], ifr, uses);
-          if (im >= 0 && code[im].op === 'MUL' && stable(code, im, j)) {
-            code[j] = { op: 'STRIPES', H: 0, a: [ins.a[0], code[im].a[1], code[im].a[2], ins.a[1]] };
-            code.splice(ifr, 1); code.splice(im, 1);
-            stats.STRIPES = (stats.STRIPES || 0) + 1; changed = true; break;
-          }
-        }
-      }
-      // fmodp(floor(p * n).x + floor(p * n).y, 2.0) -> CHECKER
-      if (ins.op === 'FMODP' && constIs(ins.a[2], 2)) {
-        const ia = ins.a[1];
-        const iadd = producer(code, ia, j, uses);
-        if (iadd >= 0 && code[iadd].op === 'ADD') {
-          const [, p, q] = code[iadd].a;
-          if (p.r && p.r === q.r && p.o === 0 && q.o === 1 && p.r.kind === 'tmp' && uses.get(p.r) === 2) {
-            // the floor instruction defining p.r
-            let ifl = -1;
-            for (let i = iadd - 1; i >= 0; i--) { const x = code[i]; if (x.op === 'LABEL' || CONTROL.has(x.op)) break; if (x.a[0] && x.a[0].r === p.r) { ifl = i; break; } }
-            const fl = ifl >= 0 ? code[ifl] : null;
-            const flW = fl && (fl.op === 'VFLOOR' ? (fl.H & 7) : fl.op === 'FLOOR3' ? 3 : 0);
-            if (flW >= 2 && !(fl.op === 'VFLOOR' && (fl.H & 8))) {
-              const im = producer(code, fl.a[1], ifl, uses);
-              const m = im >= 0 ? code[im] : null;
-              const mW = m && (m.op === 'VMUL' && !(m.H & 24) ? (m.H & 7) : m.op === 'MUL3' ? 3 : 0);
-              if (m && mW === flW && stable(code, im, j)) {
-                code[j] = { op: 'CHECKER', H: flW, a: [ins.a[0], m.a[1], m.a[2]] };
-                code.splice(iadd, 1); code.splice(ifl, 1); code.splice(im, 1);
-                stats.CHECKER = (stats.CHECKER || 0) + 1; changed = true; break;
-              }
-            }
-          }
-        }
-      }
-      // a * b + c (either order) -> MAD; v * s + c -> MAD3S
-      if (ins.op === 'ADD' || ins.op === 'ADD3') {
-        for (const side of [1, 2]) {
-          const im = producer(code, ins.a[side], j, uses);
-          if (im < 0) continue;
-          const m = code[im];
-          const other = ins.a[3 - side];
-          if (other.r && other.r === m.a[0].r) continue;
-          if (ins.op === 'ADD' && m.op === 'MUL' && stable(code, im, j)) {
-            code[j] = { op: 'MAD', H: 0, a: [ins.a[0], m.a[1], m.a[2], other] };
-            code.splice(im, 1); stats.MAD = (stats.MAD || 0) + 1; changed = true; break;
-          }
-          if (ins.op === 'ADD3' && m.op === 'MUL3S' && stable(code, im, j)) {
-            code[j] = { op: 'MAD3S', H: 0, a: [ins.a[0], m.a[1], m.a[2], other] };
-            code.splice(im, 1); stats.MAD3S = (stats.MAD3S || 0) + 1; changed = true; break;
-          }
-        }
-        if (changed) break;
+// Use counts stay valid across fusions within a pass: a fusion removes producers whose results had exactly one use
+// (the consumer, which the fused instruction replaces) and moves their sources into the fused instruction.
+function fuseAt(code, j, uses, stats) {
+  const ins = code[j];
+  // fresnelDielectric(clamp(dot(a, b), 0, 1), eta) -> FRESDOT
+  if (ins.op === 'CALL' && ins.H === ISA.KFUNC.fresnelDielectric) {
+    const ic = producer(code, ins.a[1], j, uses);
+    if (ic >= 0 && code[ic].op === 'CLAMP' && constIs(code[ic].a[2], 0) && constIs(code[ic].a[3], 1)) {
+      const id = producer(code, code[ic].a[1], ic, uses);
+      if (id >= 0 && code[id].op === 'DOT3' && stable(code, id, j) && stable(code, ic, j)) {
+        code[j] = { op: 'FRESDOT', H: 0, a: [ins.a[0], code[id].a[1], code[id].a[2], ins.a[2]] };
+        code.splice(ic, 1); code.splice(id, 1);
+        stats.FRESDOT = (stats.FRESDOT || 0) + 1; return 2;
       }
     }
+  }
+  // step(duty, fract(x * n)) -> STRIPES
+  if (ins.op === 'STEP') {
+    const ifr = producer(code, ins.a[2], j, uses);
+    if (ifr >= 0 && code[ifr].op === 'FRACT') {
+      const im = producer(code, code[ifr].a[1], ifr, uses);
+      if (im >= 0 && code[im].op === 'MUL' && stable(code, im, j)) {
+        code[j] = { op: 'STRIPES', H: 0, a: [ins.a[0], code[im].a[1], code[im].a[2], ins.a[1]] };
+        code.splice(ifr, 1); code.splice(im, 1);
+        stats.STRIPES = (stats.STRIPES || 0) + 1; return 2;
+      }
+    }
+  }
+  // fmodp(floor(p * n).x + floor(p * n).y, 2.0) -> CHECKER
+  if (ins.op === 'FMODP' && constIs(ins.a[2], 2)) {
+    const iadd = producer(code, ins.a[1], j, uses);
+    if (iadd >= 0 && code[iadd].op === 'ADD') {
+      const [, p, q] = code[iadd].a;
+      if (p.r && p.r === q.r && p.o === 0 && q.o === 1 && p.r.kind === 'tmp' && uses.get(p.r) === 2) {
+        let ifl = -1;
+        for (let i = iadd - 1; i >= 0; i--) { const x = code[i]; if (x.op === 'LABEL' || CONTROL.has(x.op)) break; if (x.a[0] && x.a[0].r === p.r) { ifl = i; break; } }
+        const fl = ifl >= 0 ? code[ifl] : null;
+        const flW = fl && (fl.op === 'VFLOOR' ? (fl.H & 7) : fl.op === 'FLOOR3' ? 3 : 0);
+        if (flW >= 2 && !(fl.op === 'VFLOOR' && (fl.H & 8))) {
+          const im = producer(code, fl.a[1], ifl, uses);
+          const m = im >= 0 ? code[im] : null;
+          const mW = m && (m.op === 'VMUL' && !(m.H & 24) ? (m.H & 7) : m.op === 'MUL3' ? 3 : 0);
+          if (m && mW === flW && stable(code, im, j)) {
+            code[j] = { op: 'CHECKER', H: flW, a: [ins.a[0], m.a[1], m.a[2]] };
+            code.splice(iadd, 1); code.splice(ifl, 1); code.splice(im, 1);
+            stats.CHECKER = (stats.CHECKER || 0) + 1; return 3;
+          }
+        }
+      }
+    }
+  }
+  // a * b + c (either order) -> MAD; v * s + c -> MAD3S
+  if (ins.op === 'ADD' || ins.op === 'ADD3') {
+    for (const side of [1, 2]) {
+      const im = producer(code, ins.a[side], j, uses);
+      if (im < 0) continue;
+      const m = code[im], other = ins.a[3 - side];
+      if (other.r && other.r === m.a[0].r) continue;
+      if (ins.op === 'ADD' && m.op === 'MUL' && stable(code, im, j)) {
+        code[j] = { op: 'MAD', H: 0, a: [ins.a[0], m.a[1], m.a[2], other] };
+        code.splice(im, 1); stats.MAD = (stats.MAD || 0) + 1; return 1;
+      }
+      if (ins.op === 'ADD3' && m.op === 'MUL3S' && stable(code, im, j)) {
+        code[j] = { op: 'MAD3S', H: 0, a: [ins.a[0], m.a[1], m.a[2], other] };
+        code.splice(im, 1); stats.MAD3S = (stats.MAD3S || 0) + 1; return 1;
+      }
+    }
+  }
+  return -1;
+}
+export function fuse(code, stats) {
+  for (let pass = 0; pass < 4; pass++) {
+    const uses = useCounts(code);
+    let changed = false;
+    for (let j = 0; j < code.length; j++) {
+      const removed = fuseAt(code, j, uses, stats);
+      if (removed >= 0) { changed = true; j -= removed; }
+    }
+    if (!changed) break;
   }
   return code;
 }

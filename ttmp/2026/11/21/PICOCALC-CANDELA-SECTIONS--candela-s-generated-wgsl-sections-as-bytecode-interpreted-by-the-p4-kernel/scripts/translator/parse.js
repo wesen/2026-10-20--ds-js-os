@@ -21,35 +21,63 @@ const KEYWORDS = new Set(['fn', 'let', 'var', 'if', 'else', 'return', 'true', 'f
 const REJECT = new Set(['for', 'loop', 'while', 'switch', 'break', 'continue', 'continuing', 'discard', 'const', 'override',
   'alias', 'struct', 'enable', 'requires', 'ptr', 'array', 'bitcast', 'private', 'function', 'workgroup', 'uniform', 'storage']);
 
+// two-character punctuators by first character, and the single-character ones
+const PUNCT2 = {};
+for (const q of PUNCT) if (q.length === 2) (PUNCT2[q[0]] = PUNCT2[q[0]] || []).push(q);
+const PUNCT1 = new Set(PUNCT.filter(q => q.length === 1));
+const isDigit = c => c >= 48 && c <= 57;
+const isIdStart = c => (c >= 65 && c <= 90) || (c >= 97 && c <= 122) || c === 95;
+const isIdChar = c => isIdStart(c) || isDigit(c);
+
+// The lexer works on character codes (no regular expression or slice per token): it runs on the device, where
+// QuickJS's interpreter is the cost. Positions are tracked by remembering where the current line starts.
 export function lex(src, file) {
   const toks = [];
-  let i = 0, line = 1, col = 1;
-  const adv = n => { for (let k = 0; k < n; k++) { if (src[i] === '\n') { line++; col = 1; } else col++; i++; } };
-  while (i < src.length) {
-    const c = src[i];
-    if (c === ' ' || c === '\t' || c === '\r' || c === '\n') { adv(1); continue; }
-    if (c === '/' && src[i + 1] === '/') { while (i < src.length && src[i] !== '\n') adv(1); continue; }
-    if (c === '/' && src[i + 1] === '*') { const j = src.indexOf('*/', i + 2); adv((j < 0 ? src.length : j + 2) - i); continue; }
-    const at = { file, line, col };
-    if ((c >= '0' && c <= '9') || (c === '.' && src[i + 1] >= '0' && src[i + 1] <= '9')) {
-      const t = /^(?:\d+\.\d*|\.\d+|\d+)(?:[eE][+-]?\d+)?[fhiu]?/.exec(src.slice(i, i + 40))[0];
-      if (/^0[xX]/.test(src.slice(i, i + 2))) throw new SectionError('E-SECT-UNSUPPORTED', 'literal:hex', 'hexadecimal literals are not in the section subset', at);
-      if (/[hiu]$/.test(t)) throw new SectionError('E-SECT-UNSUPPORTED', 'literal:suffix-' + t.slice(-1), `literal suffix '${t.slice(-1)}' is not in the section subset`, at);
-      const body = t.replace(/f$/, '');
-      toks.push({ k: 'num', v: body, float: /[.eE]/.test(body) || /f$/.test(t), at });
-      adv(t.length); continue;
+  const n = src.length;
+  let i = 0, line = 1, lineStart = 0;
+  while (i < n) {
+    const c = src.charCodeAt(i);
+    if (c === 10) { i++; line++; lineStart = i; continue; }
+    if (c === 32 || c === 9 || c === 13) { i++; continue; }
+    if (c === 47 && src.charCodeAt(i + 1) === 47) { while (i < n && src.charCodeAt(i) !== 10) i++; continue; }
+    if (c === 47 && src.charCodeAt(i + 1) === 42) {
+      const j = src.indexOf('*/', i + 2), e = j < 0 ? n : j + 2;
+      for (; i < e; i++) if (src.charCodeAt(i) === 10) { line++; lineStart = i + 1; }
+      continue;
     }
-    if (/[A-Za-z_]/.test(c)) {
-      const m = /^[A-Za-z_][A-Za-z0-9_]*/.exec(src.slice(i, i + 128))[0];
+    const at = { file, line, col: i - lineStart + 1 };
+    if (isDigit(c) || (c === 46 && isDigit(src.charCodeAt(i + 1)))) {
+      if (c === 48 && (src.charCodeAt(i + 1) | 32) === 120) throw new SectionError('E-SECT-UNSUPPORTED', 'literal:hex', 'hexadecimal literals are not in the section subset', at);
+      let j = i, float = false;
+      while (isDigit(src.charCodeAt(j))) j++;
+      if (src.charCodeAt(j) === 46) { float = true; j++; while (isDigit(src.charCodeAt(j))) j++; }
+      if ((src.charCodeAt(j) | 32) === 101) {
+        let k = j + 1; const s = src.charCodeAt(k); if (s === 43 || s === 45) k++;
+        if (isDigit(src.charCodeAt(k))) { float = true; j = k; while (isDigit(src.charCodeAt(j))) j++; }
+      }
+      const body = src.slice(i, j);
+      const suf = src[j];
+      if (suf === 'h' || suf === 'i' || suf === 'u') throw new SectionError('E-SECT-UNSUPPORTED', 'literal:suffix-' + suf, `literal suffix '${suf}' is not in the section subset`, at);
+      if (suf === 'f') { float = true; j++; }
+      toks.push({ k: 'num', v: body, float, at });
+      i = j; continue;
+    }
+    if (isIdStart(c)) {
+      let j = i + 1;
+      while (j < n && isIdChar(src.charCodeAt(j))) j++;
+      const m = src.slice(i, j);
       toks.push({ k: KEYWORDS.has(m) ? 'kw' : 'id', v: m, at });
-      adv(m.length); continue;
+      i = j; continue;
     }
-    const p = PUNCT.find(q => src.startsWith(q, i));
-    if (!p) throw new SectionError('E-SECT-UNSUPPORTED', 'character:' + c, `unexpected character '${c}'`, at);
+    const ch = src[i], two = PUNCT2[ch];
+    let p = null;
+    if (two) { const nx = src[i + 1]; for (const q of two) if (q[1] === nx) { p = q; break; } }
+    if (!p && PUNCT1.has(ch)) p = ch;
+    if (!p) throw new SectionError('E-SECT-UNSUPPORTED', 'character:' + ch, `unexpected character '${ch}'`, at);
     toks.push({ k: 'p', v: p, at });
-    adv(p.length);
+    i += p.length;
   }
-  toks.push({ k: 'eof', v: '<end>', at: { file, line, col } });
+  toks.push({ k: 'eof', v: '<end>', at: { file, line, col: i - lineStart + 1 } });
   return toks;
 }
 

@@ -1,0 +1,20 @@
+targeted malformations of $SCRATCH/export/B-01/prog.cdvm:
+  bad magic                                    rejected: bad magic 4d564442
+  future version                               rejected: bytecode version 2, interpreter 1
+  truncated by one halfword                    rejected: blob is 368 bytes, header describes 370
+  register file larger than the limit          rejected: bad register counts (23 constants, 5000 registers)
+  constants beyond the register file           rejected: bad register counts (75 constants, 74 registers)
+  material frame overlaps sdUser's             rejected: entries 0 and 1 share registers
+  material result outside its frame            rejected: entry 0 argument or result block outside its frame
+  entry code ranges overlap                    rejected: entries 0 and 1 share code
+  unknown opcode                               rejected: unknown opcode 250 at pc 0
+  destination register outside the frame       rejected: destination r0 outside the entry's frame at pc 0
+  hit field beyond the 23-word record          rejected: bad HLD field at pc 0
+  backward jump                                rejected: jump target 3 at pc 3 is not forward inside the entry
+  jump outside the entry                       rejected: jump target 84 at pc 3 is not forward inside the entry
+  jump into the middle of an instruction       rejected: jump into the middle of an instruction (halfword 10)
+  SWITCH with 300 cases                        rejected: bad SWITCH size 300 at pc 3
+  kernel without fresnelDielectric             rejected: the program needs kernel function 0, which the kernel does not export
+  last instruction of an entry is not RET/JMP  rejected: instruction at pc 86 runs past the entry
+targeted: 17 of 17 rejected
+{"blobs": 105, "blobsVerified": 105, "targeted": 17, "targetedRejected": 17, "mutants": 210000, "mutantsRejected": 184981, "mutantsAcceptedAndRun": 25019, "evaluations": 753720, "maxStepsOneMaterialEvaluation": 116}

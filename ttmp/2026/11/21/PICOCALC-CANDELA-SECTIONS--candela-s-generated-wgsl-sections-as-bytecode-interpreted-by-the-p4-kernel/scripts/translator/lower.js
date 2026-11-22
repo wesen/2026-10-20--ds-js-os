@@ -186,8 +186,10 @@ export class EntryLowering {
     if (this.retarget(dst, v)) return;
     this.mov(dst, v);
   }
+  // Only an anonymous temporary may be retargeted: a value bound to a name or held in the load cache is read again
+  // later, and those reads would find its old register empty.
   retarget(dst, v) {
-    if (v.c || v.hitIn || v.o !== 0 || v.r.kind !== 'tmp') return false;
+    if (v.c || v.hitIn || v.o !== 0 || v.r.kind !== 'tmp' || v.r.shared) return false;
     const last = this.code[this.code.length - 1];
     if (!last || last.op === 'LABEL' || !last.a.length) return false;
     const d0 = last.a[0];
@@ -219,7 +221,7 @@ export class Lowerer extends EntryLowering {
   pushScope() { this.scope = { vars: new Map(), hld: new Map(), cse: new Map(), up: this.scope }; }
   popScope() { this.scope = this.scope.up; }
   lookup(name) { for (let s = this.scope; s; s = s.up) { if (s.vars.has(name)) return s.vars.get(name); if (s.fnBoundary) break; } return null; }
-  bind(name, b) { this.scope.vars.set(name, b); }
+  bind(name, b) { if (b.kind === 'let' && b.val && b.val.r) b.val.r.shared = true; this.scope.vars.set(name, b); }
 
   // Inline function `ast` with argument values; ret(value) handles a return. Returns the function's value.
   inline(ast, argVals, opts = {}) {
@@ -617,6 +619,7 @@ export class Lowerer extends EntryLowering {
     // a load is visible in the scope of the whole function body: place it at the scope where the hit is bound
     const d = this.newval(ft);
     this.emit('HLD', [d, { imm: off }], w);
+    d.r.shared = true;
     this.scope.hld.set(e.name, d);
     return d;
   }

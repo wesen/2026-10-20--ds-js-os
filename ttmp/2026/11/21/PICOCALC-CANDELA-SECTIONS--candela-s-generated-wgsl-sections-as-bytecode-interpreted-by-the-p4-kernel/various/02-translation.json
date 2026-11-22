@@ -1,0 +1,8257 @@
+{
+ "presets": 105,
+ "translated": 105,
+ "failedByConstruct": {},
+ "totalMs": 198.4,
+ "rows": [
+  {
+   "id": "A-01",
+   "ok": true,
+   "ms": 10.69,
+   "spectral": false,
+   "bytes": 606,
+   "sha256": "216304b72000d7a5c3230d61ddc470c15399ad6c4aa7440133f47d86eeee7e62",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 42,
+      "halfwords": 169,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "CLAMP": 2,
+       "CHOOSE": 2,
+       "LOBE": 9,
+       "RET": 9,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "STRIPES": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3,
+     "STRIPES": 1
+    },
+    "constWords": 38,
+    "imports": 1,
+    "registerWords": 89,
+    "codeHalfwords": 185,
+    "bytes": 606,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "A-02",
+   "ok": true,
+   "ms": 3.5,
+   "spectral": false,
+   "bytes": 810,
+   "sha256": "557400fb8554392cead5a3f4240943fcd1ffa4ea48414b2a64bae2ab1a1a92c9",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 64,
+      "halfwords": 257,
+      "frameWords": 44,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "MUL3": 2,
+       "CALL": 3,
+       "MAD": 2,
+       "SUB": 4,
+       "DIV": 5,
+       "CLAMP": 5,
+       "MIX3S": 4,
+       "LOBE": 7,
+       "RET": 6,
+       "MOV3": 2,
+       "DOT3": 1,
+       "CHOOSE0": 2,
+       "JMP": 1,
+       "ABS": 1,
+       "MAX": 1,
+       "ADD": 1,
+       "MUL3S": 1,
+       "VPOW": 1,
+       "FRESDOT": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 2,
+     "FRESDOT": 1
+    },
+    "constWords": 45,
+    "imports": 1,
+    "registerWords": 106,
+    "codeHalfwords": 273,
+    "bytes": 810,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "A-03",
+   "ok": true,
+   "ms": 2.35,
+   "spectral": false,
+   "bytes": 510,
+   "sha256": "64ca50d9e4049df9e504f1e55bcf1083dcd5da25d7e0f22e6d3498d0f7e1ddc4",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 39,
+      "halfwords": 149,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "CHOOSE0": 4,
+       "LOBE": 9,
+       "RET": 8,
+       "JMP": 1,
+       "MOV3": 1,
+       "FRESDOT": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 25,
+    "imports": 0,
+    "registerWords": 76,
+    "codeHalfwords": 165,
+    "bytes": 510,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "A-04",
+   "ok": true,
+   "ms": 1.74,
+   "spectral": false,
+   "bytes": 564,
+   "sha256": "c69c994ff723eee62a21b79379b334d8dd815c49e6be5e6edf864cc921afafeb",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 37,
+      "halfwords": 140,
+      "frameWords": 39,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "MUL": 1,
+       "ADD": 1,
+       "GATHER": 1,
+       "MOV1": 2,
+       "VMUL": 1,
+       "VFRACT": 1,
+       "MIN": 3,
+       "SUB": 2,
+       "SMOOTH": 1,
+       "CLAMP": 1,
+       "CHOOSE": 1,
+       "FRESDOT": 1,
+       "CHOOSE0": 1,
+       "LOBE": 5,
+       "RET": 5
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 41,
+    "imports": 2,
+    "registerWords": 97,
+    "codeHalfwords": 156,
+    "bytes": 564,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "A-05",
+   "ok": true,
+   "ms": 2.08,
+   "spectral": false,
+   "bytes": 1048,
+   "sha256": "8c632817c8277da5f620fc186dca28d27e891fe31228aa29a34cfadbafbee2ec",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 79,
+      "halfwords": 330,
+      "frameWords": 42,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "SUB": 4,
+       "ADD": 1,
+       "MUL3": 3,
+       "CALL": 3,
+       "MAD": 2,
+       "SMOOTH": 2,
+       "MIX3S": 3,
+       "MIX": 2,
+       "CLAMP": 3,
+       "CHOOSE": 2,
+       "MUL": 10,
+       "MAX": 5,
+       "LOBE": 9,
+       "RET": 9,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "ABS": 1,
+       "POW": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 2,
+     "FRESDOT": 3
+    },
+    "constWords": 66,
+    "imports": 3,
+    "registerWords": 125,
+    "codeHalfwords": 346,
+    "bytes": 1048,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "A-06",
+   "ok": true,
+   "ms": 1.23,
+   "spectral": false,
+   "bytes": 560,
+   "sha256": "f912a4216f09ddf14caa7b145ba964d83c190879b27bb12fc1b2e8cae3a3e297",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 35,
+      "halfwords": 140,
+      "frameWords": 42,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "SUB": 1,
+       "ADD": 2,
+       "SMOOTH": 2,
+       "MUL3": 1,
+       "CALL": 1,
+       "MUL": 2,
+       "MIX": 1,
+       "MIX3S": 1,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "MAX": 1,
+       "LOBE": 5,
+       "RET": 5
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 41,
+    "imports": 1,
+    "registerWords": 100,
+    "codeHalfwords": 156,
+    "bytes": 560,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "B-01",
+   "ok": true,
+   "ms": 0.93,
+   "spectral": false,
+   "bytes": 370,
+   "sha256": "f3e9c884f45dd8c68642eddb4542607a07823f34003675f4efd4b7e483336e43",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 22,
+      "halfwords": 83,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 4,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 5,
+       "RET": 5
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 23,
+    "imports": 0,
+    "registerWords": 74,
+    "codeHalfwords": 99,
+    "bytes": 370,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "B-02",
+   "ok": true,
+   "ms": 2.26,
+   "spectral": false,
+   "bytes": 680,
+   "sha256": "526d719c7f4d09207fd4b69501304221990e045d48d9e38fcda4d72aca7ea504",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 50,
+      "halfwords": 200,
+      "frameWords": 35,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "FRESDOT": 3,
+       "CHOOSE": 3,
+       "LOBE": 10,
+       "RET": 10,
+       "CLAMP": 2,
+       "MUL": 4,
+       "MAX": 4,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 38,
+    "imports": 4,
+    "registerWords": 90,
+    "codeHalfwords": 216,
+    "bytes": 680,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "B-03",
+   "ok": true,
+   "ms": 0.95,
+   "spectral": false,
+   "bytes": 434,
+   "sha256": "35bd6860c1a7825222d8b7dee49d71c0a9495fdba9b81d0265184175f95379bb",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 115,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 7,
+       "RET": 7
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 23,
+    "imports": 0,
+    "registerWords": 74,
+    "codeHalfwords": 131,
+    "bytes": 434,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "B-04",
+   "ok": true,
+   "ms": 1.48,
+   "spectral": false,
+   "bytes": 584,
+   "sha256": "29a7c0b1cf55c343f6e51ea73ed3835bb7c6f1a067691cd657cfc7d030d828f4",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 43,
+      "halfwords": 168,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 3,
+       "CHOOSE0": 4,
+       "LOBE": 10,
+       "RET": 9,
+       "CHOOSE": 1,
+       "JMP": 1,
+       "MOV3": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 34,
+    "imports": 0,
+    "registerWords": 85,
+    "codeHalfwords": 184,
+    "bytes": 584,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "B-05",
+   "ok": true,
+   "ms": 1.34,
+   "spectral": false,
+   "bytes": 552,
+   "sha256": "f1ea4af3f2b95b0040692d0d9feb517edcb653ece5f239ce94dadb4504ce465f",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 42,
+      "halfwords": 160,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "FRESDOT": 4,
+       "CHOOSE0": 4,
+       "LOBE": 10,
+       "RET": 10
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 4
+    },
+    "constWords": 30,
+    "imports": 0,
+    "registerWords": 81,
+    "codeHalfwords": 176,
+    "bytes": 552,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "C-01",
+   "ok": true,
+   "ms": 1.41,
+   "spectral": false,
+   "bytes": 506,
+   "sha256": "55e12f00157a0338fd6c30643ba1f2f064c7a8c605d069186611619603b94ad5",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 36,
+      "halfwords": 143,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "FRESDOT": 3,
+       "CHOOSE": 2,
+       "LOBE": 9,
+       "RET": 9,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 27,
+    "imports": 0,
+    "registerWords": 78,
+    "codeHalfwords": 159,
+    "bytes": 506,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "C-02",
+   "ok": true,
+   "ms": 1.59,
+   "spectral": false,
+   "bytes": 516,
+   "sha256": "b6c0bf5910e4e65f5f83520005e97b2c404e1dc2f9e0aeb030cb58f113f36791",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 120,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 7,
+       "LOBE": 8,
+       "RET": 8,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 40,
+    "imports": 1,
+    "registerWords": 91,
+    "codeHalfwords": 136,
+    "bytes": 516,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "C-03",
+   "ok": true,
+   "ms": 1.2,
+   "spectral": false,
+   "bytes": 526,
+   "sha256": "a1525dbb7a76c82f1ca54e237cf12d6a07482f0ca66dafe0339479735bcd4f45",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 38,
+      "halfwords": 147,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 4,
+       "CHOOSE0": 4,
+       "LOBE": 9,
+       "RET": 9
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 4
+    },
+    "constWords": 30,
+    "imports": 0,
+    "registerWords": 81,
+    "codeHalfwords": 163,
+    "bytes": 526,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "C-04",
+   "ok": true,
+   "ms": 1.81,
+   "spectral": false,
+   "bytes": 602,
+   "sha256": "d7c18b73570f10e736fd10f4d5ee617c75338112f606a0d1a014f59b19735a32",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 46,
+      "halfwords": 179,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "FRESDOT": 5,
+       "CHOOSE0": 5,
+       "LOBE": 11,
+       "RET": 11
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 5
+    },
+    "constWords": 33,
+    "imports": 0,
+    "registerWords": 84,
+    "codeHalfwords": 195,
+    "bytes": 602,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "C-05",
+   "ok": true,
+   "ms": 1.51,
+   "spectral": false,
+   "bytes": 552,
+   "sha256": "3375d2b8cf8600bc7e01f8600f6f68131aa10014a50738e25b74e770b1658880",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 42,
+      "halfwords": 154,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 7,
+       "LOBE": 10,
+       "RET": 10,
+       "FRESDOT": 3,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 33,
+    "imports": 0,
+    "registerWords": 84,
+    "codeHalfwords": 170,
+    "bytes": 552,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "C-06",
+   "ok": true,
+   "ms": 1.57,
+   "spectral": false,
+   "bytes": 564,
+   "sha256": "11d7ba95ebde9d9d35a09a422972eb379e1907fd112254647aa8e41dd6c50ba2",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 39,
+      "halfwords": 150,
+      "frameWords": 40,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "LOBE": 7,
+       "RET": 5,
+       "MOV3": 2,
+       "DOT3": 1,
+       "CLAMP": 1,
+       "CALL": 1,
+       "CHOOSE": 1,
+       "JMP": 2,
+       "ABS": 1,
+       "MAX": 1,
+       "DIV": 1,
+       "ADD": 1,
+       "MUL3S": 1,
+       "VPOW": 1,
+       "CHOOSE0": 2,
+       "FRESDOT": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 38,
+    "imports": 0,
+    "registerWords": 95,
+    "codeHalfwords": 166,
+    "bytes": 564,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "D-01",
+   "ok": true,
+   "ms": 0.77,
+   "spectral": false,
+   "bytes": 492,
+   "sha256": "ceba66c72e4c356aefafcce1d7da49dbc901213109e648462f2d0b81556b2816",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 128,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 8,
+       "RET": 8
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 30,
+    "imports": 1,
+    "registerWords": 81,
+    "codeHalfwords": 144,
+    "bytes": 492,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "D-02",
+   "ok": true,
+   "ms": 1.14,
+   "spectral": false,
+   "bytes": 404,
+   "sha256": "4459dc1cb408e07f1b290fd81e583574bcbbc2be82a73e36debdb189e42588b8",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 24,
+      "halfwords": 90,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 4,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "MUL": 1,
+       "MAX": 1,
+       "LOBE": 5,
+       "RET": 5
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 27,
+    "imports": 1,
+    "registerWords": 78,
+    "codeHalfwords": 106,
+    "bytes": 404,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "D-03",
+   "ok": true,
+   "ms": 0.77,
+   "spectral": false,
+   "bytes": 572,
+   "sha256": "22674edbe47ee686a47ba32adca218edfd13654f06569138558c77c9696fb202",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 39,
+      "halfwords": 158,
+      "frameWords": 39,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "MUL3": 1,
+       "CALL": 1,
+       "MAD": 1,
+       "SMOOTH": 1,
+       "SUB": 1,
+       "MIX3S": 1,
+       "MIX": 1,
+       "CLAMP": 1,
+       "CHOOSE": 1,
+       "MUL": 2,
+       "MAX": 2,
+       "LOBE": 6,
+       "RET": 6,
+       "FRESDOT": 2,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 1,
+     "FRESDOT": 2
+    },
+    "constWords": 36,
+    "imports": 0,
+    "registerWords": 92,
+    "codeHalfwords": 174,
+    "bytes": 572,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "D-04",
+   "ok": true,
+   "ms": 0.77,
+   "spectral": false,
+   "bytes": 496,
+   "sha256": "e0516ea0d73ab798d993b0032a61f3d044cfe40710b90cd09e6a45f1793a5e7e",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 132,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "LOBE": 8,
+       "RET": 8,
+       "FRESDOT": 3,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 30,
+    "imports": 0,
+    "registerWords": 81,
+    "codeHalfwords": 148,
+    "bytes": 496,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "E-01",
+   "ok": true,
+   "ms": 1.29,
+   "spectral": false,
+   "bytes": 538,
+   "sha256": "4206f0255d2ff448a2e4522cca0d2843b732322695cc43278ee8bc41dd30f1bf",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 35,
+      "halfwords": 135,
+      "frameWords": 40,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "LOBE": 7,
+       "RET": 7,
+       "MUL3": 1,
+       "CALL": 1,
+       "SMOOTH": 1,
+       "MIX3S": 1,
+       "FRESDOT": 2,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 39,
+    "imports": 0,
+    "registerWords": 96,
+    "codeHalfwords": 151,
+    "bytes": 538,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "voronoi3"
+    ]
+   }
+  },
+  {
+   "id": "E-02",
+   "ok": true,
+   "ms": 1.98,
+   "spectral": false,
+   "bytes": 772,
+   "sha256": "79b7287b1d59fdb0ff29860485ca0472e9d445fe2f43a72d93ff9f4c5bb986b3",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 38,
+      "halfwords": 147,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 4,
+       "CHOOSE0": 4,
+       "LOBE": 9,
+       "RET": 9
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 25,
+      "halfwords": 97,
+      "frameWords": 40,
+      "ops": {
+       "CALL": 3,
+       "HBOOL": 1,
+       "NOT": 1,
+       "NEG3": 1,
+       "DOT3": 2,
+       "MAX": 1,
+       "MUL": 2,
+       "FLOOR": 1,
+       "DIV": 1,
+       "MUL3": 3,
+       "ADD3": 1,
+       "SEL": 1,
+       "MAD": 1,
+       "SPLAT3": 2,
+       "SMOOTH": 1,
+       "SEL3": 1,
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 4,
+     "MAD": 1
+    },
+    "constWords": 44,
+    "imports": 1,
+    "registerWords": 129,
+    "codeHalfwords": 256,
+    "bytes": 772,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "traceScene",
+     "occluded",
+     "hitAlbedo"
+    ]
+   }
+  },
+  {
+   "id": "E-03",
+   "ok": true,
+   "ms": 1.17,
+   "spectral": false,
+   "bytes": 488,
+   "sha256": "07b35f60ca642409d21d8e4c3016019a21640621485e700ffcda7c65b0f0500f",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 128,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 8,
+       "RET": 8
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 29,
+    "imports": 1,
+    "registerWords": 80,
+    "codeHalfwords": 144,
+    "bytes": 488,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "E-04",
+   "ok": true,
+   "ms": 1.01,
+   "spectral": false,
+   "bytes": 642,
+   "sha256": "32b327320df72e4ff1f5ba054c9f967837e2e44980dd35e3800992064203abfd",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 46,
+      "halfwords": 171,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 11,
+       "SWITCH": 1,
+       "LNONE": 10,
+       "LOBE": 11,
+       "RET": 11,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 43,
+    "imports": 4,
+    "registerWords": 94,
+    "codeHalfwords": 187,
+    "bytes": 642,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "E-05",
+   "ok": true,
+   "ms": 0.98,
+   "spectral": false,
+   "bytes": 450,
+   "sha256": "26901c0723f072570a19e237a787e2b0b98d2c82f9493bc41709ffc8370470f3",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 111,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "LOBE": 7,
+       "RET": 7,
+       "FRESDOT": 2,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 28,
+    "imports": 1,
+    "registerWords": 79,
+    "codeHalfwords": 127,
+    "bytes": 450,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "E-06",
+   "ok": true,
+   "ms": 0.92,
+   "spectral": false,
+   "bytes": 434,
+   "sha256": "48e260986f5a5b96bba439bf6b1e3f8834a164213f515a6baf917a51a5267d52",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 115,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 7,
+       "RET": 7
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 23,
+    "imports": 0,
+    "registerWords": 74,
+    "codeHalfwords": 131,
+    "bytes": 434,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "E-07",
+   "ok": true,
+   "ms": 1.83,
+   "spectral": false,
+   "bytes": 436,
+   "sha256": "131e1084098911116f280e1a4535ff5fdc315289e089ff79710295f5cb345238",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 26,
+      "halfwords": 96,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "LOBE": 6,
+       "RET": 6,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 32,
+    "imports": 1,
+    "registerWords": 83,
+    "codeHalfwords": 112,
+    "bytes": 436,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "F-01",
+   "ok": true,
+   "ms": 1.29,
+   "spectral": false,
+   "bytes": 658,
+   "sha256": "3f9d0777d2dbfdc5e3b64fe053c27832c54a05c1bc296b36dd2c2b2f33b20346",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 46,
+      "halfwords": 185,
+      "frameWords": 41,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "STRIPES": 1,
+       "MIX3S": 4,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 7,
+       "RET": 7,
+       "MAD": 1,
+       "SUB": 2,
+       "DIV": 2,
+       "CLAMP": 2,
+       "GATHER": 1,
+       "CHECKER": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "STRIPES": 1,
+     "FRESDOT": 3,
+     "MAD": 1,
+     "CHECKER": 1
+    },
+    "constWords": 44,
+    "imports": 0,
+    "registerWords": 102,
+    "codeHalfwords": 201,
+    "bytes": 658,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "F-02",
+   "ok": true,
+   "ms": 0.75,
+   "spectral": false,
+   "bytes": 562,
+   "sha256": "c48a86458d81dea2fd55a614d31d43610b9c3100349b06260aa5ed2c451a0e25",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 35,
+      "halfwords": 139,
+      "frameWords": 37,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "MUL3": 1,
+       "CALL": 1,
+       "MAD": 1,
+       "MUL": 2,
+       "SIN": 1,
+       "ABS": 1,
+       "POW": 1,
+       "MIX3S": 1,
+       "FRESDOT": 2,
+       "CHOOSE": 1,
+       "LOBE": 6,
+       "RET": 6,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 1,
+     "FRESDOT": 2
+    },
+    "constWords": 41,
+    "imports": 2,
+    "registerWords": 95,
+    "codeHalfwords": 155,
+    "bytes": 562,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "F-03",
+   "ok": true,
+   "ms": 1.47,
+   "spectral": false,
+   "bytes": 880,
+   "sha256": "afd8489ce258a1c7c4c094fabfb1ac11863c96dab25f05f92b64012a31b33603",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 71,
+      "halfwords": 282,
+      "frameWords": 53,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "MUL3": 7,
+       "CALL": 7,
+       "ADD3": 3,
+       "SMOOTH": 7,
+       "MUL": 6,
+       "SUB3": 5,
+       "SUB": 5,
+       "DIV3S": 1,
+       "DOT3": 1,
+       "SMUL3": 1,
+       "SAFENORM3": 2,
+       "DIV": 2,
+       "CLAMP": 2,
+       "MIX3S": 3,
+       "FRESDOT": 1,
+       "CHOOSE0": 1,
+       "LOBE": 4,
+       "RET": 4
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 51,
+    "imports": 0,
+    "registerWords": 121,
+    "codeHalfwords": 298,
+    "bytes": 880,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "voronoi3"
+    ]
+   }
+  },
+  {
+   "id": "F-04",
+   "ok": true,
+   "ms": 2.75,
+   "spectral": false,
+   "bytes": 1148,
+   "sha256": "a5025e3fe6aa091f51b75c812a474d14a193838cb6c9514afb16873fc7541e5b",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 108,
+      "halfwords": 410,
+      "frameWords": 48,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "ADD3": 6,
+       "MUL3": 12,
+       "CALL": 12,
+       "POW": 6,
+       "MUL": 18,
+       "SUB3": 10,
+       "SUB": 6,
+       "DIV3S": 2,
+       "DOT3": 2,
+       "SMUL3": 2,
+       "SAFENORM3": 4,
+       "LOBE": 6,
+       "RET": 6,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 53,
+    "imports": 1,
+    "registerWords": 118,
+    "codeHalfwords": 426,
+    "bytes": 1148,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "noise3",
+     "voronoi3"
+    ]
+   }
+  },
+  {
+   "id": "F-05",
+   "ok": true,
+   "ms": 1.4,
+   "spectral": false,
+   "bytes": 622,
+   "sha256": "f9b7843354ffdf12f63305e73bab0b19f1f2ddd4931ed03edde0980207d2631c",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 43,
+      "halfwords": 165,
+      "frameWords": 38,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "MUL3": 3,
+       "CALL": 1,
+       "SMOOTH": 1,
+       "MIX3S": 2,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 6,
+       "RET": 6,
+       "GLD": 2,
+       "MUL": 1,
+       "SIN": 1,
+       "MAD": 2,
+       "SPLAT3": 1,
+       "STRIPES": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2,
+     "MAD": 2,
+     "STRIPES": 1
+    },
+    "constWords": 45,
+    "imports": 0,
+    "registerWords": 100,
+    "codeHalfwords": 181,
+    "bytes": 622,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "F-06",
+   "ok": true,
+   "ms": 3.02,
+   "spectral": false,
+   "bytes": 1360,
+   "sha256": "c38dac7502aa260ea6c8713d5d266325ac9d45f2b027300a4bf53e4461f7be06",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 140,
+      "halfwords": 542,
+      "frameWords": 43,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "ADD3": 3,
+       "GATHER": 6,
+       "VLEN": 6,
+       "MUL": 30,
+       "SIN": 24,
+       "ADD": 6,
+       "MAD": 18,
+       "SUB3": 5,
+       "SUB": 3,
+       "DIV3S": 1,
+       "DOT3": 1,
+       "SMUL3": 1,
+       "SAFENORM3": 2,
+       "FRESDOT": 3,
+       "CHOOSE": 1,
+       "LOBE": 8,
+       "RET": 8,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 18,
+     "FRESDOT": 3
+    },
+    "constWords": 41,
+    "imports": 0,
+    "registerWords": 101,
+    "codeHalfwords": 558,
+    "bytes": 1360,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "F-07",
+   "ok": true,
+   "ms": 1.49,
+   "spectral": false,
+   "bytes": 526,
+   "sha256": "c3c9c193a24970a3cc0d76092bee84062b7cc1114f3f21ab3a9a6f858d69ef8f",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 40,
+      "halfwords": 153,
+      "frameWords": 37,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "ADD": 2,
+       "MOV1": 2,
+       "CHECKER": 2,
+       "MIX3S": 2,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 7,
+       "RET": 7
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "CHECKER": 2,
+     "FRESDOT": 3
+    },
+    "constWords": 27,
+    "imports": 0,
+    "registerWords": 81,
+    "codeHalfwords": 169,
+    "bytes": 526,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "F-08",
+   "ok": true,
+   "ms": 1.28,
+   "spectral": false,
+   "bytes": 624,
+   "sha256": "d9b1e1db631bcc0bfbf3117fa532ee481c7c6cfd52f4e3b42ee33b17cfb68f78",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 42,
+      "halfwords": 170,
+      "frameWords": 39,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "MIX": 1,
+       "SUB": 4,
+       "DIV": 4,
+       "CLAMP": 4,
+       "MIX3S": 4,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "MUL": 1,
+       "MAX": 1,
+       "LOBE": 5,
+       "RET": 5
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 43,
+    "imports": 0,
+    "registerWords": 99,
+    "codeHalfwords": 186,
+    "bytes": 624,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "G-01",
+   "ok": true,
+   "ms": 2.36,
+   "spectral": false,
+   "bytes": 750,
+   "sha256": "aab10bd91135f9cd641f28c7d82a36fe3ed0415b742dccfe8144a2e41ae99d6a",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 62,
+      "halfwords": 243,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 9,
+       "SWITCH": 1,
+       "LNONE": 8,
+       "FRESDOT": 7,
+       "CHOOSE0": 7,
+       "LOBE": 15,
+       "RET": 15
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 7
+    },
+    "constWords": 38,
+    "imports": 0,
+    "registerWords": 89,
+    "codeHalfwords": 259,
+    "bytes": 750,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "G-02",
+   "ok": true,
+   "ms": 2.65,
+   "spectral": false,
+   "bytes": 1116,
+   "sha256": "7dc8dfd6997bc26345f2024f28d36b2ad57785a54da01801a19c1793b6a6b8db",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 132,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 8,
+       "RET": 8
+      }
+     },
+     "sdUser": {
+      "instructions": 71,
+      "halfwords": 256,
+      "frameWords": 13,
+      "ops": {
+       "SWITCH": 1,
+       "SUB3": 4,
+       "LEN3": 5,
+       "SUB": 12,
+       "MIN": 3,
+       "ABS": 3,
+       "MAX": 5,
+       "DIV": 3,
+       "MUL": 11,
+       "MOV1": 5,
+       "RET": 4,
+       "COS": 4,
+       "SIN": 4,
+       "MAD": 3,
+       "ABS3": 1,
+       "MAX3": 1,
+       "ADD": 1,
+       "MUL3": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3,
+     "MAD": 3
+    },
+    "constWords": 58,
+    "imports": 1,
+    "registerWords": 118,
+    "codeHalfwords": 400,
+    "bytes": 1116,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "G-03",
+   "ok": true,
+   "ms": 0.73,
+   "spectral": false,
+   "bytes": 544,
+   "sha256": "a008f95dec42f093055306d7884a779230eeb78b748c8a7a524cdb09fe85d965",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 23,
+      "halfwords": 91,
+      "frameWords": 42,
+      "ops": {
+       "HLD": 4,
+       "SWITCH": 1,
+       "LNONE": 2,
+       "SMOOTH": 3,
+       "MUL": 2,
+       "MIX3S": 2,
+       "ADD": 1,
+       "FRESDOT": 1,
+       "CHOOSE0": 1,
+       "LOBE": 3,
+       "RET": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 13,
+      "halfwords": 45,
+      "frameWords": 6,
+      "ops": {
+       "SWITCH": 1,
+       "MOV1": 5,
+       "MUL3": 1,
+       "CALL": 1,
+       "POW": 1,
+       "MUL": 2,
+       "RET": 2
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 41,
+    "imports": 1,
+    "registerWords": 103,
+    "codeHalfwords": 148,
+    "bytes": 544,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "G-04",
+   "ok": true,
+   "ms": 0.66,
+   "spectral": false,
+   "bytes": 492,
+   "sha256": "d13ce87f05e3cf5861fc3722541ec627b572e92b1dad67b554f90f32d20748cc",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 32,
+      "halfwords": 126,
+      "frameWords": 37,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "MUL": 1,
+       "SUB": 2,
+       "DIV": 2,
+       "CLAMP": 2,
+       "MIX3S": 2,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 5,
+       "RET": 5
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 32,
+    "imports": 0,
+    "registerWords": 86,
+    "codeHalfwords": 142,
+    "bytes": 492,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "G-05",
+   "ok": true,
+   "ms": 0.89,
+   "spectral": false,
+   "bytes": 580,
+   "sha256": "dbd98e6d78e711cdccbc2acfb5a6ae65b18867a39bebbadc819c7e3e2b0a998f",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 42,
+      "halfwords": 164,
+      "frameWords": 37,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 4,
+       "CHOOSE0": 4,
+       "LOBE": 9,
+       "RET": 9,
+       "SUB": 1,
+       "CLAMP": 1,
+       "MIX3S": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 4
+    },
+    "constWords": 35,
+    "imports": 0,
+    "registerWords": 89,
+    "codeHalfwords": 180,
+    "bytes": 580,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "G-06",
+   "ok": true,
+   "ms": 0.83,
+   "spectral": false,
+   "bytes": 484,
+   "sha256": "1b4a1c335cd9f0ee4490aee75b850ac5406a0f3f9c88cd67fca986b5d6da376a",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 128,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "LOBE": 8,
+       "RET": 8,
+       "FRESDOT": 3,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 29,
+    "imports": 0,
+    "registerWords": 80,
+    "codeHalfwords": 144,
+    "bytes": 484,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "K-01",
+   "ok": true,
+   "ms": 3.62,
+   "spectral": false,
+   "bytes": 1754,
+   "sha256": "0c03d656c985da1a5d0308551980387a55efe6118e548bcce81aa6a674ce20ff",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 156,
+      "halfwords": 671,
+      "frameWords": 36,
+      "ops": {
+       "HLD": 35,
+       "SWITCH": 1,
+       "LNONE": 19,
+       "CHOOSE": 2,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 24,
+       "RET": 24,
+       "CALL": 19,
+       "SUB3": 13,
+       "CROSS": 13
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 75,
+    "imports": 0,
+    "registerWords": 128,
+    "codeHalfwords": 687,
+    "bytes": 1754,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "tangentWorld"
+    ]
+   }
+  },
+  {
+   "id": "K-02",
+   "ok": true,
+   "ms": 5,
+   "spectral": false,
+   "bytes": 1908,
+   "sha256": "04ecb81d913e96d2fdf9c5a8b3b3e5bd8504f035f00f72d1c689fc4bb91b4a19",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 186,
+      "halfwords": 754,
+      "frameWords": 44,
+      "ops": {
+       "HLD": 33,
+       "SWITCH": 1,
+       "LNONE": 18,
+       "SUB3": 17,
+       "CROSS": 9,
+       "CALL": 14,
+       "LOBE": 23,
+       "RET": 23,
+       "MUL3": 4,
+       "MUL": 4,
+       "SUB": 4,
+       "MOV1": 8,
+       "DIV3S": 4,
+       "DOT3": 4,
+       "SMUL3": 4,
+       "SAFENORM3": 8,
+       "CHOOSE": 2,
+       "FRESDOT": 3,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 72,
+    "imports": 0,
+    "registerWords": 133,
+    "codeHalfwords": 770,
+    "bytes": 1908,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3",
+     "tangentWorld"
+    ]
+   }
+  },
+  {
+   "id": "K-03",
+   "ok": true,
+   "ms": 7.33,
+   "spectral": false,
+   "bytes": 3060,
+   "sha256": "32ad57433fc0b7b63bddc8a37dce859e1cef11efab7e82517791706a9361e73a",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 291,
+      "halfwords": 1238,
+      "frameWords": 44,
+      "ops": {
+       "HLD": 59,
+       "SWITCH": 1,
+       "LNONE": 32,
+       "SUB3": 22,
+       "CROSS": 20,
+       "CALL": 29,
+       "LOBE": 47,
+       "RET": 47,
+       "MUL3": 1,
+       "MUL": 1,
+       "SUB": 1,
+       "MOV1": 2,
+       "DIV3S": 1,
+       "DOT3": 1,
+       "SMUL3": 1,
+       "SAFENORM3": 2,
+       "CHOOSE": 6,
+       "FRESDOT": 9,
+       "CHOOSE0": 9
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 9
+    },
+    "constWords": 117,
+    "imports": 1,
+    "registerWords": 178,
+    "codeHalfwords": 1254,
+    "bytes": 3060,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3",
+     "tangentWorld"
+    ]
+   }
+  },
+  {
+   "id": "K-04",
+   "ok": true,
+   "ms": 1.99,
+   "spectral": false,
+   "bytes": 1084,
+   "sha256": "85544fa638121de94b4d17b6ced32f9983593a049cae82f09a3a29de3cd80f07",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 91,
+      "halfwords": 380,
+      "frameWords": 36,
+      "ops": {
+       "HLD": 22,
+       "SWITCH": 1,
+       "LNONE": 12,
+       "SUB3": 9,
+       "CROSS": 9,
+       "CALL": 10,
+       "LOBE": 13,
+       "RET": 13,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 53,
+    "imports": 0,
+    "registerWords": 106,
+    "codeHalfwords": 396,
+    "bytes": 1084,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "tangentWorld"
+    ]
+   }
+  },
+  {
+   "id": "K-05",
+   "ok": true,
+   "ms": 1.96,
+   "spectral": false,
+   "bytes": 604,
+   "sha256": "2b86818b6ab38b8fd9fc4011359b1e45c3bdaf53f0fbf20b12efaf881a1ce15e",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 42,
+      "halfwords": 168,
+      "frameWords": 36,
+      "ops": {
+       "HLD": 9,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "LOBE": 8,
+       "RET": 8,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "SUB3": 2,
+       "CROSS": 2,
+       "CALL": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 39,
+    "imports": 0,
+    "registerWords": 92,
+    "codeHalfwords": 184,
+    "bytes": 604,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "tangentWorld"
+    ]
+   }
+  },
+  {
+   "id": "K-06",
+   "ok": true,
+   "ms": 2.42,
+   "spectral": false,
+   "bytes": 1288,
+   "sha256": "e1354438ce8df7a633da4d8daee60223ad0c2d6fb3be694bdbeb2342a45cf4f6",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 113,
+      "halfwords": 470,
+      "frameWords": 36,
+      "ops": {
+       "HLD": 25,
+       "SWITCH": 1,
+       "LNONE": 13,
+       "SUB3": 10,
+       "CROSS": 10,
+       "CALL": 10,
+       "LOBE": 18,
+       "RET": 18,
+       "CHOOSE": 2,
+       "FRESDOT": 3,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 59,
+    "imports": 0,
+    "registerWords": 112,
+    "codeHalfwords": 486,
+    "bytes": 1288,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "tangentWorld"
+    ]
+   }
+  },
+  {
+   "id": "K-07",
+   "ok": true,
+   "ms": 2.46,
+   "spectral": false,
+   "bytes": 1318,
+   "sha256": "35b80aac0dbccdcdf0d5bdacc6c7a3e0c814912ec8d6b9bd3a0a9a4975fc4c4d",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 114,
+      "halfwords": 487,
+      "frameWords": 37,
+      "ops": {
+       "HLD": 24,
+       "SWITCH": 1,
+       "LNONE": 13,
+       "SUB3": 8,
+       "CROSS": 8,
+       "CALL": 12,
+       "LOBE": 19,
+       "RET": 19,
+       "CHOOSE": 2,
+       "FRESDOT": 4,
+       "CHOOSE0": 4
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 4
+    },
+    "constWords": 58,
+    "imports": 0,
+    "registerWords": 112,
+    "codeHalfwords": 503,
+    "bytes": 1318,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "tangentWorld"
+    ]
+   }
+  },
+  {
+   "id": "K-08",
+   "ok": true,
+   "ms": 2.88,
+   "spectral": false,
+   "bytes": 1132,
+   "sha256": "113ff09cd96e302f874ace3a47583c729ed610b3c8ae2b7131346d5f7f754b08",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 93,
+      "halfwords": 398,
+      "frameWords": 37,
+      "ops": {
+       "HLD": 17,
+       "SWITCH": 1,
+       "LNONE": 9,
+       "CHOOSE": 4,
+       "FRESDOT": 5,
+       "LOBE": 18,
+       "RET": 18,
+       "CHOOSE0": 5,
+       "SUB3": 4,
+       "CROSS": 4,
+       "CALL": 8
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 5
+    },
+    "constWords": 56,
+    "imports": 0,
+    "registerWords": 110,
+    "codeHalfwords": 414,
+    "bytes": 1132,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "tangentWorld"
+    ]
+   }
+  },
+  {
+   "id": "K-09",
+   "ok": true,
+   "ms": 4.53,
+   "spectral": false,
+   "bytes": 2950,
+   "sha256": "6cfb9a34b09deba30762472626c73937e1c0a93fbada19792a8c4a13fd0d2c47",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 290,
+      "halfwords": 1203,
+      "frameWords": 41,
+      "ops": {
+       "HLD": 54,
+       "SWITCH": 1,
+       "LNONE": 31,
+       "LOBE": 49,
+       "RET": 49,
+       "SUB3": 16,
+       "CROSS": 16,
+       "CALL": 16,
+       "CHOOSE": 8,
+       "FRESDOT": 10,
+       "CHOOSE0": 10,
+       "ADD": 3,
+       "MUL": 5,
+       "SIN": 1,
+       "MAD": 1,
+       "SPLAT3": 1,
+       "MUL3": 1,
+       "DIV": 2,
+       "FLOOR": 1,
+       "SUB": 2,
+       "GLD": 1,
+       "FMODP": 1,
+       "FLE": 1,
+       "FGE": 1,
+       "AND": 1,
+       "FRACT": 1,
+       "MIX": 1,
+       "ABS": 1,
+       "SMOOTH": 3,
+       "SEL": 1,
+       "MIX3S": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 10,
+     "MAD": 1
+    },
+    "constWords": 107,
+    "imports": 1,
+    "registerWords": 165,
+    "codeHalfwords": 1219,
+    "bytes": 2950,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "tangentWorld"
+    ]
+   }
+  },
+  {
+   "id": "L-01",
+   "ok": true,
+   "ms": 0.6,
+   "spectral": false,
+   "bytes": 450,
+   "sha256": "2b0170d6292c47e6f256dbc987439c82ccb64f9ada078a5036930a2751f4303a",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 109,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 7,
+       "RET": 7
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 28,
+    "imports": 2,
+    "registerWords": 79,
+    "codeHalfwords": 125,
+    "bytes": 450,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-02",
+   "ok": true,
+   "ms": 0.81,
+   "spectral": false,
+   "bytes": 512,
+   "sha256": "a24d0fb6c16dd12ad19b29f3b93ff578ab66c84351ef521dd99e2632169a0d1b",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 132,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 8,
+       "RET": 8
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 34,
+    "imports": 0,
+    "registerWords": 85,
+    "codeHalfwords": 148,
+    "bytes": 512,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-03",
+   "ok": true,
+   "ms": 0.89,
+   "spectral": false,
+   "bytes": 450,
+   "sha256": "a125d42ad4ba473fb555ea80d717bfabdb3a6ac358c5db3e83a00aba375a679c",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 115,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 7,
+       "RET": 7
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 27,
+    "imports": 0,
+    "registerWords": 78,
+    "codeHalfwords": 131,
+    "bytes": 450,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-04",
+   "ok": true,
+   "ms": 0.55,
+   "spectral": false,
+   "bytes": 450,
+   "sha256": "a7560ecc84327e4b1be5caa431799e2476a0f5e905da12669747ced30d08f7e1",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 115,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 7,
+       "RET": 7
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 27,
+    "imports": 0,
+    "registerWords": 78,
+    "codeHalfwords": 131,
+    "bytes": 450,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-05",
+   "ok": true,
+   "ms": 0.53,
+   "spectral": false,
+   "bytes": 612,
+   "sha256": "214ee5eeb6454cf8d3d95353c7dcec1af49fcafa74d487ab67da1004af1fba5d",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 42,
+      "halfwords": 142,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 10,
+       "SWITCH": 1,
+       "LNONE": 9,
+       "LOBE": 10,
+       "RET": 10,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 47,
+    "imports": 7,
+    "registerWords": 98,
+    "codeHalfwords": 158,
+    "bytes": 612,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-06",
+   "ok": true,
+   "ms": 0.73,
+   "spectral": false,
+   "bytes": 584,
+   "sha256": "fd51fca18d833b18d715e564334aa8ca3650c986c25287ed191f321074f1d2c5",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 42,
+      "halfwords": 154,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 7,
+       "LOBE": 10,
+       "RET": 10,
+       "FRESDOT": 3,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 38,
+    "imports": 3,
+    "registerWords": 89,
+    "codeHalfwords": 170,
+    "bytes": 584,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-07",
+   "ok": true,
+   "ms": 0.68,
+   "spectral": false,
+   "bytes": 530,
+   "sha256": "baf78bf73b3adce005e4a0ec138a721ec6ebd61165271e8070fbe87c9fef812f",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 38,
+      "halfwords": 147,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 4,
+       "CHOOSE0": 4,
+       "LOBE": 9,
+       "RET": 9
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 4
+    },
+    "constWords": 31,
+    "imports": 0,
+    "registerWords": 82,
+    "codeHalfwords": 163,
+    "bytes": 530,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-08",
+   "ok": true,
+   "ms": 0.51,
+   "spectral": false,
+   "bytes": 416,
+   "sha256": "d1e1fc8b9dd9dc493579ef5ffc02c1b68522215f49e23df04a4f31e3dfbf772f",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 26,
+      "halfwords": 96,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 6,
+       "RET": 6
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 27,
+    "imports": 1,
+    "registerWords": 78,
+    "codeHalfwords": 112,
+    "bytes": 416,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-09",
+   "ok": true,
+   "ms": 1.11,
+   "spectral": false,
+   "bytes": 772,
+   "sha256": "120e0778cab163e18d94683a56210b935491d25d50653bf121fc0c4f01acf651",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 62,
+      "halfwords": 234,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 11,
+       "SWITCH": 1,
+       "LNONE": 8,
+       "CHOOSE": 2,
+       "LOBE": 15,
+       "RET": 15,
+       "FRESDOT": 5,
+       "CHOOSE0": 5
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 5
+    },
+    "constWords": 45,
+    "imports": 3,
+    "registerWords": 96,
+    "codeHalfwords": 250,
+    "bytes": 772,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-10",
+   "ok": true,
+   "ms": 0.55,
+   "spectral": false,
+   "bytes": 428,
+   "sha256": "eafdec8c1afb87bdca99527ead6a70eab09f815a0a330200f58464d6fe5c7b48",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 26,
+      "halfwords": 100,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "LOBE": 6,
+       "RET": 6,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 29,
+    "imports": 0,
+    "registerWords": 80,
+    "codeHalfwords": 116,
+    "bytes": 428,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-11",
+   "ok": true,
+   "ms": 1.34,
+   "spectral": false,
+   "bytes": 844,
+   "sha256": "e3516aaacf376de405867de9109e94d458aa1d7f46e8765460ca3b2a597bbb2d",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 63,
+      "halfwords": 238,
+      "frameWords": 40,
+      "ops": {
+       "HLD": 10,
+       "SWITCH": 1,
+       "LNONE": 9,
+       "LOBE": 13,
+       "RET": 11,
+       "FRESDOT": 2,
+       "CHOOSE0": 3,
+       "MOV3": 2,
+       "DOT3": 1,
+       "CLAMP": 1,
+       "CALL": 1,
+       "CHOOSE": 1,
+       "JMP": 2,
+       "ABS": 1,
+       "MAX": 1,
+       "DIV": 1,
+       "ADD": 1,
+       "MUL3S": 1,
+       "VPOW": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 60,
+    "imports": 4,
+    "registerWords": 117,
+    "codeHalfwords": 254,
+    "bytes": 844,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "L-12",
+   "ok": true,
+   "ms": 0.74,
+   "spectral": false,
+   "bytes": 610,
+   "sha256": "fc6f5febbd5782cdfdde36e7c38d2f0a28a0af00d9e2025d80e5bd0263ba524e",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 46,
+      "halfwords": 167,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 9,
+       "SWITCH": 1,
+       "LNONE": 8,
+       "LOBE": 11,
+       "RET": 11,
+       "FRESDOT": 3,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 40,
+    "imports": 1,
+    "registerWords": 91,
+    "codeHalfwords": 183,
+    "bytes": 610,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-01",
+   "ok": true,
+   "ms": 1.4,
+   "spectral": false,
+   "bytes": 1010,
+   "sha256": "174a840d2830a0cb9ad5cb525bdd78091e967e34d1f57db864deafafad20b384",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 94,
+      "halfwords": 377,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 16,
+       "SWITCH": 1,
+       "LNONE": 15,
+       "FRESDOT": 8,
+       "CHOOSE0": 8,
+       "LOBE": 23,
+       "RET": 23
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 8
+    },
+    "constWords": 36,
+    "imports": 0,
+    "registerWords": 87,
+    "codeHalfwords": 393,
+    "bytes": 1010,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-02",
+   "ok": true,
+   "ms": 0.85,
+   "spectral": false,
+   "bytes": 878,
+   "sha256": "17ccf5ffd9fd4cf04e8ea62fa46c127303066b87c8a3948bb1736f0b57379650",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 54,
+      "halfwords": 221,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 13,
+       "SWITCH": 1,
+       "LNONE": 12,
+       "LOBE": 13,
+       "RET": 13,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 81,
+    "imports": 0,
+    "registerWords": 132,
+    "codeHalfwords": 237,
+    "bytes": 878,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-03",
+   "ok": true,
+   "ms": 0.57,
+   "spectral": false,
+   "bytes": 426,
+   "sha256": "8c4d3eb94fb4ef0e9ae5ce0e664d2e68ee9409beaa114155fb629444e21687fa",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 24,
+      "halfwords": 91,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 4,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 5,
+       "RET": 5,
+       "MUL": 1,
+       "MAX": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 31,
+    "imports": 2,
+    "registerWords": 82,
+    "codeHalfwords": 107,
+    "bytes": 426,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-04",
+   "ok": true,
+   "ms": 0.6,
+   "spectral": false,
+   "bytes": 484,
+   "sha256": "46487d8444aea79bcbd10f951d7f58b3e923b389a9cf178e3a7e2ad528dc7fbb",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 130,
+      "frameWords": 37,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "LOBE": 7,
+       "RET": 7,
+       "GATHER": 1,
+       "CHECKER": 1,
+       "MIX3S": 1,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "CHECKER": 1,
+     "FRESDOT": 1
+    },
+    "constWords": 28,
+    "imports": 0,
+    "registerWords": 82,
+    "codeHalfwords": 146,
+    "bytes": 484,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-05",
+   "ok": true,
+   "ms": 0.98,
+   "spectral": false,
+   "bytes": 624,
+   "sha256": "674b43d8345771299a604002fe1bb1e77f1fda593ad4145dd7cc51ec3d88f2ab",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 49,
+      "halfwords": 188,
+      "frameWords": 37,
+      "ops": {
+       "HLD": 10,
+       "SWITCH": 1,
+       "LNONE": 8,
+       "LOBE": 11,
+       "RET": 11,
+       "STRIPES": 1,
+       "MIX3S": 1,
+       "FRESDOT": 3,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "STRIPES": 1,
+     "FRESDOT": 3
+    },
+    "constWords": 34,
+    "imports": 0,
+    "registerWords": 88,
+    "codeHalfwords": 204,
+    "bytes": 624,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-06",
+   "ok": true,
+   "ms": 0.33,
+   "spectral": false,
+   "bytes": 332,
+   "sha256": "c24b7fa531545662b740d86292be8fbd781506416128de8bedabe944a481e3c1",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 18,
+      "halfwords": 68,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 4,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "LOBE": 4,
+       "RET": 4,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 21,
+    "imports": 0,
+    "registerWords": 72,
+    "codeHalfwords": 84,
+    "bytes": 332,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-07",
+   "ok": true,
+   "ms": 1.16,
+   "spectral": false,
+   "bytes": 682,
+   "sha256": "39488c3b322ed991fa6e4dd4381ed35e5438a3b484951cdf306c86e7d1650117",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 44,
+      "halfwords": 175,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "FRESDOT": 3,
+       "CHOOSE": 1,
+       "MUL": 1,
+       "MAX": 1,
+       "LOBE": 10,
+       "RET": 10,
+       "CLAMP": 1,
+       "CHOOSE0": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 52,
+    "imports": 3,
+    "registerWords": 103,
+    "codeHalfwords": 191,
+    "bytes": 682,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-08",
+   "ok": true,
+   "ms": 0.41,
+   "spectral": false,
+   "bytes": 396,
+   "sha256": "6444fb228193620755a05c46f31c24943ecc24c36e610f6f30f88e9d05c7e597",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 26,
+      "halfwords": 92,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "CHOOSE0": 2,
+       "LOBE": 6,
+       "RET": 6,
+       "FRESDOT": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 25,
+    "imports": 0,
+    "registerWords": 76,
+    "codeHalfwords": 108,
+    "bytes": 396,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-09",
+   "ok": true,
+   "ms": 0.48,
+   "spectral": false,
+   "bytes": 508,
+   "sha256": "ba07fdf7d8ab1c905f95f7860e48fd465629411c4dd0ea34876af1f9101322d0",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 112,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "MUL": 2,
+       "MAX": 2,
+       "LOBE": 6,
+       "RET": 6,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 40,
+    "imports": 3,
+    "registerWords": 91,
+    "codeHalfwords": 128,
+    "bytes": 508,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-10",
+   "ok": true,
+   "ms": 0.77,
+   "spectral": false,
+   "bytes": 712,
+   "sha256": "285bda25b86157f3c3d76e598aeb4633138e2c60c55793099a403ec419338da9",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 49,
+      "halfwords": 204,
+      "frameWords": 36,
+      "ops": {
+       "HLD": 11,
+       "SWITCH": 1,
+       "LNONE": 10,
+       "LOBE": 11,
+       "RET": 11,
+       "MUL": 2,
+       "MOV1": 1,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 47,
+    "imports": 1,
+    "registerWords": 100,
+    "codeHalfwords": 220,
+    "bytes": 712,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-11",
+   "ok": true,
+   "ms": 0.47,
+   "spectral": false,
+   "bytes": 492,
+   "sha256": "0b7888f69eaf996042fd8218acf5259b2739e71184e0513530721dc2e9cc065e",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 132,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 8,
+       "SWITCH": 1,
+       "LNONE": 7,
+       "LOBE": 8,
+       "RET": 8,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 28,
+    "imports": 1,
+    "registerWords": 79,
+    "codeHalfwords": 148,
+    "bytes": 492,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-12",
+   "ok": true,
+   "ms": 0.49,
+   "spectral": false,
+   "bytes": 490,
+   "sha256": "e0cb560df8934e909d27eaaad70d522f9db2f9412298069dbdeb653ffc2ce350",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 38,
+      "halfwords": 155,
+      "frameWords": 29,
+      "ops": {
+       "HLD": 10,
+       "SWITCH": 1,
+       "LNONE": 9,
+       "LOBE": 9,
+       "RET": 9
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {},
+    "constWords": 17,
+    "imports": 0,
+    "registerWords": 63,
+    "codeHalfwords": 171,
+    "bytes": 490,
+    "kernelFunctions": []
+   }
+  },
+  {
+   "id": "M-13",
+   "ok": true,
+   "ms": 0.66,
+   "spectral": false,
+   "bytes": 520,
+   "sha256": "e1772d08bae9d60afd51e37d946ce2924ec7467ad9963d68359db64bdc4d42e8",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 126,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "LOBE": 8,
+       "RET": 8,
+       "FRESDOT": 2,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 38,
+    "imports": 1,
+    "registerWords": 89,
+    "codeHalfwords": 142,
+    "bytes": 520,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "M-14",
+   "ok": true,
+   "ms": 1.88,
+   "spectral": false,
+   "bytes": 1240,
+   "sha256": "aeed0533af251d09ca6ce7d87166ca4b67d83613c21d7811e13eaf0ccbddfe03",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 113,
+      "halfwords": 480,
+      "frameWords": 45,
+      "ops": {
+       "HLD": 11,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "MUL3": 4,
+       "CALL": 5,
+       "MAD": 4,
+       "SUB": 8,
+       "DIV": 9,
+       "CLAMP": 9,
+       "MIX3S": 8,
+       "FRESDOT": 4,
+       "CHOOSE0": 5,
+       "LOBE": 14,
+       "RET": 12,
+       "CHOOSE": 3,
+       "MOV3": 2,
+       "DOT3": 1,
+       "JMP": 2,
+       "ABS": 1,
+       "MAX": 1,
+       "ADD": 1,
+       "MUL3S": 1,
+       "VPOW": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 4,
+     "FRESDOT": 4
+    },
+    "constWords": 42,
+    "imports": 0,
+    "registerWords": 104,
+    "codeHalfwords": 496,
+    "bytes": 1240,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "R-01",
+   "ok": true,
+   "ms": 0.65,
+   "spectral": false,
+   "bytes": 488,
+   "sha256": "97104baa4aad13810dc6032c8e76e6e1bc6d1c050f8dda7d05dffbde284bf070",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 128,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 8,
+       "RET": 8
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 29,
+    "imports": 1,
+    "registerWords": 80,
+    "codeHalfwords": 144,
+    "bytes": 488,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "R-02",
+   "ok": true,
+   "ms": 1.14,
+   "spectral": false,
+   "bytes": 776,
+   "sha256": "81a7666b26fc62be90360825e08ccd5bd0194d9d38557164cd6b7f8264d221d3",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 59,
+      "halfwords": 232,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 9,
+       "SWITCH": 1,
+       "LNONE": 8,
+       "FRESDOT": 4,
+       "CHOOSE": 3,
+       "LOBE": 15,
+       "RET": 15,
+       "CHOOSE0": 4
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 4
+    },
+    "constWords": 48,
+    "imports": 2,
+    "registerWords": 99,
+    "codeHalfwords": 248,
+    "bytes": 776,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "R-03",
+   "ok": true,
+   "ms": 1.09,
+   "spectral": false,
+   "bytes": 960,
+   "sha256": "b7c3bcbe7043f1bd056b924e28b50307b3f5dae7eae21fc704f7c378672d1c8d",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 78,
+      "halfwords": 308,
+      "frameWords": 45,
+      "ops": {
+       "HLD": 13,
+       "SWITCH": 1,
+       "LNONE": 10,
+       "MOV3": 2,
+       "MUL3": 1,
+       "CALL": 2,
+       "MAD": 1,
+       "SUB": 1,
+       "CLAMP": 2,
+       "MIX3S": 1,
+       "DOT3": 1,
+       "CHOOSE": 1,
+       "LOBE": 15,
+       "JMP": 2,
+       "ABS": 1,
+       "MAX": 1,
+       "DIV": 1,
+       "ADD": 1,
+       "MUL3S": 1,
+       "VPOW": 1,
+       "CHOOSE0": 4,
+       "RET": 13,
+       "FRESDOT": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 1,
+     "FRESDOT": 2
+    },
+    "constWords": 57,
+    "imports": 1,
+    "registerWords": 119,
+    "codeHalfwords": 324,
+    "bytes": 960,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "R-04",
+   "ok": true,
+   "ms": 1.06,
+   "spectral": false,
+   "bytes": 906,
+   "sha256": "5f3c2f77813ae58db9e305f4e899cfda35a3da596e6fe4a03da440fe0e8859ff",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 67,
+      "halfwords": 254,
+      "frameWords": 44,
+      "ops": {
+       "HLD": 4,
+       "SWITCH": 1,
+       "LNONE": 2,
+       "ADD3": 3,
+       "MUL3": 6,
+       "CALL": 6,
+       "MUL": 12,
+       "MAD": 6,
+       "SIN": 6,
+       "SUB3": 5,
+       "SUB": 3,
+       "DIV3S": 1,
+       "DOT3": 1,
+       "SMUL3": 1,
+       "SAFENORM3": 2,
+       "FRESDOT": 1,
+       "CHOOSE0": 1,
+       "LOBE": 3,
+       "RET": 3
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 18,
+      "halfwords": 67,
+      "frameWords": 8,
+      "ops": {
+       "SWITCH": 1,
+       "MOV1": 5,
+       "MUL3": 2,
+       "MUL": 2,
+       "MAD": 3,
+       "CALL": 1,
+       "SIN": 1,
+       "POW": 1,
+       "RET": 2
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 9,
+     "FRESDOT": 1
+    },
+    "constWords": 40,
+    "imports": 0,
+    "registerWords": 106,
+    "codeHalfwords": 333,
+    "bytes": 906,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "noise3",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "R-05",
+   "ok": true,
+   "ms": 1.75,
+   "spectral": true,
+   "bytes": 1308,
+   "sha256": "6f0083ecdb83397ddc408630ee6ff5296a5f7e97e8ff18487a0ad433e0e14488",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 107,
+      "halfwords": 399,
+      "frameWords": 40,
+      "ops": {
+       "HLD": 10,
+       "SWITCH": 1,
+       "LNONE": 8,
+       "GLD": 5,
+       "SUB": 8,
+       "DIV": 4,
+       "CLAMP": 4,
+       "MUL": 4,
+       "MIX": 8,
+       "FGT": 4,
+       "SEL": 4,
+       "MOV1": 8,
+       "MOV3": 8,
+       "JMP": 4,
+       "LOBE": 11,
+       "RET": 11,
+       "CALL": 1,
+       "FRESDOT": 1,
+       "CHOOSE": 1,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 12,
+      "halfwords": 41,
+      "frameWords": 9,
+      "ops": {
+       "SWITCH": 1,
+       "ABS3": 1,
+       "MAD": 1,
+       "ADD": 1,
+       "SUB": 2,
+       "MUL": 1,
+       "MAX": 1,
+       "MOV1": 2,
+       "RET": 2
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1,
+     "MAD": 1
+    },
+    "constWords": 79,
+    "imports": 2,
+    "registerWords": 141,
+    "codeHalfwords": 452,
+    "bytes": 1308,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "sellmeier"
+    ]
+   }
+  },
+  {
+   "id": "R-06",
+   "ok": true,
+   "ms": 3.95,
+   "spectral": false,
+   "bytes": 1426,
+   "sha256": "095fc1f3e03f4c1a3aac5d586dfa6e2477afac813ad183fdd801c536a96285c6",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 132,
+      "halfwords": 539,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 15,
+       "SWITCH": 1,
+       "LNONE": 13,
+       "CHOOSE0": 12,
+       "LOBE": 35,
+       "RET": 35,
+       "FRESDOT": 11,
+       "CHOOSE": 10
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 11
+    },
+    "constWords": 59,
+    "imports": 0,
+    "registerWords": 110,
+    "codeHalfwords": 555,
+    "bytes": 1426,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "R-07",
+   "ok": true,
+   "ms": 3.8,
+   "spectral": false,
+   "bytes": 2194,
+   "sha256": "e52b8432672fe33df507ca6a1fa018cc5acca64fa22040320e91e2445d551700",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 214,
+      "halfwords": 851,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 28,
+       "SWITCH": 1,
+       "LNONE": 27,
+       "FRESDOT": 26,
+       "CHOOSE0": 26,
+       "LOBE": 53,
+       "RET": 53
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 26
+    },
+    "constWords": 95,
+    "imports": 0,
+    "registerWords": 146,
+    "codeHalfwords": 867,
+    "bytes": 2194,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "R-08",
+   "ok": true,
+   "ms": 1.07,
+   "spectral": false,
+   "bytes": 994,
+   "sha256": "41971d34dae6b1a643afd9ed35b70338b200ced12d67262123f81a903f40c931",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 120,
+      "frameWords": 40,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 5,
+       "RET": 5,
+       "SMOOTH": 2,
+       "MUL3": 1,
+       "CALL": 1,
+       "ADD": 1,
+       "MUL": 1,
+       "MIX3S": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 30,
+      "halfwords": 116,
+      "frameWords": 10,
+      "ops": {
+       "SWITCH": 1,
+       "DIV3": 3,
+       "LEN3": 3,
+       "SUB": 3,
+       "MUL3": 3,
+       "CALL": 3,
+       "MAD": 3,
+       "MUL": 3,
+       "MOV1": 4,
+       "RET": 4
+      }
+     },
+     "heightAt": {
+      "instructions": 29,
+      "halfwords": 101,
+      "frameWords": 10,
+      "ops": {
+       "SWITCH": 1,
+       "MOV1": 8,
+       "GATHER": 1,
+       "VSUB": 3,
+       "VLEN": 3,
+       "MIN": 3,
+       "MUL": 3,
+       "SIN": 2,
+       "SMOOTH": 1,
+       "MIX": 1,
+       "MAD": 1,
+       "RET": 2
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2,
+     "MAD": 4
+    },
+    "constWords": 56,
+    "imports": 0,
+    "registerWords": 126,
+    "codeHalfwords": 345,
+    "bytes": 994,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "R-09",
+   "ok": true,
+   "ms": 0.58,
+   "spectral": false,
+   "bytes": 492,
+   "sha256": "9d3fb7ca5ffb4154a398c439bad6154f9e2aef5e823bb11635c90980e784a777",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 132,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 5,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 8,
+       "RET": 8
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 29,
+    "imports": 0,
+    "registerWords": 80,
+    "codeHalfwords": 148,
+    "bytes": 492,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "R-10",
+   "ok": true,
+   "ms": 0.84,
+   "spectral": false,
+   "bytes": 668,
+   "sha256": "1de48c871636089440cc530f8121330f3a18a4c85b892253e5840185ae47230b",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 53,
+      "halfwords": 206,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 9,
+       "SWITCH": 1,
+       "LNONE": 8,
+       "LOBE": 13,
+       "RET": 13,
+       "FRESDOT": 4,
+       "CHOOSE0": 4,
+       "CHOOSE": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 4
+    },
+    "constWords": 36,
+    "imports": 0,
+    "registerWords": 87,
+    "codeHalfwords": 222,
+    "bytes": 668,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "S-01",
+   "ok": true,
+   "ms": 0.42,
+   "spectral": true,
+   "bytes": 438,
+   "sha256": "ee0c4eaf01c65e08b0758902a3009f81b18dc95f252acc425305e057bab84829",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 28,
+      "halfwords": 101,
+      "frameWords": 36,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "GLD": 1,
+       "CALL": 1,
+       "LOBE": 5,
+       "RET": 5,
+       "STRIPES": 1,
+       "SPLAT3": 1,
+       "MUL3": 1,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "STRIPES": 1,
+     "FRESDOT": 1
+    },
+    "constWords": 31,
+    "imports": 0,
+    "registerWords": 84,
+    "codeHalfwords": 117,
+    "bytes": 438,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "sellmeier"
+    ]
+   }
+  },
+  {
+   "id": "S-02",
+   "ok": true,
+   "ms": 0.58,
+   "spectral": true,
+   "bytes": 616,
+   "sha256": "19fad6522a055dc569f4f894f2839f5869fbc86450906155ce06adad9603dfe0",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 36,
+      "halfwords": 131,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "GLD": 1,
+       "CALL": 1,
+       "LOBE": 8,
+       "RET": 8,
+       "FRESDOT": 2,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 12,
+      "halfwords": 41,
+      "frameWords": 9,
+      "ops": {
+       "SWITCH": 1,
+       "ABS3": 1,
+       "MAD": 1,
+       "ADD": 1,
+       "SUB": 2,
+       "MUL": 1,
+       "MAX": 1,
+       "MOV1": 2,
+       "RET": 2
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2,
+     "MAD": 1
+    },
+    "constWords": 40,
+    "imports": 2,
+    "registerWords": 96,
+    "codeHalfwords": 184,
+    "bytes": 616,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "sellmeier"
+    ]
+   }
+  },
+  {
+   "id": "S-03",
+   "ok": true,
+   "ms": 0.51,
+   "spectral": true,
+   "bytes": 542,
+   "sha256": "a9fd7fd58cd20ea385ea5c437f738b0dc4e33c4998d21273f1f438a750861dda",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 38,
+      "halfwords": 147,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 9,
+       "SWITCH": 1,
+       "LNONE": 8,
+       "LOBE": 9,
+       "RET": 9,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 34,
+    "imports": 0,
+    "registerWords": 85,
+    "codeHalfwords": 163,
+    "bytes": 542,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "S-04",
+   "ok": true,
+   "ms": 1.25,
+   "spectral": false,
+   "bytes": 1210,
+   "sha256": "5c63099c54f7e816e52015b172a507118fd20a896822813be29c7beb2ad84fa8",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 101,
+      "halfwords": 389,
+      "frameWords": 41,
+      "ops": {
+       "HLD": 11,
+       "SWITCH": 1,
+       "LNONE": 9,
+       "ADD": 7,
+       "DIV": 8,
+       "CLAMP": 2,
+       "SUB": 8,
+       "POW": 2,
+       "MAD": 8,
+       "MUL": 13,
+       "MAX": 3,
+       "SPLAT3": 1,
+       "MUL3": 1,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 11,
+       "JMP": 1,
+       "MOV3": 1,
+       "RET": 10
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 8,
+     "FRESDOT": 2
+    },
+    "constWords": 79,
+    "imports": 1,
+    "registerWords": 137,
+    "codeHalfwords": 405,
+    "bytes": 1210,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "V-01",
+   "ok": true,
+   "ms": 0.87,
+   "spectral": false,
+   "bytes": 450,
+   "sha256": "079626915631f13fb2603a71de4e58dbc7ac02c6e293dfeccc813038940c478b",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 115,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 7,
+       "RET": 7
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 27,
+    "imports": 0,
+    "registerWords": 78,
+    "codeHalfwords": 131,
+    "bytes": 450,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "V-02",
+   "ok": true,
+   "ms": 0.51,
+   "spectral": false,
+   "bytes": 460,
+   "sha256": "5f53b89711026f60f98303294ca45647bdb7dca5494ead0c2679900a4d60aa10",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 103,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "LOBE": 7,
+       "RET": 7,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 9,
+      "halfwords": 23,
+      "frameWords": 4,
+      "ops": {
+       "SWITCH": 1,
+       "MOV1": 4,
+       "RET": 4
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 25,
+    "imports": 1,
+    "registerWords": 76,
+    "codeHalfwords": 138,
+    "bytes": 460,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "V-03",
+   "ok": true,
+   "ms": 0.49,
+   "spectral": false,
+   "bytes": 576,
+   "sha256": "bdda3eb4abe6d0fe725807bc34b5d9d36b94fef8432870993af271c5a0c5c97d",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 18,
+      "halfwords": 64,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 4,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "FRESDOT": 1,
+       "CHOOSE0": 1,
+       "LOBE": 4,
+       "RET": 4
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 24,
+      "halfwords": 96,
+      "frameWords": 12,
+      "ops": {
+       "SWITCH": 1,
+       "SUB3": 1,
+       "ADD": 2,
+       "DIV": 1,
+       "MAD": 1,
+       "MUL": 5,
+       "GATHER": 1,
+       "VLEN": 1,
+       "SMOOTH": 3,
+       "MUL3": 1,
+       "ADD3": 1,
+       "CALL": 1,
+       "MAX": 2,
+       "RET": 2,
+       "MOV1": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1,
+     "MAD": 1
+    },
+    "constWords": 38,
+    "imports": 0,
+    "registerWords": 97,
+    "codeHalfwords": 172,
+    "bytes": 576,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "V-04",
+   "ok": true,
+   "ms": 0.54,
+   "spectral": false,
+   "bytes": 658,
+   "sha256": "a8c057e12367aaf0b6e788da966cdc5f802a481ce26af15969f008d975f8b63c",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 18,
+      "halfwords": 64,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 4,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "FRESDOT": 1,
+       "CHOOSE0": 1,
+       "LOBE": 4,
+       "RET": 4
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 33,
+      "halfwords": 127,
+      "frameWords": 10,
+      "ops": {
+       "SWITCH": 1,
+       "SUB3": 4,
+       "LEN3": 4,
+       "SUB": 4,
+       "MAX": 8,
+       "DIV": 3,
+       "MUL3": 1,
+       "CALL": 1,
+       "MAD": 1,
+       "MUL": 2,
+       "SMOOTH": 1,
+       "RET": 2,
+       "MOV1": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1,
+     "MAD": 1
+    },
+    "constWords": 43,
+    "imports": 0,
+    "registerWords": 100,
+    "codeHalfwords": 203,
+    "bytes": 658,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "V-05",
+   "ok": true,
+   "ms": 0.42,
+   "spectral": false,
+   "bytes": 430,
+   "sha256": "495d91763bf20992c3ee7e9428ae8ad7d7c1a09d3508a55632afad5e38869385",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 30,
+      "halfwords": 117,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "LOBE": 7,
+       "RET": 7,
+       "FRESDOT": 1,
+       "CHOOSE0": 1
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 1
+    },
+    "constWords": 21,
+    "imports": 0,
+    "registerWords": 72,
+    "codeHalfwords": 133,
+    "bytes": 430,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "W-01",
+   "ok": true,
+   "ms": 1.06,
+   "spectral": false,
+   "bytes": 562,
+   "sha256": "e4388319549db741eacb9ed10bac077fac1b52b2b5049c520652a45d837746da",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 38,
+      "halfwords": 149,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "FRESDOT": 3,
+       "CHOOSE0": 3,
+       "LOBE": 9,
+       "RET": 9
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 3
+    },
+    "constWords": 38,
+    "imports": 0,
+    "registerWords": 89,
+    "codeHalfwords": 165,
+    "bytes": 562,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "W-02",
+   "ok": true,
+   "ms": 4,
+   "spectral": false,
+   "bytes": 1318,
+   "sha256": "22eeefda759479f855c98dd8946da09b19c06669b5efcbfb73ccfe5b8239c7af",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 116,
+      "halfwords": 475,
+      "frameWords": 38,
+      "ops": {
+       "HLD": 15,
+       "SWITCH": 1,
+       "LNONE": 10,
+       "MUL3": 1,
+       "CALL": 1,
+       "MAD": 1,
+       "SUB": 1,
+       "CLAMP": 1,
+       "MIX3S": 1,
+       "FRESDOT": 10,
+       "CHOOSE": 8,
+       "LOBE": 28,
+       "RET": 28,
+       "CHOOSE0": 10
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 1,
+     "FRESDOT": 10
+    },
+    "constWords": 63,
+    "imports": 1,
+    "registerWords": 118,
+    "codeHalfwords": 491,
+    "bytes": 1318,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "W-03",
+   "ok": true,
+   "ms": 1.01,
+   "spectral": false,
+   "bytes": 470,
+   "sha256": "ab88278b4cd0356475eebba7f8bf3099910f2841e61a850af0d0535b352ce8a1",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 28,
+      "halfwords": 107,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "MUL": 1,
+       "MAX": 1,
+       "LOBE": 6,
+       "RET": 6
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 35,
+    "imports": 1,
+    "registerWords": 86,
+    "codeHalfwords": 123,
+    "bytes": 470,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "W-04",
+   "ok": true,
+   "ms": 1.7,
+   "spectral": false,
+   "bytes": 534,
+   "sha256": "b041a0cb830146210324059467f56646f6378c1e4a525a92d54975b66a8a3607",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 133,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 7,
+       "SWITCH": 1,
+       "LNONE": 6,
+       "LOBE": 8,
+       "RET": 8,
+       "FRESDOT": 2,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 39,
+    "imports": 0,
+    "registerWords": 90,
+    "codeHalfwords": 149,
+    "bytes": 534,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "X-01",
+   "ok": true,
+   "ms": 0.84,
+   "spectral": false,
+   "bytes": 436,
+   "sha256": "6a9ef73467e3a576918ddcd1ec469482968351b1d11e4fe7ff72fb84b4a26ec0",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 26,
+      "halfwords": 100,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "LOBE": 6,
+       "RET": 6,
+       "FRESDOT": 2,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 31,
+    "imports": 0,
+    "registerWords": 82,
+    "codeHalfwords": 116,
+    "bytes": 436,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "X-02",
+   "ok": true,
+   "ms": 1.18,
+   "spectral": false,
+   "bytes": 536,
+   "sha256": "21adaac6169ca5ffd1bedeb91d57c5ab71e2fe2a3c21378a745a6adaafeddf0e",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 35,
+      "halfwords": 140,
+      "frameWords": 38,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "SUB": 3,
+       "DIV": 3,
+       "CLAMP": 3,
+       "MIX3S": 3,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 5,
+       "RET": 5
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 36,
+    "imports": 0,
+    "registerWords": 91,
+    "codeHalfwords": 156,
+    "bytes": 536,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "X-03",
+   "ok": true,
+   "ms": 1.38,
+   "spectral": false,
+   "bytes": 816,
+   "sha256": "f4d829a96e361b101715982c2bf6a4ae91481ac0ee58f035cefc61062ef98d00",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 42,
+      "halfwords": 166,
+      "frameWords": 38,
+      "ops": {
+       "HLD": 6,
+       "SWITCH": 1,
+       "LNONE": 4,
+       "LEN3": 1,
+       "SUB": 4,
+       "MAD": 1,
+       "DIV": 3,
+       "CLAMP": 3,
+       "MIX3S": 3,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 6,
+       "RET": 6
+      }
+     },
+     "sdUser": {
+      "instructions": 13,
+      "halfwords": 46,
+      "frameWords": 9,
+      "ops": {
+       "SWITCH": 1,
+       "LEN3": 1,
+       "SUB": 3,
+       "SAFENORM3": 1,
+       "MUL3": 1,
+       "CALL": 1,
+       "MUL": 1,
+       "MOV1": 2,
+       "RET": 2
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 13,
+      "halfwords": 46,
+      "frameWords": 5,
+      "ops": {
+       "SWITCH": 1,
+       "LEN3": 1,
+       "SUB": 1,
+       "MUL": 3,
+       "POW": 1,
+       "FLT": 1,
+       "SEL": 1,
+       "MAX": 1,
+       "RET": 2,
+       "MOV1": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 1,
+     "FRESDOT": 2
+    },
+    "constWords": 51,
+    "imports": 0,
+    "registerWords": 112,
+    "codeHalfwords": 266,
+    "bytes": 816,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  },
+  {
+   "id": "X-04",
+   "ok": true,
+   "ms": 0.89,
+   "spectral": false,
+   "bytes": 892,
+   "sha256": "f4dc7fce8e07b3edf26f761ecb9b2a7ef00be6c77dbb120462850bc6a2e3e5e9",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 22,
+      "halfwords": 83,
+      "frameWords": 34,
+      "ops": {
+       "HLD": 4,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "FRESDOT": 2,
+       "CHOOSE0": 2,
+       "LOBE": 5,
+       "RET": 5
+      }
+     },
+     "sdUser": {
+      "instructions": 59,
+      "halfwords": 221,
+      "frameWords": 13,
+      "ops": {
+       "SWITCH": 1,
+       "DIV3": 1,
+       "ABS3": 7,
+       "SUB3": 4,
+       "MAX3": 1,
+       "LEN3": 1,
+       "MAX": 14,
+       "MIN": 7,
+       "ADD": 1,
+       "VFMODP": 3,
+       "MUL3": 5,
+       "ADD3": 3,
+       "SUB": 3,
+       "DIV": 3,
+       "MUL": 1,
+       "MOV1": 2,
+       "RET": 2
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "FRESDOT": 2
+    },
+    "constWords": 45,
+    "imports": 0,
+    "registerWords": 105,
+    "codeHalfwords": 316,
+    "bytes": 892,
+    "kernelFunctions": [
+     "fresnelDielectric"
+    ]
+   }
+  },
+  {
+   "id": "X-05",
+   "ok": true,
+   "ms": 0.83,
+   "spectral": false,
+   "bytes": 518,
+   "sha256": "0b68c3563c54b089f4a2dcac20fd71b3d4c7c1d00f5cc987e2f3ec92667db6be",
+   "stats": {
+    "entries": {
+     "evalMaterial": {
+      "instructions": 34,
+      "halfwords": 135,
+      "frameWords": 37,
+      "ops": {
+       "HLD": 5,
+       "SWITCH": 1,
+       "LNONE": 3,
+       "MUL3": 1,
+       "CALL": 1,
+       "MUL": 1,
+       "MAD": 1,
+       "SIN": 1,
+       "ABS": 1,
+       "POW": 1,
+       "MIX3S": 1,
+       "FRESDOT": 2,
+       "CHOOSE": 1,
+       "LOBE": 6,
+       "RET": 6,
+       "CHOOSE0": 2
+      }
+     },
+     "sdUser": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "heightAt": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 3,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "densityOf": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 4,
+      "ops": {
+       "MOV1": 1,
+       "RET": 1
+      }
+     },
+     "customKernel": {
+      "instructions": 2,
+      "halfwords": 4,
+      "frameWords": 6,
+      "ops": {
+       "MOV3": 1,
+       "RET": 1
+      }
+     }
+    },
+    "fusions": {
+     "MAD": 1,
+     "FRESDOT": 2
+    },
+    "constWords": 34,
+    "imports": 0,
+    "registerWords": 88,
+    "codeHalfwords": 151,
+    "bytes": 518,
+    "kernelFunctions": [
+     "fresnelDielectric",
+     "fbm3"
+    ]
+   }
+  }
+ ]
+}

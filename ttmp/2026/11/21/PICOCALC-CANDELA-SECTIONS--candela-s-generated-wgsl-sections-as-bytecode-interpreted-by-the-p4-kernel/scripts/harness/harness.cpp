@@ -110,9 +110,12 @@ static Lobe evalMaterial(const Hit &h, vec3f wo, f32 u) {
   Lobe B; cdl_vm_eval_material(&CTX, (const cdl_hit *)&h, &wo.x, u, (cdl_lobe *)&B); const u32 s2 = rngS; rngS = s1;
   const float *a = (const float *)&A, *b = (const float *)&B;
   static const int F[][2] = {{1, 3}, {4, 3}, {7, 1}, {8, 1}, {9, 1}, {11, 3}, {14, 3}, {17, 3}, {20, 2}, {23, 3}};   // float fields (offset, width)
-  double rel = 0; for (auto &f : F) rel = fmax(rel, relv(a + f[0], b + f[0], f[1]));
+  static const char *FN[] = {"c0", "c1", "ax", "ay", "ior", "N", "w", "Le", "film", "T"};
+  double rel = 0; int wf = 0; for (int i = 0; i < 10; i++) { const double r = relv(a + F[i][0], b + F[i][0], F[i][1]); if (r > rel) { rel = r; wf = i; } }
   const bool intOk = A.kind == B.kind && A.flags == B.flags && A.med == B.med;
-  char w[512]; snprintf(w, sizeof w, "mat %d P=(%g %g %g) N=(%g %g %g) wo=(%g %g %g) u=%.9g kind %d/%d flags %d/%d rel %.3g", h.mat, h.P.x, h.P.y, h.P.z, h.N.x, h.N.y, h.N.z, wo.x, wo.y, wo.z, u, A.kind, B.kind, A.flags, B.flags, rel);
+  const float *fa = a + F[wf][0], *fb = b + F[wf][0];
+  char w[512]; snprintf(w, sizeof w, "mat %d P=(%g %g %g) N=(%g %g %g) wo=(%g %g %g) u=%.9g kind %d/%d flags %d/%d rel %.3g in %s: (%.9g %.9g %.9g) / (%.9g %.9g %.9g)", h.mat, h.P.x, h.P.y, h.P.z, h.N.x, h.N.y, h.N.z, wo.x, wo.y, wo.z, u, A.kind, B.kind, A.flags, B.flags, rel,
+    FN[wf], fa[0], F[wf][1] > 1 ? fa[1] : 0.0f, F[wf][1] > 2 ? fa[2] : 0.0f, fb[0], F[wf][1] > 1 ? fb[1] : 0.0f, F[wf][1] > 2 ? fb[2] : 0.0f);
   note(0, rel, intOk, s1 == s2, memcmp(&A, &B, sizeof A) == 0, w);
   return A;
 #endif
