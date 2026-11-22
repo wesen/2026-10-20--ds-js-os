@@ -54,6 +54,7 @@ type settings struct {
 	JobID       string   `glazed:"job-id"`
 	Stop        bool     `glazed:"stop"`
 	MaxJob      string   `glazed:"max-job"`
+	Idle        string   `glazed:"idle"`
 	LogLevel    string   `glazed:"log-level"`
 }
 
@@ -96,10 +97,11 @@ func root() (*cobra.Command, error) {
 	detach := fields.New("detach", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("With --job: print the job ID and return instead of waiting"))
 	jobID := fields.New("job-id", fields.TypeString, fields.WithRequired(true), fields.WithHelp("ID printed by eval --job --detach"))
 	stop := fields.New("stop", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("Interrupt the job instead of reporting it"))
+	idle := fields.New("idle", fields.TypeString, fields.WithDefault("2h"), fields.WithHelp("Unload sessions unused for this long (Go duration; 0 keeps them until closed)"))
 	maxJob := fields.New("max-job", fields.TypeString, fields.WithDefault("10m"), fields.WithHelp("Longest deadline a background job may have (Go duration, e.g. 10m)"))
 	defs := []*command{
 		{
-			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, simd, repo, mount, maxJob, level)),
+			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, simd, repo, mount, maxJob, idle, level)),
 			serve,
 		},
 		{
@@ -118,6 +120,10 @@ func root() (*cobra.Command, error) {
 		{
 			cmds.NewCommandDescription("close", cmds.WithShort("Release a session and its JavaScript bindings"), cmds.WithFlags(addr, session)),
 			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "close") },
+		},
+		{
+			cmds.NewCommandDescription("sessions", cmds.WithShort("List open sessions: created, last used, idle time, cells, jobs and any running job"), cmds.WithFlags(addr)),
+			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "sessions") },
 		},
 		{
 			cmds.NewCommandDescription("info", cmds.WithShort("Print what a running service mounted: archive, studies, sessions and limits"), cmds.WithFlags(addr)),
@@ -205,6 +211,12 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 			return nil, errors.Errorf("--max-job %q: give a positive Go duration such as 10m", cfg.MaxJob)
 		}
 	}
+	idleFor := tracerepl.DefaultIdle
+	if cfg.Idle != "" {
+		if idleFor, err = time.ParseDuration(cfg.Idle); err != nil || idleFor < 0 {
+			return nil, errors.Errorf("--idle %q: give a Go duration such as 2h, or 0 to keep sessions", cfg.Idle)
+		}
+	}
 	inputs := inventory{archive: archive, hardware: hardware, hardwarePath: absPath(cfg.DeviceStudy), simd: simd, simdPath: absPath(cfg.SIMDStudy),
 		repo: repo, compilers: compilers}
 	return tracerepl.New(ctx, func(vm *goja.Runtime) error {
@@ -224,7 +236,7 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 			return err
 		}
 		return traceapi.InstallStats(vm)
-	}, logger, tracerepl.WithInventory(inputs.describe), tracerepl.WithMaxJob(maxJob))
+	}, logger, tracerepl.WithInventory(inputs.describe), tracerepl.WithMaxJob(maxJob), tracerepl.WithIdle(idleFor))
 }
 
 // inventory is what GET /info reports about the service's verified inputs.
@@ -440,6 +452,12 @@ func client(ctx context.Context, cfg settings, action string) error {
 		fmt.Println(session.ID)
 	case "close":
 		return call(ctx, cfg, http.MethodDelete, sessionPath, nil, nil)
+	case "sessions":
+		var sessions []tracerepl.SessionView
+		if err := call(ctx, cfg, http.MethodGet, "/sessions", nil, &sessions); err != nil {
+			return err
+		}
+		return printJSON(sessions)
 	case "info":
 		var info json.RawMessage
 		if err := call(ctx, cfg, http.MethodGet, "/info", nil, &info); err != nil {

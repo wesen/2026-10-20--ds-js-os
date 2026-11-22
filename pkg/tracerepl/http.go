@@ -21,7 +21,7 @@ const MaxSessions = 32
 // routes is what GET / lists, so a client that finds a port can discover the protocol.
 var routes = []string{
 	"GET /info: inventory of mounted inputs, sessions and limits",
-	"POST /sessions: open a session",
+	"POST /sessions: open a session; GET /sessions: list open sessions",
 	`POST /sessions/{id}/eval: evaluate {"source": "..."} within the cell deadline`,
 	`POST /sessions/{id}/jobs: start {"source": "...", "timeoutSeconds": N} in the background (202)`,
 	"GET /sessions/{id}/jobs: list jobs; GET /sessions/{id}/jobs/{job}: state and result",
@@ -33,12 +33,12 @@ var routes = []string{
 // part of the protocol. Test the Host header as well as the listener address.
 func Handler(s *Service, logger zerolog.Logger) http.Handler {
 	mux := http.NewServeMux()
+	// Serializes opening, so the count and the open cannot interleave.
 	var mu sync.Mutex
-	live := make(map[string]struct{})
 	mux.HandleFunc("POST /sessions", func(w http.ResponseWriter, r *http.Request) {
 		mu.Lock()
 		defer mu.Unlock()
-		if len(live) >= MaxSessions {
+		if s.SessionCount() >= MaxSessions {
 			// Name only paths a client may take: it can close sessions it opened.
 			response(w, http.StatusTooManyRequests, Result{Error: fmt.Sprintf("session limit (%d) reached; close a session you opened (trace-repl close --session ID) or ask the operator to restart the service", MaxSessions)})
 			return
@@ -48,7 +48,6 @@ func Handler(s *Service, logger zerolog.Logger) http.Handler {
 			failure(w, err)
 			return
 		}
-		live[id] = struct{}{}
 		logger.Debug().Str("id", id).Msg("opened trace session")
 		response(w, http.StatusCreated, map[string]string{"id": id})
 	})
@@ -107,28 +106,21 @@ func Handler(s *Service, logger zerolog.Logger) http.Handler {
 		response(w, http.StatusOK, job)
 	})
 	mux.HandleFunc("GET /info", func(w http.ResponseWriter, r *http.Request) {
-		info := s.inventory()
-		mu.Lock()
-		info["sessions"] = map[string]int{"open": len(live), "max": MaxSessions}
-		mu.Unlock()
-		response(w, http.StatusOK, info)
+		response(w, http.StatusOK, s.inventory())
+	})
+	mux.HandleFunc("GET /sessions", func(w http.ResponseWriter, r *http.Request) {
+		response(w, http.StatusOK, s.Sessions())
 	})
 	mux.HandleFunc("GET /{$}", func(w http.ResponseWriter, r *http.Request) {
 		response(w, http.StatusOK, map[string]any{"service": "trace-repl", "routes": routes})
 	})
 	mux.HandleFunc("DELETE /sessions/{id}", func(w http.ResponseWriter, r *http.Request) {
-		id := r.PathValue("id")
-		mu.Lock()
-		defer mu.Unlock()
-		if err := s.Release(r.Context(), id); err != nil {
-			// A session that no longer exists must not keep holding capacity.
-			if errors.Is(err, replsession.ErrSessionNotFound) || errors.Is(err, replsession.ErrSessionClosed) {
-				delete(live, id)
-			}
+		// Release drops the session from the registry first, so a session that
+		// vanished elsewhere never keeps holding capacity.
+		if err := s.Release(r.Context(), r.PathValue("id")); err != nil {
 			failure(w, err)
 			return
 		}
-		delete(live, id)
 		w.WriteHeader(http.StatusNoContent)
 	})
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -80,6 +80,10 @@ repo.show("eaf0872", "picocalc-os/compiler/typed-rv32.js").sha256
 mounts.board.json()          // started with --mount board=/tmp/bench/rows.json
 ```
 
+## Session lifetime
+
+A service holds at most 32 sessions. A session that nobody has used for `--idle` (default `2h`; `0` keeps sessions until they are closed) is unloaded, and its bindings are gone. A session that is running or queueing a cell or job is never idle, and its idle time starts when that work ends. A later request to an unloaded session gets HTTP 404 with the reason, for example `session session-… expired after 2h0m0s idle`. `trace-repl sessions --addr …` lists the open sessions with their creation and last-use times, cell and job counts and any running job.
+
 ## Run long work as a job
 
 A cell must finish within 15 seconds. A job is a cell with its own deadline, up to the service's `--max-job` (default `10m`). It runs in the same session VM, so it sees every binding of earlier cells and its own top-level declarations persist. While a job is queued or running, the session refuses cells and other jobs at once with HTTP 409 and the job's ID, instead of letting them wait out their deadline. A job's result obeys the same 512 KiB limit as a cell's. A session remembers its last 16 finished jobs.
@@ -112,10 +116,11 @@ Several services often run side by side on different ports. `trace-repl info --a
 | --- | --- |
 | `GET /` | HTTP 200, the list of routes |
 | `GET /info` | HTTP 200, `{"service","build","repo":{"root","head"},"mounts","archive","deviceStudy","simdStudy","sessions":{"open","max"},"limits":{"sourceBytes","resultBytes","cellSeconds"},"started"}` |
-| `POST /sessions` with empty body | HTTP 201, `{"id":"session-…"}` |
+| `POST /sessions` with empty body | HTTP 201, `{"id":"session-…"}`; HTTP 429 at 32 open sessions |
+| `GET /sessions` | HTTP 200, `[{"id","created","lastUsed","idleSeconds","cells","jobs","activeJob","busy"}]`, oldest first |
 | `POST /sessions/{id}/eval` with `Content-Type: application/json` and `{"source":"7 * 6"}` | HTTP 200, `{"ok":true,"value":42}` |
 | JS parse or evaluation error | HTTP 200, `{"ok":false,"error":"…"}`. A subsequent valid cell can still run. |
-| Unknown session | HTTP 404 with a JSON error |
+| Unknown session | HTTP 404 with a JSON error; for a session unloaded after `--idle`, the error says `session … expired after 2h0m0s idle` |
 | `POST /sessions/{id}/jobs` with `{"source":"…","timeoutSeconds":600}` (`timeoutSeconds` optional) | HTTP 202, `{"job":"job-…","state":"queued","timeoutSeconds":600,…}` |
 | `GET /sessions/{id}/jobs/{job}` | HTTP 200, `{"job","session","state","submitted","started","finished","timeoutSeconds","elapsedSeconds","result"}`; `state` is `queued`, `running`, `done`, `failed` or `stopped`, and `result` is a cell result once finished |
 | `GET /sessions/{id}/jobs` | HTTP 200, the session's jobs without results, oldest first |

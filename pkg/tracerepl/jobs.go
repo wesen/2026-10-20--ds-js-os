@@ -116,12 +116,6 @@ func (s *Service) register(id string) {
 	s.mu.Unlock()
 }
 
-func (s *Service) unregister(id string) {
-	s.mu.Lock()
-	delete(s.live, id)
-	s.mu.Unlock()
-}
-
 // claim admits a cell: the session must be known and hold no job.
 func (s *Service) claim(id string) error {
 	s.mu.Lock()
@@ -151,8 +145,11 @@ func (s *Service) touch(id string, cell bool) {
 	}
 }
 
-// missing explains an unknown session ID.
+// missing explains an unknown session ID; the caller holds s.mu.
 func (s *Service) missing(id string) error {
+	if reason, ok := s.expired[id]; ok {
+		return &ExpiredError{ID: id, Reason: reason}
+	}
 	return errors.Wrapf(replsession.ErrSessionNotFound, "session %s", id)
 }
 

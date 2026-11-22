@@ -246,6 +246,10 @@ func TestPublicCommandGrammar(t *testing.T) {
 		{[]string{"serve", "--help"}, "", "--archive"},
 		{[]string{"serve", "--help"}, "", "--simd-study"},
 		{[]string{"serve", "--help"}, "", "--mount"},
+		{[]string{"serve", "--help"}, "", "--idle"},
+		{[]string{"serve", "--help"}, "", "--max-job"},
+		{[]string{"eval", "--help"}, "", "--job"},
+		{[]string{"sessions", "--help"}, "", "--addr"},
 		{[]string{"eval", "--help"}, "", "--session"},
 		{[]string{"serve", "--archive", ".", "--addr", "0.0.0.0:3791"}, "loopback", ""},
 		{[]string{"eval", "--code", "1+1"}, "session", ""},
@@ -338,5 +342,11 @@ func TestEvalJobThroughTheClient(t *testing.T) {
 	cfg.Job, cfg.Code = false, "fromJob"
 	if err := client(ctx, cfg, "eval"); err != nil {
 		t.Fatal(err)
+	}
+	if err := client(ctx, cfg, "sessions"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := newService(ctx, settings{Archive: evidenceRoot(t, "PICOCALC-ROW-IR--*"), Idle: "later"}, zerolog.Nop()); err == nil || !strings.Contains(err.Error(), "--idle") {
+		t.Fatalf("bad --idle accepted: %v", err)
 	}
 }

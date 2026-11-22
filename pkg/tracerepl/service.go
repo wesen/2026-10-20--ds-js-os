@@ -112,9 +112,14 @@ type Service struct {
 	describe func() map[string]any
 	lifetime context.Context
 
-	mu   sync.Mutex
-	live map[string]*sessionEntry // sessions opened through Open
-	wg   sync.WaitGroup           // job goroutines
+	mu           sync.Mutex
+	live         map[string]*sessionEntry // sessions opened through Open
+	expired      map[string]string        // reaped session ID -> reason
+	expiredOrder []string
+	idle         time.Duration
+	closing      chan struct{}
+	closeOnce    sync.Once
+	wg           sync.WaitGroup // job goroutines and the reaper
 }
 
 // Option configures a Service.
@@ -147,9 +152,14 @@ func New(ctx context.Context, install Installer, logger zerolog.Logger, opts ...
 	s := &Service{sessions: replsession.NewService(factory, logger,
 		replsession.WithLifetimeContext(ctx),
 		replsession.WithDefaultSessionOptions(replsession.RawSessionOptions()),
-	), timeout: defaultEvalTimeout, maxJob: DefaultMaxJob, started: time.Now().UTC(), lifetime: ctx, live: map[string]*sessionEntry{}}
+	), timeout: defaultEvalTimeout, maxJob: DefaultMaxJob, started: time.Now().UTC(), lifetime: ctx,
+		live: map[string]*sessionEntry{}, expired: map[string]string{}, idle: DefaultIdle, closing: make(chan struct{})}
 	for _, opt := range opts {
 		opt(s)
+	}
+	if s.idle > 0 {
+		s.wg.Add(1)
+		go s.reap()
 	}
 	return s, nil
 }
@@ -175,6 +185,7 @@ func (s *Service) inventory() map[string]any {
 	info["service"] = "trace-repl"
 	info["started"] = s.started
 	info["limits"] = s.Limits()
+	info["sessions"] = map[string]any{"open": s.SessionCount(), "max": MaxSessions, "idleSeconds": s.idle.Seconds()}
 	return info
 }
 
@@ -190,12 +201,21 @@ func (s *Service) Open(ctx context.Context) (string, error) {
 // Release closes a session. A running cell or job is interrupted with the
 // reason "its session was closed".
 func (s *Service) Release(ctx context.Context, id string) error {
-	s.unregister(id)
-	return s.sessions.UnloadSession(ctx, id)
+	s.mu.Lock()
+	_, known := s.live[id]
+	reason, expired := s.expired[id]
+	delete(s.live, id)
+	s.mu.Unlock()
+	err := s.sessions.UnloadSession(ctx, id)
+	if !known && expired && errors.Is(err, replsession.ErrSessionNotFound) {
+		return &ExpiredError{ID: id, Reason: reason}
+	}
+	return err
 }
 
-// Close stops every session and waits for their jobs to finish.
+// Close stops every session, the idle reaper and every job, and waits for them.
 func (s *Service) Close(ctx context.Context) error {
+	s.closeOnce.Do(func() { close(s.closing) })
 	err := s.sessions.Close(ctx)
 	s.wg.Wait()
 	return err
