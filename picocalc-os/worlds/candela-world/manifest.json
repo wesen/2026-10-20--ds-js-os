@@ -1,0 +1,1 @@
+{ "name": "candela", "file": "candela/world.js", "claims": ["candela", "fs:/candela"], "budget_ms": 50, "long_ms": 4000, "mem_kb": 4096, "stack_kb": 56 }

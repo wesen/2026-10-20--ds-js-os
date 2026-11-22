@@ -824,7 +824,7 @@ static void run_segment(world_t *W, bool is_settle) {
                             : PROFILE.turn_base_us + (vtime_t)(steps * PROFILE.ns_per_step / 1000.0) + K.seg_cost;
   char why[300] = "";
   if (W->oom) snprintf(why, sizeof why, "ran out of memory (its limit is %zu KB)", W->mem_limit / 1024);
-  else if (W->overrun) snprintf(why, sizeof why, "ran past its %s budget of %lld %sms", budget_kind, (long long)(budget / 1000), K.realtime || W->engine == ENG_NATIVE ? "" : "virtual ");   // a process runs in real time
+  else if (W->overrun) snprintf(why, sizeof why, "ran past its %s budget of %lld %sms", W->seg_long ? "long segment" : budget_kind, (long long)((W->seg_long ? W->long_budget_us : budget) / 1000), K.realtime || W->engine == ENG_NATIVE ? "" : "virtual ");   // a process runs in real time
   else if (rc < 0) snprintf(why, sizeof why, "%s", W->last_error);
   else if (W->turn_failed) snprintf(why, sizeof why, "%s", W->turn_error ? W->turn_error : "its turn failed");
   W->cpu_us += cost;
@@ -949,6 +949,8 @@ static int add_world(void *arg, const manifest_world_t *mw) {
   W->mem_limit = mw->has_mem ? (size_t)(mw->mem_kb * 1024) : 1024 * 1024;
   W->prio = mw->has_prio ? (int)mw->priority : -1;
   W->store_limit = mw->has_store ? (size_t)(mw->store_kb * 1024) : 16 * 1024;
+  W->long_budget_us = mw->has_long ? (vtime_t)(mw->long_ms * 1000) : 0;
+  W->js_stack = mw->has_stack ? (size_t)(mw->stack_kb * 1024) : 0;
   for (int k = 0; k < mw->n_claims && k < MAX_LIST; k++) snprintf(W->claims[W->n_claims++], NAME_LEN, "%s", mw->claims[k]);
   W->engine = mw->engine[0] ? engine_index(mw->engine) : ENG_JS;
   if (W->engine < 0) { fprintf(stderr, "%s: there is no engine \"%s\" (js, wasm, native)\n", W->name, mw->engine); free(W); return -1; }

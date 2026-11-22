@@ -85,7 +85,7 @@ export function subsetCheck(compiled, o = {}) {
   const tier = o.tier == null ? TIER : o.tier;
   return features(compiled, o.main).filter(f => f.tier > tier).map(f => ({
     severity: 'error', code: CODE,
-    message: `the PicoCalc renders tier T${tier} scenes; ${NAMES[f.why] || f.why} ${f.why.startsWith('env ') ? 'is' : 'are'} tier T${f.tier}`,
+    message: `not in the PicoCalc's subset (tier T${tier}): ${NAMES[f.why] || f.why}, a tier T${f.tier} feature`,
     hint: f.tier >= 3 ? 'this scene needs more data than the handheld holds' : `→ build it on a desktop, or wait for the T${f.tier} kernel`,
     loc: f.loc, suggest: null, tier: f.tier, feature: f.why,
   }));

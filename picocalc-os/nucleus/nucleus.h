@@ -110,8 +110,12 @@ typedef struct world {
   size_t mem_limit;         // device bytes
   size_t store_limit;       // bytes of its persistent record (the JSON text)
   vtime_t budget_us;        // per segment
+  vtime_t long_budget_us;   // manifest "long_ms": the longest segment the world may ask for (0: none; PICOCALC-CANDELA-WORLD)
+  size_t js_stack;          // manifest "stack_kb": its QuickJS C stack limit, at most the port's (0: the port's)
   // accounting
   size_t mem_used;          // host bytes, from the allocator
+  size_t mem_peak;          // the most mem_used has been since the runtime was made (or the world reset it)
+  bool seg_long;            // this segment runs on long_budget_us (it asked for it)
   bool oom, overrun;
   bool user;                 // spawned from storage (sys.spawn): named u-<name>, no claims, its title is its name
   int64_t interrupts;       // interrupt-handler calls since the runtime was made
@@ -315,8 +319,8 @@ bool world_claims(world_t *W, const char *claim);
 // the engine binding: vm.c (QuickJS) or vm_mqjs.c (MicroQuickJS); one is linked into a build
 typedef struct {                // one entry of system.json's "worlds", as the binding's JSON parser read it
   char name[NAME_LEN], file[96], engine[12];
-  bool has_budget, has_mem, has_prio, has_store;
-  double budget_ms, mem_kb, priority, store_kb;
+  bool has_budget, has_mem, has_prio, has_store, has_long, has_stack;
+  double budget_ms, mem_kb, priority, store_kb, long_ms, stack_kb;
   char claims[MAX_LIST][NAME_LEN]; int n_claims;
 } manifest_world_t;
 int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(void *arg, const manifest_world_t *w), void *arg);
@@ -328,6 +332,7 @@ void vm_op_prof_reset(void);
 int vm_create(world_t *W);
 void vm_dispose(world_t *W);
 void vm_begin_segment(world_t *W, vtime_t budget_us);
+int vm_long_segment(world_t *W, char *why, size_t n);   // this segment runs on W->long_budget_us; -1 if it has none
 int64_t vm_steps(world_t *W);
 int vm_dispatch(world_t *W, msg_t *m);
 int vm_settle(world_t *W, settle_t *s);

@@ -1,0 +1,15 @@
+# picocalc-host script: the diagnostic probes of 06-diag-probes.json
+wait 1500
+send candela load
+wait 300
+send candela build {"id":"P-throw","files":{"scene.js":"import { scene } from 'candela';\n\nconst x = 1;\nthrow new Error('boom');\nexport default scene();\n"},"render":false}
+wait 2000
+send candela build {"id":"P-method","files":{"scene.js":"import { scene, shape, material } from 'candela';\n\n\nexport default scene().add(shape.sphere(1).materail(material.pbr()));\n"},"render":false}
+wait 2000
+send candela build {"id":"P-torus","files":{"scene.js":"import { scene, shape, material, light } from 'candela';\n\nexport default scene()\n  .add(shape.sphere(1).material(material.pbr()))\n  .add(shape.torus(1, 0.3).at(0, 2, 0).material(material.pbr()))\n  .light(light.daylight());\n"},"render":false}
+wait 2000
+send candela build {"id":"P-field","files":{"scene.js":"import { scene, shape, material, bsdf, light, fx } from 'candela';\n\nconst gold = bsdf.conductor({ ior: 'Au', roughness: 0.2 });\nexport default scene()\n  .add(shape.sphere(0.5).material(material(bsdf.mix(bsdf.lambert('#1d4f9a'), gold, p => fx.stripes(p.P.y, 7, 0.7)))))\n  .light(light.daylight());\n"},"render":false}
+wait 2000
+send candela build {"id":"P-syntax","files":{"scene.js":"import { scene } from 'candela';\nconst a = ;\nexport default scene();\n"},"render":false}
+wait 2000
+quit

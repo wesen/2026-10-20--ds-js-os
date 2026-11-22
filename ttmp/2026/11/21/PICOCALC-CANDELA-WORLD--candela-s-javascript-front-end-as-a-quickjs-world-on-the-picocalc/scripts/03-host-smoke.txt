@@ -1,0 +1,16 @@
+# picocalc-host script: the Candela world end to end in the simulator (make CANDELA=1 candela, then
+#   ./build-candela/picocalc-host -j build-candela/candela-js THIS-FILE | grep '^CW ')
+wait 1500
+send candela load
+wait 200
+send candela build {"id":"B-01","measure":true}
+wait 3000
+send candela status
+wait 200
+send candela build {"id":"B-01p"}
+wait 500
+send candela param {"id":"rough","value":0.7}
+wait 500
+send candela status
+wait 200
+quit

@@ -1,0 +1,32 @@
+{
+ "P-throw": {
+  "expect": "E000 at scene.js:4",
+  "files": {
+   "scene.js": "import { scene } from 'candela';\n\nconst x = 1;\nthrow new Error('boom');\nexport default scene();\n"
+  }
+ },
+ "P-method": {
+  "expect": "E104 at scene.js:4",
+  "files": {
+   "scene.js": "import { scene, shape, material } from 'candela';\n\n\nexport default scene().add(shape.sphere(1).materail(material.pbr()));\n"
+  }
+ },
+ "P-torus": {
+  "expect": "E790 (T1 torus) at scene.js:5",
+  "files": {
+   "scene.js": "import { scene, shape, material, light } from 'candela';\n\nexport default scene()\n  .add(shape.sphere(1).material(material.pbr()))\n  .add(shape.torus(1, 0.3).at(0, 2, 0).material(material.pbr()))\n  .light(light.daylight());\n"
+  }
+ },
+ "P-field": {
+  "expect": "E790 (T2 surface field) at scene.js:5",
+  "files": {
+   "scene.js": "import { scene, shape, material, bsdf, light, fx } from 'candela';\n\nconst gold = bsdf.conductor({ ior: 'Au', roughness: 0.2 });\nexport default scene()\n  .add(shape.sphere(0.5).material(material(bsdf.mix(bsdf.lambert('#1d4f9a'), gold, p => fx.stripes(p.P.y, 7, 0.7)))))\n  .light(light.daylight());\n"
+  }
+ },
+ "P-syntax": {
+  "expect": "E001",
+  "files": {
+   "scene.js": "import { scene } from 'candela';\nconst a = ;\nexport default scene();\n"
+  }
+ }
+}

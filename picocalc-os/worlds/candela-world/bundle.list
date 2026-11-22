@@ -1,0 +1,29 @@
+# The Candela world's bundle, candela/front.qbc (tools/candela-bc OUT --list this-file picocalc-os/).
+# Candela's front end: src/candela.js and its import closure, unchanged (third_party/candela/PIN.json).
+ggx third_party/candela/src/kernel.js
+module candela:candela.js third_party/candela/src/candela.js
+module candela:compile.js third_party/candela/src/compile.js
+module candela:diag.js third_party/candela/src/diag.js
+module candela:finish.js third_party/candela/src/finish.js
+module candela:fragments.js third_party/candela/src/fragments.js
+module candela:fx.js third_party/candela/src/fx.js
+module candela:hdri.js third_party/candela/src/hdri.js
+module candela:ir.js third_party/candela/src/ir.js
+module candela:kernel.js third_party/candela/src/kernel.js
+module candela:mesh.js third_party/candela/src/mesh.js
+module candela:params.js third_party/candela/src/params.js
+module candela:scene.js third_party/candela/src/scene.js
+module candela:stdlib.js third_party/candela/src/stdlib.js
+module candela:test.js third_party/candela/src/test.js
+module candela:units.js third_party/candela/src/units.js
+# The world's modules.
+memo world:kernel-memo.js worlds/candela-world/kernel-memo.js
+module world:shims.js worlds/candela-world/shims.js
+module world:runner.js worlds/candela-world/runner.js
+module world:subset.js worlds/candela-world/subset.js
+module world:frame.js worlds/candela-world/frame.js
+module world:program.js worlds/candela-world/program.js
+# Scenes: the T0 presets by file name (PIN.json maps ids to files) and the world's own.
+text pin third_party/candela/PIN.json
+text-dir preset: third_party/candela/presets
+text-dir scene: worlds/candela-world/scenes

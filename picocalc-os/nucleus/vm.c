@@ -10,6 +10,9 @@
 #include <string.h>
 #include "nucleus.h"
 #include "quickjs.h"
+#if PICOCALC_CANDELA_WORLD
+#include "candela_world.h"
+#endif
 
 // What this binding keeps per world, behind world_t's opaque vm pointer.
 typedef struct { int id; JSValue resolve, reject; } pending_t;
@@ -34,6 +37,7 @@ static void *w_malloc(JSMallocState *s, size_t size) {
   if (!p) return NULL;
   size_t u = port_heap_usable(p) + 8;
   W->mem_used += u; s->malloc_size += u; s->malloc_count++;
+  if (W->mem_used > W->mem_peak) W->mem_peak = W->mem_used;
   return p;
 }
 static void w_free(JSMallocState *s, void *p) {
@@ -53,6 +57,7 @@ static void *w_realloc(JSMallocState *s, void *p, size_t size) {
   if (!q) return NULL;
   size_t u = port_heap_usable(q) + 8;
   W->mem_used = W->mem_used - old + u; s->malloc_size = s->malloc_size - old + u;
+  if (W->mem_used > W->mem_peak) W->mem_peak = W->mem_used;
   return q;
 }
 static size_t w_usable(const void *p) { return port_heap_usable(p); }
@@ -74,6 +79,19 @@ void vm_begin_segment(world_t *W, vtime_t budget_us) {
   W->budget_interrupts = (int64_t)((double)budget_us * 1000.0 / (PROFILE.ns_per_step * JS_GetInterruptCounterInit())) + 1;
   W->seg_deadline = K.realtime ? port_clock() + budget_us : VT_INF;
   W->overrun = false;
+  W->seg_long = false;
+}
+
+// A long segment: this segment runs on the world's long budget (manifest "long_ms") instead of its turn budget, counted
+// from the segment's start. For work that cannot be split across turns, such as a Candela scene build; it holds the
+// lane as a boot segment does. A world without long_ms cannot ask.
+int vm_long_segment(world_t *W, char *why, size_t n) {
+  if (!W->long_budget_us) { snprintf(why, n, "%s has no long_ms in its manifest", W->name); return -1; }
+  if (W->seg_long) return 0;
+  W->seg_long = true;
+  W->budget_interrupts = (int64_t)((double)W->long_budget_us * 1000.0 / (PROFILE.ns_per_step * JS_GetInterruptCounterInit())) + 1;
+  if (K.realtime) W->seg_deadline = K.vnow + W->long_budget_us;
+  return 0;
 }
 
 int64_t vm_steps(world_t *W) {
@@ -1009,11 +1027,11 @@ int vm_create(world_t *W) {
   extern void p4_agenda_js_boot(const world_t *, const vtime_t *);
   vtime_t stages[5] = {port_clock()};
 #endif
-  W->oom = false; W->interrupts = 0; W->mem_used = 0;
+  W->oom = false; W->interrupts = 0; W->mem_used = 0; W->mem_peak = 0;
   W->vm = calloc(1, sizeof(*W->vm));
   W->vm->rt = JS_NewRuntime2(&MF, W);
   if (!W->vm->rt) { snprintf(W->last_error, sizeof W->last_error, "could not make a runtime within %zu KB", W->mem_limit / 1024); return -1; }
-  JS_SetMaxStackSize(W->vm->rt, port_js_stack());
+  JS_SetMaxStackSize(W->vm->rt, W->js_stack && W->js_stack < port_js_stack() ? W->js_stack : port_js_stack());
   JS_SetInterruptHandler(W->vm->rt, on_interrupt, W);
   JS_SetHostPromiseRejectionTracker(W->vm->rt, on_rejection, W);
   W->vm->ctx = JS_NewContext(W->vm->rt);
@@ -1032,6 +1050,10 @@ int vm_create(world_t *W) {
   JSValue r = eval_prelude(ctx);
   if (JS_IsException(r)) { set_error(W); rc = -1; }
   JS_FreeValue(ctx, r);
+#if PICOCALC_CANDELA_WORLD
+  // the Candela world (claim "candela"): its bytecode module loader and host object, after the prelude
+  if (!rc && world_claims(W, "candela") && candela_world_install(W, ctx)) { set_error(W); rc = -1; }
+#endif
 #if PICOCALC_TYPED_AGENDA
   stages[2] = port_clock();
 #endif
@@ -1066,6 +1088,9 @@ int vm_create(world_t *W) {
 
 void vm_dispose(world_t *W) {
   agent_drop(W);
+#if PICOCALC_CANDELA_WORLD
+  candela_world_dispose(W);
+#endif
   if (!W->vm) return;
   if (!W->vm->rt) { free(W->vm); W->vm = NULL; return; }
   JSContext *ctx = W->vm->ctx;
@@ -1164,6 +1189,8 @@ int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(vo
     f = JS_GetPropertyStr(ctx, o, "mem_kb"); if ((mw.has_mem = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.mem_kb, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "priority"); if ((mw.has_prio = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.priority, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "store_kb"); if ((mw.has_store = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.store_kb, f); JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "long_ms"); if ((mw.has_long = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.long_ms, f); JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "stack_kb"); if ((mw.has_stack = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.stack_kb, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "claims");
     JSValue cl = JS_GetPropertyStr(ctx, f, "length"); int32_t nc = 0; JS_ToInt32(ctx, &nc, cl); JS_FreeValue(ctx, cl);
     for (int k = 0; k < nc && k < MAX_LIST; k++) {

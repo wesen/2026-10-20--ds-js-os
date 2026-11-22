@@ -1,0 +1,46 @@
+{
+ "P-throw": {
+  "expect": "E000 at scene.js:4",
+  "ok": false,
+  "diags": [
+   "E000@scene.js:6"
+  ],
+  "refused": []
+ },
+ "P-method": {
+  "expect": "E104 at scene.js:4",
+  "ok": false,
+  "diags": [
+   "E104@scene.js:56"
+  ],
+  "refused": []
+ },
+ "P-torus": {
+  "expect": "E790 (T1 torus) at scene.js:5",
+  "ok": true,
+  "diags": [
+   "I207@-"
+  ],
+  "refused": [
+   "E790@scene.js:114 torus"
+  ]
+ },
+ "P-field": {
+  "expect": "E790 (T2 surface field) at scene.js:5",
+  "ok": true,
+  "diags": [
+   "I207@-"
+  ],
+  "refused": [
+   "E790@scene.js:114 surface field"
+  ]
+ },
+ "P-syntax": {
+  "expect": "E001",
+  "ok": false,
+  "diags": [
+   "E001@scene.js:1"
+  ],
+  "refused": []
+ }
+}
