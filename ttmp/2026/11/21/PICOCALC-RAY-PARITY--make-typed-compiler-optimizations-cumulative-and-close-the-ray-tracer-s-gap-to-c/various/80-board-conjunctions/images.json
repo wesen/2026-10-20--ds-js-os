@@ -1,0 +1,88 @@
+[
+ {
+  "family": "ray",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true, \"sets\": true, \"hoist\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "3e18e5099c990fb168e24f8637ddf7110f931edf980b92b4f7383dda6adbf6d7",
+  "bytes": 11780,
+  "entries": {
+   "typedRayStride": 0,
+   "typedRaySphereFits": 140,
+   "typedRayLampFits": 204,
+   "typedRayAbs": 264,
+   "typedRaySetObject": 292,
+   "typedRaySetObjects": 524,
+   "typedRayBuildGeometry": 804,
+   "typedRayBuildLight": 1324,
+   "typedRayBuildTables": 2208,
+   "typedRayPrepare": 2292,
+   "typedRayComputeRow": 2400,
+   "typedRayInShadow": 3448,
+   "typedRaySphereScale": 4284,
+   "typedRayPack": 4656,
+   "typedRayPixel": 4856,
+   "typedRayLitRow": 5316,
+   "typedRaySaveAudit": 8716,
+   "typedRayFrame": 9120,
+   "typedRayRender": 9452,
+   "typedRayTrace": 10204,
+   "typedRayShade": 10860
+  }
+ },
+ {
+  "family": "chess",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true, \"sets\": true, \"hoist\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "0b9ffd88d8057c65ba527b75177ffb3c18fe4184bb64fb400b44e6e3f47a07f7",
+  "bytes": 1220,
+  "entries": {
+   "chessSquare": 0,
+   "chessSide": 32,
+   "chessValue": 84,
+   "chessAbs": 196,
+   "chessCenter": 224,
+   "chessEvaluate": 308
+  }
+ },
+ {
+  "family": "ray",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true, \"sets\": true, \"hoist\": true, \"conjunctions\": true, \"loadHomes\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "245edbc1333519b3d78baa792e2317a6ba407f36fff682b078dd653bc5f097a0",
+  "bytes": 11600,
+  "entries": {
+   "typedRayStride": 0,
+   "typedRaySphereFits": 136,
+   "typedRayLampFits": 200,
+   "typedRayAbs": 260,
+   "typedRaySetObject": 288,
+   "typedRaySetObjects": 520,
+   "typedRayBuildGeometry": 800,
+   "typedRayBuildLight": 1316,
+   "typedRayBuildTables": 2188,
+   "typedRayPrepare": 2272,
+   "typedRayComputeRow": 2380,
+   "typedRayInShadow": 3400,
+   "typedRaySphereScale": 4240,
+   "typedRayPack": 4612,
+   "typedRayPixel": 4812,
+   "typedRayLitRow": 5272,
+   "typedRaySaveAudit": 8536,
+   "typedRayFrame": 8940,
+   "typedRayRender": 9272,
+   "typedRayTrace": 10024,
+   "typedRayShade": 10680
+  }
+ },
+ {
+  "family": "chess",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true, \"sets\": true, \"hoist\": true, \"conjunctions\": true, \"loadHomes\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "e056eeb5ab22b376e96905132f1d068665cd7eec2d7dbe62c9bdfb3eef6c8aad",
+  "bytes": 1204,
+  "entries": {
+   "chessSquare": 0,
+   "chessSide": 32,
+   "chessValue": 84,
+   "chessAbs": 196,
+   "chessCenter": 224,
+   "chessEvaluate": 308
+  }
+ }
+]

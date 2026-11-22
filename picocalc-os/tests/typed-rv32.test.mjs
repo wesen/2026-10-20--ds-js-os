@@ -238,14 +238,16 @@ test("the default policy applies the qualified options and stock reproduces the 
         "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.equal(sha({policy: "interactive"}), "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     // The "kernel" policy adds division facts (board run 10 timed that image at 15.27 ms, Step 15),
-    // value sets (board run 11: 13.84 ms, Step 17) and hoisted loop invariants (board run 12:
-    // 12.45 ms, Step 18).
-    const kernelSelect = typedRv32.policies.kernel.select;
-    assert.equal(sha({policy: "kernel", select: {...kernelSelect, sets: false, hoist: false}}),
+    // value sets (board run 11: 13.84 ms, Step 17), hoisted loop invariants (board run 12:
+    // 12.45 ms, Step 18), and fused conjunctions with loads into homes (below).
+    const kernelSelect = typedRv32.policies.kernel.select, step18 = {...kernelSelect, conjunctions: false, loadHomes: false};
+    assert.equal(sha({policy: "kernel", select: {...step18, sets: false, hoist: false}}),
         "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
-    assert.equal(sha({policy: "kernel", select: {...kernelSelect, hoist: false}}),
+    assert.equal(sha({policy: "kernel", select: {...step18, hoist: false}}),
         "a5eb06b25026ea4f3fa85f8941fd062718b6fed3665ca38ba70944b73b122dc3");
-    assert.equal(sha({policy: "kernel"}), "3e18e5099c990fb168e24f8637ddf7110f931edf980b92b4f7383dda6adbf6d7");
+    assert.equal(sha({policy: "kernel", select: step18}), "3e18e5099c990fb168e24f8637ddf7110f931edf980b92b4f7383dda6adbf6d7");
+    // Fused conjunctions and loads into homes (board run 13: 11.43 ms, Step 19).
+    assert.equal(sha({policy: "kernel"}), "245edbc1333519b3d78baa792e2317a6ba407f36fff682b078dd653bc5f097a0");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
 
@@ -867,4 +869,67 @@ test("hoisted loop invariants keep results, stores and traps identical, includin
         traps += expected.trap;
     }
     assert(traps >= 8, "short buffers reach the bounds");
+});
+
+test("fused conjunctions and loads into homes keep results, stores and traps identical", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    // band: && in two ifs, one body with an early return. pick: an inlined callee whose return
+    // inside a fused body becomes a branch out of it. flag: && kept as a value (not fused).
+    const src = `function pick(v: i32): i32 {
+    if (v > 65 && v < 75) { return v * 2; }
+    return 1;
+}
+function band(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let x = 0; x < n; x = x + 1) {
+        const v = work.charCodeAt(x);
+        if (v > 65 && v < 75) { s = s + v; if (v === 70) { return s; } }
+        if (v > 60 && v % 3 === 0) { s = s - 1; }
+    }
+    return s;
+}
+function inline(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let x = 0; x < n; x = x + 1) { s = s + pick(work.charCodeAt(x)); work.setCharCodeAt(x, s); }
+    return s;
+}
+function flag(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let x = 0; x < n; x = x + 1) {
+        const v = work.charCodeAt(x);
+        const ok = v > 62 && v < 80;
+        let add = 1;
+        if (ok) { add = 3; }
+        s = s + add;
+    }
+    return s;
+}`;
+    const kernel = typedRv32.policies.kernel;
+    const tapes = {};
+    const candidate = typedRv32.compile(src, [], undefined, {policy: "kernel",
+        observeTape: (fn, phase, code) => { if (phase === "commute" || phase === "conjunctions") (tapes[fn] ??= {})[phase] = code; }});
+    const fused = name => tapes[name].conjunctions.length !== tapes[name].commute.length ||
+        tapes[name].conjunctions.some((c, i) => c !== tapes[name].commute[i]);
+    assert(kernel.select.conjunctions && kernel.select.loadHomes, "kernel fuses conjunctions and loads into homes");
+    assert(fused("band") && fused("inline"), "band and inline fuse");
+    assert(!fused("flag"), "a conjunction kept as a value is not fused");
+    const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
+    const cells = 40;
+    function run(p, f, n) {
+        const mem = new Uint8Array(4096), view = new DataView(mem.buffer);
+        view.setUint32(1024, cells, true);
+        for (let i = 0; i < cells; i++) view.setUint16(1028 + 2 * i, 58 + (i * 7) % 25, true);
+        const out = typedRv32Interp.run(p, f, [1024, n], mem);
+        return {result: out.result, trap: Boolean(out.trap), bytes: Array.from(out.bytes.subarray(1024, 1028 + 2 * cells))};
+    }
+    let traps = 0;
+    for (const f of ["band", "inline", "flag"]) for (const n of [0, 1, 6, 17, 39, 40, 41]) {
+        const expected = run(stock, f, n);
+        assert.deepEqual(run(candidate, f, n), expected, f + " " + n);
+        traps += expected.trap;
+    }
+    assert(traps >= 2, "the inputs reach the buffer bound");
 });

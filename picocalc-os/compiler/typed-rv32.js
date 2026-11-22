@@ -248,25 +248,29 @@ class FunctionCode {
         }
         const out = this.resultRegister(), tape = this.program.code;
         const loads = tape[this.at] === 0x2f && tape[this.at+2] === 4;
+        // select.loadHomes: a fused load whose value a homed local takes next loads into the
+        // home (destination()), not into a stack register and a move. The address registers
+        // are read by the load itself, so the home may be one of them.
+        const fused = (offset, from) => {
+            this.at += 3;
+            const stored = this.select?.loadHomes ? this.destination() : undefined;
+            this.load(stored ?? out, offset, from, 5);
+            if (stored === undefined) this.push(out); else this.result(stored, stored);
+        };
         if (pointer) {
-            if (loads) {
-                this.at += 3;
-                this.load(out, pointer.disp, pointer.reg, 5);
-            } else this.emit(instruction.i(0x13, out, 0, pointer.reg, pointer.disp - 4));
+            if (loads) return fused(pointer.disp, pointer.reg);
+            this.emit(instruction.i(0x13, out, 0, pointer.reg, pointer.disp - 4));
         } else if (unchecked && j) {
             this.emit(instruction.i(0x13, out, 1, index, 1));
             this.emit(instruction.r(0x33, out, 0, base, out));
-            if (loads && 4 + 2 * j <= 2047) {
-                this.at += 3;
-                this.load(out, 4 + 2 * j, out, 5);
-            } else if (2 * j <= 2047) this.emit(instruction.i(0x13, out, 0, out, 2 * j));
+            if (loads && 4 + 2 * j <= 2047) return fused(4 + 2 * j, out);
+            if (2 * j <= 2047) this.emit(instruction.i(0x13, out, 0, out, 2 * j));
             else {
                 this.constant(T6, 2 * j);
                 this.emit(instruction.r(0x33, out, 0, out, T6));
             }
         } else if (constant >= 0 && constant <= 1021 && loads) {
-            this.at += 3;
-            this.load(out, 4 + 2 * constant, base, 5);
+            return fused(4 + 2 * constant, base);
         } else {
             this.emit(instruction.i(0x13, out, 1, index, 1));
             this.emit(instruction.r(0x33, out, 0, base, out));
@@ -2164,6 +2168,57 @@ function foldValueSets(code, arity, sink = true) {
     return out;
 }
 
+// select.conjunctions: the frontend lowers `a && b` to a value if, `a; if (result i32) b else
+// const 0 end`, whose 0/1 result a following `if` or `br_if` tests again. Fused, the value is
+// never materialized:
+//   a; if (result i32) b else const 0 end; if BODY end   ->   a; if b; if BODY end end
+//   a; if (result i32) b else const 0 end; br_if L       ->   a; if b; br_if L+1 end
+// b runs exactly when a holds in both forms. BODY sits one construct deeper, so its branches
+// that leave it gain one level; b keeps its depth (it was inside the value if, now inside the
+// outer if). A consumer `if` with an else arm is left alone (fusing would duplicate the arm).
+function fuseConjunctions(code) {
+    for (let at = 0; at < code.length; at = opNext(code, at)) if (!(OPERAND_CELLS[code[at]] >= 0)) return null;
+    let changed = false;
+    for (let round = 0; round < 64; round++) {
+        let rewritten = null;
+        for (let s = 0; s < code.length && !rewritten; s = opNext(code, s)) {
+            if (code[s] !== 0x04 || code[s + 1] !== 0x7f) continue;
+            const t = opClose(code, s);
+            let e = -1;
+            for (let k = s + 2, depth = 0; k < t; k = opNext(code, k)) {
+                const op = code[k];
+                if (op >= 0x02 && op <= 0x04) depth++;
+                else if (op === 0x0b) depth--;
+                else if (op === 0x05 && depth === 0) e = k;
+            }
+            if (e < 0 || t !== e + 3 || code[e + 1] !== 0x41 || code[e + 2] !== 0) continue;
+            const c = t + 1;
+            if (code[c] === 0x0d) {
+                rewritten = [...code.slice(0, s), 0x04, 0x40, ...code.slice(s + 2, e), 0x0d, code[c + 1] + 1, 0x0b, ...code.slice(c + 2)];
+            } else if (code[c] === 0x04 && code[c + 1] === 0x40) {
+                const u = opClose(code, c);
+                if (u < 0) return null;
+                const body = [];
+                let otherwise = false;
+                for (let k = c + 2, depth = 0; k < u; k = opNext(code, k)) {
+                    const op = code[k];
+                    if (op === 0x05 && depth === 0) otherwise = true;
+                    if ((op === 0x0c || op === 0x0d) && code[k + 1] > depth) body.push(op, code[k + 1] + 1);
+                    else for (let j = k; j < opNext(code, k); j++) body.push(code[j]);
+                    if (op >= 0x02 && op <= 0x04) depth++;
+                    else if (op === 0x0b) depth--;
+                }
+                if (otherwise) continue;
+                rewritten = [...code.slice(0, s), 0x04, 0x40, ...code.slice(s + 2, e), 0x04, 0x40, ...body, 0x0b, 0x0b, ...code.slice(u + 1)];
+            }
+        }
+        if (!rewritten) break;
+        code = rewritten;
+        changed = true;
+    }
+    return changed ? code : null;
+}
+
 function rotateLoops(code) {
     const next = at => at + 1 + OPERAND_CELLS[code[at]];
     // Matching `end` of the block or loop opened at `at`.
@@ -2549,8 +2604,10 @@ const POLICIES = Object.freeze({
     // facts cost Chess's boot compile about a quarter more, past its budget, but take the ray
     // frame from 16.25 to 15.27 ms on the P4 (RAY-PARITY Step 15); value sets take it to 13.84 ms
     // for 6% more compile time (Step 17), hoisted loop invariants to 12.45 ms for 11% more
-    // (Step 18). The ray tracer uses it.
-    kernel: Object.freeze({...DEFAULT_POLICY, select: Object.freeze({...DEFAULT_POLICY.select, facts: true, sets: true, hoist: true})}),
+    // (Step 18), fused conjunctions and loads into homes to 11.43 ms for 1% more (Step 19).
+    // The ray tracer uses it.
+    kernel: Object.freeze({...DEFAULT_POLICY, select: Object.freeze({...DEFAULT_POLICY.select, facts: true, sets: true, hoist: true,
+        conjunctions: true, loadHomes: true})}),
     stock: Object.freeze({}),
 });
 
@@ -2646,6 +2703,11 @@ function compile(source, imports = [], maxSourceLength, requested) {
             observe("commute");
         }
         const arity = index => callables[index].params.length;
+        if (options?.select?.conjunctions) {
+            const fused = fuseConjunctions(fn.code);
+            if (fused) fn.code = fused;
+            observe("conjunctions");
+        }
         if (options?.select?.sets) {
             const folded = foldValueSets(fn.code, arity);
             if (folded) fn.code = folded;

@@ -1315,3 +1315,58 @@ Step 17's profile showed 26 instructions of `InShadow` setup per floor pixel, of
   - `storeless` and its call in `lower()`;
   - `POLICIES.kernel`.
 - `picocalc-os/tests/typed-rv32.test.mjs`: the new test and the three kernel pins.
+
+## Step 19: Fused conjunctions and loads into homes, and the frame reaches 1.48× C
+
+After Step 18 the floor pixel's remaining waste included two small patterns that GCC never produces. A conjunction `a && b` that feeds an `if` built a 0 or 1 in a register and branched on it. A checked load whose value went to a homed local landed in a temporary register first and was then copied. Two flags in `kernel` remove both. On the P4 the frame fell from 12.45 to 11.43 ms (−8.17%, 6/6 blocks, every scene 7.35–8.49%), for 1% more compile time. Typed is at 1.48× the C frame.
+
+### What I did
+
+- **`fuseConjunctions(code)`** (`select.conjunctions`), run after `commuteConstants`. The front end lowers `if (a && b) BODY` to `a; if 127 b else const 0 end; if BODY end`, a value block whose result the second `if` tests. The pass rewrites it to `a; if b; if BODY end end`: the test of `b` becomes an `if` of its own, nested inside the test of `a`. Every branch that leaves BODY outward gains one nesting level, so its depth is incremented. The form where the value feeds a `br_if` instead of an `if` is handled the same way.
+- **Loads into homes** (`select.loadHomes`). In `checkedAddress`, the fused checked load gets its destination from `destination()` when the next operation is a `set` of a homed local. The load then writes the home register directly, and the `mv` disappears.
+- **Test** `fused conjunctions and loads into homes keep results, stores and traps identical`: a conjunction inside a loop (`band`), one inside an inlined helper (`inline` with `pick`), and one with a flag local (`flag`). Typed has no ternary, so the test spells the value form with `if`. All match `stock` with normal and with short, trapping buffers.
+- **Gates** with both flags in `kernel`:
+  - 149/149 tests (`node --test tests/*.test.mjs`);
+  - 24/24 replays with `kernel` as the default (`various/77-replays-kernel-conjunctions.log`);
+  - Chess engine oracle: 6981/6981 words (`various/78-chess-oracle-kernel-conjunctions.log`).
+- **Board run 13:** modes in `various/76-board-modes-conjunctions.json` (mode 0 is run 12's image, `3e18e509…`; mode 1 adds both flags, image `245edbc1…`, the image the test pins for `{policy: "kernel"}`). Build log `various/79-board-build-conjunctions.log`. Imported to `various/80-board-conjunctions`, scored to `various/81-board-conjunctions-scores.json`. Restored to `b22a807d…` with eight healthy worlds.
+
+### What worked
+
+| | run 12 (`kernel` + hoist) | + conjunctions | + loadHomes | both |
+|---|---:|---:|---:|---:|
+| host frame instructions | 3,646,781 | 3,469,050 (−177,731) | 3,577,670 (−69,111) | 3,399,939 (−246,842) |
+| `LitRow` | 2,696,134 | 2,518,403 | 2,635,132 | 2,457,401 |
+| `ComputeRow` | 935,791 | 935,791 | 927,688 | 927,688 |
+| image bytes | 11,780 | 11,696 | 11,684 | 11,600 |
+
+| P4, board run 13 | run 12 image | both flags |
+|---|---:|---:|
+| frame (6 blocks) | 12.45 ms | 11.43 ms (−8.17%, 6/6) |
+| ratio to C (7.73 ms) | 1.61× | 1.48× |
+| ray compile on the P4 | 1.95 s | 1.97 s (+1.07%) |
+| peak heap during the compile | 1.50 MB | 1.50 MB |
+| Chess evaluation kernel | 1,993 µs | 1,970 µs (−1.39%, 6/6) |
+
+The savings of the two flags add up exactly, so they touch different code. Conjunctions act only in `LitRow`, where the shadow test and the checker combine conditions with `&&`. Loads into homes act in both functions. Both also shrink the image.
+
+### What didn't work
+
+- **The first conjunction test used `c ? x : y`.** Typed has no conditional operator, so the source didn't compile. The test now builds the value form with `if`.
+- **Adding the flags broke every kernel pin**, because the pins were written as `{policy: "kernel", select: {...}}` with only the earlier flags named. The pins now spell out `step18 = {...kernelSelect, conjunctions: false, loadHomes: false}` and derive each older image from it. A future flag needs only one new pin and one new `false` in `step18`'s successor.
+- **`11-import-board.py` assumed restored firmware `e7b771aa…`.** It now takes the restored SHA-256 as an optional fourth argument.
+
+### What I learned
+
+- The compile cost of a pass depends on how much of the tape it has to inspect, not on how much it saves. Both passes here are local pattern rewrites that look at a few operations each, so they cost 1% where Step 18's hoisting cost 11%.
+- A strength-reduction prototype (induction variables, and pointers that advance without their index) is ready in a scratch copy and takes the host frame to 3,278,213 (−3.6%). It is the subject of the next step.
+
+### What warrants a second pair of eyes
+
+- `fuseConjunctions`' depth adjustment: a `br` or `br_if` inside BODY whose label lies outside BODY (label greater than its nesting depth within BODY) gains one level; a branch to BODY's own `if` or to a label inside BODY keeps its depth. The tape has no `br_table`: an opcode outside `OPERAND_CELLS` makes the pass return `null` before it rewrites anything.
+- `loadHomes` lets the home be one of the load's own address registers. That is safe because the load is one `lhu`, which reads its address register before it writes its destination. Splitting the load into several instructions would break it.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `fuseConjunctions` and its call in `lower()`; `fused()` in `checkedAddress`; `POLICIES.kernel` and its comment.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the new test and the restated kernel pins.

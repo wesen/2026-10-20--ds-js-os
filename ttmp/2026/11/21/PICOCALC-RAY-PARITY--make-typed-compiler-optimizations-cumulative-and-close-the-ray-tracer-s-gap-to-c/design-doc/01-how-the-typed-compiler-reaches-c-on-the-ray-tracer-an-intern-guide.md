@@ -26,7 +26,7 @@ RelatedFiles:
       Note: The benchmark program
 ExternalSources: []
 Summary: 'What a newcomer needs to change the Typed RV32 compiler: the system, the code generator, the ray-tracer benchmark, the validation tools, the measured gap to C and a phased plan to close it.'
-LastUpdated: 2026-11-21T20:00:00-05:00
+LastUpdated: 2026-11-22T08:00:00-05:00
 WhatFor: Onboarding a new compiler engineer to PICOCALC-RAY-PARITY
 WhenToUse: Before changing typed-rv32.js, before designing a ray-tracer experiment, or when resuming the parity plan
 ---
@@ -330,7 +330,7 @@ The remaining factor of 3.75 to the C predicate splits into three parts:
 
 The code-generation factor is mostly register allocation. LLVM's middle end turns every local into an SSA value (SROA and `PromoteMemToReg`). Its greedy allocator then keeps loop-carried values in registers across blocks and calls, saving callee-saved registers once per call. Its block-local allocator, which spills at block boundaries, needs 92% more cycles on the same IR, and Typed now sits at exactly that level. LLVM also removes redundant capacity loads with EarlyCSE: 12 sites become 1 in the read-only predicate. The checks factor is the cost of the bounds contract itself. C omits the checks. Typed must keep them, but it can test a whole region once and keep a checked fallback. The representation factor comes from Typed buffers having only 16-bit cells.
 
-For the whole frame, Typed under the earlier default plus `pie-empty` took 46.05 ms against 7.72 ms for scalar C in the same firmware. After Phase 1 the default without PIE took 39.49 ms (5.11× C) and the shadow predicate 247 cycles (1.82× the checked C predicate's 136). After Phase 1b it took 31.51 ms (4.08× C) and 212.8 cycles (1.57×); after Phases 1c and 1d it took 22.43 ms (2.90× C) and 194.1 cycles (1.43×); after Phase 1e it took 20.20 ms (2.61× C) and 181.7 cycles (1.34×); with Phase 3's pointer homes it took 19.31 ms (2.50× C) and 171.9 cycles (1.27×); with versioned loops and split locals it takes 16.26 ms (2.11× C) and 161.4 cycles (1.19×). With division facts (the `kernel` policy) it takes 15.27 ms (1.97× C). The C renderer visits all 160 pixels of every row for every sphere. A Typed source that computes exact sphere spans and traverses shadows row by row took 29.98 ms on the old compiler. "Competitive with C" therefore has two meanings, and both should be reported. One compares the same algorithm in both languages; that is the compiler benchmark. The other compares the best correct Typed program against the existing C renderer; that is the product benchmark.
+For the whole frame, Typed under the earlier default plus `pie-empty` took 46.05 ms against 7.72 ms for scalar C in the same firmware. After Phase 1 the default without PIE took 39.49 ms (5.11× C) and the shadow predicate 247 cycles (1.82× the checked C predicate's 136). After Phase 1b it took 31.51 ms (4.08× C) and 212.8 cycles (1.57×); after Phases 1c and 1d it took 22.43 ms (2.90× C) and 194.1 cycles (1.43×); after Phase 1e it took 20.20 ms (2.61× C) and 181.7 cycles (1.34×); with Phase 3's pointer homes it took 19.31 ms (2.50× C) and 171.9 cycles (1.27×); with versioned loops and split locals it takes 16.26 ms (2.11× C) and 161.4 cycles (1.19×). With division facts (the `kernel` policy) it takes 15.27 ms (1.97× C), and with value sets, hoisting, fused conjunctions and loads into homes 11.43 ms (1.48× C). The traced half of the frame now executes fewer instructions than GCC's (927,688 against 1,132,651); all of the remaining gap is in shading (2,457,401 against 1,317,388). The C renderer visits all 160 pixels of every row for every sphere. A Typed source that computes exact sphere spans and traverses shadows row by row took 29.98 ms on the old compiler. "Competitive with C" therefore has two meanings, and both should be reported. One compares the same algorithm in both languages; that is the compiler benchmark. The other compares the best correct Typed program against the existing C renderer; that is the product benchmark.
 
 ## 8. Why vectorization is not the next step
 
@@ -434,13 +434,22 @@ The profile after Phase 1 showed where the remaining instructions were: 1.79 M `
 
 Generalize the SCALAR-BREAKDOWN shadow-region guard. When every access in a function or loop has a provable maximum index, test the maximum once at entry and run an unchecked copy. Otherwise run the original checked copy, so traps still occur at the same operation with the same prior writes. The earlier lab's instruction prediction for this transformation matched the measurement exactly. Target: the unchecked GCC row of Section 7.
 
-**Policies now depend on the compile budget (Steps 14 and 15; ticket PICOCALC-COMPILE-BUDGET).** The device compiles its boot worlds against deadlines (1.7 s Files and Agenda, 6 s Editor and Chess). Step 13's default missed two of them. There are three named policies:
+**Policies now depend on the compile budget (Steps 14 and 15; ticket PICOCALC-COMPILE-BUDGET).** The device compiles its boot worlds against deadlines (1.7 s Files and Agenda, 6 s Editor and Chess). Step 13's default missed two of them. There are four named policies, plus `stock`:
 
 - `interactive` (the Step 6 set) for Agenda and Editor.
-- `default` (everything through Step 13) for Files and Chess.
-- `kernel` (`default` plus division facts) for compute kernels such as the ray tracer.
+- `balanced` (`default` without versioned loops and split locals, the Step 11 set) for Chess with the 3D painter.
+- `default` (everything through Step 13) for Files.
+- `kernel` (`default` plus division facts, value sets, hoisting, fused conjunctions and loads into homes) for compute kernels such as the ray tracer.
+
+Each policy's ray image is pinned in `tests/typed-rv32.test.mjs` to an image a board run timed.
 
 An option becomes part of `default` only if the arms firmware shows every boot world still inside 75% of its deadline.
+
+**The kernel passes after division facts (Steps 16–19).** Step 16's profile showed that most remaining waste needs registers that are all taken; scoring changes made the frame worse. The next three passes therefore remove work instead of moving it:
+
+- **Value sets (`select.sets`, Step 17).** A flow-sensitive analysis gives each local a set of at most four constants. A pure block over such locals becomes a balanced tree of comparisons that selects a precomputed result. The floor colour, one of four brightness levels, is the case that pays. Host frame 4,532,990 → 4,080,475; P4 frame 15.27 → 13.84 ms; compile +6%.
+- **Hoisting (`select.hoist`, Step 18).** Inside a versioned loop, statements and subexpressions that do not change across iterations move into the guard block. A load moves only when the guard also proves the loop's stores cannot reach its buffer (`s == r` sends the run to the slow copy). Host frame → 3,646,781; P4 frame → 12.45 ms; compile +11%.
+- **Fused conjunctions and loads into homes (`select.conjunctions`, `select.loadHomes`, Step 19).** `if (a && b)` branches on `a` and `b` directly instead of building a 0 or 1, and a checked load writes a homed destination directly. Host frame → 3,399,939; P4 frame → 11.43 ms (1.48× C); compile +1%.
 
 **Division facts are done (`kernel` policy, Step 15).** Facts take a division or remainder by a constant whose dividend is provably non-negative and drop its rounding bias and sign fix-up. The intervals are computed per local before versioning and read through the split map. Host frame 4,888,369 → 4,532,990 instructions; P4 frame 16.25 → 15.27 ms.
 
@@ -453,7 +462,7 @@ An option becomes part of `default` only if the arms firmware shows every boot w
 1. **Pointer homes.** For accesses `r[L + k]` with the same buffer r and local L and constants k within ±1021 of an anchor K0, keep `p = r + 4 + 2*(L + K0)` in a register. Each access becomes `lhu v, 2*(k-K0)(p)`. The planner scores p like a local. The emitter updates p at every write of L: `addi p, p, 2c` for `L = L + c`, otherwise three instructions. Example: `typedRayInShadow`'s `work[shadow]` … `work[shadow + 3]` (52,917 iterations per frame), and `ComputeRow`'s `work[1545 + x]` and `work[1705 + x]` with anchor 1545.
 2. **Versioned loops.** For a rotated loop whose counter has a constant start, a constant or invariant bound and a constant step, every `r[L + k]` index lies in a computable range. Before the loop, test the range's maximum against a capacity home and its minimum against 0. If both pass, run a copy of the loop whose accesses in that set carry no check; otherwise run the original. Writes in the loop cannot change a capacity (Phase 1c), so the test is valid for the whole loop. The cost is code size: the loop exists twice. In `typedRayLitRow` the loop holds the inlined pixel pipeline.
 
-Loop-invariant loads (`InShadow`'s `work[16..19]` inside `LitRow`'s pixel loop, about 0.5 M instructions) need the same versioning with an additional test: the hoisted cells must not lie inside the address range of any buffer the loop writes.
+Loop-invariant loads (`InShadow`'s `work[16..19]` inside `LitRow`'s pixel loop, about 0.5 M instructions) need the same versioning with an additional test: the hoisted cells must not lie inside the address range of any buffer the loop writes. This is done as `select.hoist` (Step 18), with the test as buffer-identity terms in the loop guard.
 
 ### Phase 4: division by constants
 
