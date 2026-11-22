@@ -645,3 +645,61 @@ The guide's mechanism did not work on that very case, so the design changed. The
 ### Technical details
 
 - `Rename`: `{variant, phase, ordinal, pass, from, to, method: "alias"|"body", aliasOrdinal?, bodySHA256?, ref}`. Alias line pattern: `^@NAME = … alias … @NAME$`. Body digest: SHA-256 of the lines after the `define` line up to the closing `}`.
+
+## Step 11: As-built guide, reMarkable upload and the vault report
+
+The guide now records what was built for each change. Its revised version is on reMarkable under a new name, and the project report is in the go-go-parc vault, committed and pushed. Checking the report against the code found five strings I had quoted from memory that were wrong, and one stale row in the README.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1. The coordinator relayed the user's request for the report, verbatim: "ask the REPLL subagent to commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill) and to  write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no analogies, see skill). Commit and push the bsidian vault when done (go-go-parc vault). (when they're done)"
+**Assistant interpretation:** Once implementation and its diary were done: update the guide where implementation differed and re-upload it without `--force`. Write a textbook-style project report in `Projects/2026/11/21/`, with the sibling Odyssey report's frontmatter and a wikilink to it. Stage only the report, commit with the trailer, push, and record the result here.
+**Inferred user intent:** A durable account of the workbench that a later reader can use without the ticket, and a guide that matches the code.
+**Commit (code):** 75b68be ("docs(trace-workbench): as-built guide, diary steps 8-10 and ticket overview") and 1046e53 ("docs(trace-repl): list every GET /info field in the protocol table"). Vault: 8ae32b3.
+
+### What I did
+
+- Guide: a status paragraph with every change's commit. As-built notes for W1 (Go side `Provider`/`Bundle`/`traceapi.InstallCompiler`, not the draft's `tracecompiler.Install`), W2, W3 (the registry moving into the service), W4, W5, W6 (the failed draft rule, the alias rule) and W7. New Section 5.1 with the acceptance results and the loading-method result, decisions D5–D7, and reference rows for every new package.
+- docmgr: related the primary files to the guide, the diary and the index. Added a changelog entry, filled in the index overview, and ran `docmgr doctor` ("All checks passed").
+- Delegated the upload to a haiku subagent: `remarquee upload bundle <guide> --name "PICOCALC-TRACE-WORKBENCH Intern Guide As Built" --remote-dir "/ai/2026/11/21/PICOCALC-TRACE-WORKBENCH" --toc-depth 2 --non-interactive`. It returned `OK: uploaded PICOCALC-TRACE-WORKBENCH Intern Guide As Built.pdf -> /ai/2026/11/21/PICOCALC-TRACE-WORKBENCH` on the first attempt. The earlier upload in the folder was left untouched. This confirms cloud delivery only, not sync to the device.
+- Stopped my services on 3811 and 3812 with `scratchpad/stop-my-service.py`. The script now accepts any binary directly in the scratchpad's `bin/`. Services on 3791–3795 kept running.
+- Wrote `/home/manuel/code/wesen/go-go-golems/go-go-parc/Projects/2026/11/21/PROJECT REPORT - PicoCalc Compiler - From Trace REPL to Compiler Workbench - Seven Changes Tested Against a Real Compiler Study.md` (about 9,000 words, five mermaid diagrams). Staged only that file, committed `8ae32b3`, and ran `git push`: `fb70436..8ae32b3  main -> main`.
+
+### Why
+
+- I uploaded under a new name because the guide changed materially and `--force` was not authorized. Overwriting would also have discarded any annotations on the first upload.
+
+### What worked
+
+- The push succeeded on the first attempt, with no rebase needed.
+
+### What didn't work
+
+- I had written several strings in the report from memory, and checking them against the code showed five were wrong. The 409 message is `session is busy with job job-…; poll GET /sessions/{id}/jobs/job-…, or stop it with DELETE (trace-repl job --stop)`, not my paraphrase. The stop message ends in "; bindings from earlier cells remain". `repo.list` entries are `{name, type, bytes}`, with no `path`. `stats.summary` returns `{n, min, q1, median, q3, max, mean}`. The LLVM lines I had invented were replaced with the real diff from `scripts/10-diff-renamed-body.py`, run on the SHADOW-LLVM ticket. That diff also shows the definition line changing from `define internal i32 @checked_shadow(…) #0` to `define dso_local i32 @kernel(…) local_unnamed_addr #0`.
+- The first run of `10-diff-renamed-body.py` failed with `IndexError: list index out of range`, because it takes the SHADOW-LLVM ticket directory as its argument and I had passed none.
+- The README's `GET /info` row predated W1, W3 and W7, so it lacked `compiler`, `sessions.idleSeconds` and `limits.jobSeconds`. I compared it with a live `/info` and fixed it in 1046e53.
+- One board example in the report was mislabelled. "Frame pie" compares the previous default against the candidate, both with `pie-empty`. It does not measure the empty-packet exit itself.
+
+### What I learned
+
+- Quoted error text and object shapes in a report need the same check against the code as numbers do. Five of them were wrong, while none of the numbers checked against the result files were.
+
+### What was tricky to build
+
+- N/A.
+
+### What warrants a second pair of eyes
+
+- The report's claim that goja agrees with the board only when the arms are paired inside one job rests on one change and two programs (n = 9 and n = 5). The report says so, but the claim should be read as a hypothesis.
+
+### What should be done in the future
+
+- Merge the branch. Restart long-lived services from the merged code. Rerun `scripts/06-run-acceptance.sh` with the default `--repo` once RAY-PARITY commits its board inputs.
+
+### Code review instructions
+
+- Read the report's W1, W3 and W6 sections against `pkg/tracecompiler/compiler.go`, `pkg/tracerepl/jobs.go` and `pkg/tracearchive/renames.go`.
+
+### Technical details
+
+- Vault commit `8ae32b3`, pushed to `ssh://github.com/go-go-golems/go-go-parc` `main`. reMarkable: `/ai/2026/11/21/PICOCALC-TRACE-WORKBENCH/PICOCALC-TRACE-WORKBENCH Intern Guide As Built.pdf`.
