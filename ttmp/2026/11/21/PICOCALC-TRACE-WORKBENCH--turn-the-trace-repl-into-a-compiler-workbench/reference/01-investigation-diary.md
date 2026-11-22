@@ -140,3 +140,66 @@ This step also found that the worktree cannot build as checked out, because `go.
 ### Technical details
 
 - Guide corrections: (1) W1 `compiler.sources.*` moved onto the revision object (`work.ray`, `work.world(name)`, `work.read(path)`, `work.typedSources()`), so sources and compiler always share a revision; (2) the wrapper needs `;` separators, a prototype-less shadow object and must return every published name; (3) W3 said both "a cell waits behind a job" and "return 409", and now says 409 at once; (4) W4's help title comes from the ticket directory name and its `index.md` `Title:`; (5) W4's binary revision is only available from `go build` VCS stamping, so `/info` also reports `HEAD` of `--repo`.
+
+## Step 3: W4, an inventory endpoint and a help title that names the archive
+
+A running service can now say what it mounted. `GET /info` reports the archive directory, its ticket name and title, the manifest and stream digests, the two optional studies, open sessions against the limit and the per-cell limits. `trace-repl info` prints it, and `GET /` lists the routes instead of returning 404. `q.help()` and `a.toJSON()` name the mounted capture, so the SHADOW-LLVM service on 3795 will stop calling itself the row archive once it is restarted from this code.
+
+The guide was uploaded to reMarkable at the start of this step, by a small-model subagent, before any code changed: `OK: uploaded PICOCALC-TRACE-WORKBENCH Intern Guide.pdf -> /ai/2026/11/21/PICOCALC-TRACE-WORKBENCH`.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Implement W4 first, as guide Section 5 orders, because every later change is easier to debug when a service can describe itself.
+**Inferred user intent:** Stop having to use `ps` and tmux names to find which service holds which capture (field note N1).
+**Commit (code):** c195e91 — "feat(trace-repl): GET /info inventory and help that names the mounted archive"
+
+### What I did
+
+- `pkg/tracearchive/archive.go`: `Open` records the absolute directory, a `Label` and the manifest's SHA-256. New `Label` (`Ticket`, `Title`, `Dir`, `String()`), `readLabel`, `StreamInfo`, and the accessors `Dir`, `Label`, `ManifestSHA256`, `Streams`.
+- `pkg/traceapi/install.go`: bridge method `describe()`. `query.js` computes `ARCHIVE_NAME` from it once and uses it in the help index and `a.toJSON()`.
+- `pkg/tracerepl/service.go`: `Option`, `WithInventory(func() map[string]any)`, `Limits`, and `inventory()`, which adds `service`, `started` and `limits`. `New` takes variadic options, so existing callers are unchanged.
+- `pkg/tracerepl/http.go`: `GET /info` adds `sessions: {open, max}` from the handler's `live` map under its mutex. `GET /{$}` lists `routes`.
+- `cmd/trace-repl/main.go`: an `inventory` struct holding the verified inputs, `describe()`, `buildInfo()` from `debug.ReadBuildInfo`, and an `info` subcommand.
+- Tests: `TestLabelAndStreamsDescribeTheMountedCapture` (tracearchive), `TestInfoReportsInventorySessionsAndLimits` (tracerepl, including the 403 for an `Origin` header), `TestInfoNamesTheMountedCapture` (cmd: real archive and device study over HTTP, the CLI `info` client, and the help title in a session).
+- Smoke test: built `scratchpad/bin/trace-repl`, started it on 127.0.0.1:3811 with the ROW-IR archive, ran `trace-repl info --addr 127.0.0.1:3811` and `curl /`, then stopped it with `scratchpad/stop-my-service.py 3811`. That script only signals a process whose `argv[0]` is the scratchpad binary and whose arguments name the port, and it refuses ports below 3811.
+
+### Why
+
+- The manifest has no title, so the name has to come from the archive directory. Every archive in this repository is a docmgr ticket directory with an `index.md`, so the ticket prefix and the frontmatter `Title:` are reliable, and a plain directory still gets its basename.
+- The inventory is a callback rather than a struct in `tracerepl`, so the REPL package stays independent of archives and studies.
+
+### What worked
+
+- `go test ./...` passes (cmd 0.57 s, traceapi 5.3 s, tracearchive 0.27 s, tracerepl 0.73 s). `go vet ./...` and `gofmt -l` are clean.
+- The live `info` output on 3811 named `PICOCALC-ROW-IR` / "Trace the ray row through GCC and LLVM optimization passes", manifest `278cdce2…`, 6 streams, `deviceStudy: null`, `sessions {max: 32, open: 0}`, `limits {65536, 524288, 15}`.
+
+### What didn't work
+
+- The first build, `go build -o scratchpad/bin/trace-repl ./cmd/trace-repl`, was stamped `vcs.revision=4e0dd35c862fa442b60950dbc1ebcd34892e4d6c`, `vcs.modified=true` (`go version -m`). That is the head of `main` in the main checkout ("docs(ray-parity): REPL field notes N8-N10, task bookkeeping"), not this worktree's `c7a13e6`. A worktree's `.git` is a file, and the stamp matches the main checkout, which is consistent with the go command finding the VCS root by a `.git` directory and walking up past the worktree. A worktree build therefore carries the wrong revision. I now build with `-buildvcs=false` (`build.revision: null`) and documented the caveat in the README. W2 will report the `HEAD` of `--repo`, which git resolves correctly for a worktree.
+- A diary append and one code edit written through long shell heredocs were refused by the worktree guard ("this command is too complex to verify that it stays inside the worktree"). I made the code edits with the Edit tool and append diary entries from a scratch file.
+
+### What I learned
+
+- `main` has moved on since this branch was cut: `63abc8a` "feat(rv32): make callee-saved homes and direct reads the default" landed after `14c95b5`. The acceptance work compares the fixed commits `eaf0872` and `3213028`, so it does not depend on that.
+
+### What was tricky to build
+
+- The session count lives in the handler's `live` map, not the service, so `/info` takes the handler's mutex to read it. W7 moves the registry into the service, and then `/info` can read the count there.
+
+### What warrants a second pair of eyes
+
+- `inventory()` lets the caller's map supply any key and then overwrites `service`, `started` and `limits`. The handler adds `sessions` after that. A caller that sets one of those keys loses it silently, which is intended.
+
+### What should be done in the future
+
+- W2 adds `repo` and `mounts` to the inventory, and W3 adds `jobSeconds` to the limits.
+
+### Code review instructions
+
+- Start at `pkg/tracerepl/http.go` (`GET /info`) and `cmd/trace-repl/main.go` (`inventory.describe`, `buildInfo`).
+- Run `go test ./cmd/trace-repl ./pkg/tracerepl ./pkg/tracearchive -run 'Info|Label'`.
+
+### Technical details
+
+- `GET /info` keys: `service`, `started`, `build {goVersion, module, revision, revisionTime?, modified?}`, `archive {path, label {ticket, title, dir}, manifestSHA256, streams [{variant, phase, sha256, rawBytes, dumps}]}`, `deviceStudy {path, sourceSHA, firmwareSHA, pairs, loads} | null`, `simdStudy {path, sha256, empty, decisions, traces} | null`, `sessions {open, max}`, `limits {sourceBytes, resultBytes, cellSeconds}`.

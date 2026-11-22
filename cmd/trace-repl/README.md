@@ -52,6 +52,15 @@ lab.physicsPair("contact", 128, "grouped-scalar", "grouped-pie")
 
 The director loader adds the `lab` binding only in its new session. The `simd` provider is available in every session of the mounted study. [Study index](../../ttmp/2026/11/21/PICOCALC-SIMD-LAB--choosing-simd-packet-boundaries-in-the-typed-compiler-on-esp32-p4/index.md)
 
+## Shared statistics
+
+Every session has a `stats` global, so studies stop re-implementing medians and paired comparisons. `stats.median`, `stats.mean`, `stats.quantile(xs, p)` (linear interpolation, R type 7) and `stats.summary(xs)` refuse empty arrays and non-finite values. `stats.paired(rows, {key, control, candidate, value, better})` pairs one control row with one candidate row per key, for example per load block, and returns the median of the per-pair percentage saved, `100 * (1 - candidate / control)`, with wins, losses and ties. It also returns `percentSavedOfMedians`, the change between the two arm medians, which is a different number. It refuses rows that match both arms, duplicate keys within an arm and keys present in only one arm, and names them. `stats.help()` lists the rest.
+
+```js
+stats.paired(rows, {key: "block", control: r => r.arm === 2, candidate: r => r.arm === 3, value: "value"})
+// → {pairs: 6, controlMedian, candidateMedian, medianPercentSaved, percentSavedOfMedians, wins, losses, ties, method, perPair}
+```
+
 ## Find out what a running service mounted
 
 Several services often run side by side on different ports. `trace-repl info --addr 127.0.0.1:PORT` prints the inventory of one of them: the archive's directory, ticket name, title and stream digests, the device and SIMD studies (or `null`), open sessions against the limit, and the per-cell limits. `build.revision` is the git commit that `go build` stamped into the binary. A `go run` service has no stamp, so the field is `null`. A binary built inside a git worktree is stamped with the enclosing main checkout's commit, not the worktree's, so build there with `-buildvcs=false`. `q.help()` names the same archive.

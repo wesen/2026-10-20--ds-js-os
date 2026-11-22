@@ -43,6 +43,8 @@ func TestServeWiresVerifiedEvidenceAndOptionalDevice(t *testing.T) {
 			"simd.help().available":                             "false",
 			"simd.help().absent.startsWith('missingSIMDStudy')": "true",
 			"typeof require + typeof __trace + typeof fetch":    `"undefinedundefinedundefined"`,
+			"stats.median([3, 1, 2])":                           "2",
+			"q.help().includes('stats.help()')":                 "true",
 		}},
 		{evidenceRoot(t, "PICOCALC-PIE-LOOPS--*"), emptySIMD, map[string]string{
 			"hardware.help().available":                       "true",

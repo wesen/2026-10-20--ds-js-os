@@ -174,7 +174,10 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 		if err := traceapi.InstallHardware(vm, hardware); err != nil {
 			return err
 		}
-		return traceapi.InstallSIMD(vm, simd)
+		if err := traceapi.InstallSIMD(vm, simd); err != nil {
+			return err
+		}
+		return traceapi.InstallStats(vm)
 	}, logger, tracerepl.WithInventory(inputs.describe))
 }
 

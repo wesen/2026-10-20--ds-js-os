@@ -2250,6 +2250,8 @@
       '  q.run(profiles.arm("checked-gcc").region("row").workload("opening-160-rows").total("instructions"))',
       'Topics: q.help("plans" | "events" | "timeline" | "states" | "metrics" | "changes" | "machine" | "profiles" | "compare" | "capabilities" | "params" | "results" | "errors" | "cache").',
       'Every object answers .help(). Statuses: available · absent (module print lacks the function) · unavailable (capture lacks it) · unsupported (parser limit).',
+      ...(root.stats && typeof root.stats.help === 'function'
+        ? ['Medians, quantiles and paired block comparisons shared by every study: stats.help().'] : []),
       ...(root.simd && typeof root.simd.help === 'function'
         ? ['SIMD compiler decision ranges and guest PC counts: simd.help() (' + (root.simd.help().available ? 'study available' : 'no SIMD study mounted') + ').'] : []),
       'Physical ESP32-P4 timings are a separate global, never mixed into profiles (guest instruction counts): ' + liveList(() => {
