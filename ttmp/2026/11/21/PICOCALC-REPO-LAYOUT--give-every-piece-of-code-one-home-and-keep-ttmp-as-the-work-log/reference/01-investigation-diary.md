@@ -180,3 +180,77 @@ This milestone moved the two remaining questions in Section 8 to decided.
 - **The gallery** stays a build option (`PICOCALC_CANDELA_GALLERY`), and `profiles/playable.env` turns it on. Diagnostic profiles leave it off. Its compositor edits still move into `compositor.js` in Phase B2, behind a check, so that a build without the gallery never takes the gallery path.
 
 Section 8 now has no open questions. Only the design document, this diary and the changelog changed.
+
+## Step 4: Start the migration, and do Phase F first
+
+The user asked to implement the design. This step plans the order of the work, starts two background agents, and lands Phase F. Phase F stops tracking build output, and it goes first because it is independent of every other phase and removes noise from `git status` for the rest of the migration.
+
+### Prompt Context
+
+**User prompt (verbatim):** "then, implement, commit at appropriate intervals and keep a detailed diary as you work (using the diary format from the skill)
+
+ write a detailed project report for the obsidian vault as a deep dive technical analysis blog post using a textbook writing style (no analogies, see skill).
+ Commit and push the bsidian vault when done (go-go-parc vault).   The report is basically about the entirety of this project and repository, explaining what's in it and why and where and how it's used and what it taught us and all that."
+
+**Assistant interpretation:** Execute Phases A to I of the design, with commits at phase boundaries and this diary in investigation format. Then write one long vault report about the whole project and repository, and commit and push the vault.
+
+**Inferred user intent:** End with a repository a newcomer can understand from its layout, and a written account of what the project built and learned.
+
+**Commit (code):** `3b809dd` (Phase F).
+
+### What I did
+
+- Read the code that Phase A must consolidate:
+  - the board harness: SHADOW-CODEGEN `scripts/board/{01-images.mjs,02-build.sh,03-run.sh,bench.c,cold.c,layout.inc}` and SIMD-LAB's `scripts/ray/02-run-board.py` and `board/` CMake files;
+  - RAY-PARITY's `10-stage-board.py`, `11-import-board.py`, `15-score-board-workbench.js`, `16-restore-playable.py` and `17-install-playable.py`;
+  - the device library chain and CANDELA-WORLD's `lib/board_health.py`;
+  - COMPILE-BUDGET's `05-replays-policy.sh` and the 24 scripts it calls.
+- Found that the device library chain is four tickets deep, not three. RAYTRACE's `board_common.py` loads NATIVE-PROMOTION's `common.py`, which loads its serial `Console` class from SNAKE-INTEGRATION's `scripts/device/01-normal-snake.py` (345 lines, also a Snake measurement script).
+- Measured the moves. Outside `picocalc-os/`, only 13 tracked files name a `picocalc-os/` subdirectory, and they are in the trace REPL, AGENTS.md and `.gitignore`. Inside, the firmware directories (`nucleus`, `sdk`, `natives`, `host`, `sim`, `third_party`, `port`) mostly reference each other, and about 90 files reference the directories that leave (`compiler`, `worlds`, `js*`, `scripts*`, `tools`, `tests`).
+- Started two background agents:
+  - Phase B2 (the Candela generators, in its own worktree, without device access). Its diary is `reference/02-phase-b2-candela-generators-diary.md`.
+  - A read-only digest of the project's history for the vault report.
+- Phase F:
+  - `git rm -r --cached` the three `out*` trees (143 files; the files stay on disk);
+  - ignored `picocalc-os/out*/`, `__pycache__/`, `.docmgr-operations/`, `.playwright-mcp/`, `.claude/worktrees/` and `.claude/settings.local.json`;
+  - removed the empty `handoffs/typed-selfhost/` and `handoffs/` with a Python `os.rmdir` after checking that each was an empty, non-symlinked directory.
+
+### Why
+
+- **The firmware move is a rename.** Renaming `picocalc-os/` to `firmware/` as a whole keeps every firmware-internal relative path valid. Only the directories that leave need their references rewritten.
+- **The order.** The host gates and the playable record come first, so that the moves can be checked against them. B2 runs in parallel and must be merged before the firmware moves.
+
+### What worked
+
+- Nothing outside the tests and the Makefile reads `out*/`, so untracking it needed no other change.
+
+### What didn't work
+
+- My first attempt to list the replay scripts' dependencies used zsh word splitting (`set -- $spec`). zsh does not split unquoted variables, and the loop received one word. I redid it as a Python scan.
+
+### What I learned
+
+- The board harness depends on files from three tickets:
+  - SHADOW-CODEGEN's `validation/holdout.mjs`, which supplies the Chess fixtures and an independent evaluation; it reads the Chess source at the fixed revision `57b2d9f` through `git show`;
+  - SIMD-LAB's `various/director/frame-fixtures.json`, the twelve frame fixtures;
+  - SIMD-LAB's `board/` CMake and sdkconfig files.
+
+### What was tricky to build
+
+- Keeping Phase F free of side effects. `git rm --cached` removes the files from the index without deleting the captures someone may still look at.
+
+### What warrants a second pair of eyes
+
+- `.claude/` is only partly ignored (worktrees and local settings), so a shared `.claude/settings.json` could still be committed later.
+
+### What should be done in the future
+
+- Phase I commits the five untracked ticket READMEs that the new ignore rules now reveal.
+
+### Code review instructions
+
+- `git show 3b809dd --stat`. Then `git status` should show only ticket READMEs as untracked.
+
+### Technical details
+
+- Base for the migration: `889a9b2`.
