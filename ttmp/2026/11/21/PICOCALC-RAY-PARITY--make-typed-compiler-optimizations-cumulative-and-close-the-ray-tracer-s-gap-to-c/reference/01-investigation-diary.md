@@ -376,7 +376,7 @@ Board results, paired over 6 blocks (median of per-block savings; wins of 6):
 ### What warrants a second pair of eyes
 
 - Mode 1's cold-compile cost is not measured directly. It is assumed to be close to mode 3's plus the PIE recognizer's earlier cost of about 70 ms.
-- The playable firmware on the device still predates the new default. A new playable build must be qualified separately (task 9ji7), following the TYPED-CHESS recipe.
+- The playable firmware on the device still predates the new default. A new playable build must be qualified separately (task xxxn), following the TYPED-CHESS recipe.
 
 ### What should be done in the future
 

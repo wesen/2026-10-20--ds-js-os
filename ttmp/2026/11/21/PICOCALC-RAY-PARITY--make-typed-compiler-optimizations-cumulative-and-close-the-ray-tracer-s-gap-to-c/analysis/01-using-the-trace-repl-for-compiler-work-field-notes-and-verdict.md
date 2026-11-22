@@ -61,7 +61,19 @@ A cell comparing 38 inputs × 7 option sets × 2 compilers stopped with `cell st
 
 Each study defines its own `median` and paired-block comparison. OPERAND-HOMES `scripts/05-query.js` and this ticket's `03-compile-cost.py` both contain one. A shared, tested `stats` global would remove a source of small inconsistencies, for example a median of paired percentages against a percentage of medians.
 
-## Verdict (in progress)
+### N8. Sessions accumulate
+
+Every driver run opens a session, and the drivers did not close theirs. After a day of work a service holds dozens of sessions until it reaches `MaxSessions` (32), and nothing reports which ones are idle. That became W7 in PICOCALC-TRACE-WORKBENCH.
+
+### N9. The REPL as the scoring engine for board data
+
+In Step 5 the 167 KB of normalized board rows (`various/13-board/rows.json`) were bound into a session in six 30,000-character chunks and scored there (`scripts/08-score-board.{py,js}`). Keeping the rows in the session paid off immediately. The Chess comparison, which the scoring cell had not covered, was one more short cell against the same `rows`, with no reload and no second script. This is the notebook property that justifies the REPL over a one-shot Node script. The chunked binding remains the friction, and a mount would make it one line.
+
+### N10. goja understates the P4's compile cost
+
+goja estimated the Phase 1 options at +2.2% of a ray compile (54.6 → 55.8 ms median, n=9). On the P4, QuickJS measured +8.2% (307 → 332 ms, n=6). Both are bytecode interpreters, and the direction agreed, but the ratio did not. A goja number is good for finding a regression and ranking candidates. It does not replace the cold-compile row on the board.
+
+## Verdict
 
 The REPL's archive queries answer narrow questions about LLVM passes precisely and with verifiable references. Its larger value is the persistent VM, which can run the Typed compiler and keep large inputs and helper functions between questions. As built, both uses are held back by the same three limits: no way to load files or data except through eval, a 64 KiB cell cap, and a 15-second deadline. Recommendations, highest value first:
 
@@ -71,3 +83,6 @@ The REPL's archive queries answer narrow questions about LLVM passes precisely a
 4. **An inventory endpoint.** `GET /info` listing mounts, digests, repository revision and session count, plus correct per-mount help text. This removes N1.
 5. **Rename-aware function identity** in LLVM timelines (N3).
 6. **A shared `stats` global** with median, paired percentage change by block, and win counts (N7).
+7. **Session lifetime:** an idle timeout and a session list (N8).
+
+These seven recommendations are designed in PICOCALC-TRACE-WORKBENCH (`design-doc/01-turning-the-trace-repl-into-a-compiler-workbench-an-intern-guide.md`), which is being implemented on a separate branch. Calibrate goja compile-cost estimates against the board's cold-compile rows before relying on their size (N10).
