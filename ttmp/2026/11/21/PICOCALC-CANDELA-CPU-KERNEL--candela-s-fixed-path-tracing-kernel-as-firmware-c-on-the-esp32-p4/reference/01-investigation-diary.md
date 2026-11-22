@@ -271,7 +271,7 @@ The 64 spp image run passed the acceptance numbers at once. Mean luminance agree
 **User prompt (verbatim):** see Step 1.
 **Assistant interpretation:** the luminance acceptance test: RV32 frames at 64 spp against the host build of the same C++.
 **Inferred user intent:** evidence that the device renders what Candela renders, not only at the same speed.
-**Commit (code):** pending at the time of writing — "fix(candela-cpu-kernel): sequence calls with side effects in WGSL's order; image agreement"
+**Commit (code):** 4c10512 — "fix(candela-cpu-kernel): sequence side-effecting calls in WGSL order; device acceptance"
 
 ### What I did
 
@@ -335,7 +335,7 @@ I repeated the timing run with an image built from the generator that includes r
 **User prompt (verbatim):** see Step 1.
 **Assistant interpretation:** the device numbers in the ticket must come from the code in the ticket.
 **Inferred user intent:** reproducible evidence.
-**Commit (code):** pending at the time of writing — see the commit after d50dc3e.
+**Commit (code):** 4c10512 — "fix(candela-cpu-kernel): sequence side-effecting calls in WGSL order; device acceptance"
 
 ### What I did
 
@@ -382,3 +382,12 @@ I repeated the timing run with an image built from the generator that includes r
 ### Technical details
 
 - Timing app `9913c612f163…` (1,681,184 bytes); image app (not rerun) `ea10ef88…`; restore `b22a807d…` from `/tmp/picocalc-playable-smooth-chess-676ae95/build`.
+
+## Step 7: Vault report published
+
+Milestone. The deep-dive report went to the vault, with the regenerated substitution ladder and the device frames as figures. The vault push was first rejected (non-fast-forward); `git pull --rebase` then `git push` succeeded.
+
+- **Report:** `go-go-parc/Projects/2026/11/22/PROJECT REPORT - PicoCalc Candela - The Fixed Path-Tracing Kernel as Firmware C++, Measured on the ESP32-P4 - A Technical Deep Dive.md`, with `_assets/picocalc-candela-cpu-kernel-b01-ladder.png` and `_assets/picocalc-candela-cpu-kernel-device-frames.png`.
+- **Vault commit:** `adb4d60` on go-go-parc `main` (rebased onto `0cd2a18`).
+- **Code commit it cites:** `4c10512`.
+- **Validation:** `docmgr doctor --ticket PICOCALC-CANDELA-CPU-KERNEL` passes. The board was left on the playable firmware `b22a807d` and is healthy.
