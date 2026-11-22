@@ -211,9 +211,20 @@ class FunctionCode {
         if (!list) return;
         const source = plan.homes.get(local) ?? value;
         const step = plan.increments.get(at);
+        // A constant written to the source: the pointer is base + 4 + 2 * (K0 + c), one addition.
+        // The constant is the operation before the set, or the current one when destination()
+        // folded the set into it.
+        const tape = this.program.code;
+        let constant;
+        if (plan.skips) for (const o of [this.currentOp, this.previousOp]) if (o !== undefined && tape[o] === 0x41 && o + 2 === at) constant = tape[o + 1];
         for (const {reg, r, K0, other} of list) {
             if (step !== undefined) {
                 this.emit(instruction.i(0x13, reg, 0, reg, 2 * step));
+                continue;
+            }
+            const base = plan.homes.get(r), offset = 4 + 2 * (K0 + (constant ?? 0));
+            if (constant !== undefined && other === undefined && base !== undefined && offset >= -2048 && offset <= 2047) {
+                this.emit(instruction.i(0x13, reg, 0, base, offset));
                 continue;
             }
             let second;
@@ -537,6 +548,15 @@ class FunctionCode {
 
     step(op) {
         const plan = this.locations;
+        this.previousOp = this.currentOp;
+        this.currentOp = this.at - 1;
+        const skip = plan?.skips?.get(this.at - 1);
+        if (skip) {
+            for (const {reg} of plan.pointerWrites.get(skip.local)) this.emit(instruction.i(0x13, reg, 0, reg, 2 * skip.inc));
+            this.at = skip.end;
+            this.currentOp = undefined;
+            return false;
+        }
         if (op >= 0x02 && op <= 0x0f) this.materialize();
         if (plan?.forward.has(this.at - 1)) {
             const site = this.at - 1, tape = this.program.code;
@@ -1132,12 +1152,12 @@ function opClose(code, at) {
     }
     return -1;
 }
-function versionLoops(code, params, hoist) {
+function versionLoops(code, params, hoist, induction) {
     for (let at = 0; at < code.length; at = opNext(code, at)) if (!(OPERAND_CELLS[code[at]] >= 0)) return null;
     // select.hoist: where each local is read, so a moved statement's local can be checked for
     // reads outside its loop (hoistInvariants).
     const readsAt = new Map();
-    if (hoist) for (let at = 0; at < code.length; at = opNext(code, at)) {
+    if (hoist || induction) for (let at = 0; at < code.length; at = opNext(code, at)) {
         const op = code[at];
         const locals = op === 0x20 || op === 0xf2 ? [code[at + 1]] : op === 0xf1 || op === 0xf3 ? [code[at + 1], code[at + 2]] : [];
         for (const x of locals) { if (!readsAt.has(x)) readsAt.set(x, []); readsAt.get(x).push(at); }
@@ -1160,7 +1180,7 @@ function versionLoops(code, params, hoist) {
         for (let at = 0; at < src.length;) {
             // k0 is a known non-negative constant when `const c; set k` precedes the loop.
             const k0Known = prev2 >= 0 && src[prev2] === 0x41 && src[prev2 + 1] >= 0 && src[prev] === 0x21 && src[prev + 1] === src[at + 3];
-            const v = version(src, at, k0Known);
+            const v = version(src, at, k0Known, k0Known ? src[prev2 + 1] : undefined);
             if (v) {
                 out.push(...v.cells);
                 changed = true;
@@ -1176,7 +1196,7 @@ function versionLoops(code, params, hoist) {
         return out;
     }
 
-    function version(src, at, k0Known) {
+    function version(src, at, k0Known, k0) {
         if (src[at] !== 0x02 || src[at + 1] !== 0x40 || src[at + 2] !== 0x20 || src[at + 6] !== 0x48 || src[at + 7] !== 0x45 ||
             src[at + 8] !== 0x0d || src[at + 9] !== 0 || src[at + 10] !== 0x03 || src[at + 11] !== 0x40) return null;
         const k = src[at + 3], boundOp = src[at + 4], bound = src[at + 5];
@@ -1288,10 +1308,45 @@ function versionLoops(code, params, hoist) {
         }
         // The fast body: unchecked accesses, and branches that leave the loop one level further
         // out (the loop now sits inside the guard block).
+        // select.induction: an affine local i = a*k + b whose definition multiplies, runs on every
+        // iteration and is not absorbed into an access, in a loop whose counter starts at a known
+        // constant k0, becomes an induction variable: set to a*k0 + b before the loop, stepped
+        // by a*s beside k = k + s, its definition removed. Every read of i follows its one write
+        // in the body's top region and lies inside this loop (all of the function's reads of i
+        // are here), so each read still sees a*k + b and none sees the step past the last. A
+        // pointer home over i then advances by one addition (InShadow's 21 + 4 * sphere), and
+        // when the pointer is i's only reader the planner drops i's own steps.
+        const reduced = [], skip = new Set(), folded = new Set([...eligible.values()].flatMap(x => x.drop));
+        if (induction && k0 !== undefined) for (const [local, f] of affine) {
+            if (f.end !== ops.length) continue;
+            const readsHere = [];
+            for (let i = 0; i < ops.length; i++) {
+                const {op, a, b} = ops[i];
+                if (((op === 0x20 || op === 0xf2) && a === local) || ((op === 0xf1 || op === 0xf3) && (a === local || b === local))) readsHere.push(i);
+            }
+            if (!readsHere.length || readsHere.some(i => i <= f.def) || (readsAt.get(local)?.length ?? -1) !== readsHere.length) continue;
+            let start = f.def, net = 0;
+            for (let j = f.def - 1; j >= 0; j--) {
+                const op = ops[j].op;
+                if (op === 0x20 || op === 0x41) net++;
+                else if (op === 0x6a || op === 0x6c) net--;
+                else break;
+                if (net === 1) { start = j; break; }
+            }
+            if (start === f.def) continue;
+            let absorbed = false, multiplies = false;
+            for (let j = start; j <= f.def; j++) { if (folded.has(ops[j].at)) absorbed = true; if (ops[j].op === 0x6c) multiplies = true; }
+            const i32 = x => Number.isInteger(x) && x >= -2147483648 && x <= 2147483647;
+            if (absorbed || !multiplies || !i32(f.a * k0 + f.b) || !i32(f.a * src[inc + 3])) continue;
+            for (let j = start; j <= f.def; j++) skip.add(ops[j].at);
+            reduced.push({local, a: f.a, b: f.b});
+        }
         let fast = [];
         const drop = new Set([...eligible.values()].flatMap(x => x.drop)), unchecked = new Set();
+        for (const p of skip) drop.add(p);
         for (let p = bodyStart, depth = 0; p < bodyEnd; p = opNext(src, p)) {
             const op = src[p];
+            if (p === inc) for (const r of reduced) fast.push(0x20, r.local, 0x41, r.a * src[inc + 3], 0x6a, 0x21, r.local);
             if (drop.has(p)) continue;
             if (op === 0xf1 && eligible.has(p)) { unchecked.add(fast.length); fast.push(0xf3, src[p + 1], src[p + 2], eligible.get(p).j); continue; }
             if ((op === 0x0c || op === 0x0d) && src[p + 1] > depth) { fast.push(op, src[p + 1] + 1); continue; }
@@ -1313,8 +1368,9 @@ function versionLoops(code, params, hoist) {
             const h = hoistSubexpressions(inner, k, hoist.arity, hoist.fresh);
             if (h) { inner = h.body; computed = h.pre; }
         }
+        const start = reduced.flatMap(r => [0x41, r.a * k0 + r.b, 0x21, r.local]);
         const cells = [0x02, 0x40, ...cond, 0x45, 0x0d, 0,
-            0x02, 0x40, ...terms, ...moved.aliasTerms, ...moved.pre, ...computed,
+            0x02, 0x40, ...terms, ...moved.aliasTerms, ...moved.pre, ...computed, ...start,
             0x03, 0x40, ...inner, ...cond, 0x0d, 0, 0x0b,
             0x0c, 1,
             0x0b,
@@ -2509,8 +2565,41 @@ function planLocations(fn, options, inlineCall) {
     }
     for (const local of pointerWrites.keys()) for (const write of writesOf.get(local) ?? [])
         if (write.inc !== undefined && Math.abs(2 * write.inc) <= 2047) increments.set(write.at, write.inc);
+    // operandLocations.pointerOnly: a source whose every read is either a covered access of its
+    // own single-source pointer group (one read each) or its own step L = L + c (one read each)
+    // is read only through the pointer: its steps need only advance the pointer, so the emitter
+    // replaces `get L; const c; add; set L` by `addi p, p, 2c` (skips: statement start -> step).
+    const skips = options.pointerOnly ? new Map() : undefined;
+    if (skips) for (const [key, g] of groups) {
+        if (homes.get(key) === undefined || !g.covered || g.M !== undefined) continue;
+        const steps = (writesOf.get(g.L) ?? []).filter(w => w.inc !== undefined);
+        const covered = [...groups.values()].filter(h => h.L === g.L && h.M === undefined && homes.get("p" + h.r + ":" + h.L) !== undefined)
+            .reduce((n, h) => n + h.covered.length, 0);
+        if (g.L < fn.params.length || reads.get(g.L) !== covered + steps.length) continue;
+        if (!steps.every(w => increments.has(w.at))) continue;
+        // After a skipped step L is stale, so in the innermost loop around each step every read of
+        // L must be an unchecked access (which needs no index) or a step. A checked access needs
+        // L's value for its bounds check; the slow copy of a versioned loop recomputes L from its
+        // definition, which is not a step, so its checked accesses see the exact value.
+        const L = g.L, unchecked = q => tape[q] === 0xf3;
+        const safeRead = q => (tape[q + 2] === 0x21 && unchecked(q + 4)) ||
+            (tape[q + 2] === 0x41 && tape[q + 4] === 0x6a && tape[q + 5] === 0x21 && (tape[q + 6] === L || unchecked(q + 7))) ||
+            (q >= 2 && tape[q - 2] === 0x41 && tape[q + 2] === 0x6a && tape[q + 3] === 0x21 && unchecked(q + 5));
+        let stale = false;
+        for (const w of steps) {
+            const span = loopSpans.filter(([s0, e0]) => s0 <= w.at && w.at <= e0).sort((x, y) => y[0] - x[0])[0];
+            if (!span) { stale = true; break; }
+            for (let q = span[0]; q < span[1] && !stale; q = opNext(tape, q)) {
+                const op = tape[q];
+                if ((op === 0x20 || op === 0xf2) && tape[q + 1] === L && !(op === 0x20 && safeRead(q))) stale = true;
+                if ((op === 0xf1 || op === 0xf3) && (tape[q + 1] === L || tape[q + 2] === L)) stale = true;
+            }
+        }
+        if (stale) continue;
+        for (const w of steps) skips.set(w.at - 5, {end: w.at + 2, local: g.L, inc: w.inc});
+    }
     // scores and intervals are what planSavedHomes chose from; only observePlan reads them.
-    return {receiver,forward,homes,direct,pointers,pointerWrites,increments,scores,intervals};
+    return {receiver,forward,homes,direct,pointers,pointerWrites,increments,skips,scores,intervals};
 }
 
 // Callee-saved registers a function may claim as homes. Each claimed register costs a
@@ -2605,9 +2694,14 @@ const POLICIES = Object.freeze({
     // frame from 16.25 to 15.27 ms on the P4 (RAY-PARITY Step 15); value sets take it to 13.84 ms
     // for 6% more compile time (Step 17), hoisted loop invariants to 12.45 ms for 11% more
     // (Step 18), fused conjunctions and loads into homes to 11.43 ms for 1% more (Step 19).
+    // Induction variables with pointer-only sources take it to 11.17 ms for 1.5% more (Step 20).
     // The ray tracer uses it.
-    kernel: Object.freeze({...DEFAULT_POLICY, select: Object.freeze({...DEFAULT_POLICY.select, facts: true, sets: true, hoist: true,
-        conjunctions: true, loadHomes: true})}),
+    kernel: Object.freeze({
+        ...DEFAULT_POLICY,
+        operandLocations: Object.freeze({...DEFAULT_POLICY.operandLocations, pointerOnly: true}),
+        select: Object.freeze({...DEFAULT_POLICY.select, facts: true, sets: true, hoist: true,
+            conjunctions: true, loadHomes: true, induction: true}),
+    }),
     stock: Object.freeze({}),
 });
 
@@ -2721,7 +2815,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
             if (options.select.facts) ranges = localRanges(fn.code, fn.params.length, arity);
             if (options.select.version) {
                 const hoist = options.select.hoist ? {storeless, arity, fresh: () => fn.params.length + fn.nlocals++} : undefined;
-                const versioned = versionLoops(fn.code, fn.params.length, hoist);
+                const versioned = versionLoops(fn.code, fn.params.length, hoist, options.select.induction);
                 if (versioned) fn.code = versioned;
                 observe("version");
             }

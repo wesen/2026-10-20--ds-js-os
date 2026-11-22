@@ -1370,3 +1370,85 @@ The savings of the two flags add up exactly, so they touch different code. Conju
 
 - `picocalc-os/compiler/typed-rv32.js`: `fuseConjunctions` and its call in `lower()`; `fused()` in `checkedAddress`; `POLICIES.kernel` and its comment.
 - `picocalc-os/tests/typed-rv32.test.mjs`: the new test and the restated kernel pins.
+
+## Step 20: Induction variables and pointer-only sources, and the frame reaches 1.44× C
+
+Step 17's profile found the shadow test's sphere loop rebuilding `work + 2·(21 + 4·sphere)` on every iteration. GCC keeps a pointer that advances by 8 bytes. Two flags in `kernel` now do the same. `select.induction` turns `shadow = 21 + 4·sphere` into a variable stepped by 4 beside `sphere`. `operandLocations.pointerOnly` then sees that `shadow` is read only through its pointer home, and stops stepping `shadow` itself. On the P4 the frame fell from 11.44 to 11.17 ms (−2.35%, 6/6 blocks, every scene 1.44–4.51%), for 1.5% more compile time. Typed is at 1.44× the C frame.
+
+### What I did
+
+- **`select.induction`**, inside `versionLoops`' `version()`, when building the fast copy. An affine local `i = a·k + b` of the loop counter `k` becomes an induction variable when all of these hold:
+  - the loop's counter starts at a known constant `k0` (`const c; set k` right before the loop), and the fast copy's step is `k = k + s`;
+  - `i`'s definition runs on every iteration (it ends at the body's top level) and contains a multiply, so the reduction removes real work;
+  - the definition is not absorbed into an access (an index the versioning already folded into a displacement); counting it twice was the first bug, below;
+  - every read of `i` in the loop follows its definition, and all of the function's reads of `i` are inside this loop (`readsAt`), so no read sees the value one step past the last iteration;
+  - `a·k0 + b` and `a·s` fit in an i32.
+
+  The definition is dropped from the fast copy. `const a·k0 + b; set i` goes into the guard block after the hoisted statements, and `i = i + a·s` goes right before `k = k + s`. The slow copy keeps the original code.
+- **`operandLocations.pointerOnly`**, in the planner. Take a pointer group with a home, a single source `L` and covered accesses. If every read of `L` is either one of those accesses or `L`'s own step `L = L + c`, then `L` is read only through the pointer. The emitter then replaces `get L; const c; add; set L` with `addi p, p, 2c` (`plan.skips`, keyed by the statement's start).
+  - **Stale-index rule.** After a skipped step, `L`'s register no longer holds its value. In the innermost loop around each step, every read of `L` must be an unchecked access, which needs no index, or a step. A checked access needs `L` for its bounds check. The versioned loop's slow copy recomputes `L` from its definition, which is not a step, so its checked accesses see the exact value.
+- **Constant pointers.** When a constant `c` is written to a pointer's source, the pointer becomes `base + 4 + 2·(K0 + c)`, one `addi`, instead of a recompute from the source. The constant is the operation before the `set`, or the current one when `destination()` folded the set into it.
+- **Gating.** The prototype always created the `skips` map, and the constant-pointer shortcut tested only that the map existed. Unchanged, it would have changed the `default` and `balanced` images, which were timed and pinned. The map now exists only with `pointerOnly`.
+- **Test** `induction variables and pointer-only sources keep results, stores and traps identical`:
+  - `rows` and `nested` (InShadow's shape) must be reduced and use pointer-only sources.
+  - `mixed`, which also reads its affine local in arithmetic, must be reduced without pointer-only.
+  - `start` (the counter begins at a parameter) and `after` (the local is read after the loop) must be left alone.
+  - All five match `stock` over seven loop counts and three buffer sizes, including negative counts and buffers short enough to trap.
+- **Pins.** The older kernel images now name `pointerOnly: false` in `operandLocations` as well. Since top-level option keys replace the policy's wholesale, a helper `old(select)` spreads kernel's `operandLocations` with that one flag off. `{policy: "kernel"}` is pinned to `8eaa4060…`. `interactive`, `balanced` and `default` are unchanged.
+- **Gates:**
+  - 150/150 tests;
+  - 24/24 replays with `kernel` as the default (`various/83-replays-kernel-induction.log`);
+  - Chess engine oracle: 6981/6981 words, 118,361,847 instructions (`various/84-chess-oracle-kernel-induction.log`).
+- **Board run 14:** modes in `various/82-board-modes-induction.json` (mode 0 is run 13's image `245edbc1…`, mode 1 adds both flags, image `8eaa4060…`). Build log `various/85-board-build-induction.log`. Imported to `various/86-board-induction`, scored to `various/87-board-induction-scores.json`. Restored to `b22a807d…` with eight healthy worlds.
+
+### What worked
+
+| | run 13 (`kernel` + fusion) | + induction | + pointerOnly | both |
+|---|---:|---:|---:|---:|
+| host frame instructions | 3,399,939 | 3,366,101 (−33,838) | 3,399,939 (0) | 3,278,213 (−121,726) |
+| `LitRow` | 2,457,401 | 2,425,017 | 2,457,401 | 2,337,939 |
+| `ComputeRow` | 927,688 | 926,248 | 927,688 | 925,448 |
+| image bytes | 11,600 | 11,692 | 11,600 | 11,632 |
+
+`pointerOnly` alone changes nothing because, without induction, no source is read only through its pointer. Together, the sphere loop's address costs one `addi s1, s1, 8` per iteration, and `shadow` no longer exists in the fast copy.
+
+| P4, board run 14 | run 13 image | both flags |
+|---|---:|---:|
+| frame (6 blocks) | 11.44 ms | 11.17 ms (−2.35%, 6/6) |
+| ratio to C (7.74 ms) | 1.48× | 1.44× |
+| primary pass | 4,045 µs | 4,019 µs (−0.64%, 6/6) |
+| shadow predicate | 147.7 cycles | 145.7 cycles (−1.33%, 6/6) |
+| ray compile on the P4 | 1.98 s | 2.01 s (+1.51%) |
+| peak heap during the compile | 1.55 MB | 1.55 MB |
+| Chess evaluation kernel | 1,966 µs | 1,969 µs (unchanged, 3/6) |
+
+The peak heap was 1.50 MB in run 13. Both arms of a run show the same peak, so the rise belongs to the compiler's own source growing, not to the new passes.
+
+### What didn't work
+
+- **The first induction version miscompiled.** An affine definition whose index the versioning had already folded into an access displacement was reduced as well, so `j` was counted twice and an access trapped where `stock` did not. The differential test caught it. Absorbed definitions are now excluded.
+- **Reducing copies and conditional definitions made `LitRow` worse.** A definition that is only a copy saves nothing, and one under an `if` gains a step on every iteration while saving work only when the `if` runs. Only unconditional definitions that multiply are reduced now.
+- **The constant-pointer shortcut first never fired.** `destination()` folds `set L` into the constant's own step, so the `const` is the current operation, not the previous one. The shortcut checks both.
+
+### What I learned
+
+The remaining waste in `LitRow` is register pressure. I tested four ideas in scratch copies, and committed none of them in this step.
+
+- **The pixel store's pointer still doesn't pay.** It scores 6, below the lowest home at 8, because the model credits 2 instructions per access and assumes `pixels` and `row` sit in registers. Crediting the reads of the base and second source raises it to 14. Forcing it into a register makes `LitRow` 14,728 instructions worse, because it evicts `dy` from a saved register: one store and four loads per sphere hit, 48k. With the pointer homed, the index `row + x` is also still computed into `t0` and then overwritten. That dead index code would need fixing first.
+- **Weighting the slow copies of versioned loops as cold code** (the loop after the fast copy's `br 1; end`, divided by 4 per level) saves 18,588 instructions (−0.57%). `LitRow` drops 22,803 and `ComputeRow` gains 4,219. Factors from 4 to 1024 give the same frame.
+- **Reusing the argument registers of parameters without homes** saves 38,578 (−1.18%) and shrinks the image. `LitRow` reads `stride` once, so `a3` sat idle all function; with reuse it holds the sphere count, which frees a saved register for `dz` and removes the slot-272 spill. Only plain locals may take such a register, because parameter, capacity and pointer homes are filled in the prologue from the incoming registers. Combined with cold slow copies it is worse (`ComputeRow` again), so it becomes Step 21 on its own.
+- **What's left is mostly row-invariant values in stack slots:** `pixels`, `row`, `y / 16`, a guard result, and the light vector `lx`, `ly`, `norm`. Each needs a register across the whole `x` loop. The checker's signed `% 2` keeps its sign fix because `y` is a parameter. GCC would test `(v & 0x80000001) == 1` instead, but Typed's tape has no `and`.
+
+### What warrants a second pair of eyes
+
+- The stale-index rule in the planner scans only the innermost loop around each step. A read of `L` after that loop would see a stale value. Induction already guarantees that all reads of a reduced local are inside its loop; for other pointer-only sources the rule relies on the same reads count (`reads.get(L) === covered + steps`), which counts every read in the function.
+- `version()`'s induction check walks back from the definition with a stack-height count (`net`) to find the start of `a·k + b`. It accepts only `get`, `const`, `add` and `mul`; any other operation stops the walk and cancels the reduction.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`:
+  - `versionLoops` and `version()`: the `induction` argument, `reduced`, `skip`, the step inserted at `inc`, and `start` in the guard block;
+  - `planLocations`: `skips`, the stale-index rule;
+  - `pointersAfterWrite` (the constant shortcut) and `step()` (`previousOp`, `currentOp`, the skip hook);
+  - `POLICIES.kernel`.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the new test and the restated pins.

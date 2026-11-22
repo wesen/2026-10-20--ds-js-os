@@ -240,14 +240,16 @@ test("the default policy applies the qualified options and stock reproduces the 
     // The "kernel" policy adds division facts (board run 10 timed that image at 15.27 ms, Step 15),
     // value sets (board run 11: 13.84 ms, Step 17), hoisted loop invariants (board run 12:
     // 12.45 ms, Step 18), and fused conjunctions with loads into homes (below).
-    const kernelSelect = typedRv32.policies.kernel.select, step18 = {...kernelSelect, conjunctions: false, loadHomes: false};
-    assert.equal(sha({policy: "kernel", select: {...step18, sets: false, hoist: false}}),
-        "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
-    assert.equal(sha({policy: "kernel", select: {...step18, hoist: false}}),
-        "a5eb06b25026ea4f3fa85f8941fd062718b6fed3665ca38ba70944b73b122dc3");
-    assert.equal(sha({policy: "kernel", select: step18}), "3e18e5099c990fb168e24f8637ddf7110f931edf980b92b4f7383dda6adbf6d7");
+    const kernel = typedRv32.policies.kernel, before = {...kernel.operandLocations, pointerOnly: false};
+    const step19 = {...kernel.select, induction: false}, step18 = {...step19, conjunctions: false, loadHomes: false};
+    const old = select => sha({policy: "kernel", select, operandLocations: before});
+    assert.equal(old({...step18, sets: false, hoist: false}), "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
+    assert.equal(old({...step18, hoist: false}), "a5eb06b25026ea4f3fa85f8941fd062718b6fed3665ca38ba70944b73b122dc3");
+    assert.equal(old(step18), "3e18e5099c990fb168e24f8637ddf7110f931edf980b92b4f7383dda6adbf6d7");
     // Fused conjunctions and loads into homes (board run 13: 11.43 ms, Step 19).
-    assert.equal(sha({policy: "kernel"}), "245edbc1333519b3d78baa792e2317a6ba407f36fff682b078dd653bc5f097a0");
+    assert.equal(old(step19), "245edbc1333519b3d78baa792e2317a6ba407f36fff682b078dd653bc5f097a0");
+    // Induction variables and pointer-only sources (board run 14: 11.17 ms, Step 20).
+    assert.equal(sha({policy: "kernel"}), "8eaa40605e4bca96872b309aa87a39bfaf6312079822f9c1e4a134a63398fcdc");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
 
@@ -932,4 +934,82 @@ function flag(work: buffer, n: i32): i32 {
         traps += expected.trap;
     }
     assert(traps >= 2, "the inputs reach the buffer bound");
+});
+
+test("induction variables and pointer-only sources keep results, stores and traps identical", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    // [induction, pointer-only]: rows and nested (InShadow's shape) both; mixed reads its affine
+    // local in arithmetic too (induction only); start's counter begins at a parameter and
+    // after's local is read after the loop (neither).
+    const fns = {
+        rows: [true, true, `function rows(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let k = 0; k < n; k = k + 1) {
+        const i = 3 + 4 * k;
+        s = s + work.charCodeAt(i) + work.charCodeAt(i + 1) - work.charCodeAt(i + 2);
+    }
+    return s;
+}`],
+        nested: [true, true, `function nested(work: buffer, m: i32): i32 {
+    let s = 0;
+    for (let y = 0; y < m; y = y + 1) {
+        const count = work.charCodeAt(1) % 6;
+        for (let t = 0; t < count; t = t + 1) {
+            const at = 5 + 3 * t;
+            if (work.charCodeAt(at) > 70 && work.charCodeAt(at + 1) < 75) { s = s + t + y; }
+        }
+    }
+    return s;
+}`],
+        mixed: [true, false, `function mixed(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let k = 0; k < n; k = k + 1) {
+        const i = 2 + 3 * k;
+        s = s + work.charCodeAt(i) + i;
+    }
+    return s;
+}`],
+        start: [false, false, `function start(work: buffer, k0: i32): i32 {
+    let s = 0;
+    for (let k = k0; k < 9; k = k + 1) { const i = 1 + 2 * k; s = s + work.charCodeAt(i); }
+    return s;
+}`],
+        after: [false, false, `function after(work: buffer, n: i32): i32 {
+    let i = 0;
+    let s = 0;
+    for (let k = 0; k < n; k = k + 1) { i = 4 + 2 * k; s = s + work.charCodeAt(i); }
+    return s + i;
+}`],
+    };
+    const kernel = typedRv32.policies.kernel;
+    assert(kernel.select.induction && kernel.operandLocations.pointerOnly, "kernel uses induction and pointer-only sources");
+    for (const [name, [reduced, pointerOnly, src]] of Object.entries(fns)) {
+        const tapes = {}, skips = [];
+        const observe = key => ({observeTape: (fn, phase, code) => { if (fn === name && phase === "version") tapes[key] = code; },
+            observePlan: (fn, plan) => { if (fn === name && key === "on") skips.push(plan.skips?.size ?? 0); }});
+        typedRv32.compile(src, [], undefined, {policy: "kernel", ...observe("on")});
+        typedRv32.compile(src, [], undefined, {policy: "kernel", select: {...kernel.select, induction: false}, ...observe("off")});
+        assert.equal(tapes.on.length !== tapes.off.length || tapes.on.some((c, i) => c !== tapes.off[i]), reduced, name + " induction");
+        assert.equal(skips.some(n => n > 0), pointerOnly, name + " pointer-only");
+    }
+    const all = Object.values(fns).map(([, , src]) => src).join("\n");
+    const stock = typedRv32.compile(all, [], undefined, {policy: "stock"});
+    const candidate = typedRv32.compile(all, [], undefined, {policy: "kernel"});
+    function run(p, f, n, cells) {
+        const mem = new Uint8Array(4096), view = new DataView(mem.buffer);
+        view.setUint32(1024, cells, true);
+        for (let i = 0; i < cells; i++) view.setUint16(1028 + 2 * i, 60 + (i * 7) % 23, true);
+        const out = typedRv32Interp.run(p, f, [1024, n], mem);
+        return {result: out.result, trap: Boolean(out.trap), bytes: Array.from(out.bytes.subarray(1024, 1028 + 2 * cells))};
+    }
+    let traps = 0;
+    for (const f of Object.keys(fns)) for (const n of [0, 1, 3, 7, 9, 12, -2]) for (const cells of [40, 12, 6]) {
+        const expected = run(stock, f, n, cells);
+        assert.deepEqual(run(candidate, f, n, cells), expected, `${f} n=${n} cells=${cells}`);
+        traps += expected.trap;
+    }
+    assert(traps >= 6, "short buffers reach the bounds");
 });
