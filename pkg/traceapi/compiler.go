@@ -50,6 +50,7 @@ func InstallCompiler(vm *goja.Runtime, provider *tracecompiler.Provider) error {
 			_ = o.Set("files", copyJSON(b.Files, nil))
 			_ = o.Set("missing", copyJSON(b.Missing, nil))
 			_ = o.Set("key", b.Key)
+			_ = o.Set("worlds", b.Worlds)
 			_ = o.Set("globals", globals)
 			return o
 		},

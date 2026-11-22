@@ -26,6 +26,9 @@ defaults=
 for f in "${SDKCONFIG_DEFAULTS[@]}"; do defaults+="${defaults:+;}$port/$f"; done
 defines=()
 for o in "${OPTIONS[@]}"; do defines+=(-D "$o"); done
+# The commit and dirty state of the sources the build starts from (a later edit must not be recorded as built).
+commit=$(git -C "$port" rev-parse --short HEAD)
+dirty=false; git -C "$port" diff --quiet HEAD -- || dirty=true
 mkdir -p "$build"
 config=$build/sdkconfig.$SDKCONFIG_NAME
 if [[ -n ${SDKCONFIG_SEED:-} && ! -e $config ]]; then
@@ -34,8 +37,6 @@ if [[ -n ${SDKCONFIG_SEED:-} && ! -e $config ]]; then
 fi
 idf.py -C "$port" -B "$build" -D "SDKCONFIG=$config" -D "SDKCONFIG_DEFAULTS=$defaults" \
     "${defines[@]}" "$@" build
-commit=$(git -C "$port" rev-parse --short HEAD)
-dirty=false; git -C "$port" diff --quiet HEAD -- || dirty=true
 app=$(sha256sum "$build/picocalc-os-p4.bin" | cut -d' ' -f1)
 part=$(sha256sum "$build/partition_table/partition-table.bin" | cut -d' ' -f1)
 extra=$(printf '%s\n' "$@" | python3 -c 'import json,sys; print(json.dumps([l for l in sys.stdin.read().splitlines() if l]))')

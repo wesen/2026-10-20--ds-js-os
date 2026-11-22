@@ -8,8 +8,10 @@
 (function (root, bridge) {
   'use strict';
   const MODULES = bridge.modules();
-  const RAY = 'picocalc-os/worlds/raytrace/raytrace.typed';
-  const BENCH = 'picocalc-os/tools/typed-ray-bench.js';
+  // Paths move between revisions (PICOCALC-REPO-LAYOUT): the Typed worlds live under raw.worlds, and the bench
+  // tools are found among the files the revision loaded.
+  const RAY = 'raytrace/raytrace.typed';
+  const BENCH = 'typed-ray-bench.js';
   // Worlds without a source.list, assembled as the P4 firmware reads them:
   // files_p4.c compiles files/files.typed alone; agenda_p4.c (read_source) appends
   // a newline and agenda/entry.typed to the reminder source.
@@ -25,7 +27,7 @@
 
   function decorate(raw, requested) {
     const rev = raw.revision;
-    const b = { revision: rev, requested, files: raw.files, missing: raw.missing, key: raw.key, globals: raw.globals };
+    const b = { revision: rev, requested, files: raw.files, missing: raw.missing, key: raw.key, worlds: raw.worlds, globals: raw.globals };
     for (const m of MODULES) b[m.alias] = raw.globals[m.binding] === undefined ? null : raw.globals[m.binding];
     const read = path => file(bridge.read(rev, String(path)));
     let nativeTools;
@@ -33,12 +35,12 @@
       if (nativeTools) return nativeTools;
       if (!RV32) throw new Error('[compiler] this session has no rv32 global, so there is no native interpreter');
       let rayBench = null;
-      const loaded = raw.files.find(f => f.path === BENCH);
+      const loaded = raw.files.find(f => f.path.endsWith('/' + BENCH));
       if (loaded) {
-        const bench = read(BENCH);
+        const bench = read(loaded.path);
         // "worktree" is re-read here; refuse a bench file that changed since compiler.at loaded it.
         if (bench.sha256 !== loaded.sha256)
-          throw new Error('[compiler] ' + BENCH + ' changed since compiler.at("' + requested + '") loaded it; call compiler.at again');
+          throw new Error('[compiler] ' + loaded.path + ' changed since compiler.at("' + requested + '") loaded it; call compiler.at again');
         const shadow = Object.create(null);
         new Function('globalThis', 'typedRv32Interp', bench.text)(shadow, RV32);
         rayBench = shadow.typedRayBench ?? null;
@@ -55,7 +57,7 @@
       // without one, the files of its built-in layout (WORLD_LAYOUTS).
       world: {
         value: name => {
-          const dir = 'picocalc-os/worlds/' + String(name) + '/';
+          const dir = raw.worlds + '/' + String(name) + '/';
           let names, layout;
           try {
             names = read(dir + 'source.list').text.split('\n').map(s => s.trim()).filter(Boolean);
@@ -77,7 +79,7 @@
       // revision's tools/typed-ray-bench.js evaluated with typedRv32Interp bound to rv32, so the
       // memory layout, arguments and checks stay the revision's and only the interpreter changes.
       native: { get: () => native() },
-      ray: { get: () => read(RAY).text },
+      ray: { get: () => read(raw.worlds + '/' + RAY).text },
       where: {
         value: line => {
           const n = Number(line);

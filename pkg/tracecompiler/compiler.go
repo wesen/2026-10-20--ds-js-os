@@ -1,6 +1,11 @@
-// Package tracecompiler loads the Typed compiler (picocalc-os/compiler) and
-// its host tools at a git revision or from the working tree, so that one
-// session VM can hold several compiler revisions side by side.
+// Package tracecompiler loads the Typed compiler (compiler/typed, formerly
+// picocalc-os/compiler) and its host tools at a git revision or from the
+// working tree, so that one session VM can hold several compiler revisions side
+// by side.
+//
+// The files moved during PICOCALC-REPO-LAYOUT. Every module therefore names its
+// paths newest layout first, and a revision loads the first one that exists
+// there: compiler.at works at commits before and after each move.
 //
 // The compiler files are classic scripts. Each publishes its module with
 // `globalThis.<name> = …` and finds the others either through globalThis or
@@ -25,24 +30,35 @@ import (
 
 // Module is one compiler file, in load order.
 type Module struct {
-	Binding  string `json:"binding"` // the name the file publishes on globalThis
-	Alias    string `json:"alias"`   // the property on a loaded revision
-	Path     string `json:"path"`
-	Required bool   `json:"required"`
+	Binding  string   `json:"binding"` // the name the file publishes on globalThis
+	Alias    string   `json:"alias"`   // the property on a loaded revision
+	Paths    []string `json:"paths"`   // newest layout first; a revision loads the first that exists
+	Required bool     `json:"required"`
 }
 
 // Modules lists the files a revision loads, in the order PICOCALC-RAY-PARITY
 // used. The order only has to put each file after those it uses at load time;
 // later references go through live let bindings.
 var Modules = []Module{
-	{"typedWasm", "typedWasm", "picocalc-os/compiler/typed-wasm.js", true},
-	{"typedAsync", "typedAsync", "picocalc-os/compiler/typed-async.js", false},
-	{"typedWorld", "typedWorld", "picocalc-os/compiler/typed-world.js", true},
-	{"typedRv32", "typedRv32", "picocalc-os/compiler/typed-rv32.js", true},
-	{"typedPieLoops", "typedPieLoops", "picocalc-os/compiler/typed-pie-loops.js", false},
-	{"typedRv32Interp", "interp", "picocalc-os/tools/rv32-interp.js", false},
-	{"typedRayBench", "rayBench", "picocalc-os/tools/typed-ray-bench.js", false},
+	{"typedWasm", "typedWasm", compilerPaths("typed-wasm.js"), true},
+	{"typedAsync", "typedAsync", compilerPaths("typed-async.js"), false},
+	{"typedWorld", "typedWorld", compilerPaths("typed-world.js"), true},
+	{"typedRv32", "typedRv32", compilerPaths("typed-rv32.js"), true},
+	{"typedPieLoops", "typedPieLoops", compilerPaths("typed-pie-loops.js"), false},
+	{"typedRv32Interp", "interp", toolPaths("rv32-interp.js"), false},
+	{"typedRayBench", "rayBench", toolPaths("typed-ray-bench.js"), false},
 }
+
+func compilerPaths(name string) []string {
+	return []string{"compiler/typed/" + name, "picocalc-os/compiler/" + name}
+}
+
+func toolPaths(name string) []string {
+	return []string{"bench/host/" + name, "picocalc-os/tools/" + name}
+}
+
+// WorldRoots are the directories that have held the Typed worlds, newest first.
+var WorldRoots = []string{"apps/typed", "picocalc-os/worlds"}
 
 // File is one loaded file. Line is the wrapper line at which it starts, so a
 // stack position "compiler@rev:LINE:COL" can be mapped back to the file.
@@ -59,7 +75,8 @@ type Bundle struct {
 	Revision string        `json:"revision"` // full commit SHA or "worktree"
 	Files    []File        `json:"files"`
 	Missing  []string      `json:"missing"`
-	Key      string        `json:"key"` // SHA-256 over the files' paths and digests
+	Worlds   string        `json:"worlds"` // the WorldRoots entry that exists at this revision
+	Key      string        `json:"key"`    // SHA-256 over the files' paths and digests
 	Program  *goja.Program `json:"-"`
 }
 
@@ -128,18 +145,30 @@ func (p *Provider) load(revision string, read func(string) (*tracerepo.File, err
 	b := &Bundle{Revision: revision, Missing: []string{}}
 	key := sha256.New()
 	for i, m := range Modules {
-		f, err := read(m.Path)
+		var f *tracerepo.File
+		var path string
+		var err error
+		for _, path = range m.Paths {
+			if f, err = read(path); err == nil || !strings.Contains(err.Error(), "does not exist") {
+				break
+			}
+		}
 		if err != nil {
 			if !m.Required && strings.Contains(err.Error(), "does not exist") {
-				b.Missing = append(b.Missing, m.Path)
+				b.Missing = append(b.Missing, m.Paths[len(m.Paths)-1])
 				continue
 			}
 			return nil, errors.Wrapf(err, "load compiler at %s", label(revision))
 		}
 		texts[i], present[i] = f.Text, true
-		b.Files = append(b.Files, File{Path: m.Path, SHA256: f.SHA256, Bytes: f.Bytes})
-		fmt.Fprintf(key, "%s %s\n", m.Path, f.SHA256)
+		b.Files = append(b.Files, File{Path: path, SHA256: f.SHA256, Bytes: f.Bytes})
+		fmt.Fprintf(key, "%s %s\n", path, f.SHA256)
 	}
+	worlds, err := p.worldRoot(revision)
+	if err != nil {
+		return nil, err
+	}
+	b.Worlds = worlds
 	b.Key = hex.EncodeToString(key.Sum(nil))
 	p.mu.Lock()
 	same := p.byKey[b.Key]
@@ -210,8 +239,27 @@ func (b *Bundle) Where(line int) (string, int, bool) {
 	return "", 0, false
 }
 
-// TypedSources lists every picocalc-os/worlds/**/*.typed at a revision (or
-// "worktree"), sorted, as repository-relative paths.
+// worldRoot is the first of WorldRoots that exists at a revision (or "worktree").
+func (p *Provider) worldRoot(rev string) (string, error) {
+	for _, root := range WorldRoots {
+		if _, err := p.repo.List(root, rev); err == nil {
+			return root, nil
+		} else if !absent(err) {
+			return "", errors.Wrapf(err, "list %s at %s", root, label(rev))
+		}
+	}
+	return "", errors.Errorf("no Typed world directory (%s) at %s", strings.Join(WorldRoots, ", "), label(rev))
+}
+
+// absent reports whether a repository read failed because the path is not there
+// at that revision (tracerepo says "does not exist" for files and "is not a
+// directory" for a directory it cannot list).
+func absent(err error) bool {
+	return strings.Contains(err.Error(), "does not exist") || strings.Contains(err.Error(), "is not a directory")
+}
+
+// TypedSources lists every *.typed file under the revision's world directory
+// (WorldRoots) at a revision (or "worktree"), sorted, as repository-relative paths.
 func (p *Provider) TypedSources(rev string) ([]string, error) {
 	var out []string
 	var walk func(dir string) error
@@ -233,7 +281,11 @@ func (p *Provider) TypedSources(rev string) ([]string, error) {
 		}
 		return nil
 	}
-	if err := walk("picocalc-os/worlds"); err != nil {
+	root, err := p.worldRoot(rev)
+	if err != nil {
+		return nil, err
+	}
+	if err := walk(root); err != nil {
 		return nil, err
 	}
 	sort.Strings(out)

@@ -1,0 +1,89 @@
+{
+ "what": "RAY-PARITY board run 15: reuseArgs (mode candidate, the kernel policy) against run 14's kernel without it.",
+ "modes": [
+  {
+   "name": "control",
+   "options": {
+    "policy": "stock",
+    "operandLocations": {
+     "forward": true,
+     "capacity": true,
+     "homes": true,
+     "saved": true,
+     "direct": true,
+     "capacities": true,
+     "nested": true,
+     "constants": true,
+     "share": true,
+     "pointers": true,
+     "split": true,
+     "pointerOnly": true
+    },
+    "select": {
+     "immediates": true,
+     "divisions": true,
+     "branches": true,
+     "results": true,
+     "leafParams": true,
+     "commute": true,
+     "rotate": true,
+     "shortBranches": true,
+     "version": true,
+     "facts": true,
+     "sets": true,
+     "hoist": true,
+     "conjunctions": true,
+     "loadHomes": true,
+     "induction": true
+    },
+    "inline": true,
+    "inlineGuardedReturns": true
+   }
+  },
+  {
+   "name": "candidate",
+   "options": {
+    "policy": "stock",
+    "operandLocations": {
+     "forward": true,
+     "capacity": true,
+     "homes": true,
+     "saved": true,
+     "direct": true,
+     "capacities": true,
+     "nested": true,
+     "constants": true,
+     "share": true,
+     "pointers": true,
+     "split": true,
+     "pointerOnly": true,
+     "reuseArgs": true
+    },
+    "select": {
+     "immediates": true,
+     "divisions": true,
+     "branches": true,
+     "results": true,
+     "leafParams": true,
+     "commute": true,
+     "rotate": true,
+     "shortBranches": true,
+     "version": true,
+     "facts": true,
+     "sets": true,
+     "hoist": true,
+     "conjunctions": true,
+     "loadHomes": true,
+     "induction": true
+    },
+    "inline": true,
+    "inlineGuardedReturns": true
+   }
+  }
+ ],
+ "pins": {
+  "control": "8eaa40605e4bca96872b309aa87a39bfaf6312079822f9c1e4a134a63398fcdc",
+  "candidate": "4323938e38a4ef2a44c80103bf43680b506195762d6faa0f5834b41c86e9d2a5"
+ },
+ "blocks": 6
+}
