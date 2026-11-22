@@ -176,7 +176,7 @@ Everything B-01 needs fits in 1,016 bytes. For every preset outside the mechanic
 
 ## 7. What the kernel computes for one sample
 
-The WebGPU backend dispatches one invocation per pixel, which calls `renderPixel(px, frameIx)` (`kernel.js` lines 1365-1404). For each of the dispatch's samples it seeds the random generator (`pcgH`, a PCG hash), picks a wavelength if the engine is spectral, generates a camera ray and calls `tracePath`. The path loop (`tracePath`, lines 1142-1312) is the heart of the renderer:
+The WebGPU backend dispatches one invocation per pixel, which calls `renderPixel(px, frameIx)` (`kernel.js` lines 1365-1403). For each of the dispatch's samples it seeds the random generator (`pcgH`, a PCG hash), picks a wavelength if the engine is spectral, generates a camera ray and calls `tracePath`. The path loop (`tracePath`, lines 1142-1311) is the heart of the renderer:
 
 ```mermaid
 flowchart TD
@@ -295,10 +295,14 @@ The ESP32-P4's cycle cost per instruction for this code has not been measured, s
 
 For B-01 at -O3 (7,100 instructions, of which 110 are divisions and square roots and 1,612 other floating-point arithmetic) this gives 8,800 to 12,600 cycles per sample: **28,500 to 41,000 samples per second on one 360 MHz core**. A 160 x 160 frame at one sample per pixel then takes 0.63-0.90 s, and an 80 x 80 frame 0.16-0.22 s. `scripts/14-cycle-model.py` applies the same model to every measured run (`various/11-cycle-model.txt`): the ordinary presets fall between 20,000 and 47,000 samples per second, the toon preset E-02 reaches 59,000-83,000, and W-02 manages 3,500-4,100 with newlib and 15,000-21,000 with the fast-math prologue. The fast-math and sky-table changes above would shorten this by roughly a quarter to a third for outdoor scenes. For comparison, the Typed integer ray tracer renders its 160 x 160 frame (primary rays and hard shadows) in 16.26 ms; a physically based path-traced sample costs about 50 times more per pixel than that frame does.
 
+### The front end's cost
+
+The kernel is not the only cost; the front end runs too, once per build and once per `pack`. A subagent ran Candela's unmodified sources in the firmware's own QuickJS build on the host (`reference/02-quickjs-front-end-diary.md`, `various/03-quickjs-front-end.json`). One function dominates every build: `ggxTableWGSL()` (`kernel.js`) recomputes a constant 16 x 16 GGX albedo table with 2.1 million Monte Carlo samples, 26.7 million QuickJS steps, 3.7 s of CPU in the 32-bit host build, which is more than 99% of B-01's build. With the table computed once, B-01 builds in 2.0 ms and packs in 0.11-0.34 ms in 32-bit QuickJS, and the median preset builds in 4.2 ms. The nucleus's calibration programs run 33-44 times slower on the P4 than in that build, so B-01's build would take roughly 70-90 ms on the device and its `pack` 4-15 ms, before any extra penalty for the device's software doubles. Loading Candela's modules leaves 1.37 MB of heap, more than a world's default limit.
+
 ## 10. Key points
 
 - Candela is a front end (builders, fx tracing, `compile`, `pack`) that emits a WGSL program and flat buffers, plus a fixed path-tracing kernel. Ports so far kept the front end and replaced the target.
-- The front end must stay alive at run time: animations, behaviors and parameter maps re-run JavaScript and re-pack the buffers.
+- The front end must stay alive at run time: animations, behaviors and parameter maps re-run JavaScript and re-pack the buffers. In the firmware's QuickJS it is affordable once a constant table is precomputed: about a tenth of a second per build for simple scenes on the device (estimated).
 - Materials are generated code on the GPU, but for 57 of the 105 presets every material value is a constant or a uniform, so a CPU kernel could take them as data.
 - Candela's own kernel, compiled for RV32IMAFC, costs 6,100-11,300 instructions per camera sample on ordinary presets; the outdoor presets spend 40% of that in libm, and sine-based hashes cost up to ten times more than everything else.
 - The packed values span 1e-2 to 1.8e9, which a single fixed-point format cannot hold.

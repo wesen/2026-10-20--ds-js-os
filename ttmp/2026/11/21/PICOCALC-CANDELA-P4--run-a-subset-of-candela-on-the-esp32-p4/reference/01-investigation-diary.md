@@ -391,3 +391,61 @@ Polynomial `sin`/`cos`/`exp` and a conversion-based `floor` cut B-01 from 8,160 
 ### Technical details
 
 - Fast-math accuracy: `sin` max error about 4e-6 on [-pi, pi]; `exp` about 2e-7 relative; `ffloor` exact for |x| < 2.1e9.
+
+## Step 7: The analysis, the design, and five follow-up tickets
+
+With the kernel counts, numeric models, entry-call counts and the QuickJS study's first results in hand, I wrote the analysis and the design and split the implementation into tickets. The design's central move came from reading `compile.js` line 539 again: the program is assembled from fixed sections and generated sections, and the fixed code reaches the generated code only through five dispatch functions. That seam decides where each part runs.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** deliverables 2 (analysis), 3 (design with decisions and evidence) and 4 (ticket split with design stubs; no implementation).
+**Inferred user intent:** a plan another agent can start implementing tomorrow, with acceptance measurements that will show whether the estimates held.
+
+### What I did
+
+- Analysis doc rewritten from the template: Candela's nouns, stages, IR, compile, pack, the per-sample loop, the census, and the measured cost model with the preview figure.
+- Design doc: decisions table; machine and world limits read from `nucleus/kernel.c` (`add_world`: 1 MB, 50 ms defaults), `nucleus/vm.c` (prelude bytecode cache via `JS_ReadObject`), `port/esp32p4/main/port_p4.c` (56 KB stack), `main_p4.c` (kernel task on core 1) and `painter_service.c` (low-priority worker on core 1 and its comment about cross-core contention); architecture at the dispatch seam; numeric decision; front end in QuickJS; bytecode for generated sections with B-01's material as an example; subset; resolution policy; reuse table; ticket order; risks.
+- Read Candela's denoiser (`render.js` `denoisePx`, `kernel.js` `atrousW`) to estimate post cost: 4 iterations x 25 taps, three `exp` and one `pow` per tap.
+- `docmgr ticket create-ticket` for PICOCALC-CANDELA-CPU-KERNEL, PICOCALC-CANDELA-SECTIONS, PICOCALC-CANDELA-WORLD, PICOCALC-CANDELA-FIRST-LIGHT, PICOCALC-TYPED-F32; `docmgr doc add --doc-type design-doc` in each; stubs written with goal, context, scope, dependencies, risks, acceptance measurement (generator script kept in the scratchpad, `stubs/write_stubs.py`).
+- Commits `370014c` (kernel counts, numeric models, analysis) and `51dc641` (design, tickets).
+
+### Why
+
+- Translating the generated WGSL text rather than adding a back end to `compile.js` keeps Candela's sources unchanged, which is what kept the DGX Spark and V8 ports in step with Candela.
+- The interpreter for generated code is justified by calls per sample (0.8-1.7 material evaluations), not by interpreter speed.
+
+### What worked
+
+- `docmgr doctor` passes for all five new tickets after the fix below.
+
+### What didn't work
+
+- My stub generator wrote YAML summaries with `repr(...).replace("'", '"')`, which turned `Candela's` into `Candela"s` inside a double-quoted string. `docmgr doctor --ticket PICOCALC-CANDELA-SECTIONS` then reported `Error: failed to resolve ticket "PICOCALC-CANDELA-SECTIONS": ticket not found`, and `docmgr validate frontmatter` showed `index.md:14 did not find expected key`. A regex restoring `'s` fixed all affected files.
+- My first hand-computed time range in the docs (27,000-40,000 samples/s, 0.64-0.93 s per pass) did not match the explicit model; I replaced every time figure with the output of `scripts/14-cycle-model.py` (28,500-41,000 samples/s, 0.63-0.90 s).
+- A sentence in the design claimed an interpreted kernel would be "below one frame per minute"; the arithmetic gives 5-13 s per 160 x 160 pass, and the sentence now says so.
+
+### What I learned
+
+- The firmware already has the pieces the world needs: per-world memory and budget settings in the manifest, and a bytecode cache path for JavaScript.
+- Candela's `engine.preview` (depth 3, half scale) already expresses the interactive policy the device needs.
+
+### What was tricky to build
+
+- Keeping estimates and measurements apart in prose: every time figure now names the cycle model, and every count names its script and output file.
+
+### What warrants a second pair of eyes
+
+- The bytecode cost estimate for materials (150-250 instructions for B-01's material) assumes the measured 22 instructions per bytecode instruction and constant folding in the translator; it is a design estimate, not a measurement.
+
+### What should be done in the future
+
+- Fold the QuickJS study's final numbers into the docs (Step 8) and publish the vault report.
+
+### Code review instructions
+
+- Start with the design's decisions table, then Sections 4 and 6; check each number against the `various/` file it cites.
+
+### Technical details
+
+- Ticket directories: `ttmp/2026/11/21/PICOCALC-CANDELA-{CPU-KERNEL,SECTIONS,WORLD,FIRST-LIGHT}--*` and `ttmp/2026/11/21/PICOCALC-TYPED-F32--*`.

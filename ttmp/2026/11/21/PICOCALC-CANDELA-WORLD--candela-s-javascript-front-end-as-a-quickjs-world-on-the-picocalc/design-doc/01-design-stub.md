@@ -27,7 +27,7 @@ A PicoCalc world loads Candela's front end (`candela.js`, `scene.js`, `fx.js`, `
 
 ## Context
 
-The parent design (`ttmp/2026/11/21/PICOCALC-CANDELA-P4--run-a-subset-of-candela-on-the-esp32-p4/design-doc/01-a-candela-subset-for-the-esp32-p4.md`, Section 5) and the QuickJS study (`ttmp/2026/11/21/PICOCALC-CANDELA-P4--run-a-subset-of-candela-on-the-esp32-p4/reference/02-quickjs-front-end-diary.md`, `various/03-quickjs-front-end.json`) found: all 105 presets build in the firmware's QuickJS with WGSL and diagnostics identical to Node's; `ggxTableWGSL()` is 26.7 million QuickJS steps per compile and must be memoised; loading needs 1.40 MB of heap (32-bit) against a world default of 1 MB; B-01's build is 4-15 ms in host QuickJS, roughly 0.25-0.9 s on the device at the measured factor of about 61; QuickJS ignores `//# sourceURL=`, so user line numbers in diagnostics need the host to compile scene files with a file name.
+The parent design (`ttmp/2026/11/21/PICOCALC-CANDELA-P4--run-a-subset-of-candela-on-the-esp32-p4/design-doc/01-a-candela-subset-for-the-esp32-p4.md`, Section 5) and the QuickJS study (`ttmp/2026/11/21/PICOCALC-CANDELA-P4--run-a-subset-of-candela-on-the-esp32-p4/reference/02-quickjs-front-end-diary.md`, `various/03-quickjs-front-end.json`) found: all 105 presets build in the firmware's QuickJS with WGSL and diagnostics identical to Node's; `ggxTableWGSL()` is 26.7 million QuickJS steps per compile (at least 123-161 s on the device) and must be memoised; loading needs 1.37 MB of heap (32-bit) against a world default of 1 MB (it fails at 1 MB, succeeds at 2 MB); with the memo, B-01's build is 2.0 ms in 32-bit host QuickJS, about 67-88 ms on the device by the nucleus's own calibration ratios (33-44x), and its `pack` 0.11-0.34 ms (4-15 ms on the device); one preset (S-04) needs 69 KB of C stack against 56 KB; QuickJS ignores `//# sourceURL=`, so user line numbers in diagnostics need the host to compile scene files with a file name.
 
 ## Scope
 
@@ -43,8 +43,8 @@ The parent design (`ttmp/2026/11/21/PICOCALC-CANDELA-P4--run-a-subset-of-candela
 
 ## Risks
 
-- The factor of 61 was measured on mostly integer code; Candela's builds are float-heavy and the device's doubles are soft-float.
-- `fx.js` `Gen` recursion depth: the 64-bit host overflowed a 56 KB stack on K-09.
+- The host-to-device factors (33-44 against 32-bit QuickJS, about 61 against 64-bit) come from integer-heavy programs; Candela's builds compute in doubles, which the P4 emulates in software.
+- `fx.js` `Gen` recursion depth: S-04 needs 69 KB and E-02 52 KB of C stack in 32-bit host QuickJS, against 56 KB.
 - Heap growth across rebuilds (a user editing a scene repeatedly).
 
 ## Acceptance measurement
