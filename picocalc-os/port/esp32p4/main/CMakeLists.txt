@@ -160,6 +160,15 @@ if(PICOCALC_NATIVE_ELF)
         target_include_directories(${COMPONENT_LIB} PRIVATE ${tool_dir})
     endif()
     set(cji_input_toplog ${CJI_ROOT}/tests/native/toplog.world.js)
+    if(PICOCALC_CANDELA_GALLERY AND "compositor" IN_LIST CJI_WORLDS)
+        # The Candela gallery (PICOCALC-CANDELA-GALLERY): CJI compiles a copy of the compositor that draws the gallery
+        # world's frames (tools/candela-gallery-compositor.py); js/system/compositor.js itself is not changed.
+        set(gallery_compositor ${CMAKE_CURRENT_BINARY_DIR}/compositor-gallery.js)
+        add_custom_command(OUTPUT ${gallery_compositor}
+            COMMAND ${PYTHON} ${OS}/tools/candela-gallery-compositor.py ${cji_input_compositor} ${gallery_compositor}
+            DEPENDS ${OS}/tools/candela-gallery-compositor.py ${cji_input_compositor} VERBATIM)
+        set(cji_input_compositor ${gallery_compositor})
+    endif()
     foreach(name IN LISTS CJI_WORLDS CJI_DIAGNOSTICS)
         set(module ${CMAKE_CURRENT_BINARY_DIR}/natives/${name}.elf)
         set(own ${CMAKE_CURRENT_BINARY_DIR}/${name}.own.slir)
@@ -408,6 +417,58 @@ if(PICOCALC_CANDELA_WORLD)
     file(READ ${OS}/worlds/candela-world/manifest.json candela_world_entry)
     string(JSON candela_world_index LENGTH "${typed_manifest}" worlds)
     string(JSON typed_manifest SET "${typed_manifest}" worlds ${candela_world_index} "${candela_world_entry}")
+endif()
+
+# The Candela gallery (PICOCALC-CANDELA-GALLERY): Candela's presets path-traced by the firmware on core 1 and shown
+# on the screen. Two instances of CPU-KERNEL's generated kernel (third_party/candela/kernel) with every CPU
+# substitution: cg (RGB) and cgs (CDL_SPECTRAL). Each is compiled from a one-line wrapper, because a source file
+# carries one set of definitions; nucleus/candela_gallery_instance.cpp binds each instance's dispatch functions to
+# SECTIONS' interpreter (third_party/candela/vm). The floating-point policy: -ffp-contract=off on the kernel, the
+# interpreter and the renderer core, so device frames equal the host build's (design Section 6). The scenes are
+# third_party/candela/gallery/candela_gallery_scenes.c; the world is worlds/candela-gallery, appended to the typed
+# manifests written below, and the compositor is patched above.
+if(PICOCALC_CANDELA_GALLERY)
+    if(NOT PICOCALC_TYPED_CHESS OR NOT PICOCALC_NATIVE_ELF)
+        message(FATAL_ERROR "PICOCALC_CANDELA_GALLERY rides on the typed Chess firmware (build-smooth-chess.sh)")
+    endif()
+    set(cdl ${OS}/third_party/candela)
+    set(cdl_fp -ffp-contract=off -fno-math-errno -fwrapv)
+    set(cdl_switches CDL_SKY_N=64 CDL_LAZY_SELECT=1 CDL_NO_ZERO_INIT=1 CDL_FAST_FLOOR=1 CDL_FAST_TRIG=1
+        CDL_FAST_EXP=1 CDL_INT_HASH=1 CDL_SKY_TABLE=1 CDL_POW32=1)
+    target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_CANDELA_GALLERY=1)
+    target_include_directories(${COMPONENT_LIB} PRIVATE ${cdl}/kernel ${cdl}/vm)
+    set(gallery_sources)
+    foreach(inst cg cgs)
+        foreach(part cdl_kernel cdl_post candela_gallery_instance)
+            if(part STREQUAL "candela_gallery_instance")
+                set(src ${OS}/nucleus/${part}.cpp)
+            else()
+                set(src ${cdl}/kernel/${part}.cpp)
+            endif()
+            set(wrapper ${CMAKE_CURRENT_BINARY_DIR}/gallery-${inst}-${part}.cpp)
+            file(CONFIGURE OUTPUT ${wrapper} CONTENT "#include \"${src}\"\n")
+            set(defs CDL_NS=${inst} ${cdl_switches})
+            if(inst STREQUAL "cgs")
+                list(APPEND defs CDL_SPECTRAL=1)
+                if(part STREQUAL "candela_gallery_instance")
+                    list(APPEND defs CDL_VM_NO_MATH_EXPORTS=1)
+                endif()
+            endif()
+            set_source_files_properties(${wrapper} PROPERTIES COMPILE_DEFINITIONS "${defs}" COMPILE_OPTIONS "${cdl_fp};-w")
+            list(APPEND gallery_sources ${wrapper})
+            set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${src})
+        endforeach()
+    endforeach()
+    set_source_files_properties(${cdl}/vm/cdl_vm.c PROPERTIES COMPILE_OPTIONS "-include;${cdl}/vm/cdl_vm_ck_math.h;${cdl_fp};-w")
+    set_source_files_properties(${OS}/nucleus/candela_gallery.c PROPERTIES COMPILE_OPTIONS "${cdl_fp}")
+    target_sources(${COMPONENT_LIB} PRIVATE candela_gallery_p4.c ${OS}/nucleus/candela_gallery.c ${cdl}/vm/cdl_vm.c
+        ${cdl}/gallery/candela_gallery_scenes.c ${cdl}/kernel/cdl_fixed_kernel.c ${gallery_sources})
+    list(APPEND BUNDLE_EXTRA "candela-gallery/gallery.js=${OS}/worlds/candela-gallery/gallery.js")
+    list(APPEND BUNDLE_EXTRA_DEPS ${OS}/worlds/candela-gallery/gallery.js)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${OS}/worlds/candela-gallery/manifest.json)
+    file(READ ${OS}/worlds/candela-gallery/manifest.json gallery_entry)
+    string(JSON gallery_index LENGTH "${typed_manifest}" worlds)
+    string(JSON typed_manifest SET "${typed_manifest}" worlds ${gallery_index} "${gallery_entry}")
 endif()
 
 if(PICOCALC_TYPED_EDITOR)

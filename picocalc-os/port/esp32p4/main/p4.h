@@ -83,3 +83,13 @@ void p4_agenda_stage(const world_t *world, const char *stage);
 char *p4_agenda_take_module(size_t *length);
 void p4_agenda_console(const char *command);
 #endif
+
+// The Candela gallery's console command (PICOCALC-CANDELA-GALLERY, candela_gallery_p4.c), one more case of
+// console_exec's dispatch. A macro, so that main_p4.c gains no line without the option: its line numbers, which
+// ESP_ERROR_CHECK writes into the playable firmware, stay as they were.
+#if PICOCALC_CANDELA_GALLERY
+void p4_gallery_console(const char *args);
+#define P4_GALLERY_CONSOLE(cmd, rest) else if (!strcmp(cmd, "gallery")) p4_gallery_console(rest);
+#else
+#define P4_GALLERY_CONSOLE(cmd, rest)
+#endif

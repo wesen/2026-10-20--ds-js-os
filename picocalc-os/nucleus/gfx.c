@@ -39,9 +39,35 @@ static inline void touch(dmabuf_t *b, int y, int h) {
   b->dirty |= (b1 - b0 == 63 ? ~0ull : ((1ull << (b1 - b0 + 1)) - 1)) << b0;
 }
 
+#if PICOCALC_CANDELA_GALLERY
+// The Candela gallery (PICOCALC-CANDELA-GALLERY): the newest frame of the gallery's renderer, 320 x 320, with a
+// caption over a darkened bottom strip. skip: the gallery world's scene counter (a change moves to another scene).
+static bool gfx_gallery(dmabuf_t *b, int skip) {
+  extern const uint16_t *p4_gallery_take(int skip, char *left, size_t nl, char *right, size_t nr);
+  enum { S = 320, STRIP = 16 };
+  if (b->w < S || b->h < S) return false;
+  char left[96], right[48];
+  const uint16_t *f = p4_gallery_take(skip, left, sizeof left, right, sizeof right);
+  if (f) for (int y = 0; y < S; y++) memcpy(b->back + y * b->w, f + y * S, S * sizeof(pixel_t));
+  else gfx_fill(b, 0, 0, S, S, 0);
+  for (int y = S - STRIP; y < S; y++) {
+    pixel_t *r = b->back + y * b->w;
+    for (int x = 0; x < S; x++) r[x] = (pixel_t)((r[x] >> 2) & 0x39e7);   // a quarter of each channel
+  }
+  const int font = gfx_font_index("s"), rw = gfx_measure(right, font);
+  gfx_text(b, 4, S - STRIP + 2, left, font, 0xffff, S - rw - 16);
+  gfx_text(b, S - 4 - rw, S - STRIP + 2, right, font, 0xffff, rw);
+  touch(b, 0, S);
+  return true;
+}
+#endif
+
 #if PICOCALC_RAYTRACE
 bool gfx_raytrace(dmabuf_t *b, int sx, int sy, int lx, int ly, int selection) {
   enum { SIDE = RAYTRACE_DEMO_SIDE * 3 / 2, TOP = 32 };
+#if PICOCALC_CANDELA_GALLERY
+  if (selection == 1000) return gfx_gallery(b, sx);
+#endif
   if (b->w < SIDE || b->h < TOP + SIDE) return false;
   uint16_t *origin = b->back + TOP * b->w + (b->w - SIDE) / 2;
   raytrace_demo_scene scene = { .sphere_x = sx, .sphere_y = sy, .light_x = lx, .light_y = ly };

@@ -185,7 +185,7 @@ void console_exec(char *line) {
     else defer_deliver(W, new_msg(M_ON, type, m && rest[m] ? rest + m : NULL, -1));
   }
 #endif
-  else if (!strcmp(cmd, "raybench")) p4_raybench(rest);
+  else if (!strcmp(cmd, "raybench")) p4_raybench(rest); P4_GALLERY_CONSOLE(cmd, rest)
 #if PICOCALC_CANDELA
   else if (!strcmp(cmd, "candela")) p4_candela_console(rest);
 #endif
