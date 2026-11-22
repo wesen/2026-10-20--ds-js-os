@@ -107,6 +107,17 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
 #else
     printf("%s native compiler functions=streamed\n", app);
 #endif
+    // A named policy selects how much the compiler optimizes this world: interactive worlds
+    // trade generated-code speed for a boot compile inside their deadline (COMPILE-BUDGET).
+    if (ready && limits && limits->policy) {
+      if (argc < 3) {
+        args[2] = JS_NewObject(ctx);
+        ready = !JS_IsException(args[2]);
+        argc = 3;
+      }
+      ready = ready && JS_SetPropertyStr(ctx, args[2], "policy", JS_NewString(ctx, limits->policy)) >= 0;
+      if (ready) printf("%s native compiler policy=%s\n", app, limits->policy);
+    }
   }
   if (ready) result = JS_Call(ctx, function, JS_UNDEFINED, argc, args);
   JS_FreeValue(ctx, args[2]);

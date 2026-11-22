@@ -131,6 +131,18 @@ The workbench is the merged result of PICOCALC-TRACE-WORKBENCH (merge commit 295
   - Nothing stops a script from reading a global another script left behind. This is the strongest argument for I2: a real `args` channel recorded with each job.
   - A failed job returns `{"ok": false, "error": …}` on stdout with exit status 1. My first post-processing one-liner assumed success and failed with `KeyError`. Every consumer has to check `ok`.
 
+### 2026-11-21, entry 6: scoring board run 9, and a compile-cost proxy that misled
+
+- **Task 1: score board run 9** (Step 11 against split, and against version + split). `15-score-board-workbench.js` with `args.board` scored the imported run (`various/56-board-version-scores.json`) in one cell. It checked the C references, the Chess control and all 12 scenes per mode. No change was needed: the second board run that this script scored unchanged.
+- **Task 2: compile cost of every world under every step policy.** After the boot failure (diary Step 14), `compile-cost.js` took `args.arms` straight from `various/58-compile-cost-steps-arms.json` and ran 8 arms × 5 programs as one job in 54 s.
+- **What went wrong: the proxy, not the tool.** goja put Editor's growth from `stock` to Step 13 at 1.6× and Chess's at 1.7×. On the device, Editor grew at least 2.5×, and jitless Node shows 3.1× and 3.0×. The device runs the Typed lexer's index as native code, while goja interprets it, so in goja the large worlds' compile time is mostly frontend. The workbench measured goja correctly; goja was the wrong stand-in for the device's backend cost.
+- **Good:**
+  - The arms file is the same JSON that COMPILE-BUDGET's measurement firmware compiles on the device. The host proxies and the device read one definition of each policy.
+  - One job replaced what used to be a Python driver issuing one cell per compile.
+- **Bad:**
+  - A goja timing is ambiguous unless it is split by phase. The job reported only whole-compile times, so the frontend share stayed invisible until I profiled in Node.
+- **Improvement (I8): phase timers in the compiler.** Add `options.timings`, a callback receiving `(phase, ms)`, so a workbench job can split frontend from backend time in any interpreter. Then a proxy can drop the phase that runs natively on the device.
+
 ## Assessment so far
 
 ### Good
@@ -158,3 +170,4 @@ The workbench is the merged result of PICOCALC-TRACE-WORKBENCH (merge commit 295
 - **I5. A result store:** `results.save(name, value)` writing `$scratch/results/NAME.json` with the session, revision and script digest. The client would no longer redirect and unwrap.
 - **I6. Per-block detail from `stats.paired`** (`blocks: [{key, control, candidate, savedPct}]`), to judge spread without re-deriving it.
 - **I7. Mounted native results:** a documented convention for mounting the outputs of host-only steps (C counts, Chess oracle, replays), so a workbench report can cite them by digest.
+- **I8. Phase timers in the compiler** (`options.timings(phase, ms)`), so that compile-cost jobs can separate the frontend, which is partly native on the device, from the backend (entry 6).

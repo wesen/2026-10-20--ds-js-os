@@ -41,11 +41,14 @@ def main():
     p.add_argument("--arms", type=Path, required=True)
     p.add_argument("--pick", default="stock,step6,step7,step8,step11,step13")
     p.add_argument("--rounds", type=int, default=2)
+    p.add_argument("--rebuild", action="store_true",
+                   help="reuse OUTPUT: recopy the tracked files over its checkout (copy2 keeps the mtimes of unchanged "
+                        "files) and rebuild its build tree incrementally")
     a = p.parse_args()
     arms = json.loads(a.arms.read_text())
     names = a.pick.split(",")
     work = a.output.resolve()
-    work.mkdir(parents=True)
+    work.mkdir(parents=True, exist_ok=a.rebuild)
     checkout = work / "checkout"
     tracked = subprocess.check_output(["git", "ls-files", "-z", "picocalc-os", "cji"], cwd=REPO)
     for name in tracked.decode().strip("\0").split("\0"):
@@ -65,7 +68,10 @@ def main():
           "static char *typed_compile_once(const char *app, const char *source_kind, const char *source,\n"
           "                       size_t source_length, const char *linker, const char *entry, int engine,\n"
           "                       const char *reactor, size_t reactor_length, size_t *length, vtime_t started,\n"
-          "                       const p4_compile_limits *limits, const char *arm, size_t *peak) {")
+          "                       const p4_compile_limits *limits, const char *arm, size_t *peak,\n"
+          "                       vtime_t *evaluated) {")
+    patch(typed, "      !eval_file(ctx, linker)) goto rejected;\n",
+          "      !eval_file(ctx, linker)) goto rejected;\n  if (evaluated) *evaluated = port_clock();\n")
     patch(typed, "    .deadline = started + (limits ? limits->duration_us : COMPILER_US),",
           "    .deadline = started + 60000000,  /* COMPILE-BUDGET measurement image */")
     patch(typed, "  if (ready) result = JS_Call(ctx, function, JS_UNDEFINED, argc, args);",
@@ -99,21 +105,23 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
     for (int round = 0; round < CCARM_ROUNDS; round++)
       for (size_t i = 0; i < CCARM_N; i++) {{
         size_t k = round % 2 ? CCARM_N - 1 - i : i, bytes = 0, peak = 0;
-        vtime_t t0 = port_clock();
+        vtime_t t0 = port_clock(), evaluated = t0;
         char *module = typed_compile_once(app, source_kind, source, source_length, linker, entry, engine,
-                                          reactor, reactor_length, &bytes, t0, limits, ccarm_options[k], &peak);
-        long long us = (long long)(port_clock() - t0);
+                                          reactor, reactor_length, &bytes, t0, limits, ccarm_options[k], &peak,
+                                          &evaluated);
+        long long us = (long long)(port_clock() - t0), eval_us = (long long)(evaluated - t0);
         uint32_t fnv = 2166136261u;
         for (size_t j = 0; module && j < bytes; j++) fnv = (fnv ^ (uint8_t)module[j]) * 16777619u;
         printf("CCARM {{\\"app\\":\\"%s\\",\\"round\\":%d,\\"arm\\":\\"%s\\",\\"status\\":\\"%s\\",\\"us\\":%lld,"
-               "\\"peak\\":%u,\\"bytes\\":%u,\\"fnv\\":\\"%08x\\"}}\\n", app, round, ccarm_names[k],
-               module ? "ok" : "failed", us, (unsigned)peak, (unsigned)(module ? bytes : 0), (unsigned)fnv);
+               "\\"evalUs\\":%lld,\\"peak\\":%u,\\"bytes\\":%u,\\"fnv\\":\\"%08x\\"}}\\n", app, round, ccarm_names[k],
+               module ? "ok" : "failed", us, eval_us, (unsigned)peak, (unsigned)(module ? bytes : 0), (unsigned)fnv);
         free(module);
         vTaskDelay(1);
       }}
   }}
+  /* The arms ran after the caller's start time; the world's own compile gets its own clock. */
   return typed_compile_once(app, source_kind, source, source_length, linker, entry, engine,
-                            reactor, reactor_length, length, started, limits, NULL, NULL);
+                            reactor, reactor_length, length, port_clock(), limits, NULL, NULL, NULL);
 }}
 """)
     shutil.copyfile(REPO / "picocalc-os/port/esp32p4/sdkconfig.agent-elf", work / "sdkconfig")  # not tracked
