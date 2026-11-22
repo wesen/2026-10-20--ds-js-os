@@ -1,0 +1,6 @@
+[
+ {"policy": "stock", "inlineGuardedReturns": true, "operandLocations": {"forward": true, "capacity": true, "homes": true, "saved": true, "direct": true}, "select": {"immediates": true, "divisions": true, "branches": true, "results": true, "leafParams": true}},
+ {"policy": "stock", "inlineGuardedReturns": true, "operandLocations": {"forward": true, "capacity": true, "homes": true, "saved": true, "direct": true, "capacities": true, "nested": true}, "select": {"immediates": true, "divisions": true, "branches": true, "results": true, "leafParams": true, "commute": true}},
+ {"policy": "stock", "inlineGuardedReturns": true, "operandLocations": {"forward": true, "capacity": true, "homes": true, "saved": true, "direct": true}, "select": {"immediates": true, "divisions": true, "branches": true, "results": true, "leafParams": true}, "inline": true},
+ {"policy": "stock", "inlineGuardedReturns": true, "operandLocations": {"forward": true, "capacity": true, "homes": true, "saved": true, "direct": true, "capacities": true, "nested": true}, "select": {"immediates": true, "divisions": true, "branches": true, "results": true, "leafParams": true, "commute": true}, "inline": true}
+]

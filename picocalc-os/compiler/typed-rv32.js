@@ -163,9 +163,10 @@ class FunctionCode {
     checkedAddress(receiver, index, constant) {
         const base = this.locations?.homes.get(receiver) ?? T6;
         if (base === T6) this.readLocal(base, receiver);
+        const capacity = this.locations?.homes.get(-1 - receiver);
         const cached = this.locations?.receiver === receiver;
-        const length = cached ? A0 + 7 : A0;
-        if (!cached || !this.capacityReady) this.load(length, 0, base);
+        const length = capacity ?? (cached ? A0 + 7 : A0);
+        if (capacity === undefined && (!cached || !this.capacityReady)) this.load(length, 0, base);
         if (cached) this.capacityReady = true;
         this.emit(instruction.b(6, index, length, 8));
         this.emit(0x00100073);
@@ -540,6 +541,8 @@ class FunctionCode {
         this.emit(0);
         for (let k = 0; k < saved.length; k++) this.emit(0);
         for (let i = 0; i < count; i++) this.writeLocal(A0 + i, i);
+        // Capacity homes belong to unwritten parameters, still in their argument registers here.
+        for (const [id, reg] of this.locations?.homes ?? []) if (id < 0) this.load(reg, 0, A0 - 1 - id);
         while (this.at < this.program.code.length && !this.step(this.cell())) {}
         const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
@@ -733,6 +736,185 @@ for (const [opcode, cells] of [
     [0x6a,0],[0x6b,0],[0x6c,0],[0x6d,0],[0x6f,0],[0x74,0],[0x75,0],[0xf1,2],[0xf2,2],
 ]) OPERAND_CELLS[opcode] = cells;
 
+// inline: replace calls to small internal functions lowered earlier with their tapes.
+// A call `args…; call f` becomes `local.set p_{n-1} … local.set p_0; block (result i32)
+// <f's tape> end`, where f's locals are renumbered into a range of the caller's locals and
+// each `return` becomes a branch to the new block. Every Typed function returns a value
+// and every declaration has an initializer, so the inlined block needs no zeroed locals;
+// repeated inlining of the same callee into one caller shares one local range, which is
+// safe because inlined bodies never overlap in time (a callee is never its own ancestor).
+//
+// An argument that is a plain local read or a literal, for a parameter the callee never
+// writes, is substituted into the body instead of copied: the caller's `local.get x` or
+// `i32.const c` cells are removed and the callee reads x or c directly. A literal is not
+// substituted for a parameter used as a checked-address operand, which must be a local.
+//
+// Only calls inside a caller's loop are inlined, unless `anywhere` is set; the library
+// keeps each candidate fully expanded (`anywhere`), so a callee inlined into a loop brings
+// its own callees with it.
+// maxLoopDepth bounds the loop nesting a call site and the callee's own loops may form
+// together: a callee whose loops already amortize its call is left out of a caller's loop.
+const INLINE_DEFAULTS = Object.freeze({calleeCells: 1000, callerCells: 8000, maxLoopDepth: 2});
+
+function loopDepth(code) {
+    let depth = 0, deepest = 0;
+    const blocks = [];
+    for (let at = 0; at < code.length; at += 1 + OPERAND_CELLS[code[at]]) {
+        const op = code[at];
+        if (op >= 0x02 && op <= 0x04) { blocks.push(op); if (op === 0x03) deepest = Math.max(deepest, ++depth); }
+        if (op === 0x0b && blocks.pop() === 0x03) depth--;
+    }
+    return deepest;
+}
+
+function inlineCalls(fn, library, limits, arity, anywhere) {
+    const tape = fn.code;
+    if (!tape.includes(0x10)) return null;
+    const bases = new Map(), out = [], stack = [], blocks = [];
+    let locals = fn.params.length + fn.nlocals, loops = 0, changed = false;
+    const push = entry => stack.push(entry);
+    const pop = n => { stack.length = Math.max(0, stack.length - n); };
+    for (let at = 0; at < tape.length;) {
+        const opcode = tape[at], cells = OPERAND_CELLS[opcode], a = tape[at + 1];
+        if (cells < 0) return null;
+        let callee = opcode === 0x10 && (anywhere || loops > 0) ? library.get(a) : undefined;
+        if (callee && (out.length + callee.code.length > limits.callerCells || loops + callee.loops > limits.maxLoopDepth))
+            callee = undefined;
+        if (!callee) {
+            const start = out.length;
+            for (let k = 0; k <= cells; k++) out.push(tape[at + k]);
+            at += 1 + cells;
+            // Abstract operand stack: the cells that produced each simple value.
+            if (opcode === 0x20) push({at: start, local: a});
+            else if (opcode === 0x41) push({at: start, constant: a});
+            else if (opcode === 0x21) {
+                pop(1);
+                for (let i = 0; i < stack.length; i++) if (stack[i]?.local === a) stack[i] = null;
+            } else if (opcode === 0x1a || opcode === 0x0d) pop(1);
+            else if (opcode === 0x45 || opcode === 0x28 || opcode === 0x2f) { pop(1); push(null); }
+            else if ((opcode >= 0x46 && opcode <= 0x4f) || (opcode >= 0x6a && opcode <= 0x75)) { pop(2); push(null); }
+            else if (opcode === 0x36 || opcode === 0x3b) pop(2);
+            else if (opcode === 0xf1) push(null);
+            else if (opcode === 0x10) { pop(arity(a)); push(null); }
+            else if (opcode >= 0x02 && opcode <= 0x04) {
+                if (opcode === 0x04) pop(1);
+                blocks.push({op: opcode, value: a === 0x7f, height: stack.length});
+                if (opcode === 0x03) loops++;
+            } else if (opcode === 0x05) stack.length = blocks.at(-1).height;
+            else if (opcode === 0x0b && blocks.length) {
+                const block = blocks.pop();
+                if (block.op === 0x03) loops--;
+                stack.length = block.height;
+                if (block.value) push(null);
+            }
+            continue;
+        }
+        at += 2;
+        let base = bases.get(callee);
+        if (base === undefined) {
+            base = locals;
+            bases.set(callee, base);
+            locals += callee.params + callee.nlocals;
+        }
+        const args = stack.slice(stack.length - callee.params);
+        const subst = args.map((arg, i) => {
+            if (!arg || callee.written[i]) return undefined;
+            const cellsOk = arg.local !== undefined ? out[arg.at] === 0x20 && out[arg.at + 1] === arg.local
+                : out[arg.at] === 0x41 && out[arg.at + 1] === arg.constant;
+            if (!cellsOk || (arg.local === undefined && callee.addressed[i])) return undefined;
+            return arg;
+        });
+        for (const arg of subst.filter(Boolean).sort((x, y) => y.at - x.at)) out.splice(arg.at, 2);
+        pop(callee.params);
+        for (let i = callee.params - 1; i >= 0; i--) if (!subst[i]) out.push(0x21, base + i);
+        out.push(0x02, 0x7f);
+        const local = v => v < callee.params && subst[v] ? subst[v].local : base + v;
+        let depth = 0;
+        const body = callee.code;
+        for (let k = 0; k < body.length;) {
+            const op = body[k], n = OPERAND_CELLS[op], v = body[k + 1];
+            k += 1 + n;
+            if (op === 0x0f) { out.push(0x0c, depth); continue; }
+            if (op >= 0x02 && op <= 0x04) depth++;
+            if (op === 0x0b) depth--;
+            if (op === 0x20 && v < callee.params && subst[v]?.constant !== undefined) out.push(0x41, subst[v].constant);
+            else if (op === 0x20 || op === 0x21) out.push(op, local(v));
+            else if (op === 0xf1) out.push(op, local(v), local(body[k - 1]));
+            else for (let j = n; j >= 0; j--) out.push(body[k - 1 - j]);
+        }
+        // The callee's final `end` closed its function; here it closes the inlined block.
+        push(null);
+        changed = true;
+    }
+    return changed ? {code: out, nlocals: locals - fn.params.length} : null;
+}
+
+// select.commute: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
+// eq, ne), so the literal reaches selectConstant as a right operand. Moving a literal past
+// e cannot change e's effects. Each abstract stack entry records where its cells start in
+// the output; an expression whose start is not certain (a value block) is NaN and is never
+// moved past.
+const COMMUTATIVE = new Set([0x6a, 0x6c, 0x46, 0x47]);
+
+function commuteConstants(code, arity) {
+    const out = [], stack = [], blocks = [];
+    let changed = false;
+    for (let at = 0; at < code.length;) {
+        const op = code[at], cells = OPERAND_CELLS[op], a = code[at + 1];
+        if (cells < 0) return null;
+        const start = out.length;
+        if ((op >= 0x46 && op <= 0x4f) || (op >= 0x6a && op <= 0x75)) {
+            const right = stack.pop(), left = stack.pop();
+            if (!left || !right) return null;
+            if (COMMUTATIVE.has(op) && left.constant !== undefined && right.constant === undefined &&
+                left.start + 2 === right.start && out[left.start] === 0x41) {
+                out.push(...out.splice(left.start, 2));
+                changed = true;
+            }
+            out.push(op);
+            stack.push({start: left.start});
+            at++;
+            continue;
+        }
+        for (let k = 0; k <= cells; k++) out.push(code[at + k]);
+        at += 1 + cells;
+        if (op === 0x41) stack.push({start, constant: a});
+        else if (op === 0x20 || op === 0xf1) stack.push({start});
+        else if (op === 0x45 || op === 0x28 || op === 0x2f) stack.push({start: stack.pop()?.start ?? NaN});
+        else if (op === 0x21 || op === 0x1a || op === 0x0d) stack.pop();
+        else if (op === 0x36 || op === 0x3b) { stack.pop(); stack.pop(); }
+        else if (op === 0x10) {
+            const n = arity(a), args = stack.splice(stack.length - n, n);
+            stack.push({start: n ? args[0]?.start ?? NaN : start});
+        } else if (op >= 0x02 && op <= 0x04) {
+            if (op === 0x04) stack.pop();
+            blocks.push({value: a === 0x7f, height: stack.length});
+        } else if (op === 0x05) stack.length = blocks.at(-1).height;
+        else if (op === 0x0b && blocks.length) {
+            const block = blocks.pop();
+            stack.length = block.height;
+            if (block.value) stack.push({start: NaN});
+        }
+    }
+    return changed ? out : null;
+}
+
+// A function the inliner may copy: short, no literal stores (their table is per function),
+// no calls to itself, and not an async state machine. Records which parameters the body
+// writes and which it uses as checked-address operands.
+function inlineCandidate(fn, code, limits, guarded) {
+    if (fn.async || guarded || fn.literals || code.length > limits.calleeCells) return null;
+    const written = fn.params.map(() => false), addressed = fn.params.map(() => false);
+    for (let at = 0; at < code.length;) {
+        const op = code[at], n = OPERAND_CELLS[op];
+        if (n < 0 || op === 0xf2 || (op === 0x10 && code[at + 1] === fn.index)) return null;
+        if (op === 0x21 && code[at + 1] < fn.params.length) written[code[at + 1]] = true;
+        if (op === 0xf1) for (const v of [code[at + 1], code[at + 2]]) if (v < fn.params.length) addressed[v] = true;
+        at += 1 + n;
+    }
+    return {params: fn.params.length, written, addressed};
+}
+
 // Assign permanent homes only in framed scalar functions with a checked access.
 function planLocations(fn, options, inlineCall) {
     const tape = fn.code;
@@ -743,10 +925,14 @@ function planLocations(fn, options, inlineCall) {
     // Estimated executions per invocation: four inside a loop. Saved homes cost a fixed
     // save and restore per call, so their estimate also halves under each enclosing if:
     // a value used only on a rarely taken path should stay in its slot.
+    // nested: four times per enclosing loop level (at most three) instead of four for any loop.
     function weigh(local, scale = 1) {
-        const weight = (loops ? 4 : 1) * (options.saved ? scale / (1 << Math.min(ifs, 3)) : 1);
+        const loopWeight = options.nested ? 4 ** Math.min(loops, 3) : loops ? 4 : 1;
+        const weight = loopWeight * (options.saved ? scale / (1 << Math.min(ifs, 3)) : 1);
         scores.set(local, (scores.get(local) ?? 0) + weight);
     }
+    // capacities: each checked access to buffer local b scores b's capacity, key -1 - b.
+    const capacityUses = new Map();
     function read(local) {
         reads.set(local, (reads.get(local) ?? 0) + 1);
         weigh(local);
@@ -766,6 +952,12 @@ function planLocations(fn, options, inlineCall) {
         if (at > tape.length) throw new Error("truncated Typed inspection operation");
         if (opcode === 0xf1) {
             if (straight && receiver === undefined) receiver = a;
+            if (options.capacities) {
+                const before = scores.get(-1);
+                weigh(-1);
+                capacityUses.set(a, (capacityUses.get(a) ?? 0) + scores.get(-1) - (before ?? 0));
+                scores.delete(-1);
+            }
             read(a); read(b);
             if (prevOpcode === 0x21 && prevA === b)
                 candidates.push({id: b, at: prev2Opcode === 0x41 ? prev2Offset : prevOffset});
@@ -793,6 +985,15 @@ function planLocations(fn, options, inlineCall) {
         prevOpcode = opcode; prevOffset = offset; prevA = a;
     }
     if (!options.capacity || !pure || !leaf || writes.has(receiver)) receiver = undefined;
+    // A capacity register replaces a7 caching. A buffer's capacity header is written only by
+    // the host, and a checked store at index i < capacity writes at 4 + 2i, so no store reaches
+    // a header: the value read at entry stays valid. Only unwritten parameters qualify, so the
+    // buffer is the same for the whole call; each use saves a load, at one load per call.
+    if (options.capacities) {
+        receiver = undefined;
+        for (const [local, uses] of capacityUses)
+            if (local < fn.params.length && !writes.has(local) && uses > 1) scores.set(-1 - local, uses - 1);
+    }
     const forward = new Set(), homes = new Map();
     if (options.forward) for (const {id, at} of candidates) {
         if (reads.get(id) !== 1) continue;
@@ -882,11 +1083,26 @@ function compile(source, imports = [], maxSourceLength, requested) {
 
     const inspect = options?.inspect;
     const policy = options?.inlineGuardedReturns;
+    const inlining = options?.inline ? {...INLINE_DEFAULTS, ...(options.inline === true ? {} : options.inline)} : null;
+    const inlineLibrary = new Map();
     if (policy !== undefined && typeof policy !== "boolean" && typeof policy !== "function")
         throw new TypeError("expected a boolean or caller selector for inlineGuardedReturns");
     function lower(fn) {
         if (inspect && (inspect.function === undefined || inspect.function === fn.name))
             fn.nativeInspection = {leafDecision: "eligible for frameless lowering"};
+        let libraryCopy;
+        if (inlining) {
+            const arity = index => callables[index].params.length;
+            // The library copy inlines every candidate call; the function's own code only those
+            // in its loops.
+            const all = inlineCalls(fn, inlineLibrary, inlining, arity, true);
+            libraryCopy = all ?? {code: fn.code, nlocals: fn.nlocals};
+            const loops = inlineCalls(fn, inlineLibrary, inlining, arity, false);
+            if (loops) {
+                fn.code = loops.code;
+                fn.nlocals = loops.nlocals;
+            }
+        }
         let Emitter = FunctionCode;
         if (policy) {
             // Only our internal definition targets can acquire summaries. A forward call
@@ -906,6 +1122,10 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 return;
             }
         }
+        if (options?.select?.commute) {
+            const commuted = commuteConstants(fn.code, index => callables[index].params.length);
+            if (commuted) fn.code = commuted;
+        }
         let compiled = lowerLeaf(fn, callables, targets, options?.select);
         if (!compiled) {
             const emitter = new Emitter(fn, callables, targets);
@@ -914,6 +1134,12 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn);
             compiled = emitter.lower();
         }
+        const index = imported.length + code.length;
+        const candidate = inlining && inlineCandidate(fn, libraryCopy.code, inlining, targets[index]?.guardedReturn);
+        if (candidate) inlineLibrary.set(index, {...candidate, nlocals: libraryCopy.nlocals, code: libraryCopy.code.slice(),
+            loops: loopDepth(libraryCopy.code)});
+        inlining?.report?.push({name: fn.name, cells: fn.code.length, locals: fn.params.length + fn.nlocals,
+            libraryCells: candidate ? libraryCopy.code.length : undefined});
         code.push(compiled);
         // The lowered code retains the descriptor, so release the function-local literal table.
         if (fn.literals) fn.literals = null;

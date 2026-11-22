@@ -301,3 +301,63 @@ function leaf(a: i32, b: i32): i32 { return (a - b) * 4 + a / 8 - b % 4 + a / 3;
     const divides = words(selected, "div").filter(w => opcode(w) === 0x33 && (w >>> 25) === 1 && ((w >>> 12) & 7) >= 4);
     assert.equal(divides.length, 0);
 });
+
+test("inlining, capacity homes and literal commutation match stock code", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    const src = `function clamp(v: i32, lo: i32, hi: i32): i32 {
+    if (v < lo) { return lo; }
+    if (v > hi) { return hi; }
+    return v;
+}
+function weight(buf: buffer, i: i32, k: i32): i32 {
+    const kk = k + 1;
+    let s = 0;
+    for (let j = 0; j < 3; j = j + 1) { s = s + buf.charCodeAt(i + j) * kk; }
+    return clamp(s, 3, 9000);
+}
+function first(buf: buffer, n: i32): i32 {
+    for (let i = 0; i < n; i = i + 1) {
+        if (buf.charCodeAt(i) === 7) { return i; }
+    }
+    return 0 - 1;
+}
+function fill(out: buffer, buf: buffer, n: i32): i32 {
+    let total = 0;
+    for (let i = 0; i < n; i = i + 1) {
+        const w = weight(buf, i, 2) + clamp(5 * i, 10, 40) + 3 * first(buf, i);
+        out.setCharCodeAt(i, w % 65536);
+        total = total + w;
+    }
+    return total;
+}`;
+    const all = {inline: true, select: {immediates: true, divisions: true, branches: true, results: true,
+        leafParams: true, commute: true},
+        operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true}};
+    const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
+    const candidate = typedRv32.compile(src, [], undefined, all);
+    assert.deepEqual(candidate.image, typedRv32.compile(src, [], undefined, {...all, streamFunctions: false}).image);
+    const words32 = (p, name) => words(p, name);
+    // fill's loop inlines weight (with clamp inside it), clamp and first: no call remains.
+    assert.equal(words32(candidate, "fill").filter(w => opcode(w) === 0x6f && destination(w) === 1).length, 0);
+    const memory = n => {
+        const bytes = new Uint8Array(4096), view = new DataView(bytes.buffer);
+        view.setUint32(0, 400, true); view.setUint32(1024, 64, true);
+        for (let i = 0; i < 64; i++) view.setUint16(1028 + 2 * i, (i * 37 + n) % 11, true);
+        return bytes;
+    };
+    for (const n of [0, 1, 2, 5, 17, 40, 62]) {
+        const a = typedRv32Interp.run(stock, "fill", [0, 1024, n], memory(n));
+        const b = typedRv32Interp.run(candidate, "fill", [0, 1024, n], memory(n));
+        assert.equal(b.result, a.result, "fill " + n);
+        assert.deepEqual(b.bytes, a.bytes, "memory after fill " + n);
+    }
+    // An out-of-range access still traps at the same point.
+    const trapStock = typedRv32Interp.run(stock, "fill", [0, 1024, 63], memory(3));
+    const trapCandidate = typedRv32Interp.run(candidate, "fill", [0, 1024, 63], memory(3));
+    assert.equal(trapStock.trap, true);
+    assert.equal(trapCandidate.trap, true);
+    assert.deepEqual(trapCandidate.bytes, trapStock.bytes);
+});
