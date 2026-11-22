@@ -1,0 +1,4 @@
+{
+ "sha256": "430f0d5016593f5b5232593107f198e92f6ecdfd88c946b59d0af364e2117625",
+ "what": "SHA-256 of guest memory after typedRayFrame on the opening fixture; the C-verified opening frame recorded by PICOCALC-SHADOW-CODEGEN and PICOCALC-OPERAND-HOMES. Every compile policy must reproduce it."
+}

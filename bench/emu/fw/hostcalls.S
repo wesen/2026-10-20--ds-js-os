@@ -1,4 +1,4 @@
-/* Chapter 29: the library calls of the rv32 test firmware that the machine answers (tools/rv32/emu.c,
+/* Chapter 29: the library calls of the rv32 test firmware that the machine answers (bench/emu/emu.c,
    hostcall): a7 is the call's number, the arguments and results are where the calling convention
    puts them. On the board these are the firmware's own: newlib, libgcc's soft-float helpers. */
 	.text
@@ -11,7 +11,7 @@
 	ret
 .endm
 /* (CJI-4: the soft-float and 64-bit integer helpers, and floor, ceil, trunc, round and fabs, are weak: a firmware linked
-   with tools/rv32/fw/softfloat.o runs them as code instead, as the board does) */
+   with bench/emu/fw/softfloat.o runs them as code instead, as the board does) */
 .macro HCW name num
 	.weak \name
 	.type \name, @function

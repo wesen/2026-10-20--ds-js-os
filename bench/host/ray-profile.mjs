@@ -1,32 +1,29 @@
 #!/usr/bin/env node
 // Profile the opening ray-tracer frame under one or more compile policies on the host.
 //
-//   node tools/typed-ray-profile.mjs                      # stock and default, table
-//   node tools/typed-ray-profile.mjs --policy default --json out.json
-//   node tools/typed-ray-profile.mjs --options '{"operandLocations":{"homes":true}}'
+//   node bench/host/ray-profile.mjs                       # stock, default and kernel, table
+//   node bench/host/ray-profile.mjs --policy kernel --json out.json
+//   node bench/host/ray-profile.mjs --options '{"policy":"kernel","operandLocations":{"reuseArgs":false}}'
 //
 // Every arm must reproduce the reference frame: the SHA-256 of guest memory after the call
-// equals OPENING_DIGEST, the digest recorded by the PICOCALC-SHADOW-CODEGEN and
-// PICOCALC-OPERAND-HOMES profilers for the C-verified opening frame.
+// equals OPENING_DIGEST (bench/reference/ray-opening.json), the digest recorded by the
+// PICOCALC-SHADOW-CODEGEN and PICOCALC-OPERAND-HOMES profilers for the C-verified opening frame.
 import {createHash} from "node:crypto";
 import {readFileSync, writeFileSync} from "node:fs";
 import {runInThisContext} from "node:vm";
 
-const root = new URL("..", import.meta.url);
-for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js", "tools/typed-ray-bench.js"])
+const root = new URL("../../", import.meta.url);
+for (const file of ["picocalc-os/compiler/typed-wasm.js", "picocalc-os/compiler/typed-rv32.js", "picocalc-os/tools/rv32-interp.js", "picocalc-os/tools/typed-ray-bench.js"])
     runInThisContext(readFileSync(new URL(file, root), "utf8"), {filename: file});
 
-export const OPENING_DIGEST = "430f0d5016593f5b5232593107f198e92f6ecdfd88c946b59d0af364e2117625";
-const POLICIES = {
-    stock: {policy: "stock"},
-    default: {},
-};
+export const OPENING_DIGEST = JSON.parse(readFileSync(new URL("../reference/ray-opening.json", import.meta.url))).sha256;
+const POLICIES = {stock: {policy: "stock"}, default: {}, kernel: {policy: "kernel"}};
 
 const args = process.argv.slice(2);
 const option = name => { const i = args.indexOf(name); return i < 0 ? undefined : args[i + 1]; };
 const arms = option("--options") ? {custom: JSON.parse(option("--options"))} :
-    option("--policy") ? {[option("--policy")]: POLICIES[option("--policy")]} : POLICIES;
-const source = readFileSync(new URL("worlds/raytrace/raytrace.typed", root), "utf8");
+    option("--policy") ? {[option("--policy")]: {policy: option("--policy")}} : POLICIES;
+const source = readFileSync(new URL("picocalc-os/worlds/raytrace/raytrace.typed", root), "utf8");
 const sha = bytes => createHash("sha256").update(bytes).digest("hex");
 
 const results = {};

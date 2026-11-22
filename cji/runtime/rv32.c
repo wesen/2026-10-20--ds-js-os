@@ -16,7 +16,7 @@
  * code in .text, and the code reaches the table relative to itself: each function starts with
  * auipc/addi into S0, patched once the code's size is known. So the code is position-independent,
  * and the object's relocations are all R_RISCV_32 on the table and on .data: what a module loader
- * (the board's elf_loader, tools/rv32/emu.c) applies.
+ * (the board's elf_loader, bench/emu/emu.c) applies.
  *
  * The root stack. One SLIR register is not in the frame: s0, the root stack's pointer, which every
  * function finds where its caller left it (on x86-64 it is SLJIT's S0, a callee-saved register,

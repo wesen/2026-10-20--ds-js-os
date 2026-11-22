@@ -40,3 +40,5 @@ __pycache__/
 .playwright-mcp/
 .claude/worktrees/
 .claude/settings.local.json
+# Built by make -C bench/emu.
+bench/emu/build/

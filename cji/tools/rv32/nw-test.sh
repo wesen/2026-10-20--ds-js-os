@@ -1,7 +1,7 @@
 #!/bin/sh
 # CJI-4 (chapter 30): tools/nw-fake-test.sh for the board. Each world named in tests/native/*.events is
 # built as the module the board loads (slas-rv32 -c NAME.so --module: an ELF shared object, no C compiler),
-# loaded by the rv32 emulator as elf_loader would load it (tools/rv32/emu.c, load_shared) into a test
+# loaded by the rv32 emulator as elf_loader would load it (bench/emu/emu.c, load_shared) into a test
 # firmware (the runtime, the glue runtime/cji_elf.c, and a fake kernel that speaks picocalc-os's
 # sdk/nw_elf.h and prints as tools/nw_fake.c does), and sent the events; the calls it makes must be
 # tests/native/NAME.out, which the host build makes. Last, a module built from C the board's way
@@ -165,7 +165,7 @@ fi
 # -fvisibility=hidden, linked -shared -e app_main -z max-page-size=16 --strip-all (as picocalc-os's CMake
 # builds natives/*.c, with clang and ld.lld for riscv32-esp-elf-gcc)
 cl="clang --target=riscv32-unknown-elf -march=rv32imafc -mabi=ilp32f -Os -fPIC -fvisibility=hidden -ffunction-sections
-	-fdata-sections -nostdinc -isystem $(clang -print-resource-dir)/include -isystem tools/rv32/fw/include -I$pc/sdk"
+	-fdata-sections -nostdinc -isystem $(clang -print-resource-dir)/include -isystem ../bench/emu/fw/include -I$pc/sdk"
 $cl -c tools/rv32/fw/ref_module.c -o $out/ref_module.o
 $cl -c "$pc/sdk/nw_elf.c" -o $out/nw_elf.o
 ld.lld -m elf32lriscv -shared -e app_main --gc-sections -z max-page-size=16 --strip-all -o $out/ref_module.so \

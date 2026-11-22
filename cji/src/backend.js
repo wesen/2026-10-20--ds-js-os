@@ -42,7 +42,7 @@ export function runAot(ir, file) {
 }
 
 // Chapter 29: rv32. slas-rv32 writes an object for the ESP32-P4's processor; the test machine
-// (tools/rv32/emu.c) loads it against the test firmware (the C runtime built for rv32) and runs it.
+// (bench/emu/emu.c) loads it against the test firmware (the C runtime built for rv32) and runs it.
 const RV32 = join(ROOT, 'build', 'rv32');
 export function runRv32(ir, file) {
   const tools = [join(ROOT, 'slas-rv32'), join(RV32, 'rv32emu'), join(RV32, 'fw-test.elf')];

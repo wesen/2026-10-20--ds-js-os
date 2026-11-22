@@ -2,7 +2,7 @@
  *
  * The ESP32-P4 has single-precision floating point (F) but not double (D), so on the board every double operation of
  * the runtime and of compiled code is a call to libgcc's helpers (__adddf3 and the rest). The rv32 test firmwares
- * answer those helpers by host call (tools/rv32/fw/hostcalls.S): one instruction each, so the emulator's instruction
+ * answer those helpers by host call (bench/emu/fw/hostcalls.S): one instruction each, so the emulator's instruction
  * counts leave their real cost out. A firmware linked with this file runs them as code instead (hostcalls.S's stubs
  * for them are weak), and the counts include them.
  *
