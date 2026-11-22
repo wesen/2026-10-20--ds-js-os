@@ -1,0 +1,40 @@
+[
+ {
+  "pieLoops": "pie-empty",
+  "inlineGuardedReturns": true,
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true
+  }
+ },
+ {
+  "pieLoops": "pie-empty",
+  "inlineGuardedReturns": true,
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true,
+   "saved": true,
+   "direct": true
+  }
+ },
+ {
+  "inlineGuardedReturns": true,
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true
+  }
+ },
+ {
+  "inlineGuardedReturns": true,
+  "operandLocations": {
+   "forward": true,
+   "capacity": true,
+   "homes": true,
+   "saved": true,
+   "direct": true
+  }
+ }
+]

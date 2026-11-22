@@ -208,3 +208,41 @@ test("the default policy applies the qualified options and stock reproduces the 
     assert.equal(image({policy: "stock"}).length, 9564);
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
+
+test("saved homes and direct reads keep the ABI and reproduce stock results", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js", "tools/typed-ray-bench.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp, typedRayBench} = ctx;
+    const candidate = {operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}};
+    // A framed caller keeps four hot locals across calls; the interpreter faults if any
+    // callee-saved register differs at a return, or if sp or ra is wrong.
+    const src = `function step(x: i32, k: i32): i32 { return (x * 5 + k) % 9973; }
+function mix(n: i32): i32 {
+    let a = 1;
+    let b = 2;
+    let c = 3;
+    let s = 0;
+    for (let i = 0; i < n; i = i + 1) {
+        a = step(a, i);
+        b = step(b + a, c);
+        c = step(c, b - a);
+        if (i % 3 === 0) { s = s + a; } else { s = s - b + c; }
+    }
+    return s + a * 3 + b * 7 + c;
+}`;
+    const result = options => typedRv32Interp.run(typedRv32.compile(src, [], undefined, options), "mix", [200],
+        new Uint8Array(64)).result;
+    const savedProgram = typedRv32.compile(src, [], undefined, candidate);
+    const mix = words(savedProgram, "mix");
+    assert(mix.some(word => opcode(word) === 0x23 && sourceRegister(word) === 2 && [9, 18, 19, 20].includes((word >>> 20) & 31)),
+        "mix saves a callee-saved register");
+    assert.equal(result(candidate), result({policy: "stock"}));
+    // The opening ray frame is byte-identical to the C-verified reference, with fewer instructions.
+    const sha = typedRayBench.fnv1a;
+    const frame = options => typedRayBench.openingFrame(typedRv32.compile(
+        readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8"), [], 65536, options));
+    const stock = frame({policy: "stock"}), saved = frame(candidate);
+    assert.equal(sha(saved.bytes), sha(stock.bytes));
+    assert(saved.steps < frame().steps, "saved homes and direct reads reduce the frame's instructions");
+});

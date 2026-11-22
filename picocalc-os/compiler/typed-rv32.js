@@ -30,6 +30,9 @@ class FunctionCode {
         this.calls = [];
         this.control = [];
         this.depth = this.spillDepth = this.at = 0;
+        // direct[d] names the home register of a local read that is still pending at operand
+        // depth d. Its consumer reads the home itself, so no copy is emitted.
+        this.direct = [];
         this.exit = {};
         if (program.nativeInspection) observeSteps(this);
     }
@@ -63,8 +66,29 @@ class FunctionCode {
 
     writeLocal(reg, local) {
         const home = this.locations?.homes.get(local);
-        if (home !== undefined) this.move(home, reg);
-        else this.store(reg, 4 * local);
+        if (home !== undefined) {
+            // A pending read of this local must keep the value it had when it was pushed.
+            this.materialize(home);
+            this.move(home, reg);
+        } else this.store(reg, 4 * local);
+    }
+
+    // Copy pending direct reads into their ordinary operand locations: every one, or only
+    // those of one home register. Control flow calls this so that both arms of a join and
+    // every loop iteration agree on where each operand lives.
+    materialize(home) {
+        for (let d = 0; d < this.depth; d++) {
+            const h = this.direct[d];
+            if (h === undefined || (home !== undefined && h !== home)) continue;
+            this.direct[d] = undefined;
+            const reg = STACK_REGISTERS[d];
+            if (reg === undefined) this.spill(d, h);
+            else this.move(reg, h);
+        }
+    }
+
+    pushHome(home) {
+        this.direct[this.depth++] = home;
     }
 
     checkedAddress(receiver, index, constant) {
@@ -97,6 +121,11 @@ class FunctionCode {
     pop(scratch) {
         if (!this.depth) throw new SyntaxError("empty RV32 operand stack");
         const depth = --this.depth;
+        const home = this.direct[depth];
+        if (home !== undefined) {
+            this.direct[depth] = undefined;
+            return home;
+        }
         const reg = STACK_REGISTERS[depth];
         if (reg !== undefined) return reg;
         this.load(scratch, this.slot(depth));
@@ -105,6 +134,7 @@ class FunctionCode {
 
     push(reg) {
         const depth = this.depth++;
+        this.direct[depth] = undefined;
         const home = STACK_REGISTERS[depth];
         if (home === undefined) this.spill(depth, reg);
         else this.move(home, reg);
@@ -193,16 +223,18 @@ class FunctionCode {
             const arg = A0 + i;
             this.move(arg, this.pop(arg));
         }
-        // Only the values below the arguments survive the call.
+        // Only the values below the arguments survive the call. A pending direct read stays in
+        // its home: a function that calls keeps homes only in callee-saved registers.
         const live = Math.min(this.depth, STACK_REGISTERS.length);
-        for (let d = 0; d < live; d++) this.spill(d, STACK_REGISTERS[d]);
+        for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.spill(d, STACK_REGISTERS[d]);
         this.jump(this.starts[index], RA);
-        for (let d = 0; d < live; d++) this.load(STACK_REGISTERS[d], this.slot(d));
+        for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.load(STACK_REGISTERS[d], this.slot(d));
         this.push(A0);
     }
 
     step(op) {
         const plan = this.locations;
+        if (op >= 0x02 && op <= 0x0f) this.materialize();
         if (plan?.forward.has(this.at - 1)) {
             const constant = op === 0x41 ? this.cell() : undefined;
             const index = constant === undefined ? this.pop(T5) : T5;
@@ -244,8 +276,14 @@ class FunctionCode {
         case 0x10: this.call(this.cell()); break;
         case 0x1a: this.depth--; break;
         case 0x20: {
+            const local = this.cell();
+            const home = plan?.direct ? plan.homes.get(local) : undefined;
+            if (home !== undefined) {
+                this.pushHome(home);
+                break;
+            }
             const out = this.resultRegister();
-            this.readLocal(out, this.cell());
+            this.readLocal(out, local);
             this.push(out);
             break;
         }
@@ -299,18 +337,32 @@ class FunctionCode {
         return false;
     }
 
+    // Callee-saved registers that the plan uses as homes, saved below the return address.
+    savedRegisters() {
+        const homes = this.locations?.homes;
+        return homes ? [...new Set(homes.values())].filter(isSavedRegister).sort((a, b) => a - b) : [];
+    }
+
     lower() {
         const count = this.program.params.length;
         if (count > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
+        const saved = this.savedRegisters();
+        // The frame size depends on the deepest spill, known only after the body, so the
+        // prologue is emitted as placeholders and patched below.
         this.emit(0);
         this.emit(0);
+        for (let k = 0; k < saved.length; k++) this.emit(0);
         for (let i = 0; i < count; i++) this.writeLocal(A0 + i, i);
         while (this.at < this.program.code.length && !this.step(this.cell())) {}
-        const frame = (4 * (this.locals + this.spillDepth + 1) + 15) & -16;
+        const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
         this.words[1] = instruction.s(2, SP, RA, frame - 4) >>> 0;
+        for (let k = 0; k < saved.length; k++)
+            this.words[2 + k] = instruction.s(2, SP, saved[k], frame - 8 - 4 * k) >>> 0;
+        // Every return jumps here, so one restore sequence covers all exits.
         this.mark(this.exit);
+        for (let k = 0; k < saved.length; k++) this.load(saved[k], frame - 8 - 4 * k);
         this.load(RA, frame - 4);
         this.emit(instruction.i(0x13, SP, 0, SP, frame));
         this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
@@ -493,12 +545,20 @@ for (const [opcode, cells] of [
 // Assign permanent homes only in framed scalar functions with a checked access.
 function planLocations(fn, options, inlineCall) {
     const tape = fn.code;
-    if (!tape.includes(0xf1)) return null;
+    // Forwarding and capacity reuse need a checked access; saved homes apply to any framed function.
+    if (!options.saved && !tape.includes(0xf1)) return null;
     const reads = new Map(), writes = new Set(), scores = new Map();
-    let receiver, straight = true, pure = true, leaf = true, loops = 0;
+    let receiver, straight = true, pure = true, leaf = true, loops = 0, ifs = 0;
+    // Estimated executions per invocation: four inside a loop. Saved homes cost a fixed
+    // save and restore per call, so their estimate also halves under each enclosing if:
+    // a value used only on a rarely taken path should stay in its slot.
+    function weigh(local, scale = 1) {
+        const weight = (loops ? 4 : 1) * (options.saved ? scale / (1 << Math.min(ifs, 3)) : 1);
+        scores.set(local, (scores.get(local) ?? 0) + weight);
+    }
     function read(local) {
         reads.set(local, (reads.get(local) ?? 0) + 1);
-        scores.set(local, (scores.get(local) ?? 0) + (loops ? 4 : 1));
+        weigh(local);
     }
     const blocks = [];
     // A checked address whose index local was set by the preceding operation; the
@@ -519,14 +579,23 @@ function planLocations(fn, options, inlineCall) {
                 candidates.push({id: b, at: prev2Opcode === 0x41 ? prev2Offset : prevOffset});
         }
         if (opcode === 0x20 || opcode === 0xf2) read(a);
-        if (opcode === 0x21) writes.add(a);
+        if (opcode === 0x21) {
+            writes.add(a);
+            // A homed write turns a store into a move: worth less than a read, which disappears.
+            if (options.saved) weigh(a, 0.5);
+        }
         if (opcode === 0x10 && !inlineCall(a)) leaf = false;
         if (opcode === 0x36 || opcode === 0x3b || opcode === 0xf2) pure = false;
         if (opcode >= 0x02 && opcode <= 0x04) {
             blocks.push(opcode);
             if (opcode === 0x03) loops++;
+            if (opcode === 0x04) ifs++;
         }
-        if (opcode === 0x0b && blocks.pop() === 0x03) loops--;
+        if (opcode === 0x0b) {
+            const closed = blocks.pop();
+            if (closed === 0x03) loops--;
+            if (closed === 0x04) ifs--;
+        }
         if (opcode >= 0x02 && opcode <= 0x0f) straight = false;
         prev2Opcode = prevOpcode; prev2Offset = prevOffset;
         prevOpcode = opcode; prevOffset = offset; prevA = a;
@@ -538,7 +607,9 @@ function planLocations(fn, options, inlineCall) {
         forward.add(at);
         scores.delete(id);
     }
-    if (options.homes && leaf) {
+    const direct = Boolean(options.direct);
+    if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined);
+    else if (options.homes && leaf) {
         let reg = A0 + Math.max(1, fn.params.length);
         const end = A0 + (receiver === undefined ? 8 : 7);
         for (const [id,score] of [...scores].sort((a,b)=>b[1]-a[1])) {
@@ -546,7 +617,38 @@ function planLocations(fn, options, inlineCall) {
             homes.set(id, reg++);
         }
     }
-    return {receiver,forward,homes};
+    return {receiver,forward,homes,direct};
+}
+
+// Callee-saved registers a function may claim as homes. Each claimed register costs a
+// save in the prologue and a restore in the epilogue, but survives calls. s0 stays free.
+const SAVED_REGISTERS = [9, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]; // s1, s2..s11
+const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27);
+
+// Homes for every framed function. A leaf first keeps parameter i >= 1 in its incoming
+// register a_i and uses the spare argument registers, which cost nothing; a0 is the
+// emitter's scratch (capacity loads, division checks, results) and a7 holds a cached
+// capacity. Any function may then claim s1..s11 for a local whose estimated accesses per
+// call exceed twice the two instructions of save and restore. The factor of two absorbs
+// the static estimate's optimism about branches; on the opening ray frame it gave the
+// fewest instructions of the factors 1-4 (diary, PICOCALC-RAY-PARITY Step 4). Scores fall
+// in sorted order and costs rise along the free list, so the first unaffordable local
+// ends the assignment.
+const SAVED_MARGIN = 2;
+function planSavedHomes(fn, scores, homes, leaf, capacityCached) {
+    const free = [];
+    if (leaf) {
+        const lastIncoming = capacityCached ? Math.min(fn.params.length, 7) : fn.params.length;
+        for (let p = 1; p < lastIncoming; p++) if ((scores.get(p) ?? 0) >= 2) homes.set(p, A0 + p);
+        for (let reg = A0 + Math.max(1, fn.params.length); reg < A0 + (capacityCached ? 7 : 8); reg++)
+            free.push({reg, cost: 0});
+    }
+    for (const reg of SAVED_REGISTERS) free.push({reg, cost: 2});
+    for (const [id, score] of [...scores].sort((a, b) => b[1] - a[1])) {
+        if (homes.has(id)) continue;
+        if (!free.length || score <= (free[0].cost ? SAVED_MARGIN * free[0].cost : 1)) break;
+        homes.set(id, free.shift().reg);
+    }
 }
 
 // Named code-generation policies. "default" applies every native optimization that has

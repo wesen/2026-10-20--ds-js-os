@@ -1,0 +1,254 @@
+{
+ "summary": {
+  "inputs": 38,
+  "compiledInputs": [
+   "ray",
+   "world:chess",
+   "world:editor",
+   "world:agenda",
+   "world:files",
+   "worlds/agenda/reminder.typed",
+   "worlds/candela/builders.typed",
+   "worlds/chess/painter-3d.typed",
+   "worlds/chess/painter.typed",
+   "worlds/chess/position.typed",
+   "worlds/editor/empty.typed",
+   "worlds/editor/layout.typed",
+   "worlds/files/files.typed",
+   "worlds/raytrace/raytrace.typed"
+  ],
+  "identical": 98,
+  "errorsIdentical": 168,
+  "mismatches": []
+ },
+ "rows": [
+  {
+   "name": "ray",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "world:chess",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "world:editor",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "world:agenda",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "world:files",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/agenda/entry.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/agenda/reminder.typed",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/candela/builders.typed",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/candela/fluent-types.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/candela/fluent.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/candela/hand.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/candela/materials.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/candela/pattern-types.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/candela/patterns.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/chess/chess.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/chess/mobile-view.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/chess/moves.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/chess/painter-3d.typed",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/chess/painter.typed",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/chess/position.typed",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/chess/search.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/chess/state.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/chess/view.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/document-view.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/edit.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/editor.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/empty.typed",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/find.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/layout.typed",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/markdown.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/positions.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/preview.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/state.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/editor/view.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/files/files.typed",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/raytrace/material-frame.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/raytrace/material-phases.typed",
+   "identical": 0,
+   "errorsIdentical": 7,
+   "mismatches": []
+  },
+  {
+   "name": "worlds/raytrace/raytrace.typed",
+   "identical": 7,
+   "errorsIdentical": 0,
+   "mismatches": []
+  }
+ ]
+}

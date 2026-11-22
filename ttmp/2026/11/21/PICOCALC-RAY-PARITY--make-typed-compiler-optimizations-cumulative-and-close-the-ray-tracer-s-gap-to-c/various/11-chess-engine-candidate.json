@@ -1,0 +1,9 @@
+{
+ "note": "rv32emu instruction counts for the complete Chess engine oracle (PICOCALC-TYPED-CHESS fixtures, 6981 result words, all matched), produced by scripts/05-chess-engine-oracle.mjs with TYPED_RV32_OPTIONS set to each options object",
+ "arms": [
+  {"options": {"policy": "stock"}, "engineInstructions": 289388025, "engineImageBytes": 22724},
+  {"options": {}, "label": "default at eaf0872", "engineInstructions": 275326071, "engineImageBytes": 21372},
+  {"options": {"operandLocations": {"forward": true, "capacity": true, "homes": true, "direct": true}}, "engineInstructions": 275214328, "engineImageBytes": 21284},
+  {"options": {"operandLocations": {"forward": true, "capacity": true, "saved": true, "direct": true}}, "engineInstructions": 248624574, "engineImageBytes": 19656}
+ ]
+}
