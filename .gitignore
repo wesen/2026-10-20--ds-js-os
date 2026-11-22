@@ -8,6 +8,8 @@ picocalc-os/build32-agent/
 picocalc-os/build32-san-agent/
 picocalc-os/build-candela/
 picocalc-os/build32-candela/
+picocalc-os/build-san-candela/
+picocalc-os/build32-san-candela/
 picocalc-os/tools/__pycache__/
 picocalc-os/tests/__pycache__/
 picocalc-os/cc*.s

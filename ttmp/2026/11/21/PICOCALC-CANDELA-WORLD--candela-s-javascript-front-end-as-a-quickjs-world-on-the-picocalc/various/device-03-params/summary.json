@@ -1,0 +1,381 @@
+{
+ "run": {
+  "image": "/tmp/claude-1000/-home-manuel-code-wesen-2026-10-20--ds-js-os/8cb22ffd-b9b3-49d6-975e-44f61fbbbf0b/scratchpad/cw/fw1/build",
+  "imageSha256": "5b3c241a50a0c3d67514876ba3bfe12ce2bfd1d6f9fe2178754ee88e9240aa67",
+  "port": "/dev/ttyACM0",
+  "plan": "params",
+  "steps": 20,
+  "started": 1795329362.3739805,
+  "restore": "/tmp/picocalc-playable-smooth-chess-676ae95/build",
+  "restoreSha256": "b22a807d7c1e72227847b7762de09b927b5a86f537d8a1f434c77d618a69f62c",
+  "locked": 1795329368.9999607,
+  "finished": 1795329636.2352035
+ },
+ "loads": [
+  {
+   "step": "load-0",
+   "ms": 175.911,
+   "readMs": 48.034,
+   "steps": 16387,
+   "modules": 21,
+   "bytecodeBytes": 470349,
+   "heap": {
+    "before": 229684,
+    "after": 1107376,
+    "peak": 1112476,
+    "limit": 4194304
+   }
+  }
+ ],
+ "b01": [],
+ "suite": [
+  {
+   "id": "A-03",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "B-01",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "B-03",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "B-04",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "B-05",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "C-02",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "C-03",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "C-04",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "D-01",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "D-02",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "E-03",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "E-04",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "G-06",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "L-01",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "L-02",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "L-03",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "L-04",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "L-05",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "L-06",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "L-07",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "L-08",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "M-01",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "M-02",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "M-03",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "M-09",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "M-12",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "R-01",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "R-07",
+   "status": "not run",
+   "why": null
+  },
+  {
+   "id": "B-01p",
+   "status": "not run",
+   "why": null
+  }
+ ],
+ "suiteTotals": {
+  "scenes": 29,
+  "built": 0,
+  "equal": 0,
+  "maxBuildMs": null,
+  "maxHeapPeak": null,
+  "maxStackBytes": null,
+  "maxPackStackBytes": null
+ },
+ "params": [
+  {
+   "step": "b-01p-rough-0.1",
+   "id": "B-01p",
+   "param": "rough",
+   "static": false,
+   "long": false,
+   "value": 0.1,
+   "packMs": 6.813,
+   "updateMs": 0.32,
+   "repackMs": 8.648,
+   "segmentMs": 14.235,
+   "totalMs": 11.828,
+   "totalSteps": 1027,
+   "buildMs": null
+  },
+  {
+   "step": "b-01p-rough-0.5",
+   "id": "B-01p",
+   "param": "rough",
+   "static": false,
+   "long": false,
+   "value": 0.5,
+   "packMs": 6.891,
+   "updateMs": 0.33,
+   "repackMs": 8.675,
+   "segmentMs": 15.28,
+   "totalMs": 11.97,
+   "totalSteps": 1027,
+   "buildMs": null
+  },
+  {
+   "step": "b-01p-rough-0.9",
+   "id": "B-01p",
+   "param": "rough",
+   "static": false,
+   "long": false,
+   "value": 0.9,
+   "packMs": 6.51,
+   "updateMs": 0.318,
+   "repackMs": 8.343,
+   "segmentMs": 13.577,
+   "totalMs": 11.445,
+   "totalSteps": 1027,
+   "buildMs": null
+  },
+  {
+   "step": "m-03-n-1.2",
+   "id": "M-03",
+   "param": "n",
+   "static": false,
+   "long": true,
+   "value": 1.2,
+   "packMs": 38.088,
+   "updateMs": 0.346,
+   "repackMs": 40.186,
+   "segmentMs": 48.423,
+   "totalMs": 45.54,
+   "totalSteps": 10089,
+   "buildMs": null
+  },
+  {
+   "step": "m-03-n-1.8",
+   "id": "M-03",
+   "param": "n",
+   "static": false,
+   "long": true,
+   "value": 1.8,
+   "packMs": 38.373,
+   "updateMs": 0.337,
+   "repackMs": 40.624,
+   "segmentMs": 48.736,
+   "totalMs": 45.805,
+   "totalSteps": 10089,
+   "buildMs": null
+  },
+  {
+   "step": "m-03-n-2.2",
+   "id": "M-03",
+   "param": "n",
+   "static": false,
+   "long": true,
+   "value": 2.2,
+   "packMs": 38.231,
+   "updateMs": 0.34,
+   "repackMs": 40.403,
+   "segmentMs": 48.764,
+   "totalMs": 45.546,
+   "totalSteps": 10089,
+   "buildMs": null
+  },
+  {
+   "step": "m-09-along-0.2",
+   "id": "M-09",
+   "param": "along",
+   "static": false,
+   "long": true,
+   "value": 0.2,
+   "packMs": 40.699,
+   "updateMs": 0.337,
+   "repackMs": 42.633,
+   "segmentMs": 48.725,
+   "totalMs": 46.296,
+   "totalSteps": 6870,
+   "buildMs": null
+  },
+  {
+   "step": "m-09-along-0.5",
+   "id": "M-09",
+   "param": "along",
+   "static": false,
+   "long": true,
+   "value": 0.5,
+   "packMs": 40.76,
+   "updateMs": 0.323,
+   "repackMs": 42.597,
+   "segmentMs": 48.857,
+   "totalMs": 46.256,
+   "totalSteps": 6870,
+   "buildMs": null
+  },
+  {
+   "step": "m-09-along-0.8",
+   "id": "M-09",
+   "param": "along",
+   "static": false,
+   "long": true,
+   "value": 0.8,
+   "packMs": 40.775,
+   "updateMs": 0.328,
+   "repackMs": 42.65,
+   "segmentMs": 49.388,
+   "totalMs": 46.269,
+   "totalSteps": 6870,
+   "buildMs": null
+  },
+  {
+   "step": "d-02-gloss-0.2",
+   "id": "D-02",
+   "param": "gloss",
+   "static": false,
+   "long": false,
+   "value": 0.2,
+   "packMs": 13.222,
+   "updateMs": 0.348,
+   "repackMs": 15.208,
+   "segmentMs": 21.771,
+   "totalMs": 18.908,
+   "totalSteps": 3047,
+   "buildMs": null
+  },
+  {
+   "step": "d-02-gloss-0.6",
+   "id": "D-02",
+   "param": "gloss",
+   "static": false,
+   "long": false,
+   "value": 0.6,
+   "packMs": 13.199,
+   "updateMs": 0.339,
+   "repackMs": 15.214,
+   "segmentMs": 22.166,
+   "totalMs": 18.967,
+   "totalSteps": 3047,
+   "buildMs": null
+  },
+  {
+   "step": "l05-time-0.5",
+   "param": "time",
+   "static": false,
+   "value": 0.5,
+   "id": "L-05",
+   "long": true,
+   "packMs": 271.31,
+   "updateMs": 0.409,
+   "repackMs": 273.673,
+   "segmentMs": 282.322
+  },
+  {
+   "step": "l05-time-1.5",
+   "param": "time",
+   "static": false,
+   "value": 1.5,
+   "id": "L-05",
+   "long": true,
+   "packMs": 270.508,
+   "updateMs": 0.398,
+   "repackMs": 272.911,
+   "segmentMs": 280.715
+  }
+ ],
+ "rebuilds": [],
+ "probes": {},
+ "faults": []
+}

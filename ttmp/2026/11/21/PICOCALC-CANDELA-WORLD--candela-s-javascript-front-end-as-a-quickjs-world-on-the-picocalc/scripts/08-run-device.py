@@ -2,10 +2,10 @@
 
 usage (any directory):
     python3 08-run-device.py --image BUILD --reference NODE_REFERENCE.json --probes PROBES.json --out DIR \
-        [--port /dev/ttyACM0] [--plan full|smoke]
+        [--port /dev/ttyACM0] [--plan full|smoke|params]
 
 BUILD is the measurement image's ESP-IDF build directory (build-smooth-chess.sh BUILD -D PICOCALC_CANDELA_WORLD=ON).
-The restore image is read from /tmp/picocalc-current-playable.txt ("<build dir> <app sha256>") when the run starts.
+The restore image is read from /tmp/picocalc-current-playable.txt ("<build dir> <app sha256>") once the lock is held.
 Under the shared serial lock (board_common.acquire, as PICOCALC-SIMD-LAB's 02-run-board.py and
 PICOCALC-COMPILE-BUDGET's 02-run-arms-firmware.py do): check both builds; record the playable image's health; quiesce
 I2C (hold); write and verify the measurement app at 0x10000 only; check its health; send the plan's messages to the
@@ -14,7 +14,8 @@ finally clause, quiesce, write and verify the playable app and record its health
 keyboard's I2C transfers failing stops the run (board_common.health raises).
 
 Writes DIR/uart.log (every byte read), DIR/cw.jsonl (each record with the step that produced it), DIR/before.json,
-DIR/candidate.json, DIR/after.json and DIR/run.json (images, restore target, plan, timings of the run itself).
+DIR/candidate.json, DIR/after.json, DIR/start-heap.txt and DIR/end-{stats,heap,worlds}.txt (the measurement image's
+console before and after the plan) and DIR/run.json (images, restore target, plan, timings of the run itself).
 """
 import argparse
 import hashlib
@@ -36,6 +37,20 @@ DONE = {"load": {"load"}, "build": {"build"}, "param": {"param"}, "time": {"time
 def plan_messages(kind, reference, probes):
     msgs = []
     add = lambda step, typ, payload=None, timeout=20: msgs.append((step, typ, payload, timeout))
+    def policy():   # the re-pack policy: light scenes in an ordinary turn, heavy ones (last pack > 25 ms) in a long one
+        for sid, pid, values in (("M-03", "n", (1.2, 1.8, 2.2)), ("M-09", "along", (0.2, 0.5, 0.8)),
+                                 ("D-02", "gloss", (0.2, 0.6)), ("L-03", "elevation", (0.3, 0.6, 1.0))):
+            add(f"{sid.lower()}-build", "build", {"id": sid, "render": True})
+            for v in values:
+                add(f"{sid.lower()}-{pid}-{v}", "param", {"id": pid, "value": v})
+        add("l05-build", "build", {"id": "L-05", "render": True})
+        for t in (0.5, 1.5):
+            add(f"l05-time-{t}", "time", {"t": t})
+    if kind == "params":
+        add("load-0", "load", None, 20)
+        policy()
+        add("final-status", "status")
+        return msgs
     # module load and B-01, three fresh runtimes: load, a cold build, then (in the first) three warm builds
     for k in range(3 if kind == "full" else 1):
         if k:
@@ -54,12 +69,7 @@ def plan_messages(kind, reference, probes):
         add(f"b01p-param-{v}", "param", {"id": "rough", "value": v})
     add("b01p-status", "status")
     if kind == "full":
-        add("l03-build", "build", {"id": "L-03", "render": True})
-        for v in (0.3, 0.6, 1.0):
-            add(f"l03-elevation-{v}", "param", {"id": "elevation", "value": v})
-        add("m03-build", "build", {"id": "M-03", "render": True})
-        for v in (1.2, 1.8, 2.2):
-            add(f"m03-n-{v}", "param", {"id": "n", "value": v})
+        policy()
         add("e03-build", "build", {"id": "E-03", "render": True})
         add("e03-depth-static", "param", {"id": "depth", "value": 6}, 30)
         add("rebuilds-b01", "rebuilds", {"id": "B-01", "n": 10}, 120)
@@ -76,20 +86,21 @@ def main():
     ap.add_argument("--probes", type=Path, required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--port", default="/dev/ttyACM0")
-    ap.add_argument("--plan", choices=("full", "smoke"), default="full")
+    ap.add_argument("--plan", choices=("full", "smoke", "params"), default="full")
     a = ap.parse_args()
-    restore_dir, restore_sha = Path("/tmp/picocalc-current-playable.txt").read_text().split()
-    restore = Path(restore_dir)
     image_sha = hashlib.sha256((a.image / release.APP).read_bytes()).hexdigest()
     check_build(a.image, image_sha)
-    check_build(restore, restore_sha)
     reference, probes = json.loads(a.reference.read_text()), json.loads(a.probes.read_text())
     msgs = plan_messages(a.plan, reference, probes)
     a.out.mkdir(parents=True, exist_ok=False)
-    run = {"image": str(a.image), "imageSha256": image_sha, "restore": str(restore), "restoreSha256": restore_sha,
-           "port": a.port, "plan": a.plan, "steps": len(msgs), "started": time.time()}
-    save(a.out / "run.json", run)
+    run = {"image": str(a.image), "imageSha256": image_sha, "port": a.port, "plan": a.plan, "steps": len(msgs), "started": time.time()}
     with acquire(), (a.out / "uart.log").open("ab", buffering=0) as log, (a.out / "cw.jsonl").open("w") as cw:
+        # the playable image is whatever /tmp/picocalc-current-playable.txt names once the lock is ours
+        restore_dir, restore_sha = Path("/tmp/picocalc-current-playable.txt").read_text().split()
+        restore = Path(restore_dir)
+        check_build(restore, restore_sha)
+        run.update(restore=str(restore), restoreSha256=restore_sha, locked=time.time())
+        save(a.out / "run.json", run)
         def connect():
             return release.unit.Console(a.port, log)
         console = connect()
@@ -104,6 +115,7 @@ def main():
             release.esp("verify_flash", a.image, a.out, "candidate-verify", a.port)   # hard reset
             console = connect()
             save(a.out / "candidate.json", {"sha256": image_sha, "health": health(console)})
+            (a.out / "start-heap.txt").write_text("\n".join(console.command("heap", timeout=10)) + "\n")
             misses = 0
             for step, typ, payload, timeout in msgs:
                 t0 = time.monotonic()

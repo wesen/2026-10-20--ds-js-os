@@ -268,6 +268,7 @@ static void run_report(deferred_t *d, vtime_t at) {
   (void)at;
   printf("CW %s\n", d->json);
   fflush(stdout);
+  free(d->json); d->json = NULL;   // a run function owns what its effect carries (apply_deferred frees only d)
 }
 static JSValue h_report(JSContext *ctx, JSValueConst t, int argc, JSValueConst *argv) {
   JSValue j = argc ? JS_JSONStringify(ctx, argv[0], JS_UNDEFINED, JS_UNDEFINED) : JS_UNDEFINED;

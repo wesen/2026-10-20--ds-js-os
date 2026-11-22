@@ -139,3 +139,29 @@ The world goes into the playable firmware's configuration (`build-smooth-chess.s
 - The generated agenda manifest (`build/esp-idf/main/system.typed-agenda.json`) lists 25 worlds, the last `{"name":"candela","file":"candela/world.js","long_ms":4000,"mem_kb":4096,"stack_kb":56,...}`.
 - World heap on the P4 comes from PSRAM (`port_heap_malloc`: `heap_caps_aligned_alloc(..., MALLOC_CAP_SPIRAM)`), so `CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=4096` does not put QuickJS's small allocations in internal RAM.
 - The bundle read by `port_read_file` (500 KB) is kept for the life of the firmware and is not charged to the world.
+
+### What didn't work
+- First firmware build (`build-smooth-chess.sh BUILD -D PICOCALC_CANDELA_WORLD=ON`), `-Werror=format` on RV32, where `uint32_t` is `long unsigned int`:
+  ```
+  nucleus/candela_render_stub.c:85:85: error: format '%u' expects argument of type 'unsigned int', but argument 6 has type 'uint32_t' {aka 'long unsigned int'}
+  nucleus/candela_world.c:436:36: error: format '%u' expects argument of type 'unsigned int', but argument 4 has type 'uint32_t' {aka 'long unsigned int'}
+  ```
+  Fixed with `(unsigned)` casts; the second build succeeded. App `picocalc-os-p4.bin` 5,172,240 bytes, SHA-256 `14e3b1da6e27bc4d8499c16a2b758827fa891bfe518f020fbecaa51018eb41a2`; partition table `72721dc3...` (the supported layout). The playable app is 4,626,128 bytes; the difference is the bundle, the world script and the world's C.
+- Running `./build/picocalc-host scripts/tour.txt` to check the default host build rewrote the tracked screenshots in `picocalc-os/out/`; restored them with `git checkout -- picocalc-os/out/`.
+
+## Step 6: The world on the ESP32-P4
+
+The first device run was a smoke plan: one load, B-01 cold and three times warm, B-01p with five slider moves. It worked on the first attempt. The run waited seven minutes for the serial lock (PICOCALC-SIMD-LAB's `02-run-board.py` held it), then wrote, verified and health-checked the measurement image, ran the plan, and restored and health-checked the playable app.
+
+### What I did
+- `python3 scripts/08-run-device.py --image fw1/build --reference various/02-node-reference.json --probes scripts/06-diag-probes.json --out various/device-01-smoke --plan smoke`
+- `python3 -I scripts/10-summarize-device.py various/device-01-smoke various/02-node-reference.json`
+
+### What worked
+- Module load in a fresh runtime: 175.9 ms, of which `JS_ReadObject` 47.9 ms; 21 modules, 470,209 bytes of bytecode; heap 229,684 -> 1,107,272 bytes (32-bit; the host's 64-bit figure is 1,348,048).
+- B-01: build 124.7 ms cold, 123.7-124.6 ms warm; a separate `compile()` 85.3 ms cold, 69.1-69.7 ms warm; first pack 21.8 ms cold, 6.2 ms warm; `pack({time: 2.5})` 4.4-5.1 ms. C stack 20,668 bytes during the build, 9,220 during a pack (limit 56 KB). Heap peak 1,398,964 bytes cold (+291,692 over the loaded runtime). The WGSL digest `3cd66c92...` equals Node's.
+- B-01p slider (dynamic roughness), five moves: pack 6.9-7.0 ms, pack + frame uniforms + `render.update` 8.6-8.7 ms, the whole segment 14.0-14.9 ms of the 50 ms turn.
+- Restored: app `b22a807d...` verified, health check passed, keyboard I2C 291 transfers, 0 errors.
+
+### What I learned
+- The first pack in a fresh runtime costs 3.5 times a later one (3,086 against 785 steps): QuickJS builds shapes and inline caches the first time `pack()`'s code runs.

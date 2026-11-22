@@ -1,0 +1,2 @@
+CW {"ev":"frame","gen":18,"pass":1,"spp":1,"us":500000}
+heap: internal 71587 free (largest 31744), psram 21185448 free (largest 20447232)

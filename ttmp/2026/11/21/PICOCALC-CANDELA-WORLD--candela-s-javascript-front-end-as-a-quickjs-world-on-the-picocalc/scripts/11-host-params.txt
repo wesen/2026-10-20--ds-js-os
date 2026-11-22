@@ -1,0 +1,15 @@
+# picocalc-host script: the re-pack policy (a scene whose last pack took over 25 ms re-packs in a long segment)
+wait 1500
+send candela build {"id":"B-01p"}
+wait 500
+send candela param {"id":"rough","value":0.3}
+wait 300
+send candela build {"id":"M-09"}
+wait 500
+send candela param {"id":"along","value":0.3}
+wait 300
+send candela build {"id":"L-05"}
+wait 500
+send candela time {"t":1.5}
+wait 500
+quit

@@ -92,7 +92,7 @@ export async function buildScene(id, files, o = {}) {
     rec.compileMs = r2(host.now() - t); rec.compileSteps = host.steps() - s;
   }
   rec.heap.after = host.mem().used;
-  cur = { id, files, result: r, compiled: c, packed: p0, U, time: 0, cam, parts, gen: 0 };
+  cur = { id, files, result: r, compiled: c, packed: p0, U, time: 0, cam, parts, gen: 0, packMs: rec.pack0Ms };
   if (rec.ok && o.render !== false) {
     t = host.now();
     const program = { sceneId: id, wgsl: c.shared, fieldCode: parts.fieldCode, matCode: parts.matCode, spectral: parts.spectral,
@@ -119,9 +119,14 @@ export async function setParam(id, value) {
   return Object.assign(repack(cur.time), { ev: 'param', param: id, static: false, value, totalMs: r2(host.now() - t0), totalSteps: host.steps() - s0 });
 }
 
-// Pack at a time (animation, a parameter) and hand the new buffers to the renderer.
+// Pack at a time (animation, a parameter) and hand the new buffers to the renderer. A re-pack is an ordinary
+// turn (the manifest's budget_ms, 50 ms) unless the scene's last pack took more than half of that: then it asks
+// for a long segment first. On the P4, B-01 packs in 6-7 ms; M-03 and M-09 in about 40 ms, L-05 in 270-380 ms.
+export const PACK_LONG_MS = 25;
 export function repack(time) {
   const c = cur.compiled;
+  const long = cur.packMs > PACK_LONG_MS;
+  if (long) host.longSegment();
   const t0 = host.now();
   let poses = null;
   if (c.animation) { try { poses = c.animation(time); } catch (e) { poses = null; } }
@@ -132,8 +137,8 @@ export function repack(time) {
   const t1 = host.now();
   const upd = host.render.update(renderBuffers(pk, U), { reset: true });
   const updateMs = host.now() - t1;
-  cur.packed = pk; cur.U = U; cur.time = time; cur.gen = upd.gen;
-  return { id: cur.id, time, packMs: r2(packMs), updateMs: r2(updateMs), repackMs: r2(host.now() - t0), gen: upd.gen,
+  cur.packed = pk; cur.U = U; cur.time = time; cur.gen = upd.gen; cur.packMs = packMs;
+  return { id: cur.id, time, long, packMs: r2(packMs), updateMs: r2(updateMs), repackMs: r2(host.now() - t0), gen: upd.gen,
            pack: digests(pk), segmentMs: r2(host.segmentMs()) };
 }
 

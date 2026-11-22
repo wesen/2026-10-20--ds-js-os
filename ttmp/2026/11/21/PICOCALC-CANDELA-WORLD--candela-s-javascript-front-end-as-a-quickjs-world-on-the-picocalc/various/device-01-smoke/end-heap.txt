@@ -1,0 +1,1 @@
+heap: internal 75687 free (largest 31744), psram 21258648 free (largest 20447232)
