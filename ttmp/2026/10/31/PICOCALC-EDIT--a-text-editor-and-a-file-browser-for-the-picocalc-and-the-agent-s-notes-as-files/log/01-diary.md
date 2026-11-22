@@ -11,17 +11,17 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/editor.js
+    - Path: repo://apps/js/picocalc/apps/editor.js
       Note: the editor
-    - Path: repo://picocalc-os/js/apps/files.js
+    - Path: repo://apps/js/picocalc/apps/files.js
       Note: the file browser and the open protocol
-    - Path: repo://picocalc-os/js/system/agent.js
+    - Path: repo://apps/js/picocalc/system/agent.js
       Note: note tools on files, migration
-    - Path: repo://picocalc-os/port/esp32p4/main/fs_p4.c
+    - Path: repo://firmware/port/esp32p4/main/fs_p4.c
       Note: fs worker placement and slow-op log
-    - Path: repo://picocalc-os/tests/agent.test.mjs
+    - Path: repo://firmware/tests/agent.test.mjs
       Note: agent tests with a fake notes folder
-    - Path: repo://picocalc-os/tests/editor.test.mjs
+    - Path: repo://firmware/tests/editor.test.mjs
       Note: editor tests
 ExternalSources: []
 Summary: 'Chronological record of PICOCALC-EDIT: a text editor, a file browser that hands out one file at a time, and the agent''s notes moved into files; host and ESP32-P4.'

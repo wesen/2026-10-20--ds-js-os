@@ -10,13 +10,13 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/compiler/tool.c
+    - Path: repo://firmware/port/esp32p4/compiler/tool.c
       Note: On-device frontend boundaries
-    - Path: repo://cji/src/infer.js
+    - Path: repo://compiler/cji/src/infer.js
       Note: Type solving and validated whole-range result reuse
-    - Path: repo://cji/src/library.js
+    - Path: repo://compiler/cji/src/library.js
       Note: Per-round library helper selection and additional inference
-    - Path: repo://cji/src/ranges.js
+    - Path: repo://compiler/cji/src/ranges.js
       Note: Range fixpoint, same-round skips and cross-round episode replay
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-PERF--benchmark-cji-across-linux-rv32-emulation-and-the-picocalc/various/p4/comparison.json
       Note: Physical heap experiment

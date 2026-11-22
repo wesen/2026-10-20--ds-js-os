@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/CMakeLists.txt
+    - Path: repo://firmware/port/esp32p4/CMakeLists.txt
       Note: PICOCALC_DEVICE_COMPILER option for C1
-    - Path: repo://picocalc-os/port/esp32p4/compiler/install.c
+    - Path: repo://firmware/port/esp32p4/compiler/install.c
       Note: CJI installer whose record and write order B1 follows
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Compile step that B2 moves into the nucleus and puts behind the cache
 ExternalSources: []
 Summary: 'Tasks B1, B2 and C1: a content-keyed cache for compiled typed modules with module-before-record writes and hash verification, compile-or-load at boot on device and simulator, and the CJI tool out of the default profile.'

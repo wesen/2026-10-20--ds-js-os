@@ -11,11 +11,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Streamed function callback, assembly and link
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Lexer, frontend and Wasm emission
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Outer timing boundary and compiler allocator
 ExternalSources: []
 Summary: ""

@@ -12,17 +12,17 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js-papers3/drivers/clock.js
+    - Path: repo://apps/js/papers3/drivers/clock.js
       Note: RTC wake
-    - Path: repo://picocalc-os/js-papers3/system/compositor.js
+    - Path: repo://apps/js/papers3/system/compositor.js
       Note: suspend, resume, adopt
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: deferred effects, kernel_reset
-    - Path: repo://picocalc-os/nucleus/vm_mqjs.c
+    - Path: repo://firmware/nucleus/vm_mqjs.c
       Note: host operations store/poweroff/fb
-    - Path: repo://picocalc-os/port/esp32s3-papers3/main/bus_s3.cpp
+    - Path: repo://firmware/port/esp32s3-papers3/main/bus_s3.cpp
       Note: panel init without clear
-    - Path: repo://picocalc-os/port/esp32s3-papers3/main/port_s3.c
+    - Path: repo://firmware/port/esp32s3-papers3/main/port_s3.c
       Note: NVS store, power latch
 ExternalSources: []
 Summary: 'How picocalc-os on the M5Stack PaperS3 can switch the board off after a period without use and come back where it was: the board''s power path, a per-world persistent store, a kernel power-off operation, RTC wake, a standby service with a suspend protocol, and a resume that repaints only what changed.'

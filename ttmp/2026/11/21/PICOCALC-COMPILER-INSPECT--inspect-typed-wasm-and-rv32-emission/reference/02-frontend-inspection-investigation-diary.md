@@ -10,9 +10,9 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Frontend observation and actual Wasm output projection
-    - Path: repo://picocalc-os/tests/typed-wasm-inspect.test.mjs
+    - Path: repo://tests/compiler/typed-wasm-inspect.test.mjs
       Note: Byte locations and async provenance regressions
     - Path: repo://ttmp/2026/11/21/PICOCALC-COMPILER-INSPECT--inspect-typed-wasm-and-rv32-emission/scripts/frontend/01-baseline.mjs
       Note: Pinned byte and diagnostic differential

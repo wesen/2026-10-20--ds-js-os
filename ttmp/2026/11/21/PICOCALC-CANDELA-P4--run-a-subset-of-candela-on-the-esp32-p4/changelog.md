@@ -16,3 +16,7 @@ Census and tiers of all 105 presets; Candela's own WGSL kernel translated to C++
 ## 2026-11-21
 
 Folded the QuickJS study's final numbers into the design (B-01 build about 67-88 ms on the device once the GGX table is memoised); committed the study; published the vault report (go-go-parc bf2902a).
+
+## 2026-11-22
+
+Closed by PICOCALC-REPO-LAYOUT Phase I: every task is done; its code lives in the repository's one home for it (see AGENTS.md)

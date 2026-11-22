@@ -10,7 +10,7 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/snake.js
+    - Path: repo://apps/js/picocalc/apps/snake.js
       Note: Original application and gameplay transitions
     - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-SNAKE--measuring-snake-snapshots-and-damage-against-full-frames/scripts/11-run.sh
       Note: Reproduces source, raster, skip and recovery experiments

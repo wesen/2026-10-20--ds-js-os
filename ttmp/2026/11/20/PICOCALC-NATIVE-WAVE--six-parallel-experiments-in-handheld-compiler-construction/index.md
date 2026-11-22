@@ -10,9 +10,9 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Generates native instructions and fixes function and import calls.
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Checks Typed source and emits the numeric operations examined by the lowering studies.
     - Path: repo://ttmp/2026/11/20/PICOCALC-NATIVE-WAVE--six-parallel-experiments-in-handheld-compiler-construction/scripts/director/10-replay-host.sh
       Note: Reproduces the independent held-out treatments and instruction counts.

@@ -10,17 +10,17 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/compiler/tool.c
+    - Path: repo://firmware/port/esp32p4/compiler/tool.c
       Note: Physical frontend and assembler boundaries
-    - Path: repo://picocalc-os/port/esp32p4/main/perf_p4.c
+    - Path: repo://firmware/port/esp32p4/main/perf_p4.c
       Note: Hardware cache instrumentation
-    - Path: repo://cji/runtime/aot_main.c
+    - Path: repo://compiler/cji/runtime/aot_main.c
       Note: Host AOT measurement driver
-    - Path: repo://cji/runtime/runtime.c
+    - Path: repo://compiler/cji/runtime/runtime.c
       Note: Collector metrics and relocation semantics
-    - Path: repo://cji/tools/rv32/emu.c
+    - Path: repo://bench/emu/emu.c
       Note: Guest instruction profiler
-    - Path: repo://cji/tools/rv32/fw/stage1_main.c
+    - Path: repo://compiler/cji/tools/rv32/fw/stage1_main.c
       Note: Guest timing boundary
 ExternalSources: []
 Summary: An intern guide to measuring CJI work and timing across Linux, RV32 and ESP32-P4.

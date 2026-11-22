@@ -8,13 +8,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Standalone compiler and private memory
-    - Path: repo://picocalc-os/nucleus/native_wasm.c
+    - Path: repo://firmware/nucleus/native_wasm.c
       Note: Existing WAMR world admission and execution
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Current synchronous compilation lifecycle
-    - Path: repo://picocalc-os/worlds/chess/view.typed
+    - Path: repo://apps/typed/chess/view.typed
       Note: Effectful current producer and pure view helpers
 ExternalSources: []
 Summary: ""

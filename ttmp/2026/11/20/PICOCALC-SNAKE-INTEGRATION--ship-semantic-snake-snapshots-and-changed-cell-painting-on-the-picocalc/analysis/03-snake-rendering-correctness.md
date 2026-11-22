@@ -8,7 +8,7 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: Production semantic admission, incremental painting and display callbacks
     - Path: repo://ttmp/2026/11/20/PICOCALC-SNAKE-INTEGRATION--ship-semantic-snake-snapshots-and-changed-cell-painting-on-the-picocalc/scripts/replay/04-production-replay.mjs
       Note: Reproducible event, framebuffer, lifecycle and refusal assertions

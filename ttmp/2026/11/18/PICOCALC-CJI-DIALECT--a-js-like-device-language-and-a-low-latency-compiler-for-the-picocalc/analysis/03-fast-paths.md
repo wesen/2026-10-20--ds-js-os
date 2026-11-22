@@ -8,11 +8,11 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/native_wasm.c
+    - Path: repo://firmware/nucleus/native_wasm.c
       Note: Validated WebAssembly backend and event ABI
-    - Path: repo://picocalc-os/nucleus/vm.c
+    - Path: repo://firmware/nucleus/vm.c
       Note: World setup and QuickJS CPU accounting
-    - Path: repo://picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c
+    - Path: repo://firmware/port/esp32p4/optional/native_elf/native_elf_p4.c
       Note: P4 machine module loading and event budgets
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-DIALECT--a-js-like-device-language-and-a-low-latency-compiler-for-the-picocalc/scripts/fastpath/03-run-quickjs.py
       Note: Reproduces timing and replay for the complete manifest

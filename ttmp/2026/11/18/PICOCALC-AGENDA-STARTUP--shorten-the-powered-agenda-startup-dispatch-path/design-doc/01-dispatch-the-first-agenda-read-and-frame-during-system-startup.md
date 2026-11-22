@@ -8,13 +8,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: World initialization and runnable candidate selection
-    - Path: repo://picocalc-os/port/esp32p4/main/agenda_p4.c
+    - Path: repo://firmware/port/esp32p4/main/agenda_p4.c
       Note: Startup deadline, compilation, and first-publication telemetry
-    - Path: repo://picocalc-os/port/esp32p4/main/fs_p4.c
+    - Path: repo://firmware/port/esp32p4/main/fs_p4.c
       Note: The real FAT worker and kernel settlement boundary
-    - Path: repo://picocalc-os/port/esp32p4/main/main_p4.c
+    - Path: repo://firmware/port/esp32p4/main/main_p4.c
       Note: FreeRTOS kernel task and wait path
 ExternalSources: []
 Summary: Evidence, scheduler design, intern implementation guide and powered comparison plan.

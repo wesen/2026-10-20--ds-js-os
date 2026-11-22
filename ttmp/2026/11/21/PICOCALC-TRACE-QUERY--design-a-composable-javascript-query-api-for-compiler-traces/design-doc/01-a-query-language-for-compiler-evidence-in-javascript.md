@@ -10,7 +10,7 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/tools/typed-inspect.mjs
+    - Path: repo://compiler/typed/tools/typed-inspect.mjs
       Note: Source and RV32 inspector for a future Typed provider
     - Path: repo://ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/09-archive-llvm.py
       Note: Defines the archived digest, ordinal and decompressed byte ranges

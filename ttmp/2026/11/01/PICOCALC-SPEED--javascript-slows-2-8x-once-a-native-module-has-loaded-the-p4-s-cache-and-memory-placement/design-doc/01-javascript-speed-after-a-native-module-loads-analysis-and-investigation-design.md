@@ -11,13 +11,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/nucleus/vm.c
+    - Path: firmware/nucleus/vm.c
       Note: vm_calibrate and count_steps (the benchmark), w_malloc (world heaps through port_heap_malloc)
-    - Path: picocalc-os/port/esp32p4/main/main_p4.c
+    - Path: firmware/port/esp32p4/main/main_p4.c
       Note: the console (bench, heap, stats), the tasks and their cores
-    - Path: picocalc-os/port/esp32p4/main/port_p4.c
+    - Path: firmware/port/esp32p4/main/port_p4.c
       Note: port_heap_malloc and where world heaps are placed
-    - Path: picocalc-os/port/esp32p4/sdkconfig.defaults
+    - Path: firmware/port/esp32p4/sdkconfig.defaults
       Note: flash mode (DIO, 80 MHz), PSRAM (hex, 200 MHz), the cache configuration
 ExternalSources: []
 Summary: "On the ESP32-P4, JavaScript runs 2.8x slower once a native module has been loaded (and in some images without one). This document collects what is known, states the hypotheses, and designs the measurements and fixes."

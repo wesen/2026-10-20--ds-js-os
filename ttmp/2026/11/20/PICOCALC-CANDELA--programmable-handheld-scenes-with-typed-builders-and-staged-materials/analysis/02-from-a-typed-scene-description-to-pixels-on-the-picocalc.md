@@ -10,11 +10,11 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Static receiver dispatch, record options and construction-time callbacks
-    - Path: repo://picocalc-os/nucleus/candela_scene.c
+    - Path: repo://firmware/nucleus/candela_scene.c
       Note: Graph validation and native visibility-to-shader bridge
-    - Path: repo://picocalc-os/worlds/candela/materials.typed
+    - Path: repo://apps/typed/candela/materials.typed
       Note: Procedural material evaluator and bulk scanline execution
 ExternalSources: []
 Summary: ""

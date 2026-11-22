@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/mobile-painter.js
+    - Path: repo://apps/typed/chess/link-painter.js
       Note: Typed entry qualification and slot linking
-    - Path: repo://picocalc-os/nucleus/mobile_painter.h
+    - Path: repo://firmware/nucleus/mobile_painter.h
       Note: Portable state and drawing ABI
-    - Path: repo://picocalc-os/port/esp32p4/main/mobile_painter_p4.c
+    - Path: repo://firmware/port/esp32p4/main/mobile_painter_p4.c
       Note: Source admission, compilation and executable lifetime
 ExternalSources: []
 Summary: Source admission, RV32 compilation, executable ownership, and the draw word contract.

@@ -10,9 +10,9 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/candela_scene.c
+    - Path: repo://firmware/nucleus/candela_scene.c
       Note: Validates candidates and calls the Typed shaders
-    - Path: repo://picocalc-os/worlds/candela/materials.typed
+    - Path: repo://apps/typed/candela/materials.typed
       Note: Contains the scalar evaluation and certified row reuse rules
     - Path: repo://ttmp/2026/11/20/PICOCALC-CANDELA--programmable-handheld-scenes-with-typed-builders-and-staged-materials/scripts/renderer/03-qualify.sh
       Note: Replays C geometry and both ordinary Typed compilation targets

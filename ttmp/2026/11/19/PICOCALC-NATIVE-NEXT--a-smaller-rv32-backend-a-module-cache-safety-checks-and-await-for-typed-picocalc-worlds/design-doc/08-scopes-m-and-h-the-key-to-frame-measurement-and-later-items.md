@@ -8,9 +8,9 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: Turn accounting extended in M1
-    - Path: repo://picocalc-os/port/esp32p4/main/bus_p4.c
+    - Path: repo://firmware/port/esp32p4/main/bus_p4.c
       Note: I2C and SPI workers stamped in M1
 ExternalSources: []
 Summary: 'Tasks M1 and M2 and items H1 to H6: key-to-frame intervals from kernel timestamps, the deferred instrument measurement, and six later items with their first steps.'

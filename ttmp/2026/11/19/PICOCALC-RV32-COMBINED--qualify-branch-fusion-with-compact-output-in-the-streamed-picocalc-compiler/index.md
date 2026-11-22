@@ -10,9 +10,9 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Production instruction selection and output control
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Device runtime allocator and time boundary
 ExternalSources: []
 Summary: Two-boot factorial qualification of branch fusion and compact RV32 storage across the three native apps.

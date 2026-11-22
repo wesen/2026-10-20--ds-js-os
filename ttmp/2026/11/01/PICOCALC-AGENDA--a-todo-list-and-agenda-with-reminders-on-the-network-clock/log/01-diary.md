@@ -11,21 +11,21 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/host/port_host.c
+    - Path: repo://firmware/host/port_host.c
       Note: host wall clock
-    - Path: repo://picocalc-os/js/apps/agenda.js
+    - Path: repo://apps/js/picocalc/apps/agenda.js
       Note: the agenda
-    - Path: repo://picocalc-os/js/prelude.js
+    - Path: repo://apps/js/picocalc/prelude.js
       Note: clock and Date
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: status clock and notify
-    - Path: repo://picocalc-os/port/esp32p4/main/store_p4.c
+    - Path: repo://firmware/port/esp32p4/main/store_p4.c
       Note: time zone setting
-    - Path: repo://picocalc-os/tests/agenda.test.mjs
+    - Path: repo://firmware/tests/agenda.test.mjs
       Note: agenda tests
-    - Path: repo://picocalc-os/tests/test_clock_native.py
+    - Path: repo://firmware/tests/test_clock_native.py
       Note: clock tests
-    - Path: repo://picocalc-os/third_party/quickjs/quickjs.c
+    - Path: repo://firmware/third_party/quickjs/quickjs.c
       Note: getTimezoneOffset on ESP-IDF
 ExternalSources: []
 Summary: 'Chronological record of PICOCALC-AGENDA: the wall clock, time zones and a daylight-saving fix in QuickJS, notifications in the compositor, and an agenda kept in notes/todo.txt with reminders; host and ESP32-P4.'

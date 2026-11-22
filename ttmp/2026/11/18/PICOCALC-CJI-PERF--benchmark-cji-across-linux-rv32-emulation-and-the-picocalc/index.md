@@ -1,7 +1,7 @@
 ---
 Title: Benchmark CJI across Linux, RV32 emulation and the PicoCalc
 Ticket: PICOCALC-CJI-PERF
-Status: active
+Status: complete
 Topics:
     - performance
     - esp32-p4
@@ -12,7 +12,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: Design and validation plan for comparable CJI performance measurements.
-LastUpdated: 2026-11-18T08:50:38.773070211-05:00
+LastUpdated: 2026-11-22T17:20:41.859562306-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

@@ -210,7 +210,7 @@ def markdown_blocks(text, base, st):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--source',type=Path,default=ROOT/'docs/picocalc-agent-implementation.md')
+    parser.add_argument('--source',type=Path,default=ROOT.parent/'docs/agent/picocalc-agent-implementation.md')
     parser.add_argument('--output',type=Path,required=True)
     args=parser.parse_args(); args.output.parent.mkdir(parents=True,exist_ok=True)
     fonts(); st=styles(); story=[]

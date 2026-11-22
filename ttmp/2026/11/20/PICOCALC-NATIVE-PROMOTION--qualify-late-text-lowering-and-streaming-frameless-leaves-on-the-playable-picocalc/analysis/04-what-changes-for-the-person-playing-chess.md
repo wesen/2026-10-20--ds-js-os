@@ -10,9 +10,9 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: Defines the time charged to a world on the physical device
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Defines reported compilation elapsed time, output size and heap use
     - Path: repo://ttmp/2026/11/20/PICOCALC-NATIVE-PROMOTION--qualify-late-text-lowering-and-streaming-frameless-leaves-on-the-playable-picocalc/scripts/device/03-candidate.py
       Note: Combines app-only installation with automatic rollback and readback

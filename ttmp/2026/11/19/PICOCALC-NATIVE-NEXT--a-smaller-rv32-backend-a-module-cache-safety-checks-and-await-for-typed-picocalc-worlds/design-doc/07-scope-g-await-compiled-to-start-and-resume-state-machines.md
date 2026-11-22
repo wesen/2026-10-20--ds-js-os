@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/worlds/editor/editor.typed
+    - Path: repo://apps/typed/editor/editor.typed
       Note: Open path rewritten in G3
-    - Path: repo://picocalc-os/worlds/editor/find.typed
+    - Path: repo://apps/typed/editor/find.typed
       Note: Find path rewritten in G4
-    - Path: repo://picocalc-os/worlds/editor/state.typed
+    - Path: repo://apps/typed/editor/state.typed
       Note: The 71 state fields
 ExternalSources: []
 Summary: 'Tasks G1 to G4: async and await with liveness and static frames, generated state machines and dispatcher, and the open and find paths of the Editor rewritten, accepted at no more than 71 state fields.'

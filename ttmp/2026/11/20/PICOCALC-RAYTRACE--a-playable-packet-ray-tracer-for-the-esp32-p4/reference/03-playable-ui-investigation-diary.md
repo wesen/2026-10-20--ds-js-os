@@ -9,9 +9,9 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/js/system/compositor.js
+    - Path: apps/js/picocalc/system/compositor.js
       Note: Scene admission and composition
-    - Path: picocalc-os/scripts/raytrace.txt
+    - Path: apps/tours/picocalc/raytrace.txt
       Note: Repeatable launcher and keyboard inputs
 ExternalSources: []
 Summary: Control design, direct framebuffer integration, and end-to-end host verification.

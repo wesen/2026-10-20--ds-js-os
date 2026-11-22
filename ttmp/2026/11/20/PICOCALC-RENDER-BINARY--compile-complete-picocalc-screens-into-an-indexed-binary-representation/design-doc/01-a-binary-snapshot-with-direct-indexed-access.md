@@ -8,9 +8,9 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: Shared production painter
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: Production sender envelope and retained dispatch
     - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-BINARY--compile-complete-picocalc-screens-into-an-indexed-binary-representation/scripts/02-binary-screen.js
       Note: Encoder and immutable reader

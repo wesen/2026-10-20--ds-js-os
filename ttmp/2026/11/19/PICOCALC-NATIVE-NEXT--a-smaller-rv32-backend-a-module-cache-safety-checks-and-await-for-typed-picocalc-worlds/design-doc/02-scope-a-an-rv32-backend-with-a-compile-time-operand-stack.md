@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: The RV32 backend that Scope A rewrites
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Frontend change for && and || in A6
-    - Path: repo://picocalc-os/sdk/typed/rv32-slot.S
+    - Path: repo://firmware/sdk/typed/rv32-slot.S
       Note: Slot reservation reduced in A8
 ExternalSources: []
 Summary: 'Tasks A0 to A8: the register lowering with a compile-time operand stack, fused comparisons, short branches, branch-form && and ||, locals in registers, and smaller slots, each with a predicted instruction count.'

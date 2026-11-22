@@ -11,9 +11,9 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/main/perf_p4.c
+    - Path: repo://firmware/port/esp32p4/main/perf_p4.c
       Note: the instrument
-    - Path: repo://picocalc-os/port/esp32p4/sdkconfig.defaults
+    - Path: repo://firmware/port/esp32p4/sdkconfig.defaults
       Note: the fix
 ExternalSources: []
 Summary: Chronological record of the investigation of placement-dependent JavaScript speed on the ESP32-P4.

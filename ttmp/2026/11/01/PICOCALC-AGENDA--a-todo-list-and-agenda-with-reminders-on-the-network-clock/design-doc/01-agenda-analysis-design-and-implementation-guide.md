@@ -11,11 +11,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/agenda.js
+    - Path: repo://apps/js/picocalc/apps/agenda.js
       Note: the agenda
-    - Path: repo://picocalc-os/nucleus/vm.c
+    - Path: repo://firmware/nucleus/vm.c
       Note: clock ops
-    - Path: repo://picocalc-os/tools/provision_agent.py
+    - Path: repo://firmware/tools/provision_agent.py
       Note: --tz
 ExternalSources: []
 Summary: 'A todo list and agenda for picocalc-os, kept in the plain-text file notes/todo.txt that the editor and the agent also use, with reminders shown as banners. It needs a real clock first: the kernel exposes the wall clock (unknown until SNTP sets it on the P4), the device gets a time zone, QuickJS''s local-time code on ESP-IDF is fixed for daylight saving time, and the compositor learns to show notifications from any world.'

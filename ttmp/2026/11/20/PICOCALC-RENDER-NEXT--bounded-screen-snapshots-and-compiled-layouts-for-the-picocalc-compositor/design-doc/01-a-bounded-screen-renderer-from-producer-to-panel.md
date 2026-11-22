@@ -8,13 +8,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/sysmon.js
+    - Path: repo://apps/js/picocalc/apps/sysmon.js
       Note: Worlds table and its dynamic window
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: Frame receipt, measurement and painting in CJI
-    - Path: repo://picocalc-os/nucleus/gfx.c
+    - Path: repo://firmware/nucleus/gfx.c
       Note: Pixel comparison and repair
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: Comparison, retention and replay
 ExternalSources: []
 Summary: ""

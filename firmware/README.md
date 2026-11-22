@@ -45,7 +45,7 @@ make test-agent-live  # optional libcurl + local TLS tests; no provider API call
 `make AGENT_LIVE=1` builds `build-agent/picocalc-host`. Live use needs `PICOCALC_AGENT_URL`,
 `PICOCALC_AGENT_TOKEN`, and the runner's `-r` pacing flag. The P4 has an optional ESP-Hosted C6
 Wi-Fi build and an interactive credential provisioning helper. See the
-[implementation guide and report](docs/picocalc-agent-implementation.md) for the architecture,
+[implementation guide and report](../docs/agent/picocalc-agent-implementation.md) for the architecture,
 exact setup commands, quotas, tests, and remaining physical-device acceptance checks, or the
 [P4 build notes](port/esp32p4/README.md) for the short build path.
 

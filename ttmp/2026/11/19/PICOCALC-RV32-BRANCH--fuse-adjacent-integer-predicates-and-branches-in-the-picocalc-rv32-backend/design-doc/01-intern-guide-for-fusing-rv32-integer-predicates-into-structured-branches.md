@@ -8,9 +8,9 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Current depth-indexed backend and long branch helper
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Frontend comparison and structured-control opcode sources
     - Path: repo://ttmp/2026/11/19/PICOCALC-RV32-BRANCH--fuse-adjacent-integer-predicates-and-branches-in-the-picocalc-rv32-backend/scripts/02-predicate-fusion.patch
       Note: Experimental compiler diff against pinned baseline

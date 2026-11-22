@@ -38,6 +38,8 @@
 set -e
 here=$(cd "$(dirname "$0")/../.." && pwd)
 pc=${PICOCALC:-$here/../../firmware}
+# LLVM's linker: ld.lld on PATH, or the copy Rust's toolchain ships (as the Makefile finds it).
+LLD=${LLD:-$(command -v ld.lld || echo "$(rustc --print target-libdir)/../bin/gcc-ld/ld.lld")}
 cd "$here"
 if [ -n "$BOARD" ]; then   # (part 2: each world compiled on the board, by the firmware; three checks)
 	make -s slas rv32-board PICOCALC="$pc" > /dev/null
@@ -47,7 +49,7 @@ if [ -n "$BOARD" ]; then   # (part 2: each world compiled on the board, by the f
 	for ev in tests/native/*.events; do
 		name=$(basename "$ev" .events)
 		file=$(head -1 "$ev")
-		case "$file" in tests/*) src=$file ;; *) src=$pc/js/$file ;; esac
+		case "$file" in tests/*) src=$file ;; *) src=$pc/../apps/js/picocalc/$file ;; esac
 		node cji.js "$src" --world-unit --emit > $out/$name.own.slir
 		node tools/link-units.mjs build/rv32/unit/prelude-unit.slir $out/$name.own.slir > $out/$name.slir
 		./slas-rv32 -c $out/$name.so --module --extern build/rv32/unit/unit.list $out/$name.slir 2> $out/$name.slas.log
@@ -85,7 +87,7 @@ for ev in tests/native/*.events; do
 	name=$(basename "$ev" .events)
 	rm -f $out/$name.snap
 	file=$(head -1 "$ev")
-	case "$file" in tests/*) src=$file ;; *) src=$pc/js/$file ;; esac
+	case "$file" in tests/*) src=$file ;; *) src=$pc/../apps/js/picocalc/$file ;; esac
 	if [ -n "$UNITS" ]; then   # (chapter 32: the world alone, joined with the runtime unit's text)
 		node cji.js "$src" --world-unit --emit > $out/$name.own.slir
 		node tools/link-units.mjs build/rv32/unit/prelude-unit.slir $out/$name.own.slir > $out/$name.slir
@@ -168,7 +170,7 @@ cl="clang --target=riscv32-unknown-elf -march=rv32imafc -mabi=ilp32f -Os -fPIC -
 	-fdata-sections -nostdinc -isystem $(clang -print-resource-dir)/include -isystem tools/rv32/fw/include -I$pc/sdk"
 $cl -c tools/rv32/fw/ref_module.c -o $out/ref_module.o
 $cl -c "$pc/sdk/nw_elf.c" -o $out/nw_elf.o
-ld.lld -m elf32lriscv -shared -e app_main --gc-sections -z max-page-size=16 --strip-all -o $out/ref_module.so \
+"$LLD" -m elf32lriscv -shared -e app_main --gc-sections -z max-page-size=16 --strip-all -o $out/ref_module.so \
 	$out/ref_module.o $out/nw_elf.o
 set +e
 build/rv32/rv32emu $fw $out/ref_module.so -- NW_SELF=ref start ask ping null > $out/ref_module.got 2>&1

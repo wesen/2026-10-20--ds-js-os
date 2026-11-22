@@ -9,9 +9,9 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/js/apps/raytrace.js
+    - Path: apps/js/picocalc/apps/raytrace.js
       Note: Launcher metadata, scene state and movement controls
-    - Path: picocalc-os/nucleus/gfx.c
+    - Path: firmware/nucleus/gfx.c
       Note: Rendering into the framebuffer and in-place enlargement
 ExternalSources: []
 Summary: A keyboard guide and a pixel comparison from the simulated PicoCalc panel through four interactive scenes.

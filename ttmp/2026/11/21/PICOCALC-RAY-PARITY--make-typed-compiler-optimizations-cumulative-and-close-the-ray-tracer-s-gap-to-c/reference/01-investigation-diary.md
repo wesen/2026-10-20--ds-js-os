@@ -10,7 +10,7 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/compiler/typed-rv32.js
+    - Path: compiler/typed/typed-rv32.js
       Note: planLocations now walks raw tape cells (OPERAND_CELLS)
     - Path: ttmp/2026/11/21/PICOCALC-RAY-PARITY--make-typed-compiler-optimizations-cumulative-and-close-the-ray-tracer-s-gap-to-c/scripts/01-open-compiler-session.py
       Note: Loads the compiler and all Typed inputs into a trace-REPL session

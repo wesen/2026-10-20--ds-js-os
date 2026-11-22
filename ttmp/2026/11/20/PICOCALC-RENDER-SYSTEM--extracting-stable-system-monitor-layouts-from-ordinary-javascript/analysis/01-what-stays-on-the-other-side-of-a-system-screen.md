@@ -8,7 +8,7 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/sysmon.js
+    - Path: repo://apps/js/picocalc/apps/sysmon.js
       Note: Production control and sampling functions
     - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-SYSTEM--extracting-stable-system-monitor-layouts-from-ordinary-javascript/scripts/08-extract.cjs
       Note: Frozen ordinary-source catalog extractor

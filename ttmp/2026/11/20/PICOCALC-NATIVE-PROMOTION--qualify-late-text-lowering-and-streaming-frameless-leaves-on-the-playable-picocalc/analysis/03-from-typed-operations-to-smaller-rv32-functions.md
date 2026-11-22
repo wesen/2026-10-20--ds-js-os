@@ -10,9 +10,9 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Shows the late text instructions and the conditions for a frameless scalar leaf
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Stores checked text operations until the numeric native backend reads them
     - Path: repo://ttmp/2026/11/20/PICOCALC-NATIVE-PROMOTION--qualify-late-text-lowering-and-streaming-frameless-leaves-on-the-playable-picocalc/various/compiler/mobile-painter.json
       Note: Records the 160 exact painter comparisons and mode-specific instruction totals

@@ -1,7 +1,7 @@
 ---
 Title: Faster turns, interrupt-driven input and light sleep on the PaperS3
 Ticket: PAPERS3-IDLE
-Status: active
+Status: complete
 Topics:
     - papers3
     - esp32-s3
@@ -14,7 +14,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-10-26T23:57:44.884408309-04:00
+LastUpdated: 2026-11-22T17:20:35.61388371-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

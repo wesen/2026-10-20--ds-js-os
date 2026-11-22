@@ -8,15 +8,15 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: Measurement, full painting, coalescing and display recovery
-    - Path: repo://picocalc-os/nucleus/gfx.c
+    - Path: repo://firmware/nucleus/gfx.c
       Note: Existing raster and changed-band comparison
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: Durable replacement, per-subscriber publication and retained replay
-    - Path: repo://picocalc-os/worlds/editor/document-view.typed
+    - Path: repo://apps/typed/editor/document-view.typed
       Note: Held-out typed producer writes complete JSON views
-    - Path: repo://cji/src/world-native.js
+    - Path: repo://compiler/cji/src/world-native.js
       Note: Generated message decoding before the app handler
 ExternalSources: []
 Summary: A scientific review of the four proposed compositor studies, causal controls, recovery boundaries and held-out qualification.

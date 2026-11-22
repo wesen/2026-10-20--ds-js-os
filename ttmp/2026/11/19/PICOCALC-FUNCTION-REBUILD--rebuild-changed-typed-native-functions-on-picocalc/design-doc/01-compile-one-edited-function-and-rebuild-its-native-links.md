@@ -11,11 +11,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Function lowering, jump encoding, and reactor slot linker
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Ordered declarations and numeric body emitter
-    - Path: repo://picocalc-os/worlds/files/compile.js
+    - Path: repo://apps/typed/files/compile.js
       Note: Production Files entry signatures
 ExternalSources: []
 Summary: ""

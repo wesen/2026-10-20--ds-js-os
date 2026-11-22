@@ -10,9 +10,9 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: retained posts and replay
-    - Path: repo://picocalc-os/tests/test_sys_native.py
+    - Path: repo://firmware/tests/test_sys_native.py
       Note: the tests
 ExternalSources: []
 Summary: Chronological record of diagnosing and fixing apps that stay blank after the compositor restarts.

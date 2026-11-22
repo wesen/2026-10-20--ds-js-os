@@ -9,11 +9,11 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/main/chess_p4.c
+    - Path: repo://firmware/port/esp32p4/main/chess_p4.c
       Note: Generic firmware compiler invocation
-    - Path: repo://picocalc-os/worlds/chess/chess.typed
+    - Path: repo://apps/typed/chess/chess.typed
       Note: Typed launcher application and timer-driven state machine
-    - Path: repo://picocalc-os/worlds/chess/search.typed
+    - Path: repo://apps/typed/chess/search.typed
       Note: Bounded iterative deepening, alpha–beta and quiescence
     - Path: repo://ttmp/2026/11/20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/various/engine-oracle.json
       Note: Frozen perft, legality, score and node comparisons

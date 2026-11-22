@@ -31,10 +31,6 @@ commit=$(git -C "$port" rev-parse --short HEAD)
 dirty=false; git -C "$port" diff --quiet HEAD -- || dirty=true
 mkdir -p "$build"
 config=$build/sdkconfig.$SDKCONFIG_NAME
-if [[ -n ${SDKCONFIG_SEED:-} && ! -e $config ]]; then
-    # A tracked full configuration: start from it, made reproducible (sdkconfig.reproducible), outside the source tree.
-    sed 's/^# CONFIG_APP_REPRODUCIBLE_BUILD is not set$/CONFIG_APP_REPRODUCIBLE_BUILD=y/' "$port/$SDKCONFIG_SEED" > "$config"
-fi
 idf.py -C "$port" -B "$build" -D "SDKCONFIG=$config" -D "SDKCONFIG_DEFAULTS=$defaults" \
     "${defines[@]}" "$@" build
 app=$(sha256sum "$build/picocalc-os-p4.bin" | cut -d' ' -f1)

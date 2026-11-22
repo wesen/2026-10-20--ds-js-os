@@ -10,19 +10,19 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/nucleus/kernel.c
+    - Path: firmware/nucleus/kernel.c
       Note: kernel_publish, run_segment (where frames are published), teardown and crash_at (supervision)
-    - Path: picocalc-os/nucleus/nucleus.h
+    - Path: firmware/nucleus/nucleus.h
       Note: world_t (frame, provides, needs), the kernel API
-    - Path: picocalc-os/nucleus/vm.c
+    - Path: firmware/nucleus/vm.c
       Note: op_publish, the JavaScript binding of publish()
-    - Path: picocalc-os/js/prelude.js
+    - Path: apps/js/picocalc/prelude.js
       Note: publish(), the world builder, __render
-    - Path: picocalc-os/js/system/compositor.js
+    - Path: apps/js/picocalc/system/compositor.js
       Note: the frames, power and worlds.status handlers; paint() and its "starting …" placeholder
-    - Path: picocalc-os/js/drivers/power.js
+    - Path: apps/js/picocalc/drivers/power.js
       Note: publishes the battery state only when it changes
-    - Path: picocalc-os/nucleus/native.c
+    - Path: firmware/nucleus/native.c
       Note: NW_PUBLISH for native worlds
 ExternalSources: []
 Summary: "Why apps go blank after the compositor restarts (published state is not kept, frames are deduplicated), and the design and implementation of retained channel messages that fix it."

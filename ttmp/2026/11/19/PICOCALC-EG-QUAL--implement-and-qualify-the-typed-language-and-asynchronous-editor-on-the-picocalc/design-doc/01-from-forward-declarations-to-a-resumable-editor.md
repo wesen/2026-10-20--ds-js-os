@@ -9,11 +9,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-world.js
+    - Path: repo://compiler/typed/typed-world.js
       Note: SDK signatures and typed world entries
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Times and returns each on-device compilation
-    - Path: repo://picocalc-os/worlds/editor/source.list
+    - Path: repo://apps/typed/editor/source.list
       Note: Defines the application sources under qualification
 ExternalSources: []
 Summary: ""

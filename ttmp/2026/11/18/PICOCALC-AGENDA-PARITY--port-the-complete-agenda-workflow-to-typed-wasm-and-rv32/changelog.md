@@ -39,3 +39,7 @@ Build the matched powered profiles and add a paired cold and workflow harness. R
 ## 2026-11-18
 
 Verify the same full notes and Editor workflow with working peripherals on both compiled targets and push the paired technical report.
+
+## 2026-11-22
+
+Closed by PICOCALC-REPO-LAYOUT Phase I: every task is done; its code lives in the repository's one home for it (see AGENTS.md)

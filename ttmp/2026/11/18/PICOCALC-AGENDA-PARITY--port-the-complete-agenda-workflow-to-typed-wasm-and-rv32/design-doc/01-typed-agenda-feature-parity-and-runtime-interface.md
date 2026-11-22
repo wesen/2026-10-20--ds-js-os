@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/agenda.js
+    - Path: repo://apps/js/picocalc/apps/agenda.js
       Note: Original interaction and file semantics used as the oracle
-    - Path: repo://picocalc-os/worlds/agenda/entry.typed
+    - Path: repo://apps/typed/agenda/entry.typed
       Note: Typed date and time token rules
-    - Path: repo://picocalc-os/worlds/agenda/wasm-world.c
+    - Path: repo://apps/typed/agenda/wasm-world.c
       Note: Shared host-facing runtime implementation
 ExternalSources: []
 Summary: ""

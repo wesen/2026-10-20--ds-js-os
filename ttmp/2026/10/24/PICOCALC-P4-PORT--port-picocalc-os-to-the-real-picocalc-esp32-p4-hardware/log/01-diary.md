@@ -13,9 +13,9 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/sysmon.js
+    - Path: repo://apps/js/picocalc/apps/sysmon.js
       Note: cpu% column and compact counters
-    - Path: repo://picocalc-os/port/esp32p4/main/CMakeLists.txt
+    - Path: repo://firmware/port/esp32p4/main/CMakeLists.txt
       Note: QuickJS flags that fixed the -O2 crash
 ExternalSources: []
 Summary: Chronological implementation diary for porting picocalc-os to the PicoCalc ESP32-P4.

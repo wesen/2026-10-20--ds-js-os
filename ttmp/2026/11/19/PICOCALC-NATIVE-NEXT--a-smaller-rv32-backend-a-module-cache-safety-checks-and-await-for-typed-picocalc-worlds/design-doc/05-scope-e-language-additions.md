@@ -8,7 +8,7 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Frontend changed by every task of Scope E
 ExternalSources: []
 Summary: 'Tasks E1 to E9: else, for, break, !==, forward calls with a cycle check, enumerations with exhaustive match, distinct integers, an index type with guard facts, and a reactor-usage report.'

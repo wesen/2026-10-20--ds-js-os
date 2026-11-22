@@ -12,19 +12,19 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/nucleus/candela_render.h
+    - Path: firmware/nucleus/candela_render.h
       Note: The seam between the world and the firmware renderer (FIRST-LIGHT implements it)
-    - Path: picocalc-os/nucleus/candela_world.c
+    - Path: firmware/nucleus/candela_world.c
       Note: Bytecode module loader, the __candela host object, SHA-256, the renderer calls
-    - Path: picocalc-os/third_party/candela/PIN.json
+    - Path: firmware/third_party/candela/PIN.json
       Note: The vendored Candela front end and T0 scenes, with their digests
-    - Path: picocalc-os/tools/candela-bc.c
+    - Path: tools/gen/candela/candela-bc.c
       Note: Build-time compiler of the world's ES modules to QuickJS bytecode, GGX table evaluation
-    - Path: picocalc-os/worlds/candela-world/runner.js
+    - Path: apps/js/worlds/candela-world/runner.js
       Note: Build, subset check, pack, frame uniforms, parameters, renderer handoff
-    - Path: picocalc-os/worlds/candela-world/shims.js
+    - Path: apps/js/worlds/candela-world/shims.js
       Note: atob, performance, console, and the file-named Function
-    - Path: picocalc-os/worlds/candela-world/subset.js
+    - Path: apps/js/worlds/candela-world/subset.js
       Note: The T0 subset check, Candela-style E790 diagnostics
     - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-WORLD--candela-s-javascript-front-end-as-a-quickjs-world-on-the-picocalc/scripts/08-run-device.py
       Note: Measurement run with restore and peripherals option

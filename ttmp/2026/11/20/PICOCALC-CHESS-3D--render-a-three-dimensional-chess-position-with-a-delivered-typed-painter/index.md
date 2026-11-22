@@ -9,11 +9,11 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Production streaming backend supplying the scalar code generator
-    - Path: repo://picocalc-os/nucleus/painter_commands.c
+    - Path: repo://firmware/nucleus/painter_commands.c
       Note: Base command reader for the temporary triangle extension
-    - Path: repo://picocalc-os/port/esp32p4/main/painter_service.c
+    - Path: repo://firmware/port/esp32p4/main/painter_service.c
       Note: Production owner of retained state and asynchronous painter installation
 ExternalSources: []
 Summary: ""

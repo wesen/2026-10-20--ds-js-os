@@ -9,9 +9,9 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Signed guards and per-function streaming in the production control
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Emits numeric operations and enables the arithmetic indicator
 ExternalSources: []
 Summary: "Design and preregistration for bounded signed divisor analysis in the streamed RV32 compiler."

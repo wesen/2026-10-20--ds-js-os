@@ -10,15 +10,15 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/system/agent.js
+    - Path: repo://apps/js/picocalc/system/agent.js
       Note: Saved conversation restoration
-    - Path: repo://picocalc-os/nucleus/agent_transport.c
+    - Path: repo://firmware/nucleus/agent_transport.c
       Note: Request ownership and cancellation
-    - Path: repo://picocalc-os/nucleus/fs.c
+    - Path: repo://firmware/nucleus/fs.c
       Note: Delegated filesystem operations
-    - Path: repo://picocalc-os/nucleus/native.c
+    - Path: repo://firmware/nucleus/native.c
       Note: Kernel native system calls
-    - Path: repo://picocalc-os/port/esp32p4/main/CMakeLists.txt
+    - Path: repo://firmware/port/esp32p4/main/CMakeLists.txt
       Note: Build and manifest selection
     - Path: repo://ttmp/2026/11/17/PICOCALC-CJI-PORT--ship-compiled-picocalc-worlds-with-a-shared-prelude-and-port-os-workflows/various/hardware-checks.txt
       Note: Physical measurements and restart evidence

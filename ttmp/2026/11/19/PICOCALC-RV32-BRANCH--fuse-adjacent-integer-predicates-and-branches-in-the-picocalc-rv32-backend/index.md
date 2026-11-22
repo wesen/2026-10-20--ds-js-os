@@ -1,7 +1,7 @@
 ---
 Title: Fuse adjacent integer predicates and branches in the PicoCalc RV32 backend
 Ticket: PICOCALC-RV32-BRANCH
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -9,8 +9,8 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: "An isolated Scope A2 candidate with static, differential, linked-app and board evidence."
-LastUpdated: 2026-11-19T19:30:35.830243514-05:00
+Summary: An isolated Scope A2 candidate with static, differential, linked-app and board evidence.
+LastUpdated: 2026-11-22T17:20:48.574983584-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

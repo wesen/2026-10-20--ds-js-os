@@ -10,19 +10,19 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: teardown, kernel_spawn, kernel_stop_world
-    - Path: repo://picocalc-os/nucleus/vm.c
+    - Path: repo://firmware/nucleus/vm.c
       Note: sys.spawn, sys.stop
-    - Path: repo://picocalc-os/js/apps/loader.js
+    - Path: repo://apps/js/picocalc/apps/loader.js
       Note: the Loader app
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: open and draw sender checks
-    - Path: repo://picocalc-os/js/drivers/power.js
+    - Path: repo://apps/js/picocalc/drivers/power.js
       Note: screen and backlight sender checks
-    - Path: repo://picocalc-os/js/drivers/display.js
+    - Path: repo://apps/js/picocalc/drivers/display.js
       Note: attach and flush sender checks
-    - Path: repo://picocalc-os/tests/test_loader_native.py
+    - Path: repo://firmware/tests/test_loader_native.py
       Note: spawning through the host binary
 ExternalSources: []
 Summary: 'Chronological record of PICOCALC-LOADER: closing the requests a world without claims could make, sys.spawn and sys.stop, the Loader app, and a hostile app tried on the ESP32-P4.'

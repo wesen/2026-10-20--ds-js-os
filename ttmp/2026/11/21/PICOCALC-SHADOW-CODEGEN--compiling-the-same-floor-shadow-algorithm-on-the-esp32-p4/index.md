@@ -10,11 +10,11 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Native frontend consumer and machine code emitter
-    - Path: repo://picocalc-os/nucleus/raytrace_demo.c
+    - Path: repo://firmware/nucleus/raytrace_demo.c
       Note: Production C shadow reference
-    - Path: repo://picocalc-os/worlds/raytrace/raytrace.typed
+    - Path: repo://apps/typed/raytrace/raytrace.typed
       Note: Unchanged Typed algorithm and fixtures
 ExternalSources: []
 Summary: Physical shadow timings, an optional streaming compiler pass, and a held-out Chess transfer test

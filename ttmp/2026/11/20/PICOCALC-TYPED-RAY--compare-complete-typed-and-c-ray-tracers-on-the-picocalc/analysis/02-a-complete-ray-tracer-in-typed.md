@@ -10,7 +10,7 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/worlds/raytrace/raytrace.typed
+    - Path: repo://apps/typed/raytrace/raytrace.typed
       Note: Matches the complete published scene in ordinary Typed
     - Path: repo://ttmp/2026/11/20/PICOCALC-TYPED-RAY--compare-complete-typed-and-c-ray-tracers-on-the-picocalc/various/renderer/host.json
       Note: Records all frame and audit identities, padding and explicit landmarks

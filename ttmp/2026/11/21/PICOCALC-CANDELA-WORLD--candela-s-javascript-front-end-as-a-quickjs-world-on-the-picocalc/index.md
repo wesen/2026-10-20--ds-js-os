@@ -1,7 +1,7 @@
 ---
 Title: Candela's JavaScript front end as a QuickJS world on the PicoCalc
 Ticket: PICOCALC-CANDELA-WORLD
-Status: active
+Status: complete
 Topics:
     - picocalc
     - esp32-p4
@@ -13,8 +13,8 @@ Intent: long-term
 Owners: []
 RelatedFiles: []
 ExternalSources: []
-Summary: "Candela's unchanged front end runs in a QuickJS world on the ESP32-P4: 21 modules loaded from build-time bytecode in 175 ms, B-01 built in 124-128 ms, 27 of 28 T0 presets built within 4 MB with digests equal to Node's for 26 of them (D-02 random, M-12 over the 4 s long segment), a B-01 slider re-packed in a 15 ms turn; renderer seam (render.start/update/stop, candela.frame) with a stub."
-LastUpdated: 2026-11-21T23:02:25.401711508-05:00
+Summary: 'Candela''s unchanged front end runs in a QuickJS world on the ESP32-P4: 21 modules loaded from build-time bytecode in 175 ms, B-01 built in 124-128 ms, 27 of 28 T0 presets built within 4 MB with digests equal to Node''s for 26 of them (D-02 random, M-12 over the 4 s long segment), a B-01 slider re-packed in a 15 ms turn; renderer seam (render.start/update/stop, candela.frame) with a stub.'
+LastUpdated: 2026-11-22T17:20:52.589023992-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

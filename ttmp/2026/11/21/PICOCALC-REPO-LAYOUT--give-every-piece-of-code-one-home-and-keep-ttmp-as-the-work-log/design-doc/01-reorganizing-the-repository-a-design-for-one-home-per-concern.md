@@ -11,15 +11,15 @@ Owners: []
 RelatedFiles:
     - Path: AGENTS.md
       Note: Current entry document; a list of links into ticket documents
-    - Path: picocalc-os/Makefile
+    - Path: firmware/Makefile
       Note: Host build, shots, test-apps and CANDELA=1 targets that the move must preserve
-    - Path: picocalc-os/port/esp32p4/main/CMakeLists.txt
+    - Path: firmware/port/esp32p4/main/CMakeLists.txt
       Note: Firmware bundle; embeds compiler/, link adapters, third_party/candela and the gallery compositor patch
     - Path: picocalc-os/port/esp32p4/build-smooth-chess.sh
       Note: The playable firmware's flags, now in the repository; becomes profiles/playable.env
     - Path: ttmp/2026/11/20/PICOCALC-RAYTRACE--a-playable-packet-ray-tracer-for-the-esp32-p4/scripts/device/board_common.py
       Note: Shared device infrastructure inside a ticket; seven scripts in five tickets load it
-    - Path: picocalc-os/third_party/candela/VENDOR.json
+    - Path: firmware/third_party/candela/VENDOR.json
       Note: Firmware sources copied out of two tickets; its note sends edits back to the tickets
     - Path: pkg/tracecompiler/compiler.go
       Note: The trace REPL loads the compiler by fixed paths at any revision; the moves must keep compiler.at working

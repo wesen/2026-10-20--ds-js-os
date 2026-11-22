@@ -10,11 +10,11 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/candela_scene.c
+    - Path: repo://firmware/nucleus/candela_scene.c
       Note: Validates the graph and connects Typed material callbacks to native C geometry
-    - Path: repo://picocalc-os/worlds/candela/builders.typed
+    - Path: repo://apps/typed/candela/builders.typed
       Note: Creates checked scene descriptors and edits one selected parameter
-    - Path: repo://picocalc-os/worlds/candela/materials.typed
+    - Path: repo://apps/typed/candela/materials.typed
       Note: Implements scalar and proven scanline graph evaluation in Typed
 ExternalSources: []
 Summary: ""

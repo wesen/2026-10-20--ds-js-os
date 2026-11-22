@@ -14,11 +14,11 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32s3-papers3/main/main_s3.c
+    - Path: repo://firmware/port/esp32s3-papers3/main/main_s3.c
       Note: device entry, kernel task, USB console and shot
-    - Path: repo://picocalc-os/port/esp32s3-papers3/qemu.sh
+    - Path: repo://firmware/port/esp32s3-papers3/qemu.sh
       Note: runs the firmware's conformance worlds in QEMU
-    - Path: repo://picocalc-os/tools/s3cap.py
+    - Path: repo://firmware/tools/s3cap.py
       Note: host client for the device console and screenshots
 ExternalSources: []
 Summary: ""

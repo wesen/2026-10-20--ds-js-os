@@ -10,21 +10,21 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/js/apps/calc.js
+    - Path: apps/js/picocalc/apps/calc.js
       Note: |-
         the calculator this ticket extends
         the calculator: engine, graphing, help, modes, limits
-    - Path: picocalc-os/tests/calc.test.mjs
+    - Path: firmware/tests/calc.test.mjs
       Note: |-
         its tests, kept passing
         27 tests, including every help entry and the guides' claims
-    - Path: repo://picocalc-os/js/apps/launcher.js
+    - Path: repo://apps/js/picocalc/apps/launcher.js
       Note: the calculator's description
-    - Path: repo://picocalc-os/js/system.json
+    - Path: repo://apps/js/picocalc/system.json
       Note: calc mem_kb 1024, budget_ms 200
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: ui.lines with visible draws all its rows
-    - Path: repo://picocalc-os/scripts/calc.txt
+    - Path: repo://apps/tours/picocalc/calc.txt
       Note: captures 60-73, 75-79
 ExternalSources: []
 Summary: 'How to turn the PicoCalc''s calculator into a graphing scientific calculator: angle and display modes, a larger function library, calculus and a solver, functions of several variables, polar and parametric curves, a table, curve analysis, a window page, and built-in help with a function reference.'

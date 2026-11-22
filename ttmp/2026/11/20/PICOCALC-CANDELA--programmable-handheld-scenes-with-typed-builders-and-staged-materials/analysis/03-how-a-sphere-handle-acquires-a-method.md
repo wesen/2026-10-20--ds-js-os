@@ -9,9 +9,9 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/compiler/typed-wasm.js
+    - Path: compiler/typed/typed-wasm.js
       Note: Receiver resolution, options checking and emission
-    - Path: picocalc-os/worlds/candela/fluent.typed
+    - Path: apps/typed/candela/fluent.typed
       Note: Working scene used throughout the chapter
 ExternalSources: []
 Summary: From a static receiver call and a named position to identical executable code and matching materials on Wasm and RV32.

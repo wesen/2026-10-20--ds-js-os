@@ -8,13 +8,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/compiler/tool.c
+    - Path: repo://firmware/port/esp32p4/compiler/tool.c
       Note: Physical compiler frontend boundary
-    - Path: repo://cji/runtime/runtime.c
+    - Path: repo://compiler/cji/runtime/runtime.c
       Note: Dynamic representation and lookup operations
-    - Path: repo://cji/src/infer.js
+    - Path: repo://compiler/cji/src/infer.js
       Note: Structural inference and escape behavior
-    - Path: repo://cji/src/ranges.js
+    - Path: repo://compiler/cji/src/ranges.js
       Note: Numeric proofs and persistent local state
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-STATIC--static-representations-and-sparse-range-analysis-for-the-picocalc-compiler/scripts/12-range-state-copies.mjs
       Note: Measures unchanged writes and structural sharing

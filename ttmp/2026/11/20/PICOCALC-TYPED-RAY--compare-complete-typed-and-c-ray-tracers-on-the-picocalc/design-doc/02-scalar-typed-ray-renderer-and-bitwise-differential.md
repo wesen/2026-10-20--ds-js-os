@@ -10,7 +10,7 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/raytrace_demo.c
+    - Path: repo://firmware/nucleus/raytrace_demo.c
       Note: Reference geometry and RGB565 rendering semantics
 ExternalSources: []
 Summary: ""

@@ -9,9 +9,9 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/worlds/candela/fluent-types.typed
+    - Path: apps/typed/candela/fluent-types.typed
       Note: Source-declared mapping to direct functions
-    - Path: picocalc-os/compiler/typed-wasm.js
+    - Path: compiler/typed/typed-wasm.js
       Note: Shared Wasm and RV32 implementation
 ExternalSources: []
 Summary: An implementation and reproduction guide for an engineer extending the bounded Typed builder surface.

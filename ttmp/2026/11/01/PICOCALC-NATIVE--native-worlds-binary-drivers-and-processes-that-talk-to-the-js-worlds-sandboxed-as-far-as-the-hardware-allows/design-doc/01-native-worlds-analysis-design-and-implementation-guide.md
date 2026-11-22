@@ -10,41 +10,41 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/nucleus/kernel.c
+    - Path: firmware/nucleus/kernel.c
       Note: the lane, run_segment, supervision; where engines are called
-    - Path: picocalc-os/nucleus/nucleus.h
+    - Path: firmware/nucleus/nucleus.h
       Note: |-
         worlds, messages, handles, the port API
         engines, eng_* wrappers, native_backend_t, nw_call_t
-    - Path: picocalc-os/nucleus/vm.c
+    - Path: firmware/nucleus/vm.c
       Note: the JavaScript engine binding whose seven functions a native engine mirrors
-    - Path: repo://picocalc-os/host/native_proc.c
+    - Path: repo://firmware/host/native_proc.c
       Note: 'the host backend: process, rlimits, seccomp filter, turns over a socket'
-    - Path: repo://picocalc-os/natives/battery.cc
+    - Path: repo://firmware/natives/battery.cc
       Note: a C++ driver example
-    - Path: repo://picocalc-os/nucleus/native.c
+    - Path: repo://firmware/nucleus/native.c
       Note: 'the kernel side of native worlds: events, system calls, strict payloads'
-    - Path: repo://picocalc-os/nucleus/native_wasm.c
+    - Path: repo://firmware/nucleus/native_wasm.c
       Note: 'the WebAssembly backend (WAMR): one import, limits, instruction budget'
-    - Path: repo://picocalc-os/port/esp32p4/main/CMakeLists.txt
+    - Path: repo://firmware/port/esp32p4/main/CMakeLists.txt
       Note: WAMR on the P4; builds and bundles ELF modules
-    - Path: repo://picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c
+    - Path: repo://firmware/port/esp32p4/optional/native_elf/native_elf_p4.c
       Note: 'the ELF backend on the P4: resolver, allocator, events, trust boundary'
-    - Path: repo://picocalc-os/sdk/nw.h
+    - Path: repo://firmware/sdk/nw.h
       Note: the C/C++ API a native world programs against
-    - Path: repo://picocalc-os/sdk/nw_elf.c
+    - Path: repo://firmware/sdk/nw_elf.c
       Note: module runtime for ELF modules
-    - Path: repo://picocalc-os/sdk/nw_elf.h
+    - Path: repo://firmware/sdk/nw_elf.h
       Note: ABI between the kernel and an ELF module
-    - Path: repo://picocalc-os/sdk/nw_proc.c
+    - Path: repo://firmware/sdk/nw_proc.c
       Note: the process runtime linked into host binaries
-    - Path: repo://picocalc-os/sdk/nw_wasm.c
+    - Path: repo://firmware/sdk/nw_wasm.c
       Note: module runtime for WebAssembly
-    - Path: repo://picocalc-os/sdk/nw_wire.h
+    - Path: repo://firmware/sdk/nw_wire.h
       Note: frames between the kernel and a process
-    - Path: repo://picocalc-os/tests/test_native_worlds.py
+    - Path: repo://firmware/tests/test_native_worlds.py
       Note: 12 tests of native worlds and the sandbox
-    - Path: repo://picocalc-os/third_party/wamr/patches/0003-esp-idf-self-thread-in-any-task.patch
+    - Path: repo://firmware/third_party/wamr/patches/0003-esp-idf-self-thread-in-any-task.patch
       Note: the fix for the pthread_self reboot loop
 ExternalSources: []
 Summary: 'How to add native worlds to picocalc-os: binaries (WebAssembly modules, or machine code compiled from C/C++) that take turns, hold claims and handles, and exchange messages with the JavaScript worlds, isolated as far as each board''s hardware allows: as Linux processes under seccomp on the host, as WebAssembly on the ESP32-P4, and as supervised machine code for trusted drivers.'

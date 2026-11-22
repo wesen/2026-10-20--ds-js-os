@@ -10,7 +10,7 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Captures exact operations and places them in the final Wasm module
     - Path: repo://ttmp/2026/11/21/PICOCALC-COMPILER-INSPECT--inspect-typed-wasm-and-rv32-emission/various/frontend/baseline.json
       Note: Records the pinned module identities, operation counts and real ray function offsets

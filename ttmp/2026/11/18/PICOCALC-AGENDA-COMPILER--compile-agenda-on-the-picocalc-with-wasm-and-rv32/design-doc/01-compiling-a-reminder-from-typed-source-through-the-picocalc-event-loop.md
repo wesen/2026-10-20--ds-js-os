@@ -8,17 +8,17 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: RV32 lowering and reserved executable region in the ELF reactor
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Typed frontend, Wasm emission and module linking
-    - Path: repo://picocalc-os/port/esp32p4/main/agenda_p4.c
+    - Path: repo://firmware/port/esp32p4/main/agenda_p4.c
       Note: Compiler realm, module replacement and the hardware benchmark boundaries
-    - Path: repo://picocalc-os/worlds/agenda/compile.js
+    - Path: repo://apps/typed/agenda/compile.js
       Note: Source-level checks for the parser and record ABI on both targets
-    - Path: repo://picocalc-os/worlds/agenda/reminder.typed
+    - Path: repo://apps/typed/agenda/reminder.typed
       Note: Editable source for task records, title cooking, dates and lead times
-    - Path: repo://picocalc-os/worlds/agenda/wasm-world.c
+    - Path: repo://apps/typed/agenda/wasm-world.c
       Note: Shared SDK reactor for storage, clock reminders and frame publication
 ExternalSources: []
 Summary: ""

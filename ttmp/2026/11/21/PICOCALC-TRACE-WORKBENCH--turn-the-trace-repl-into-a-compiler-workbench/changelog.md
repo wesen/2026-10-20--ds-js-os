@@ -11,3 +11,7 @@ Implemented W1-W7 (c195e91 W4, 0bee9f9 W5, 1607478 W2, 6076045 W1, 601bb5e W3, 9
 ## 2026-11-21
 
 Uploaded the as-built guide to reMarkable (/ai/2026/11/21/PICOCALC-TRACE-WORKBENCH, new name) and published the project report to the go-go-parc vault (8ae32b3, pushed).
+
+## 2026-11-22
+
+Closed by PICOCALC-REPO-LAYOUT Phase I: every task is done; its code lives in the repository's one home for it (see AGENTS.md)

@@ -11,25 +11,25 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: guarded channels, the log ring
-    - Path: repo://picocalc-os/nucleus/vm.c
+    - Path: repo://firmware/nucleus/vm.c
       Note: sys.log, net.*, clock.setzone
-    - Path: repo://picocalc-os/host/net_host.c
+    - Path: repo://firmware/host/net_host.c
       Note: the simulated Wi-Fi station
-    - Path: repo://picocalc-os/port/esp32p4/main/agent_p4.c
+    - Path: repo://firmware/port/esp32p4/main/agent_p4.c
       Note: scan, join and info on the network worker
-    - Path: repo://picocalc-os/port/esp32p4/main/port_p4.c
+    - Path: repo://firmware/port/esp32p4/main/port_p4.c
       Note: the log lock and the ESP-IDF log hook
-    - Path: repo://picocalc-os/js/apps/settings.js
+    - Path: repo://apps/js/picocalc/apps/settings.js
       Note: Settings
-    - Path: repo://picocalc-os/js/apps/logs.js
+    - Path: repo://apps/js/picocalc/apps/logs.js
       Note: Logs
-    - Path: repo://picocalc-os/js/apps/launcher.js
+    - Path: repo://apps/js/picocalc/apps/launcher.js
       Note: row scrolling
-    - Path: repo://picocalc-os/tests/test_sys_native.py
+    - Path: repo://firmware/tests/test_sys_native.py
       Note: channels, ring, network and zone through the host binary
-    - Path: repo://picocalc-os/tests/sysapps.test.mjs
+    - Path: repo://firmware/tests/sysapps.test.mjs
       Note: Settings, Logs and launcher in Node
 ExternalSources: []
 Summary: 'Chronological record of PICOCALC-SYS: key and screen channels as capabilities, a kernel log ring, Wi-Fi status, scan and join and the time zone as kernel ops, and the Settings and Logs apps; host and ESP32-P4.'

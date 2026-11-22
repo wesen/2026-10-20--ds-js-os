@@ -8,13 +8,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Portable standalone view compilation
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: Production measurement, layout and rendering control
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: Durable snapshot and sender lifetime
-    - Path: repo://picocalc-os/worlds/chess/view.typed
+    - Path: repo://apps/typed/chess/view.typed
       Note: Semantic split and existing game state dependencies
 ExternalSources: []
 Summary: Dispatch-ready research assignments, controls, dependencies and device gates for the two RENDER-NEXT designs.

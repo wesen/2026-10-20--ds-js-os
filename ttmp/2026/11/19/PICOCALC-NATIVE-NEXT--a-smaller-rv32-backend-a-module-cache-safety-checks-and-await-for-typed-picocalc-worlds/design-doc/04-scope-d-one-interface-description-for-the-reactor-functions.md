@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-world.js
+    - Path: repo://compiler/typed/typed-world.js
       Note: Import table that D1 generates
-    - Path: repo://picocalc-os/sdk/typed/rv32-slot.S
+    - Path: repo://firmware/sdk/typed/rv32-slot.S
       Note: Trampolines that D1 generates
-    - Path: repo://picocalc-os/sdk/typed/world.c
+    - Path: repo://firmware/sdk/typed/world.c
       Note: The 28 reactor functions
 ExternalSources: []
 Summary: 'Tasks D1 and D2: one interface description that generates the import table, the trampolines and the C declarations of the 28 reactor functions, a drift check, and per-function capability, fuel and stack fields.'

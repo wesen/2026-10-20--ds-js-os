@@ -8,13 +8,13 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Standalone import-free Wasm producer with a fixed memory page
-    - Path: repo://picocalc-os/nucleus/native_wasm.c
+    - Path: repo://firmware/nucleus/native_wasm.c
       Note: Present whole-world loader and instruction meter
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Synchronous on-device compiler, allocator and time budget
-    - Path: repo://picocalc-os/worlds/chess/view.typed
+    - Path: repo://apps/typed/chess/view.typed
       Note: Derives legal destinations, status, footer and canvas geometry from app state
     - Path: repo://ttmp/2026/11/20/PICOCALC-RENDER-NEXT--bounded-screen-snapshots-and-compiled-layouts-for-the-picocalc-compositor/various/chess-screen-baseline.json
       Note: Desktop Wasm Chess SDK boundary bytes and commands

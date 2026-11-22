@@ -9,7 +9,7 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/main/raybench_p4.c
+    - Path: repo://firmware/port/esp32p4/main/raybench_p4.c
       Note: Runs coupled scalar and PIE frame and nearest-depth measurements
     - Path: repo://ttmp/2026/11/20/PICOCALC-RAYTRACE--a-playable-packet-ray-tracer-for-the-esp32-p4/scripts/device/02-qualify.py
       Note: Qualifies normal launcher controls, matching pixels and board readback

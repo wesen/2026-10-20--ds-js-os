@@ -8,13 +8,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: Layout and pixel production
-    - Path: repo://picocalc-os/nucleus/gfx.c
+    - Path: repo://firmware/nucleus/gfx.c
       Note: Band comparison and display-image lifecycle
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: Admission and retention before fanout and replay
-    - Path: repo://picocalc-os/worlds/editor/document-view.typed
+    - Path: repo://apps/typed/editor/document-view.typed
       Note: Independent typed producer holdout
 ExternalSources: []
 Summary: ""

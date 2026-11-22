@@ -1,7 +1,7 @@
 ---
 Title: 'A real LLM agent on the PicoCalc: import, adapt to an OpenAI-compatible chat API, test on the ESP32-P4'
 Ticket: PICOCALC-AGENT
-Status: active
+Status: complete
 Topics:
     - picocalc
     - esp32-p4
@@ -14,7 +14,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-10-31T21:28:57.949987964-04:00
+LastUpdated: 2026-11-22T17:20:37.830886523-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

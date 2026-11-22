@@ -15,3 +15,7 @@ Built an isolated alternate lowerer. Verified 1,343 differential cases and six p
 ## 2026-11-19
 
 Recorded physical compile and comparator results for two boots. Uploaded the intern guide and published the single vault report at 15585a7.
+
+## 2026-11-22
+
+Closed by PICOCALC-REPO-LAYOUT Phase I: every task is done; its code lives in the repository's one home for it (see AGENTS.md)

@@ -8,13 +8,13 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://cji/tests/native/snake.out
+    - Path: repo://compiler/cji/tests/native/snake.out
       Note: Qualified RV32 world output
-    - Path: repo://picocalc-os/js/apps/snake.js
+    - Path: repo://apps/js/picocalc/apps/snake.js
       Note: Complete head-first board and visual state
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: Admission, full composition and changed-cell painting
-    - Path: repo://picocalc-os/nucleus/gfx.c
+    - Path: repo://firmware/nucleus/gfx.c
       Note: Commit, comparison copy and invalidation
 ExternalSources: []
 Summary: Integrate complete semantic Snake frames and incremental painting, qualify two runtimes, publish the measured results.

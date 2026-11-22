@@ -9,9 +9,9 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/compiler/typed-wasm.js
+    - Path: compiler/typed/typed-wasm.js
       Note: Shared static member and options mechanisms
-    - Path: picocalc-os/worlds/candela/fluent.typed
+    - Path: apps/typed/candela/fluent.typed
       Note: Exercised production scene
 ExternalSources: []
 Summary: Isolated implementation, research consultation, normal compiler regression and cross-target graph execution.

@@ -10,25 +10,25 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/js/apps/launcher.js
+    - Path: apps/js/picocalc/apps/launcher.js
       Note: the home screen, today a fixed list of apps
-    - Path: picocalc-os/js/system/compositor.js
+    - Path: apps/js/picocalc/system/compositor.js
       Note: the grid node that draws icons, paint()
-    - Path: picocalc-os/nucleus/kernel.c
+    - Path: firmware/nucleus/kernel.c
       Note: run_segment's render step, boot_world, kernel_worlds_json_fields
-    - Path: picocalc-os/nucleus/native.c
+    - Path: firmware/nucleus/native.c
       Note: nat_syscall (where NW_SCREEN and NW_PRESENT go), nat_create, the payload checks
-    - Path: picocalc-os/nucleus/nucleus.h
+    - Path: firmware/nucleus/nucleus.h
       Note: eng_render, world_t, the native system call numbers
-    - Path: picocalc-os/nucleus/vm.c
+    - Path: firmware/nucleus/vm.c
       Note: read_meta (what a JavaScript world declares), op_sys_worlds
-    - Path: picocalc-os/sdk/nw.h
+    - Path: firmware/sdk/nw.h
       Note: the native SDK
-    - Path: repo://picocalc-os/js/apps/loader.js
+    - Path: repo://apps/js/picocalc/apps/loader.js
       Note: ldStart opens a WebAssembly app that declared kind app
-    - Path: repo://picocalc-os/natives/dial.c
+    - Path: repo://firmware/natives/dial.c
       Note: 'the demonstration app: a screen, keys, presentation, three builds'
-    - Path: repo://picocalc-os/sdk/nw_ui.h
+    - Path: repo://firmware/sdk/nw_ui.h
       Note: writing a screen's tree without a C library
 ExternalSources: []
 Summary: How picocalc-os draws app screens and the launcher, why native worlds (WebAssembly, machine code, processes) cannot show anything and why apps cannot bring their own icons, and the design and implementation that fix both.

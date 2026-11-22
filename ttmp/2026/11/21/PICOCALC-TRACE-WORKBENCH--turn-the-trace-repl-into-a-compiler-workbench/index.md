@@ -1,7 +1,7 @@
 ---
 Title: Turn the trace REPL into a compiler workbench
 Ticket: PICOCALC-TRACE-WORKBENCH
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -16,7 +16,7 @@ RelatedFiles:
       Note: Design and as-built record
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-21T20:10:39.416710585-05:00
+LastUpdated: 2026-11-22T17:20:54.30488796-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

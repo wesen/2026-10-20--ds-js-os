@@ -10,9 +10,9 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/raytrace_demo.c
+    - Path: repo://firmware/nucleus/raytrace_demo.c
       Note: Production C renderer and scalar and PIE selection
-    - Path: repo://picocalc-os/worlds/raytrace/raytrace.typed
+    - Path: repo://apps/typed/raytrace/raytrace.typed
       Note: Checked Typed renderer and fused primary row
     - Path: repo://ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes/scripts/05-execute.py
       Note: Differential trace and pass ablations

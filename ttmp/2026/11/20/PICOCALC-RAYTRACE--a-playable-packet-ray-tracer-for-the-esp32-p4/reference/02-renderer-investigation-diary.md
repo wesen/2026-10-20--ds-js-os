@@ -9,9 +9,9 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/raytrace_demo.c
+    - Path: repo://firmware/nucleus/raytrace_demo.c
       Note: Maintains scene, shadows, depth and both rendering modes
-    - Path: repo://picocalc-os/nucleus/raytrace_demo.h
+    - Path: repo://firmware/nucleus/raytrace_demo.h
       Note: Stable packed and scalar render and intersection APIs
     - Path: repo://ttmp/2026/11/20/PICOCALC-RAYTRACE--a-playable-packet-ray-tracer-for-the-esp32-p4/scripts/renderer/03-qualify.sh
       Note: Reproduces checked host images and the model of actual target instruction bytes

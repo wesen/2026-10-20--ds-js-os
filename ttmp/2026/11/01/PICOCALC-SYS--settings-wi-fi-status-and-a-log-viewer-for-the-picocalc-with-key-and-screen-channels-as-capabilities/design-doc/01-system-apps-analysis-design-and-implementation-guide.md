@@ -11,25 +11,25 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/js/apps/launcher.js
+    - Path: apps/js/picocalc/apps/launcher.js
       Note: the 4 x 3 grid that thirteen apps outgrow
-    - Path: picocalc-os/js/system/compositor.js
+    - Path: apps/js/picocalc/system/compositor.js
       Note: routes keys to the focused app; the only reader of frames
-    - Path: picocalc-os/nucleus/kernel.c
+    - Path: firmware/nucleus/kernel.c
       Note: kernel_publish, klog, boot_world; where channel claims and the log ring go
-    - Path: picocalc-os/nucleus/vm.c
+    - Path: firmware/nucleus/vm.c
       Note: the op table; new ops sys.log, net.*, clock.setzone
-    - Path: picocalc-os/port/esp32p4/main/agent_p4.c
+    - Path: firmware/port/esp32p4/main/agent_p4.c
       Note: the Wi-Fi station, its worker task and the NVS credentials that scan and join build on
-    - Path: repo://picocalc-os/host/net_host.c
+    - Path: repo://firmware/host/net_host.c
       Note: the simulated station
-    - Path: repo://picocalc-os/js/apps/logs.js
+    - Path: repo://apps/js/picocalc/apps/logs.js
       Note: the Logs app
-    - Path: repo://picocalc-os/js/apps/settings.js
+    - Path: repo://apps/js/picocalc/apps/settings.js
       Note: the Settings app
-    - Path: repo://picocalc-os/nucleus/util.c
+    - Path: repo://firmware/nucleus/util.c
       Note: shared checks for SSID, password, zone; secret_wipe
-    - Path: repo://picocalc-os/tests/test_sys_native.py
+    - Path: repo://firmware/tests/test_sys_native.py
       Note: native tests
 ExternalSources: []
 Summary: How to give the PicoCalc a Settings app (Wi-Fi status, scan and join, time zone, provider), a kernel log ring with a Logs app, and launcher scrolling, after first making the key and screen channels capabilities.

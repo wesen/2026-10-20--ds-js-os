@@ -10,7 +10,7 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Current checked address and local lowering
     - Path: repo://ttmp/2026/11/21/PICOCALC-SHADOW-LLVM--following-a-checked-floor-shadow-through-llvm-to-executed-rv32-instructions/scripts/04-trace.py
       Note: Per-PC comparison of on-device kernel bytes

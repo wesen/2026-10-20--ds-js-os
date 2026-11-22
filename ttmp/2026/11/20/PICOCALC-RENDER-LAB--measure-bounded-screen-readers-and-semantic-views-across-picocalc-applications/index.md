@@ -8,11 +8,11 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: Control painter and frames event
-    - Path: repo://picocalc-os/nucleus/gfx.c
+    - Path: repo://firmware/nucleus/gfx.c
       Note: Raster and panel diff
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: Frame retention and delivery
 ExternalSources: []
 Summary: ""

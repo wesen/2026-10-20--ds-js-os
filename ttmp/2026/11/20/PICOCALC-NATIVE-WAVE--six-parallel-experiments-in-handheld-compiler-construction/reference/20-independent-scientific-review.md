@@ -14,7 +14,7 @@ RelatedFiles:
       Note: Original seven-arm hardware observations, checksums and image identities.
     - Path: repo://ttmp/2026/11/20/PICOCALC-NATIVE-WAVE--six-parallel-experiments-in-handheld-compiler-construction/various/01-bounds/physical-first.json
       Note: Ordered fresh-engine observations from the incomplete first collection.
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Timer and allocator boundaries used by the experimental and ordinary callers.
 ExternalSources: []
 Summary: Independent recomputation of paired device timings and assessment of the six studies' release implications.

@@ -1,7 +1,7 @@
 ---
 Title: Static representations and sparse range analysis for the PicoCalc compiler
 Ticket: PICOCALC-CJI-STATIC
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-18T14:31:12.797638537-05:00
+LastUpdated: 2026-11-22T17:20:46.255242614-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

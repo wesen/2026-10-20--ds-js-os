@@ -9,11 +9,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Streaming native lowering and fixups
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Shared parser and type checker
-    - Path: repo://picocalc-os/compiler/typed-world.js
+    - Path: repo://compiler/typed/typed-world.js
       Note: World state validation
 ExternalSources: []
 Summary: ""

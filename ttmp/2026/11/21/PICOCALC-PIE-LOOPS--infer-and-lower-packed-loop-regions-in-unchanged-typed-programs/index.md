@@ -10,9 +10,9 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-pie-loops.js
+    - Path: repo://compiler/typed/typed-pie-loops.js
       Note: Optional inferred loop transformation
-    - Path: repo://picocalc-os/tools/typed-inspect.mjs
+    - Path: repo://compiler/typed/tools/typed-inspect.mjs
       Note: Inspect loop decisions and final native instructions
 ExternalSources: []
 Summary: ""

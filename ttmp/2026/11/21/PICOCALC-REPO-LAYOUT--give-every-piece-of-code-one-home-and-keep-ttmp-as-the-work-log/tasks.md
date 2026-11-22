@@ -15,3 +15,4 @@
 - [ ] Before Phase C: make the trace REPL's compiler module table revision-aware (pkg/tracecompiler) so compiler.at works on both sides of each move <!-- t:v3ua -->
 - [ ] Phase B2 device gate: install the B2 playable image, check the gallery is in front and gallery digest agrees for the 18 scenes (not run in B2: device off limits) <!-- t:oemr -->
 - [ ] Promote upstream Candela vendoring (CANDELA-WORLD 01-vendor-candela.py, REPO-LAYOUT scripts/01) to tools/gen/candela for the next Candela bump; it must also re-derive translator/isa.js SECTION_API over all presets <!-- t:y737 -->
+- [ ] Fix firmware/tests/test_native_worlds.py test_dial_on_the_launcher_from_the_manifest_and_from_storage (fails since before 889a9b2; marked expectedFailure) and the PaperS3 host link (port_tz_set, port_net_scan, port_net_join undefined) <!-- t:u5ux -->

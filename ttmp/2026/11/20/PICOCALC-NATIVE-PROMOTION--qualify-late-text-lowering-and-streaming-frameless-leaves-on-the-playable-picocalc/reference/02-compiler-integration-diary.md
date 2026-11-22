@@ -10,11 +10,11 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Lowers checked text and chooses a conservative frameless function
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Produces checked numeric text operations and retains the Wasm primitive path
-    - Path: repo://picocalc-os/tests/typed-rv32.test.mjs
+    - Path: repo://tests/compiler/typed-rv32.test.mjs
       Note: Normal regression coverage for ABI and text code generation
     - Path: repo://ttmp/2026/11/20/PICOCALC-NATIVE-PROMOTION--qualify-late-text-lowering-and-streaming-frameless-leaves-on-the-playable-picocalc/scripts/compiler/01-mobile-painter.mjs
       Note: Compares the maintained closed renderer through both release compiler revisions

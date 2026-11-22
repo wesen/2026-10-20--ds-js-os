@@ -8,11 +8,11 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/painter_commands.c
+    - Path: repo://firmware/nucleus/painter_commands.c
       Note: Validation and body rasterization
-    - Path: repo://picocalc-os/port/esp32p4/main/painter_service.c
+    - Path: repo://firmware/port/esp32p4/main/painter_service.c
       Note: Kernel-lane retained view and asynchronous compiler
-    - Path: repo://picocalc-os/worlds/chess/painter.typed
+    - Path: repo://apps/typed/chess/painter.typed
       Note: App-provided rendering program
 ExternalSources: []
 Summary: ""

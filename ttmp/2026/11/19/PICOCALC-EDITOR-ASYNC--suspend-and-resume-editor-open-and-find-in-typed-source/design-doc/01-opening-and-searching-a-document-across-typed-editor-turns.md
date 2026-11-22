@@ -10,13 +10,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/worlds/editor/document-view.typed
+    - Path: repo://apps/typed/editor/document-view.typed
       Note: Frame rendering and Open reply
-    - Path: repo://picocalc-os/worlds/editor/editor.typed
+    - Path: repo://apps/typed/editor/editor.typed
       Note: Open task and world handler
-    - Path: repo://picocalc-os/worlds/editor/find.typed
+    - Path: repo://apps/typed/editor/find.typed
       Note: Search ranges and result presentation
-    - Path: repo://picocalc-os/worlds/editor/positions.typed
+    - Path: repo://apps/typed/editor/positions.typed
       Note: Persistent cursor coordinate conversion
 ExternalSources: []
 Summary: Carry the complete Editor Open and Find workflows in generated typed continuations while preserving behavior on both targets.

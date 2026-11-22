@@ -19,3 +19,7 @@ Verify a 62.88% reduction in Agenda RV32 frontend instructions at 8 MiB with ide
 ## 2026-11-18
 
 Verified physical guarded Agenda and Files at 8 MiB. The paired receipts and restored smoke are stored in PICOCALC-CJI-STATIC/various/p4.
+
+## 2026-11-22
+
+Closed by PICOCALC-REPO-LAYOUT Phase I: every task is done; its code lives in the repository's one home for it (see AGENTS.md)

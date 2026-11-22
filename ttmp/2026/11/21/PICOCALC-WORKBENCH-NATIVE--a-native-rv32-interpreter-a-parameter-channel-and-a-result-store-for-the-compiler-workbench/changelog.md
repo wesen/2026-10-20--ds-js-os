@@ -15,3 +15,7 @@ I1 native RV32 interpreter (849166a), I2 args channel (0791eeb, --arg fix 887f6d
 ## 2026-11-21
 
 Milestone vault report pushed (go-go-parc fcb7bcf): Projects/2026/11/21/PROJECT REPORT - PicoCalc Compiler - A Native RV32 Interpreter and Per-Cell Parameters for the Compiler Workbench - A Technical Deep Dive.md
+
+## 2026-11-22
+
+Closed by PICOCALC-REPO-LAYOUT Phase I: every task is done; its code lives in the repository's one home for it (see AGENTS.md)

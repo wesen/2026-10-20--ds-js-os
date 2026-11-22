@@ -10,13 +10,13 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/js/apps/calc.js
+    - Path: apps/js/picocalc/apps/calc.js
       Note: the calculator, all four steps
-    - Path: picocalc-os/tests/calc.test.mjs
+    - Path: firmware/tests/calc.test.mjs
       Note: 27 tests, including the help reference checks
-    - Path: picocalc-os/js/system.json
+    - Path: apps/js/picocalc/system.json
       Note: calc mem_kb 1024 (C1), budget_ms 200 (C4)
-    - Path: picocalc-os/js/system/compositor.js
+    - Path: apps/js/picocalc/system/compositor.js
       Note: ui.lines with visible, fixed in C3
 ExternalSources: []
 Summary: "Implementation diary of PICOCALC-SCI: the engine, graphing, help and modes, and the measurements on the ESP32-P4 that changed the work limits and two hot paths."

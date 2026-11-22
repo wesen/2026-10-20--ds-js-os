@@ -11,13 +11,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/candela_gallery.c
+    - Path: repo://firmware/nucleus/candela_gallery.c
       Note: 'renderer core: passes, sub-passes, meter, display, upscale, digests'
-    - Path: repo://picocalc-os/nucleus/gfx.c
+    - Path: repo://firmware/nucleus/gfx.c
       Note: gfx_gallery for selection 1000, under the option
-    - Path: repo://picocalc-os/port/esp32p4/main/CMakeLists.txt
+    - Path: repo://firmware/port/esp32p4/main/CMakeLists.txt
       Note: the option's sources, instances and flags
-    - Path: repo://picocalc-os/port/esp32p4/main/candela_gallery_p4.c
+    - Path: repo://firmware/port/esp32p4/main/candela_gallery_p4.c
       Note: worker on core 1, triple buffer, console, CGAL records
     - Path: repo://picocalc-os/tools/candela-gallery-compositor.py
       Note: build-time patch of the compositor copy

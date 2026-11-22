@@ -21,7 +21,7 @@ for ev in tests/native/*.events; do
 	name=$(basename "$ev" .events)
 	if [ -n "$WORLDS" ]; then case " $WORLDS " in *" $name "*) ;; *) continue ;; esac; fi
 	file=$(head -1 "$ev")
-	case "$file" in tests/*) src=$here/$file ;; *) src=$pc/js/$file ;; esac
+	case "$file" in tests/*) src=$here/$file ;; *) src=$pc/../apps/js/picocalc/$file ;; esac
 	node cji.js "$src" --world-unit --emit > $out/$name.host.slir
 	set +e
 	RV32_STEPS=1 RV32_SIZES=1 RV32_CLOCK=1 build/rv32/rv32emu build/rv32/fw-stage1.elf -- -g -h ${HEAP:-4194304} -- "$src" --world-unit \

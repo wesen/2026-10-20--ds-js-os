@@ -8,8 +8,10 @@ DEFS    := -DSLJIT_CONFIG_AUTO=1 -DSLJIT_VERBOSE=1 -DSLJIT_ARGUMENT_CHECKS=1
 slas: runtime/slas.c runtime/runtime.c runtime/runtime.h runtime/casemap.h runtime/idtable.h $(SLJIT)/sljitLir.c $(wildcard $(SLJIT)/*.h)
 	$(CC) $(CFLAGS) $(DEFS) -I$(SLJIT) runtime/slas.c runtime/runtime.c $(SLJIT)/sljitLir.c -o $@ -lm
 
+# This checkout is the PicoCalc selection of cji (README.md): run-tests.js and the full suite stay upstream. Its
+# included test compiles the native-world fixtures and replays them on rv32emu against their C control.
 test: slas
-	node run-tests.js
+	NOSNAP=1 sh tools/rv32/nw-test.sh
 
 clean:
 	rm -rf slas slas-rv32 build
@@ -21,6 +23,8 @@ clean:
 # emulator, and a firmware made of the C runtime and a small C library, built for rv32 by clang as
 # picocalc-os's build would build it.
 RV32    := build/rv32
+# LLVM's linker: ld.lld on PATH, or the copy Rust's toolchain ships (as port/esp32p4/compiler/build-tool.sh finds it).
+LLD     ?= $(or $(shell command -v ld.lld),$(shell rustc --print target-libdir 2>/dev/null)/../bin/gcc-ld/ld.lld)
 RVSLJIT := -DSLJIT_CONFIG_RISCV_32=1 -DSLJIT_CONFIG_RISCV_COMPRESSED=200 -DSLJIT_EXECUTABLE_ALLOCATOR=0 -DSLJIT_IS_FPU_AVAILABLE=0 -DSLJIT_VERBOSE=1 -DSLJIT_ARGUMENT_CHECKS=1 -include runtime/rv32_exec.h
 RVCLANG := clang --target=riscv32-unknown-elf -march=rv32imc -mabi=ilp32 -O2 -nostdinc \
 	-isystem $(shell clang -print-resource-dir)/include -isystem tools/rv32/fw/include -Iruntime -fno-pic -mno-relax
@@ -50,7 +54,7 @@ $(RV32)/fw-test.elf: Makefile runtime/runtime.c runtime/runtime.h runtime/cji_el
 	$(RVCLANG) -c tools/rv32/fw/main.c -o $(RV32)/main.o
 	$(RVCLANG) -c tools/rv32/fw/hostcalls.S -o $(RV32)/hostcalls.o
 	$(RVCLANG) -c tools/rv32/fw/softfloat.c -o $(RV32)/softfloat.o
-	ld.lld -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/main.o $(RV32)/runtime.o $(FWLIB)
+	$(LLD) -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/main.o $(RV32)/runtime.o $(FWLIB)
 
 .PHONY: rv32
 
@@ -81,7 +85,7 @@ $(RV32)/resolve.c: tools/rv32/resolve-table.mjs $(RV32)/fw-test.elf $(RV32)/cji_
 
 $(RV32)/fw-nw.elf: $(RV32)/fw-test.elf $(RV32)/cji_elf.o $(RV32)/nw_main.o $(RV32)/resolve.c
 	$(RVCLANG) -c $(RV32)/resolve.c -o $(RV32)/resolve.o
-	ld.lld -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/nw_main.o $(RV32)/cji_elf.o $(RV32)/runtime.o \
+	$(LLD) -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/nw_main.o $(RV32)/cji_elf.o $(RV32)/runtime.o \
 		$(FWLIB) $(RV32)/resolve.o
 
 .PHONY: rv32-nw
@@ -107,12 +111,12 @@ $(RV32)/resolve-units.c: tools/rv32/resolve-table.mjs $(RV32)/fw-test.elf $(RV32
 
 $(RV32)/fw-nw-units.elf: $(RV32)/fw-nw.elf $(RV32)/resolve-units.c
 	$(RVCLANG) -c $(RV32)/resolve-units.c -o $(RV32)/resolve-units.o
-	ld.lld -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/nw_main.o $(RV32)/cji_elf.o $(RV32)/runtime.o \
+	$(LLD) -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/nw_main.o $(RV32)/cji_elf.o $(RV32)/runtime.o \
 		$(FWLIB) $(UNIT)/unit-ilp32.o $(RV32)/resolve-units.o
 
 $(RV32)/fw-nw-units-noswap.elf: $(RV32)/fw-nw-units.elf runtime/cji_elf.c
 	$(RVCLANG) $(NWFLAGS) -DCJI_ELF_NO_SWAP -c runtime/cji_elf.c -o $(RV32)/cji_elf_noswap.o
-	ld.lld -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/nw_main.o $(RV32)/cji_elf_noswap.o $(RV32)/runtime.o \
+	$(LLD) -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/nw_main.o $(RV32)/cji_elf_noswap.o $(RV32)/runtime.o \
 		$(FWLIB) $(UNIT)/unit-ilp32.o $(RV32)/resolve-units.o
 
 rv32-nw-units: rv32-nw $(RV32)/fw-nw-units.elf $(RV32)/fw-nw-units-noswap.elf
@@ -137,7 +141,7 @@ $(RV32)/stage1_main.o: tools/rv32/fw/stage1_main.c runtime/runtime.h Makefile
 	$(RVCLANG) -c tools/rv32/fw/stage1_main.c -o $@
 
 $(RV32)/fw-stage1.elf: $(RV32)/fw-test.elf $(RV32)/stage1_main.o $(STAGE1)/stage1-ilp32.o
-	ld.lld -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/stage1_main.o $(STAGE1)/stage1-ilp32.o \
+	$(LLD) -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(RV32)/stage1_main.o $(STAGE1)/stage1-ilp32.o \
 		$(RV32)/runtime.o $(FWLIB)
 
 rv32-stage1: rv32 $(RV32)/fw-stage1.elf
@@ -193,7 +197,7 @@ $(BOARD)/elf_load.o: tools/rv32/fw/elf_load.c $(BOARD)/inc/elf.h
 
 $(RV32)/fw-board.elf: $(RV32)/fw-nw-units.elf $(BOARD)/board_main.o $(BOARD)/board_slas.o $(BOARD)/elf_load.o $(BOARD)/slas.o \
 		$(BOARD)/sljitLir.o $(BOARD)/stage1.o $(BOARD)/unit_list.o
-	ld.lld -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(BOARD)/board_main.o $(BOARD)/board_slas.o $(BOARD)/elf_load.o $(RV32)/cji_elf.o \
+	$(LLD) -m elf32lriscv --no-relax -Ttext=0x10000 -e _start -o $@ $(BOARD)/board_main.o $(BOARD)/board_slas.o $(BOARD)/elf_load.o $(RV32)/cji_elf.o \
 		$(BOARD)/slas.o $(BOARD)/sljitLir.o $(BOARD)/stage1.o $(UNIT)/unit-ilp32.o $(BOARD)/unit_list.o $(RV32)/runtime.o \
 		$(FWLIB) $(RV32)/resolve-units.o
 

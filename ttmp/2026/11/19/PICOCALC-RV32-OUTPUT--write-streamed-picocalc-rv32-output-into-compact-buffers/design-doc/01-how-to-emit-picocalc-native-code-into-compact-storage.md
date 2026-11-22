@@ -12,11 +12,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Production instruction word arrays and slot linker
-    - Path: repo://picocalc-os/compiler/typed-world.js
+    - Path: repo://compiler/typed/typed-world.js
       Note: World declarations and link entry
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Firmware compiler allocator and argument and result copies
     - Path: repo://ttmp/2026/11/19/PICOCALC-RV32-OUTPUT--write-streamed-picocalc-rv32-output-into-compact-buffers/scripts/01-prepare.py
       Note: Reconstructs clean and profiled candidate variants

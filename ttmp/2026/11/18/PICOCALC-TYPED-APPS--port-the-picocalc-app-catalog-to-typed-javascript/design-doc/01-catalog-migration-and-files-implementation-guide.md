@@ -8,13 +8,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/files.js
+    - Path: repo://apps/js/picocalc/apps/files.js
       Note: Observable Files behavior
-    - Path: repo://picocalc-os/js/system.json
+    - Path: repo://apps/js/picocalc/system.json
       Note: Shipped app inventory
-    - Path: repo://picocalc-os/nucleus/fs.c
+    - Path: repo://firmware/nucleus/fs.c
       Note: Capability-checked filesystem work
-    - Path: repo://picocalc-os/worlds/agenda/compile.js
+    - Path: repo://apps/typed/agenda/compile.js
       Note: Existing typed ABI
 ExternalSources: []
 Summary: ""

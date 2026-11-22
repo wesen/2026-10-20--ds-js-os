@@ -10,11 +10,11 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Final native emission and fixups
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Frontend observations and final Wasm section ranges
-    - Path: repo://picocalc-os/tools/typed-inspect.mjs
+    - Path: repo://compiler/typed/tools/typed-inspect.mjs
       Note: Host CLI and profile join
 ExternalSources: []
 Summary: ""

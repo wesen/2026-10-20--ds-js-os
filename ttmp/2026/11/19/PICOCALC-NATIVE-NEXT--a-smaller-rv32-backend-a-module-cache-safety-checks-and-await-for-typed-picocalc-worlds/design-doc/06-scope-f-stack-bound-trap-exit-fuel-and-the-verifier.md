@@ -8,9 +8,9 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Emits trap jumps and fuel sequences
-    - Path: repo://picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c
+    - Path: repo://firmware/port/esp32p4/optional/native_elf/native_elf_p4.c
       Note: Native loader where trap exit and verifier attach
 ExternalSources: []
 Summary: 'Tasks F1 to F6: static stack need, a controlled trap exit for native code, a fuel counter, a verifier over emitted RV32 with seven checks, mutation testing, and address masking.'

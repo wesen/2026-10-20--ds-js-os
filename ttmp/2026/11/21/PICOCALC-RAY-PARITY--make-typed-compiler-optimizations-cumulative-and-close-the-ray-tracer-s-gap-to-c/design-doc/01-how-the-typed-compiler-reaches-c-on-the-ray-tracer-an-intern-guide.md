@@ -10,19 +10,19 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/compiler/typed-rv32.js
+    - Path: compiler/typed/typed-rv32.js
       Note: RV32 backend, compile policies, planLocations
-    - Path: picocalc-os/compiler/typed-wasm.js
+    - Path: compiler/typed/typed-wasm.js
       Note: Frontend and numeric operation tape
-    - Path: picocalc-os/nucleus/raytrace_demo.c
+    - Path: firmware/nucleus/raytrace_demo.c
       Note: The C renderer used as the reference
-    - Path: picocalc-os/tools/rv32-interp.js
+    - Path: bench/host/rv32-interp.js
       Note: Reference interpreter with calling-convention checks
-    - Path: picocalc-os/tools/typed-ray-profile.mjs
+    - Path: bench/host/ray-profile.mjs
       Note: |-
         Opening-frame profiler
         Profiler used for Section 5
-    - Path: picocalc-os/worlds/raytrace/raytrace.typed
+    - Path: apps/typed/raytrace/raytrace.typed
       Note: The benchmark program
 ExternalSources: []
 Summary: 'What a newcomer needs to change the Typed RV32 compiler: the system, the code generator, the ray-tracer benchmark, the validation tools, the measured gap to C and a phased plan to close it.'

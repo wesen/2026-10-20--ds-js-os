@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/native_wasm.c
+    - Path: repo://firmware/nucleus/native_wasm.c
       Note: Production Wasm module validation and event ABI
-    - Path: repo://picocalc-os/nucleus/vm.c
+    - Path: repo://firmware/nucleus/vm.c
       Note: Current QuickJS source execution and dispatch
-    - Path: repo://picocalc-os/port/esp32p4/compiler/tool.c
+    - Path: repo://firmware/port/esp32p4/compiler/tool.c
       Note: Native frontend and assembly phases
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-DIALECT--a-js-like-device-language-and-a-low-latency-compiler-for-the-picocalc/scripts/fastpath/04-typed-wasm.js
       Note: Direct source-to-Wasm emitter tested on host and P4

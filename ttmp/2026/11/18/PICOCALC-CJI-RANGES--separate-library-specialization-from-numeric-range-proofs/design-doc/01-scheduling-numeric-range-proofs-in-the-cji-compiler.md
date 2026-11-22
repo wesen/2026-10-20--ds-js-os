@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://cji/src/infer.js
+    - Path: repo://compiler/cji/src/infer.js
       Note: Type and range verdicts
-    - Path: repo://cji/src/library.js
+    - Path: repo://compiler/cji/src/library.js
       Note: Receiver specialization loop
-    - Path: repo://cji/src/ranges.js
+    - Path: repo://compiler/cji/src/ranges.js
       Note: Interval domain and widening
     - Path: repo://ttmp/2026/11/18/PICOCALC-CJI-RANGES--separate-library-specialization-from-numeric-range-proofs/scripts/19-defer-range-proof.patch
       Note: Isolated prototype

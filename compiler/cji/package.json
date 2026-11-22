@@ -4,6 +4,6 @@
   "description": "Compiling JavaScript, Incrementally: the companion compiler",
   "type": "module",
   "private": true,
-  "scripts": { "test": "node run-tests.js" },
+  "scripts": { "test": "NOSNAP=1 sh tools/rv32/nw-test.sh" },
   "engines": { "node": ">=18" }
 }

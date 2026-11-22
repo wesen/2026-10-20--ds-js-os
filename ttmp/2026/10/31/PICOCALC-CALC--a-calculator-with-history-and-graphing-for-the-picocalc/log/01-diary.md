@@ -10,13 +10,13 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/calc.js
+    - Path: repo://apps/js/picocalc/apps/calc.js
       Note: the calculator and plotter
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: canvas poly operation
-    - Path: repo://picocalc-os/scripts/calc.txt
+    - Path: repo://apps/tours/picocalc/calc.txt
       Note: host script
-    - Path: repo://picocalc-os/tests/calc.test.mjs
+    - Path: repo://firmware/tests/calc.test.mjs
       Note: calculator tests
 ExternalSources: []
 Summary: 'Chronological record of PICOCALC-CALC: an expression language compiled to closures, a calculator with history, and a plotter that samples in slices sized for the turn budget; host and ESP32-P4.'

@@ -9,11 +9,11 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: Gallery drawing folded in from the deleted build-time patch
-    - Path: repo://picocalc-os/third_party/candela/PIN.json
+    - Path: repo://firmware/third_party/candela/PIN.json
       Note: Gained the generator section pinning render.js, wgsl2glsl.js and the 18 gallery presets
-    - Path: repo://picocalc-os/third_party/candela/VENDOR.json
+    - Path: repo://firmware/third_party/candela/VENDOR.json
       Note: Per-file generator, inputs and digests; hand-written files marked
     - Path: repo://tools/gen/candela/kernel.mjs
       Note: Kernel generator promoted from CANDELA-CPU-KERNEL 02-gen-kernel.mjs

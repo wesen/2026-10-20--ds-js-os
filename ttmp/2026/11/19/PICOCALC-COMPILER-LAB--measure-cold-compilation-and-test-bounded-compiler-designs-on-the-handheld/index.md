@@ -9,9 +9,9 @@ DocType: index
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Frozen frontend streaming boundary
-    - Path: repo://picocalc-os/port/esp32p4/main/typed_p4.c
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
       Note: Physical compiler invocation and allocator
 ExternalSources: []
 Summary: Results, publication index and replay procedures for four physical compiler studies and independent review.

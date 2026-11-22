@@ -9,9 +9,9 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/raytrace_demo.c
+    - Path: repo://firmware/nucleus/raytrace_demo.c
       Note: Shared intersection, depth, lighting and shadow contracts
-    - Path: repo://picocalc-os/nucleus/raytrace_demo_pie.S
+    - Path: repo://firmware/nucleus/raytrace_demo_pie.S
       Note: Actual packed instruction sequence and ABI
     - Path: repo://ttmp/2026/11/20/PICOCALC-RAYTRACE--a-playable-packet-ray-tracer-for-the-esp32-p4/scripts/renderer/03-qualify.sh
       Note: Rebuilds strict host checks and the linked PIE instruction model

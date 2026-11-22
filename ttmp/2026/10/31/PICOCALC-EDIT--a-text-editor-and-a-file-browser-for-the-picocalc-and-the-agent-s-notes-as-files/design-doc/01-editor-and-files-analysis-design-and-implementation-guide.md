@@ -11,13 +11,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/editor.js
+    - Path: repo://apps/js/picocalc/apps/editor.js
       Note: the editor
-    - Path: repo://picocalc-os/js/apps/files.js
+    - Path: repo://apps/js/picocalc/apps/files.js
       Note: the file browser
-    - Path: repo://picocalc-os/js/system/agent.js
+    - Path: repo://apps/js/picocalc/system/agent.js
       Note: notes as files
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: textarea node
 ExternalSources: []
 Summary: 'A text editor and a file browser for picocalc-os, built on PICOCALC-FS''s file handles: how screens, keys and the compositor work, the textarea node, the editor''s text model, the open-a-file protocol with revocation, and moving the agent''s notes into files.'

@@ -1,7 +1,7 @@
 ---
 Title: Separate library specialization from numeric range proofs
 Ticket: PICOCALC-CJI-RANGES
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-18T11:12:26.670304329-05:00
+LastUpdated: 2026-11-22T17:20:44.147733227-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

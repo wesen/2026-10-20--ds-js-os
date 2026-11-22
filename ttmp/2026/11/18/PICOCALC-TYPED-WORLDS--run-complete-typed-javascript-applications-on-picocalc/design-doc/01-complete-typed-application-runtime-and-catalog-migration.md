@@ -8,17 +8,17 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: RV32 generator and slot linker
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Typed parser and Wasm linker
-    - Path: repo://picocalc-os/js/system.json
+    - Path: repo://apps/js/picocalc/system.json
       Note: Shipped application catalog
-    - Path: repo://picocalc-os/sdk/nw.h
+    - Path: repo://firmware/sdk/nw.h
       Note: Kernel API contract
-    - Path: repo://picocalc-os/worlds/agenda/wasm-world.c
+    - Path: repo://apps/typed/agenda/wasm-world.c
       Note: Current Agenda behavior that must move to typed source
-    - Path: repo://picocalc-os/worlds/files/world.c
+    - Path: repo://apps/typed/files/world.c
       Note: Current Files behavior that must move to typed source
 ExternalSources: []
 Summary: ""

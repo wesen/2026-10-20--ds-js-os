@@ -9,7 +9,7 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/main/raybench_p4.c
+    - Path: repo://firmware/port/esp32p4/main/raybench_p4.c
       Note: Specifies physical timing boundaries
     - Path: repo://ttmp/2026/11/20/PICOCALC-RAYTRACE--a-playable-packet-ray-tracer-for-the-esp32-p4/scripts/device/04-summarize.py
       Note: Computes paired speed ratios and occupancy

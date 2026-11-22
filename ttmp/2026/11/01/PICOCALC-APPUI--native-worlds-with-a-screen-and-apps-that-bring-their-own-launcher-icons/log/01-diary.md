@@ -10,19 +10,19 @@ DocType: log
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/launcher.js
+    - Path: repo://apps/js/picocalc/apps/launcher.js
       Note: the launcher from sys.worlds, lnOps, lnPoll (Phase 3)
-    - Path: repo://picocalc-os/js/system/compositor.js
+    - Path: repo://apps/js/picocalc/system/compositor.js
       Note: grid mark, icon text width, the paint guard (Phase 3)
-    - Path: repo://picocalc-os/natives/dial.c
+    - Path: repo://firmware/natives/dial.c
       Note: Dial (Phase 4)
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: kernel_present, boot_world, kernel_worlds_json_fields (Phase 1)
-    - Path: repo://picocalc-os/nucleus/native.c
+    - Path: repo://firmware/nucleus/native.c
       Note: NW_SCREEN, NW_PRESENT, nat_render (Phase 1)
-    - Path: repo://picocalc-os/tests/sysapps.test.mjs
+    - Path: repo://firmware/tests/sysapps.test.mjs
       Note: launcher and loader tests on fake worlds
-    - Path: repo://picocalc-os/tests/test_native_worlds.py
+    - Path: repo://firmware/tests/test_native_worlds.py
       Note: Dial on both engines and end to end
     - Path: repo://ttmp/2026/11/01/PICOCALC-APPUI--native-worlds-with-a-screen-and-apps-that-bring-their-own-launcher-icons/various/device-elf/capture.log
       Note: the ELF firmware capture (Step 5)

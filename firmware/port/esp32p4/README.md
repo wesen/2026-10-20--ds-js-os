@@ -2,7 +2,7 @@
 
 This port targets the PicoCalc adapter with a **Waveshare ESP32-P4-WIFI6 base board**.
 The detailed agent architecture, setup, operating instructions, and verification report are in
-[the PicoCalc agent implementation guide](../../docs/picocalc-agent-implementation.md).
+[the PicoCalc agent implementation guide](../../../docs/agent/picocalc-agent-implementation.md).
 
 ## Build
 

@@ -12,17 +12,17 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/system/agent.js
+    - Path: repo://apps/js/picocalc/system/agent.js
       Note: agent service, dialect translation, tool loop
-    - Path: repo://picocalc-os/nucleus/vm.c
+    - Path: repo://firmware/nucleus/vm.c
       Note: agent.* and store.* operations
-    - Path: repo://picocalc-os/port/esp32p4/main/agent_p4.c
+    - Path: repo://firmware/port/esp32p4/main/agent_p4.c
       Note: P4 HTTPS transport, Wi-Fi, net console
-    - Path: repo://picocalc-os/port/esp32p4/main/bus_p4.c
+    - Path: repo://firmware/port/esp32p4/main/bus_p4.c
       Note: console key injection
-    - Path: repo://picocalc-os/port/esp32p4/sdkconfig.agent-wifi
+    - Path: repo://firmware/port/esp32p4/sdkconfig.agent-wifi
       Note: ESP-Hosted mode and PSRAM placement
-    - Path: repo://picocalc-os/tools/provision_agent.py
+    - Path: repo://firmware/tools/provision_agent.py
       Note: provisioning from local sources
 ExternalSources: []
 Summary: How the imported PicoCalc agent works end to end (worlds, native HTTPS, ESP-Hosted Wi-Fi, NVS), what the first hardware run found, and the design for talking to an OpenAI-compatible Chat Completions provider (lunaroute, deepseek-4.1-flash).

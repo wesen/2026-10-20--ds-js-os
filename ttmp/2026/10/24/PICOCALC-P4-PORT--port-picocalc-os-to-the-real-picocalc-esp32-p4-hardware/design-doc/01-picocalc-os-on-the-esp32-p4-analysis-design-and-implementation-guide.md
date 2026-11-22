@@ -13,27 +13,27 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/js/system/compositor.js
+    - Path: apps/js/picocalc/system/compositor.js
       Note: The largest world; owns the framebuffer and drives the display driver
-    - Path: picocalc-os/nucleus/hw.c
+    - Path: firmware/nucleus/hw.c
       Note: Handles and bus accounting; its bus back ends move behind the port seam
-    - Path: picocalc-os/nucleus/kernel.c
+    - Path: firmware/nucleus/kernel.c
       Note: The lane, the clock, messages and supervision; gains the real-time clock mode
-    - Path: picocalc-os/nucleus/nucleus.h
+    - Path: firmware/nucleus/nucleus.h
       Note: The nucleus contract, including the new port API
-    - Path: picocalc-os/nucleus/vm.c
+    - Path: firmware/nucleus/vm.c
       Note: One QuickJS runtime per world; allocator, budget and stack limit become port-dependent
-    - Path: picocalc-os/sim/st7365p.c
+    - Path: firmware/sim/st7365p.c
       Note: Simulated panel; the behaviour the device back end must reproduce on real glass
-    - Path: picocalc-os/sim/stm32kbd.c
+    - Path: firmware/sim/stm32kbd.c
       Note: Simulated STM32 southbridge; defines the I2C register contract the JS drivers rely on
-    - Path: repo://picocalc-os/port/esp32p4/main/bus_p4.c
+    - Path: repo://firmware/port/esp32p4/main/bus_p4.c
       Note: I2C and SPI worker tasks, buffer pinning
-    - Path: repo://picocalc-os/port/esp32p4/main/main_p4.c
+    - Path: repo://firmware/port/esp32p4/main/main_p4.c
       Note: Kernel task real-time loop and serial console
-    - Path: repo://picocalc-os/port/esp32p4/main/port_p4.c
+    - Path: repo://firmware/port/esp32p4/main/port_p4.c
       Note: Real clock, aligned PSRAM heaps, JS bundle lookup
-    - Path: repo://picocalc-os/tools/p4cap.py
+    - Path: repo://firmware/tools/p4cap.py
       Note: Reset, console commands and shot decoding from the host
 ExternalSources:
     - /home/manuel/code/wesen/go-go-golems/esp32-s3-m5/0099-esp32-p4-picocalc-display-keyboard

@@ -10,9 +10,9 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/raytrace_demo.c
+    - Path: repo://firmware/nucleus/raytrace_demo.c
       Note: Original C scene and matched audit phases
-    - Path: repo://picocalc-os/worlds/raytrace/raytrace.typed
+    - Path: repo://apps/typed/raytrace/raytrace.typed
       Note: Complete ordinary Typed render, trace and shade entry points
     - Path: repo://ttmp/2026/11/20/PICOCALC-TYPED-RAY--compare-complete-typed-and-c-ray-tracers-on-the-picocalc/scripts/renderer/03-qualify.sh
       Note: All supported host replay and bitwise verification entry

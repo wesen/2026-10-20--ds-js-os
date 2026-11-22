@@ -12,19 +12,19 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/nucleus/kernel.c
+    - Path: firmware/nucleus/kernel.c
       Note: turns, segments, timers (E_TICK), the lane; where interrupts become messages
-    - Path: picocalc-os/nucleus/vm_mqjs.c
+    - Path: firmware/nucleus/vm_mqjs.c
       Note: the engine binding; hw.gpio, rendering, the per-segment cost
-    - Path: picocalc-os/port/esp32s3-papers3/main/main_s3.c
+    - Path: firmware/port/esp32s3-papers3/main/main_s3.c
       Note: the kernel task's wait loop (the 50 ms cap), console, power management setup
-    - Path: picocalc-os/port/esp32s3-papers3/main/bus_s3.cpp
+    - Path: firmware/port/esp32s3-papers3/main/bus_s3.cpp
       Note: bus workers and the kernel queue; PM locks for the panel and I2C
-    - Path: picocalc-os/js-papers3/drivers/touch.js
+    - Path: apps/js/papers3/drivers/touch.js
       Note: the GT911 driver, polled every 20 ms today
-    - Path: picocalc-os/js-papers3/system/compositor.js
+    - Path: apps/js/papers3/system/compositor.js
       Note: the 100 ms and 1 s timers; focus and blur
-    - Path: picocalc-os/sim/papers3/gt911.c
+    - Path: firmware/sim/papers3/gt911.c
       Note: the host's GT911 model, which must grow an INT line
 ExternalSources: []
 Summary: 'Why picocalc-os on the PaperS3 burns 23% of its lane doing nothing, how to make input interrupt-driven within the world model, how to let the ESP32-S3 light-sleep when idle, and how to make turns cheaper; phased plan with measurements.'

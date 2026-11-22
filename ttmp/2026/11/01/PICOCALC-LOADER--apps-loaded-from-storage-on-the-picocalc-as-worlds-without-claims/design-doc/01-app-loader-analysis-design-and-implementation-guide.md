@@ -10,19 +10,19 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/js/drivers/display.js
+    - Path: apps/js/picocalc/drivers/display.js
       Note: attach and flush requests, unchecked today
-    - Path: picocalc-os/js/drivers/power.js
+    - Path: apps/js/picocalc/drivers/power.js
       Note: screen and backlight requests, unchecked today
-    - Path: picocalc-os/js/system/compositor.js
+    - Path: apps/js/picocalc/system/compositor.js
       Note: open, draw and worlds.status; who may bring an app to the front
-    - Path: picocalc-os/nucleus/kernel.c
+    - Path: firmware/nucleus/kernel.c
       Note: add_world, crash_at, kernel_restart_world; where spawning and stopping go
-    - Path: repo://picocalc-os/js/apps/loader.js
+    - Path: repo://apps/js/picocalc/apps/loader.js
       Note: the Loader app
-    - Path: repo://picocalc-os/nucleus/vm.c
+    - Path: repo://firmware/nucleus/vm.c
       Note: sys.spawn and sys.stop
-    - Path: repo://picocalc-os/tests/test_loader_native.py
+    - Path: repo://firmware/tests/test_loader_native.py
       Note: native tests
 ExternalSources: []
 Summary: How to run JavaScript apps from the files partition (apps/*.js) as worlds with no claims, started by a Loader app, after closing the requests that a world without claims could still use against the system.

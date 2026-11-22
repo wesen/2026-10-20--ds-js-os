@@ -1,7 +1,7 @@
 ---
 Title: A native RV32 interpreter, a parameter channel and a result store for the compiler workbench
 Ticket: PICOCALC-WORKBENCH-NATIVE
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -15,10 +15,10 @@ RelatedFiles:
     - Path: repo://ttmp/2026/11/21/PICOCALC-WORKBENCH-NATIVE--a-native-rv32-interpreter-a-parameter-channel-and-a-result-store-for-the-compiler-workbench/design-doc/01-native-interpretation-parameters-and-results-in-the-compiler-workbench.md
       Note: Design and as-built notes
 ExternalSources: []
-Summary: "The second round of trace-REPL workbench changes requested by PICOCALC-RAY-PARITY's field notes: a Go RV32 interpreter identical to the reference (I1, about 440-500x faster than the reference in goja), a fresh args object per cell and job (I2), a result store (I5), per-block detail from stats.paired (I6) and the Files and Agenda worlds (I2b)."
-LastUpdated: 2026-11-21T23:30:00-05:00
-WhatFor: "Finding the design, evidence and diary of the native interpreter, args, results, blocks and worlds."
-WhenToUse: "Before changing rv32, the args channel, results, stats.paired or compiler.at(rev).world."
+Summary: 'The second round of trace-REPL workbench changes requested by PICOCALC-RAY-PARITY''s field notes: a Go RV32 interpreter identical to the reference (I1, about 440-500x faster than the reference in goja), a fresh args object per cell and job (I2), a result store (I5), per-block detail from stats.paired (I6) and the Files and Agenda worlds (I2b).'
+LastUpdated: 2026-11-22T17:20:56.016975267-05:00
+WhatFor: Finding the design, evidence and diary of the native interpreter, args, results, blocks and worlds.
+WhenToUse: Before changing rv32, the args channel, results, stats.paired or compiler.at(rev).world.
 ---
 
 # A native RV32 interpreter, a parameter channel and a result store for the compiler workbench

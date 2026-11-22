@@ -10,13 +10,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/main/CMakeLists.txt
+    - Path: repo://firmware/port/esp32p4/main/CMakeLists.txt
       Note: Firmware bundle
-    - Path: repo://picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c
+    - Path: repo://firmware/port/esp32p4/optional/native_elf/native_elf_p4.c
       Note: Resolver and loader
-    - Path: repo://picocalc-os/sdk/nw_elf.h
+    - Path: repo://firmware/sdk/nw_elf.h
       Note: Board ABI
-    - Path: repo://cji/runtime/cji_elf.c
+    - Path: repo://compiler/cji/runtime/cji_elf.c
       Note: Runtime entry and state management
     - Path: repo://ttmp/2026/11/17/PICOCALC-CJI--cji-workspace-import-and-picocalc-integration-analysis/various/rv32-nosnap.txt
       Note: Reproduced emulator gate

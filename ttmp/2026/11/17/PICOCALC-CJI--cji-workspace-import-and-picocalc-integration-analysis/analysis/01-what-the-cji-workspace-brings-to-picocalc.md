@@ -10,13 +10,13 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c
+    - Path: repo://firmware/port/esp32p4/optional/native_elf/native_elf_p4.c
       Note: Hardware loader
-    - Path: repo://picocalc-os/port/esp32p4/partitions.csv
+    - Path: repo://firmware/port/esp32p4/partitions.csv
       Note: Firmware capacity
-    - Path: repo://picocalc-os/sdk/nw.h
+    - Path: repo://firmware/sdk/nw.h
       Note: World events and system calls
-    - Path: repo://picocalc-os/sdk/nw_elf.h
+    - Path: repo://firmware/sdk/nw_elf.h
       Note: Module ABI
 ExternalSources: []
 Summary: ""

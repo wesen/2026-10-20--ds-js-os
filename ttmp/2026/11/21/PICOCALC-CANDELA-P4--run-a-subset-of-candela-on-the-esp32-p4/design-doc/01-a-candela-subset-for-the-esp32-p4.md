@@ -20,7 +20,7 @@ RelatedFiles:
       Note: Which presets each kernel tier renders
     - Path: ttmp/2026/11/21/PICOCALC-CANDELA-P4--run-a-subset-of-candela-on-the-esp32-p4/various/03-quickjs-front-end.json
       Note: Candela's front end measured in the firmware's QuickJS on the host
-    - Path: picocalc-os/nucleus/vm.c
+    - Path: firmware/nucleus/vm.c
       Note: World runtime limits (memory, C stack, turn budget) and the bytecode cache pattern the Candela world would follow
 ExternalSources: []
 Summary: "Decisions, with evidence, for running Candela scene programs on the PicoCalc: Candela's JavaScript front end unchanged in a QuickJS world, its fixed WGSL kernel translated to C at firmware build time and run in f32 on the FPU, its per-scene generated sections translated on the device to a register bytecode, a 28-preset first subset growing to 95, and 160 x 160 progressive rendering at an estimated 28,500-41,000 samples per second per core for the simplest preset."

@@ -15,3 +15,7 @@ P5 progress (137387a..5a8e692): per-op prof; faster glyphs; caches (32 KB I, 64 
 ## 2026-10-28
 
 P5 closed after step 13 by the user's choice. Left open: the compositor's interpreter time (~14 ms per repaint), frame JSON decode (~4 ms), the compositor's 254 ms parse at boot, lower mem_kb limits.
+
+## 2026-11-22
+
+Closed by PICOCALC-REPO-LAYOUT Phase I: every task is done; its code lives in the repository's one home for it (see AGENTS.md)

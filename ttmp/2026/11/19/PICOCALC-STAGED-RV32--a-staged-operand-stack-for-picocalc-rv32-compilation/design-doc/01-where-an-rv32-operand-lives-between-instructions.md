@@ -9,11 +9,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: Frozen production lowering
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Numeric operand stream producer
-    - Path: repo://picocalc-os/sdk/typed/rv32-slot.S
+    - Path: repo://firmware/sdk/typed/rv32-slot.S
       Note: Editor executable slot capacity
 ExternalSources: []
 Summary: ""

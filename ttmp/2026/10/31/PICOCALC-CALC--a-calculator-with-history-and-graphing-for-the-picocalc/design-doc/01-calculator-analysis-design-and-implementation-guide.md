@@ -10,9 +10,9 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/js/apps/calc.js
+    - Path: repo://apps/js/picocalc/apps/calc.js
       Note: the calculator and plotter
-    - Path: repo://picocalc-os/js/apps/launcher.js
+    - Path: repo://apps/js/picocalc/apps/launcher.js
       Note: Calc entry, four columns
 ExternalSources: []
 Summary: 'A calculator app for picocalc-os: an expression language with variables and one-argument functions, compiled to closures; a history the user can recall; and a function plotter that computes its samples in slices small enough for the kernel''s turn budgets, on the host model and on the ESP32-P4.'

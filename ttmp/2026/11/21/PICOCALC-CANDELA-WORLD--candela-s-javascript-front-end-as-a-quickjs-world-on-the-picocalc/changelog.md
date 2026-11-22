@@ -19,3 +19,7 @@ Device: final run on image 63a87a16 (commit c0bd0f3): load 175 ms, B-01 build 12
 ### Related Files
 
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-a5ffe016ff270b9ad/ttmp/2026/11/21/PICOCALC-CANDELA-WORLD--candela-s-javascript-front-end-as-a-quickjs-world-on-the-picocalc/various/device-04-final/summary.json — final device summary
+
+## 2026-11-22
+
+Closed by PICOCALC-REPO-LAYOUT Phase I: every task is done; its code lives in the repository's one home for it (see AGENTS.md)

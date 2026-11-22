@@ -8,9 +8,9 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/port/esp32p4/main/mobile_painter_p4.c
+    - Path: repo://firmware/port/esp32p4/main/mobile_painter_p4.c
       Note: Device compile, load and run path
-    - Path: repo://picocalc-os/worlds/chess/painter.typed
+    - Path: repo://apps/typed/chess/painter.typed
       Note: Painter code used in the worked example
     - Path: repo://ttmp/2026/11/20/PICOCALC-MOBILE-PAINTER--compile-a-chess-painter-delivered-by-the-app-and-paint-psix-frames-on-the-picocalc/various/compiler-replay.json
       Note: Operation equality for the host replay

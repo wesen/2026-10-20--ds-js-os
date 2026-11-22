@@ -8,11 +8,11 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-rv32.js
+    - Path: repo://compiler/typed/typed-rv32.js
       Note: RV32 lowering measured and modelled in Article 5
-    - Path: repo://picocalc-os/compiler/typed-wasm.js
+    - Path: repo://compiler/typed/typed-wasm.js
       Note: Frontend and WebAssembly emitter examined in Articles 4, 5 and 7
-    - Path: repo://picocalc-os/worlds/editor/editor.typed
+    - Path: repo://apps/typed/editor/editor.typed
       Note: Hand-written continuations discussed in Article 8
 ExternalSources: []
 Summary: Index to the ten articles, back matter, experiments and reader-study records of the special issue on compiler design for the PicoCalc.

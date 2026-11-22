@@ -10,15 +10,15 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/kernel.c
+    - Path: repo://firmware/nucleus/kernel.c
       Note: World replacement lifecycle
-    - Path: repo://picocalc-os/port/esp32p4/compiler/install.c
+    - Path: repo://firmware/port/esp32p4/compiler/install.c
       Note: Kernel-task activation and verified two-slot installation
-    - Path: repo://picocalc-os/port/esp32p4/compiler/tool.c
+    - Path: repo://firmware/port/esp32p4/compiler/tool.c
       Note: Private stage-1 invocation and module assembly
-    - Path: repo://picocalc-os/port/esp32p4/optional/native_elf/native_elf_p4.c
+    - Path: repo://firmware/port/esp32p4/optional/native_elf/native_elf_p4.c
       Note: Production module ABI and relocation
-    - Path: repo://cji/tools/rv32/fw/board_main.c
+    - Path: repo://compiler/cji/tools/rv32/fw/board_main.c
       Note: Emulator compilation reference
     - Path: repo://ttmp/2026/11/17/PICOCALC-CJI-PORT--ship-compiled-picocalc-worlds-with-a-shared-prelude-and-port-os-workflows/scripts/06-exercise-device-compiler.py
       Note: Physical Editor, peer IPC, failure and reboot acceptance

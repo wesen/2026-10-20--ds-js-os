@@ -12,9 +12,9 @@ DocType: reference
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/candela_world.c
+    - Path: repo://firmware/nucleus/candela_world.c
       Note: Bytecode loader and host object built in Step 3
-    - Path: repo://picocalc-os/tools/candela-bc.c
+    - Path: repo://tools/gen/candela/candela-bc.c
       Note: Build-time bytecode compiler (Step 3)
     - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-WORLD--candela-s-javascript-front-end-as-a-quickjs-world-on-the-picocalc/scripts/04-compare.py
       Note: Digest comparison of world records against Node (Steps 4 and 6)

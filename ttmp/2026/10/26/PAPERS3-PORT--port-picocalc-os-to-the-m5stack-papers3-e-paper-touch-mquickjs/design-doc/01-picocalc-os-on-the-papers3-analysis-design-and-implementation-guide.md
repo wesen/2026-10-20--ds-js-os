@@ -14,13 +14,13 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: picocalc-os/nucleus/nucleus.h
+    - Path: firmware/nucleus/nucleus.h
       Note: The nucleus contract; the engine and board seams are added here
-    - Path: picocalc-os/nucleus/vm.c
+    - Path: firmware/nucleus/vm.c
       Note: The QuickJS engine binding that the mquickjs backend mirrors
-    - Path: picocalc-os/nucleus/kernel.c
+    - Path: firmware/nucleus/kernel.c
       Note: The lane, turns, supervision; engine-neutral after phase 0
-    - Path: picocalc-os/js/system/compositor.js
+    - Path: apps/js/picocalc/system/compositor.js
       Note: The PicoCalc compositor that the paper compositor replaces
 ExternalSources: []
 Summary: "How picocalc-os (a JavaScript OS of supervised worlds) is ported to the M5Stack PaperS3: an engine seam so worlds run on MicroQuickJS, gray framebuffers and proportional fonts, an e-paper display driver with a refresh planner, a GT911 touch driver and a touch-first compositor, a host simulator for the board, and the ESP-IDF port."

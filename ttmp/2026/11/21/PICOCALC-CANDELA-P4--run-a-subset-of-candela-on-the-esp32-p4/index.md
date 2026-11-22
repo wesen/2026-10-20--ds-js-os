@@ -1,7 +1,7 @@
 ---
 Title: Run a subset of Candela on the ESP32-P4
 Ticket: PICOCALC-CANDELA-P4
-Status: active
+Status: complete
 Topics:
     - picocalc
     - compiler
@@ -23,8 +23,8 @@ RelatedFiles:
     - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-P4--run-a-subset-of-candela-on-the-esp32-p4/scripts/07-run-kernel.sh
       Note: One-command reproduction of a per-sample instruction count
 ExternalSources: []
-Summary: "Research and design for running Candela scene programs on the ESP32-P4: measured per-sample cost of Candela's own kernel on RV32, numeric-model experiments, the Candela front end in QuickJS, the decided architecture and subset, and five follow-up tickets."
-LastUpdated: 2026-11-21T22:05:51.365611452-05:00
+Summary: 'Research and design for running Candela scene programs on the ESP32-P4: measured per-sample cost of Candela''s own kernel on RV32, numeric-model experiments, the Candela front end in QuickJS, the decided architecture and subset, and five follow-up tickets.'
+LastUpdated: 2026-11-22T17:20:50.545834017-05:00
 WhatFor: ""
 WhenToUse: ""
 ---

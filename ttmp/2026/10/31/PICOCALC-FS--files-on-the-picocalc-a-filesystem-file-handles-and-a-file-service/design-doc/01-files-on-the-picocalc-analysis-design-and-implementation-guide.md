@@ -11,15 +11,15 @@ DocType: design-doc
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/nucleus/fs.c
+    - Path: repo://firmware/nucleus/fs.c
       Note: POSIX file layer and path rules
-    - Path: repo://picocalc-os/nucleus/vm.c
+    - Path: repo://firmware/nucleus/vm.c
       Note: hw.fs, fs.at, ka_fs
-    - Path: repo://picocalc-os/port/esp32p4/main/bus_p4.c
+    - Path: repo://firmware/port/esp32p4/main/bus_p4.c
       Note: i2c hold before resets
-    - Path: repo://picocalc-os/port/esp32p4/main/fs_p4.c
+    - Path: repo://firmware/port/esp32p4/main/fs_p4.c
       Note: FAT mount, worker, console
-    - Path: repo://picocalc-os/tests/test_fs_native.py
+    - Path: repo://firmware/tests/test_fs_native.py
       Note: native tests
 ExternalSources: []
 Summary: 'Why picocalc-os needs files, how they fit its handle and deferred-effect model, and the implementation: a POSIX file layer shared by the host and a FAT partition on the ESP32-P4''s flash, file handles that can be narrowed to one directory or one file, and asynchronous operations on a worker task.'

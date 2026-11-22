@@ -10,7 +10,7 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/compiler/typed-pie-loops.js
+    - Path: repo://compiler/typed/typed-pie-loops.js
       Note: Loop recognition and lowering
     - Path: repo://ttmp/2026/11/21/PICOCALC-PIE-LOOPS--infer-and-lower-packed-loop-regions-in-unchanged-typed-programs/scripts/03-qualify.mjs
       Note: C, Wasm and unchanged native execution

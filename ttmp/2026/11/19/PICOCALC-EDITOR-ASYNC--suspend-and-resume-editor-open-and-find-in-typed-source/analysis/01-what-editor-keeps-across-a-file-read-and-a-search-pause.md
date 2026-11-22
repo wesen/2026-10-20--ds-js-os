@@ -10,9 +10,9 @@ DocType: analysis
 Intent: long-term
 Owners: []
 RelatedFiles:
-    - Path: repo://picocalc-os/worlds/editor/editor.typed
+    - Path: repo://apps/typed/editor/editor.typed
       Note: Find and Open event dispatch and Open task
-    - Path: repo://picocalc-os/worlds/editor/find.typed
+    - Path: repo://apps/typed/editor/find.typed
       Note: Search state and bounded scheduler slices
 ExternalSources: []
 Summary: Explain the production Editor continuation migration and measure its behavior, code size, and persistent state on both targets.

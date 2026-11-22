@@ -19,3 +19,7 @@ Verified both physical Agenda heap configurations, profiled Linux and Files on R
 ## 2026-11-18
 
 Complete the Agenda RV32 symbol profile and match collector counters across Linux, the guest and the prior P4 runs.
+
+## 2026-11-22
+
+Closed by PICOCALC-REPO-LAYOUT Phase I: every task is done; its code lives in the repository's one home for it (see AGENTS.md)

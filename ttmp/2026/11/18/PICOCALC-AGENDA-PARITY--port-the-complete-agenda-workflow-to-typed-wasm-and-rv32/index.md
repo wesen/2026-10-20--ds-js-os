@@ -1,7 +1,7 @@
 ---
 Title: Port the complete Agenda workflow to typed Wasm and RV32
 Ticket: PICOCALC-AGENDA-PARITY
-Status: active
+Status: complete
 Topics:
     - picocalc
 DocType: index
@@ -10,7 +10,7 @@ Owners: []
 RelatedFiles: []
 ExternalSources: []
 Summary: ""
-LastUpdated: 2026-11-18T20:33:40.384530722-05:00
+LastUpdated: 2026-11-22T17:20:40.007500934-05:00
 WhatFor: ""
 WhenToUse: ""
 ---
