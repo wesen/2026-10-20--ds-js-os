@@ -636,7 +636,7 @@ The deep-dive report is in the vault as `Projects/2026/11/22/PROJECT REPORT - Pi
 
 ### What worked
 
-- See the push result in the ticket's changelog.
+- Vault commit `861fda5` (the report and the two figures only), pushed to go-go-golems/go-go-parc `main` (`acdfcaf..861fda5`) on the first attempt; no rebase was needed.
 
 ### What didn't work
 

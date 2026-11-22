@@ -12,3 +12,7 @@ Translator (105/105 presets, identical bytes in Node and QuickJS), bytecode v1 w
 
 - repo://ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/design-doc/01-design-stub.md — design and results
 - repo://ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/reference/01-investigation-diary.md — steps 1-11
+
+## 2026-11-22 - Vault report pushed
+
+PROJECT REPORT - PicoCalc Candela - Scene Code as Verified Bytecode in the Fixed Kernel - A Technical Deep Dive, with two figures, committed alone in go-go-parc as 861fda5 and pushed (acdfcaf..861fda5).
