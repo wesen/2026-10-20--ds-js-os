@@ -66,9 +66,13 @@ def wait_for(console, rec, until, timeout):
 
 
 def png(path, w, h, rgb565):
-    rows = b"".join(b"\0" + bytes(c for x in range(w) for c in (
-        ((p := rgb565[2 * (y * w + x)] | rgb565[2 * (y * w + x) + 1] << 8) >> 11 & 31) * 255 // 31,
-        (p >> 5 & 63) * 255 // 63, (p & 31) * 255 // 31)) for y in range(h))
+    rows = bytearray()
+    for y in range(h):
+        rows.append(0)
+        for x in range(w):
+            p = rgb565[2 * (y * w + x)] | rgb565[2 * (y * w + x) + 1] << 8
+            rows += bytes(((p >> 11 & 31) * 255 // 31, (p >> 5 & 63) * 255 // 63, (p & 31) * 255 // 31))
+    rows = bytes(rows)
     chunk = lambda kind, data: struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
     path.write_bytes(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", w, h, 8, 2, 0, 0, 0))
                      + chunk(b"IDAT", zlib.compress(rows, 9)) + chunk(b"IEND", b""))
