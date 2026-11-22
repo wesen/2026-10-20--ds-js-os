@@ -4,7 +4,9 @@
 #include "p4.h"
 
 char *p4_editor_compile(size_t *length) {
-  static const p4_compile_limits limits = {.heap_bytes = 4 * 1024 * 1024, .duration_us = 6000000};
+  // "default" compiles Editor in 7.90 s on the P4, "interactive" in 3.35 s (PICOCALC-COMPILE-BUDGET).
+  static const p4_compile_limits limits = {.heap_bytes = 4 * 1024 * 1024, .duration_us = 6000000,
+                                           .policy = "interactive"};
   vtime_t started = port_clock();
   size_t source_length = 0, reactor_length = 0;
   char *source = p4_bundle_read("editor/editor.typed", &source_length, NULL, 0);

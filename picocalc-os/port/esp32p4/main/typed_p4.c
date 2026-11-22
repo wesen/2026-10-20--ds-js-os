@@ -70,8 +70,8 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
                        const char *reactor, size_t reactor_length, size_t *length, vtime_t started,
                        const p4_compile_limits *limits) {
   compile_heap heap = {
-    .limit = limits ? limits->heap_bytes : COMPILER_LIMIT,
-    .deadline = started + (limits ? limits->duration_us : COMPILER_US),
+    .limit = limits && limits->heap_bytes ? limits->heap_bytes : COMPILER_LIMIT,
+    .deadline = started + (limits && limits->duration_us ? limits->duration_us : COMPILER_US),
   };
   JSRuntime *rt = JS_NewRuntime2(&compiler_allocator, &heap);
   JSContext *ctx = NULL;

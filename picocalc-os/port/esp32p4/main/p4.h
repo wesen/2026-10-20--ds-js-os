@@ -50,8 +50,8 @@ void p4_agent_console(const char *args); // secret values are accepted but never
 
 #if PICOCALC_TYPED_AGENDA || PICOCALC_TYPED_FILES || PICOCALC_TYPED_EDITOR || PICOCALC_TYPED_CHESS
 typedef struct {
-  size_t heap_bytes;
-  vtime_t duration_us;
+  size_t heap_bytes;         // 0: COMPILER_LIMIT (typed_p4.c)
+  vtime_t duration_us;       // 0: COMPILER_US
   const char *rv32_backend;  // optional bundled backend for comparative compiler studies
   const char *policy;        // optional named RV32 code-generation policy (typed-rv32.js POLICIES)
 } p4_compile_limits;

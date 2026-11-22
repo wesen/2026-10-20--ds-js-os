@@ -1858,7 +1858,17 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals) {
 // options object override the selected policy; false or null switches one off.
 // PIE loop lowering stays opt-in: it needs typed-pie-loops.js and saved under 1% of a
 // ray frame for about 70 ms of cold compile on the P4.
+// "interactive" is for worlds that the device compiles while a person waits (the boot worlds):
+// RAY-PARITY's Step 6 set, operand locations and instruction selection without inlining or
+// loop transforms. On the P4 it compiles Agenda in 0.98 s and Editor in 3.35 s against 2.75 s
+// and 7.90 s for "default" (PICOCALC-COMPILE-BUDGET Step 2), inside their 1.7 s and 6 s deadlines.
 const POLICIES = Object.freeze({
+    interactive: Object.freeze({
+        inlineGuardedReturns: true,
+        operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true}),
+        select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true}),
+        inline: false,
+    }),
     default: Object.freeze({
         inlineGuardedReturns: true,
         operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,

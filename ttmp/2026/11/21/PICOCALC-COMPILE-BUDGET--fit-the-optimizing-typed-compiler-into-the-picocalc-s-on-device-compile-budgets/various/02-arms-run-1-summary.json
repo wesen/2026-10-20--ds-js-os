@@ -1,0 +1,272 @@
+{
+ "files.stock": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 492919.0,
+  "minUs": 492796,
+  "maxUs": 493060,
+  "peakBytes": 891088.0,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step6": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 519749.5,
+  "minUs": 519552,
+  "maxUs": 519923,
+  "peakBytes": 891088.0,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step7": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 593812.0,
+  "minUs": 593659,
+  "maxUs": 593963,
+  "peakBytes": 891088.0,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step8": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 639449.5,
+  "minUs": 639331,
+  "maxUs": 639556,
+  "peakBytes": 891088.0,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step11": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 665753.0,
+  "minUs": 665482,
+  "maxUs": 665930,
+  "peakBytes": 891088.0,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "files.step13": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 743954.0,
+  "minUs": 743846,
+  "maxUs": 744100,
+  "peakBytes": 891088.0,
+  "bytes": [
+   24424
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "agenda.stock": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 831907.0,
+  "minUs": 831517,
+  "maxUs": 832129,
+  "peakBytes": 1026140.0,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "agenda.step6": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 982769.5,
+  "minUs": 982597,
+  "maxUs": 983197,
+  "peakBytes": 1044904.0,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": true
+ },
+ "agenda.step7": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 1693984.5,
+  "minUs": 1693097,
+  "maxUs": 1694128,
+  "peakBytes": 1334200.0,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": false
+ },
+ "agenda.step8": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 1960290.0,
+  "minUs": 1960100,
+  "maxUs": 1961307,
+  "peakBytes": 1486000.0,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": false
+ },
+ "agenda.step11": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 2328889.0,
+  "minUs": 2328094,
+  "maxUs": 2329218,
+  "peakBytes": 1519912.0,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": false
+ },
+ "agenda.step13": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 2748987.0,
+  "minUs": 2748677,
+  "maxUs": 2749648,
+  "peakBytes": 1613840.0,
+  "bytes": [
+   66364
+  ],
+  "digests": 1,
+  "deadlineUs": 1700000,
+  "heapLimit": 2097152,
+  "fits": false
+ },
+ "editor.stock": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 2763372.0,
+  "minUs": 2762943,
+  "maxUs": 2763625,
+  "peakBytes": 2752180.0,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": true
+ },
+ "editor.step6": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 3350323.5,
+  "minUs": 3349033,
+  "maxUs": 3351523,
+  "peakBytes": 2817692.0,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": true
+ },
+ "editor.step7": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 5141388.5,
+  "minUs": 5139886,
+  "maxUs": 5142283,
+  "peakBytes": 3188676.0,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ },
+ "editor.step8": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 5863973.5,
+  "minUs": 5863649,
+  "maxUs": 5864500,
+  "peakBytes": 3656884.0,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ },
+ "editor.step11": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 6566652.0,
+  "minUs": 6565497,
+  "maxUs": 6567361,
+  "peakBytes": 3704508.0,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ },
+ "editor.step13": {
+  "n": 4,
+  "ok": 4,
+  "medianUs": 7900253.5,
+  "minUs": 7898978,
+  "maxUs": 7901869,
+  "peakBytes": 3867736.0,
+  "bytes": [
+   242124
+  ],
+  "digests": 1,
+  "deadlineUs": 6000000,
+  "heapLimit": 4194304,
+  "fits": false
+ }
+}

@@ -96,9 +96,12 @@ static unsigned char *compile(bool edit, size_t *length, vtime_t *started) {
     free(source); free(reactor);
     return NULL;
   }
+  // Agenda's first frame waits for this compile: the default policy takes 2.75 s on the P4
+  // against a 1.7 s deadline, "interactive" 0.98 s (PICOCALC-COMPILE-BUDGET).
+  static const p4_compile_limits limits = {.policy = "interactive"};
   unsigned char *module = (unsigned char *)p4_typed_compile("agenda", edit ? "edit" : "bundle",
       source, source_length, "agenda/compile.js", AGENDA_COMPILE, AGENDA_ENGINE,
-      reactor, reactor_length, length, *started, NULL);
+      reactor, reactor_length, length, *started, &limits);
   free(source);
   free(reactor);
   return module;

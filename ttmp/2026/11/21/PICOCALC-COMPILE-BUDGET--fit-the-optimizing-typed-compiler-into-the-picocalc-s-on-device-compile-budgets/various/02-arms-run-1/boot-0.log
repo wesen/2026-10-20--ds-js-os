@@ -1,0 +1,208 @@
+����j
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40160020 size=2a764ch (2782796) map
+ESP-ROM:esp32p4-eco2-20240710
+Build:Jul 10 2024
+rst:0x1 (POWERON),boot:0x30f (SPI_FAST_FLASH_BOOT)
+SPI mode:DIO, clock div:1
+load:0x4ff33ce0,len:0x15f0
+load:0x4ff2abd0,len:0xd88
+load:0x4ff2cbd0,len:0x3310
+entry 0x4ff2abda
+I (25) boot: ESP-IDF v5.4.2 2nd stage bootloader
+I (26) boot: compile time Nov  1 2026 16:48:47
+I (26) boot: Multicore bootloader
+I (27) boot: chip revision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40160020 size=2a764ch (2782796) map
+I (562) esp_image: segment 1: paddr=002b7674 vaddr=30100000 size=00068h (   104) load
+I (564) esp_image: segment 2: paddr=002b76e4 vaddr=4ff00000 size=08934h ( 35124) load
+I (574) esp_image: segment 3: paddr=002c0020 vaddr=40000020 size=15f07ch (1437820) map
+I (814) esp_image: segment 4: paddr=0041f0a4 vaddr=4ff08934 size=0b6e4h ( 46820) load
+I (825) esp_image: segment 5: paddr=0042a790 vaddr=4ff14080 size=04fd4h ( 20436) load
+I (835) boot: Loaded app from partition at offset 0x10000
+I (835) boot: Disabling RNG early entropy source...
+I (845) hex_psram: vendor id    : 0x0d (AP)
+I (846) hex_psram: Latency      : 0x01 (Fixed)
+I (846) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (847) hex_psram: dev id       : 0x03 (generation 4)
+I (851) hex_psram: density      : 0x07 (256 Mbit)
+I (856) hex_psram: good-die     : 0x06 (Pass)
+I (860) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (865) hex_psram: BurstType    : 0x00 ( Wrap)
+I (869) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (873) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (878) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (883) hex_psram: DriveStrength: 0x00 (1/1)
+I (887) MSPI DQS: tuning success, best phase id is 0
+I (1060) MSPI DQS: tuning success, best delayline id is 17
+I (1060) esp_psram: Found 32MB PSRAM device
+I (1060) esp_psram: Speed: 200MHz
+I (1061) hex_psram: psram CS IO is dedicated
+I (1065) cpu_start: Multicore app
+I (1974) esp_psram: SPI SRAM memory test OK
+I (1983) cpu_start: Pro cpu start user code
+I (1983) cpu_start: cpu freq: 360000000 Hz
+I (1984) app_init: Application information:
+I (1984) app_init: Project name:     picocalc-os-p4
+I (1988) app_init: App version:      1
+I (1992) app_init: Compile time:     Nov 21 2026 22:28:42
+I (1997) app_init: ELF file SHA256:  447211a3f...
+I (2001) app_init: ESP-IDF:          v5.4.2
+I (2005) efuse_init: Min chip rev:     v0.1
+I (2009) efuse_init: Max chip rev:     v1.99 
+I (2013) efuse_init: Chip rev:         v1.3
+I (2017) heap_init: Initializing. RAM available for dynamic allocation:
+I (2024) heap_init: At 4FF29590 len 00011A30 (70 KiB): RAM
+I (2029) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (2034) heap_init: At 4FF50E40 len 0004F1C0 (316 KiB): RAM
+I (2039) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (2044) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (2052) spi_flash: detected chip: generic
+W (2055) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (2065) spi_flash: flash io: dio
+I (2069) main_task: Started on CPU0
+I (2072) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (2080) main_task: Calling app_main()
+I (2083) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+heap: internal 406419 free (largest 319488), psram 33551748 free (largest 33030144)
+I (2142) fs: /files: 7900 KB, 7892 KB free (mounted in 21 ms)
+I (2144) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2145) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2340) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+I (2341) main_task: Returned from app_main()
+[   172.558] calibration on the real clock: the 100k loop took 127.2 ms (the model says 133), fib(20) 30.1 ms (the model says 29.1)
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=830826 peak_js_bytes=1026140 module_bytes=66364
+CCARM {"app":"agenda","round":0,"arm":"stock","status":"ok","us":832129,"peak":1026140,"bytes":66364,"fnv":"e0e4f789"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=981890 peak_js_bytes=1044904 module_bytes=66364
+CCARM {"app":"agenda","round":0,"arm":"step6","status":"ok","us":983197,"peak":1044904,"bytes":66364,"fnv":"7fb08c9f"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=1691783 peak_js_bytes=1334200 module_bytes=66364
+CCARM {"app":"agenda","round":0,"arm":"step7","status":"ok","us":1693097,"peak":1334200,"bytes":66364,"fnv":"d9cea55b"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=1958970 peak_js_bytes=1486000 module_bytes=66364
+CCARM {"app":"agenda","round":0,"arm":"step8","status":"ok","us":1960276,"peak":1486000,"bytes":66364,"fnv":"0ddebfa9"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=2326778 peak_js_bytes=1519912 module_bytes=66364
+CCARM {"app":"agenda","round":0,"arm":"step11","status":"ok","us":2328094,"peak":1519912,"bytes":66364,"fnv":"5370a8b7"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=2748342 peak_js_bytes=1613840 module_bytes=66364
+CCARM {"app":"agenda","round":0,"arm":"step13","status":"ok","us":2749648,"peak":1613840,"bytes":66364,"fnv":"3f93796a"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=2747899 peak_js_bytes=1613840 module_bytes=66364
+CCARM {"app":"agenda","round":1,"arm":"step13","status":"ok","us":2749215,"peak":1613840,"bytes":66364,"fnv":"3f93796a"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=2327534 peak_js_bytes=1519912 module_bytes=66364
+CCARM {"app":"agenda","round":1,"arm":"step11","status":"ok","us":2328835,"peak":1519912,"bytes":66364,"fnv":"5370a8b7"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=1959004 peak_js_bytes=1486000 module_bytes=66364
+CCARM {"app":"agenda","round":1,"arm":"step8","status":"ok","us":1960304,"peak":1486000,"bytes":66364,"fnv":"0ddebfa9"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=1692808 peak_js_bytes=1334200 module_bytes=66364
+CCARM {"app":"agenda","round":1,"arm":"step7","status":"ok","us":1694117,"peak":1334200,"bytes":66364,"fnv":"d9cea55b"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=981605 peak_js_bytes=1044904 module_bytes=66364
+CCARM {"app":"agenda","round":1,"arm":"step6","status":"ok","us":982895,"peak":1044904,"bytes":66364,"fnv":"7fb08c9f"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=830478 peak_js_bytes=1026140 module_bytes=66364
+CCARM {"app":"agenda","round":1,"arm":"stock","status":"ok","us":831765,"peak":1026140,"bytes":66364,"fnv":"e0e4f789"}
+agenda native compiler functions=streamed
+agenda compile source=bundle status=ok us=23906485 peak_js_bytes=1613844 module_bytes=66364
+agenda boot source_start_us=174345
+files native compiler functions=streamed
+files compile source=bundle status=ok us=491686 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":0,"arm":"stock","status":"ok","us":492944,"peak":891088,"bytes":24424,"fnv":"202632ea"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=518365 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":0,"arm":"step6","status":"ok","us":519625,"peak":891088,"bytes":24424,"fnv":"676c5662"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=592435 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":0,"arm":"step7","status":"ok","us":593683,"peak":891088,"bytes":24424,"fnv":"dc186aa0"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=638278 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":0,"arm":"step8","status":"ok","us":639556,"peak":891088,"bytes":24424,"fnv":"09e561b3"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=664538 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":0,"arm":"step11","status":"ok","us":665795,"peak":891088,"bytes":24424,"fnv":"84a67aad"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=742741 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":0,"arm":"step13","status":"ok","us":744008,"peak":891088,"bytes":24424,"fnv":"20d430df"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=742646 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":1,"arm":"step13","status":"ok","us":743900,"peak":891088,"bytes":24424,"fnv":"20d430df"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=664235 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":1,"arm":"step11","status":"ok","us":665482,"peak":891088,"bytes":24424,"fnv":"84a67aad"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=638177 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":1,"arm":"step8","status":"ok","us":639426,"peak":891088,"bytes":24424,"fnv":"09e561b3"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=592688 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":1,"arm":"step7","status":"ok","us":593963,"peak":891088,"bytes":24424,"fnv":"dc186aa0"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=518623 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":1,"arm":"step6","status":"ok","us":519874,"peak":891088,"bytes":24424,"fnv":"676c5662"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=491528 peak_js_bytes=891088 module_bytes=24424
+CCARM {"app":"files","round":1,"arm":"stock","status":"ok","us":492796,"peak":891088,"bytes":24424,"fnv":"202632ea"}
+files native compiler functions=streamed
+files compile source=bundle status=ok us=8084137 peak_js_bytes=891088 module_bytes=24424
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2762249 peak_js_bytes=2752180 module_bytes=242124
+CCARM {"app":"editor","round":0,"arm":"stock","status":"ok","us":2763574,"peak":2752180,"bytes":242124,"fnv":"7d8d8496"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3348060 peak_js_bytes=2817692 module_bytes=242124
+CCARM {"app":"editor","round":0,"arm":"step6","status":"ok","us":3349374,"peak":2817692,"bytes":242124,"fnv":"d65af206"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=5139665 peak_js_bytes=3188676 module_bytes=242124
+CCARM {"app":"editor","round":0,"arm":"step7","status":"ok","us":5140994,"peak":3188676,"bytes":242124,"fnv":"a72bbc99"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=5862383 peak_js_bytes=3656884 module_bytes=242124
+CCARM {"app":"editor","round":0,"arm":"step8","status":"ok","us":5863693,"peak":3656884,"bytes":242124,"fnv":"77301d38"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=6565353 peak_js_bytes=3704508 module_bytes=242124
+CCARM {"app":"editor","round":0,"arm":"step11","status":"ok","us":6566677,"peak":3704508,"bytes":242124,"fnv":"59ec9e31"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=7899770 peak_js_bytes=3867736 module_bytes=242124
+CCARM {"app":"editor","round":0,"arm":"step13","status":"ok","us":7901088,"peak":3867736,"bytes":242124,"fnv":"559f6d12"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=7897652 peak_js_bytes=3867736 module_bytes=242124
+CCARM {"app":"editor","round":1,"arm":"step13","status":"ok","us":7898978,"peak":3867736,"bytes":242124,"fnv":"559f6d12"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=6565309 peak_js_bytes=3704508 module_bytes=242124
+CCARM {"app":"editor","round":1,"arm":"step11","status":"ok","us":6566627,"peak":3704508,"bytes":242124,"fnv":"59ec9e31"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=5863197 peak_js_bytes=3656884 module_bytes=242124
+CCARM {"app":"editor","round":1,"arm":"step8","status":"ok","us":5864500,"peak":3656884,"bytes":242124,"fnv":"77301d38"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=5140462 peak_js_bytes=3188676 module_bytes=242124
+CCARM {"app":"editor","round":1,"arm":"step7","status":"ok","us":5141783,"peak":3188676,"bytes":242124,"fnv":"a72bbc99"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=3347694 peak_js_bytes=2817692 module_bytes=242124
+CCARM {"app":"editor","round":1,"arm":"step6","status":"ok","us":3349033,"peak":2817692,"bytes":242124,"fnv":"d65af206"}
+editor native compiler functions=streamed
+editor compile source=bundle status=ok us=2761856 peak_js_bytes=2752180 module_bytes=242124
+CCARM {"app":"editor","round":1,"arm":"stock","status":"ok","us":2763170,"peak":2752180,"bytes":242124,"fnv":"7d8d8496"}
+editor compile rejected: InternalError: interrupted
+
+editor compile source=bundle status=failed us=63442937 peak_js_bytes=570628 module_bytes=0
+cannot read js/editor/compiled.bin
+E (98045) picocalc-os: the manifest did not load

@@ -229,10 +229,12 @@ test("the default policy applies the qualified options and stock reproduces the 
     // Step 7's image (24.18 ms): also without loop rotation and constant homes.
     assert.equal(sha(without(["version", "shortBranches", "rotate"], ["split", "pointers", "share", "constants"])),
         "4e7eb52aee07cf8fd5e6a3a96733d100241b10fe445030793a73513229fb676c");
-    // Step 6's image (31.51 ms): also without inlining and the Step 7 options.
+    // Step 6's image (31.51 ms): also without inlining and the Step 7 options. The named
+    // "interactive" policy, which the device's boot worlds compile with, is exactly this set.
     assert.equal(sha(without(["version", "shortBranches", "rotate", "commute"],
         ["split", "pointers", "share", "constants", "capacities", "nested"], {inline: false})),
         "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
+    assert.equal(sha({policy: "interactive"}), "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
 

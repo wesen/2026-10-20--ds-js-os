@@ -109,3 +109,27 @@ A world's boot compile must fit its deadline with at least 25% margin on the dev
 2. Choose per-world policies by the decision rule and install a playable firmware that uses them, with its world list and Chess oracle checked on the device.
 3. Make the compile-speed changes, measured with jitless Node and confirmed with the arms firmware, keeping images byte-identical.
 4. Write the tiered-compilation design as its own ticket if levers 1 and 2 leave a gap.
+
+## Results so far
+
+### Run 1: three worlds under every policy
+
+`various/02-arms-run-1/` holds two boots, two rounds each, so four compiles per world and arm. All four compiles of each cell took the same time to within 10 ms and produced the same module digest. The summary is in `various/02-arms-run-1-summary.json`:
+
+| World | stock | step6 | step7 | step8 | step11 | step13 | 75% of deadline |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Files | 0.49 s | 0.52 | 0.59 | 0.64 | 0.67 | 0.74 | 1.28 |
+| Agenda | 0.83 | 0.98 | 1.69 | 1.96 | 2.33 | 2.75 | 1.28 |
+| Editor | 2.76 | 3.35 | 5.14 | 5.86 | 6.57 | 7.90 | 4.50 |
+
+Chess was not reached in run 1; run 2 measures it. Inlining is the step that breaks the budget for Agenda (+0.71 s) and Editor (+1.79 s). On Editor at step13 the heap peak is 3.87 MB of 4 MiB.
+
+### Decision
+
+- **The named policy.** `typed-rv32.js` gains `POLICIES.interactive`, exactly the Step 6 set: operand locations, saved homes, direct reads and instruction selection, with no inlining and no loop transforms. The pin test checks that it reproduces Step 6's P4-timed ray image (`6b854512…`).
+- **Who uses it.** Agenda and Editor compile with `interactive` (`agenda_p4.c`, `editor_p4.c`, through `p4_compile_limits.policy`). Files keeps the default, at 0.74 s against a 1.28 s target. Chess follows run 2.
+- **The default.** `default` stays the fully optimizing policy for kernels: the ray tracer (8 s deadline, 1.45 s at step13) and the tools.
+
+### The fixed cost
+
+Even the `stock` arm compiles more slowly than the previous firmware did: Agenda 0.83 s against 0.61 s, Files 0.49 s against 0.32 s. Code generation is the same, so the extra time is in work that every compile repeats, most likely evaluating 225 KB of compiler JavaScript in each fresh runtime. Run 2 times evaluation separately. If the share is large, `eval_file` can cache each compiler source as QuickJS bytecode: `JS_Eval` with `JS_EVAL_FLAG_COMPILE_ONLY`, then `JS_WriteObject`, then `JS_ReadObject` and `JS_EvalFunction` in later runtimes. That speeds up every world under every policy and changes no output.
