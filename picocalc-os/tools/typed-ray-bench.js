@@ -48,7 +48,8 @@ function frameProfile(program, options) {
     const total = {name: "(frame)", steps: frame.steps};
     for (const key of ["spLoad", "spStore", "load", "store", "branch", "boundsTest", "capacityLoad", "call", "mul", "div"])
         total[key] = rows.reduce((sum, r) => sum + r[key], 0);
-    return {imageBytes: program.image.length, steps: frame.steps, digest: fnv1a(frame.bytes), total, rows, bytes: frame.bytes};
+    return {imageBytes: program.image.length, steps: frame.steps, digest: fnv1a(frame.bytes), total, rows, bytes: frame.bytes,
+        counts: frame.counts};
 }
 
 globalThis.typedRayBench = {openingMemory, openingFrame, frameProfile, fnv1a, OPENING};

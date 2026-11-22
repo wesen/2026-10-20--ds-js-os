@@ -230,24 +230,41 @@ class FunctionCode {
         }
     }
 
-    checkedAddress(receiver, index, constant, pointer) {
+    // The address of receiver[index + j]: checked against the capacity, or unchecked (0xf3, in a
+    // copy of a loop that select.version proved in range), and read at once when a UTF-16 load
+    // follows.
+    checkedAddress(receiver, index, constant, pointer, unchecked = false, j = 0) {
         const capacity = this.locations?.homes.get(-1 - receiver);
         const cached = this.locations?.receiver === receiver;
-        const reload = capacity === undefined && (!cached || !this.capacityReady);
+        const reload = !unchecked && capacity === undefined && (!cached || !this.capacityReady);
         const base = this.locations?.homes.get(receiver) ?? T6;
         if (base === T6 && (reload || !pointer)) this.readLocal(base, receiver);
         const length = capacity ?? (cached ? A0 + 7 : A0);
         if (reload) this.load(length, 0, base);
-        if (cached) this.capacityReady = true;
-        this.emit(instruction.b(6, index, length, 8));
-        this.emit(0x00100073);
+        if (!unchecked) {
+            if (cached) this.capacityReady = true;
+            this.emit(instruction.b(6, index, length, 8));
+            this.emit(0x00100073);
+        }
         const out = this.resultRegister(), tape = this.program.code;
+        const loads = tape[this.at] === 0x2f && tape[this.at+2] === 4;
         if (pointer) {
-            if (tape[this.at] === 0x2f && tape[this.at+2] === 4) {
+            if (loads) {
                 this.at += 3;
                 this.load(out, pointer.disp, pointer.reg, 5);
             } else this.emit(instruction.i(0x13, out, 0, pointer.reg, pointer.disp - 4));
-        } else if (constant >= 0 && constant <= 1021 && tape[this.at] === 0x2f && tape[this.at+2] === 4) {
+        } else if (unchecked && j) {
+            this.emit(instruction.i(0x13, out, 1, index, 1));
+            this.emit(instruction.r(0x33, out, 0, base, out));
+            if (loads && 4 + 2 * j <= 2047) {
+                this.at += 3;
+                this.load(out, 4 + 2 * j, out, 5);
+            } else if (2 * j <= 2047) this.emit(instruction.i(0x13, out, 0, out, 2 * j));
+            else {
+                this.constant(T6, 2 * j);
+                this.emit(instruction.r(0x33, out, 0, out, T6));
+            }
+        } else if (constant >= 0 && constant <= 1021 && loads) {
             this.at += 3;
             this.load(out, 4 + 2 * constant, base, 5);
         } else {
@@ -502,19 +519,34 @@ class FunctionCode {
         const plan = this.locations;
         if (op >= 0x02 && op <= 0x0f) this.materialize();
         if (plan?.forward.has(this.at - 1)) {
-            const site = this.at - 1;
+            const site = this.at - 1, tape = this.program.code;
             const constant = op === 0x41 ? this.cell() : undefined;
+            // [const c] set t access r t, or set t access r t: access is 0xf1 or 0xf3 (with j).
+            const accessAt = constant === undefined ? site + 2 : site + 4;
+            const unchecked = tape[accessAt] === 0xf3, j = unchecked ? tape[accessAt + 3] : 0;
+            const direct = unchecked && constant >= 0 && constant + j <= 1021 && tape[accessAt + 4] === 0x2f && tape[accessAt + 6] === 4;
             const constantHome = constant === undefined ? undefined : plan.homes.get("c" + constant);
             const index = constant === undefined ? this.pop(T5) : constantHome ?? T5;
             if (constant !== undefined) {
-                if (constantHome === undefined) this.constant(index, constant);
+                if (constantHome === undefined && !direct) this.constant(index, constant);
                 this.at++; // local.set opcode following the literal
             }
             this.at += 2; // destination local and checked-address opcode
             const receiver = this.cell();
             this.at++; // proven single-use index local
-            this.checkedAddress(receiver, index, constant, constant === undefined ? plan.pointers?.get(site) : undefined);
+            if (unchecked) this.at++; // j
+            this.checkedAddress(receiver, index, constant === undefined ? undefined : constant + j,
+                constant === undefined ? plan.pointers?.get(site) : undefined, unchecked, constant === undefined ? j : 0);
             return false;
+        }
+        // The capacity header of a buffer with a capacity home: the home itself.
+        if (op === 0x20 && plan && this.select?.version && this.program.code[this.at + 1] === 0x28 && this.program.code[this.at + 3] === 0) {
+            const home = plan.homes.get(-1 - this.program.code[this.at]);
+            if (home !== undefined) {
+                this.at += 4;
+                this.pushHome(home);
+                return false;
+            }
         }
         if (op === 0x20 && this.capacityReady && this.program.code[this.at] === plan.receiver &&
             this.program.code[this.at+1] === 0x28 && this.program.code[this.at+3] === 0) {
@@ -605,6 +637,12 @@ class FunctionCode {
             const receiver = this.cell(), position = this.cell();
             this.readLocal(T5, position);
             this.checkedAddress(receiver, T5);
+            break;
+        }
+        case 0xf3: { // unchecked UTF-16 address of receiver[position + j] (select.version)
+            const receiver = this.cell(), position = this.cell(), j = this.cell();
+            this.readLocal(T5, position);
+            this.checkedAddress(receiver, T5, undefined, undefined, true, j);
             break;
         }
         case 0xf2: { // ordered UTF-16 stores after the complete range check
@@ -843,7 +881,7 @@ for (const [opcode, cells] of [
     [0x00,0],[0x02,1],[0x03,1],[0x04,1],[0x05,0],[0x0b,0],[0x0c,1],[0x0d,1],[0x0f,0],
     [0x10,1],[0x1a,0],[0x20,1],[0x21,1],[0x28,2],[0x2f,2],[0x36,2],[0x3b,2],[0x41,1],
     [0x45,0],[0x46,0],[0x47,0],[0x48,0],[0x4a,0],[0x4c,0],[0x4e,0],[0x4f,0],
-    [0x6a,0],[0x6b,0],[0x6c,0],[0x6d,0],[0x6f,0],[0x74,0],[0x75,0],[0xf1,2],[0xf2,2],
+    [0x6a,0],[0x6b,0],[0x6c,0],[0x6d,0],[0x6f,0],[0x74,0],[0x75,0],[0xf1,2],[0xf2,2],[0xf3,3],
 ]) OPERAND_CELLS[opcode] = cells;
 
 // inline: replace calls to small internal functions lowered earlier with their tapes.
@@ -1021,6 +1059,245 @@ function commuteConstants(code, arity) {
 // and each iteration ends in one backward conditional branch. C is evaluated at the same
 // points as before (once before every iteration and once to exit). Labels inside B keep
 // their meaning; C is copied only if every branch in it targets a block inside C.
+// select.version: a rotated counted loop (rotateLoops)
+//   block  get k (const n | get N) lt_s eqz br_if 0  loop  B  get k (n | N) lt_s br_if 0  end  end
+// whose body B ends in k = k + s (1 <= s <= 64), with no other write of k or N in the loop, is
+// emitted twice. Checked accesses r[i] in B whose index is a*k + b, M + a*k + b with M unwritten
+// in the loop, or a constant, on an unwritten parameter r, are proved in range for every
+// iteration by one guard before the loop: k ranges over [k0, N - 1], so the largest index is
+// a*(N - 1) + b (+ M). If the guard holds, a copy of the loop runs with those accesses unchecked
+// (0xf3 r t j: the address of r[t + j]); otherwise the original loop runs. An access that the
+// fast copy leaves unchecked would not trap in the original either, so traps, their position
+// and every store before them are unchanged. Affine locals are i = a*k + b written once in B
+// and read only after that write in its own region. The guard keeps every term below 2^31:
+// N <= 2^20, a <= 1024 and 0 <= b <= 2^20.
+const VERSION_LIMITS = Object.freeze({coefficient: 1024, offset: 1 << 20, bound: 1 << 20, bodyCells: 2000});
+function opNext(code, at) { return at + 1 + OPERAND_CELLS[code[at]]; }
+function opClose(code, at) {
+    let depth = 0;
+    for (let k = at; k < code.length; k = opNext(code, k)) {
+        const op = code[k];
+        if (op >= 0x02 && op <= 0x04) depth++;
+        else if (op === 0x0b && --depth === 0) return k;
+    }
+    return -1;
+}
+function versionLoops(code, params) {
+    for (let at = 0; at < code.length; at = opNext(code, at)) if (!(OPERAND_CELLS[code[at]] >= 0)) return null;
+    // A single-use index local can absorb the constant of its index into the access.
+    const reads = new Map();
+    const read = local => reads.set(local, (reads.get(local) ?? 0) + 1);
+    for (let at = 0; at < code.length; at = opNext(code, at)) {
+        const op = code[at];
+        if (op === 0x20 || op === 0xf2) read(code[at + 1]);
+        else if (op === 0xf1) { read(code[at + 1]); read(code[at + 2]); }
+    }
+    let changed = false;
+    const out = transform(code);
+    return changed ? out : null;
+
+    function transform(src) {
+        const out = [];
+        let prev = -1, prev2 = -1;
+        for (let at = 0; at < src.length;) {
+            // k0 is a known non-negative constant when `const c; set k` precedes the loop.
+            const k0Known = prev2 >= 0 && src[prev2] === 0x41 && src[prev2 + 1] >= 0 && src[prev] === 0x21 && src[prev + 1] === src[at + 3];
+            const v = version(src, at, k0Known);
+            if (v) {
+                out.push(...v.cells);
+                changed = true;
+                prev = prev2 = -1;
+                at = v.end;
+                continue;
+            }
+            const n = opNext(src, at);
+            for (let j = at; j < n; j++) out.push(src[j]);
+            prev2 = prev; prev = at;
+            at = n;
+        }
+        return out;
+    }
+
+    function version(src, at, k0Known) {
+        if (src[at] !== 0x02 || src[at + 1] !== 0x40 || src[at + 2] !== 0x20 || src[at + 6] !== 0x48 || src[at + 7] !== 0x45 ||
+            src[at + 8] !== 0x0d || src[at + 9] !== 0 || src[at + 10] !== 0x03 || src[at + 11] !== 0x40) return null;
+        const k = src[at + 3], boundOp = src[at + 4], bound = src[at + 5];
+        if (boundOp !== 0x41 && boundOp !== 0x20) return null;
+        const loopEnd = opClose(src, at + 10), blockEnd = opClose(src, at);
+        if (loopEnd < 0 || blockEnd !== loopEnd + 1) return null;
+        const cond = src.slice(at + 2, at + 7);
+        if (src.slice(loopEnd - 7, loopEnd).join() !== [...cond, 0x0d, 0].join()) return null;
+        const bodyStart = at + 12, bodyEnd = loopEnd - 7;
+        if (bodyEnd - bodyStart > VERSION_LIMITS.bodyCells) return null;
+        const inc = bodyEnd - 7;
+        if (inc < bodyStart || src[inc] !== 0x20 || src[inc + 1] !== k || src[inc + 2] !== 0x41 || src[inc + 4] !== 0x6a ||
+            src[inc + 5] !== 0x21 || src[inc + 6] !== k || !(src[inc + 3] >= 1 && src[inc + 3] <= 64)) return null;
+        if (boundOp === 0x41 && !(bound >= 1 && bound <= VERSION_LIMITS.bound)) return null;
+        const ops = [], writes = new Map();
+        for (let p = bodyStart; p < bodyEnd; p = opNext(src, p)) {
+            ops.push({op: src[p], at: p, a: src[p + 1], b: src[p + 2]});
+            if (src[p] === 0x21) writes.set(src[p + 1], (writes.get(src[p + 1]) ?? 0) + 1);
+        }
+        if (writes.get(k) !== 1 || (boundOp === 0x20 && writes.has(bound))) return null;
+        const o = j => ops[j] ?? {};
+        // End of the region that opens around ops[i]: the closing end or else of its construct.
+        const regionEnd = i => {
+            for (let j = i + 1, level = 0; j < ops.length; j++) {
+                const op = ops[j].op;
+                if (op >= 0x02 && op <= 0x04) level++;
+                else if (op === 0x0b) { if (level-- === 0) return j; }
+                else if (op === 0x05 && level === 0) return j;
+            }
+            return ops.length;
+        };
+        const affine = new Map();
+        const formOf = (local, i) => {
+            if (local === k) return {a: 1, b: 0};
+            const f = affine.get(local);
+            return f && f.def < i && i < f.end ? f : null;
+        };
+        const invariant = local => local !== k && !writes.has(local);
+        // Affine form of the value that ops[i] consumes, from the operations just before it.
+        function expression(i) {
+            const scaled = (f, m, c) => f && {a: f.a * m, b: f.b * m + c};
+            if (o(i - 1).op === 0x6a && o(i - 2).op === 0x41 && o(i - 3).op === 0x6c && o(i - 4).op === 0x41 && o(i - 5).op === 0x20)
+                return scaled(formOf(o(i - 5).a, i), o(i - 4).a, o(i - 2).a);
+            if (o(i - 1).op === 0x6a && o(i - 2).op === 0x6c && o(i - 3).op === 0x41 && o(i - 4).op === 0x20 && o(i - 5).op === 0x41)
+                return scaled(formOf(o(i - 4).a, i), o(i - 3).a, o(i - 5).a);
+            if (o(i - 1).op === 0x6c && o(i - 2).op === 0x41 && o(i - 3).op === 0x20) return scaled(formOf(o(i - 3).a, i), o(i - 2).a, 0);
+            if (o(i - 1).op === 0x6a && o(i - 2).op === 0x41 && o(i - 3).op === 0x20) return scaled(formOf(o(i - 3).a, i), 1, o(i - 2).a);
+            if (o(i - 1).op === 0x6a && o(i - 2).op === 0x20 && o(i - 3).op === 0x41) return scaled(formOf(o(i - 2).a, i), 1, o(i - 3).a);
+            if (o(i - 1).op === 0x20) return scaled(formOf(o(i - 1).a, i), 1, 0);
+            return null;
+        }
+        const inRange = f => f && f.a >= 0 && f.a <= VERSION_LIMITS.coefficient && f.b >= 0 && f.b <= VERSION_LIMITS.offset;
+        const eligible = new Map(); // f1 offset -> {fold: offsets of the const and add, j}
+        const limits = new Map();   // receiver -> Map(key "a" or "a:M" -> {a, b, M})
+        const note = (r, f, M) => {
+            if (!limits.has(r)) limits.set(r, new Map());
+            const key = f.a + (M === undefined ? "" : ":" + M), m = limits.get(r);
+            if (!m.has(key) || m.get(key).b < f.b) m.set(key, {a: f.a, b: f.b, M});
+        };
+        for (let i = 0; i < ops.length; i++) {
+            const {op, a, b} = ops[i];
+            if (op === 0x21 && a !== k && writes.get(a) === 1) {
+                const f = expression(i);
+                if (inRange(f)) affine.set(a, {...f, def: i, end: regionEnd(i)});
+            }
+            if (op !== 0xf1 || a >= params || o(i - 1).op !== 0x21 || o(i - 1).a !== b) continue;
+            const e = i - 1, single = reads.get(b) === 1 && writes.get(b) === 1;
+            let f = null, M, fold;
+            if (o(e - 1).op === 0x41 && o(e - 1).a >= 0 && o(e - 1).a <= VERSION_LIMITS.offset) f = {a: 0, b: o(e - 1).a};
+            else if (inRange(f = expression(e))) {
+                // [x, const j, add] or [const j, x, add] before set t: j moves into the access.
+                if (single && o(e - 1).op === 0x6a && (o(e - 2).op === 0x41 || o(e - 3).op === 0x41) &&
+                    (o(e - 2).op === 0x41 ? o(e - 3).op === 0x20 : o(e - 2).op === 0x20)) {
+                    const c = o(e - 2).op === 0x41 ? e - 2 : e - 3;
+                    fold = {drop: [ops[c].at, ops[e - 1].at], j: ops[c].a};
+                }
+            } else {
+                f = null;
+                const sum = (x, y) => o(e - 1).op === 0x6a && o(e - 2).op === 0x20 && o(e - 3).op === 0x20 &&
+                    invariant(o(e - x).a) && inRange(formOf(o(e - y).a, e)) ? [o(e - x).a, formOf(o(e - y).a, e)] : null;
+                const pair = sum(3, 2) ?? sum(2, 3);
+                if (pair) { M = pair[0]; f = {a: pair[1].a, b: pair[1].b}; }
+                else if (o(e - 1).op === 0x20 && invariant(o(e - 1).a)) { M = o(e - 1).a; f = {a: 0, b: 0}; }
+                else if (o(e - 1).op === 0x6a && o(e - 2).op === 0x41 && o(e - 3).op === 0x20 && invariant(o(e - 3).a) && inRange({a: 0, b: o(e - 2).a})) {
+                    M = o(e - 3).a; f = {a: 0, b: o(e - 2).a};
+                    if (single) fold = {drop: [ops[e - 2].at, ops[e - 1].at], j: o(e - 2).a};
+                }
+            }
+            if (!f) continue;
+            note(a, f, M);
+            eligible.set(ops[i].at, fold ?? {drop: [], j: 0});
+        }
+        if (!eligible.size) return null;
+        // Guard: each term pushes a failure condition and leaves the guard block with br_if 0.
+        const terms = [];
+        const cap = r => [0x20, r, 0x28, 2, 0];
+        const largest = (a, b) => boundOp === 0x41 ? [0x41, a * (bound - 1) + b] : [0x20, bound, 0x41, a, 0x6c, 0x41, b - a, 0x6a];
+        if (!k0Known) terms.push(0x20, k, 0x41, 0, 0x48, 0x0d, 0);
+        if (boundOp === 0x20) terms.push(0x20, bound, 0x41, VERSION_LIMITS.bound, 0x4a, 0x0d, 0);
+        for (const [r, m] of limits) {
+            const plain = [...m.values()].filter(x => x.M === undefined), shifted = [...m.values()].filter(x => x.M !== undefined);
+            if (boundOp === 0x41 && plain.length) {
+                const top = Math.max(...plain.map(x => x.a * (bound - 1) + x.b));
+                terms.push(0x41, top, ...cap(r), 0x4e, 0x0d, 0);
+            } else for (const x of plain) terms.push(...largest(x.a, x.b), ...cap(r), 0x4e, 0x0d, 0);
+            if (shifted.length) terms.push(...cap(r), 0x41, 0, 0x48, 0x0d, 0);
+            for (const M of new Set(shifted.map(x => x.M))) terms.push(0x20, M, 0x41, 0, 0x48, 0x0d, 0);
+            for (const x of shifted) terms.push(...largest(x.a, x.b), ...cap(r), 0x20, x.M, 0x6b, 0x4e, 0x0d, 0);
+        }
+        // The fast body: unchecked accesses, and branches that leave the loop one level further
+        // out (the loop now sits inside the guard block).
+        const fast = [], drop = new Set([...eligible.values()].flatMap(x => x.drop));
+        for (let p = bodyStart, depth = 0; p < bodyEnd; p = opNext(src, p)) {
+            const op = src[p];
+            if (drop.has(p)) continue;
+            if (op === 0xf1 && eligible.has(p)) { fast.push(0xf3, src[p + 1], src[p + 2], eligible.get(p).j); continue; }
+            if ((op === 0x0c || op === 0x0d) && src[p + 1] > depth) { fast.push(op, src[p + 1] + 1); continue; }
+            if (op >= 0x02 && op <= 0x04) depth++;
+            else if (op === 0x0b) depth--;
+            for (let j = p; j < opNext(src, p); j++) fast.push(src[j]);
+        }
+        const cells = [0x02, 0x40, ...cond, 0x45, 0x0d, 0,
+            0x02, 0x40, ...terms,
+            0x03, 0x40, ...transform(fast), ...cond, 0x0d, 0, 0x0b,
+            0x0c, 1,
+            0x0b,
+            0x03, 0x40, ...src.slice(bodyStart, bodyEnd), ...cond, 0x0d, 0, 0x0b,
+            0x0b];
+        return {cells, end: blockEnd + 1};
+    }
+}
+
+// operandLocations.split: give every web of a local its own local id. A web starts at a write;
+// every later occurrence inside the region that holds that write (a block, loop, if-arm or
+// else-arm, or the body) belongs to it, because in structured code the write precedes them on
+// every path through that region. An occurrence outside the current web's region starts a new
+// web if it is a write; a read there makes the local unsplittable. Webs never read each other's
+// writes, so the renaming is exact. Two inlined copies of one callee, or the two copies of a
+// versioned loop, then have separate intervals for share.
+function splitLocals(code, params, nlocals) {
+    const uses = new Map(), path = [];
+    let region = 0;
+    const note = (cell, write) => {
+        const id = code[cell];
+        if (id < params) return;
+        if (!uses.has(id)) uses.set(id, []);
+        uses.get(id).push({cell, write, path: path.slice()});
+    };
+    for (let at = 0; at < code.length; at = opNext(code, at)) {
+        const op = code[at];
+        if (!(OPERAND_CELLS[op] >= 0)) return null;
+        if (op === 0x05) { path.pop(); path.push(region++); }
+        else if (op === 0x0b) path.pop();
+        if (op === 0x20 || op === 0xf2) note(at + 1, false);
+        else if (op === 0x21) note(at + 1, true);
+        else if (op === 0xf1 || op === 0xf3) { note(at + 1, false); note(at + 2, false); }
+        if (op >= 0x02 && op <= 0x04) path.push(region++);
+    }
+    const inside = (outer, inner) => outer.length <= inner.length && outer.every((x, i) => inner[i] === x);
+    const out = code.slice();
+    let fresh = params + nlocals;
+    for (const occurrences of uses.values()) {
+        const webs = [];
+        let current = null, splittable = true;
+        for (const o of occurrences) {
+            if (current && inside(current.path, o.path)) { current.cells.push(o.cell); continue; }
+            if (!o.write) { splittable = false; break; }
+            current = {path: o.path, cells: [o.cell]};
+            webs.push(current);
+        }
+        if (!splittable || webs.length < 2) continue;
+        for (const web of webs.slice(1)) {
+            const id = fresh++;
+            for (const cell of web.cells) out[cell] = id;
+        }
+    }
+    return fresh === params + nlocals ? null : {code: out, nlocals: fresh - params};
+}
+
 function rotateLoops(code) {
     const next = at => at + 1 + OPERAND_CELLS[code[at]];
     // Matching `end` of the block or loop opened at `at`.
@@ -1091,7 +1368,7 @@ function inlineCandidate(fn, code, limits, guarded) {
 function planLocations(fn, options, inlineCall) {
     const tape = fn.code;
     // Forwarding and capacity reuse need a checked access; saved homes apply to any framed function.
-    if (!options.saved && !tape.includes(0xf1)) return null;
+    if (!options.saved && !tape.includes(0xf1) && !tape.includes(0xf3)) return null;
     const reads = new Map(), writes = new Set(), scores = new Map();
     let receiver, straight = true, pure = true, leaf = true, loops = 0, ifs = 0;
     // Estimated executions per invocation: four inside a loop. Saved homes cost a fixed
@@ -1140,7 +1417,7 @@ function planLocations(fn, options, inlineCall) {
         if (at > tape.length) throw new Error("truncated Typed inspection operation");
         if (options.pointers) {
             if ((opcode === 0x20 || opcode === 0xf2) && !writes.has(a)) readEarly.add(a);
-            if (opcode === 0xf1) for (const x of [a, b]) if (!writes.has(x)) readEarly.add(x);
+            if (opcode === 0xf1 || opcode === 0xf3) for (const x of [a, b]) if (!writes.has(x)) readEarly.add(x);
             if (opcode === 0x21) {
                 // L = L + c or L = c + L: the three preceding operations.
                 let inc;
@@ -1151,7 +1428,7 @@ function planLocations(fn, options, inlineCall) {
                 if (!writesOf.has(a)) writesOf.set(a, []);
                 writesOf.get(a).push({at: offset, w: weightNow(), inc, depth: loops});
             }
-            if (opcode === 0xf1 && prevOpcode === 0x21 && prevA === b) {
+            if ((opcode === 0xf1 || opcode === 0xf3) && prevOpcode === 0x21 && prevA === b) {
                 // r[L], r[L + k], r[k + L] and r[L + M] for locals L and M, the index expression
                 // being the operations before the local.set.
                 let L, M, k = 0;
@@ -1161,13 +1438,19 @@ function planLocations(fn, options, inlineCall) {
                     else if (prev3Opcode === 0x20 && prev4Opcode === 0x41) { L = prev3A; k = prev4A; }
                     else if (prev3Opcode === 0x20 && prev4Opcode === 0x20 && prev3A !== prev4A) { L = Math.min(prev3A, prev4A); M = Math.max(prev3A, prev4A); }
                 }
+                if (opcode === 0xf3) k += tape[offset + 3];
                 if (L !== undefined && L !== b && M !== b) pointerAccesses.push({at: prevOffset, r: a, L, M, k, w: weightNow(), depth: loops});
             }
         }
         if (options.share) {
             if (opcode === 0x20 || opcode === 0xf2) occur(a, offset, true);
             else if (opcode === 0x21) occur(a, offset, false);
-            else if (opcode === 0xf1) { occur(a, offset, true); occur(b, offset, true); }
+            else if (opcode === 0xf1 || opcode === 0xf3) { occur(a, offset, true); occur(b, offset, true); }
+        }
+        if (opcode === 0xf3) {
+            read(a); read(b);
+            if (prevOpcode === 0x21 && prevA === b)
+                candidates.push({id: b, at: prev2Opcode === 0x41 ? prev2Offset : prevOffset});
         }
         if (opcode === 0xf1) {
             if (straight && receiver === undefined) receiver = a;
@@ -1442,13 +1725,32 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 return;
             }
         }
+        // observeTape(name, phase, code, nlocals): a read-only view of each tape transform, for
+        // tools (the trace-REPL workbench). It sees a copy and cannot change the output.
+        const observe = phase => options?.observeTape?.(fn.name, phase, fn.code.slice(), fn.nlocals);
+        observe("inline");
         if (options?.select?.commute) {
             const commuted = commuteConstants(fn.code, index => callables[index].params.length);
             if (commuted) fn.code = commuted;
+            observe("commute");
         }
         if (options?.select?.rotate) {
             const rotated = rotateLoops(fn.code);
             if (rotated) fn.code = rotated;
+            observe("rotate");
+            if (options.select.version) {
+                const versioned = versionLoops(fn.code, fn.params.length);
+                if (versioned) fn.code = versioned;
+                observe("version");
+            }
+        }
+        if (options?.operandLocations?.split) {
+            const split = splitLocals(fn.code, fn.params.length, fn.nlocals);
+            if (split) {
+                fn.code = split.code;
+                fn.nlocals = split.nlocals;
+            }
+            observe("split");
         }
         let compiled = lowerLeaf(fn, callables, targets, options?.select);
         if (!compiled) {

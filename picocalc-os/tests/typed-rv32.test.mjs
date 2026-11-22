@@ -477,3 +477,86 @@ function fill(work: buffer, n: i32): i32 {
     assert.equal(run(plain, "fill", 30).trap, true);
     assert.equal(run(plain, "fill", 29).trap, false);
 });
+
+test("versioned loops and split locals keep results, stores and traps identical", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    // Every index form select.version proves: k + c, c + k, k, a*k + b with offsets, an
+    // invariant base plus k, constants; with a non-constant start, an early return, nested
+    // loops and stores. Each size list crosses the point where the guard fails.
+    const src = `function sum(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let x = 0; x < n; x = x + 1) { s = s + work.charCodeAt(3 + x) + work.charCodeAt(x + 5) + work.charCodeAt(x); }
+    return s;
+}
+function affine(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let k = 0; k < n; k = k + 1) {
+        const i = 2 + 4 * k;
+        s = s + work.charCodeAt(i) - work.charCodeAt(i + 2);
+        if (work.charCodeAt(i + 1) > 70) {
+            const j = 5 * k + 1;
+            s = s + work.charCodeAt(i + 3) + work.charCodeAt(j + 2);
+        }
+    }
+    return s;
+}
+function shifted(work: buffer, h: i32): i32 {
+    let s = 0;
+    for (let x = 0; x < 6; x = x + 1) { s = s + work.charCodeAt(h + x) + work.charCodeAt(16); }
+    return s;
+}
+function start(work: buffer, x0: i32): i32 {
+    let s = 0;
+    for (let x = x0; x < 12; x = x + 1) { s = s + work.charCodeAt(x + 1); }
+    return s;
+}
+function early(work: buffer, n: i32): i32 {
+    for (let x = 0; x < n; x = x + 1) { if (work.charCodeAt(x + 2) === 71) { return x; } }
+    return 0 - 1;
+}
+function nested(work: buffer, n: i32): i32 {
+    let s = 0;
+    for (let y = 0; y < 3; y = y + 1) {
+        const row = y * n;
+        for (let x = 0; x < n; x = x + 1) { s = s + work.charCodeAt(row + x); work.setCharCodeAt(30 + x, s); }
+    }
+    return s;
+}
+function fill(work: buffer, n: i32): i32 {
+    for (let x = 0; x < n; x = x + 1) { work.setCharCodeAt(10 + x, work.charCodeAt(x) + 1); }
+    return work.charCodeAt(10);
+}`;
+    const select = {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true,
+        rotate: true, shortBranches: true};
+    const locations = {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
+        constants: true, share: true, pointers: true};
+    const unchecked = {};
+    const candidate = typedRv32.compile(src, [], undefined, {select: {...select, version: true},
+        operandLocations: {...locations, split: true},
+        observeTape: (name, phase, code) => { if (phase === "split") unchecked[name] = code.includes(0xf3); }});
+    const plain = typedRv32.compile(src, [], undefined, {});
+    const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
+    const cells = 40;
+    function run(p, f, args) {
+        const mem = new Uint8Array(4096), view = new DataView(mem.buffer);
+        view.setUint32(1024, cells, true);
+        for (let i = 0; i < cells; i++) view.setUint16(1028 + 2 * i, 60 + (i * 7) % 23, true);
+        const out = typedRv32Interp.run(p, f, [1024, ...args], mem);
+        return {result: out.result, trap: Boolean(out.trap), bytes: Array.from(out.bytes.subarray(1024, 1028 + 2 * cells))};
+    }
+    const cases = [["sum", [0, 1, 35, 36, 37]], ["affine", [0, 1, 8, 9, 10, 11]], ["shifted", [0, 30, 34, 35, -1, 1 << 30]],
+        ["start", [0, 5, 11, 12, -3, -(1 << 30)]], ["early", [0, 5, 37, 38, 39]], ["nested", [0, 4, 10, 11, 13, 14]],
+        ["fill", [0, 5, 29, 30, 31]]];
+    let traps = 0;
+    for (const [f, sizes] of cases) for (const n of sizes) {
+        const expected = run(stock, f, [n]);
+        assert.deepEqual(run(plain, f, [n]), expected, "plain " + f + " " + n);
+        assert.deepEqual(run(candidate, f, [n]), expected, "versioned " + f + " " + n);
+        traps += expected.trap;
+    }
+    assert(traps >= 8, "the sizes reach the trapping bound");
+    for (const f of ["sum", "affine", "shifted", "start", "early", "nested", "fill"]) assert(unchecked[f], f + " has an unchecked copy");
+});
