@@ -235,6 +235,8 @@ test("the default policy applies the qualified options and stock reproduces the 
         ["split", "pointers", "share", "constants", "capacities", "nested"], {inline: false})),
         "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.equal(sha({policy: "interactive"}), "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
+    // The "kernel" policy adds division facts: board run 10 timed this image at 15.27 ms (Step 15).
+    assert.equal(sha({policy: "kernel"}), "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
 

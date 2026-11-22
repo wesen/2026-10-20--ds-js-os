@@ -1,0 +1,88 @@
+[
+ {
+  "family": "ray",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "d9c25ef928d70c4ca46f065a18396c6f3df6fafaaf021bd2e840318be844b8f3",
+  "bytes": 11964,
+  "entries": {
+   "typedRayStride": 0,
+   "typedRaySphereFits": 140,
+   "typedRayLampFits": 204,
+   "typedRayAbs": 264,
+   "typedRaySetObject": 292,
+   "typedRaySetObjects": 524,
+   "typedRayBuildGeometry": 804,
+   "typedRayBuildLight": 1308,
+   "typedRayBuildTables": 2192,
+   "typedRayPrepare": 2276,
+   "typedRayComputeRow": 2384,
+   "typedRayInShadow": 3412,
+   "typedRaySphereScale": 4248,
+   "typedRayPack": 4620,
+   "typedRayPixel": 4820,
+   "typedRayLitRow": 5284,
+   "typedRaySaveAudit": 8900,
+   "typedRayFrame": 9304,
+   "typedRayRender": 9636,
+   "typedRayTrace": 10388,
+   "typedRayShade": 11044
+  }
+ },
+ {
+  "family": "chess",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "a2eda1adb7742a051bff993b5abb31b4c6fbc18b00d167c5c2832188da1c382c",
+  "bytes": 1344,
+  "entries": {
+   "chessSquare": 0,
+   "chessSide": 32,
+   "chessValue": 84,
+   "chessAbs": 196,
+   "chessCenter": 224,
+   "chessEvaluate": 308
+  }
+ },
+ {
+  "family": "ray",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc",
+  "bytes": 11808,
+  "entries": {
+   "typedRayStride": 0,
+   "typedRaySphereFits": 140,
+   "typedRayLampFits": 204,
+   "typedRayAbs": 264,
+   "typedRaySetObject": 292,
+   "typedRaySetObjects": 524,
+   "typedRayBuildGeometry": 804,
+   "typedRayBuildLight": 1308,
+   "typedRayBuildTables": 2192,
+   "typedRayPrepare": 2276,
+   "typedRayComputeRow": 2384,
+   "typedRayInShadow": 3412,
+   "typedRaySphereScale": 4248,
+   "typedRayPack": 4620,
+   "typedRayPixel": 4820,
+   "typedRayLitRow": 5280,
+   "typedRaySaveAudit": 8744,
+   "typedRayFrame": 9148,
+   "typedRayRender": 9480,
+   "typedRayTrace": 10232,
+   "typedRayShade": 10888
+  }
+ },
+ {
+  "family": "chess",
+  "mode": "({\"policy\": \"stock\", \"operandLocations\": {\"forward\": true, \"capacity\": true, \"homes\": true, \"saved\": true, \"direct\": true, \"capacities\": true, \"nested\": true, \"constants\": true, \"share\": true, \"pointers\": true, \"split\": true}, \"select\": {\"immediates\": true, \"divisions\": true, \"branches\": true, \"results\": true, \"leafParams\": true, \"commute\": true, \"rotate\": true, \"shortBranches\": true, \"version\": true, \"facts\": true}, \"inline\": true, \"inlineGuardedReturns\": true})",
+  "sha": "0b9ffd88d8057c65ba527b75177ffb3c18fe4184bb64fb400b44e6e3f47a07f7",
+  "bytes": 1220,
+  "entries": {
+   "chessSquare": 0,
+   "chessSide": 32,
+   "chessValue": 84,
+   "chessAbs": 196,
+   "chessCenter": 224,
+   "chessEvaluate": 308
+  }
+ }
+]

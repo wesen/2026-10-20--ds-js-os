@@ -1868,6 +1868,14 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals) {
 // RAY-PARITY's Step 6 set, operand locations and instruction selection without inlining or
 // loop transforms. On the P4 it compiles Agenda in 0.98 s and Editor in 3.35 s against 2.75 s
 // and 7.90 s for "default" (PICOCALC-COMPILE-BUDGET Step 2), inside their 1.7 s and 6 s deadlines.
+const DEFAULT_POLICY = Object.freeze({
+    inlineGuardedReturns: true,
+    operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
+        capacities: true, nested: true, constants: true, share: true, pointers: true, split: true}),
+    select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
+        commute: true, rotate: true, shortBranches: true, version: true}),
+    inline: true,
+});
 const POLICIES = Object.freeze({
     interactive: Object.freeze({
         inlineGuardedReturns: true,
@@ -1875,14 +1883,11 @@ const POLICIES = Object.freeze({
         select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true}),
         inline: false,
     }),
-    default: Object.freeze({
-        inlineGuardedReturns: true,
-        operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
-            capacities: true, nested: true, constants: true, share: true, pointers: true, split: true}),
-        select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
-            commute: true, rotate: true, shortBranches: true, version: true}),
-        inline: true,
-    }),
+    default: DEFAULT_POLICY,
+    // "kernel" is "default" plus what only a compute kernel can afford to compile: the division
+    // facts cost Chess's boot compile about a quarter more, past its budget, but take the ray
+    // frame from 16.25 to 15.27 ms on the P4 (RAY-PARITY Step 15). The ray tracer uses it.
+    kernel: Object.freeze({...DEFAULT_POLICY, select: Object.freeze({...DEFAULT_POLICY.select, facts: true})}),
     stock: Object.freeze({}),
 });
 

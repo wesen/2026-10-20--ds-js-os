@@ -1071,3 +1071,46 @@ The first playable firmware built with the Step 13 default (`2712684`) did not b
 ### What should be done in the future
 
 - Add a gate before any default change: COMPILE-BUDGET's arms firmware, which compiles every boot world under every candidate policy on the P4.
+
+## Step 15: Division facts take the frame under 2× C
+
+Step 13's hot listing showed each floor pixel spending sign corrections on divisions whose dividends are never negative. `select.facts` proves non-negativity for division and remainder by a constant, and the emitter then drops the rounding bias and the sign fix-up. On the P4 the frame fell from 16.25 to 15.27 ms (−6.0%, 6/6 blocks, every scene 5.6–6.7%). The Chess evaluation kernel fell 17.9%. Typed is now at 1.97× the C frame. Facts cost compile time, so the device's boot worlds cannot afford them (COMPILE-BUDGET). They become a `kernel` policy for compute kernels, and the default does not include them.
+
+### What I did
+
+- **First version** (`rangeFacts`, one pass on the final tape): only 4 bytes changed and no instructions were saved. Two causes:
+  - Its counted-loop pattern only matched a rotated loop's entry. Versioning puts a guard block between the test and each copy, so in the slow copy the counter's write lies after another copy's writes.
+  - A missing fixed point discarded every fact of the function.
+- **Second version, in two steps** (`6350c61`):
+  - `localRanges` gives every local one interval, the join of all its writes, on the tape after rotation and before versioning. Counter increments are bounded by the loop's test.
+  - `divisionFacts` evaluates the final tape with those intervals. `splitLocals` now returns `origin`, so a split local takes the interval of the local it came from. This is sound because versioning and splitting change where values are computed, not which values a local can hold.
+- **Widening at a threshold.** A falling lower bound that is still non-negative widens to 0, not to −2³¹. Without that, `level = level / 3` lowered the bound on every pass and ended unknown. With it, `LitRow` gets 16 facts instead of 2: the floor's `typedRayPack` divisions, `x / 16` and `level / 3`, in both versioned copies.
+- **Test.** `division facts change code only for dividends proven non-negative`:
+  - Three functions must change code: a counter from 0, the `level / 3` pattern, a buffer read.
+  - Four must not: a counter from −9, a local written −3, a read minus 32, and a counter stepping by 2 to a parameter bound, where `k + 2` could wrap.
+  - All seven match `stock` on negative, trapping and ordinary inputs.
+- **Board run 10:** `various/59-board-modes-facts.json` (mode 0 = Step 13 spelled out, `d9c25ef9…`; mode 1 + facts, `22c20887…`), imported to `various/61-board-facts`, scored in the workbench to `various/62-board-facts-scores.json`.
+- **Compile cost.** In jitless Node, paired, the first facts version added 47% to the default compile. `localRanges` interpreted every function up to 16 times, though most functions divide by no constant. A scan for constant divisions (`0d2b839`) brings it to: Files +2%, Agenda +10%, ray +11%, Editor +14%, Chess +25%. The output is unchanged, and the current compiler still produces the timed `22c20887…`.
+
+### What worked
+
+| | Step 13 | + facts |
+|---|---:|---:|
+| host frame instructions | 4,888,369 | 4,532,990 (−7.3%) |
+| Chess engine oracle | 128,152,624 | 120,826,730 (−5.7%), 6981/6981 words |
+| P4 frame | 16,247.5 µs | 15,271 µs (−6.0%, 6/6) |
+| P4 primary pass | 4,087 µs | 4,032.5 µs (−1.3%) |
+| P4 Chess evaluate | 2,427 µs | 1,996 µs (−17.9%) |
+| shadow predicate | 161.5 cycles | 161.4 |
+| ray cold compile on the P4 | 1.46 s | 1.84 s (+25.7%, before the skip scan) |
+
+C references in the same run: frame 7,737 µs, checked predicate 135.9 cycles. The device was restored to `e7b771aa…`, eight worlds healthy.
+
+### What didn't work
+
+- The single-pass version, and widening straight to the i32 limits (above).
+- Facts in `default`: Chess compiles at 4.34 s on the P4 against a 4.5 s target, and facts add 25% to its backend.
+
+### What I learned
+
+- The remaining floor divisions need `y`, which is a parameter of `LitRow`, so the analysis would have to cross function boundaries. The sphere scale `62 + dot * 183 / bound` is non-negative only under the preceding `if (dot <= 0) return 62`. Both need more than a flow-insensitive analysis.
