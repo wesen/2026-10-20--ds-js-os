@@ -1,0 +1,81 @@
+{
+ "ms": {
+  "ray.step10": 65.6,
+  "ray.pointers": 65.2,
+  "chess.step10": 437.4,
+  "chess.pointers": 394.2,
+  "editor.step10": 3111.1,
+  "editor.pointers": 3176.8,
+  "files.step10": 68.4,
+  "files.pointers": 74.8,
+  "agenda.step10": 618.1,
+  "agenda.pointers": 654
+ },
+ "bytes": {
+  "ray.step10": 8004,
+  "ray.pointers": 8048,
+  "chess.step10": 37912,
+  "chess.pointers": 37848,
+  "editor.step10": 80600,
+  "editor.pointers": 80572,
+  "files.step10": 3208,
+  "files.pointers": 3208,
+  "agenda.step10": 22320,
+  "agenda.pointers": 22288
+ },
+ "arms": {
+  "step10": {
+   "policy": "stock",
+   "inlineGuardedReturns": true,
+   "inline": true,
+   "operandLocations": {
+    "forward": true,
+    "capacity": true,
+    "homes": true,
+    "saved": true,
+    "direct": true,
+    "capacities": true,
+    "nested": true,
+    "constants": true,
+    "share": true
+   },
+   "select": {
+    "immediates": true,
+    "divisions": true,
+    "branches": true,
+    "results": true,
+    "leafParams": true,
+    "commute": true,
+    "rotate": true,
+    "shortBranches": true
+   }
+  },
+  "pointers": {
+   "policy": "stock",
+   "inlineGuardedReturns": true,
+   "inline": true,
+   "operandLocations": {
+    "forward": true,
+    "capacity": true,
+    "homes": true,
+    "saved": true,
+    "direct": true,
+    "capacities": true,
+    "nested": true,
+    "constants": true,
+    "share": true,
+    "pointers": true
+   },
+   "select": {
+    "immediates": true,
+    "divisions": true,
+    "branches": true,
+    "results": true,
+    "leafParams": true,
+    "commute": true,
+    "rotate": true,
+    "shortBranches": true
+   }
+  }
+ }
+}

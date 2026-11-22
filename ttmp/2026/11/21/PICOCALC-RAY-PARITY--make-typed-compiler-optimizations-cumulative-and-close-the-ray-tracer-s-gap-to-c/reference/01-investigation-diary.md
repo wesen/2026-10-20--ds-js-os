@@ -773,3 +773,95 @@ Board, against mode 0 (median of per-block savings; wins of 6):
 
 - `picocalc-os/compiler/typed-rv32.js`: `occur` and the `intervals` block in `planLocations`; `planSavedHomes` (`opened`, `disjoint`); `branch`, `patchBranches`, `SHORT_BRANCH_RANGE` and the retry in `compile`'s `lower`.
 - `picocalc-os/tests/typed-rv32.test.mjs`: the short-branch test; the four default pins and the `without` helper.
+
+## Step 11: Pointer homes, and how far Typed is from C in instructions
+
+Checked accesses had become 39.5% of the frame (Step 10). This step implements the first half of Phase 3, pointer homes: a home register holds the address of a buffer cell, so an access after its bounds check is one `lhu` with a displacement. On the P4 the frame fell from 20.17 to 19.31 ms (−4.3%, 6/6 blocks, all 12 scenes) and the predicate from 181.1 to 171.9 cycles. Typed is now at 2.50× the C frame, and pointer homes are the default.
+
+The step also measures the C frame in instructions for the first time. GCC's frame is 3,194,201 instructions and Typed's is 5,578,770, a ratio of 1.75. The time ratio is 2.50, so a large part of the gap is cost per instruction, not instruction count. One candidate is memory placement: in the board harness, Typed's `work` buffer lives in PSRAM, while the C frame keeps its tables on the stack in internal RAM. A paired board run that moves only that buffer is running (Step 12).
+
+**Commits:** 154f2ad added `pointers` as opt-in. 2953d57 merged the PICOCALC-TRACE-WORKBENCH branch (W1–W7). The default change is in the commit that records this step. Replays with pointers in the default: 24/24 PASS (`various/49-replays-pointers-default.log`); tests: 144 pass.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 6.
+**Assistant interpretation:** Continue toward C parity; Phase 3 is next.
+**Inferred user intent:** As before.
+
+### What I did
+
+- **Planner.** At a forwarded checked access, the operations before the index `local.set` give the index expression.
+  - The forms are `local.get L`, `local.get L; i32.const k; add`, `i32.const k; local.get L; add` and `local.get L; local.get M; add`.
+  - Accesses to an unwritten parameter r are grouped by key `p<r>:<L>` or `p<r>:<L>+<M>`.
+  - Each group gets an anchor K0, the weighted median k. Accesses within ±1000 cells of K0 are covered.
+  - Gain is 2 instructions per covered access, minus the updates. An update is one `addi` for `L = L + c`, found from the three operations before the `local.set`, and otherwise 4 or 5 instructions, plus a prologue initialization when every source is a parameter. Writes and accesses are weighted like home scores.
+  - For `r[L + M]`, a write outside the accesses' innermost loop is divided by a further 4 per level. Without that, the once-per-sphere writes of `horizontal` and `x = 0` in `ComputeRow` outweigh the 160 inner iterations they serve.
+  - The gain competes for homes in `planSavedHomes` with the hull of the sources' intervals.
+- **Emitter.** `checkedAddress(…, pointer)`: after `bltu`, a following `i32.load16_u offset 4` becomes `lhu out, disp(p)`; anything else gets `addi out, p, disp − 4`, the same address `r + 2·index` as before. `pointersAfterWrite` runs after `case 0x21` and after `result()` when `destination()` stored into a homed local (it records `pendingWrite`). Parameter sources are initialized in the prologue from the argument registers.
+- **Soundness.** `p` is updated at every write of a source, so at every access it equals `r + 4 + 2(L + K0)` modulo 2^32. The bounds check still tests the same index, and `p + 2(k − K0) = r + 2(L + k)` modulo 2^32. Accesses, stores and traps are unchanged. Sources read before any write in tape order (generated slots) are excluded.
+- **Test:** `pointer homes keep checked accesses, stores and traps identical` covers increments, recomputed indices, parameter sources, two-local sums and stores. It compares results, the buffer bytes and the trap flag with the plain plan at sizes on both sides of the trapping bound.
+- **C instruction count:** `scripts/14-c-frame-instructions.mjs` builds `nucleus/raytrace_demo.c` with `scripts/14-c-frame-runner.c` for `rv32emu`, with and without the render, and subtracts the two counts. It checks that the C pixels equal the Typed opening frame. The runner's `memset` and `memcpy` are word-wise, as newlib's are on the board.
+- **Board:** `various/41-board-modes-pointers.json` (mode 0 is the Step 10 default `e7e33cd0…`, mode 1 adds pointers), imported to `various/47-board-pointers`, scored to `various/48-board-pointers-scores.json`.
+- **Merged the workbench subagent's branch** (`2953d57`). `go vet ./...` and `go test ./...` pass on main.
+
+### Why
+
+- GCC addresses `work[1545 + x]` as one `lhu` off a pointer it advances with the loop. Typed spent `slli` and `add` per access to rebuild the address.
+
+### What worked
+
+Host frame (reference digest): 5,884,011 → 5,651,384 with `r[L + k]` only, **5,578,770** with the two-local form (`slli` after a check 445 k → 181 k at the first stage). Chess engine oracle: 128,814,186 → 128,741,180, 6981/6981 words.
+
+| | P4, mode 0 → mode 1 (6 blocks) |
+|---|---:|
+| frame | 20,167.5 → **19,307 µs (4.27%)**, 6/6, scenes 3.61–4.55% |
+| primary pass | 5,816.5 → 5,255.5 µs (9.55%) |
+| shade pass | 24,659.5 → 24,245.5 µs (1.68%) |
+| shadow predicate | 181.1 → 171.9 cycles (5.06%) |
+| Chess evaluate (identical image: a control) | 0.15%, 3/6 wins |
+| ray cold compile | 786,918.5 → 888,327.5 µs (−12.88%) |
+| Chess cold compile | −5.85% |
+
+- C references: frame 7,725.5 µs, checked predicate 135.8 cycles. Restored `e7b771aa…`, eight worlds healthy. Diagnostic app SHA-256 `801e255a95b4ed18c53f101285531c40d66d992f6364121b1b4674839234fa97`.
+- Instructions per opening frame (`various/44-c-frame-instructions.jsonl`, pixels equal in every row):
+
+| | instructions | × GCC -O2 |
+|---|---:|---:|
+| GCC -O2 (the board's `CONFIG_COMPILER_OPTIMIZATION_PERF`) | 3,194,201 | 1.00 |
+| GCC -O3 | 2,450,039 | 0.77 |
+| Typed stock | 15,532,634 | 4.86 |
+| Typed Step 10 default | 5,884,011 | 1.84 |
+| Typed + pointers | 5,578,770 | 1.75 |
+
+- On the P4 at 360 MHz, the C frame is about 2.78 M cycles for 3.19 M instructions (0.87 cycles per instruction), and Typed about 6.95 M cycles for 5.58 M (1.25). Equal cycles per instruction would put Typed at 1.75× C, not 2.50×.
+
+### What didn't work
+
+- **My first planner edit detached an `else` branch.** I inserted the pointer code between `if (options.saved) planSavedHomes(…)` and its `else if (options.homes && leaf)`. The `else` then attached to an `if` inside a new `for` loop and reassigned homes after the saved plan: `typedRayFrame returned 0`. A home trace showed identical inputs and different results, and that pointed to code after `planSavedHomes`.
+- **A per-function bisect filter did nothing,** because every function failed for the reason above. I removed the hook.
+- **Amortizing writes for `r[L + k]` as well** converted `ComputeRow`'s conditional `1545 + x` accesses. Their saving did not cover a per-iteration `addi`: −12 k instead of −73 k. The amortization applies to the two-local form only.
+- **Compile cost:** +12.9% on the device. The planner allocated a history object per operation (`hist.push({opcode, a})`) and scanned every write per group. Both are replaced, by scalar `prev2A`–`prev4A` and a `writesOf` map, with a byte-identical image (`4fa61ed1…` before and after). The device cost of the new version is measured in the next board run.
+- **I edited `compiler/` while the placement image was building.** The build's `generated/compiler.js` and images are stamped 21:37:19, 45 s before the edit, and the copy has no `prev3Opcode`. That build used the committed compiler.
+- **goja compile costs in `various/43` are unreliable:** the board build ran at the same time (Editor took 3.1 s against 1.25 s in `various/37`).
+
+### What I learned
+
+- **Instruction count is no longer the whole gap.** Typed retires 1.75× GCC's instructions but takes 2.50× the time. Placement of `work` is the first hypothesis. Others are load-use stalls after `lhu`, taken branches, and the layout of the native image in the instruction cache.
+- **Unchecked accesses are the remaining instruction gap.** 541,956 checks per frame still cost `addi` + `bltu` (975 k instructions together). GCC's 3.19 M leaves Typed about 2.4 M above it.
+
+### What warrants a second pair of eyes
+
+- **`pendingWrite` couples `destination()` to `result()`.** Every caller pairs them today. A new caller of `destination()` that skipped `result()` would leave a pointer stale, and the differential tests would only catch it if the local fed a pointer.
+- **The hull interval for two-source pointers is conservative,** but a source local first written after the pointer's other source is read assumes Typed's definite assignment.
+
+### What should be done in the future
+
+- **Step 12:** finish the placement experiment. If placement explains the CPI difference, the fair comparison and the production world's buffer allocation both change.
+- **Phase 3 part 2:** versioned loops for `x`-indexed accesses with constant bounds (`ComputeRow`, `LitRow`). Add an affine form for `i = 21 + 4k` (`InShadow`).
+- **Use the merged workbench for scoring** (`compiler.at`, `stats.paired`, jobs). My services on 3791–3795 still run older builds.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `pointerFrom`, `pointersAfterWrite`, `checkedAddress`, `destination`/`result`, `case 0x21`, the pointer-home prologue loop, and in `planLocations` the `options.pointers` block of the walk, the group section before `planSavedHomes`, and the `pointers`/`pointerWrites`/`increments` maps after it.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the pointer-home test; the five default pins.
+- `scripts/14-c-frame-instructions.mjs`, `scripts/14-c-frame-runner.c`.

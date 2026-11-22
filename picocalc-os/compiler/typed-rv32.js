@@ -1107,7 +1107,7 @@ function planLocations(fn, options, inlineCall) {
     }
     // pointers: forwarded accesses r[L + k], every write of a local (with its increment when
     // it is L = L + c), and locals read before any write in tape order.
-    const pointerAccesses = [], localWrites = [], readEarly = new Set(), hist = [];
+    const pointerAccesses = [], writesOf = new Map(), readEarly = new Set();
     // capacities: each checked access to buffer local b scores b's capacity, key -1 - b.
     const capacityUses = new Map();
     function read(local) {
@@ -1128,7 +1128,8 @@ function planLocations(fn, options, inlineCall) {
     // A checked address whose index local was set by the preceding operation; the
     // forwarding decision needs the final read count, so it is resolved after the walk.
     const candidates = [];
-    let prevOpcode = -1, prevOffset = -1, prevA = -1, prev2Opcode = -1, prev2Offset = -1;
+    let prevOpcode = -1, prevOffset = -1, prevA = -1, prev2Opcode = -1, prev2Offset = -1, prev2A = -1;
+    let prev3Opcode = -1, prev3A = -1, prev4Opcode = -1, prev4A = -1;
     for (let at = 0; at < tape.length;) {
         const offset = at, opcode = tape[at++];
         const cells = OPERAND_CELLS[opcode];
@@ -1141,23 +1142,24 @@ function planLocations(fn, options, inlineCall) {
             if ((opcode === 0x20 || opcode === 0xf2) && !writes.has(a)) readEarly.add(a);
             if (opcode === 0xf1) for (const x of [a, b]) if (!writes.has(x)) readEarly.add(x);
             if (opcode === 0x21) {
-                const [y, x, prev] = hist.slice(-3);
+                // L = L + c or L = c + L: the three preceding operations.
                 let inc;
-                if (prev?.opcode === 0x6a && x && y) {
-                    if (x.opcode === 0x41 && y.opcode === 0x20 && y.a === a) inc = x.a;
-                    else if (x.opcode === 0x20 && x.a === a && y.opcode === 0x41) inc = y.a;
+                if (prevOpcode === 0x6a) {
+                    if (prev2Opcode === 0x41 && prev3Opcode === 0x20 && prev3A === a) inc = prev2A;
+                    else if (prev2Opcode === 0x20 && prev2A === a && prev3Opcode === 0x41) inc = prev3A;
                 }
-                localWrites.push({L: a, at: offset, w: weightNow(), inc, depth: loops});
+                if (!writesOf.has(a)) writesOf.set(a, []);
+                writesOf.get(a).push({at: offset, w: weightNow(), inc, depth: loops});
             }
             if (opcode === 0xf1 && prevOpcode === 0x21 && prevA === b) {
-                const [p4, p3, p2] = hist.slice(-4, -1);
-                // r[L], r[L + k], r[k + L] and r[L + M] for locals L and M.
+                // r[L], r[L + k], r[k + L] and r[L + M] for locals L and M, the index expression
+                // being the operations before the local.set.
                 let L, M, k = 0;
-                if (p2?.opcode === 0x20) L = p2.a;
-                else if (p2?.opcode === 0x6a && p3 && p4) {
-                    if (p3.opcode === 0x41 && p4.opcode === 0x20) { L = p4.a; k = p3.a; }
-                    else if (p3.opcode === 0x20 && p4.opcode === 0x41) { L = p3.a; k = p4.a; }
-                    else if (p3.opcode === 0x20 && p4.opcode === 0x20 && p3.a !== p4.a) { L = Math.min(p3.a, p4.a); M = Math.max(p3.a, p4.a); }
+                if (prev2Opcode === 0x20) L = prev2A;
+                else if (prev2Opcode === 0x6a) {
+                    if (prev3Opcode === 0x41 && prev4Opcode === 0x20) { L = prev4A; k = prev3A; }
+                    else if (prev3Opcode === 0x20 && prev4Opcode === 0x41) { L = prev3A; k = prev4A; }
+                    else if (prev3Opcode === 0x20 && prev4Opcode === 0x20 && prev3A !== prev4A) { L = Math.min(prev3A, prev4A); M = Math.max(prev3A, prev4A); }
                 }
                 if (L !== undefined && L !== b && M !== b) pointerAccesses.push({at: prevOffset, r: a, L, M, k, w: weightNow(), depth: loops});
             }
@@ -1201,12 +1203,9 @@ function planLocations(fn, options, inlineCall) {
             if (closed === 0x04) ifs--;
         }
         if (opcode >= 0x02 && opcode <= 0x0f) straight = false;
-        prev2Opcode = prevOpcode; prev2Offset = prevOffset;
+        prev4Opcode = prev3Opcode; prev4A = prev3A; prev3Opcode = prev2Opcode; prev3A = prev2A;
+        prev2Opcode = prevOpcode; prev2Offset = prevOffset; prev2A = prevA;
         prevOpcode = opcode; prevOffset = offset; prevA = a;
-        if (options.pointers) {
-            hist.push({opcode, a});
-            if (hist.length > 4) hist.shift();
-        }
     }
     if (!options.capacity || !pure || !leaf || writes.has(receiver)) receiver = undefined;
     // A capacity register replaces a7 caching. A buffer's capacity header is written only by
@@ -1271,7 +1270,7 @@ function planLocations(fn, options, inlineCall) {
             // ran 16 times. (Applied to r[L + k] too, it converts conditional accesses whose
             // saving does not cover a per-iteration update.)
             const depth = Math.max(...g.covered.map(x => x.depth));
-            for (const write of localWrites) if (sources.includes(write.L))
+            for (const source of sources) for (const write of writesOf.get(source) ?? [])
                 cost += write.w / (g.M === undefined ? 1 : 4 ** Math.max(0, depth - write.depth)) *
                     (write.inc !== undefined && Math.abs(2 * write.inc) <= 2047 ? 1 : sources.length + 3);
             const gain = 2 * g.covered.reduce((sum, x) => sum + x.w, 0) - cost;
@@ -1304,9 +1303,8 @@ function planLocations(fn, options, inlineCall) {
             pointerWrites.get(source).push({reg, r: g.r, K0: g.K0, other});
         }
     }
-    for (const write of localWrites)
-        if (pointerWrites.has(write.L) && write.inc !== undefined && Math.abs(2 * write.inc) <= 2047)
-            increments.set(write.at, write.inc);
+    for (const local of pointerWrites.keys()) for (const write of writesOf.get(local) ?? [])
+        if (write.inc !== undefined && Math.abs(2 * write.inc) <= 2047) increments.set(write.at, write.inc);
     return {receiver,forward,homes,direct,pointers,pointerWrites,increments};
 }
 
@@ -1372,7 +1370,7 @@ const POLICIES = Object.freeze({
     default: Object.freeze({
         inlineGuardedReturns: true,
         operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
-            capacities: true, nested: true, constants: true, share: true}),
+            capacities: true, nested: true, constants: true, share: true, pointers: true}),
         select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
             commute: true, rotate: true, shortBranches: true}),
         inline: true,

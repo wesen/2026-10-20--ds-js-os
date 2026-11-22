@@ -1,0 +1,4 @@
+[
+ {"policy": "stock", "inlineGuardedReturns": true, "inline": true, "operandLocations": {"forward": true, "capacity": true, "homes": true, "saved": true, "direct": true, "capacities": true, "nested": true, "constants": true, "share": true}, "select": {"immediates": true, "divisions": true, "branches": true, "results": true, "leafParams": true, "commute": true, "rotate": true, "shortBranches": true}},
+ {"policy": "stock", "inlineGuardedReturns": true, "inline": true, "operandLocations": {"forward": true, "capacity": true, "homes": true, "saved": true, "direct": true, "capacities": true, "nested": true, "constants": true, "share": true, "pointers": true}, "select": {"immediates": true, "divisions": true, "branches": true, "results": true, "leafParams": true, "commute": true, "rotate": true, "shortBranches": true}}
+]
