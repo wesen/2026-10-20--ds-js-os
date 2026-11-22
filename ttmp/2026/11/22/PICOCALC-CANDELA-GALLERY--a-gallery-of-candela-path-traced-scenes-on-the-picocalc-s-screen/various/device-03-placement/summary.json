@@ -1,0 +1,250 @@
+{
+ "run": "ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/various/device-03-placement",
+ "scenes": [
+  {
+   "id": "B-01",
+   "w": 160,
+   "h": 160,
+   "firstImageMs": 232.9,
+   "coarseMs": 125.2,
+   "halfMs": 6527.1,
+   "pass1Ms": 7467.7,
+   "passes": 49,
+   "secPerPass": 0.9329,
+   "laterPassMedianS": 0.926,
+   "samplesPerSec": 27442.3,
+   "cyclesPerSample": 13085.8,
+   "displays": 52,
+   "displayMsMean": 145.2,
+   "internalPeakUse": 9336,
+   "psramPeakUse": 1628580,
+   "skyRebuilt": 1,
+   "digestPasses": 4,
+   "deviceFrame0": "e2ba6956",
+   "deviceAcc": "3b52c63c",
+   "deviceDisp": "23d7885f",
+   "digestCyclesPerSample": 13544.8,
+   "frame0CyclesPerSample": 12795.5,
+   "rv32Frame0": "e2ba6956",
+   "rv32Acc": "3b52c63c",
+   "rv32Disp": "23d7885f",
+   "rv32InstrPerSample": 5743.6,
+   "equalRv32": true,
+   "cpi": 2.358,
+   "hostFrame0": "df6d3f85",
+   "hostAcc": "9fdd525f",
+   "hostDisp": "23d7885f",
+   "equalHostFrame0": false,
+   "equalHostAcc": false,
+   "equalHostDisp": true,
+   "hostMeanLum": 8511.44124,
+   "deviceMeanLum": 8511.44124,
+   "meanLumRatio": 1.0
+  },
+  {
+   "id": "R-01",
+   "w": 160,
+   "h": 160,
+   "firstImageMs": 357.9,
+   "coarseMs": 207.0,
+   "halfMs": 666.6,
+   "pass1Ms": 1956.1,
+   "passes": 2,
+   "secPerPass": 1.5552,
+   "laterPassMedianS": 1.575,
+   "samplesPerSec": 16460.6,
+   "cyclesPerSample": 21835.7,
+   "displays": 5,
+   "displayMsMean": 143.9,
+   "internalPeakUse": 4200,
+   "psramPeakUse": 747564,
+   "skyRebuilt": 1,
+   "digestPasses": 4,
+   "deviceFrame0": "e8421c97",
+   "deviceAcc": "2ac5b8e1",
+   "deviceDisp": "1d7de02e",
+   "digestCyclesPerSample": 20686.6,
+   "frame0CyclesPerSample": 19235.5,
+   "rv32Frame0": "e8421c97",
+   "rv32Acc": "2ac5b8e1",
+   "rv32Disp": "1d7de02e",
+   "rv32InstrPerSample": 11061.5,
+   "equalRv32": true,
+   "cpi": 1.87,
+   "hostFrame0": "e8421c97",
+   "hostAcc": "2ac5b8e1",
+   "hostDisp": "1d7de02e",
+   "equalHostFrame0": true,
+   "equalHostAcc": true,
+   "equalHostDisp": true,
+   "hostMeanLum": 62.0379497,
+   "deviceMeanLum": 62.0379497,
+   "meanLumRatio": 1.0
+  },
+  {
+   "id": "L-03"
+  },
+  {
+   "id": "G-01"
+  },
+  {
+   "id": "E-02"
+  },
+  {
+   "id": "W-02",
+   "digestPasses": 4,
+   "deviceFrame0": "34a669ff",
+   "deviceAcc": "865eba2b",
+   "deviceDisp": "dd654b4c",
+   "digestCyclesPerSample": 31592.1,
+   "frame0CyclesPerSample": 29897.1,
+   "rv32Frame0": "34a669ff",
+   "rv32Acc": "865eba2b",
+   "rv32Disp": "dd654b4c",
+   "rv32InstrPerSample": 16004.6,
+   "equalRv32": true,
+   "cpi": 1.974,
+   "hostFrame0": "34a669ff",
+   "hostAcc": "865eba2b",
+   "hostDisp": "dd654b4c",
+   "equalHostFrame0": true,
+   "equalHostAcc": true,
+   "equalHostDisp": true,
+   "hostMeanLum": 15.5241421,
+   "deviceMeanLum": 15.5241421,
+   "meanLumRatio": 1.0
+  },
+  {
+   "id": "F-01"
+  },
+  {
+   "id": "V-02"
+  },
+  {
+   "id": "G-02"
+  },
+  {
+   "id": "X-04",
+   "digestPasses": 4,
+   "deviceFrame0": "2b9af109",
+   "deviceAcc": "a0aafa50",
+   "deviceDisp": "450d2ead",
+   "digestCyclesPerSample": 77982.6,
+   "frame0CyclesPerSample": 74028.0,
+   "rv32Frame0": "2b9af109",
+   "rv32Acc": "a0aafa50",
+   "rv32Disp": "450d2ead",
+   "rv32InstrPerSample": 40442.0,
+   "equalRv32": true,
+   "cpi": 1.928,
+   "hostFrame0": "2b9af109",
+   "hostAcc": "a0aafa50",
+   "hostDisp": "450d2ead",
+   "equalHostFrame0": true,
+   "equalHostAcc": true,
+   "equalHostDisp": true,
+   "hostMeanLum": 2417.46993,
+   "deviceMeanLum": 2417.46993,
+   "meanLumRatio": 1.0
+  },
+  {
+   "id": "S-02",
+   "digestPasses": 4,
+   "deviceFrame0": "e32b0f6b",
+   "deviceAcc": "a4d9bc0b",
+   "deviceDisp": "4785e5ad",
+   "digestCyclesPerSample": 51775.2,
+   "frame0CyclesPerSample": 47145.3,
+   "rv32Frame0": "e32b0f6b",
+   "rv32Acc": "a4d9bc0b",
+   "rv32Disp": "4785e5ad",
+   "rv32InstrPerSample": 25566.9,
+   "equalRv32": true,
+   "cpi": 2.025,
+   "hostFrame0": "e32b0f6b",
+   "hostAcc": "a4d9bc0b",
+   "hostDisp": "4785e5ad",
+   "equalHostFrame0": true,
+   "equalHostAcc": true,
+   "equalHostDisp": true,
+   "hostMeanLum": 200.70751,
+   "deviceMeanLum": 200.70751,
+   "meanLumRatio": 1.0
+  },
+  {
+   "id": "R-05"
+  },
+  {
+   "id": "V-03"
+  },
+  {
+   "id": "V-04"
+  },
+  {
+   "id": "R-08"
+  },
+  {
+   "id": "X-03"
+  },
+  {
+   "id": "R-04"
+  },
+  {
+   "id": "G-03"
+  }
+ ],
+ "placement": [
+  {
+   "id": "B-01",
+   "sameDigests": true,
+   "psramCyclesPerSample": 13544.8,
+   "internalCyclesPerSample": 13219.4,
+   "quietCyclesPerSample": 8622.4,
+   "psramSeconds": 3.854,
+   "internalSeconds": 3.761,
+   "quietSeconds": 2.453
+  },
+  {
+   "id": "R-01",
+   "sameDigests": true,
+   "psramCyclesPerSample": 20686.6,
+   "internalCyclesPerSample": 20429.2,
+   "quietCyclesPerSample": 14662.1,
+   "psramSeconds": 5.885,
+   "internalSeconds": 5.812,
+   "quietSeconds": 4.171
+  },
+  {
+   "id": "W-02",
+   "sameDigests": true,
+   "psramCyclesPerSample": 31592.1,
+   "internalCyclesPerSample": 31016.4,
+   "quietCyclesPerSample": 21860.6,
+   "psramSeconds": 8.987,
+   "internalSeconds": 8.825,
+   "quietSeconds": 6.218
+  },
+  {
+   "id": "X-04",
+   "sameDigests": true,
+   "psramCyclesPerSample": 77982.6,
+   "internalCyclesPerSample": 77203.5,
+   "quietCyclesPerSample": 55934.4,
+   "psramSeconds": 5.546,
+   "internalSeconds": 5.491,
+   "quietSeconds": 3.978
+  },
+  {
+   "id": "S-02",
+   "sameDigests": true,
+   "psramCyclesPerSample": 51775.2,
+   "internalCyclesPerSample": 50360.4,
+   "quietCyclesPerSample": 35768.6,
+   "psramSeconds": 3.682,
+   "internalSeconds": 3.582,
+   "quietSeconds": 2.544
+  }
+ ],
+ "records": 103,
+ "errors": []
+}

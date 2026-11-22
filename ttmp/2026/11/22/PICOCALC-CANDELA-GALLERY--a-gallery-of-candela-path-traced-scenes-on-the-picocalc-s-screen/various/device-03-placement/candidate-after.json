@@ -1,0 +1,99 @@
+{
+  "health": {
+    "peripherals": "off by user",
+    "keyboard": "off by user",
+    "display": "off by user",
+    "worlds": {
+      "compositor": {
+        "engine": "native",
+        "file": "natives/compositor.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "snake": {
+        "engine": "native",
+        "file": "natives/snake.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "keyboard": {
+        "engine": "native",
+        "file": "natives/keyboard.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "display": {
+        "engine": "native",
+        "file": "natives/display.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "files": {
+        "engine": "native",
+        "file": "files/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "editor": {
+        "engine": "native",
+        "file": "editor/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "agenda": {
+        "engine": "native",
+        "file": "agenda/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "chess": {
+        "engine": "native",
+        "file": "chess/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      }
+    },
+    "judged": [
+      "snake",
+      "files",
+      "editor",
+      "agenda",
+      "chess"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 6317827,
+      "relocate_us": 1149,
+      "native_us": 1426,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "i2c": {
+      "busyMs": 47392.29,
+      "transfers": 7986,
+      "bytes": 31982,
+      "errors": 0
+    },
+    "spi": {
+      "busyMs": 2269.9,
+      "transfers": 1205,
+      "bytes": 9438202,
+      "errors": 0
+    },
+    "waitedForBoot": 0
+  }
+}

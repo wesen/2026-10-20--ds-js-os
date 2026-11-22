@@ -1,0 +1,100 @@
+{
+  "sha256": "2fd89ccde3dc7956aeeeee9b501976737b97a40c8b1e619d6493807c8ca35054",
+  "health": {
+    "peripherals": "off by user",
+    "keyboard": "off by user",
+    "display": "off by user",
+    "worlds": {
+      "compositor": {
+        "engine": "native",
+        "file": "natives/compositor.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "snake": {
+        "engine": "native",
+        "file": "natives/snake.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "keyboard": {
+        "engine": "native",
+        "file": "natives/keyboard.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "display": {
+        "engine": "native",
+        "file": "natives/display.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "files": {
+        "engine": "native",
+        "file": "files/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "editor": {
+        "engine": "native",
+        "file": "editor/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "agenda": {
+        "engine": "native",
+        "file": "agenda/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "chess": {
+        "engine": "native",
+        "file": "chess/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      }
+    },
+    "judged": [
+      "snake",
+      "files",
+      "editor",
+      "agenda",
+      "chess"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 6317827,
+      "relocate_us": 1149,
+      "native_us": 1426,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "i2c": {
+      "busyMs": 2031.13,
+      "transfers": 333,
+      "bytes": 1336,
+      "errors": 0
+    },
+    "spi": {
+      "busyMs": 247.49,
+      "transfers": 62,
+      "bytes": 1043420,
+      "errors": 0
+    },
+    "waitedForBoot": 8
+  }
+}

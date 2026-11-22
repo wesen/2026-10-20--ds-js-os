@@ -10,7 +10,13 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/design-doc/01-render-candela-s-presets-progressively-on-the-picocalc-s-screen.md
+      Note: the as-built design and its results
+    - Path: repo://ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/scripts/01-prepare-scenes.mjs
+      Note: host preparation of the 18 scenes
+    - Path: repo://ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/scripts/06-run-device.py
+      Note: device run under the board lock
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-22T08:42:08.661408936-05:00

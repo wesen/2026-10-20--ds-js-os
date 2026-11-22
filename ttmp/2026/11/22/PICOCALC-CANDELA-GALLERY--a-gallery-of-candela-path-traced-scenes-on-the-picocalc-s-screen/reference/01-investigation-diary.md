@@ -173,3 +173,49 @@ The gallery is one build option. With it, a worker task on core 1 renders the pr
 
 ### Technical details
 - Smoke and first full run: `various/device-01-smoke/`, `various/device-02-full/` (candidate d099ee7a..., restored b22a807d...).
+
+## Step 4: Find where the device's cycles go: stack placement, the kernel task, the display
+
+The worker took about 13,100 cycles per sample for B-01 where CPU-KERNEL's standalone benchmark would predict 7,400-9,900. I added digest variants that run the same digest on a helper task with a PSRAM stack, an internal-RAM stack, or above the kernel task, and ran five scenes on one boot. The stack's placement is worth 1-3%; sharing core 1 with the rest of the firmware is worth 28-36%. All 15 digests equal the RV32 references, whatever the variant.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Measure per scene and explain the numbers; a real number for each claim.
+**Inferred user intent:** Know what the gallery costs and why, before it stays installed.
+**Commit (code):** 7e5d1ea — digest variants; a396d3b — probe, display bound, fewer repaints.
+
+### What I did
+- `gallery digest ID PASSES psram|internal|quiet`: the digest on a helper task on core 1, priority 1 with a PSRAM or internal stack, or priority 6 (above the kernel task's 5, which waits the 2-9 s the digest takes).
+- Ran `06-run-device.py --scenes B-01,R-01,W-02,X-04,S-02 --variant-scenes ... --skip-scenes` (`various/device-03-placement/`), restored main's 8acb94cc (healthy).
+
+### Why
+- PSRAM stacks, the kernel task and cache pressure were all plausible; one boot with three variants separates them.
+
+### What worked
+- Cycles per sample at 4 passes (PSRAM / internal / above the kernel task): B-01 13,545 / 13,219 / 8,622; R-01 20,687 / 20,429 / 14,662; W-02 31,592 / 31,016 / 21,861; X-04 77,983 / 77,204 / 55,934; S-02 51,775 / 50,360 / 35,769.
+- Above the kernel task, B-01 runs at 8,622 / 5,744 = CPI 1.50, inside CPU-KERNEL's 1.28-1.72: the kernel code and the interpreter run on the device as counted.
+- Frame-0, accumulation and display digests equal the RV32 interpreter's for all five scenes and all three variants. Against x86-64: equal for R-01, W-02, X-04, S-02; for B-01 (a Preetham sky) frame 0 and the accumulation differ, as expected from libm, and the display digest is the same.
+
+### What didn't work
+- N/A (the experiment answered its question).
+
+### What I learned
+- The internal heap has about 70 KB free while the gallery runs (`internalFree0` 70,479-71,283). A 24 KB internal stack would buy 1-3%; not worth a third of the free internal heap. The stack stays in PSRAM.
+- One display (tone map 160 x 160, upscale to 320 x 320, publish) costs 131-145 ms on the worker (`displayCyclesMean` 47.3 M for B-01). With a display after every pass, B-01 spent 7.5 s of its 60 s on 52 displays. a396d3b shows a pass only when ten display durations have passed since the last.
+- The gallery world repainted four times a second, and each repaint copies the 200 KB frame into the compositor's back buffer and compares it with the front buffer on the kernel task. a396d3b repaints four times a second only for two seconds after the gallery opens or a key changes the scene, then twice a second.
+
+### What was tricky to build
+- The helper task must not delete itself while the worker waits on it: it notifies and suspends, and the worker deletes it (`vTaskDeleteWithCaps`, since its stack came from `xTaskCreatePinnedToCoreWithCaps`).
+
+### What warrants a second pair of eyes
+- The `quiet` variant starves the kernel task for the digest's duration (2.5-6.2 s here). It is a measurement, not something the gallery does.
+
+### What should be done in the future
+- `gallery probe MS` (a396d3b) measures what a priority-1 task on core 1 loses directly to other tasks and interrupts; the difference between that and the 28-36% is cache and memory interference. Step 5 records it.
+
+### Code review instructions
+- `python3 -I scripts/07-summarize.py various/device-03-placement various/references/host-4-passes.jsonl various/references/rv32-4-passes.jsonl OUT.json --md OUT.md`.
+
+### Technical details
+- Placement image 2fd89ccd... (based on 627d608, an experiment; not installed).

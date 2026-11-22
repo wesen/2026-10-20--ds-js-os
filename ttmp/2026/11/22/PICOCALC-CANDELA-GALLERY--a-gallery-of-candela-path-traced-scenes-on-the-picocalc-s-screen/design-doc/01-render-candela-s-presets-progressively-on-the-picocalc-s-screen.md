@@ -10,12 +10,24 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://picocalc-os/nucleus/candela_gallery.c
+      Note: 'renderer core: passes, sub-passes, meter, display, upscale, digests'
+    - Path: repo://picocalc-os/nucleus/gfx.c
+      Note: gfx_gallery for selection 1000, under the option
+    - Path: repo://picocalc-os/port/esp32p4/main/CMakeLists.txt
+      Note: the option's sources, instances and flags
+    - Path: repo://picocalc-os/port/esp32p4/main/candela_gallery_p4.c
+      Note: worker on core 1, triple buffer, console, CGAL records
+    - Path: repo://picocalc-os/tools/candela-gallery-compositor.py
+      Note: build-time patch of the compositor copy
+    - Path: repo://ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/scripts/05-same-without-option.py
+      Note: proof that the option-off build is unchanged
 ExternalSources: []
-Summary: "As-built design of the Candela gallery: 18 presets prepared on the host, rendered on core 1 by CPU-KERNEL's kernel with SECTIONS' interpreter, accumulated progressively from a 1/16 sub-pass, tone mapped with Candela's AgX, upscaled to 320 x 320 and drawn by a build-time-patched compositor; the build option, the FP-contraction policy and the measurement method."
+Summary: 'As-built design of the Candela gallery: 18 presets prepared on the host, rendered on core 1 by CPU-KERNEL''s kernel with SECTIONS'' interpreter, accumulated progressively from a 1/16 sub-pass, tone mapped with Candela''s AgX, upscaled to 320 x 320 and drawn by a build-time-patched compositor; the build option, the FP-contraction policy and the measurement method.'
 LastUpdated: 2026-11-22T10:00:00-05:00
-WhatFor: "How the gallery is built and run, what each firmware change does, why, and how its timings and digests are measured"
-WhenToUse: "Before changing the gallery renderer, its scenes, the compositor patch or the build option; before connecting the Candela world to the renderer (Milestone B)"
+WhatFor: How the gallery is built and run, what each firmware change does, why, and how its timings and digests are measured
+WhenToUse: Before changing the gallery renderer, its scenes, the compositor patch or the build option; before connecting the Candela world to the renderer (Milestone B)
 ---
 
 # Render Candela's presets progressively on the PicoCalc's screen
@@ -94,7 +106,7 @@ The image is upscaled to 320 x 320 bilinearly (2x or 4x) in RGB565 and published
 
 ### 4.4 Cadence
 
-The worker publishes a frame after the first and fourth sub-passes, after each of the first four passes, after later passes when 0.4 s have passed since the last frame, and inside a long pass every 1.5 s.
+The worker publishes a frame after the first and fourth sub-passes, after each of the first four passes, and inside a long pass every 1.5 s. After that, a finished pass is shown when 0.4 s and ten display durations have passed since the last frame. A display (tone map of 160 x 160 pixels, upscale, publish) measured 131-145 ms on the worker, so without the bound it took 14% of B-01's minute.
 
 ### 4.5 Scene policy
 
@@ -105,6 +117,8 @@ The worker renders only while the gallery is on screen (a paint in the last 2 s)
 ### 5.1 Task
 
 The worker runs on core 1 at priority 1, below the kernel task (priority 5) and the painter's build worker (priority 2), with a 24 KB stack in PSRAM, as the painter's worker has. It therefore runs in the kernel's idle time. The task watchdog does not check core 1's idle task (`CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1=n`).
+
+The stack stays in PSRAM. Measured with `gallery digest ID 4 internal` on the same boot, an internal-RAM stack saves 1.0-2.7% of the cycles per sample (B-01 13,545 against 13,219; Section 9), and the playable firmware has about 70 KB of internal heap free while the gallery runs. Running above the kernel task (`quiet`) saves 28-36%: that is what sharing core 1 with the rest of the firmware costs, and the gallery pays it rather than delay the kernel.
 
 ### 5.2 Memory
 
@@ -118,11 +132,13 @@ The compositor is compiled by CJI from `js/system/compositor.js` in the playable
 
 ### 5.4 The gallery world
 
-`worlds/candela-gallery/gallery.js` is a QuickJS app named `gallery` (launcher key `p`). It sends `open` to the compositor at start and every second until it has been in front once (at most 30 tries), because with the keyboard off nobody can open it. It republishes its frame four times a second (`seq`), so the compositor repaints and new passes appear, and counts keys into `skip`.
+`worlds/candela-gallery/gallery.js` is a QuickJS app named `gallery` (launcher key `p`). It sends `open` to the compositor at start and every second until it has been in front once (at most 30 tries), because with the keyboard off nobody can open it. It republishes its frame (`seq`), so the compositor repaints and new passes appear: four times a second for two seconds after it opens or a key changes the scene, then twice a second, since each repaint copies the whole 320 x 320 frame on the kernel task. It counts keys into `skip`.
 
 ### 5.5 The build option
 
-`PICOCALC_CANDELA_GALLERY` (default OFF) in `port/esp32p4/CMakeLists.txt`. With it, `port/esp32p4/main/CMakeLists.txt` compiles the kernel twice (instances `cg` and `cgs`) through one-line wrapper sources, the interpreter, the core, the scene table and the device side; bundles the world and appends its manifest entry to the typed manifests; and swaps the compositor's CJI input for the patched copy. Without it, nothing is added and the two C files it touches (`gfx.c`, `main_p4.c`) preprocess to the same text as before (Section 8).
+`PICOCALC_CANDELA_GALLERY` (default OFF) in `port/esp32p4/CMakeLists.txt`. With it, `port/esp32p4/main/CMakeLists.txt` compiles the kernel twice (instances `cg` and `cgs`) through one-line wrapper sources, the interpreter, the core, the scene table and the device side; bundles the world and appends its manifest entry to the typed manifests; and swaps the compositor's CJI input for the patched copy. Without it, nothing is added, and the three files it touches that the playable build compiles (`gfx.c`, `main_p4.c`, `p4.h`) preprocess to the same text as before (Section 8).
+
+`main_p4.c` gains no line: `ESP_ERROR_CHECK` writes `__LINE__` into the binary, so an added line above it changes the playable firmware. The console case is a macro, `P4_GALLERY_CONSOLE(cmd, rest)`, appended to the `raybench` line and defined in `p4.h` (empty without the option), and the worker starts on the compositor's first draw of the gallery (or the first `gallery` command), so `main()` calls nothing.
 
 ```bash
 source ~/esp/esp-idf-5.4.2/export.sh
@@ -144,7 +160,12 @@ The gallery chooses bit-reproducibility: a device frame can then be checked exac
 
 ## 8. Proof that the playable firmware is unchanged without the option
 
-`scripts/05-same-without-option.py` preprocesses `gfx.c` and `main_p4.c` with the exact compile commands of a build without the option (from its `compile_commands.json`), once from `main` at `627d608` and once from the worktree, and requires equal output; it lists every other changed file, all of which are new and compiled only with the option. (Results: Section 9.)
+Two scripts, after PICOCALC-CANDELA-WORLD's 13 and 14:
+
+- `scripts/05-same-without-option.py` preprocesses every playable source the change reaches (`gfx.c`, and the 18 sources of the build that include `p4.h`, `main_p4.c` among them) with the exact compile commands of a build without the option (its `compile_commands.json`), once from `main`'s text and once from the worktree, and requires byte-equal output, line markers off but `__LINE__` and `__FILE__` expansions included. The base source and base `p4.h` are written side by side; `-fmacro-prefix-map` maps the temporary directory back to the real one. It lists every other changed file; all are new and compiled only with the option.
+- `scripts/08-same-build-files.py` compares a fresh configure of `main` with a fresh configure of the worktree without the option: every compile command, `build.ninja`, and the five world manifests CMake writes, after replacing each tree's paths, the app version string (`git describe`), the ESP-IDF Python environment and the git HEAD files ESP-IDF watches. (Two configures of the same directory differ from one in `TARGET_PDB` lines, so both sides must be first configures.)
+
+Against `main` at 5c01d81: 19 of 19 sources equal (`various/identity/05-same-without-option-5c01d81.txt`); compile commands, `build.ninja` and manifests equal (`various/identity/08-same-build-files-5c01d81.txt`). With the option, `gfx.c` differs in 19 preprocessed lines and `main_p4.c` in 3.
 
 ## 9. Results
 
@@ -152,4 +173,10 @@ To be filled in from the device runs.
 
 ## 10. Milestone B
 
-To be filled in.
+Not done in this ticket. PICOCALC-CANDELA-WORLD's front end runs Candela's unchanged JavaScript in a QuickJS world and hands a packed scene (`cr_scene_t`) and a compiled program (`cr_program_t`, with SECTIONS' bytecode in `sections`) to `port_candela_start/update/stop/status_json` (`nucleus/candela_render.h`). Today `nucleus/candela_render_stub.c` checks them and reports passes on the kernel's clock without drawing. The gallery's renderer core is what that stub stands in for, so the connection is an adapter and a frame path, not a new renderer:
+
+1. **A renderer behind `candela_render.h`**, replacing the stub when both options are on. `port_candela_start` checks the program's `fixed_kernel_sha256` against `cg_kernel_fixed_sha256`, picks the instance by `spectral`, builds a `cg_scene_desc` from the `cr_scene_t` and hands it to the gallery's worker (`cg_begin`). `update` with `CR_RESET` restarts accumulation (`cg_end`, `cg_begin`; the sky table is rebuilt only when the sun changed). `stop` ends the scene; `status_json` reports pass, samples and seconds per pass; each finished pass calls `candela_world_frame` (which delivers a `candela.frame` message to the world) as the stub does.
+2. **The scene-data buffer.** `cr_scene_t` carries six arrays (U, O, LI, BV, SDs, SDd); the kernel binds one SD buffer in which SDd starts at row `dyn_base`. The adapter concatenates them into one allocation; the gallery's prepared scenes already have that layout.
+3. **Frame size.** `CG_MAX_SIDE` is 160 and the core's line buffer and display image are sized for it; the world accepts up to 640. Refuse larger frames (the gallery's choice), or size those buffers from the scene.
+4. **Pixels on screen.** The world draws its own screen, and `candela.frame` carries counters, not pixels. The renderer's frames need the same path the gallery uses: `fb.raytrace(..., 1000)` from the compositor while the Candela world is in front, or a region of the world's layout handed to `gfx_gallery`.
+5. **Qualification.** The world's B-01 must give the gallery's frame-0 digest (`e2ba6956` on RV32 and on the device), and the option-off proofs (scripts 05 and 08) must still hold for the playable build.

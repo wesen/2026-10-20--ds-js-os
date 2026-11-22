@@ -1,0 +1,50 @@
+same without the option: picocalc-os/nucleus/gfx.c (235074 bytes preprocessed)
+  with the option: 19 preprocessed lines differ from 5c01d81
+same without the option: picocalc-os/port/esp32p4/main/main_p4.c (165749 bytes preprocessed)
+  with the option: 3 preprocessed lines differ from 5c01d81
+same without the option: picocalc-os/port/esp32p4/compiler/install.c (173556 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/agenda_p4.c (137665 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/agent_p4.c (131946 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/bus_p4.c (178282 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/candela_p4.c (152429 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/chess_p4.c (126636 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/editor_p4.c (126645 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/files_p4.c (126474 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/fs_p4.c (190733 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/mobile_painter_p4.c (145018 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/painter_service.c (137358 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/perf_p4.c (170036 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/port_p4.c (155573 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/store_p4.c (154486 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/typed_p4.c (170349 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/typed_ray_material_bench.c (151995 bytes preprocessed)
+same without the option: picocalc-os/port/esp32p4/main/typed_ray_p4.c (153970 bytes preprocessed)
+files changed since 5c01d81 under picocalc-os/ and cji/:
+  A	picocalc-os/nucleus/candela_gallery.c
+  A	picocalc-os/nucleus/candela_gallery.h
+  A	picocalc-os/nucleus/candela_gallery_instance.cpp
+  M	picocalc-os/nucleus/gfx.c
+  M	picocalc-os/port/esp32p4/CMakeLists.txt
+  M	picocalc-os/port/esp32p4/main/CMakeLists.txt
+  A	picocalc-os/port/esp32p4/main/candela_gallery_p4.c
+  M	picocalc-os/port/esp32p4/main/main_p4.c
+  M	picocalc-os/port/esp32p4/main/p4.h
+  A	picocalc-os/third_party/candela/VENDOR.json
+  A	picocalc-os/third_party/candela/gallery/candela_gallery_scenes.c
+  A	picocalc-os/third_party/candela/kernel/cdl_api.h
+  A	picocalc-os/third_party/candela/kernel/cdl_fixed_kernel.c
+  A	picocalc-os/third_party/candela/kernel/cdl_kernel.cpp
+  A	picocalc-os/third_party/candela/kernel/cdl_kernel.h
+  A	picocalc-os/third_party/candela/kernel/cdl_math.h
+  A	picocalc-os/third_party/candela/kernel/cdl_overrides.inc
+  A	picocalc-os/third_party/candela/kernel/cdl_post.cpp
+  A	picocalc-os/third_party/candela/kernel/cdl_post.inc
+  A	picocalc-os/third_party/candela/kernel/cdl_switches.h
+  A	picocalc-os/third_party/candela/kernel/manifest.json
+  A	picocalc-os/third_party/candela/vm/cdl_vm.c
+  A	picocalc-os/third_party/candela/vm/cdl_vm.h
+  A	picocalc-os/third_party/candela/vm/cdl_vm_ck_math.h
+  A	picocalc-os/third_party/candela/vm/cdl_vm_isa.h
+  A	picocalc-os/tools/candela-gallery-compositor.py
+  A	picocalc-os/worlds/candela-gallery/gallery.js
+  A	picocalc-os/worlds/candela-gallery/manifest.json

@@ -43,8 +43,10 @@ def main():
     order = list(dict.fromkeys(r["id"] for r in recs if r.get("ev") == "scene-list"))
     scenes, digests, variants = {}, {}, {}
     for r in recs:
-        if r.get("ev") == "scene" and r.get("reason") in ("chosen", "next", "previous", "time", "target", "digest") and r.get("passes", 0) >= 1:
-            scenes.setdefault(r["id"], r)   # the first complete record of each scene
+        # the scene phase ends each scene by choosing the next ("chosen"); prefer that record, else the first other one
+        if r.get("ev") == "scene" and r.get("passes", 0) >= 1 and r.get("reason") in ("chosen", "next", "previous", "time", "target"):
+            if r["reason"] == "chosen" or r["id"] not in scenes:
+                scenes[r["id"]] = r
         if r.get("ev") == "digest":
             variants.setdefault(r["id"], {})[r.get("variant", "psram")] = r
             if r.get("variant", "psram") == "psram":

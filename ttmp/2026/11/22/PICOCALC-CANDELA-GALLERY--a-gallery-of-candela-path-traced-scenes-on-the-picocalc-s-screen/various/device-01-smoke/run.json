@@ -1,0 +1,20 @@
+{
+  "image": "/tmp/picocalc-candela-gallery-dev/build",
+  "imageSha256": "e61ccebaadbdda073e1f3c631123cfcfef66b8a298ac296047cf41d379657b4d",
+  "port": "/dev/ttyACM0",
+  "started": 1795356581.724309,
+  "args": {
+    "image": "/tmp/picocalc-candela-gallery-dev/build",
+    "out": "ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/various/device-01-smoke",
+    "port": "/dev/ttyACM0",
+    "digest_passes": 4,
+    "scene_seconds": 30,
+    "scenes": "",
+    "skip_digests": true,
+    "skip_scenes": true,
+    "leave_installed": false
+  },
+  "restore": "/tmp/picocalc-playable-smooth-chess-676ae95/build",
+  "restoreSha256": "b22a807d7c1e72227847b7762de09b927b5a86f537d8a1f434c77d618a69f62c",
+  "locked": 1795356581.819041
+}

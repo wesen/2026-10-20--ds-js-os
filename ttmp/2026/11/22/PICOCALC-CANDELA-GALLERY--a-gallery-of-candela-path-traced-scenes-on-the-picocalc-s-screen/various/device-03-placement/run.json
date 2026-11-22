@@ -1,0 +1,53 @@
+{
+  "image": "/tmp/picocalc-candela-gallery-dev/build",
+  "imageSha256": "2fd89ccde3dc7956aeeeee9b501976737b97a40c8b1e619d6493807c8ca35054",
+  "port": "/dev/ttyACM0",
+  "started": 1795357580.9569135,
+  "args": {
+    "image": "/tmp/picocalc-candela-gallery-dev/build",
+    "out": "ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/various/device-03-placement",
+    "port": "/dev/ttyACM0",
+    "digest_passes": 4,
+    "scene_seconds": 30,
+    "scenes": "B-01,R-01,W-02,X-04,S-02",
+    "variant_scenes": "B-01,R-01,W-02,X-04,S-02",
+    "skip_digests": false,
+    "skip_scenes": true,
+    "leave_installed": false
+  },
+  "restore": "/tmp/picocalc-playable-3353264/build",
+  "restoreSha256": "8acb94cc18ac1c174691c458a173a05be7cf9fb05d32d5531a6035c5dfcf4636",
+  "locked": 1795357580.967762,
+  "bootDrainedAt": 32.52117657661438,
+  "firstSeen": {
+    "ev": "first",
+    "id": "R-01",
+    "ms": 357.9,
+    "sub": 1,
+    "pass": 0,
+    "ev100": 8.5206,
+    "skyRebuilt": 1
+  },
+  "shots": {
+    "boot": {
+      "crc32": "b4e79c51",
+      "sha256": "4d6a74974ac1232470e0633308a60ad37e03b6bd35963e7f3a93bfc15f8b2396",
+      "rleBytes": 206272,
+      "seconds": 24.5
+    },
+    "end": {
+      "crc32": "e6bb1903",
+      "sha256": "de809107e0a55b9dc6806bae45b8f831495d1cdf1d93cdbb26d714e9544147bd",
+      "rleBytes": 75636,
+      "seconds": 9.0
+    }
+  },
+  "scenes": [
+    "B-01",
+    "R-01",
+    "W-02",
+    "X-04",
+    "S-02"
+  ],
+  "finished": 1795358011.8200479
+}

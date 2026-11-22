@@ -1,0 +1,34 @@
+t = 199666.3 ms, lane busy 41563.0 ms (20.8%), 15211 turns, 841 published, 1600 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   waiting       7942  17023.52     67.3    320    0  
+  power       driver   idle            37     80.28     77.2    320    0  
+  display     driver   idle            93    753.27     73.8    320    0  
+  compositor  service  idle          1823  11555.99    427.8    768    0  
+  agent       service  idle          1601    548.35    771.0   1536    0  
+  chat        app      idle             8    144.81    238.8    768    0  
+  launcher    app      idle            87   1100.96    264.7    384    0  
+  files       app      idle             1      4.04     68.2    384    0  
+  editor      app      idle             1     14.57    711.8    768    0  
+  calc        app      idle             1    241.92    568.9   1024    0  
+  agenda      app      idle            13     12.96    181.2    384    0  
+  settings    app      idle           167    612.52    190.1    384    0  
+  logs        app      idle           326   1390.44    214.3    384    0  
+  loader      app      idle           168    725.40    230.2    384    0  
+  sysmon      app      idle           328   1834.67    219.9    512    0  
+  repl        app      idle             0     27.48    209.0    384    0  
+  sandbox     service  idle             0     23.62    206.1    512    0  
+  snake       app      idle          1454   2572.79     98.3    320    0  
+  faults      app      idle             5     52.18    216.0    384    0  
+  flaky       service  idle             1      8.64     48.3    320    0  
+  raytrace    app      idle             0     26.13    207.6    320    0  
+  keys        app      idle           167    613.00    208.0    320    0  
+  about       app      idle           166    356.39    208.2    320    0  
+  chess       app      idle             1     17.85    743.8    768    0  
+  gallery     app      idle           648   1565.31    206.1    320    0  
+  toplog      service  idle             1      8.67     41.3    320    0  
+  nat-echo    service  idle             4     28.52     28.2     64    0  
+  nat-bench   service  idle             1      3.07      2.7     64    0  
+  nat-import  world    stopped          0     13.00      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle           167    202.66     14.3     64    0  
+  bus i2c0  busy 47347.99 ms, 7979 transfers, 31954 bytes, 0 errors
+  bus spi2  busy  2269.29 ms, 1202 transfers, 9438191 bytes, 0 errors
