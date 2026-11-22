@@ -113,7 +113,8 @@ function emitFns(t, overrides, ctx) {
   }
   return { protos, defs };
 }
-const kctx = { where: 'fixed kernel (rewrite)', known: [...kt.defined, ...ACCESSORS, ...DISPATCH.map(d => d.name), 'hash13'], structs: [...kt.structNames] };
+const kctx = { where: 'fixed kernel (rewrite)', known: [...kt.defined, ...ACCESSORS, ...DISPATCH.map(d => d.name), 'hash13'], structs: [...kt.structNames],
+  impure: { fns: kt.impure, globals: kt.globals.map(g => g.name) } };
 const ke = emitFns(kt, ovr, kctx);
 const tab = kt.tables[0];
 const kernel = `${pinNote}
@@ -216,7 +217,8 @@ writeFileSync(join(outDir, 'cdl_kernel.cpp'), kernel);
 writeFileSync(join(outDir, 'cdl_post.cpp'), post);
 writeFileSync(join(outDir, 'kernel.wgsl'), kernelWGSL);
 writeFileSync(join(outDir, 'post.wgsl'), postWGSL);
-const manifest = { pin: PIN, unpinned, kernel: { wgslLines: kernelWGSL.split('\n').length, functions: kt.fns.length, structs: kt.structs.map(s => s.name), globals: kt.globals.map(g => g.name), consts: kt.consts.map(c => c.name) },
+const manifest = { pin: PIN, unpinned, kernel: { wgslLines: kernelWGSL.split('\n').length, functions: kt.fns.length, structs: kt.structs.map(s => s.name), globals: kt.globals.map(g => g.name), consts: kt.consts.map(c => c.name),
+    sideEffects: kt.impure, sequenced: kt.sequenced },
   sectionAPI: API, dispatch: DISPATCH.map(d => d.name), overrides: OVERRIDES.map(o => ({ fn: o.fn, switch: o.sw, how: o.impl ? 'cpu/cdl_overrides.inc ' + o.impl : `rewrite '${o.rewrite[0]}' -> '${o.rewrite[1]}'` })),
   post: { wgslLines: postWGSL.split('\n').length, functions: pt.fns.length, overrides: POST_OVERRIDES.map(o => ({ fn: o.fn, switch: o.sw, how: `rewrite '${o.rewrite[0]}' -> '${o.rewrite[1]}'` })) } };
 writeFileSync(join(outDir, 'manifest.json'), JSON.stringify(manifest, null, 1) + '\n');

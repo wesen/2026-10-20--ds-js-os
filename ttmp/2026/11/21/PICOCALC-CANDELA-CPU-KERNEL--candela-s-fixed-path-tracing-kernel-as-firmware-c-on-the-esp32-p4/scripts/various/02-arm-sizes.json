@@ -28,7 +28,7 @@
   "bss": 52
  },
  "trig": {
-  "text": 59776,
+  "text": 59796,
   "iram": 0,
   "rodata": 2836,
   "data": 16,
@@ -84,7 +84,7 @@
   "bss": 56
  },
  "cpu-exp": {
-  "text": 59636,
+  "text": 59656,
   "iram": 0,
   "rodata": 2824,
   "data": 16,
@@ -98,7 +98,7 @@
   "bss": 56
  },
  "cpu-O3": {
-  "text": 73268,
+  "text": 73278,
   "iram": 0,
   "rodata": 2896,
   "data": 16,

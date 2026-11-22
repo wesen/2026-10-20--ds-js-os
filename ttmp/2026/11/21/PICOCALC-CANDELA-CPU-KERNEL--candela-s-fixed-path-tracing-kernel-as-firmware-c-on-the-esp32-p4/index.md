@@ -11,9 +11,21 @@ Topics:
 DocType: index
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/02-gen-kernel.mjs
+      Note: Generates the fixed kernel, post pass and section-API manifest
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/09-run-board.py
+      Note: Flash, collect, restore and health-check under the board lock
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/board/main/bench.c
+      Note: 'Device benchmark: timing, post pass, placement, 64 spp images'
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/lib/wgsl2c.mjs
+      Note: Strict WGSL-to-C++ translator, including the evaluation-order rule
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/various/06-board-timing/score.txt
+      Note: Device cycles per sample, CPI and substitution tables
+    - Path: repo://ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/various/08-board-images/compare.json
+      Note: Device 64 spp frames against the host build
 ExternalSources: []
-Summary: "Design stub: generate C from Candela's kernel.js (PRELUDE, SPECTRAL, CORE, PATH, POST) at firmware build time, add CPU-specific math, and measure cycles per sample on the ESP32-P4."
+Summary: 'Design stub: generate C from Candela''s kernel.js (PRELUDE, SPECTRAL, CORE, PATH, POST) at firmware build time, add CPU-specific math, and measure cycles per sample on the ESP32-P4.'
 LastUpdated: 2026-11-21T23:02:25.065019029-05:00
 WhatFor: ""
 WhenToUse: ""

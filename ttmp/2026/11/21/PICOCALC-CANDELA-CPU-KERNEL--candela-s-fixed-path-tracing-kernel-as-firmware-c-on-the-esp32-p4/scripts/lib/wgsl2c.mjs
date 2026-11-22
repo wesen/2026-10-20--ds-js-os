@@ -12,6 +12,12 @@
 //  3. Functions named in `overrides` are emitted as <name>_wgsl plus a forwarding definition that a CPU
 //     substitution can replace; `rewrites` produce a second, rewritten body under a switch.
 //  4. The caller decides linkage: kernel-internal functions are static, the section API is external.
+//  5. Evaluation order. WGSL evaluates operands and function arguments left to right; C++ leaves most of
+//     that order unspecified, and GCC chooses it per target (x86-64 and RV32 differ). A declaration whose
+//     initialiser calls two functions with side effects on module state (functions that assign a
+//     var<private> global, such as rnd() advancing rngS, directly or through a call) gets those calls hoisted
+//     into temporaries in WGSL's order; any other statement with two such calls fails. The same set decides
+//     which selects stay eager (2.).
 //
 // translate() parses; the emitters live in 02-gen-kernel.mjs and 03-gen-scene.mjs.
 
@@ -46,6 +52,49 @@ export function splitArgs(s) {
 function matchParen(s, i) { let d = 0; for (let k = i; k < s.length; k++) { if (s[k] === '(') d++; else if (s[k] === ')') { d--; if (!d) return k; } } return -1; }
 const floatLit = s => s.replace(/(?<![\w.])((?:\d+\.\d*|\.\d+)(?:e[+-]?\d+)?|\d+e[+-]?\d+)(?![\w.])/gi, '$1f');
 const swizzles = s => s.replace(/\.([xyzw]{2,4})\b(?!\s*\()/g, (_, k) => `.${k}()`);
+// Functions with side effects on module state; set by translate() (effectful() over its source, plus opts.impure).
+let IMPURE = new Set(['rnd', 'rnd2']);
+const callsIn = s => [...s.matchAll(/\b(\w+)\s*\(/g)].map(m => m[1]);
+const impureCall = s => callsIn(s).some(f => IMPURE.has(f));
+export function effectful(src, extra = {}) {
+  const code = src.replace(/\/\/.*$/gm, '');
+  const globals = [...code.matchAll(/^\s*var<private>\s+(\w+)/gm)].map(m => m[1]).concat(extra.globals || []);
+  const assigns = globals.map(g => new RegExp(`\\b${g}\\s*(?:\\.\\w+|\\[[^\\]]*\\])?\\s*[-+*/|&^]?=(?!=)`));
+  const bodies = new Map();
+  for (const m of code.matchAll(/^\s*fn\s+(\w+)\s*\(/gm)) {
+    const i = code.indexOf('{', m.index);
+    let d = 0, j = i;
+    for (; j < code.length; j++) { if (code[j] === '{') d++; else if (code[j] === '}' && !--d) break; }
+    bodies.set(m[1], code.slice(i, j + 1));
+  }
+  const out = new Set(extra.fns || []);
+  for (const [n, b] of bodies) if (assigns.some(r => r.test(b))) out.add(n);
+  for (let grew = true; grew;) {
+    grew = false;
+    for (const [n, b] of bodies) if (!out.has(n) && callsIn(b).some(f => out.has(f))) { out.add(n); grew = true; }
+  }
+  return out;
+}
+// Hoist the calls with side effects in one declaration into temporaries, in WGSL's left-to-right order.
+function sequence(L, where, n, log) {
+  if (callsIn(L).filter(f => IMPURE.has(f)).length < 2) return L;
+  const d = L.match(/^(\s*)((?:const\s+)?\w+\s+\w+\s*=\s*)(.*;)\s*$/);
+  if (!d) fail(where, n, 'two calls with side effects in a statement that is not a single declaration: ' + L.trim());
+  const rhs = d[3], re = /\b(\w+)\s*\(/g;
+  let pre = '', out = '', pos = 0, k = 0, m;
+  while ((m = re.exec(rhs))) {
+    if (!IMPURE.has(m[1])) continue;
+    const open = rhs.indexOf('(', m.index), close = matchParen(rhs, open), call = rhs.slice(m.index, close + 1);
+    if (impureCall(rhs.slice(open + 1, close))) fail(where, n, 'nested calls with side effects: ' + L.trim());
+    const t = `cdlSeq${n}_${k++}`;
+    pre += `const auto ${t} = ${call}; `;
+    out += rhs.slice(pos, m.index) + t;
+    pos = close + 1; re.lastIndex = close + 1;
+  }
+  out += rhs.slice(pos);
+  if (log) log.push({ where, line: n, cpp: (d[1] + pre + d[2] + out).trim() });
+  return d[1] + pre + d[2] + out;
+}
 function selects(s) {
   let from = 0, i;
   while ((i = s.slice(from).search(/\bselect\(/)) >= 0) {
@@ -53,7 +102,7 @@ function selects(s) {
     const open = s.indexOf('(', i), close = matchParen(s, open);
     const args = splitArgs(s.slice(open + 1, close));
     if (args.length !== 3) throw new TranslateError('wgsl2c: select needs 3 arguments: ' + s.slice(i, close + 1));
-    if (/\brnd2?\(/.test(args[0] + args[1])) { from = open; continue; }   // eager: keeps the random stream
+    if (impureCall(args[0] + args[1])) { from = open; continue; }   // eager: keeps WGSL's side effects (the random stream)
     const [f, t, c] = args.map(selects);
     s = s.slice(0, i) + `CDL_SEL(${f}, ${t}, ${c})` + s.slice(close + 1);
   }
@@ -99,7 +148,9 @@ export function translate(src, opts = {}) {
   const defined = new Set([...src.replace(/\/\/.*$/gm, '').matchAll(/^\s*fn\s+(\w+)\s*\(/gm)].map(m => m[1]));
   const known = new Set([...defined, ...(opts.known || [])]);
   const structNames = new Set([...(opts.structs || []), ...[...src.matchAll(/^\s*struct\s+(\w+)\s*{/gm)].map(m => m[1])]);
-  const out = { structs: [], fns: [], globals: [], consts: [], tables: [], structNames, defined };
+  const out = { structs: [], fns: [], globals: [], consts: [], tables: [], structNames, defined, sequenced: [] };
+  IMPURE = effectful(src, opts.impure || {});
+  out.impure = [...IMPURE].sort();
   let inStruct = null, fn = null, depth = 0;
   for (let i = 0; i < lines.length; i++) {
     const n = i + 1, raw = lines[i];
@@ -126,6 +177,8 @@ export function translate(src, opts = {}) {
       fn = { name: m[2], ret, params, body: [], wgsl: [raw] };
       depth = 1 + (m[5].match(/{/g) || []).length - (m[5].match(/}/g) || []).length;
       const rest = expr(decl(m[5], structNames, where, n));
+      // statements on the header line (one-line functions): each may call at most one function with side effects
+      for (const st of rest.split(/[;{}]/)) if (callsIn(st).filter(f => IMPURE.has(f)).length > 1) fail(where, n, 'two calls with side effects on a function\'s header line: ' + st.trim());
       if (depth === 0) { fn.oneLine = true; fn.body.push(rest.replace(/}\s*$/, '')); out.fns.push(fn); fn = null; }
       else fn.body.push(rest);
       continue;
@@ -135,7 +188,7 @@ export function translate(src, opts = {}) {
       depth += (code.match(/{/g) || []).length - (code.match(/}/g) || []).length;
       let L = decl(raw, structNames, where, n);
       if (/\b(let|var|fn|array<|bitcast)\b/.test(L.replace(/\/\/.*$/, ''))) fail(where, n, 'untranslated construct: ' + raw);
-      L = expr(L);
+      L = sequence(expr(L), where, n, out.sequenced);
       if (depth === 0) { if (!/^\s*}\s*$/.test(code)) fail(where, n, 'code after a function\'s closing brace'); out.fns.push(fn); fn = null; }
       else fn.body.push(L);
       continue;

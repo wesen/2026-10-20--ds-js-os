@@ -4,7 +4,7 @@ usage (repository root): python3 09-run-board.py --app BUILD/candela-bench.bin -
        python3 09-run-board.py --probe --out NEW_DIR      (health of the running firmware only)
 
 Derived from PICOCALC-SIMD-LAB scripts/ray/02-run-board.py. The restore target is read from
-/tmp/picocalc-current-playable.txt ("<build dir> <app sha256>") when the run starts, because other sessions
+/tmp/picocalc-current-playable.txt ("<build dir> <app sha256>") once the lock is held, because other sessions
 install new playable builds; board_common.check_build verifies that app and the expected partition table.
 Under the shared serial lock (board_common.acquire, held for this one run only):
   1. health check of the running firmware (eight worlds, painter, keyboard I2C); a failure stops the run
@@ -39,13 +39,9 @@ parser.add_argument("--probe", action="store_true", help="only check the running
 parser.add_argument("--out", type=Path, required=True)
 parser.add_argument("--deadline", type=float, default=900)
 args = parser.parse_args()
-pointer = Path("/tmp/picocalc-current-playable.txt").read_text().split()
-restore, restore_sha = Path(pointer[0]), pointer[1]
-check_build(restore, restore_sha)
 if not args.probe and not (args.app and args.app.is_file()):
     raise SystemExit("A built benchmark app is required")
 args.out.mkdir(parents=True, exist_ok=False)
-save(args.out / "restore.json", {"build": str(restore), "sha256": restore_sha})
 
 
 def keyboard_failure(where, exc):
@@ -55,6 +51,12 @@ def keyboard_failure(where, exc):
 
 
 with acquire(), (args.out / "uart.log").open("wb", buffering=0) as log:
+    # read the restore target only once the lock is held: another session may install a new playable build
+    # while this run waits for the lock
+    pointer = Path("/tmp/picocalc-current-playable.txt").read_text().split()
+    restore, restore_sha = Path(pointer[0]), pointer[1]
+    check_build(restore, restore_sha)
+    save(args.out / "restore.json", {"build": str(restore), "sha256": restore_sha})
     console = release.unit.Console(args.port, log)
     try:
         save(args.out / "before.json", health(console))

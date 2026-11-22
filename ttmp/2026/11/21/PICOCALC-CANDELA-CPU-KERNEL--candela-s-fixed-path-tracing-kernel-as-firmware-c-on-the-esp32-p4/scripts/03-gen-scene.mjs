@@ -30,7 +30,8 @@ const DISPATCH = { evalMaterial: ['Lobe', ['Hit', 'vec3f', 'f32']], sdUser: ['f3
 export function translateSections(shared, where) {
   const s = splitProgram(shared, K);
   const src = (s.fieldCode + s.matCode).replace(new RegExp(`\\b(${Object.keys(DISPATCH).join('|')})\\b`, 'g'), 'sec_$1');
-  const t = translate(src, { where, known: [...man.sectionAPI, 'U', 'objF', 'litF', 'bvhF', 'sdF'], structs: man.kernel.structs });
+  const t = translate(src, { where, known: [...man.sectionAPI, 'U', 'objF', 'litF', 'bvhF', 'sdF'], structs: man.kernel.structs,
+    impure: { fns: man.kernel.sideEffects, globals: man.kernel.globals } });
   if (t.structs.length || t.globals.length || t.tables.length) throw new Error(`${where}: sections declare structs or module-scope state`);
   for (const [name, [ret, ps]] of Object.entries(DISPATCH)) {
     const f = t.fns.find(f => f.name === 'sec_' + name);

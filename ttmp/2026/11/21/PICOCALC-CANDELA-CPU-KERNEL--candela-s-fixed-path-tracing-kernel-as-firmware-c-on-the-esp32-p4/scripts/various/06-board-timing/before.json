@@ -17,22 +17,22 @@
     "calls": 1,
     "paints": 0,
     "rejects": 0,
-    "compile_us": 4566747,
-    "relocate_us": 1242,
-    "native_us": 1504,
+    "compile_us": 4628349,
+    "relocate_us": 1272,
+    "native_us": 1533,
     "raster_us": 0,
     "image_bytes": 33840
   },
   "i2c": {
-    "busyMs": 209610.73,
-    "transfers": 38708,
-    "bytes": 154990,
+    "busyMs": 198441.98,
+    "transfers": 36421,
+    "bytes": 145833,
     "errors": 0
   },
   "spi": {
-    "busyMs": 109.0,
-    "transfers": 62,
-    "bytes": 401892,
+    "busyMs": 118.88,
+    "transfers": 30,
+    "bytes": 482842,
     "errors": 0
   }
 }

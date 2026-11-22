@@ -34,6 +34,28 @@
    "INV_PI",
    "BIG",
    "EPS"
+  ],
+  "sideEffects": [
+   "cameraRay",
+   "hitMesh",
+   "hitObj",
+   "neeAt",
+   "occluded",
+   "renderPixel",
+   "rnd",
+   "rnd2",
+   "shadowTr",
+   "traceAOV",
+   "traceAll",
+   "tracePath",
+   "traceScene"
+  ],
+  "sequenced": [
+   {
+    "where": "fixed kernel",
+    "line": 1313,
+    "cpp": "const auto cdlSeq1313_0 = rnd2(); const auto cdlSeq1313_1 = rnd(); const BS bs = sampleLobe(L, woL, cdlSeq1313_0, cdlSeq1313_1);"
+   }
   ]
  },
  "sectionAPI": [

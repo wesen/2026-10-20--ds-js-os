@@ -3,12 +3,13 @@
 
 usage: python3 -I 11-compare-images.py BENCH.log HOST_FRAMES_DIR OUT_DIR [--arm cpu]
 
-BENCH.log is an image run (CDL_BENCH_MODE 2): per scene a CKIMG header, CKPX rows (base64 of per-pixel
+BENCH.log (or BENCH.log.gz) is an image run (CDL_BENCH_MODE 2): per scene a CKIMG header, CKPX rows (base64 of per-pixel
 f32 luminance and an RGBE preview), CKIMGEND. HOST_FRAMES_DIR holds 09-host-tests.py frames output
 (<arm>-<scene>.rgbf, mean RGB per pixel). For each scene: the device/host mean luminance ratio, the share of
 pixels whose luminance is within 1% of the host's, and the mean relative difference. Writes OUT_DIR/
 <scene>-device.png (from the RGBE preview), OUT_DIR/compare.json, and a contact sheet of all device frames."""
 import base64
+import gzip
 import json
 import math
 import struct
@@ -20,7 +21,7 @@ log, hostdir, outdir = Path(sys.argv[1]), Path(sys.argv[2]), Path(sys.argv[3])
 arm = sys.argv[sys.argv.index("--arm") + 1] if "--arm" in sys.argv else "cpu"
 outdir.mkdir(parents=True, exist_ok=True)
 imgs, cur = {}, None
-for raw in open(log, "rb"):
+for raw in (gzip.open(log, "rb") if log.suffix == ".gz" else open(log, "rb")):
     p = raw.decode(errors="replace").strip().split()
     if not p:
         continue

@@ -97,12 +97,13 @@ The pinned version is `candela-workspace(1).zip`, SHA-256 `873b2dd4...df5d`: `sr
 
 ### Translation rules
 
-The translator keeps the prototype's rules. These are the rules of `src/wgsl2glsl.js` plus the DGX Spark report's WGSL-to-CUDA table: typed declarations, `fn` headers become prototypes, struct parameters become `const&`, vectors and built-ins come from a generated prologue, float literals get `f`, and multi-component swizzles become methods. It changes four things.
+The translator keeps the prototype's rules. These are the rules of `src/wgsl2glsl.js` plus the DGX Spark report's WGSL-to-CUDA table: typed declarations, `fn` headers become prototypes, struct parameters become `const&`, vectors and built-ins come from a generated prologue, float literals get `f`, and multi-component swizzles become methods. It changes five things. The fifth was added after the image run (diary Step 5).
 
 1. **It is strict.** Each WGSL line is tokenized. A keyword outside the subset Candela uses (`switch`, `while`, `ptr`, `bitcast`, attributes, `override`, `alias`, `discard`, texture calls), a call to an unknown function, an assignment to a swizzle, or `%` with a float operand stops the build with the line number. The C++ compiler catches some of these; the remaining ones would compile and mean something different.
 2. **Selects and zero-initialisation are macros.** `select(f, t, c)` becomes `CDL_SEL(f, t, c)` unless an argument draws a random number, in which case it stays an eager `select(...)` so the random stream does not change. `var x: S;` for a struct or array becomes `S x; CDL_ZINIT(x);`. Both macros are defined by the substitution switches (Section 5).
 3. **Override points.** For the functions that a substitution replaces (`hash3`, `hash13`, `voronoi3`, `skyL`, `atrousW`), the translator emits the original under the name `<fn>_wgsl` and a forwarding definition. `cdl_cpu.h` replaces the forwarding definition when the switch is on. A textual rewrite such as `voronoi3`'s inline sine hash is applied only if its pattern occurs exactly once; otherwise the generator fails.
 4. **Linkage and data.** Private globals (`rngS`, `gTime`, `gLam`, `gTau`, `gTri`, `gBary`) get external linkage in the kernel's namespace, because sections read `gTime` and `gLam`. The GGX table becomes `static const f32 ETAB[256]` in `.rodata`.
+5. **Evaluation order.** WGSL evaluates operands and function arguments left to right. C++ leaves the order of function arguments unspecified, and GCC at -O2 evaluates them in different orders on x86-64 and on RV32. The translator computes the functions with side effects on module state: those that assign a `var<private>` global, plus their callers, transitively. These are 13 functions, including `rnd`, `rnd2`, `tracePath`, and `hitMesh` with its callers, which write `gTri` and `gBary`; `manifest.json` lists them under `sideEffects`. In a declaration whose initialiser calls two of them, the calls are hoisted into temporaries in WGSL's order. Any other statement with two such calls, a nested pair, or two on a one-line function header fails the build. The fixed kernel has one such statement, `sampleLobe(L, woL, rnd2(), rnd())` in `tracePath`. Before this rule existed, the host build drew those random numbers in a different order from the RV32 build, so host and device rendered different samples with the same distribution. The eager-`select` rule (2.) uses the same set of functions.
 
 Everything is wrapped in `namespace CDL_NS`. A firmware image can hold several kernel instances: the benchmark links one per measurement arm, and a later firmware may hold an RGB instance and a spectral one. The C entry points are named `<ns>_bind`, `<ns>_render_pixel` and so on.
 
@@ -189,3 +190,14 @@ Nothing. The generator, the generated kernel, the harnesses and the board app li
 - **Fast math changes noise.** Image comparisons use statistics (mean luminance), except for E-02, which is deterministic and is compared per pixel.
 - **Translator drift.** The pin check, the strict tokenizer and the exact-layout split make a new Candela version fail at build time, not at render time.
 - **The seam costs inlining.** Calls through the table cannot be inlined, and `Lobe` (88 bytes) is returned through memory. The `mono` arm measures the difference.
+
+## 11. Results
+
+The full account is `analysis/01-what-candela-s-fixed-kernel-costs-on-the-esp32-p4-measured.md`. In short:
+
+- **Cycles per sample** (B-01, 160 x 160, 1 spp, one core): 14,976 with WGSL semantics and 6,832 with every substitution (52,700 samples per second). Other scenes with every substitution: R-01 12,867, L-03 5,358, G-01 11,960, E-02 4,918, W-02 19,413. Every device frame digest equals the interpreter's.
+- **Latencies:** `fdiv.s` and `fsqrt.s` take 19 cycles on one unit that is not pipelined. `fadd.s` and `fmul.s` take 4 and `fmadd.s` 5. CPI is 1.28-1.72.
+- **Instruction cache:** 0.6-16% of fetches miss L1 and L2 serves them. A kernel in internal RAM (`cpu-iram`) is 0.5-1.5% slower. Identical machine code at different addresses varies by up to 2.3% between images, which sets the resolution of arm-to-arm comparisons.
+- **Luminance agreement** at 64 spp, device against the host build of the same C++: mean ratios within 0.005% for B-01, R-01, L-03 and G-01. Per pixel within 1%: 99.996%, 99.996%, 100%, 99.1%, and E-02 99.996%. A host build with FMA contraction reproduces the device frames to f32 rounding (1.8e-6) except in G-01.
+- **Size:** the `cpu` kernel is 50,522 B of `.text`, the post pass 5,658 B, and the libm functions they use 8,308 B. Together that is 1.45% of the playable image.
+- **Deviations from this design:** the kernel is C++, not C (the C interface is `extern "C"`). `NS_render_span` was added, because a per-pixel call kept `renderPixel` from inlining. W-02 runs at 80 x 80. The eager arms are measured on RV32 only. Rule 5 was added after the image run.

@@ -1352,7 +1352,7 @@ static PathOut tracePath(vec3f ro0, vec3f rd0) {
     if (neeOn && !isDeltaLobe(L)) { po.L = po.L + beta * L.w * neeAt(h.P, h.Ng, fr, wo, L, 0.0f, false, misOn); }
     // ---- continue: sample the lobe ----
     const vec3f woL = toLocal(fr, wo);
-    const BS bs = sampleLobe(L, woL, rnd2(), rnd());
+    const auto cdlSeq1313_0 = rnd2(); const auto cdlSeq1313_1 = rnd(); const BS bs = sampleLobe(L, woL, cdlSeq1313_0, cdlSeq1313_1);
     if (!bs.ok) { break; }
     const vec3f wi = toWorld(fr, bs.wi);
     beta = beta * L.w * bs.w;

@@ -112,17 +112,44 @@ def frames(build, spp, jobs, arms):
     return rows
 
 
+def fma(build, spp, jobs):
+    """Two host builds of the cpu arm that differ only in FMA contraction, rendered at SPP: per-pixel agreement.
+    Explains how far two correct compilations of the same kernel differ per pixel (RV32 contracts a*b+c into
+    fmadd.s under -ffp-contract=fast; the reference host build has no FMA)."""
+    import struct
+    out = build / "host-fma"
+    out.mkdir(parents=True, exist_ok=True)
+
+    def one(s):
+        rows = {}
+        for tag, extra in (("nofma", []), ("fma", ["-mfma", "-ffp-contract=fast"])):
+            exe = host_exe(build, "cpu", s, extra, "fma-" + tag)
+            render(exe, s, spp, out / f"{tag}-{s}.rgbf")
+            v = struct.unpack(f"<{(out / f'{tag}-{s}.rgbf').stat().st_size // 4}f", (out / f"{tag}-{s}.rgbf").read_bytes())
+            rows[tag] = [0.2126 * v[i] + 0.7152 * v[i + 1] + 0.0722 * v[i + 2] for i in range(0, len(v), 3)]
+        a, b = rows["fma"], rows["nofma"]
+        m = sum(b) / len(b)
+        rel = [abs(x - y) / max(abs(x), abs(y), 1e-6 * m) for x, y in zip(a, b)]
+        return {"scene": s, "spp": spp, "ratio": (sum(a) / len(a)) / m, "within1pct": sum(r <= 0.01 for r in rel) / len(rel),
+                "meanRelDiff": sum(rel) / len(rel), "identical": a == b}
+    rows = list(cf.ThreadPoolExecutor(jobs).map(one, ["B-01", "R-01", "L-03", "G-01", "E-02"]))
+    for r in rows:
+        print(json.dumps(r))
+    return rows
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("build", type=Path)
-    ap.add_argument("test", choices=["sky", "poison", "frames"])
+    ap.add_argument("test", choices=["sky", "poison", "frames", "fma"])
     ap.add_argument("--spp", type=int, default=64)
     ap.add_argument("--jobs", type=int, default=8)
     ap.add_argument("--arms", default="cpu,lazy,hash,proto")
     ap.add_argument("--out", type=Path)
     a = ap.parse_args()
     build = a.build.resolve()
-    rows = sky(build) if a.test == "sky" else poison(build, a.jobs) if a.test == "poison" else frames(build, a.spp, a.jobs, a.arms.split(","))
+    rows = (sky(build) if a.test == "sky" else poison(build, a.jobs) if a.test == "poison" else fma(build, a.spp, a.jobs) if a.test == "fma"
+            else frames(build, a.spp, a.jobs, a.arms.split(",")))
     if a.out:
         a.out.write_text("".join(json.dumps(r) + "\n" for r in rows))
     if a.test == "poison" and not all(r["equal"] for r in rows):

@@ -1,0 +1,52 @@
+{
+ "B-01": {
+  "meanLumDevice": 8464.830719648897,
+  "meanLumHost": 8464.834179044195,
+  "ratio": 0.9999995913215516,
+  "within1pct": 0.9999609375,
+  "meanRelDiff": 1.2053588142270726e-06,
+  "deviceCycles": 11224553826,
+  "cyclesPerSample": 6850.923966064453,
+  "spp": 64
+ },
+ "R-01": {
+  "meanLumDevice": 62.172685396400446,
+  "meanLumHost": 62.17268459127241,
+  "ratio": 1.0000000129498676,
+  "within1pct": 0.9999609375,
+  "meanRelDiff": 1.2750875927796089e-06,
+  "deviceCycles": 21066797657,
+  "cyclesPerSample": 12858.152866821289,
+  "spp": 64
+ },
+ "L-03": {
+  "meanLumDevice": 9462.129396605491,
+  "meanLumHost": 9462.129469390877,
+  "ratio": 0.9999999923077162,
+  "within1pct": 1.0,
+  "meanRelDiff": 1.1550165170396683e-07,
+  "deviceCycles": 8844971074,
+  "cyclesPerSample": 5398.541915283203,
+  "spp": 64
+ },
+ "G-01": {
+  "meanLumDevice": 11584.48105534315,
+  "meanLumHost": 11585.048312312947,
+  "ratio": 0.9999510354247557,
+  "within1pct": 0.991015625,
+  "meanRelDiff": 0.0004857083365889585,
+  "deviceCycles": 19654441063,
+  "cyclesPerSample": 11996.11881286621,
+  "spp": 64
+ },
+ "E-02": {
+  "meanLumDevice": 0.4450253391739569,
+  "meanLumHost": 0.4450252976067444,
+  "ratio": 1.0000000934041564,
+  "within1pct": 0.9999609375,
+  "meanRelDiff": 8.094658991476232e-07,
+  "deviceCycles": 8041145798,
+  "cyclesPerSample": 4907.92590209961,
+  "spp": 64
+ }
+}

@@ -1,0 +1,147 @@
+## Cycles per sample (median of warm frames), instructions per sample, CPI, digest check
+
+| arm | B-01 | R-01 | L-03 | G-01 | E-02 | W-02 |
+|---|---|---|---|---|---|---|
+| wgsl | 14,976 / 9,338 = 1.60 | 15,536 / 11,023 = 1.41 | 13,570 / 8,382 = 1.62 | 19,817 / 12,837 = 1.54 | 5,736 / 4,242 = 1.35 | 102,659 / 79,715 = 1.29 |
+| lazy | 13,643 / 8,524 = 1.60 | 14,570 / 10,315 = 1.41 | 12,112 / 7,557 = 1.60 | 18,377 / 12,012 = 1.53 | 5,718 / 4,030 = 1.42 | 100,891 / 78,914 = 1.28 |
+| noinit | 13,136 / 8,176 = 1.61 | 13,862 / 9,881 = 1.40 | 11,785 / 7,263 = 1.62 | 17,795 / 11,620 = 1.53 | 5,393 / 3,745 = 1.44 | 100,113 / 78,342 = 1.28 |
+| floor | 13,089 / 8,175 = 1.60 | 13,819 / 9,880 = 1.40 | 11,751 / 7,262 = 1.62 | 17,704 / 11,619 = 1.52 | 5,339 / 3,722 = 1.43 | 99,346 / 77,627 = 1.28 |
+| trig | 12,028 / 7,194 = 1.67 | 13,278 / 9,509 = 1.40 | 10,603 / 6,298 = 1.68 | 16,740 / 10,682 = 1.57 | 4,962 / 3,535 = 1.40 | 22,858 / 15,265 = 1.50 |
+| exp | 10,399 / 6,178 = 1.68 | 13,126 / 9,537 = 1.38 | 8,947 / 5,241 = 1.71 | 15,341 / 9,798 = 1.57 | 4,967 / 3,535 = 1.41 | 22,548 / 15,298 = 1.47 |
+| hash | 10,415 / 6,178 = 1.69 | 13,128 / 9,537 = 1.38 | 9,034 / 5,241 = 1.72 | 15,289 / 9,798 = 1.56 | 4,965 / 3,535 = 1.40 | 19,628 / 13,893 = 1.41 |
+| cpu | 6,832 / 4,419 = 1.55 | 12,867 / 9,534 = 1.35 | 5,358 / 3,409 = 1.57 | 11,960 / 8,240 = 1.45 | 4,918 / 3,535 = 1.39 | 19,413 / 13,890 = 1.40 |
+| cpu-lazy | 8,464 / 5,172 = 1.64 | 14,348 / 10,227 = 1.40 | 7,068 / 4,168 = 1.70 | 13,897 / 9,018 = 1.54 | 5,190 / 3,776 = 1.37 | 21,514 / 14,696 = 1.46 |
+| cpu-noinit | 7,355 / 4,766 = 1.54 | 13,568 / 9,971 = 1.36 | 5,809 / 3,700 = 1.57 | 12,628 / 8,631 = 1.46 | 5,303 / 3,820 = 1.39 | 20,369 / 14,469 = 1.41 |
+| cpu-floor | 6,954 / 4,430 = 1.57 | 13,131 / 9,543 = 1.38 | 5,532 / 3,421 = 1.62 | 12,071 / 8,250 = 1.46 | 4,986 / 3,562 = 1.40 | 19,668 / 13,945 = 1.41 |
+| cpu-trig | 7,479 / 4,888 = 1.53 | 13,762 / 9,944 = 1.38 | 5,936 / 3,797 = 1.56 | 12,737 / 8,754 = 1.46 | 5,205 / 3,711 = 1.40 | 20,693 / 14,677 = 1.41 |
+| cpu-exp | 6,961 / 4,420 = 1.57 | 13,070 / 9,505 = 1.37 | 5,476 / 3,401 = 1.61 | 12,262 / 8,243 = 1.49 | 4,965 / 3,535 = 1.40 | 19,472 / 13,857 = 1.41 |
+| cpu-hash | 6,928 / 4,419 = 1.57 | 13,067 / 9,534 = 1.37 | 5,407 / 3,409 = 1.59 | 11,979 / 8,240 = 1.45 | 4,914 / 3,535 = 1.39 | 22,531 / 15,295 = 1.47 |
+| cpu-O3 | 6,656 / 4,283 = 1.55 | 12,547 / 9,244 = 1.36 | 5,258 / 3,312 = 1.59 | 11,763 / 8,030 = 1.46 | 4,908 / 3,471 = 1.41 | 19,131 / 13,612 = 1.41 |
+| cpu-iram | 6,911 / 4,438 = 1.56 | 13,065 / 9,604 = 1.36 | 5,426 / 3,416 = 1.59 | 12,100 / 8,285 = 1.46 | 4,944 / 3,550 = 1.39 | 19,675 / 13,956 = 1.41 |
+| mono | 6,918 / 4,413 = 1.57 | 12,986 / 9,507 = 1.37 | 5,494 / 3,405 = 1.61 | 11,996 / 8,163 = 1.47 | 4,789 / 3,407 = 1.41 | 19,498 / 13,825 = 1.41 |
+| proto | 13,533 / 8,521 = 1.59 | 14,167 / 10,289 = 1.38 | 12,081 / 7,559 = 1.60 | 18,248 / 11,934 = 1.53 | 5,464 / 3,957 = 1.38 | 100,742 / 78,832 = 1.28 |
+
+## Substitutions: cycles per sample
+
+### B-01: WGSL semantics 14,976, all substitutions 6,832 (2.19x)
+
+| switch | ladder: cycles saved when added | cpu without it | cost of leaving it out |
+|---|---:|---:|---:|
+| lazy select | 1,334 | 8,464 | +1,632 |
+| no zero-init | 507 | 7,355 | +523 |
+| conversion floor | 47 | 6,954 | +122 |
+| polynomial sin/cos | 1,061 | 7,479 | +647 |
+| polynomial exp | 1,629 | 6,961 | +129 |
+| integer hash | -16 | 6,928 | +96 |
+| sky table (+ pow32 in post) | 3,583 | 10,415 | +3,583 |
+
+### R-01: WGSL semantics 15,536, all substitutions 12,867 (1.21x)
+
+| switch | ladder: cycles saved when added | cpu without it | cost of leaving it out |
+|---|---:|---:|---:|
+| lazy select | 966 | 14,348 | +1,481 |
+| no zero-init | 708 | 13,568 | +701 |
+| conversion floor | 43 | 13,131 | +264 |
+| polynomial sin/cos | 540 | 13,762 | +895 |
+| polynomial exp | 152 | 13,070 | +203 |
+| integer hash | -2 | 13,067 | +200 |
+| sky table (+ pow32 in post) | 261 | 13,128 | +261 |
+
+### L-03: WGSL semantics 13,570, all substitutions 5,358 (2.53x)
+
+| switch | ladder: cycles saved when added | cpu without it | cost of leaving it out |
+|---|---:|---:|---:|
+| lazy select | 1,457 | 7,068 | +1,710 |
+| no zero-init | 328 | 5,809 | +451 |
+| conversion floor | 34 | 5,532 | +174 |
+| polynomial sin/cos | 1,148 | 5,936 | +578 |
+| polynomial exp | 1,655 | 5,476 | +117 |
+| integer hash | -86 | 5,407 | +49 |
+| sky table (+ pow32 in post) | 3,676 | 9,034 | +3,676 |
+
+### G-01: WGSL semantics 19,817, all substitutions 11,960 (1.66x)
+
+| switch | ladder: cycles saved when added | cpu without it | cost of leaving it out |
+|---|---:|---:|---:|
+| lazy select | 1,440 | 13,897 | +1,938 |
+| no zero-init | 582 | 12,628 | +668 |
+| conversion floor | 91 | 12,071 | +111 |
+| polynomial sin/cos | 964 | 12,737 | +778 |
+| polynomial exp | 1,399 | 12,262 | +303 |
+| integer hash | 52 | 11,979 | +20 |
+| sky table (+ pow32 in post) | 3,329 | 15,289 | +3,329 |
+
+### E-02: WGSL semantics 5,736, all substitutions 4,918 (1.17x)
+
+| switch | ladder: cycles saved when added | cpu without it | cost of leaving it out |
+|---|---:|---:|---:|
+| lazy select | 18 | 5,190 | +273 |
+| no zero-init | 325 | 5,303 | +385 |
+| conversion floor | 53 | 4,986 | +69 |
+| polynomial sin/cos | 378 | 5,205 | +287 |
+| polynomial exp | -6 | 4,965 | +47 |
+| integer hash | 2 | 4,914 | -3 |
+| sky table (+ pow32 in post) | 48 | 4,965 | +48 |
+
+### W-02: WGSL semantics 102,659, all substitutions 19,413 (5.29x)
+
+| switch | ladder: cycles saved when added | cpu without it | cost of leaving it out |
+|---|---:|---:|---:|
+| lazy select | 1,768 | 21,514 | +2,100 |
+| no zero-init | 779 | 20,369 | +955 |
+| conversion floor | 766 | 19,668 | +255 |
+| polynomial sin/cos | 76,488 | 20,693 | +1,279 |
+| polynomial exp | 310 | 19,472 | +59 |
+| integer hash | 2,920 | 22,531 | +3,118 |
+| sky table (+ pow32 in post) | 215 | 19,628 | +215 |
+
+## Microbenchmarks (cycles per instruction)
+
+- rdcycle-pair: 3.00 (3 cycles / 0)
+- add: 1.02 (260 cycles / 256)
+- mul: 2.02 (517 cycles / 256)
+- div+addi: 6.01 (3079 cycles / 512)
+- lw-chain: 2.01 (515 cycles / 256)
+- fadd.s: 4.02 (1030 cycles / 256)
+- fmul.s: 4.02 (1030 cycles / 256)
+- fmadd.s: 5.03 (1288 cycles / 256)
+- fmin.s: 4.02 (1030 cycles / 256)
+- fdiv.s: 19.02 (4870 cycles / 256)
+- fdiv.s-dividend: 19.02 (4870 cycles / 256)
+- fdiv.s-1/1: 6.02 (1542 cycles / 256)
+- fdiv.s-indep: 19.02 (4870 cycles / 256)
+- fdiv.s-2chains: 17.04 (4363 cycles / 256)
+- fsqrt.s+fadd.s: 11.51 (5894 cycles / 512)
+- fsqrt.s-indep: 19.02 (4868 cycles / 256)
+- fdiv.s+8addi: 2.11 (4871 cycles / 2304)
+- fcvt.w.s+fcvt.s.w: 3.01 (1541 cycles / 512)
+- flw-indep: 4.01 (1026 cycles / 256)
+- beqz-taken: 3.02 (772 cycles / 256)
+
+## Post pass (cycles per pixel)
+
+- cpu: display 4,315, one a-trous iteration 11,842
+- cpu-O3: display 4,313, one a-trous iteration 11,699
+- cpu-exp: display 4,312, one a-trous iteration 17,894
+- cpu-floor: display 4,316, one a-trous iteration 11,842
+- cpu-hash: display 4,313, one a-trous iteration 11,856
+- cpu-iram: display 4,307, one a-trous iteration 11,840
+- cpu-lazy: display 4,311, one a-trous iteration 11,878
+- cpu-noinit: display 4,313, one a-trous iteration 11,854
+- cpu-trig: display 4,336, one a-trous iteration 11,856
+- exp: display 4,315, one a-trous iteration 17,340
+- floor: display 4,340, one a-trous iteration 23,044
+- hash: display 4,313, one a-trous iteration 17,369
+- lazy: display 4,334, one a-trous iteration 23,045
+- noinit: display 4,335, one a-trous iteration 23,044
+- trig: display 4,316, one a-trous iteration 23,044
+- wgsl: display 4,341, one a-trous iteration 23,004
+
+## Placement
+
+- internal|B-01: 6,816 cycles per sample, L1D misses per sample 4.7
+- internal|R-01: 12,857 cycles per sample, L1D misses per sample 0.1
+- psram|B-01: 6,809 cycles per sample, L1D misses per sample 5.1
+- psram|R-01: 12,856 cycles per sample, L1D misses per sample 0.1
+
+minstret: {'retired': 1002, 'cycles': 43186}

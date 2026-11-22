@@ -1,0 +1,5 @@
+{"scene": "B-01", "spp": 64, "ratio": 0.9999995902036396, "within1pct": 0.9999609375, "meanRelDiff": 1.1969723432628247e-06, "identical": false}
+{"scene": "R-01", "spp": 64, "ratio": 1.0000000329513996, "within1pct": 0.9999609375, "meanRelDiff": 1.271946860940034e-06, "identical": false}
+{"scene": "L-03", "spp": 64, "ratio": 0.9999999923909824, "within1pct": 1.0, "meanRelDiff": 1.0359862626010801e-07, "identical": false}
+{"scene": "G-01", "spp": 64, "ratio": 0.999951324201432, "within1pct": 0.9909375, "meanRelDiff": 0.0004887454453404625, "identical": false}
+{"scene": "E-02", "spp": 64, "ratio": 1.0000000898755375, "within1pct": 0.9999609375, "meanRelDiff": 7.939585945498046e-07, "identical": false}

@@ -1,7 +1,7 @@
 {
-  "sha256": "b48d3cc5f22d4b0b5791930121f9fccb3cec4d87e895dc94fd9e45958ce8a5ef",
-  "bytes": 1681136,
+  "sha256": "9913c612d5e95323650a2779ba5ca05185b7547e254f4977b3cb0a0e351ff163",
+  "bytes": 1681184,
   "port": "/dev/ttyACM0",
   "end": "CANDELA END",
-  "seconds": 304.6
+  "seconds": 303.9
 }

@@ -1,0 +1,10 @@
+78 arm x scene cells with identical kernel code
+cycles per sample: median |change| 50 (0.36%), largest 663 (2.27%)
+L1 instruction misses per sample: median |change| 30, largest 116
+correlation of the two changes 0.60; 1.54 cycles per additional L1 instruction miss
+  cpu-floor|L-03: +123 cycles (+2.27%), +100 L1I misses
+  cpu-lazy|R-01: +243 cycles (+1.72%), +72 L1I misses
+  lazy|L-03: -200 cycles (-1.63%), -88 L1I misses
+  cpu-floor|B-01: +109 cycles (+1.60%), +80 L1I misses
+  noinit|B-01: -208 cycles (-1.56%), -86 L1I misses
+  lazy|B-01: -211 cycles (-1.52%), -90 L1I misses
