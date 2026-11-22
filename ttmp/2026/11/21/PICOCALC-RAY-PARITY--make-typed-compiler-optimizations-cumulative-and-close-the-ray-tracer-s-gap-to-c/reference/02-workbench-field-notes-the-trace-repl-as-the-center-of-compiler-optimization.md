@@ -143,6 +143,36 @@ The workbench is the merged result of PICOCALC-TRACE-WORKBENCH (merge commit 295
   - A goja timing is ambiguous unless it is split by phase. The job reported only whole-compile times, so the frontend share stayed invisible until I profiled in Node.
 - **Improvement (I8): phase timers in the compiler.** Add `options.timings`, a callback receiving `(phase, ms)`, so a workbench job can split frontend from backend time in any interpreter. Then a proxy can drop the phase that runs natively on the device.
 
+### 2026-11-21, entry 7: the native interpreter and `--arg` arrive (PICOCALC-WORKBENCH-NATIVE)
+
+- **What changed:** the second workbench subagent's branch is merged as `e7944d1`. It adds:
+  - `rv32`, a Go interpreter with the reference's semantics, checked over 4,000 random programs and the opening frame;
+  - `compiler.at(rev).native`;
+  - `--arg NAME=JSON`, giving a fresh `args` object per cell and job;
+  - `results.save`;
+  - `blocks` and `spread` in `stats.paired`;
+  - `world()` for the Files and Agenda layouts.
+
+  The service on 3796 was restarted on the new binary, with a new session.
+- **Task:** profile the ray frame under `interactive`, `default` and `kernel`. I used the subagent's native port of `frame-profile.js` (`PICOCALC-WORKBENCH-NATIVE/scripts/03-frame-profile.js`) with `--arg arms='{...}'`.
+- **Result:** 0.69 s of wall time for all three arms, compiles included. The same profile in goja took 18–64 s per arm. The numbers match the Node profiler:
+
+  | Policy | Steps | Image | Digest |
+  |---|---:|---:|---|
+  | `interactive` | 8,997,126 | 6,792 B | `b3c26cc8` |
+  | `default` | 4,888,369 | 11,964 B | `b3c26cc8` |
+  | `kernel` | 4,532,990 | 11,808 B | `b3c26cc8` |
+
+- **Good:**
+  - A frame profile is now an ordinary cell, faster than starting Node, so tuning a heuristic over many variants can happen inside the workbench.
+  - `--arg` replaces the `globalThis.args = ...;` prefix (entry 5), and no global survives between cells.
+- **Still outside:**
+  - the device itself (flashing, UART capture, the arms firmware);
+  - GCC and rv32emu (C counts, the Chess oracle, the replays).
+
+  These remain host scripts by design.
+- **To do:** move `scripts/workbench/*.js` to `--arg`, and make `frame-profile.js` use `rv32` by default.
+
 ## Assessment so far
 
 ### Good
@@ -153,8 +183,8 @@ The workbench is the merged result of PICOCALC-TRACE-WORKBENCH (merge commit 295
 
 ### Bad
 
-- **Interpretation speed.** The RV32 interpreter in goja takes about 12.6 s per opening frame. This is the main obstacle to making the workbench the place where heuristics are tuned.
-- **No parameters.** Every reusable script needs inputs (arms, a board directory, a revision). The choices today are hard-coding or prepending JavaScript to stdin.
+- **Interpretation speed** (resolved in entry 7). The RV32 interpreter in goja took 12.6–46 s per opening frame. The native `rv32` takes about 0.1 s.
+- **No parameters** (resolved in entry 7 by `--arg` and `--args-file`). Before that, the choices were hard-coding or prepending JavaScript to stdin.
 - **No view of the compiler's intermediate tapes.** Diagnosing Step 13's register collapse needed the tape after inlining, commutation, rotation and versioning. That needed a hacked copy of the compiler outside the workbench.
 - **Results die with the session.** Nothing in the workbench writes a result file. The client redirects stdout and unwraps `{"ok", "value"}` itself.
 - **Native steps stay outside.** The C reference, the Chess oracle, the replays and the board pipeline need GCC, rv32emu, ESP-IDF and the serial port.
