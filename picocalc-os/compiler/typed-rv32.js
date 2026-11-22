@@ -1433,7 +1433,13 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
 // constant or a local the loop does not write) is bounded by max(N) - 1 + s instead of growing
 // pass by pass, since the increment only runs after k < N held.
 function localRanges(code, params, arity) {
-    for (let at = 0; at < code.length; at = opNext(code, at)) if (!(OPERAND_CELLS[code[at]] >= 0)) return null;
+    // Most functions divide by no constant: one scan, and no intervals to compute.
+    let divides = false;
+    for (let at = 0; at < code.length; at = opNext(code, at)) {
+        if (!(OPERAND_CELLS[code[at]] >= 0)) return null;
+        if (code[at] === 0x41 && code[at + 1] > 0 && (code[at + 2] === 0x6d || code[at + 2] === 0x6f)) divides = true;
+    }
+    if (!divides) return null;
     const counters = new Map();
     for (let at = 0; at < code.length; at = opNext(code, at)) {
         if (code[at] !== 0x02 || code[at + 1] !== 0x40 || code[at + 2] !== 0x20 || code[at + 6] !== 0x48 || code[at + 7] !== 0x45 ||
@@ -1465,7 +1471,7 @@ function localRanges(code, params, arity) {
     }
     const ranges = new Map();
     const rangeOf = local => local < params || unknown.has(local) ? RANGE_TOP : ranges.get(local) ?? null;
-    // Intervals only grow. From the fourth pass a bound that still moves is widened: a falling
+    // Intervals only grow. From the third pass a bound that still moves is widened: a falling
     // lower bound to 0 when it is still non-negative (the property divisions need), otherwise to
     // the i32 limit, and a rising upper bound to the i32 limit. Each bound then moves at most
     // twice more, so the passes are bounded. Without a fixed point there are no intervals.
@@ -1486,7 +1492,7 @@ function localRanges(code, params, arity) {
             let merged = rangeJoin(old, value);
             if (!old || old[0] !== merged[0] || old[1] !== merged[1]) {
                 stable = false;
-                if (round >= 3 && old) merged = [merged[0] < old[0] ? (merged[0] >= 0 ? 0 : RANGE_TOP[0]) : old[0],
+                if (round >= 2 && old) merged = [merged[0] < old[0] ? (merged[0] >= 0 ? 0 : RANGE_TOP[0]) : old[0],
                     merged[1] > old[1] ? RANGE_TOP[1] : old[1]];
             }
             ranges.set(local, merged);
