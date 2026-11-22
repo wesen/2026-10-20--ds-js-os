@@ -9,15 +9,29 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://pkg/traceapi/compiler.js
+      Note: native tools, world layouts and compiler.loaded
+    - Path: repo://pkg/traceapi/rv32.js
+      Note: I1 session wrapper keeping the reference's setup statements
+    - Path: repo://pkg/traceapi/rv32_test.go
+      Note: I1 differential and opening-frame conformance tests
+    - Path: repo://pkg/tracerepl/results.go
+      Note: I5 results global and record
+    - Path: repo://pkg/tracerepl/service.go
+      Note: I2 per-cell args accessor and Cell/Unit
+    - Path: repo://pkg/tracerv32/rv32.go
+      Note: I1 interpreter loop with the reference's semantics
 ExternalSources: []
-Summary: "Design of five workbench changes requested by PICOCALC-RAY-PARITY's field notes: a Go RV32 interpreter with the reference interpreter's exact semantics (I1), a per-cell args channel (I2), compiler.at(rev).world for Files and Agenda (I2b), a result store (I5) and per-block detail in stats.paired (I6), plus a proposal for exporting the compiler's opcode table (I3b)."
+Summary: 'Design of five workbench changes requested by PICOCALC-RAY-PARITY''s field notes: a Go RV32 interpreter with the reference interpreter''s exact semantics (I1), a per-cell args channel (I2), compiler.at(rev).world for Files and Agenda (I2b), a result store (I5) and per-block detail in stats.paired (I6), plus a proposal for exporting the compiler''s opcode table (I3b).'
 LastUpdated: 2026-11-21T22:40:00-05:00
-WhatFor: "Reviewing or extending the trace-REPL workbench's interpreter, parameter, result and world interfaces."
-WhenToUse: "Before changing pkg/tracerv32, the args channel, the result store or compiler.at(rev).world."
+WhatFor: Reviewing or extending the trace-REPL workbench's interpreter, parameter, result and world interfaces.
+WhenToUse: Before changing pkg/tracerv32, the args channel, the result store or compiler.at(rev).world.
 ---
 
 # Native interpretation, parameters and results in the compiler workbench
+
+**Status (as built).** I1, I2, I5, I6 and I2b are implemented and tested: I1 `849166a`, I2 `0791eeb` and its `--arg` fix `887f6d0`, I6 `c38e429`, I5 and I2b `30820a6` (diary Steps 2–5). Section 14 lists where the implementation departs from this design and the measured results. I3b remains a proposal (Section 8).
 
 ## 1. Purpose
 
@@ -279,3 +293,29 @@ globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES,
 - `picocalc-os/tools/rv32-interp.js`, `picocalc-os/tools/typed-ray-bench.js`: the reference interpreter and the opening-frame workload.
 - PICOCALC-TRACE-WORKBENCH `design-doc/01-turning-the-trace-repl-into-a-compiler-workbench-an-intern-guide.md`: the service architecture.
 - PICOCALC-RAY-PARITY `reference/02-workbench-field-notes-the-trace-repl-as-the-center-of-compiler-optimization.md`: the requirements.
+
+## 14. As built: departures from the design and measured results
+
+**Departures.**
+
+- **A partial trailing word raises the reference's `RangeError`.** Section 3.1 did not cover an image whose length is not a multiple of 4. The reference's address check admits its last 1–3 bytes, and `DataView.getUint32` then throws `RangeError: Index N is out of bounds` (goja's wording) before counting. `tracerv32.RangeError` reproduces that from the slow branch of the address check, so the hot loop pays nothing for it. `rv32.profile` raises the same error where the reference's profile would.
+- **The step limit and the poll share one comparison.** The loop keeps one `checkpoint`, the first step at which either the limit or the next poll needs attention, instead of two tests per step.
+- **`--arg` is a cobra `StringArray`, not a Glazed field.** Glazed's `TypeStringList` is a pflag `StringSlice`, which parses each value as CSV and rejects `--arg rev='"x"'` with `bare " in non-quoted-field`. The flag is attached to the eval command after Glazed builds it.
+- **The client omits `args` when there are none,** because older services refuse unknown request fields.
+- **`compiler.loaded()`** was added to `compiler.js` so that `results.save` can record every compiler revision a session loaded, including each `"worktree"` load's file digests.
+- **The result store is installed by `tracerepl`, not `traceapi`.** It needs the running cell's session, unit, source digest and args, which only `tracerepl` holds. A second runtime initializer, registered after the session's installer, defines `results`. `pkg/traceresults` stores the files and knows nothing about sessions.
+- **`stats.paired` also returns `spread`**, `stats.summary` of the blocks' `savedPct`.
+
+**Measured.**
+
+| Measurement | Result |
+|---|---|
+| Random programs, `rv32` against the reference in one VM | 4,000 seeds, 0 differences; every outcome category reached |
+| Opening frame at `2712684`, default and stock, against Node's reference run | steps, result, trap and the SHA-256 of image, bytes (`430f0d50…`), counts and registers identical |
+| Default frame, reference in goja against `rv32`, in one test | 23,199 ms against 53 ms (438x), load average about 6.6 |
+| Speedup job, median of 5 native runs | default 45,665 ms against 91.5 ms (499x); stock 112,401 ms against 228.4 ms (492x); load average 25 falling to 10 |
+| RAY-PARITY `frame-profile.js` (reference) against `03-frame-profile.js` (native), three arms | identical apart from timings; 18.1 / 27.9 / 64.0 s against 86 / 104 / 163 ms |
+| `BenchmarkLoop` (load, mul, add, store, two branches) | 96.2 M steps/s before, 138.6 M steps/s after the loop changes |
+| Node, the reference, for comparison | default 152 ms, stock 385 ms |
+
+The ratio to the reference in goja is about 440–500x. Absolute times vary by a factor of two with the host's load, which other sessions shared throughout.
