@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/dop251/goja"
@@ -106,8 +107,14 @@ type cellIO struct {
 type Service struct {
 	sessions *replsession.Service
 	timeout  time.Duration
+	maxJob   time.Duration
 	started  time.Time
 	describe func() map[string]any
+	lifetime context.Context
+
+	mu   sync.Mutex
+	live map[string]*sessionEntry // sessions opened through Open
+	wg   sync.WaitGroup           // job goroutines
 }
 
 // Option configures a Service.
@@ -118,6 +125,15 @@ type Option func(*Service)
 // and must return a fresh map that the handler may extend.
 func WithInventory(describe func() map[string]any) Option {
 	return func(s *Service) { s.describe = describe }
+}
+
+// WithMaxJob caps the deadline of background jobs (default DefaultMaxJob).
+func WithMaxJob(d time.Duration) Option {
+	return func(s *Service) {
+		if d > 0 {
+			s.maxJob = d
+		}
+	}
 }
 
 func New(ctx context.Context, install Installer, logger zerolog.Logger, opts ...Option) (*Service, error) {
@@ -131,7 +147,7 @@ func New(ctx context.Context, install Installer, logger zerolog.Logger, opts ...
 	s := &Service{sessions: replsession.NewService(factory, logger,
 		replsession.WithLifetimeContext(ctx),
 		replsession.WithDefaultSessionOptions(replsession.RawSessionOptions()),
-	), timeout: defaultEvalTimeout, started: time.Now().UTC()}
+	), timeout: defaultEvalTimeout, maxJob: DefaultMaxJob, started: time.Now().UTC(), lifetime: ctx, live: map[string]*sessionEntry{}}
 	for _, opt := range opts {
 		opt(s)
 	}
@@ -143,10 +159,11 @@ type Limits struct {
 	SourceBytes int     `json:"sourceBytes"`
 	ResultBytes int     `json:"resultBytes"`
 	CellSeconds float64 `json:"cellSeconds"`
+	JobSeconds  float64 `json:"jobSeconds"`
 }
 
 func (s *Service) Limits() Limits {
-	return Limits{SourceBytes: MaxSourceBytes, ResultBytes: MaxResultBytes, CellSeconds: s.timeout.Seconds()}
+	return Limits{SourceBytes: MaxSourceBytes, ResultBytes: MaxResultBytes, CellSeconds: s.timeout.Seconds(), JobSeconds: s.maxJob.Seconds()}
 }
 
 // inventory is the GET /info body without the handler's session counts.
@@ -166,23 +183,45 @@ func (s *Service) Open(ctx context.Context) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	s.register(session.ID)
 	return session.ID, nil
 }
 
+// Release closes a session. A running cell or job is interrupted with the
+// reason "its session was closed".
 func (s *Service) Release(ctx context.Context, id string) error {
+	s.unregister(id)
 	return s.sessions.UnloadSession(ctx, id)
 }
 
+// Close stops every session and waits for their jobs to finish.
 func (s *Service) Close(ctx context.Context) error {
-	return s.sessions.Close(ctx)
+	err := s.sessions.Close(ctx)
+	s.wg.Wait()
+	return err
 }
 
+// Evaluate runs one interactive cell under the cell deadline. A session that
+// is running or queueing a job refuses the cell at once with ErrSessionBusy:
+// waiting would only spend the cell's deadline behind the job.
 func (s *Service) Evaluate(ctx context.Context, id, source string) (Result, error) {
 	if len(source) > MaxSourceBytes {
 		return Result{}, errors.Errorf("source exceeds %d bytes", MaxSourceBytes)
 	}
+	if err := s.claim(id); err != nil {
+		return Result{}, err
+	}
+	defer s.touch(id, true)
 	ctx, cancel := context.WithTimeout(ctx, s.timeout)
 	defer cancel()
+	return s.run(ctx, id, source, "cell", s.timeout, nil)
+}
+
+// run evaluates source in the session's VM while holding its gate. It is the
+// body shared by cells and jobs; what names the unit in interrupt messages and
+// limit is the deadline that ctx carries. started, when set, is called on the
+// VM's owner just before the source runs.
+func (s *Service) run(ctx context.Context, id, source, what string, limit time.Duration, started func()) (Result, error) {
 	var result Result
 	err := s.sessions.WithRuntime(ctx, id, func(opCtx context.Context, rt *engine.Runtime) error {
 		// Wait for the owner callback to finish even after cancellation. This keeps
@@ -193,7 +232,7 @@ func (s *Service) Evaluate(ctx context.Context, id, source string) (Result, erro
 			}
 			interrupted := make(chan struct{})
 			stop := context.AfterFunc(opCtx, func() {
-				vm.Interrupt(stopReason(opCtx, s.timeout))
+				vm.Interrupt(stopReason(opCtx, what, limit))
 				close(interrupted)
 			})
 			defer func() {
@@ -202,6 +241,9 @@ func (s *Service) Evaluate(ctx context.Context, id, source string) (Result, erro
 				}
 				vm.ClearInterrupt()
 			}()
+			if started != nil {
+				started()
+			}
 			state := rt.Values["cellIO"].(*cellIO)
 			state.lines = nil
 			result = evalCell(vm, state, source)
@@ -214,20 +256,28 @@ func (s *Service) Evaluate(ctx context.Context, id, source string) (Result, erro
 	return result, err
 }
 
-// stopReason tells the researcher why a running cell was interrupted.
-func stopReason(ctx context.Context, timeout time.Duration) string {
+// errJobStopped is the cancellation cause of DELETE /sessions/{id}/jobs/{job}.
+var errJobStopped = errors.New("stopped by request")
+
+// stopReason tells the researcher why a running cell or job was interrupted.
+func stopReason(ctx context.Context, what string, timeout time.Duration) string {
 	cause := context.Cause(ctx)
 	switch {
+	case errors.Is(cause, context.DeadlineExceeded) && what == "job":
+		return fmt.Sprintf("job stopped at its deadline (%s, including the wait for this session); bindings from earlier cells remain", timeout)
 	case errors.Is(cause, context.DeadlineExceeded):
-		return fmt.Sprintf("cell stopped at its evaluation deadline (at most %s, including the wait for this session); bindings from earlier cells remain", timeout)
+		return fmt.Sprintf("cell stopped at its evaluation deadline (at most %s, including the wait for this session); bindings from earlier cells remain; "+
+			"for longer work submit a job (trace-repl eval --job)", timeout)
+	case errors.Is(cause, errJobStopped):
+		return "job stopped by request; bindings from earlier cells remain"
 	case errors.Is(cause, replsession.ErrSessionClosing), errors.Is(cause, replsession.ErrSessionClosed):
-		return "cell stopped because its session was closed"
+		return what + " stopped because its session was closed"
 	case errors.Is(cause, replsession.ErrServiceClosing), errors.Is(cause, replsession.ErrServiceClosed):
-		return "cell stopped because the trace service is shutting down"
+		return what + " stopped because the trace service is shutting down"
 	case cause != nil:
-		return "cell stopped: " + cause.Error()
+		return what + " stopped: " + cause.Error()
 	}
-	return "cell stopped"
+	return what + " stopped"
 }
 
 var (

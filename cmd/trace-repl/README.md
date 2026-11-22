@@ -80,6 +80,19 @@ repo.show("eaf0872", "picocalc-os/compiler/typed-rv32.js").sha256
 mounts.board.json()          // started with --mount board=/tmp/bench/rows.json
 ```
 
+## Run long work as a job
+
+A cell must finish within 15 seconds. A job is a cell with its own deadline, up to the service's `--max-job` (default `10m`). It runs in the same session VM, so it sees every binding of earlier cells and its own top-level declarations persist. While a job is queued or running, the session refuses cells and other jobs at once with HTTP 409 and the job's ID, instead of letting them wait out their deadline. A job's result obeys the same 512 KiB limit as a cell's. A session remembers its last 16 finished jobs.
+
+```sh
+go run ./cmd/trace-repl eval --session "$sid" --job --job-timeout 300 < sweep.js   # waits and prints the result like eval
+job=$(go run ./cmd/trace-repl eval --session "$sid" --job --detach --code 'longWork()')
+go run ./cmd/trace-repl job --session "$sid" --job-id "$job"           # state, and the result once finished
+go run ./cmd/trace-repl job --session "$sid" --job-id "$job" --stop    # interrupt it
+```
+
+Interrupting `eval --job` with Ctrl-C stops the job on the service as well. Closing the session stops its job with the reason "job stopped because its session was closed".
+
 ## Shared statistics
 
 Every session has a `stats` global, so studies stop re-implementing medians and paired comparisons. `stats.median`, `stats.mean`, `stats.quantile(xs, p)` (linear interpolation, R type 7) and `stats.summary(xs)` refuse empty arrays and non-finite values. `stats.paired(rows, {key, control, candidate, value, better})` pairs one control row with one candidate row per key, for example per load block, and returns the median of the per-pair percentage saved, `100 * (1 - candidate / control)`, with wins, losses and ties. It also returns `percentSavedOfMedians`, the change between the two arm medians, which is a different number. It refuses rows that match both arms, duplicate keys within an arm and keys present in only one arm, and names them. `stats.help()` lists the rest.
@@ -103,10 +116,15 @@ Several services often run side by side on different ports. `trace-repl info --a
 | `POST /sessions/{id}/eval` with `Content-Type: application/json` and `{"source":"7 * 6"}` | HTTP 200, `{"ok":true,"value":42}` |
 | JS parse or evaluation error | HTTP 200, `{"ok":false,"error":"…"}`. A subsequent valid cell can still run. |
 | Unknown session | HTTP 404 with a JSON error |
+| `POST /sessions/{id}/jobs` with `{"source":"…","timeoutSeconds":600}` (`timeoutSeconds` optional) | HTTP 202, `{"job":"job-…","state":"queued","timeoutSeconds":600,…}` |
+| `GET /sessions/{id}/jobs/{job}` | HTTP 200, `{"job","session","state","submitted","started","finished","timeoutSeconds","elapsedSeconds","result"}`; `state` is `queued`, `running`, `done`, `failed` or `stopped`, and `result` is a cell result once finished |
+| `GET /sessions/{id}/jobs` | HTTP 200, the session's jobs without results, oldest first |
+| `DELETE /sessions/{id}/jobs/{job}` | HTTP 200, the job after it stopped (waits up to 5 s) |
+| `eval` or a job sent while a job holds the session | HTTP 409, `{"ok":false,"error":"session is busy with job …","job":"job-…"}` |
 | `DELETE /sessions/{id}` | HTTP 204 |
 
 A declaration produces `"value":null,"kind":"undefined"`. A cell can emit `console.log`, `info`, `debug`, `warn` or `error`, which appear in the response's optional `console` array. End a cell with a data value to see it as JSON. Return `undefined` explicitly when you want to keep a large binding without transporting its contents. For example, `const values = [1,2,3]; undefined`, followed by `values.length` in a new cell. Redeclaring a top-level lexical binding is a JavaScript error. Use `let` for names that you want to reassign. A cell that fails after declaring a top-level `let`, `const` or `class` leaves that name unusable for the rest of the session; the error names it, and a new name or a new session recovers.
 
-Evaluations within a session execute serially. The execution deadline is 15 seconds including the wait to enter that session. Separate sessions can execute concurrently over the archive. A standalone `await expression` cell can consume an immediately settled promise. Ordinary multi-statement cells follow script syntax, so `const r = await q.run(plan)` is a syntax error; write `const r = q.run(plan)`. An interrupted cell reports whether it reached the deadline or its session or the service closed. The API operates on local evidence synchronously. Promise-based external I/O has no event source.
+Evaluations within a session execute serially. The execution deadline is 15 seconds including the wait to enter that session. Work that takes longer, such as an equivalence sweep or a compile-cost measurement, runs as a background job (below). Separate sessions can execute concurrently over the archive. A standalone `await expression` cell can consume an immediately settled promise. Ordinary multi-statement cells follow script syntax, so `const r = await q.run(plan)` is a syntax error; write `const r = q.run(plan)`. An interrupted cell reports whether it reached the deadline or its session or the service closed. The API operates on local evidence synchronously. Promise-based external I/O has no event source.
 
 Use this service with trusted researchers on a local machine. It binds a loopback address and provides the selected archive and standard JavaScript objects. It omits a general host module loader. The evaluator caps the size of incoming source and outgoing serialized results and captures a limited amount of console output. JavaScript can still allocate memory in the host process. For jobs that require a hard process-memory limit, choose an operating-system resource boundary for the server.

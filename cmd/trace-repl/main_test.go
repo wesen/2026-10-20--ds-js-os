@@ -295,3 +295,48 @@ func TestMountAndRepoFlagsAreChecked(t *testing.T) {
 		t.Fatalf("default repository: %v %v", repo, err)
 	}
 }
+
+// eval --job submits, polls and prints like eval; job reports or stops one.
+func TestEvalJobThroughTheClient(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	if _, err := newService(ctx, settings{Archive: evidenceRoot(t, "PICOCALC-ROW-IR--*"), MaxJob: "soon"}, zerolog.Nop()); err == nil || !strings.Contains(err.Error(), "--max-job") {
+		t.Fatalf("bad --max-job accepted: %v", err)
+	}
+	service, err := newService(ctx, settings{Archive: evidenceRoot(t, "PICOCALC-ROW-IR--*"), MaxJob: "2s"}, zerolog.Nop())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer service.Close(context.Background())
+	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	go func() { _ = serveListener(ctx, ln, service, zerolog.Nop()) }()
+	cfg := settings{Addr: ln.Addr().String()}
+	var session struct{ ID string }
+	if err := call(ctx, cfg, http.MethodPost, "/sessions", nil, &session); err != nil {
+		t.Fatal(err)
+	}
+	cfg.Session = session.ID
+	cfg.Job, cfg.Code = true, "const fromJob = stats.median([5, 1, 3]); fromJob"
+	if err := client(ctx, cfg, "eval"); err != nil {
+		t.Fatal(err)
+	}
+	cfg.Code = "while (true) {}"
+	if err := client(ctx, cfg, "eval"); err == nil || !strings.Contains(err.Error(), "job failed") {
+		t.Fatalf("job past --max-job: %v", err)
+	}
+	var jobs []struct{ Job, State string }
+	if err := call(ctx, cfg, http.MethodGet, "/sessions/"+session.ID+"/jobs", nil, &jobs); err != nil || len(jobs) != 2 || jobs[0].State != "done" || jobs[1].State != "failed" {
+		t.Fatalf("jobs: %+v %v", jobs, err)
+	}
+	cfg.JobID = jobs[0].Job
+	if err := client(ctx, cfg, "job"); err != nil {
+		t.Fatal(err)
+	}
+	cfg.Job, cfg.Code = false, "fromJob"
+	if err := client(ctx, cfg, "eval"); err != nil {
+		t.Fatal(err)
+	}
+}
