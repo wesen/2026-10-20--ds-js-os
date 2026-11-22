@@ -1,0 +1,14 @@
+{
+ "ray.baseStock": 26.5,
+ "ray.baseQualified": 35.6,
+ "ray.candidateStock": 28.5,
+ "ray.candidateQualified": 29.8,
+ "chess.baseStock": 306.2,
+ "chess.baseQualified": 334.3,
+ "chess.candidateStock": 316.8,
+ "chess.candidateQualified": 310.7,
+ "editor.baseStock": 743.9,
+ "editor.baseQualified": 840.9,
+ "editor.candidateStock": 744.7,
+ "editor.candidateQualified": 811.2
+}

@@ -478,10 +478,22 @@ function lowerLeaf(fn, callables, targets) {
     }
 }
 
+// Operand cells that follow each numeric opcode in a function's tape. The planner
+// walks the raw cells: decoding the tape into operation records allocated several
+// objects per operation, which cost a bare interpreter roughly a quarter of the
+// whole compile even when no policy was enabled.
+const OPERAND_CELLS = new Int8Array(256).fill(-1);
+for (const [opcode, cells] of [
+    [0x00,0],[0x02,1],[0x03,1],[0x04,1],[0x05,0],[0x0b,0],[0x0c,1],[0x0d,1],[0x0f,0],
+    [0x10,1],[0x1a,0],[0x20,1],[0x21,1],[0x28,2],[0x2f,2],[0x36,2],[0x3b,2],[0x41,1],
+    [0x45,0],[0x46,0],[0x47,0],[0x48,0],[0x4a,0],[0x4c,0],[0x4e,0],[0x4f,0],
+    [0x6a,0],[0x6b,0],[0x6c,0],[0x6d,0],[0x6f,0],[0x74,0],[0x75,0],[0xf1,2],[0xf2,2],
+]) OPERAND_CELLS[opcode] = cells;
+
 // Assign permanent homes only in framed scalar functions with a checked access.
 function planLocations(fn, options, inlineCall) {
-    if (!fn.code.includes(0xf1)) return null;
-    const ops = typedWasm.decodeNumericOperations(fn.code);
+    const tape = fn.code;
+    if (!tape.includes(0xf1)) return null;
     const reads = new Map(), writes = new Set(), scores = new Map();
     let receiver, straight = true, pure = true, leaf = true, loops = 0;
     function read(local) {
@@ -489,29 +501,41 @@ function planLocations(fn, options, inlineCall) {
         scores.set(local, (scores.get(local) ?? 0) + (loops ? 4 : 1));
     }
     const blocks = [];
-    for (const {opcode, operands:[a,b]} of ops) {
+    // A checked address whose index local was set by the preceding operation; the
+    // forwarding decision needs the final read count, so it is resolved after the walk.
+    const candidates = [];
+    let prevOpcode = -1, prevOffset = -1, prevA = -1, prev2Opcode = -1, prev2Offset = -1;
+    for (let at = 0; at < tape.length;) {
+        const offset = at, opcode = tape[at++];
+        const cells = OPERAND_CELLS[opcode];
+        if (cells < 0) throw new Error("unknown Typed inspection opcode " + opcode);
+        const a = cells > 0 ? tape[at] : undefined, b = cells > 1 ? tape[at + 1] : undefined;
+        at += cells;
+        if (at > tape.length) throw new Error("truncated Typed inspection operation");
         if (opcode === 0xf1) {
             if (straight && receiver === undefined) receiver = a;
             read(a); read(b);
+            if (prevOpcode === 0x21 && prevA === b)
+                candidates.push({id: b, at: prev2Opcode === 0x41 ? prev2Offset : prevOffset});
         }
         if (opcode === 0x20 || opcode === 0xf2) read(a);
         if (opcode === 0x21) writes.add(a);
         if (opcode === 0x10 && !inlineCall(a)) leaf = false;
-        if ([0x36,0x3b,0xf2].includes(opcode)) pure = false;
+        if (opcode === 0x36 || opcode === 0x3b || opcode === 0xf2) pure = false;
         if (opcode >= 0x02 && opcode <= 0x04) {
             blocks.push(opcode);
             if (opcode === 0x03) loops++;
         }
         if (opcode === 0x0b && blocks.pop() === 0x03) loops--;
         if (opcode >= 0x02 && opcode <= 0x0f) straight = false;
+        prev2Opcode = prevOpcode; prev2Offset = prevOffset;
+        prevOpcode = opcode; prevOffset = offset; prevA = a;
     }
     if (!options.capacity || !pure || !leaf || writes.has(receiver)) receiver = undefined;
     const forward = new Set(), homes = new Map();
-    if (options.forward) for (let i=1; i<ops.length; i++) {
-        const set = ops[i-1], addr = ops[i], id = set.operands[0];
-        if (set.opcode !== 0x21 || addr.opcode !== 0xf1 || addr.operands[1] !== id || reads.get(id) !== 1) continue;
-        const producer = ops[i-2];
-        forward.add(producer?.opcode === 0x41 ? producer.offset : set.offset);
+    if (options.forward) for (const {id, at} of candidates) {
+        if (reads.get(id) !== 1) continue;
+        forward.add(at);
         scores.delete(id);
     }
     if (options.homes && leaf) {
