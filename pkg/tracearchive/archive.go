@@ -58,8 +58,9 @@ type stream struct {
 	spec   streamSpec
 	events []Event
 
-	mu   sync.Mutex
-	text string // immutable after successful inflation and verification
+	mu      sync.Mutex
+	text    string   // immutable after successful inflation and verification
+	renames []Rename // computed once from text, nil until then
 }
 
 type profile struct {

@@ -8,5 +8,5 @@
 - [x] W3: background jobs with their own deadline for batch cells <!-- t:8d4q -->
 - [x] W4: GET /info inventory endpoint and per-mount help text <!-- t:u3co -->
 - [x] W5: shared stats global (median, paired change, wins) <!-- t:ly11 -->
-- [ ] W6: rename-aware function identity in LLVM timelines <!-- t:khld -->
+- [x] W6: rename-aware function identity in LLVM timelines <!-- t:khld -->
 - [x] W7: idle session reaping and a session list <!-- t:1o7d -->

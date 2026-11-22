@@ -1,0 +1,68 @@
+{
+ "ok": true,
+ "value": {
+  "renames": [
+   {
+    "phase": "middle",
+    "ordinal": 17,
+    "pass": "GlobalOptPass",
+    "from": "checked_shadow",
+    "to": "kernel",
+    "method": "alias",
+    "aliasOrdinal": 16
+   }
+  ],
+  "aliases": [
+   "checked_shadow"
+  ],
+  "allocaDropsUnfollowed": [],
+  "allocaDropsFollowed": [
+   {
+    "ordinal": 6,
+    "pass": "SROAPass",
+    "before": 18,
+    "after": 0,
+    "delta": -18,
+    "function": "checked_shadow"
+   }
+  ],
+  "aroundTheRename": [
+   {
+    "ordinal": 15,
+    "pass": "IPSCCPPass",
+    "function": "checked_shadow",
+    "status": "available",
+    "value": 0,
+    "rename": null
+   },
+   {
+    "ordinal": 16,
+    "pass": "CalledValuePropagationPass",
+    "function": "checked_shadow",
+    "status": "available",
+    "value": 0,
+    "rename": null
+   },
+   {
+    "ordinal": 17,
+    "pass": "GlobalOptPass",
+    "function": "kernel",
+    "status": "available",
+    "value": 0,
+    "rename": {
+     "from": "checked_shadow",
+     "to": "kernel",
+     "method": "alias"
+    }
+   },
+   {
+    "ordinal": 18,
+    "pass": "PromotePass",
+    "function": "kernel",
+    "status": "available",
+    "value": 0,
+    "rename": null
+   }
+  ]
+ }
+}

@@ -19,6 +19,20 @@ go run ./cmd/trace-repl close --session "$sid"
 
 Before it listens, the server inflates every pass-dump stream once and checks it against the manifest digest and each index header; a damaged capture stops startup, and every reference a session hands out cites verified bytes. It then writes a readiness record with its address. To choose another port, give every command the same `--addr 127.0.0.1:PORT`. To query the independent ESP32-P4 timing captures as well, pass `--device-study ttmp/2026/11/21/PICOCALC-PIE-LOOPS--infer-and-lower-packed-loop-regions-in-unchanged-typed-programs` when starting the server. `hardware.pairs(baseline, candidate, phase)` gives within-block paired device times and `hardware.loads(treatment?)` gives the on-device cold compile cost of each treatment. Without `--device-study`, `hardware.help().available` is false and every data call fails with `missingDeviceStudy`; guest instruction counts in `profiles` are not a substitute for device time. To join compiler SIMD decisions to per-PC execution counts, pass `--simd-study FILE`, one `p4-simd-evidence-v1` JSON file holding RV32 images, decisions with byte ranges, complete per-PC traces and packet sets. The server verifies image digests, ranges, PCs and exact step sums before listening and refuses a malformed file. `simd.executions(decisionID, traceID, role)` sums executions inside one role's ranges and refuses a decision and trace from different images. Without the flag, or with a file that records nothing, `simd.help().available` is false and every data call fails with `missingSIMDStudy` or `emptySIMDStudy`. Server logs support `--log-level debug`. The CLI also reads multi-line programs from stdin when `--code` is absent.
 
+## Follow a function across renames
+
+LLVM sometimes continues a function under another name. In the PICOCALC-SHADOW-LLVM capture, the source defines `@kernel` as an alias of `@checked_shadow`. SROA removes the kernel's 18 allocas at middle ordinal 6, while it is still `checked_shadow`. At ordinal 17 GlobalOpt resolves the alias: `kernel` takes the body (with its calls rewritten to `fastcc`) and `checked_shadow` disappears. `kernel`'s own timeline therefore starts at 17 and shows no promotion.
+
+`run.renames()` lists such renames. A rename is recorded when a module print defines a new name that the previous module print declared as an alias of a function that is now gone (method `alias`), or that carries exactly the body the vanished function last had (method `body`). A rename that changes the body and leaves no alias is not detected, and the two names stay two functions. `run.function(name).aliases()` returns the earlier names, newest first. `timeline(phase, { follow: true })` uses each earlier name before its rename; its `measure()` and `changes()` rows carry `function` (the name in that print), `followedAs` and, at the rename, `rename: {from, to, method}`.
+
+```js
+const kernel = a.variant("checked").function("kernel")
+kernel.aliases()[0].name                     // "checked_shadow", renamed at ordinal 17 (method "alias")
+const allocas = q.ir.instructions().opcode("alloca").count()
+q.run(kernel.timeline("middle", { follow: true }).measure(allocas).changes().where(c => c.status === "known" && c.delta < 0))
+// → one row: ordinal 6, SROAPass, 18 → 0, function "checked_shadow"; without follow, no rows
+```
+
 ## Inspect SIMD decisions by emitted image
 
 The SIMD lab service on `127.0.0.1:3794` mounts the ray packet experiments and physics reference. Use the same address for each request. From the project checkout:
