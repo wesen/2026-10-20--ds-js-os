@@ -1505,3 +1505,14 @@ In `LitRow`, `a3` now holds the sphere count. The saved register it held before 
 
 - `picocalc-os/compiler/typed-rv32.js`: `planSavedHomes` (`reuseArgs`, `localsOnly`, `plain`, the `findIndex` assignment) and its call in `planLocations`; `POLICIES.kernel`.
 - `picocalc-os/tests/typed-rv32.test.mjs`: the new test and the restated pins.
+
+## Step 22: Split typed-rv32.js into source files with a generated bundle
+
+The user asked whether the 150 KB `typed-rv32.js` could be split, and whether that would get in the subagents' way. They work in their own worktrees, and none of them edits the backend. The risk was every loader that reads the file by path: tests, replays, the workbench, tools and the firmware's `typed/rv32.js`. So the sources moved, and the bundle stayed where the loaders read it.
+
+- `compiler/rv32/` holds 13 contiguous pieces of the old file, in its original order (`00-encoding.js` … `70-compile.js`), and a README. They are not ES modules: they share the bundle's IIFE scope and are joined in file-name order, so top-level `const` and `class` initialization keeps its order.
+- `compiler/rv32/build.mjs` writes `compiler/typed-rv32.js`. Its first build reproduced the old file byte for byte (`--check` passed before any other change). A first line marking the bundle as generated was added afterwards.
+- `tests/typed-rv32.test.mjs` fails when the bundle differs from the build of `compiler/rv32/`, and says to edit the sources.
+- The cutter is a scratch script (`cut.py`): a module starts at the comment block directly above its first definition. It is not needed again.
+- Checks: 152/152 tests; every pinned image unchanged; the firmware's CMake and the Makefile name `compiler/typed-rv32.js` explicitly, and nothing globs `compiler/`.
+- Largest pieces: the emitter class `FunctionCode` (659 lines) and loop versioning (520). Splitting the class would need prototype mixins, which I left for later.

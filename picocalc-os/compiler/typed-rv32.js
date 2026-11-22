@@ -1,3 +1,4 @@
+// Generated from compiler/rv32/ by compiler/rv32/build.mjs. Edit those files, not this one.
 // Lower the shared typed frontend's structured i32 operations to RV32IM.
 // This code executes in the host tools and can execute in a bare QuickJS realm.
 (() => {

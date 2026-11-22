@@ -1101,3 +1101,9 @@ function stored(w: buffer, n: i32, b: i32, c: i32): i32 {
         }
     assert(traps >= 6, "short buffers reach the bounds");
 });
+
+test("compiler/typed-rv32.js is the current build of compiler/rv32/", async () => {
+    const {bundle} = await import(new URL("../compiler/rv32/build.mjs", import.meta.url));
+    assert(readFileSync(new URL("../compiler/typed-rv32.js", import.meta.url), "utf8") === bundle(),
+        "compiler/typed-rv32.js differs from the build of compiler/rv32/: edit the files there, never the bundle, then run node compiler/rv32/build.mjs");
+});

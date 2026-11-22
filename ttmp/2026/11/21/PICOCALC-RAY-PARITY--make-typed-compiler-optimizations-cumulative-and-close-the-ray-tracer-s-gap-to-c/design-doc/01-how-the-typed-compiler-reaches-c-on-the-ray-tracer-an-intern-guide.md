@@ -502,7 +502,8 @@ Signed 16-bit and 32-bit indexed arrays would let source state what it stores. T
 |---|---|
 | `picocalc-os/compiler/typed-wasm.js` | Lexer, parser, type checker, tape emitter, `compileFunctions`, `decodeNumericOperations`, Wasm encoder |
 | `picocalc-os/compiler/typed-async.js` | Rewrites `async` functions before emission (needed for Editor) |
-| `picocalc-os/compiler/typed-rv32.js` | `FunctionCode`, `GuardedReturnCode`, `LeafCode`, `planLocations`, `POLICIES`, `compile`, `linkSlot` |
+| `picocalc-os/compiler/rv32/` | The RV32 backend's sources, 13 files joined in name order: encoders, `FunctionCode` (the emitter), leaf code, inlining, loop versioning with hoisting and induction, live-range splitting, ranges, value sets, conjunctions and rotation, `planLocations`, `POLICIES`, `compile`. See its README |
+| `picocalc-os/compiler/typed-rv32.js` | The generated bundle every loader reads (`node compiler/rv32/build.mjs`); never edit it directly |
 | `picocalc-os/compiler/typed-pie-loops.js` | Optional PIE loop recognizer and emitter |
 | `picocalc-os/compiler/typed-world.js` | World import table (`typedWorld.imports`) and linker contract |
 | `picocalc-os/compiler/raytrace.js` | `linkTypedRay`: the ray tracer's four entries |
