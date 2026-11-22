@@ -1,0 +1,21 @@
+{
+ "ok": true,
+ "value": {
+  "revision": "32130289737f9338dc56593d7803a54a69370b9a",
+  "sameImages": true,
+  "ray": {
+   "evalMedianMs": 22.3,
+   "workbenchMedianMs": 22.1,
+   "medianPercentSaved": 1.69,
+   "wins": 6,
+   "pairs": 9
+  },
+  "chess": {
+   "evalMedianMs": 296,
+   "workbenchMedianMs": 296.5,
+   "medianPercentSaved": -0.23,
+   "wins": 2,
+   "pairs": 5
+  }
+ }
+}

@@ -1,0 +1,129 @@
+{
+  "archive": {
+    "label": {
+      "ticket": "PICOCALC-ROW-IR",
+      "title": "Trace the ray row through GCC and LLVM optimization passes",
+      "dir": "/home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-a2fb34f1ca31870f0/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes"
+    },
+    "manifestSHA256": "278cdce2eb41e5a7a5fdedc227e724400fd5c1b75630134ce36811a3ec4c1a2b",
+    "path": "/home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-a2fb34f1ca31870f0/ttmp/2026/11/21/PICOCALC-ROW-IR--trace-the-ray-row-through-gcc-and-llvm-optimization-passes",
+    "streams": [
+      {
+        "variant": "checked",
+        "phase": "middle",
+        "sha256": "bbd3b983cff150aeb56d99e517331a1ea0b4af5afc86869c730b9dca2ac795b4",
+        "rawBytes": 1027953,
+        "dumps": 195
+      },
+      {
+        "variant": "checked",
+        "phase": "backend",
+        "sha256": "8139296763e7d912d2f6051246c8eb4d0c706c6d1685add844716a5d1f16c8ca",
+        "rawBytes": 961648,
+        "dumps": 116
+      },
+      {
+        "variant": "firmware",
+        "phase": "middle",
+        "sha256": "eaeee4b292e18742f2c40ed1aaeccd98565743941fd7378c87f3f52abf608c38",
+        "rawBytes": 13257970,
+        "dumps": 2061
+      },
+      {
+        "variant": "firmware",
+        "phase": "backend",
+        "sha256": "e1eabbaadea131365f48553d4a07b92c2ba5fb49d5db7cf17e0962599bdd915c",
+        "rawBytes": 14420051,
+        "dumps": 1450
+      },
+      {
+        "variant": "unchecked",
+        "phase": "middle",
+        "sha256": "d58c106109d500ba8010ca1d6e076d42f504cc6bd1802b3284a80052bed260d4",
+        "rawBytes": 684903,
+        "dumps": 195
+      },
+      {
+        "variant": "unchecked",
+        "phase": "backend",
+        "sha256": "98517d51246b17f8ec72298250f962b05b837b12cd955a4c4c3bbf4b4fe540f5",
+        "rawBytes": 559866,
+        "dumps": 116
+      }
+    ]
+  },
+  "build": {
+    "goVersion": "go1.26.10",
+    "module": "github.com/go-go-golems/picocalc-trace",
+    "revision": null
+  },
+  "compiler": {
+    "cachedCommits": [
+      "32130289737f9338dc56593d7803a54a69370b9a",
+      "eaf087281dbad1183f23eff353145d1c8a413e64"
+    ],
+    "modules": [
+      {
+        "binding": "typedWasm",
+        "alias": "typedWasm",
+        "path": "picocalc-os/compiler/typed-wasm.js",
+        "required": true
+      },
+      {
+        "binding": "typedAsync",
+        "alias": "typedAsync",
+        "path": "picocalc-os/compiler/typed-async.js",
+        "required": false
+      },
+      {
+        "binding": "typedWorld",
+        "alias": "typedWorld",
+        "path": "picocalc-os/compiler/typed-world.js",
+        "required": true
+      },
+      {
+        "binding": "typedRv32",
+        "alias": "typedRv32",
+        "path": "picocalc-os/compiler/typed-rv32.js",
+        "required": true
+      },
+      {
+        "binding": "typedPieLoops",
+        "alias": "typedPieLoops",
+        "path": "picocalc-os/compiler/typed-pie-loops.js",
+        "required": false
+      },
+      {
+        "binding": "typedRv32Interp",
+        "alias": "interp",
+        "path": "picocalc-os/tools/rv32-interp.js",
+        "required": false
+      },
+      {
+        "binding": "typedRayBench",
+        "alias": "rayBench",
+        "path": "picocalc-os/tools/typed-ray-bench.js",
+        "required": false
+      }
+    ]
+  },
+  "deviceStudy": null,
+  "limits": {
+    "sourceBytes": 65536,
+    "resultBytes": 524288,
+    "cellSeconds": 15,
+    "jobSeconds": 1800
+  },
+  "mounts": [],
+  "repo": {
+    "head": "951ac05bc20c8a658858ae94cc8aee6371db759b",
+    "root": "/home/manuel/code/wesen/2026-10-20--ds-js-os"
+  },
+  "service": "trace-repl",
+  "sessions": {
+    "max": 32,
+    "open": 3
+  },
+  "simdStudy": null,
+  "started": "2026-11-22T01:59:34.892228577Z"
+}

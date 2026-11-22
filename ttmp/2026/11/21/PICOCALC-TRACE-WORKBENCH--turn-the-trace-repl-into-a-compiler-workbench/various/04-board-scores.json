@@ -1,0 +1,168 @@
+{
+ "ok": true,
+ "value": {
+  "rows": {
+   "path": "ttmp/2026/11/21/PICOCALC-RAY-PARITY--make-typed-compiler-optimizations-cumulative-and-close-the-ray-tracer-s-gap-to-c/various/13-board/rows.json",
+   "sha256": "c505fdaeff127e08ceb9ded696187bd98b049cad45f257e546c72b4f77d324fa",
+   "count": 1932
+  },
+  "recorded": {
+   "path": "ttmp/2026/11/21/PICOCALC-RAY-PARITY--make-typed-compiler-optimizations-cumulative-and-close-the-ray-tracer-s-gap-to-c/various/14-board-scores.json",
+   "sha256": "87b82d687ec29ea402611da1462cbcb2431dad69f1d04f38638eb4e3dd2399e8"
+  },
+  "identicalToRecorded": true,
+  "differences": [],
+  "scores": {
+   "frame": {
+    "pie": {
+     "control": 46011.5,
+     "candidate": 42559,
+     "savedPct": 7.5,
+     "wins": 6
+    },
+    "scalar": {
+     "control": 45144,
+     "candidate": 39487.5,
+     "savedPct": 12.53,
+     "wins": 6
+    }
+   },
+   "primary": {
+    "pie": {
+     "control": 14046.5,
+     "candidate": 13093,
+     "savedPct": 6.79,
+     "wins": 6
+    },
+    "scalar": {
+     "control": 13135.5,
+     "candidate": 10106,
+     "savedPct": 23.05,
+     "wins": 6
+    }
+   },
+   "predicate": {
+    "pie": {
+     "control": 277.58658931046875,
+     "candidate": 247.46185244134108,
+     "savedPct": 10.85,
+     "wins": 6
+    },
+    "scalar": {
+     "control": 277.48598346767983,
+     "candidate": 247.24261949992297,
+     "savedPct": 10.87,
+     "wins": 6
+    }
+   },
+   "compileRay": {
+    "control": 307022,
+    "candidate": 332106,
+    "savedPct": -8.19,
+    "wins": 0
+   },
+   "compileChess": {
+    "control": 75827.5,
+    "candidate": 79050,
+    "savedPct": -4.26,
+    "wins": 0
+   },
+   "peakRay": {
+    "control": 878840,
+    "candidate": 878840,
+    "savedPct": 0,
+    "wins": 0
+   },
+   "scenes": [
+    {
+     "fixture": "default",
+     "control": 46011.5,
+     "candidate": 42559,
+     "savedPct": 7.5,
+     "wins": 6
+    },
+    {
+     "fixture": "lamp-only",
+     "control": 45813,
+     "candidate": 42473,
+     "savedPct": 7.29,
+     "wins": 6
+    },
+    {
+     "fixture": "near-corner",
+     "control": 46630.5,
+     "candidate": 42979,
+     "savedPct": 7.84,
+     "wins": 6
+    },
+    {
+     "fixture": "far-corner",
+     "control": 47187.5,
+     "candidate": 43467,
+     "savedPct": 7.9,
+     "wins": 6
+    },
+    {
+     "fixture": "left-bottom",
+     "control": 45628.5,
+     "candidate": 42335,
+     "savedPct": 7.22,
+     "wins": 6
+    },
+    {
+     "fixture": "right-top",
+     "control": 44205.5,
+     "candidate": 41111.5,
+     "savedPct": 7,
+     "wins": 6
+    },
+    {
+     "fixture": "blue-overlap",
+     "control": 44073.5,
+     "candidate": 41070,
+     "savedPct": 6.82,
+     "wins": 6
+    },
+    {
+     "fixture": "gold-overlap",
+     "control": 44074.5,
+     "candidate": 41093.5,
+     "savedPct": 6.77,
+     "wins": 6
+    },
+    {
+     "fixture": "left-lamp",
+     "control": 44866.5,
+     "candidate": 41689,
+     "savedPct": 7.08,
+     "wins": 6
+    },
+    {
+     "fixture": "right-lamp",
+     "control": 45233,
+     "candidate": 42031.5,
+     "savedPct": 7.09,
+     "wins": 6
+    },
+    {
+     "fixture": "bottom-lamp",
+     "control": 44973,
+     "candidate": 41755.5,
+     "savedPct": 7.15,
+     "wins": 6
+    },
+    {
+     "fixture": "top-lamp-wide",
+     "control": 44741.5,
+     "candidate": 41582,
+     "savedPct": 7.07,
+     "wins": 6
+    }
+   ],
+   "cFrameUs": 7728.5,
+   "candidatePieFrameUs": 42559,
+   "previousPieFrameUs": 46011.5,
+   "checkedCPredicateCycles": 136.01740514452945
+  }
+ }
+}
