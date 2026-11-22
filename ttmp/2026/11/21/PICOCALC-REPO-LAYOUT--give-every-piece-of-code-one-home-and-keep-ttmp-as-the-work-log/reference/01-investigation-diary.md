@@ -254,3 +254,71 @@ The user asked to implement the design. This step plans the order of the work, s
 ### Technical details
 
 - Base for the migration: `889a9b2`.
+
+## Step 5: Phase A, the host gates in bench/
+
+This step moved the three gates that every compiler change runs out of five tickets and into `bench/host`: the opening ray frame, the Chess engine oracle and the 24 host replays. All three now take one parameter, the compile options. The emulator and its C runtime got one home, `bench/emu`, and the reference data went to `bench/reference`. Every gate reproduced its recorded result through the promoted code, under both the compiler defaults and the kernel policy.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 4.
+
+**Assistant interpretation:** Implement Phase A's host part (design Sections 4.2 and 5.2) without moving any source the firmware builds.
+
+**Inferred user intent:** One harness instead of copies.
+
+**Commit (code):** `9ec448b`.
+
+### What I did
+
+- **The shared library.** Wrote `bench/lib/repo.mjs` (the repository root) and `bench/lib/compiler.mjs`. The loader imports the five compiler files as ESM, in the firmware's bundle order. When `TYPED_RV32_OPTIONS` is set, it installs a `globalThis.typedRv32` setter before `typed-rv32.js` runs. The setter wraps `compile`, so every caller sees the defaults, including `typed-world.js` when it links a world.
+- **The promotion (`scripts/01-promote-host-gates.py`).**
+  - Copied 16 replay files to `bench/host/replays/` under descriptive names, each with a provenance line.
+  - Collapsed each script's `../../../../../../picocalc-os/compiler/typed-*.js` imports into one import of `../../lib/compiler.mjs`.
+  - Copied the Chess oracle with TYPED-CHESS's runner and positions.
+  - `git mv`'d `tools/typed-ray-profile.mjs` to `bench/host/ray-profile.mjs`. `--policy` now accepts any policy name; before, `--policy kernel` silently compiled with the defaults, because only `stock` and `default` were in its table.
+  - Moved `OPENING_DIGEST` to `bench/reference/ray-opening.json`.
+  - `git mv`'d `cji/tools/rv32/emu.c` to `bench/emu/`.
+- **Two fix-up scripts.** `scripts/02-emulator-runtime.py` and `scripts/03-replay-drivers.py`, for the failures below.
+- **The runners.** `bench/emu/Makefile` builds `rv32emu` and the three runtime objects. `bench/lib/toolchain.sh` finds the GCC and the emulator. `bench/host/replays/run.sh [--options JSON]` runs the replays, and `bench/host/gates.sh [--options JSON]` runs all three gates.
+
+### Why
+
+- **Copies differed only in their options.** The copies across tickets differed only in how the options reached the compiler: an environment variable in one, a patched `typed-rv32.js` swapped in by an import hook in another. One environment variable, applied at the compiler's definition, covers both.
+
+### What worked
+
+- **Ray profile.** Kernel 3,239,635 and default 4,888,369 executed instructions, both with output `430f0d50…`, the same as RAY-PARITY Step 21.
+- **Chess oracle.** 6,981 words with GCC 14.2, under the defaults (128,152,624 engine instructions, 21,716 B) and the kernel policy (118,361,847, 19,892 B).
+- **Replays.** 24/24 under the defaults and 24/24 under `{"policy":"kernel"}`, about 35 s each.
+
+### What didn't work
+
+1. **Missed imports.** The first replay run gave 5/24. Three scripts also import `worlds/*/compile.js` through six-level relative paths: `Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/home/manuel/picocalc-os/worlds/files/compile.js'`. My regular expression had only handled the compiler imports.
+2. **The emulator was not standalone.** The scripts link against objects next to the emulator: `riscv32-esp-elf-gcc: error: .../bench/emu/build/libc.o: No such file or directory`. Those objects are the emulator's C runtime, built by cji's Makefile from `cji/tools/rv32/fw/`. Moving `libc.c`, `hostcalls.S`, `softfloat.c` and `include/` to `bench/emu/fw/` fixed it. cji's Makefile (six paths) and `nw-test.sh` now name them there.
+3. **The wrong GCC.** The second run gave 21/24 after `cc1: error: -march=rv32imafc_zicsr_zifencei: unsupported ISA substring '_zicsr_zifencei'`. My discovery had picked `esp-2021r2-patch5-8.4.0` over `esp-14.2.0_20260121`, because `sort | tail -1` orders `2021…` after `14…`. It now picks the highest `-dumpversion`. My first oracle run had used GCC 8.4 too, so it was rerun.
+4. **Three more C drivers.** The third run's failures were drivers that 01 had missed (`02-files-rv32-driver.c`, `07-editor-layout-driver.c`, `15-rv32-entry-runner.c`). A grep for `'NN-name.ext'` literals in the promoted scripts found exactly these three.
+
+### What I learned
+
+- `make -C cji build/rv32/fw-test.elf` fails on this machine with `ld.lld: No such file or directory`. That is independent of this move; the replays never needed `fw-test.elf`.
+
+### What was tricky to build
+
+- The options wrapper has to exist before `typed-rv32.js` assigns the global. A wrapper installed afterwards would miss any code that captured the original object while loading.
+
+### What warrants a second pair of eyes
+
+- `bench/host/replays/*.mjs` are copies of ticket scripts, not refactors: they keep their own structure and cwd-relative `picocalc-os/…` paths. Making them into one module is possible later; the gate is that they reproduce.
+
+### What should be done in the future
+
+- The board half of Phase A, after Phase B gives it a playable record to restore.
+
+### Code review instructions
+
+- Read `bench/lib/compiler.mjs`, then run `bench/host/gates.sh --options '{"policy":"kernel"}'`. It ends with `24/24 workflows passed`.
+
+### Technical details
+
+- Toolchain: `/home/manuel/.espressif/tools/riscv32-esp-elf/esp-14.2.0_20260121/riscv32-esp-elf/bin/riscv32-esp-elf-gcc` and `bench/emu/build/rv32emu` (48,176 bytes).
