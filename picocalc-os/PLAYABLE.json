@@ -1,0 +1,30 @@
+{
+  "profile": "playable",
+  "commit": "a396d3b",
+  "dirty": null,
+  "app": {
+    "file": "picocalc-os-p4.bin",
+    "sha256": "28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6"
+  },
+  "partitionTable": {
+    "sha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
+  },
+  "bootloader": {
+    "sha256": "ecfaeae5132766f9e2400484a7b57f3e19a61538d794f2ffac25e277b09a7154"
+  },
+  "store": "~/.cache/picocalc/firmware/28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6",
+  "peripherals": "on",
+  "health": {
+    "judged": [
+      "agenda",
+      "chess",
+      "compositor",
+      "display",
+      "editor",
+      "files",
+      "keyboard",
+      "snake"
+    ],
+    "restartingAfterSettle": []
+  }
+}

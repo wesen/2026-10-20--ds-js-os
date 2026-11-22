@@ -80,4 +80,12 @@ elseif(PICOCALC_AGENT_WIFI)
 elseif(PICOCALC_NATIVE_ELF)
     idf_build_set_property(DEPENDENCIES_LOCK "${CMAKE_CURRENT_LIST_DIR}/dependencies.elf.lock")
 endif()
+# Reproducible images (sdkconfig.reproducible): ESP-IDF maps its own tree and this project directory out of
+# __FILE__; the firmware also compiles sources from the rest of the repository and from the build directory
+# (generated bundles), so those prefixes are mapped too.
+get_filename_component(PICOCALC_REPO "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+idf_build_set_property(COMPILE_OPTIONS "-fmacro-prefix-map=${PICOCALC_REPO}=/picocalc" APPEND)
+idf_build_set_property(COMPILE_OPTIONS "-fdebug-prefix-map=${PICOCALC_REPO}=/picocalc" APPEND)
+idf_build_set_property(COMPILE_OPTIONS "-fmacro-prefix-map=${CMAKE_BINARY_DIR}=/build" APPEND)
+idf_build_set_property(COMPILE_OPTIONS "-fdebug-prefix-map=${CMAKE_BINARY_DIR}=/build" APPEND)
 project(picocalc-os-p4)

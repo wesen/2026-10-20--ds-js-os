@@ -65,11 +65,19 @@ components. From the repository root, choose an empty build directory.
 Use separate checkouts for concurrent builds. The CJI bootstrap writes intermediates into its source tree.
 
 ```sh
-source /path/to/esp-idf-5.4.2/export.sh
-picocalc-os/port/esp32p4/build-smooth-chess.sh /tmp/picocalc-smooth-chess
+make playable                       # from the repository root: build the playable profile and store its image
+make install-playable               # flash it, settle, health-check, and record it in picocalc-os/PLAYABLE.json
 ```
 
-The script prints SHA-256 digests for `picocalc-os-p4.bin` and `partition_table/partition-table.bin`.
+or by hand, with the ESP-IDF v5.4.2 environment sourced:
+
+```sh
+picocalc-os/port/esp32p4/build.sh playable /tmp/picocalc-playable    # any profile in profiles/*.env
+```
+
+`build.sh` prints the app digest and writes `picocalc-build.json` (profile, commit, options, digests) into the build
+directory. Every profile builds reproducibly (`sdkconfig.reproducible`): one commit gives one app digest wherever it
+is checked out and built.
 The ordinary profile uses the real keyboard controller and display, includes native Files, Agenda, Editor, and
 Chess, and uses the app-delivered smooth 3D painter. Press **H** in the launcher, then **F3/F4** to turn the camera.
 

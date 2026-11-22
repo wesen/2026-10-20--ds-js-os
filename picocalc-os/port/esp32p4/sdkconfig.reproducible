@@ -1,0 +1,4 @@
+# Every profile builds reproducibly: no build date, time or absolute path in the image, so one commit gives one app
+# digest wherever it is built (PICOCALC-REPO-LAYOUT rule 6). CMakeLists.txt adds the prefix maps for the sources
+# outside this project directory.
+CONFIG_APP_REPRODUCIBLE_BUILD=y
