@@ -9,7 +9,15 @@ Topics:
 DocType: reference
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://ttmp/2026/11/21/PICOCALC-TRACE-WORKBENCH--turn-the-trace-repl-into-a-compiler-workbench/scripts/06-run-acceptance.sh
+      Note: Runs every RAY-PARITY replacement through the CLI
+    - Path: repo://ttmp/2026/11/21/PICOCALC-TRACE-WORKBENCH--turn-the-trace-repl-into-a-compiler-workbench/scripts/09-find-renames.py
+      Note: Probe that found the alias-resolution rename
+    - Path: repo://ttmp/2026/11/21/PICOCALC-TRACE-WORKBENCH--turn-the-trace-repl-into-a-compiler-workbench/various/02-planner-equivalence-eaf0872-3213028.json
+      Note: Planner equivalence job result
+    - Path: repo://ttmp/2026/11/21/PICOCALC-TRACE-WORKBENCH--turn-the-trace-repl-into-a-compiler-workbench/various/04-board-scores.json
+      Note: Board scores reproduced from rows.json
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-21T20:10:41.571615113-05:00
@@ -452,3 +460,188 @@ Session bookkeeping moved into the service in this step. Jobs need per-session s
 ### Technical details
 
 - `JobView`: `{job, session, state, submitted, started?, finished?, timeoutSeconds, elapsedSeconds, result?, error?}`. States: `queued` → `running` → `done` | `failed` | `stopped`. A session keeps its last 16 finished jobs.
+
+## Step 8: Acceptance, the RAY-PARITY drivers as cells and jobs
+
+With W1, W2, W3 and W5 in place, the acceptance test of the ticket could run: replace PICOCALC-RAY-PARITY's Python drivers with REPL-native cells and jobs, and reproduce its recorded results. All four replacements work, and a shell driver runs them through the `trace-repl` CLI alone in 53 s. The planner equivalence of `eaf0872` against `3213028` is one job that reproduces RAY-PARITY's recorded result exactly, and the board scoring is one cell that reproduces `14-board-scores.json` exactly. One measurement raised a question, whether the loading method changes compile time in goja, and a short experiment ruled that out.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** The acceptance test of the delegated brief: the planner equivalence as one job with two `compiler.at()` revisions (`eaf0872` and `3213028`), the compile-cost measurement and the board scoring as cells using `stats`, the board rows read through `repo.read`, numbered scripts in this ticket's `scripts/`, results in the diary, and RAY-PARITY's files untouched.
+**Inferred user intent:** Prove that the workarounds are no longer needed by doing the same work without them and getting the same numbers.
+**Commit (code):** 78c963c — "test(trace-workbench): REPL-native replacements for the RAY-PARITY drivers"
+
+### What I did
+
+- Built `scratchpad/bin/trace-repl` at `6838a42` with `-buildvcs=false` and started it on 127.0.0.1:3811: `serve --archive ttmp/2026/11/21/PICOCALC-ROW-IR--… --repo /home/manuel/code/wesen/2026-10-20--ds-js-os --max-job 30m`. `--repo` names the main checkout, read-only, because the board inputs (`various/13-board/rows.json`, `various/14-board-scores.json`, `scripts/08-score-board.*`) exist there only as untracked files. They are not committed on `main`, so this worktree does not have them.
+- Wrote `scripts/02-open-compiler-session.js` (replaces `01-open-compiler-session.py` and `repl_client.py`), `03-planner-equivalence.js` (replaces `02-planner-equivalence.{js,py}`), `04-compile-cost.js` (replaces `03-compile-cost.py`), `05-score-board.js` (replaces `08-score-board.{js,py}`), `06-run-acceptance.sh` (runs all of them through the CLI and saves `various/00`–`04`) and `07-loading-method-cost.js` (the follow-up experiment, `various/05`).
+- Ran `03` once detached (`eval --job --detach`, then `trace-repl job`) and `05` in a second session while `03` was still running, then ran the whole driver: `TRACE_REPL=scratchpad/bin/trace-repl scripts/06-run-acceptance.sh 127.0.0.1:3811`.
+
+### Why
+
+- `03` and `05` check themselves against RAY-PARITY's recorded files (`06-phase1-equivalence-vs-eaf0872.json` and `14-board-scores.json`), read with `repo.read`, and report their digests. A reproduction claim is then a field of the result, not a comparison done by hand afterwards.
+- The equivalence has eleven arms: RAY-PARITY's seven (its `stock: undefined` arm is `default` here, because since `eaf0872` no options means the default policy), `stock` named explicitly, and the three options that are new in `3213028` (`saved`, `direct`, `savedDirect`). `eaf0872` ignores the unknown option keys, so only those three may differ.
+
+### What worked
+
+- `02-open-compiler-session.js`: one 0.44 s cell binds both revisions and 38 inputs (330,186 characters). The old driver pushed the same text through `eval` in 30,000-character chunks.
+- `03-planner-equivalence.js`, one job: 38 inputs × 11 arms × 2 compilers = 836 compiles in 38.9 s (32.5 s on the second run). RAY-PARITY's seven arms give 98 identical images, 168 identical errors and 0 mismatches, equal to the recorded file (sha256 `c9296b7b…`), so `rayParityArms.agrees` is true. `stock` and `default` are identical on all 14 inputs that compile. The three new arms account for all 41 mismatches. Ray: saved 8632 → 8984, direct 8632 → 8280, saved+direct 8632 → 8048. Chess world 45,348 → 42,120 and Editor 74,188 → 67,552 under saved+direct.
+- `05-score-board.js`, one cell, 57 ms: `rows.json` (sha256 `c505fdae…`, 1932 rows) scored with `stats.paired` gives `identicalToRecorded: true` with no differing path. `JSON.stringify` of the result equals that of the recorded `scores`, including key order and every floating-point digit (for example frame pie 46011.5 → 42559, 7.5%, 6 wins; predicate scalar 10.87%).
+- `04-compile-cost.js`, one job, 17.9 s. Medians in ms (stock, previous default, candidate): ray 20.4 / 21.4 / 23.5, Chess 348.1 / 349.7 / 371.7, Editor 886.4 / 900.2 / 911.7. Paired by round, previous → candidate: ray −9.32% (0 of 9 rounds won), Chess −6.08% (0 of 5), Editor −1.77% (1 of 3).
+- `07-loading-method-cost.js`: the same `3213028` compiler loaded with `(0, eval)` (as `repl_client.py` did) and through `compiler.at` compiles identical images in the same time. Ray 22.3 against 22.1 ms, Chess 296.0 against 296.5 ms.
+
+### What didn't work
+
+- Nothing failed. One result needed an explanation. The absolute compile times are about half of RAY-PARITY's recorded medians (ray 21.4 against 54.6 ms for the previous default, Chess 349.7 against 796.8 ms), while the candidate's paired overhead is larger than RAY-PARITY's medians suggested (ray −9.3% against +2.2%, Chess −6.1% against +1.2%). `07` shows the loading method is not the cause. The remaining explanation is host load when each was measured; five services and several builds were running during RAY-PARITY's measurement. Absolute goja times are therefore not comparable across sessions and days. Paired, interleaved comparisons inside one job are.
+
+### What I learned
+
+- The paired goja overheads measured here (ray −9.3%, Chess −6.1%) are close to what the physical board trial recorded for the same change (`compileRay` −8.19%, `compileChess` −4.26% in `14-board-scores.json`). RAY-PARITY's medians of separate cells (+2.2% and +1.2%) were not. With n = 9 and n = 5 this is one observation, not a calibration. It is consistent with interleaving inside one job, which removes drift between cells.
+- A second session can run a cell while the first is busy with a job, as the design requires.
+
+### What was tricky to build
+
+- The board rows live in the main checkout's working tree and not in git. Pointing `--repo` at the main checkout made them readable through `repo.read`, as the brief requires. Every git operation the service runs there is read-only plumbing with `GIT_OPTIONAL_LOCKS=0`. After the merge, and once RAY-PARITY commits those files, the scripts work with the default `--repo`.
+
+### What warrants a second pair of eyes
+
+- `04` compares the previous default on the `eaf0872` backend with the candidate on the `3213028` backend, as RAY-PARITY's arms were named. A candidate measured on its own backend with the old options would isolate the cost of the options from the cost of the backend's new code paths. That is an arm worth adding.
+
+### What should be done in the future
+
+- Once RAY-PARITY commits `various/13-board/` and `14-board-scores.json`, rerun `06-run-acceptance.sh` against a service with the default `--repo`.
+
+### Code review instructions
+
+- Read `scripts/03-planner-equivalence.js` and `scripts/05-score-board.js`, then the `various/02` and `various/04` results.
+- Reproduce: start `trace-repl serve --addr 127.0.0.1:PORT --archive <ROW-IR> --repo <a checkout with RAY-PARITY various/13-board> --max-job 30m`, then run `scripts/06-run-acceptance.sh 127.0.0.1:PORT` from the repository root.
+
+### Technical details
+
+- Results: `various/00-service-info.json`, `01-open-compiler-session.json`, `02-planner-equivalence-eaf0872-3213028.json`, `03-compile-cost-goja.json`, `04-board-scores.json`, `05-loading-method-cost.json`.
+- `typed-rv32.js` digests: `eaf0872` `2d8ec343…`, `3213028` `79f494e0…`.
+
+## Step 9: W7, idle session reaping and a session list
+
+A service now unloads sessions that nobody has used for `--idle` (default 2 h) and lists the open ones. Field note N8 found services refusing new sessions after a day of work, because sessions never expired and the limit is 32. A request to an unloaded session gets 404 with the reason, so a researcher learns why their bindings are gone instead of seeing a bare "not found".
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Implement W7 as guide Section 5 step 6, on the registry introduced in Step 7.
+**Inferred user intent:** Long-lived services should keep accepting sessions.
+**Commit (code):** 99eb09e — "feat(trace-repl): idle session reaping and GET /sessions"
+
+**Mid-step user questions (verbatim):** "how wwhere are we at? what are we doing?", "give me the big picture!" and "like the whole repl project, where are we at, what goals are we pursuing, what did we achieve?" I answered with the state of the ticket and of the REPL project (TRACE-QUERY designed the query language, TRACE-REPL built and qualified the service, RAY-PARITY used it for compiler work and wrote the field notes, and this ticket turns it into a workbench), then continued.
+
+### What I did
+
+- `pkg/tracerepl/sessions.go`: `WithIdle`, `SessionView`, `ExpiredError` (unwraps to `replsession.ErrSessionNotFound`, so the handler answers 404), `Sessions`, `SessionCount`, `Idle`, the `reap` goroutine (period `idle/4`, clamped to 10 ms–1 min), `reapIdle(now)` and `expire` (at most 256 remembered IDs).
+- `service.go`: `New` starts the reaper when `idle > 0`. `Release` reports an expired session's reason. `Close` signals the reaper through a `closing` channel and waits for it. `/info`'s `sessions` now comes from the service and includes `idleSeconds`.
+- `http.go`: the handler's own `live` map is gone. The 32-session limit counts `s.SessionCount()` under the handler's open mutex. New route `GET /sessions`.
+- `cmd/trace-repl`: `serve --idle` (Go duration, `0` disables) and `trace-repl sessions`.
+- `pkg/tracerepl/sessions_test.go`: four tests. Most call `reapIdle` with a chosen clock instead of sleeping.
+
+### Why
+
+- The registry is the only place that knows whether a session is busy. A session with `busy > 0` (a cell holding or waiting for the gate) or an active job is never reaped. Deciding and unregistering under one lock means a cell that claimed the session first keeps it, and a cell that comes later is told the session expired.
+- Moving the count from the handler into the service also removes the reason for the old test `TestHTTPReleasesCapacityOfVanishedSession`. A session released anywhere leaves the registry at once. The test still passes, because it checks the visible behaviour.
+
+### What worked
+
+- `go test -race -count=2 ./pkg/tracerepl` passes. The tests cover: a 50 ms idle session reaped by the goroutine, then 404 with "expired after 50ms idle" from eval, jobs and DELETE; a quiet session reaped while one runs a cell and another a job; the job's session reaped only once its job ended and the idle time passed; `GET /sessions` counting cells; 32 sessions refusing a 33rd until reaping frees capacity; `WithIdle(0)`; and the tombstone bound.
+
+### What didn't work
+
+- `TestBusySessionsAreNotReaped` first failed under `-race` ("race detected during execution of test"). The test assigned `s.idle = time.Minute` while the reaper goroutine read it. The field is set once in `New` and never changes in the service. The test now keeps the default 2 h and moves its clock three hours ahead.
+
+### What I learned
+
+- Passing a clock to `reapIdle` makes the reaping rule testable without sleeping, and leaves one end-to-end test for the goroutine itself.
+
+### What was tricky to build
+
+- `Release` of an expired session. The registry no longer knows the ID and replsession returns `ErrSessionNotFound`. Without the tombstone check, DELETE would answer a bare 404, so `Release` looks the tombstone up before unloading and returns `ExpiredError`.
+
+### What warrants a second pair of eyes
+
+- The reaper unloads a session outside the lock, after removing it from the registry. In that window replsession still holds the VM, but nothing can reach it, because every entry point checks the registry first.
+
+### What should be done in the future
+
+- N/A.
+
+### Code review instructions
+
+- `pkg/tracerepl/sessions.go` (`reapIdle`) and `jobs.go` (`claim`, `missing`). Run `go test -race ./pkg/tracerepl -run 'Idle|Busy|SessionList'`.
+
+### Technical details
+
+- `GET /sessions` row: `{id, created, lastUsed, idleSeconds, cells, jobs, activeJob?, busy}`. Error text: `session ID expired after 2h0m0s idle; its bindings are gone, open a new session (trace-repl open)`.
+
+## Step 10: W6, following a function across renames
+
+`run.renames()`, `function(name).aliases()` and `timeline(phase, {follow: true})` follow a function's history across a rename. On the SHADOW-LLVM capture, `kernel`'s followed middle timeline shows SROA removing 18 allocas at ordinal 6, while the function was still called `checked_shadow`. The unfollowed timeline shows nothing, which is field note N3.
+
+The guide's mechanism did not work on that very case, so the design changed. The guide proposed matching a body digest: a new name whose body equals the body of a vanished name. In this capture GlobalOpt renames and rewrites at once: it changes every call to `fastcc` and renumbers the attribute groups (`#5` → `#4`), so the digests differ. The bytes contain better evidence. The module print before the rename declares `@kernel = dso_local alias i32 (ptr, i32, i32), ptr @checked_shadow`, and GlobalOpt's rename is the resolution of that alias. Alias resolution is now the primary rule, and an identical body is a secondary one.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Implement W6 last, as the lowest priority, with the test the guide names: on SHADOW-LLVM, `kernel` aliases `checked_shadow` and SROA's alloca removal appears in the followed timeline.
+**Inferred user intent:** A function's history should not be split by a rename that a reader has to know about in advance.
+**Commit (code):** 7fed012 — "feat(trace-repl): follow a function across LLVM renames"
+
+### What I did
+
+- Probed the capture before designing with `scripts/09-find-renames.py` (module prints, defined names, body digests) and `scripts/10-diff-renamed-body.py` (the last `checked_shadow` body before ordinal 17 against `kernel` at 17), both run with `python3 -I`.
+- `pkg/tracearchive/renames.go`: `Rename`, `printFunctions` (defines with body digests, aliases, whether the print is a module), `findRenames` (one pass over a stream), and `Archive.Renames(variant)`, cached per stream on the verified text.
+- `pkg/traceapi/install.go`: bridge method `renames`. `query.js`: `renamesOf`, `aliasChain`, `followSegments`, `nameAt` and `renameAt`. Also: `FunctionHandle.timeline(phase, options)` and `aliases()`, `Run.renames()`, name-per-ordinal membership in `eachDomainEvent` and `EventPick._resolve`, `measureEvent` and `changeRow` carrying `function`, `followedAs` and `rename`, `StatePlan._target`/`_snapshot` resolving the earlier name, and `ArgumentRef.resolve` accepting a snapshot whose `aliasOf` is its function. Help topic `timeline` documents it.
+- Tests: `TestRenamesFollowGlobalOptAliasResolution` and `TestRenamesByIdenticalBody` (tracearchive), `TestFollowedTimelineCrossesGlobalOptRename` (traceapi). Ticket cell `scripts/08-follow-renamed-kernel.js`, result `various/06-follow-renamed-kernel.json`.
+
+### Why
+
+- The rename is detected in Go, at the bytes, because Go already holds every verified stream. One pass with line scanning is cheap there, and a JS scan of every module print in every session would not be. The query language only consumes the edges.
+- Following is opt-in (`{follow: true}`), so every existing timeline, measurement and recorded workbook result is unchanged.
+
+### What worked
+
+- Scan of `checked-middle`: one module-print event, ordinal 17 (`GlobalOptPass on [module]`), where `kernel` appears and `checked_shadow` disappears. The ROW-IR `checked-middle` stream has none.
+- `Renames("checked")` on SHADOW-LLVM returns exactly one edge: middle 17, `checked_shadow` → `kernel`, method `alias`, alias declared at ordinal 16.
+- The followed timeline: alloca drops `[{ordinal: 6, pass: SROAPass, before: 18, after: 0, delta: −18, function: checked_shadow}]`. The unfollowed one: `[]`. The rows at 15, 16, 17 and 18 name `checked_shadow`, `checked_shadow`, `kernel` (with `rename: {from: checked_shadow, to: kernel, method: alias}`) and `kernel`. `kernel.argument(0)` resolves in `checked_shadow`'s prints, and states picked at 6 (after) and 17 (before) are `checked_shadow`'s.
+- `go test ./...`, `go test -race ./...` and `go vet ./...` pass.
+- The same service names itself "PICOCALC-SHADOW-LLVM (Following a checked floor shadow through LLVM to executed RV32 instructions)" in `q.help()`, which fixes the mislabel of field note N1.
+
+### What didn't work
+
+- The guide's rule. `09-find-renames.py` found the event at 17 but `from: []`: no vanished function had `kernel`'s body digest. `10-diff-renamed-body.py` showed 37 diff lines between the bodies, all calls changed from `call i32 @checked_read(… ) #5` to `call fastcc i32 @checked_read(…) #4`, and `@kernel = dso_local alias … ptr @checked_shadow` in print 16.
+- `TestRenamesByIdenticalBody` first failed with a second, unexpected edge `other → p`. My fixture claimed that two functions vanished with the same body. In fact only `other` had the body `ret i32 1`, so the detector was right. The fixture now also defines `twin` with that body, and the ambiguous case yields no edge.
+- My first projection of change rows used `c.from` and `c.to`. Change rows have `before`, `after` and `from` (the previous row's ordinal), and had no `function`. I added `function` and `rename` to change rows of followed timelines.
+- The commit command with an inline message was refused by the worktree guard ("names git in a form too complex"). I wrote the message to a file and committed with `git commit -F`.
+
+### What I learned
+
+- GlobalOpt's alias resolution rewrites the body in the same pass, so in this pipeline any body-identity rule is too strict to find the renames that matter. The alias line is direct evidence of identity: LLVM printed that the two names denote one function.
+
+### What was tricky to build
+
+- Name-per-ordinal has to hold at every place that picks a function's body out of a print: membership, measurement, picked states before and after, and argument references. Missing one would make that operation report `absent` for the earlier ordinals, or throw `functionMismatch`. Snapshots are cached shared objects, so the followed path passes a shallow copy with `aliasOf` and never mutates the cached one.
+
+### What warrants a second pair of eyes
+
+- A function renamed twice in one stream gives segments `[{a, before 10}, {b, before 20}]`. `aliasChain` handles it, but no capture in the repository has a chain longer than one, so only the single rename is tested on real data.
+- The `body` rule compares the new name's body with the latest body of each vanished name, so a function pass that changed the old body between module prints is taken into account. It refuses ambiguous candidates and never chooses among them.
+
+### What should be done in the future
+
+- Consider making `follow` the default for timelines of functions that have aliases, after checking that no recorded workbook result changes.
+
+### Code review instructions
+
+- `pkg/tracearchive/renames.go` (`findRenames`), then `pkg/traceapi/query.js`: search for `nameAt`, `aliasChain`, `measureEvent`, `_target` and `aliasOf`.
+- Run `go test ./pkg/tracearchive ./pkg/traceapi -run 'Renames|Followed' -v`, or evaluate `scripts/08-follow-renamed-kernel.js` in a service on the SHADOW-LLVM capture.
+
+### Technical details
+
+- `Rename`: `{variant, phase, ordinal, pass, from, to, method: "alias"|"body", aliasOrdinal?, bodySHA256?, ref}`. Alias line pattern: `^@NAME = … alias … @NAME$`. Body digest: SHA-256 of the lines after the `define` line up to the closing `}`.
