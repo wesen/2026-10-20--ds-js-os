@@ -66,13 +66,13 @@ Use separate checkouts for concurrent builds. The CJI bootstrap writes intermedi
 
 ```sh
 make playable                       # from the repository root: build the playable profile and store its image
-make install-playable               # flash it, settle, health-check, and record it in picocalc-os/PLAYABLE.json
+make install-playable               # flash it, settle, health-check, and record it in firmware/PLAYABLE.json
 ```
 
 or by hand, with the ESP-IDF v5.4.2 environment sourced:
 
 ```sh
-picocalc-os/port/esp32p4/build.sh playable /tmp/picocalc-playable    # any profile in profiles/*.env
+firmware/port/esp32p4/build.sh playable /tmp/picocalc-playable    # any profile in profiles/*.env
 ```
 
 `build.sh` prints the app digest and writes `picocalc-build.json` (profile, commit, options, digests) into the build

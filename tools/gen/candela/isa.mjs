@@ -1,5 +1,5 @@
 // isa.mjs: cdl_vm_isa.h (opcode numbers, operand specs, kernel-function signatures) from translator/isa.js, so the
-// translator, the C verifier and the C interpreter (picocalc-os/third_party/candela/vm/cdl_vm.c) share one
+// translator, the C verifier and the C interpreter (firmware/third_party/candela/vm/cdl_vm.c) share one
 // definition. Promoted from PICOCALC-CANDELA-SECTIONS scripts/vm/gen-isa.mjs; regenerate.mjs calls generateIsa().
 import * as ISA from './translator/isa.js';
 

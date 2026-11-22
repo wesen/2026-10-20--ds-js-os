@@ -18,5 +18,5 @@ and a difference between two uses is a parameter, not a copy.
 Compile options reach every gate the same way: `--options '{"policy":"kernel"}'` sets `TYPED_RV32_OPTIONS`, and
 `lib/compiler.mjs` makes it the default of every `typedRv32.compile` call, including those `typed-world.js` makes.
 
-Scripts name repository files by repository-relative paths (`picocalc-os/compiler/...`) and run from the repository
+Scripts name repository files by repository-relative paths (`firmware/compiler/...`) and run from the repository
 root, so a directory move is one rewrite of the path prefix.

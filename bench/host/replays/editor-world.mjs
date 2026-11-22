@@ -10,7 +10,7 @@ import '../../lib/compiler.mjs';
 
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
-const os = resolve('picocalc-os');
+const os = resolve('firmware');
 const editorDir = join(os, '../apps/typed/editor');
 const sources = readFileSync(join(editorDir, 'source.list'), 'utf8').trim().split('\n');
 const source = sources.map(name => readFileSync(join(editorDir, name), 'utf8') + '\n').join('');

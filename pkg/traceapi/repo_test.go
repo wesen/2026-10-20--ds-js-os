@@ -64,7 +64,7 @@ func TestRepoAndMountsInASession(t *testing.T) {
 	}
 	for expr, want := range map[string]string{
 		"repo.read('../x')":                              "[repo] path \"../x\" leaves the repository",
-		"repo.read('picocalc-os')":                       "is a directory",
+		"repo.read('firmware')":                          "is a directory",
 		"repo.show('no-such-rev', 'README.md')":          "unknown revision",
 		"mounts.board.json.call({path: 'p', text: '{'})": "[repo] p is not JSON",
 	} {

@@ -8,7 +8,7 @@ import { join, resolve } from 'node:path';
 import '../../lib/compiler.mjs';
 import '../../../apps/typed/agenda/compile.js';
 
-const os = resolve('picocalc-os');
+const os = resolve('firmware');
 const host = process.argv[2] ? resolve(process.argv[2]) : join(os, 'build/picocalc-host');
 const world = join(os, '../apps/typed/agenda');
 const scratch = mkdtempSync(join(tmpdir(), 'picocalc-agenda-wasm-'));

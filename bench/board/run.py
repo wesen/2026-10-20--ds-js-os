@@ -5,7 +5,7 @@ usage: python3 bench/board/run.py OUT CAPTURE [--peripherals on|off-by-user] [--
        python3 bench/board/run.py --probe CAPTURE     check everything a run needs, without flashing
 
 OUT is a directory built by build.sh (the app is OUT/build/simd-lab.bin); CAPTURE is a new directory for the raw
-capture. The playable image is the one picocalc-os/PLAYABLE.json records, from the store: the run refuses to start
+capture. The playable image is the one firmware/PLAYABLE.json records, from the store: the run refuses to start
 unless the stored files match the recorded digests. It checks the playable firmware's health, writes the study app,
 captures its output until SIMDLAB END, then rewrites and verifies the playable image and checks its health again
 (CAPTURE/{before,image,after}.json, bench.log, uart.log and the esptool logs).

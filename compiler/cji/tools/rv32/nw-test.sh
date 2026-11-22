@@ -37,7 +37,7 @@
 # Logs and modules are in build/rv32/nw. NW_STEPS=1 writes each call's instruction count to NAME.steps.
 set -e
 here=$(cd "$(dirname "$0")/../.." && pwd)
-pc=${PICOCALC:-$here/../../picocalc-os}
+pc=${PICOCALC:-$here/../../firmware}
 cd "$here"
 if [ -n "$BOARD" ]; then   # (part 2: each world compiled on the board, by the firmware; three checks)
 	make -s slas rv32-board PICOCALC="$pc" > /dev/null

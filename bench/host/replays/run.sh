@@ -24,7 +24,7 @@ done
 P4_GCC=${gcc:-${P4_GCC:-}} RV32EMU=${emu:-${RV32EMU:-}}
 source bench/lib/toolchain.sh
 gcc=$P4_GCC emu=$RV32EMU
-make -s -C picocalc-os build/picocalc-host typed-world-reactor files-reactor agenda-reactor
+make -s -C firmware build/picocalc-host typed-world-reactor files-reactor agenda-reactor
 here=bench/host/replays
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT

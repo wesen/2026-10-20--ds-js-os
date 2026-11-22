@@ -10,7 +10,7 @@
 // and the exact WGSL translated (kernel.wgsl, post.wgsl; not vendored). The section API (the kernel functions that
 // generated sections may call) is translator/isa.js SECTION_API, the same list the section translator compiles
 // against. The hand-written parts the generated code includes (cdl_switches.h, cdl_api.h, cdl_math.h,
-// cdl_overrides.inc, cdl_post.inc) are the primary copies in picocalc-os/third_party/candela/kernel/.
+// cdl_overrides.inc, cdl_post.inc) are the primary copies in firmware/third_party/candela/kernel/.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';

@@ -338,7 +338,7 @@ Retry is intentionally narrower than "run the whole prompt again." If a note was
 
 ## 11. Run it on Linux first
 
-All commands in this section run from `picocalc-os/`. The existing default build needs a C compiler, zlib, and pthreads. Behavioral tests additionally use Node.js and Python 3. The live build needs libcurl development headers/libraries. The TLS test runner uses OpenSSL to create test certificates.
+All commands in this section run from `firmware/`. The existing default build needs a C compiler, zlib, and pthreads. Behavioral tests additionally use Node.js and Python 3. The live build needs libcurl development headers/libraries. The TLS test runner uses OpenSSL to create test certificates.
 
 ### A. Deterministic demonstration
 
@@ -472,7 +472,7 @@ This is a hardware acceptance dependency, not something the P4 app can infer fro
 
 ### E. Provision without embedding secrets
 
-From `picocalc-os/`, use the helper:
+From `firmware/`, use the helper:
 
 ```bash
 python3 -m pip install pyserial
@@ -658,9 +658,9 @@ Token streaming, browsing, multimodal input, voice, rich Markdown/LaTeX, backgro
 
 Repository findings are grounded in the baseline commit above and the implemented files listed in section 13. Official API/hardware references were checked during this work. Model availability, component support, and board revisions can change; use the pinned project versions for reproduction and verify migrations separately.
 
-- **R1.** [Baseline PicoCalc README](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/picocalc-os/README.md): hardware target, world architecture, original limitations, existing build flow.
-- **R2.** [Baseline kernel](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/picocalc-os/nucleus/kernel.c): turns, scheduling, deferred effects, supervision.
-- **R3.** [Baseline QuickJS binding](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/picocalc-os/nucleus/vm.c) and [MicroQuickJS binding](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/picocalc-os/nucleus/vm_mqjs.c): API differences and existing store precedent.
+- **R1.** [Baseline PicoCalc README](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/firmware/README.md): hardware target, world architecture, original limitations, existing build flow.
+- **R2.** [Baseline kernel](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/firmware/nucleus/kernel.c): turns, scheduling, deferred effects, supervision.
+- **R3.** [Baseline QuickJS binding](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/firmware/nucleus/vm.c) and [MicroQuickJS binding](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/firmware/nucleus/vm_mqjs.c): API differences and existing store precedent.
 - **R4.** [Baseline JS prelude](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/apps/js/picocalc/prelude.js): Promise/turn dispatch and UI/message contract.
 - **R5.** [Waveshare ESP32-P4-WIFI6 documentation](https://docs.waveshare.com/ESP32-P4-WIFI6): base board and integrated C6.
 - **R6.** [ESP-IDF 5.4.2 Wi-Fi expansion](https://docs.espressif.com/projects/esp-idf/en/v5.4.2/esp32p4/api-guides/wifi-expansion.html): P4 requires a Wi-Fi coprocessor and remote Wi-Fi integration.

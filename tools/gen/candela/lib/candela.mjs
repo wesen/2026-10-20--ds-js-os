@@ -8,7 +8,7 @@
 // checks every one of these boundaries and throws if any of them moved, so a new Candela version that
 // assembles its program differently fails here instead of producing a wrong kernel.
 //
-// Callers pass the Candela root: picocalc-os/third_party/candela, the vendored copy that its PIN.json pins
+// Callers pass the Candela root: firmware/third_party/candela, the vendored copy that its PIN.json pins
 // (regenerate.mjs checks every file it reads against PIN.json before loading anything).
 import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';

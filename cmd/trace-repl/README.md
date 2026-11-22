@@ -81,7 +81,7 @@ The director loader adds the `lab` binding only in its new session. The `simd` p
 
 ## Load the Typed compiler at a revision
 
-`compiler.at(rev)` loads `picocalc-os/compiler/{typed-wasm,typed-async,typed-world,typed-rv32,typed-pie-loops}.js` and `picocalc-os/tools/{rv32-interp,typed-ray-bench}.js` at a git revision, and `compiler.at("worktree")` loads them from disk. Several revisions coexist in one session: the service evaluates each revision's files inside one function scope that shadows `globalThis`, so revisions share no module objects and nothing reaches the real global object. The compiled wrapper is shared by all sessions, and the 64 KiB cell limit does not apply to it.
+`compiler.at(rev)` loads `compiler/typed/{typed-wasm,typed-async,typed-world,typed-rv32,typed-pie-loops}.js` and `bench/host/{rv32-interp,typed-ray-bench}.js` (at revisions before PICOCALC-REPO-LAYOUT, `firmware/compiler/` and `firmware/tools/`) at a git revision, and `compiler.at("worktree")` loads them from disk. Several revisions coexist in one session: the service evaluates each revision's files inside one function scope that shadows `globalThis`, so revisions share no module objects and nothing reaches the real global object. The compiled wrapper is shared by all sessions, and the 64 KiB cell limit does not apply to it.
 
 ```js
 const base = compiler.at("eaf0872"), work = compiler.at("3213028")

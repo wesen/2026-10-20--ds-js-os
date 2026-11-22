@@ -8,7 +8,7 @@
     playable.py install BUILD OUT --health-only          BUILD is already on the board: check and record it
     playable.py restore OUT [--peripherals P]           the same as install --stored (after an experiment image)
 
-PLAYABLE.json (picocalc-os/PLAYABLE.json) names the profile, the commit, and the digests of the app and partition
+PLAYABLE.json (firmware/PLAYABLE.json) names the profile, the commit, and the digests of the app and partition
 table. The store (~/.cache/picocalc/firmware/<app sha256>/, or $PICOCALC_FIRMWARE_STORE) holds the files, so a restore
 never depends on a /tmp build tree surviving. P is "on" or "off-by-user" (the keyboard and display switched off on
 purpose); the default is the value recorded at the last install. Updating the playable firmware is one install and
@@ -27,7 +27,7 @@ sys.path.insert(0, str(HERE))
 import device  # noqa: E402
 
 REPO = HERE.parents[1]
-RECORD = REPO / "picocalc-os/PLAYABLE.json"
+RECORD = REPO / "firmware/PLAYABLE.json"
 STORE = Path(os.environ.get("PICOCALC_FIRMWARE_STORE", Path.home() / ".cache/picocalc/firmware"))
 FILES = (device.APP, device.PART, device.BOOT)
 

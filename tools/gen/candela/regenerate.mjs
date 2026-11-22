@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-// regenerate.mjs: regenerate the firmware's generated Candela sources in picocalc-os/third_party/candela.
+// regenerate.mjs: regenerate the firmware's generated Candela sources in firmware/third_party/candela.
 // usage: node tools/gen/candela/regenerate.mjs [--check] [--verbose]
 //
-// The firmware's Candela renderer lives in picocalc-os/third_party/candela:
+// The firmware's Candela renderer lives in firmware/third_party/candela:
 //   kernel/   the fixed path-tracing kernel and post pass, C++ generated from Candela's WGSL (kernel.mjs), the
 //             fixed-kernel digest (cdl_fixed_kernel.c), and the hand-written parts the generated code includes
 //   vm/       the section-bytecode interpreter: hand-written C, and its opcode table generated from
@@ -25,9 +25,9 @@ import { prepareScenes } from './scenes.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, '../../..');
-const CDL = join(REPO, 'picocalc-os/third_party/candela');
+const CDL = join(REPO, 'firmware/third_party/candela');
 const GEN = relative(REPO, HERE);                   // tools/gen/candela
-const CDL_REL = relative(REPO, CDL);                // picocalc-os/third_party/candela
+const CDL_REL = relative(REPO, CDL);                // firmware/third_party/candela
 const sha = (b) => createHash('sha256').update(b).digest('hex');
 
 // The hand-written sources: the primary copies, edited in place. Generated code includes the kernel/ ones.

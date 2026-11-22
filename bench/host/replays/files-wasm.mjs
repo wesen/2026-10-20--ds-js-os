@@ -8,7 +8,7 @@ import vm from 'node:vm';
 import '../../lib/compiler.mjs';
 import '../../../apps/typed/files/compile.js';
 
-const os = resolve('picocalc-os');
+const os = resolve('firmware');
 const world = join(os, '../apps/typed/files');
 const original = readFileSync(join(os, '../apps/js/picocalc/apps/files.js'), 'utf8');
 const source = readFileSync(join(world, 'files.typed'), 'utf8');

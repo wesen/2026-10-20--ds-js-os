@@ -1,4 +1,4 @@
-# The Candela world's bundle, candela/front.qbc (tools/gen/candela/candela-bc OUT --list this-file picocalc-os/).
+# The Candela world's bundle, candela/front.qbc (tools/gen/candela/candela-bc OUT --list this-file firmware/).
 # Candela's front end: src/candela.js and its import closure, unchanged (third_party/candela/PIN.json).
 ggx third_party/candela/src/kernel.js
 module candela:candela.js third_party/candela/src/candela.js

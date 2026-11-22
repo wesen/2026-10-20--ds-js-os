@@ -1,10 +1,10 @@
 """Stage a JS root for picocalc-host with the Candela world (PICOCALC-CANDELA-WORLD), for make CANDELA=1.
 
-usage: python3 -I ../tools/gen/candela/candela-stage.py BUILD_DIR BUNDLE_TOOL     (from picocalc-os/)
+usage: python3 -I ../tools/gen/candela/candela-stage.py BUILD_DIR BUNDLE_TOOL     (from firmware/)
 
 Writes BUILD_DIR/candela-js: a copy of apps/js/picocalc/, the world's script as candela/world.js, Candela's bytecode bundle
 candela/front.qbc (BUNDLE_TOOL --list ../apps/js/worlds/candela-world/bundle.list .), and system.json with the world's
-manifest entry (apps/js/worlds/candela-world/manifest.json) appended. Run from picocalc-os/, as picocalc-os/Makefile's
+manifest entry (apps/js/worlds/candela-world/manifest.json) appended. Run from firmware/, as firmware/Makefile's
 candela target does; BUNDLE_TOOL is candela-bc.c, built by the same target. It replaces only a staging directory it
 made itself (one with a .candela-stage marker), inside BUILD_DIR.
 """
@@ -19,7 +19,7 @@ def main():
     build, tool = Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve()
     root = Path.cwd()
     if not (root / "../apps/js/worlds/candela-world/bundle.list").is_file():
-        raise SystemExit("run from picocalc-os/")
+        raise SystemExit("run from firmware/")
     stage = build / "candela-js"
     if stage.exists():
         if not (stage / ".candela-stage").is_file() or build not in stage.parents:

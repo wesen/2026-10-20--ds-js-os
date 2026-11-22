@@ -11,7 +11,7 @@
 # instructions the compile took; the clock reads the instruction count, at 400 MHz).
 set -e
 here=$(cd "$(dirname "$0")/../.." && pwd)
-pc=${PICOCALC:-$here/../../picocalc-os}
+pc=${PICOCALC:-$here/../../firmware}
 cd "$here"
 make -s rv32-stage1 PICOCALC="$pc" > /dev/null
 out=build/rv32/compile

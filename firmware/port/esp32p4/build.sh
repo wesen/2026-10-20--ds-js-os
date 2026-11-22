@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build a firmware profile (profiles/<name>.env) after sourcing the ESP-IDF v5.4.2 environment.
 #
-#   picocalc-os/port/esp32p4/build.sh playable /tmp/picocalc-playable [-D OPTION=VALUE ...]
+#   firmware/port/esp32p4/build.sh playable /tmp/picocalc-playable [-D OPTION=VALUE ...]
 #
 # Extra -D arguments go to idf.py after the profile's options. Writes BUILD/picocalc-build.json: the profile, the
 # commit and whether the tree was dirty, the options, and the app and partition-table digests. Install the playable

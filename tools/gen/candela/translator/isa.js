@@ -1,6 +1,6 @@
 // isa.js: the single definition of section bytecode version 1 (PICOCALC-CANDELA-SECTIONS design, Section 5).
 // The translator and the kernel generator (../kernel.mjs) import it; ../isa.mjs generates
-// picocalc-os/third_party/candela/vm/cdl_vm_isa.h from it for the C verifier and interpreter.
+// firmware/third_party/candela/vm/cdl_vm_isa.h from it for the C verifier and interpreter.
 // Pure JavaScript, QuickJS-compatible.
 //
 // An instruction is one opcode halfword (low byte: opcode, high byte: an immediate H) followed by operand

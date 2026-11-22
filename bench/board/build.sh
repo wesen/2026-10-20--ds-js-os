@@ -3,14 +3,14 @@
 #
 #   bench/board/build.sh OUT        OUT is stage.mjs's output directory; the app is OUT/build/simd-lab.bin
 #
-# The app (bench/board/app) times the firmware's C ray tracer (picocalc-os/nucleus/raytrace_demo.c, included as
+# The app (bench/board/app) times the firmware's C ray tracer (firmware/nucleus/raytrace_demo.c, included as
 # production.inc), the C shadow predicates, every mode's RV32 images (OUT/generated/blobs.S) and QuickJS cold
 # compiles of each mode, in balanced orders, and prints SHROW/SHCOLD lines between SIMDLAB BEGIN and END.
 set -euo pipefail
 out=$(realpath -m "${1:?usage: build.sh OUT (a directory staged by stage.mjs)}")
 root=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
 app=$root/bench/board/app
-os=$root/picocalc-os
+os=$root/firmware
 [[ -f $out/generated/manifest.json ]] || { echo "$out is not staged: run bench/board/stage.mjs STUDY.json $out" >&2; exit 2; }
 if ! command -v idf.py > /dev/null; then source "${IDF_EXPORT:-$HOME/esp/esp-idf-5.4.2/export.sh}" > /dev/null; fi
 main=$out/main
