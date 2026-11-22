@@ -237,11 +237,15 @@ test("the default policy applies the qualified options and stock reproduces the 
         ["split", "pointers", "share", "constants", "capacities", "nested"], {inline: false})),
         "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.equal(sha({policy: "interactive"}), "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
-    // The "kernel" policy adds division facts (board run 10 timed that image at 15.27 ms, Step 15)
-    // and value sets (board run 11: 13.84 ms, Step 17); without sets it is still run 10's image.
-    assert.equal(sha({policy: "kernel", select: {...typedRv32.policies.kernel.select, sets: false}}),
+    // The "kernel" policy adds division facts (board run 10 timed that image at 15.27 ms, Step 15),
+    // value sets (board run 11: 13.84 ms, Step 17) and hoisted loop invariants (board run 12:
+    // 12.45 ms, Step 18).
+    const kernelSelect = typedRv32.policies.kernel.select;
+    assert.equal(sha({policy: "kernel", select: {...kernelSelect, sets: false, hoist: false}}),
         "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
-    assert.equal(sha({policy: "kernel"}), "a5eb06b25026ea4f3fa85f8941fd062718b6fed3665ca38ba70944b73b122dc3");
+    assert.equal(sha({policy: "kernel", select: {...kernelSelect, hoist: false}}),
+        "a5eb06b25026ea4f3fa85f8941fd062718b6fed3665ca38ba70944b73b122dc3");
+    assert.equal(sha({policy: "kernel"}), "3e18e5099c990fb168e24f8637ddf7110f931edf980b92b4f7383dda6adbf6d7");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
 
@@ -763,4 +767,104 @@ function hundred(d: i32): i32 { return 100 / d; }
         traps += expected.trap;
     }
     assert(traps >= 4, "the inputs reach the division by zero and the buffer bound");
+});
+
+test("hoisted loop invariants keep results, stores and traps identical, including aliased buffers", () => {
+    const ctx = createContext({});
+    for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
+        runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
+    const {typedRv32, typedRv32Interp} = ctx;
+    // moved: invariant loads (with the out == work guard), an invariant pure statement, y / 16
+    // inside a larger expression, and an inner loop's guard over a loaded count.
+    // kept: loads from the stored buffer, a statement whose local is read after the loop, a
+    // loop-carried local, a division by a parameter (could trap), loads past a storing call.
+    const fns = {
+        light: [true, `function light(out: buffer, work: buffer, y: i32): i32 {
+    for (let x = 0; x < 12; x = x + 1) {
+        if (work.charCodeAt(x) > 70) {
+            const lx = work.charCodeAt(30) - 32;
+            const sy = 4096 + 32 * y;
+            out.setCharCodeAt(x, lx + sy + (x / 4 + y / 16) % 2);
+        }
+    }
+    return out.charCodeAt(3);
+}`],
+        shadow: [true, `function shadow(out: buffer, work: buffer, y: i32): i32 {
+    for (let x = 0; x < 10; x = x + 1) {
+        const count = work.charCodeAt(31) % 5;
+        let hits = 0;
+        for (let s = 0; s < count; s = s + 1) { hits = hits + work.charCodeAt(2 + 3 * s); }
+        out.setCharCodeAt(x + 20, hits + y);
+    }
+    return out.charCodeAt(22);
+}`],
+        same: [false, `function same(out: buffer, work: buffer, y: i32): i32 {
+    for (let x = 0; x < 12; x = x + 1) {
+        const v = work.charCodeAt(30) + 1;
+        work.setCharCodeAt(x, v + y);
+    }
+    return work.charCodeAt(11);
+}`],
+        after: [false, `function after(out: buffer, work: buffer, y: i32): i32 {
+    let v = 0;
+    for (let x = 0; x < 12; x = x + 1) {
+        if (work.charCodeAt(x) > 75) { v = work.charCodeAt(30) * 3; }
+        out.setCharCodeAt(x, v);
+    }
+    return v;
+}`],
+        carried: [false, `function carried(out: buffer, work: buffer, y: i32): i32 {
+    let v = 1;
+    for (let x = 0; x < 12; x = x + 1) {
+        out.setCharCodeAt(x, v);
+        v = work.charCodeAt(30) + y;
+    }
+    return out.charCodeAt(5);
+}`],
+        divide: [false, `function divide(out: buffer, work: buffer, d: i32): i32 {
+    for (let x = 0; x < 12; x = x + 1) {
+        if (d !== 0) { const q = 1000 / d; out.setCharCodeAt(x, q + x); }
+    }
+    return out.charCodeAt(4);
+}`],
+        storing: [false, `function storing(out: buffer, work: buffer, y: i32): i32 {
+    for (let x = 0; x < 12; x = x + 1) {
+        const v = work.charCodeAt(30) + y * 7;
+        poke(work, x);
+        out.setCharCodeAt(x, v);
+    }
+    return out.charCodeAt(6);
+}`],
+    };
+    const helpers = `function poke(b: buffer, i: i32): i32 { b.setCharCodeAt(30, i); return 0; }
+`;
+    const kernel = typedRv32.policies.kernel;
+    const withHoist = {policy: "kernel", select: {...kernel.select, hoist: true}};
+    const without = {policy: "kernel", select: {...kernel.select, hoist: false}};
+    for (const [name, [moved, src]] of Object.entries(fns)) {
+        const tapes = {};
+        const options = observe => ({observeTape: (fn, phase, code) => { if (fn === name && phase === "version") tapes[observe] = code; }});
+        typedRv32.compile(helpers + src, [], undefined, {...withHoist, ...options("on")});
+        typedRv32.compile(helpers + src, [], undefined, {...without, ...options("off")});
+        assert.equal(tapes.on.length !== tapes.off.length || tapes.on.some((c, i) => c !== tapes.off[i]), moved, name);
+    }
+    const all = helpers + Object.values(fns).map(([, src]) => src).join("\n");
+    const stock = typedRv32.compile(all, [], undefined, {policy: "stock"});
+    const candidate = typedRv32.compile(all, [], undefined, withHoist);
+    function run(p, f, args, cells, alias) {
+        const mem = new Uint8Array(4096), view = new DataView(mem.buffer);
+        for (const base of [1024, 2048]) {
+            view.setUint32(base, cells, true);
+            for (let i = 0; i < cells; i++) view.setUint16(base + 4 + 2 * i, 60 + ((i + base) * 7) % 23, true);
+        }
+        const out = typedRv32Interp.run(p, f, [alias ? 1024 : 2048, 1024, ...args], mem);
+        return {result: out.result, trap: Boolean(out.trap), bytes: Array.from(out.bytes.subarray(1024, 2048 + 4 + 2 * cells))};
+    }
+    let traps = 0;
+    for (const f of Object.keys(fns)) for (const y of [0, -37, 5, 160]) for (const cells of [40, 31, 8]) for (const alias of [false, true]) {
+        const expected = run(stock, f, [y], cells, alias);
+        assert.deepEqual(run(candidate, f, [y], cells, alias), expected, `${f} y=${y} cells=${cells} alias=${alias}`);
+        traps += expected.trap;
+    }
+    assert(traps >= 8, "short buffers reach the bounds");
 });

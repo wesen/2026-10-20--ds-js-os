@@ -1257,3 +1257,61 @@ The frame splits into trace and shading as follows (C: the same frame with the p
   - `bash $B/scripts/05-replays-policy.sh GCC EMU <compiler with kernel as default>`;
   - `TYPED_RV32_OPTIONS='{"policy":"kernel"}' node scripts/05-chess-engine-oracle.mjs GCC EMU`;
   - the board: `10-stage-board.py BUILD various/66-board-modes-sets.json 22c20887…`, then SIMD-LAB's `02-run-board.py` with the current restore target, then `11-import-board.py CAPTURE BUILD OUT <restored sha>`.
+
+## Step 18: Loop-invariant hoisting in versioned loops, and the frame reaches 1.61× C
+
+Step 17's profile showed 26 instructions of `InShadow` setup per floor pixel, of which 23 do not depend on x. `select.hoist` moves them out of the row loop. It works in two parts, both inside `versionLoops`, where the guard has already proved the fast copy's unchecked accesses in range. On the P4 the frame fell from 13.86 to 12.45 ms (−10.12%, 6/6 blocks, every scene 9.4–11.2%). Typed is at 1.61× the C frame.
+
+### What I did
+
+- **`hoistInvariants`** runs on the fast copy before inner loops are versioned. A statement `E; set X` moves into the guard block when all of these hold:
+  - E reads only constants, locals the loop does not write, capacities, and this level's unchecked loads.
+  - E divides only by constants other than 0 and −1.
+  - X is written once, every read of X follows that write in its region, and nothing outside the loop reads X. The last check uses read positions over the whole function, so it applies only to loops at the function's top level.
+  - For a load from buffer r: the loop stores nothing to r, every store's buffer is known, and every call is to a function that stores nothing. The guard gains `s == r → slow copy` for each buffer s the loop stores to.
+  - A statement that only copies a constant or a local (an access's index) moves only when a moved statement reads its local. It stays duplicated in the loop if any load that stays still reads it.
+- **`hoistSubexpressions`** runs after inner loops are versioned. A maximal pure, non-trapping subexpression over constants, unwritten locals and capacities, with at least two operations of work, moves into a fresh local. Consecutive moved comparisons that each feed a `br_if` to the same label become one sum and one `br_if`. This covers the inner loop's three guard terms over `count` and `work`'s capacity, and `y / 16` in the checker.
+- **`storeless(index)`**: a function's tape has no store and it calls only storeless functions. `lower()` records the answer before `consume` releases the tape.
+- **Test** `hoisted loop invariants keep results, stores and traps identical, including aliased buffers`:
+  - Two functions must change: `light`, with a load, a pure statement and `y / 16` in an expression; and `shadow`, with an inner loop over a loaded count.
+  - Five must not: a load from the stored buffer, a local read after the loop, a loop-carried local, a division by a parameter, and a load past a storing call.
+  - All seven match `stock` with distinct and with aliased buffers (`out == work`), and with short buffers that trap.
+- **Gates** with `hoist` in `kernel`:
+  - 148/148 tests;
+  - 24/24 replays with `kernel` as the default (`various/71-replays-kernel-hoist.log`);
+  - Chess engine oracle: 6981/6981 words, 120,826,730 instructions, unchanged (`various/72-chess-oracle-kernel-hoist.log`).
+- **Board run 12:** modes in `various/70-board-modes-hoist.json` (mode 0 is run 11's image, pin `a5eb06b2…`; mode 1 adds `hoist`, image `3e18e509…`). Build log `various/73-board-build-hoist.log`. Imported to `various/74-board-hoist`, scored to `various/75-board-hoist-scores.json`. Restored to `b22a807d…` with eight healthy worlds.
+
+### What worked
+
+| | run 11 (`kernel` + sets) | + hoist |
+|---|---:|---:|
+| host frame instructions | 4,080,475 | 3,646,781 (−10.6%) |
+| `InShadow` setup per floor pixel | 26 | 5 (`scaledX`, entry test, one merged guard branch) |
+| P4 frame (6 blocks) | 13.86 ms | 12.45 ms (−10.12%, 6/6) |
+| ratio to C (7.73 ms) | 1.79× | 1.61× |
+| ray compile on the P4 | 1.73 s | 1.93 s (+11.2%) |
+
+### What didn't work
+
+- **The first version made the frame 175k instructions worse.** Only the index statements (`const 17; set 46`) moved. Their loads then rebuilt the address from a local in a stack slot instead of a constant displacement. The loads stayed because `storeless(3)`, for `typedRayAbs`, was false: `consume()` sets `fn.code = null` after lowering, so earlier functions had no tape left to inspect. Recording the answer in `lower()` fixed it.
+- **Moving trivial copies on their own** also cost instructions. That's the reason for the copy rule above, which was first found when the test's `same` function changed although its load must stay.
+- **Keeping needed copies duplicated in the loop** made `LitRow` 180k worse: the copies became dead stores of locals that now lived across the loop. A copy that only moved statements read now moves outright.
+
+### What I learned
+
+- In the hot loops, the useful work and the register pressure are now visible separately. Hoisting cut stack stores from 91,764 to 34,454 per frame. Stack loads rose from 115,669 to 167,030, because hoisted values live in stack slots and are loaded in the loop. That's still a gain, since each replaces 2–5 instructions, but it confirms that an interval-aware allocator (Phase 4a) is the next structural limit.
+
+### What warrants a second pair of eyes
+
+- `hoistInvariants`' dominance test: a read of X counts as after the write if it lies between the write and the end of the write's region (`regionEnd`). This relies on structured control flow, where a region can only be entered at its start.
+- The alias terms compare buffer locals as values. Two buffer parameters that are the same buffer have the same pointer.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`:
+  - `versionLoops`: `readsAt`, `unchecked`, the `moved` and `computed` blocks in `version()`;
+  - `hoistInvariants`, `hoistSubexpressions`;
+  - `storeless` and its call in `lower()`;
+  - `POLICIES.kernel`.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the new test and the three kernel pins.
