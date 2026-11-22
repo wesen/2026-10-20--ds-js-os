@@ -77,11 +77,12 @@ test("empty-packet bypass emits the exact P4-qualified ray image in both fronten
     const sha = image => createHash("sha256").update(Buffer.from(image)).digest("hex");
     for (const streaming of [true,false]) {
         // PICOCALC-RAY-PARITY Step 5 timed this image on the P4 (saved homes and direct reads, no select).
-        assert.equal(sha(typedRv32.compile(source,[],undefined,{pieLoops:"pie-empty",streamFunctions:streaming,select:false}).image),
+        assert.equal(sha(typedRv32.compile(source,[],undefined,{policy:"stock",pieLoops:"pie-empty",streamFunctions:streaming,inlineGuardedReturns:true,
+            operandLocations:{forward:true,capacity:true,homes:true,saved:true,direct:true}}).image),
             "3ea6af69dcb3ae10c363a4de7a502531a4754f1d3f9b1f712fa468b3ecb35076");
         // PICOCALC-OPERAND-HOMES timed this image on the P4 (forward + capacity + homes arm).
-        assert.equal(sha(typedRv32.compile(source,[],undefined,{pieLoops:"pie-empty",streamFunctions:streaming,
-            operandLocations:{forward:true,capacity:true,homes:true},select:false}).image),
+        assert.equal(sha(typedRv32.compile(source,[],undefined,{policy:"stock",pieLoops:"pie-empty",streamFunctions:streaming,
+            inlineGuardedReturns:true,operandLocations:{forward:true,capacity:true,homes:true}}).image),
             "2e33bb648fd24dc470769ef92cb72be3a793cf4a8de4e964cbbed273b91684ac");
         const result=observe(source, "typedRayComputeRow", "pie-empty", streaming, "stock");
         // PICOCALC-SIMD-LAB timed this image on the P4 (pie-empty over the earlier default).

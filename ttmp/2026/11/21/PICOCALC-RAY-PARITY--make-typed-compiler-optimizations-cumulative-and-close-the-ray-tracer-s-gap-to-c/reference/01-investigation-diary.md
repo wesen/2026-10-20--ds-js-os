@@ -495,3 +495,105 @@ Board (`various/20-board-select-scores.json`; median of per-block savings agains
 
 - Magic examples: d=255 → M = −2,139,062,143 (as signed), s = 7, `add` correction on. d=3 → M = 1,431,655,766, s = 0.
 - Branch kinds (funct3): 0 beq, 1 bne, 4 blt, 5 bge, 6 bltu, 7 bgeu. `kind ^ 1` negates.
+
+## Step 7: Inlining, capacity homes, nested loop weights and literal commutation
+
+After Step 6 the frame still made 77,131 calls. Each one paid argument moves, a prologue and an epilogue, and callee-saved saves. The C renderer has none of these, because GCC inlines its static helpers into the pixel loop. This step adds a tape-level inliner and three supporting options. On the P4 the four together cut the frame from 31.53 to 24.18 ms (−23.3%, 6/6 blocks, all 12 scenes), the shadow predicate from 212.2 to 200.1 cycles and Chess evaluation by 23.1%. Typed is now at 3.13× the C frame. The cost is compile time: ray cold compile on the device rose from 343 to 605 ms (+76%), and the Chess evaluator compile by 51%. The extra 261 ms pays for itself after 36 frames. All four are now the default. The commit also carries two further opt-in options, `select.rotate` and `operandLocations.constants`. They are on the board in a separate run (Step 8).
+
+**Commits (code):** 221ccf7 made `select` the default (Step 6). 951ac05 added the four options as opt-in. Making them the default, plus the opt-in rotation and constant homes, is recorded in Step 8.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 6.
+**Assistant interpretation:** Keep closing the measured gap to C.
+**Inferred user intent:** As before.
+
+### What I did
+
+- `inlineCalls(fn, library, limits, arity, anywhere)`: at a call to a library function, emit `local.set` for each copied argument, then `block (result i32)`, then the callee's tape with renumbered locals and every `return` turned into `br <depth>`, closed by the callee's final `end`. One local range is shared per callee and caller.
+  - An abstract operand stack records which output cells produced each value. A plain `local.get x` or `i32.const c` argument is removed and substituted into the body. A literal is never substituted into a checked-address operand.
+  - Only calls inside a loop are inlined, unless `anywhere` is set. The library copy of each function is expanded with `anywhere`, so an inlined callee brings its own callees along.
+  - `maxLoopDepth: 2` keeps a callee out when the call site's loop depth plus the callee's own loop depth would exceed 2.
+- `inlineCandidate` records which parameters are written (always none: Typed parameters are immutable, `expected mutable local`) and which are checked-address operands. It rejects async functions, guarded-return helpers (those keep the cheaper `GuardedReturnCode` path), literal stores and self-calls.
+- `operandLocations.capacities`: an unwritten buffer parameter's capacity is scored by its checked accesses under key `-1 - b`, competes for a home like a local, and is loaded once in the prologue. It replaces `a7` caching. Soundness: the host writes headers, and a checked store at index `i < capacity` writes at `4 + 2i`, so no store can reach any header. A capacity read at entry is at least as valid as one read later.
+- `operandLocations.nested`: loop weight `4^min(depth, 3)` instead of 4 for any loop.
+- `select.commute` (`commuteConstants`): turns `c OP e` into `e c OP` for add, mul, eq and ne. It moves only when the literal's two cells directly precede e's cells, and an uncertain extent (a value block) is NaN.
+- A differential test (last in `tests/typed-rv32.test.mjs`) covers early returns, nested inlining (`fill` → `weight` → `clamp`), a loop with an early return (`first`), substituted buffers and literals, and stores. It compares results and the whole memory with stock across 7 sizes, checks that an out-of-range size traps at the same point with identical memory, and asserts that `fill` makes no call.
+- Board: `various/21-board-modes-inline.json` has four stock-based modes. 0 is the Step 6 default (pin `6b854512…`), 1 adds capacity homes, nested weights and commutation without inlining, 2 adds inlining only, and 3 adds all four. Imported to `various/27-board-inline` and scored in the REPL (`various/28-board-inline-scores.json`).
+- Compile cost in goja for all five programs (`various/24-compile-cost-inline-goja.json`).
+- 24 replays with the four options in the default (`various/22-replays-inline-default.log`).
+
+### Why
+
+- The profile after Step 6 put 1.33 M of 9.0 M instructions in stack traffic, mostly callee-saved saves and restores repeated per call in `InShadow` and `Pixel`, plus 260 k capacity loads in functions that were not pure leaves.
+
+### What worked
+
+Host frame (all with the reference digest):
+
+| arm | instructions | notes |
+|---|---:|---|
+| Step 6 default | 8,997,126 | |
+| inline, first version (copied args, any call site, 400 cells) | 9,474,899 | worse |
+| inline with substitution and loop-only placement, 1000 cells | 8,440,869 | everything collapsed into `typedRayFrame` |
+| + `maxLoopDepth: 2` | 7,692,493 | `LitRow` becomes one leaf with 0 calls |
+| + capacities | 7,215,368 | capacity loads 541,956 → 25,617 |
+| + capacities + nested | 7,141,470 | |
+| + commute (all four) | **6,752,211** | `li` 817 k → 479 k, `mul` 437 k → 278 k |
+| capacities + nested without inlining | 8,754,247 | |
+| commute alone | 8,607,867 | |
+
+Chess engine oracle (instructions; 6981/6981 words each): Step 6 default 188,553,911; inline 148,986,096; capacities + nested 186,105,130; commute 187,682,909; all four 145,676,489 (−22.7%).
+
+Board, against mode 0 (median of per-block savings; wins of 6):
+
+| | mode 1: no inline | mode 2: inline only | mode 3: all |
+|---|---:|---:|---:|
+| frame (31,525.5 µs) | 29,517 (6.37%) | 26,556.5 (15.77%) | **24,179.5 (23.30%)** |
+| primary pass (8,046 µs) | 6.94% | 0.58% | 9.82% |
+| shade pass (28,069 µs) | 3.93% | 0.11% | 3.93% |
+| shadow predicate (212.2 cycles) | 199.9 (5.78%) | 212.4 (−0.16%) | 200.1 (5.74%) |
+| ray cold compile (343,297 µs) | 391,861.5 (−14.16%) | 546,325.5 (−59.15%) | 604,644 (−76.12%) |
+| Chess cold compile (80,736.5 µs) | −10.99% | −36.85% | −50.76% |
+| ray compile peak | 1,004,088 B in every mode | | |
+
+- Mode 3 scenes: 21.85% to 24.78%, all 6/6. Chess evaluate (mode 0 against 3): 3,816.7 → 2,932.8 cycles per call (−23.11%). C references: frame 7,725 µs, checked predicate 135.6 cycles.
+- Restored `e7b771aa…`, health check passed. Diagnostic app SHA-256 `e918be6da36bda213c4918aad4d6896543ee4c6dc3d3067842d9a113d4406aa1`.
+- Replays: 24/24 PASS. Tests: 142 pass.
+
+### What didn't work
+
+- **The first inliner made the frame slower** (9,474,899 instructions). Two causes. First, every argument was copied into a fresh local, so the inlined `work` was a different local, the capacity plan lost the receiver, and capacity loads rose to equal bounds checks (541,956). Second, inlining at any call site moved `LitRow` and `ComputeRow` into `typedRayFrame`, which still makes calls and has stores. It got neither argument-register homes nor capacity caching, and far more hot locals than 11 saved registers. Argument substitution fixed the first problem and `maxLoopDepth` the second.
+- **The capacity-loop scoring hack.** `weigh(-1)` followed by `scores.delete(-1)` reuses `weigh`'s weighting for capacity uses. It works, but it is the least clear code in this step.
+- **My first test source wrote a parameter** (`k = k + 1`) and failed with `7:7: expected mutable local k`. Typed parameters are immutable, so substitution always applies to parameters.
+- **Four tests broke when the default changed**, all assuming the default touched only their own options:
+  - `deep`'s chain of additions no longer spills once commuted, so it is now subtractions.
+  - `mix` became a leaf once `step` was inlined, so that test passes `inline: false`.
+  - The PIE pins inherited `inline`. They now start from `policy: "stock"` with every field written out.
+- **A board run outside the harness's tracking.** I started the Step 8 board run with `&` inside a foreground shell call rather than as a tracked background task. It survived as a detached process, which I confirmed with `ps`, but no completion notice will arrive. Board runs must be started with the background flag, so that a lost process cannot leave the diagnostic image on the device.
+
+### What I learned
+
+- **Inlining needs register planning that knows where the hot loop is.** Placement had the same effect as the size limit: inlining into a caller that cannot keep values in registers loses.
+- **Inlining costs compile time.** On the device the ray compile rose 76%. In goja the Agenda compile rose 83% and its image 85% (11,284 → 20,852 B), Editor +24% compile and +30% image (59,260 → 76,800 B), Files +75%, Chess +22%. The frame gains are large, but the edit-to-run cost is real and has to be reduced (future work below).
+- **Capacity homes alone are worth little.** The large saving came from combining them with inlining, which creates one function with many accesses to the same unwritten buffer.
+
+### What was tricky to build
+
+- **Abstract stack effects** must match the emitter for every opcode the planner accepts. Unknown extents propagate as NaN or `null`, so a mistake can only block a transformation, never misplace cells. Before a substitution, the inliner checks the cells it removes against the recorded `local.get` or `i32.const`.
+- **Value-block semantics for `br`.** A Typed `return` occurs with only its value above the callee's base, so after inlining the value sits at the block's entry depth, which is exactly where `end()` expects a value block's result.
+
+### What warrants a second pair of eyes
+
+- **The capacity soundness argument** assumes the host never passes buffers whose cell ranges cover another buffer's header. If it did, a store could corrupt a header. Even then, the cached value is the capacity at entry, which matches the real allocation, while re-reading would use the corrupted value. So caching is not less safe, but the assumption deserves review.
+- **Capacity homes load every qualifying buffer parameter's header at entry**, including on paths that never access it. Buffer parameters are always valid buffers in the current ABI.
+
+### What should be done in the future
+
+- **Reduce inline compile cost.** The skip of fully expanded copies for over-limit functions is already in. Next: avoid expanding twice, and decline callees not reached from any loop.
+- **Phase 3: versioned loops** with one range check and strength-reduced addresses. Each checked access still costs about five instructions against GCC's two.
+
+### Code review instructions
+
+- `picocalc-os/compiler/typed-rv32.js`: `INLINE_DEFAULTS`, `loopDepth`, `inlineCalls`, `inlineCandidate`, `commuteConstants`, the capacity parts of `planLocations` (`weigh`, `capacityUses`), `checkedAddress`, the prologue loop in `FunctionCode.lower`, and the inlining block at the top of `compile`'s `lower`.
+- `picocalc-os/tests/typed-rv32.test.mjs`: the last test, and the two default pins.

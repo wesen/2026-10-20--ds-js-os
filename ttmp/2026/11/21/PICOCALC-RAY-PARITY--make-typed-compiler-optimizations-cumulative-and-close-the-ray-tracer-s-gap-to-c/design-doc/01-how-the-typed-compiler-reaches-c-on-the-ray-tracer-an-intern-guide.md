@@ -412,7 +412,13 @@ The unmerged patch from November 19 (`ttmp/2026/11/19/PICOCALC-REGISTER-LOCALS--
 
 The profile after Phase 1 showed where the remaining instructions were: 1.79 M `li` (16% of the frame) loading literals into registers for the next operation, 1.10 M `mv`, 735 k `jal` from conditional branches emitted as an inverted branch over a jump, and 222 k divides, 217 k of them by constants. The `select` option group addresses each one (Section 4.2). On the host the frame fell from 11.10 M to 9.00 M instructions and the Chess engine oracle from 248.6 M to 188.6 M. On the P4 the frame fell from 39.48 to 31.51 ms (−20.2%), the shadow predicate from 247.7 to 212.8 cycles and Chess evaluation by 31.2%, with cold compile unchanged within 0.3%. Constant division alone removed 1.3% of the instructions but 8.3% of the frame time: the P4's divide is far slower than one instruction. `scripts/09-division-sweep.mjs` checks the division sequences against JavaScript on 300 divisors and 130,200 results.
 
+### Phase 1c: inlining and capacity homes (done, default since Step 7)
+
+`inline` replaces calls inside loops with the callee's expanded tape, substituting plain-local and literal arguments; `operandLocations.capacities` gives each unwritten buffer parameter a capacity register loaded once per call; `operandLocations.nested` weighs homes by loop depth; `select.commute` moves left-hand literals of commutative operations to the right. Together they make `typedRayLitRow` one leaf loop containing `Pixel`, `SphereScale`, `Pack` and `InShadow`. P4 frame: 31.53 → 24.18 ms (3.13× C). Ray cold compile: 343 → 605 ms, which pays for itself after about 36 frames; Agenda and Editor images grow by 85% and 30%. Reducing that compile cost is open work.
+
 ### Phase 2: capacity reuse beyond pure leaves
+
+(Largely covered by `capacities` in Phase 1c for buffer parameters; locals that hold buffers remain.)
 
 `typedRayComputeRow` still loads `work`'s capacity 155,812 times per frame. It writes only into `work` itself, through checked stores. A checked store to cell `i` writes bytes `4+2i` and `5+2i`, which can never overlap the buffer's own 4-byte header. A store into a *different* buffer might, if the caller passed overlapping buffers, and earlier labs tested such aliases. The rule to implement: the cache survives checked stores into the cached receiver and is invalidated by any other store or real call. Separately, the load must not be hoisted to entry unless the function reads that buffer on every path. Otherwise, loading at the first access inside a loop and keeping the register afterwards needs a "loaded" flag, or a guard at the loop header.
 

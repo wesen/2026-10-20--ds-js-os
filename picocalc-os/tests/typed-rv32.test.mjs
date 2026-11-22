@@ -50,7 +50,7 @@ test("buffer accesses, calls and scalar spills still use the framed backend", ()
     const source = `
         function readValue(text: string, at: i32): i32 { return text.charCodeAt(at); }
         function callImport(x: i32): i32 { return increment(x); }
-        function deep(x: i32): i32 { return 1 + (2 + (3 + (4 + (5 + (6 + x))))); }
+        function deep(x: i32): i32 { return 1 - (2 - (3 - (4 - (5 - (6 - x))))); }
     `;
     const imports = [{name:"increment", params:["i32"], result:"i32"}];
     const program = typedRv32.compile(source, imports);
@@ -199,18 +199,23 @@ test("a checked constant read can use a halfword displacement and a dominating c
 test("the default policy applies the qualified options and stock reproduces the earlier default", () => {
     const {typedRv32} = compiler();
     const src = readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8");
-    const qualified = {inlineGuardedReturns: true, operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true},
-        select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true}};
+    const qualified = {inlineGuardedReturns: true, inline: true,
+        operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true},
+        select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true}};
     const image = options => typedRv32.compile(src, [], 65536, options).image;
     assert.deepEqual(image(), image({policy: "stock", ...qualified}));
     assert.deepEqual(image({policy: "default"}), image());
     assert.notDeepEqual(image({policy: "stock"}), image());
     // Explicit fields override the policy, and an explicit undefined leaves it unchanged.
-    assert.deepEqual(image({operandLocations: false, inlineGuardedReturns: false, select: false}), image({policy: "stock"}));
+    assert.deepEqual(image({operandLocations: false, inlineGuardedReturns: false, select: false, inline: false}), image({policy: "stock"}));
     assert.deepEqual(image({operandLocations: undefined}), image());
     assert.equal(image({policy: "stock"}).length, 9564);
-    // PICOCALC-RAY-PARITY Step 6 timed this image on the P4 (board mode 3: 31.51 ms per frame).
+    // PICOCALC-RAY-PARITY Step 7 timed this image on the P4 (board mode 3: 24.18 ms per frame).
     assert.equal(createHash("sha256").update(image()).digest("hex"),
+        "4e7eb52aee07cf8fd5e6a3a96733d100241b10fe445030793a73513229fb676c");
+    // Step 6's image (31.51 ms): the same policy without inlining and the Step 7 options.
+    assert.equal(createHash("sha256").update(image({inline: false, select: qualified.select && {...qualified.select, commute: false},
+        operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}})).digest("hex"),
         "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.throws(() => typedRv32.compile(src, [], 65536, {policy: "fast"}), /unknown RV32 code-generation policy/);
 });
@@ -220,7 +225,8 @@ test("saved homes and direct reads keep the ABI and reproduce stock results", ()
     for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js", "tools/typed-ray-bench.js"])
         runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp, typedRayBench} = ctx;
-    const candidate = {operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}};
+    // Inlining would turn mix into a leaf without callee-saved homes; this test keeps the calls.
+    const candidate = {inline: false, operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}};
     // A framed caller keeps four hot locals across calls; the interpreter faults if any
     // callee-saved register differs at a return, or if sp or ra is wrong.
     const src = `function step(x: i32, k: i32): i32 { return (x * 5 + k) % 9973; }
@@ -249,7 +255,7 @@ function mix(n: i32): i32 {
     const frame = options => typedRayBench.openingFrame(typedRv32.compile(
         readFileSync(new URL("../worlds/raytrace/raytrace.typed", import.meta.url), "utf8"), [], 65536, options));
     const stock = frame({policy: "stock"}), saved = frame(candidate);
-    const leafHomes = frame({operandLocations: {forward: true, capacity: true, homes: true}});
+    const leafHomes = frame({inline: false, operandLocations: {forward: true, capacity: true, homes: true}});
     assert.equal(sha(saved.bytes), sha(stock.bytes));
     assert.equal(sha(leafHomes.bytes), sha(stock.bytes));
     assert(saved.steps < leafHomes.steps, "saved homes and direct reads reduce the frame's instructions");
@@ -302,7 +308,7 @@ function leaf(a: i32, b: i32): i32 { return (a - b) * 4 + a / 8 - b % 4 + a / 3;
     assert.equal(divides.length, 0);
 });
 
-test("inlining, capacity homes and literal commutation match stock code", () => {
+test("inlining, capacity and constant homes, commutation and loop rotation match stock code", () => {
     const ctx = createContext({});
     for (const file of ["compiler/typed-wasm.js", "compiler/typed-rv32.js", "tools/rv32-interp.js"])
         runInContext(readFileSync(new URL("../" + file, import.meta.url), "utf8"), ctx, {filename: file});
@@ -334,8 +340,9 @@ function fill(out: buffer, buf: buffer, n: i32): i32 {
     return total;
 }`;
     const all = {inline: true, select: {immediates: true, divisions: true, branches: true, results: true,
-        leafParams: true, commute: true},
-        operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true}};
+        leafParams: true, commute: true, rotate: true},
+        operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true,
+            nested: true, constants: true}};
     const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
     const candidate = typedRv32.compile(src, [], undefined, all);
     assert.deepEqual(candidate.image, typedRv32.compile(src, [], undefined, {...all, streamFunctions: false}).image);

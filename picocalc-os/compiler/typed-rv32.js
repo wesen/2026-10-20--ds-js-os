@@ -70,6 +70,23 @@ function divisionMagic(d) {
     return {magic: (q2 + 1) | 0, shift: p - 32};
 }
 
+// How select lowers the literal at tape[at] (an i32.const operand cell), given the next
+// operation: "zero" (read x0), "divide", "immediate", or "register" (it needs a register:
+// a fused branch compare, a large or unfoldable operand, a store value, an argument).
+// The emitter and the planner both use this, so a constant home is planned exactly where
+// the emitter would otherwise load the literal.
+function constantForm(tape, at, s) {
+    const c = tape[at], next = tape[at + 1];
+    const consumer = tape[at + 2] === 0x45 ? tape[at + 3] : tape[at + 2];
+    if (s?.branches && PREDICATES.has(next) && (consumer === 0x04 || consumer === 0x0d))
+        return s.immediates && c === 0 ? "zero" : "register";
+    if (s?.divisions && (next === 0x6d || next === 0x6f) && (c >= 3 || powerOfTwo(c) > 0) &&
+        !(next === 0x6f && powerOfTwo(c) < 0)) return "divide";
+    if (!s?.immediates) return "register";
+    if (c === 0) return "zero";
+    return IMMEDIATE_FORMS.get(next)?.(c) ? "immediate" : "register";
+}
+
 class FunctionCode {
     constructor(program, functions, starts) {
         this.program = program;
@@ -273,27 +290,20 @@ class FunctionCode {
 
     // select.immediates and select.divisions: the literal at this.at feeds the next operation.
     selectConstant() {
-        const tape = this.program.code, c = tape[this.at], next = tape[this.at + 1], s = this.select;
-        if (s.branches && PREDICATES.has(next) && this.fusible(this.at + 2)) {
-            if (!s.immediates || c !== 0) return false;
+        const tape = this.program.code, c = tape[this.at], next = tape[this.at + 1];
+        const kind = constantForm(tape, this.at, this.select);
+        if (kind === "register") return false;
+        if (kind === "zero") {
             this.at++;
             this.pushHome(ZERO);
             return true;
         }
-        if (s.divisions && (next === 0x6d || next === 0x6f) && (c >= 3 || powerOfTwo(c) > 0) &&
-            !(next === 0x6f && powerOfTwo(c) < 0)) {
+        if (kind === "divide") {
             this.at += 2;
             this.divideByConstant(next === 0x6f, c);
             return true;
         }
-        if (!s.immediates) return false;
-        if (c === 0) {
-            this.at++;
-            this.pushHome(ZERO);
-            return true;
-        }
-        const form = IMMEDIATE_FORMS.get(next)?.(c);
-        if (!form) return false;
+        const form = IMMEDIATE_FORMS.get(next)(c);
         this.at += 2;
         const a = this.pop(T5);
         const stored = this.destination();
@@ -418,9 +428,10 @@ class FunctionCode {
         if (op >= 0x02 && op <= 0x0f) this.materialize();
         if (plan?.forward.has(this.at - 1)) {
             const constant = op === 0x41 ? this.cell() : undefined;
-            const index = constant === undefined ? this.pop(T5) : T5;
+            const constantHome = constant === undefined ? undefined : plan.homes.get("c" + constant);
+            const index = constant === undefined ? this.pop(T5) : constantHome ?? T5;
             if (constant !== undefined) {
-                this.constant(index, constant);
+                if (constantHome === undefined) this.constant(index, constant);
                 this.at++; // local.set opcode following the literal
             }
             this.at += 2; // destination local and checked-address opcode
@@ -490,6 +501,11 @@ class FunctionCode {
         }
         case 0x41: {
             const n = this.cell();
+            const constantHome = plan?.homes.get("c" + n);
+            if (constantHome !== undefined) {
+                this.pushHome(constantHome);
+                break;
+            }
             const stored = this.destination();
             const out = stored ?? this.resultRegister();
             this.constant(out, n);
@@ -542,7 +558,10 @@ class FunctionCode {
         for (let k = 0; k < saved.length; k++) this.emit(0);
         for (let i = 0; i < count; i++) this.writeLocal(A0 + i, i);
         // Capacity homes belong to unwritten parameters, still in their argument registers here.
-        for (const [id, reg] of this.locations?.homes ?? []) if (id < 0) this.load(reg, 0, A0 - 1 - id);
+        for (const [id, reg] of this.locations?.homes ?? []) {
+            if (typeof id === "string") this.constant(reg, Number(id.slice(1)));
+            else if (id < 0) this.load(reg, 0, A0 - 1 - id);
+        }
         while (this.at < this.program.code.length && !this.step(this.cell())) {}
         const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
@@ -899,6 +918,64 @@ function commuteConstants(code, arity) {
     return changed ? out : null;
 }
 
+// select.rotate: the frontend emits every loop as
+//     block; loop; C; eqz; br_if 1; B; br 0; end; end
+// which runs C, a taken skip over the exit jump, B and a taken jump back per iteration.
+// Rotated, the loop is
+//     block; C; eqz; br_if 0; loop; B; C; br_if 0; end; end
+// and each iteration ends in one backward conditional branch. C is evaluated at the same
+// points as before (once before every iteration and once to exit). Labels inside B keep
+// their meaning; C is copied only if every branch in it targets a block inside C.
+function rotateLoops(code) {
+    const next = at => at + 1 + OPERAND_CELLS[code[at]];
+    // Matching `end` of the block or loop opened at `at`.
+    function close(at) {
+        let depth = 0;
+        for (let k = at; k < code.length; k = next(k)) {
+            const op = code[k];
+            if (op >= 0x02 && op <= 0x04) depth++;
+            else if (op === 0x0b && --depth === 0) return k;
+        }
+        return -1;
+    }
+    let changed = false;
+    function emit(from, to, out) {
+        for (let at = from; at < to;) {
+            if (code[at] === 0x02 && code[at + 1] === 0x40 && code[at + 2] === 0x03 && code[at + 3] === 0x40) {
+                const loopEnd = close(at + 2), blockEnd = close(at);
+                if (loopEnd > 0 && blockEnd === loopEnd + 1 && code[loopEnd - 2] === 0x0c && code[loopEnd - 1] === 0) {
+                    // C: from the loop body's start to the first top-level `eqz; br_if 1`.
+                    let depth = 0, k = at + 4, condEnd = -1, internal = true;
+                    for (; k < loopEnd; k = next(k)) {
+                        const op = code[k];
+                        if (depth === 0 && op === 0x45 && code[k + 1] === 0x0d && code[k + 2] === 1) { condEnd = k; break; }
+                        if (op >= 0x02 && op <= 0x04) depth++;
+                        else if (op === 0x0b) depth--;
+                        else if ((op === 0x0c || op === 0x0d) && code[k + 1] >= depth) internal = false;
+                        else if (op === 0x0f || op === 0x00) internal = false;
+                    }
+                    if (condEnd > 0 && internal) {
+                        const cond = code.slice(at + 4, condEnd);
+                        out.push(0x02, 0x40, ...cond, 0x45, 0x0d, 0, 0x03, 0x40);
+                        emit(condEnd + 3, loopEnd - 2, out);
+                        out.push(...cond, 0x0d, 0, 0x0b, 0x0b);
+                        changed = true;
+                        at = blockEnd + 1;
+                        continue;
+                    }
+                }
+            }
+            const n = next(at);
+            for (let j = at; j < n; j++) out.push(code[j]);
+            at = n;
+        }
+    }
+    for (let at = 0; at < code.length; at = next(at)) if (OPERAND_CELLS[code[at]] < 0) return null;
+    const out = [];
+    emit(0, code.length, out);
+    return changed ? out : null;
+}
+
 // A function the inliner may copy: short, no literal stores (their table is per function),
 // no calls to itself, and not an async state machine. Records which parameters the body
 // writes and which it uses as checked-address operands.
@@ -963,6 +1040,9 @@ function planLocations(fn, options, inlineCall) {
                 candidates.push({id: b, at: prev2Opcode === 0x41 ? prev2Offset : prevOffset});
         }
         if (opcode === 0x20 || opcode === 0xf2) read(a);
+        // constants: a literal the emitter would load into a register, scored like a local.
+        if (opcode === 0x41 && options.constants && constantForm(tape, offset + 1, options.select) === "register")
+            weigh("c" + a);
         if (opcode === 0x21) {
             writes.add(a);
             // A homed write turns a store into a move: worth less than a read, which disappears.
@@ -1054,8 +1134,11 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached) {
 const POLICIES = Object.freeze({
     default: Object.freeze({
         inlineGuardedReturns: true,
-        operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true}),
-        select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true}),
+        operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
+            capacities: true, nested: true}),
+        select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
+            commute: true}),
+        inline: true,
     }),
     stock: Object.freeze({}),
 });
@@ -1095,7 +1178,9 @@ function compile(source, imports = [], maxSourceLength, requested) {
             const arity = index => callables[index].params.length;
             // The library copy inlines every candidate call; the function's own code only those
             // in its loops.
-            const all = inlineCalls(fn, inlineLibrary, inlining, arity, true);
+            // Expansion only grows a tape, so a function already over the callee limit is
+            // never a library candidate and needs no fully expanded copy.
+            const all = fn.code.length <= inlining.calleeCells ? inlineCalls(fn, inlineLibrary, inlining, arity, true) : null;
             libraryCopy = all ?? {code: fn.code, nlocals: fn.nlocals};
             const loops = inlineCalls(fn, inlineLibrary, inlining, arity, false);
             if (loops) {
@@ -1126,11 +1211,15 @@ function compile(source, imports = [], maxSourceLength, requested) {
             const commuted = commuteConstants(fn.code, index => callables[index].params.length);
             if (commuted) fn.code = commuted;
         }
+        if (options?.select?.rotate) {
+            const rotated = rotateLoops(fn.code);
+            if (rotated) fn.code = rotated;
+        }
         let compiled = lowerLeaf(fn, callables, targets, options?.select);
         if (!compiled) {
             const emitter = new Emitter(fn, callables, targets);
             emitter.select = options?.select;
-            if (options?.operandLocations) emitter.locations = planLocations(fn, options.operandLocations,
+            if (options?.operandLocations) emitter.locations = planLocations(fn, {...options.operandLocations, select: options.select},
                 index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn);
             compiled = emitter.lower();
         }

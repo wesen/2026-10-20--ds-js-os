@@ -1,0 +1,26 @@
+{
+ "ms": {
+  "ray.select": 46.9,
+  "ray.inline": 102.7,
+  "chess.select": 552,
+  "chess.inline": 674.6,
+  "editor.select": 859.7,
+  "editor.inline": 1062,
+  "files.select": 11,
+  "files.inline": 19.3,
+  "agenda.select": 95.4,
+  "agenda.inline": 174.4
+ },
+ "bytes": {
+  "ray.select": 6792,
+  "ray.inline": 8732,
+  "chess.select": 36300,
+  "chess.inline": 40312,
+  "editor.select": 59260,
+  "editor.inline": 76800,
+  "files.select": 2160,
+  "files.inline": 2920,
+  "agenda.select": 11284,
+  "agenda.inline": 20852
+ }
+}
