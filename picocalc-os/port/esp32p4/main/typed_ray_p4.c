@@ -61,7 +61,11 @@ static bool install(int program) {
     };
     if (program < 0 || program >= (int)(sizeof(programs)/sizeof(programs[0]))) return false;
     const char *source_name = programs[program].source;
-    const p4_compile_limits limits = {.heap_bytes=4*1024*1024,.duration_us=8000000,.rv32_backend=programs[program].backend};
+    // Programs without their own lowerer compile with the "kernel" policy: everything the RV32 backend
+    // can do for a compute kernel (RAY-PARITY Steps 15-21: 10.99 ms per frame against 16.26 ms for
+    // "default", for about 2.0 s of compile on first use, peak heap 1.55 MB).
+    const p4_compile_limits limits = {.heap_bytes=4*1024*1024,.duration_us=8000000,.rv32_backend=programs[program].backend,
+                                      .policy=programs[program].backend ? NULL : "kernel"};
     size_t ns=0, nt=0, ni=0;
     int64_t begin=port_clock();
     char *source=p4_bundle_read(source_name,&ns,NULL,0);
