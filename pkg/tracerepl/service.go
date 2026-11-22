@@ -19,6 +19,7 @@ import (
 	"github.com/dop251/goja/parser"
 	"github.com/go-go-golems/go-go-goja/pkg/engine"
 	"github.com/go-go-golems/go-go-goja/pkg/replsession"
+	"github.com/go-go-golems/picocalc-trace/pkg/traceresults"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
@@ -191,6 +192,8 @@ type Service struct {
 	expired      map[string]string        // reaped session ID -> reason
 	expiredOrder []string
 	idle         time.Duration
+	results      *traceresults.Store
+	provenance   func() map[string]any
 	closing      chan struct{}
 	closeOnce    sync.Once
 	wg           sync.WaitGroup // job goroutines and the reaper
@@ -216,21 +219,24 @@ func WithMaxJob(d time.Duration) Option {
 }
 
 func New(ctx context.Context, install Installer, logger zerolog.Logger, opts ...Option) (*Service, error) {
-	factory, err := engine.NewRuntimeFactoryBuilder(
-		engine.WithImplicitDefaultRegistryModules(false),
-		engine.WithDataOnlyDefaultRegistryModules(false),
-	).WithRuntimeInitializers(install).Build()
-	if err != nil {
-		return nil, errors.Wrap(err, "build trace runtime")
-	}
-	s := &Service{sessions: replsession.NewService(factory, logger,
-		replsession.WithLifetimeContext(ctx),
-		replsession.WithDefaultSessionOptions(replsession.RawSessionOptions()),
-	), timeout: defaultEvalTimeout, maxJob: DefaultMaxJob, started: time.Now().UTC(), lifetime: ctx,
+	s := &Service{timeout: defaultEvalTimeout, maxJob: DefaultMaxJob, started: time.Now().UTC(), lifetime: ctx,
 		live: map[string]*sessionEntry{}, expired: map[string]string{}, idle: DefaultIdle, closing: make(chan struct{})}
 	for _, opt := range opts {
 		opt(s)
 	}
+	// The result store's initializer runs after the session's installer, whose
+	// globals (compiler) and cell state it reads.
+	factory, err := engine.NewRuntimeFactoryBuilder(
+		engine.WithImplicitDefaultRegistryModules(false),
+		engine.WithDataOnlyDefaultRegistryModules(false),
+	).WithRuntimeInitializers(install, resultsInit{s}).Build()
+	if err != nil {
+		return nil, errors.Wrap(err, "build trace runtime")
+	}
+	s.sessions = replsession.NewService(factory, logger,
+		replsession.WithLifetimeContext(ctx),
+		replsession.WithDefaultSessionOptions(replsession.RawSessionOptions()),
+	)
 	if s.idle > 0 {
 		s.wg.Add(1)
 		go s.reap()
@@ -260,6 +266,10 @@ func (s *Service) inventory() map[string]any {
 	info["service"] = "trace-repl"
 	info["started"] = s.started
 	info["limits"] = s.Limits()
+	info["results"] = nil
+	if s.results != nil {
+		info["results"] = map[string]any{"dir": s.results.Dir()}
+	}
 	info["sessions"] = map[string]any{"open": s.SessionCount(), "max": MaxSessions, "idleSeconds": s.idle.Seconds()}
 	return info
 }

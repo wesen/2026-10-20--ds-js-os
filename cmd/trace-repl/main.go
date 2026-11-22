@@ -31,6 +31,7 @@ import (
 	"github.com/go-go-golems/picocalc-trace/pkg/tracehardware"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracerepl"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracerepo"
+	"github.com/go-go-golems/picocalc-trace/pkg/traceresults"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracesimd"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
@@ -58,6 +59,8 @@ type settings struct {
 	Stop        bool     `glazed:"stop"`
 	MaxJob      string   `glazed:"max-job"`
 	Idle        string   `glazed:"idle"`
+	Results     string   `glazed:"results"`
+	Name        string   `glazed:"name"`
 	LogLevel    string   `glazed:"log-level"`
 }
 
@@ -103,10 +106,12 @@ func root() (*cobra.Command, error) {
 	jobID := fields.New("job-id", fields.TypeString, fields.WithRequired(true), fields.WithHelp("ID printed by eval --job --detach"))
 	stop := fields.New("stop", fields.TypeBool, fields.WithDefault(false), fields.WithHelp("Interrupt the job instead of reporting it"))
 	idle := fields.New("idle", fields.TypeString, fields.WithDefault("2h"), fields.WithHelp("Unload sessions unused for this long (Go duration; 0 keeps them until closed)"))
+	results := fields.New("results", fields.TypeString, fields.WithHelp("Directory of results.save records (default: the user cache directory's picocalc-trace-repl/results)"))
+	name := fields.New("name", fields.TypeString, fields.WithHelp("Print this result's record instead of the list"))
 	maxJob := fields.New("max-job", fields.TypeString, fields.WithDefault("10m"), fields.WithHelp("Longest deadline a background job may have (Go duration, e.g. 10m)"))
 	defs := []*command{
 		{
-			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, simd, repo, mount, maxJob, idle, level)),
+			cmds.NewCommandDescription("serve", cmds.WithShort("Open the captured archive and serve in-memory sessions"), cmds.WithFlags(addr, archive, device, simd, repo, mount, results, maxJob, idle, level)),
 			serve,
 		},
 		{
@@ -134,6 +139,10 @@ func root() (*cobra.Command, error) {
 		{
 			cmds.NewCommandDescription("sessions", cmds.WithShort("List open sessions: created, last used, idle time, cells, jobs and any running job"), cmds.WithFlags(addr)),
 			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "sessions") },
+		},
+		{
+			cmds.NewCommandDescription("results", cmds.WithShort("List the service's saved results, or print one record with --name"), cmds.WithFlags(addr, name)),
+			func(ctx context.Context, cfg settings) error { return client(ctx, cfg, "results") },
 		},
 		{
 			cmds.NewCommandDescription("info", cmds.WithShort("Print what a running service mounted: archive, studies, sessions and limits"), cmds.WithFlags(addr)),
@@ -222,6 +231,19 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 	}
 	logger.Info().Str("root", repo.Root()).Str("head", repo.Head()).Msg("repository available read-only")
 	compilers := tracecompiler.New(repo)
+	store, err := openResults(cfg)
+	if err != nil {
+		return nil, err
+	}
+	logger.Info().Str("dir", store.Dir()).Msg("results.save writes here")
+	// A record names the commit checked out when it was saved, not at startup.
+	provenance := func() map[string]any {
+		head := repo.Head()
+		if commit, err := repo.Resolve("HEAD"); err == nil {
+			head = commit
+		}
+		return map[string]any{"root": repo.Root(), "head": head}
+	}
 	maxJob := tracerepl.DefaultMaxJob
 	if cfg.MaxJob != "" {
 		if maxJob, err = time.ParseDuration(cfg.MaxJob); err != nil || maxJob <= 0 {
@@ -256,7 +278,8 @@ func newService(ctx context.Context, cfg settings, logger zerolog.Logger) (*trac
 			return err
 		}
 		return traceapi.InstallStats(vm)
-	}, logger, tracerepl.WithInventory(inputs.describe), tracerepl.WithMaxJob(maxJob), tracerepl.WithIdle(idleFor))
+	}, logger, tracerepl.WithInventory(inputs.describe), tracerepl.WithMaxJob(maxJob), tracerepl.WithIdle(idleFor),
+		tracerepl.WithResults(store, provenance))
 }
 
 // inventory is what GET /info reports about the service's verified inputs.
@@ -269,6 +292,21 @@ type inventory struct {
 	simdPath     string
 	repo         *tracerepo.Repo
 	compilers    *tracecompiler.Provider
+}
+
+// openResults opens --results, or the user cache directory's
+// picocalc-trace-repl/results, so saving never writes into the repository.
+func openResults(cfg settings) (*traceresults.Store, error) {
+	dir := cfg.Results
+	if dir == "" {
+		cache, err := os.UserCacheDir()
+		if err != nil {
+			return nil, errors.Wrap(err, "no --results directory and no user cache directory")
+		}
+		dir = filepath.Join(cache, "picocalc-trace-repl", "results")
+	}
+	store, err := traceresults.Open(dir)
+	return store, errors.Wrap(err, "open --results")
 }
 
 // openRepo confines file access to --repo, or to the git work tree that
@@ -531,6 +569,20 @@ func client(ctx context.Context, cfg settings, action string) error {
 			return err
 		}
 		return printJSON(sessions)
+	case "results":
+		path := "/results"
+		if cfg.Name != "" {
+			path += "/" + url.PathEscape(cfg.Name)
+		}
+		var out json.RawMessage
+		if err := call(ctx, cfg, http.MethodGet, path, nil, &out); err != nil {
+			return err
+		}
+		var pretty bytes.Buffer
+		if err := json.Indent(&pretty, out, "", "  "); err != nil {
+			return err
+		}
+		fmt.Println(pretty.String())
 	case "info":
 		var info json.RawMessage
 		if err := call(ctx, cfg, http.MethodGet, "/info", nil, &info); err != nil {

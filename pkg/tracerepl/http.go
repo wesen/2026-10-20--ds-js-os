@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/go-go-golems/go-go-goja/pkg/replsession"
+	"github.com/go-go-golems/picocalc-trace/pkg/traceresults"
 	"github.com/pkg/errors"
 	"github.com/rs/zerolog"
 )
@@ -27,6 +28,7 @@ var routes = []string{
 	"GET /sessions/{id}/jobs: list jobs; GET /sessions/{id}/jobs/{job}: state and result",
 	"DELETE /sessions/{id}/jobs/{job}: stop a job",
 	"DELETE /sessions/{id}: close a session",
+	"GET /results: saved results; GET /results/{name}: one record",
 }
 
 // Handler serves the in-process operator API. Browser-origin requests are not
@@ -107,6 +109,38 @@ func Handler(s *Service, logger zerolog.Logger) http.Handler {
 	})
 	mux.HandleFunc("GET /info", func(w http.ResponseWriter, r *http.Request) {
 		response(w, http.StatusOK, s.inventory())
+	})
+	mux.HandleFunc("GET /results", func(w http.ResponseWriter, r *http.Request) {
+		store := s.Results()
+		if store == nil {
+			response(w, http.StatusNotFound, Result{Error: "this service has no result store; start it with serve --results DIR"})
+			return
+		}
+		infos, err := store.List()
+		if err != nil {
+			failure(w, err)
+			return
+		}
+		response(w, http.StatusOK, infos)
+	})
+	mux.HandleFunc("GET /results/{name}", func(w http.ResponseWriter, r *http.Request) {
+		store := s.Results()
+		if store == nil {
+			response(w, http.StatusNotFound, Result{Error: "this service has no result store; start it with serve --results DIR"})
+			return
+		}
+		data, _, err := store.Load(r.PathValue("name"))
+		if err != nil {
+			status := http.StatusBadRequest
+			if errors.Is(err, traceresults.ErrNotFound) {
+				status = http.StatusNotFound
+			}
+			response(w, status, Result{Error: err.Error()})
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(data)
 	})
 	mux.HandleFunc("GET /sessions", func(w http.ResponseWriter, r *http.Request) {
 		response(w, http.StatusOK, s.Sessions())
