@@ -1,0 +1,65 @@
+{
+ "files": {
+  "gallery/candela_gallery_scenes.c": {
+   "sha256": "761845979baea65bb4c29c82db27fc625c26a2f0da08815705a1f2244682f40e",
+   "source": "01-prepare-scenes.mjs output"
+  },
+  "kernel/cdl_api.h": {
+   "sha256": "6921ffa2f398e7ba0c40c5fb66afec6109bc172c3524d99faa4b99537c96d598",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/cpu/cdl_api.h"
+  },
+  "kernel/cdl_fixed_kernel.c": {
+   "sha256": "d5503e45b7c7a39d31a9170c1c014610807a0e875611d74f9e07505243a6b7ad",
+   "source": "02-vendor.py"
+  },
+  "kernel/cdl_kernel.cpp": {
+   "sha256": "5254d943641411ca706a9adf5d0e9d6f16ad9a1a5c064ce29538a95881bbec5d",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/generated/cdl_kernel.cpp"
+  },
+  "kernel/cdl_kernel.h": {
+   "sha256": "dcc2a71b0117d3a922f7ee33d23e694e6a4d698c4655094066558c3a618add1d",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/generated/cdl_kernel.h"
+  },
+  "kernel/cdl_math.h": {
+   "sha256": "41e025d3edc495fec00e685b2f9b026b39253c3f83e8de626ff3356c274702c3",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/cpu/cdl_math.h"
+  },
+  "kernel/cdl_overrides.inc": {
+   "sha256": "4da7be91a4cd49aa622beca59088eba8a610497c9448cbec5eb1f5ad2a32f166",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/cpu/cdl_overrides.inc"
+  },
+  "kernel/cdl_post.cpp": {
+   "sha256": "a6669c2810ff994eabbd61323abbe06fbd9b22352abf98fd4dab7adb233be5cb",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/generated/cdl_post.cpp"
+  },
+  "kernel/cdl_post.inc": {
+   "sha256": "e730b3c4bdf77ed4d9e9c61d2623cf90376b7b491f54b7cf2f39432d57631788",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/cpu/cdl_post.inc"
+  },
+  "kernel/cdl_switches.h": {
+   "sha256": "8b1c96bfe3cafc99d76fd0789b24ce43225280315186c6eace0a7c1aede015c3",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/cpu/cdl_switches.h"
+  },
+  "kernel/manifest.json": {
+   "sha256": "c4a5b5946d8f63f3c0030b34eb4405f6da7bfbde574ce8ceea1d4117ca5b5049",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-CPU-KERNEL--candela-s-fixed-path-tracing-kernel-as-firmware-c-on-the-esp32-p4/scripts/generated/manifest.json"
+  },
+  "vm/cdl_vm.c": {
+   "sha256": "6913507921b64356599463094b760b2f34c57893c3eabe4115b95d4d0a55ea92",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/scripts/vm/cdl_vm.c"
+  },
+  "vm/cdl_vm.h": {
+   "sha256": "8b46cf7683a9b28b9a80d6e23133d260e5bf7150d83afe8896a58bb725286063",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/scripts/vm/cdl_vm.h"
+  },
+  "vm/cdl_vm_ck_math.h": {
+   "sha256": "29d226f8418f5322b54951fea1e7ad81699fe1a884f7facc5885f5be4177fbcd",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/scripts/ck/cdl_vm_ck_math.h"
+  },
+  "vm/cdl_vm_isa.h": {
+   "sha256": "f80e8be45c02aed12545f810a10e41057101c9fc6a25d9f1b58c8fa7c4eca9e0",
+   "source": "ttmp/2026/11/21/PICOCALC-CANDELA-SECTIONS--candela-s-generated-wgsl-sections-as-bytecode-interpreted-by-the-p4-kernel/scripts/vm/cdl_vm_isa.h"
+  }
+ },
+ "note": "Copied by PICOCALC-CANDELA-GALLERY scripts/02-vendor.py; do not edit here, regenerate in the source tickets."
+}
