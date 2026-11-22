@@ -1,0 +1,7 @@
+T0: 28 presets (cumulative 28)  A-03 B-01 B-03 B-04 B-05 C-02 C-03 C-04 D-01 D-02 E-03 E-04 G-06 L-01 L-02 L-03 L-04 L-05 L-06 L-07 L-08 M-01 M-02 M-03 M-09 M-12 R-01 R-07
+T1: 29 presets (cumulative 57)  B-02 C-01 C-05 C-06 D-04 E-05 E-07 G-01 L-09 L-10 L-11 L-12 M-06 M-07 M-08 M-10 M-11 M-13 R-02 R-06 R-09 R-10 S-03 V-01 V-05 W-01 W-03 W-04 X-01
+T2: 38 presets (cumulative 95)  A-01 A-02 A-04 A-05 A-06 D-03 E-01 E-02 E-06 F-01 F-02 F-03 F-04 F-05 F-06 F-07 F-08 G-02 G-03 G-04 G-05 M-04 M-05 M-14 R-03 R-04 R-05 R-08 S-01 S-02 S-04 V-02 V-03 V-04 W-02 X-03 X-04 X-05
+T3: 10 presets (cumulative 105)  K-01 K-02 K-03 K-04 K-05 K-06 K-07 K-08 K-09 X-02
+reasons for the highest tier: {"surface field":29,"roundbox":9,"cone":3,"capsule":7,"torus":9,"custom integrator":1,"refraction":10,"custom pass":1,"prism":1,"sdf":6,"heightfield":3,"mesh":9,"hdri":9,"sheen":3,"medium":8,"fog":2,"thin sheet":2,"spectral":1,"density field":4,"10001 objects":1}
+presets needing each feature: {"T2:surface field":39,"T1:roundbox":16,"T1:cone":5,"T1:capsule":7,"T1:torus":16,"T1:refraction":18,"T2:custom integrator":1,"T2:custom pass":1,"T1:prism":2,"T2:sdf":6,"T2:heightfield":3,"T3:mesh":9,"T3:hdri":9,"T1:motion blur":4,"T1:anisotropy":9,"T1:sheen":6,"T1:medium":13,"T1:fog":2,"T1:thin sheet":2,"T1:spectral":4,"T2:density field":4,"T3:10001 objects":1}
+largest packed magnitudes: {"maxLight":73734.7109375,"maxSun":1825128576,"maxUniform":1825128576}

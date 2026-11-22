@@ -1,0 +1,7431 @@
+{
+ "candela": "/tmp/claude-1000/-home-manuel-code-wesen-2026-10-20--ds-js-os/8cb22ffd-b9b3-49d6-975e-44f61fbbbf0b/scratchpad/candela-run",
+ "node": "v24.18.0",
+ "presets": [
+  {
+   "id": "A-01",
+   "title": "mix: blending two BSDFs",
+   "group": "Algebra",
+   "ok": true,
+   "buildMs": 99.8,
+   "objects": 3,
+   "shapes": {
+    "sphere": 2,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 2,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 5,
+   "matChars": 2688,
+   "materialLets": 5,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 71,
+   "wgslLines": 1504,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 900
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "A-02",
+   "title": "layer: varnish over wood",
+   "group": "Algebra",
+   "ok": true,
+   "buildMs": 84,
+   "objects": 4,
+   "shapes": {
+    "box": 2,
+    "plane": 1,
+    "sphere": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {
+    "fbm3": 2
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 2875,
+   "materialLets": 25,
+   "fieldLets": 2,
+   "customPasses": 0,
+   "matLines": 77,
+   "wgslLines": 1511,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 67343.1953125
+    },
+    "O": {
+     "lo": 0.03999999910593033,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.05999999865889549,
+     "hi": 2700
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "A-03",
+   "title": "add: checked sums",
+   "group": "Algebra",
+   "ok": true,
+   "buildMs": 76.1,
+   "objects": 4,
+   "shapes": {
+    "sphere": 3,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "lambert",
+    "conductor",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 2,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 2304,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 74,
+   "wgslLines": 1508,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 100
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "A-04",
+   "title": "material.define: a tile material",
+   "group": "Algebra",
+   "ok": true,
+   "buildMs": 70.4,
+   "objects": 2,
+   "shapes": {
+    "plane": 1,
+    "sphere": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1584,
+   "materialLets": 13,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 48,
+   "wgslLines": 1480,
+   "uniforms": 2,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1308434560
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1308434560,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "A-05",
+   "title": "Fragments: rust and wear",
+   "group": "Algebra",
+   "ok": true,
+   "buildMs": 74.9,
+   "objects": 3,
+   "shapes": {
+    "cylinder": 1,
+    "roundbox": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 3
+   },
+   "msCompensatedLobes": 2,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 5,
+   "matChars": 4098,
+   "materialLets": 37,
+   "fieldLets": 4,
+   "customPasses": 0,
+   "matLines": 102,
+   "wgslLines": 1535,
+   "uniforms": 3,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1346264448
+    },
+    "O": {
+     "lo": 0.05999999865889549,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1346264448,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "A-06",
+   "title": "Writing a fragment",
+   "group": "Algebra",
+   "ok": true,
+   "buildMs": 70.6,
+   "objects": 4,
+   "shapes": {
+    "roundbox": 2,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1917,
+   "materialLets": 13,
+   "fieldLets": 2,
+   "customPasses": 0,
+   "matLines": 47,
+   "wgslLines": 1479,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1422056320
+    },
+    "O": {
+     "lo": 0.07999999821186066,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1422056320,
+    "envType": "sky",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "B-01",
+   "title": "Hello, sphere",
+   "group": "Basics",
+   "ok": true,
+   "buildMs": 68.1,
+   "objects": 2,
+   "shapes": {
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1459,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 36,
+   "wgslLines": 1468,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1346264448
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1346264448,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "B-02",
+   "title": "Params are sliders",
+   "group": "Basics",
+   "ok": true,
+   "buildMs": 70.6,
+   "objects": 3,
+   "shapes": {
+    "sphere": 1,
+    "roundbox": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 2,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 6,
+   "matChars": 3273,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 76,
+   "wgslLines": 1509,
+   "uniforms": 4,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.009134058840572834,
+     "hi": 1308434560
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1308434560,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "B-03",
+   "title": "Builders are values",
+   "group": "Basics",
+   "ok": true,
+   "buildMs": 81.5,
+   "objects": 26,
+   "shapes": {
+    "sphere": 25,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2202,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 54,
+   "wgslLines": 1487,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1422056320
+    },
+    "O": {
+     "lo": 0.06731167435646057,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1422056320,
+    "envType": "sky",
+    "bvhNodes": 19
+   }
+  },
+  {
+   "id": "B-04",
+   "title": "Diagnostics, as you type",
+   "group": "Basics",
+   "ok": true,
+   "buildMs": 68.9,
+   "objects": 4,
+   "shapes": {
+    "sphere": 3,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 2,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 4,
+   "matChars": 3018,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 79,
+   "wgslLines": 1513,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 600
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "B-05",
+   "title": "Defaults are announced",
+   "group": "Basics",
+   "ok": true,
+   "buildMs": 72.4,
+   "objects": 5,
+   "shapes": {
+    "box": 1,
+    "sphere": 1,
+    "rect": 2,
+    "plane": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 4,
+   "matChars": 3216,
+   "materialLets": 5,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 84,
+   "wgslLines": 1519,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 5
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 20
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "C-01",
+   "title": "Depth of field",
+   "group": "Camera",
+   "ok": true,
+   "buildMs": 77,
+   "objects": 16,
+   "shapes": {
+    "cylinder": 5,
+    "cone": 5,
+    "sphere": 5,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 5,
+   "matChars": 3121,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 70,
+   "wgslLines": 1503,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 800
+    },
+    "O": {
+     "lo": 0.02500000037252903,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 15
+   }
+  },
+  {
+   "id": "C-02",
+   "title": "Bokeh and blades",
+   "group": "Camera",
+   "ok": true,
+   "buildMs": 70.9,
+   "objects": 43,
+   "shapes": {
+    "sphere": 41,
+    "cylinder": 1,
+    "rect": 1
+   },
+   "materials": 6,
+   "lobes": [
+    "lambert",
+    "conductor",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 2241,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 72,
+   "wgslLines": 1508,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "gradient",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.0015176349552348256,
+     "hi": 1819.91943359375
+    },
+    "O": {
+     "lo": 1.1102230246251565e-16,
+     "hi": 42
+    },
+    "LI": {
+     "lo": 0.058894943445920944,
+     "hi": 3400
+    },
+    "sunRadiance": 0,
+    "envType": "gradient",
+    "bvhNodes": 31
+   }
+  },
+  {
+   "id": "C-03",
+   "title": "Focal length and perspective",
+   "group": "Camera",
+   "ok": true,
+   "buildMs": 69.9,
+   "objects": 27,
+   "shapes": {
+    "box": 24,
+    "rect": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 4,
+   "matChars": 2940,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 72,
+   "wgslLines": 1506,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1438527616
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 26
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1438527616,
+    "envType": "sky",
+    "bvhNodes": 19
+   }
+  },
+  {
+   "id": "C-04",
+   "title": "The exposure triangle",
+   "group": "Camera",
+   "ok": true,
+   "buildMs": 68.5,
+   "objects": 5,
+   "shapes": {
+    "box": 3,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 5,
+   "matChars": 3659,
+   "materialLets": 5,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 90,
+   "wgslLines": 1525,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1376851712
+    },
+    "O": {
+     "lo": 0.009999999776482582,
+     "hi": 4
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1376851712,
+    "envType": "sky",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "C-05",
+   "title": "Tone mapping",
+   "group": "Camera",
+   "ok": true,
+   "buildMs": 67.7,
+   "objects": 6,
+   "shapes": {
+    "capsule": 3,
+    "sphere": 1,
+    "rect": 1,
+    "plane": 1
+   },
+   "materials": 6,
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 3131,
+   "materialLets": 6,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 90,
+   "wgslLines": 1526,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 6
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "C-06",
+   "title": "Bloom, vignette, grain",
+   "group": "Camera",
+   "ok": true,
+   "buildMs": 68.8,
+   "objects": 9,
+   "shapes": {
+    "sphere": 7,
+    "roundbox": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "lambert",
+    "dielectric",
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2128,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 56,
+   "wgslLines": 1489,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "gradient",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "tonemap:agx",
+    "bloom",
+    "vignette",
+    "grain"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.0030352699104696512,
+     "hi": 40
+    },
+    "O": {
+     "lo": 0.03999999910593033,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "gradient",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "D-01",
+   "title": "Units in practice",
+   "group": "Diagnostics",
+   "ok": true,
+   "buildMs": 70.2,
+   "objects": 4,
+   "shapes": {
+    "sphere": 2,
+    "box": 1,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2342,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 61,
+   "wgslLines": 1495,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 1,
+    "light.spot": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 126584.34375
+    },
+    "O": {
+     "lo": 0.019999999552965164,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.019999999552965164,
+     "hi": 5600
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "D-02",
+   "title": "Build time, run time: the errors",
+   "group": "Diagnostics",
+   "ok": true,
+   "buildMs": 74.6,
+   "objects": 6,
+   "shapes": {
+    "sphere": 5,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1467,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 36,
+   "wgslLines": 1468,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1346264448
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1346264448,
+    "envType": "sky",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "D-03",
+   "title": "Fragment contracts",
+   "group": "Diagnostics",
+   "ok": true,
+   "buildMs": 69.8,
+   "objects": 2,
+   "shapes": {
+    "cylinder": 1,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 1
+   },
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2179,
+   "materialLets": 13,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 54,
+   "wgslLines": 1486,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1346264448
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1346264448,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "D-04",
+   "title": "Explain and the IR",
+   "group": "Diagnostics",
+   "ok": true,
+   "buildMs": 81.7,
+   "objects": 7,
+   "shapes": {
+    "cylinder": 4,
+    "torus": 2,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2567,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 65,
+   "wgslLines": 1499,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1376851712
+    },
+    "O": {
+     "lo": 3.0616169246677665e-18,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1376851712,
+    "envType": "sky",
+    "bvhNodes": 5
+   }
+  },
+  {
+   "id": "E-01",
+   "title": "Integrators: what the denoiser sees",
+   "group": "Engines",
+   "ok": true,
+   "buildMs": 69.2,
+   "objects": 4,
+   "shapes": {
+    "torus": 1,
+    "roundbox": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "voronoi3": 1
+   },
+   "msCompensatedLobes": 1,
+   "refracting": 1,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 2369,
+   "materialLets": 7,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 63,
+   "wgslLines": 1497,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 8,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1346264448
+    },
+    "O": {
+     "lo": 0.009807621128857136,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1346264448,
+    "envType": "sky",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "E-02",
+   "title": "A custom integrator: toon shading",
+   "group": "Engines",
+   "ok": true,
+   "buildMs": 76.7,
+   "objects": 4,
+   "shapes": {
+    "sphere": 1,
+    "torus": 1,
+    "cone": 1,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 4,
+   "matChars": 2957,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 72,
+   "wgslLines": 1533,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "custom:toon",
+   "maxDepth": null,
+   "engine": "realtime",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.3535533845424652,
+     "hi": 1376851712
+    },
+    "O": {
+     "lo": 0.10000000149011612,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1376851712,
+    "envType": "none",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "E-03",
+   "title": "How many bounces?",
+   "group": "Engines",
+   "ok": true,
+   "buildMs": 72.5,
+   "objects": 8,
+   "shapes": {
+    "rect": 6,
+    "box": 2
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2367,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 61,
+   "wgslLines": 1495,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 4,
+   "engine": "offline",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 2576.44873046875
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 7
+    },
+    "LI": {
+     "lo": 4.8985870794684264e-17,
+     "hi": 4500
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "E-04",
+   "title": "NEE, BSDF sampling, MIS",
+   "group": "Engines",
+   "ok": true,
+   "buildMs": 69.7,
+   "objects": 9,
+   "shapes": {
+    "box": 4,
+    "sphere": 4,
+    "plane": 1
+   },
+   "materials": 9,
+   "lobes": [
+    "conductor",
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 4,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 2782,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 90,
+   "wgslLines": 1529,
+   "uniforms": 4,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 4
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 8,
+   "engine": "offline",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 571901.75
+    },
+    "O": {
+     "lo": 0.019999999552965164,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.019999999552965164,
+     "hi": 844.8759155273438
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "E-05",
+   "title": "Fireflies and the clamp",
+   "group": "Engines",
+   "ok": true,
+   "buildMs": 68.7,
+   "objects": 4,
+   "shapes": {
+    "sphere": 2,
+    "box": 1,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 1,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1931,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 54,
+   "wgslLines": 1488,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 8,
+   "engine": "offline",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 56979.97265625
+    },
+    "O": {
+     "lo": 0.05000000074505806,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.05000000074505806,
+     "hi": 4000
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "E-06",
+   "title": "A custom pass",
+   "group": "Engines",
+   "ok": true,
+   "buildMs": 69.3,
+   "objects": 3,
+   "shapes": {
+    "sphere": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2147,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 1,
+   "matLines": 54,
+   "wgslLines": 1487,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "tonemap:agx",
+    "custom"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1308434560
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1308434560,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "E-07",
+   "title": "Realtime, preview, offline",
+   "group": "Engines",
+   "ok": true,
+   "buildMs": 69.9,
+   "objects": 4,
+   "shapes": {
+    "sphere": 1,
+    "roundbox": 1,
+    "plane": 1,
+    "rect": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 1,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 1566,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 47,
+   "wgslLines": 1481,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 3729.33056640625
+    },
+    "O": {
+     "lo": 0.030047573149204254,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.0727606862783432,
+     "hi": 4000
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "F-01",
+   "title": "Checker, stripes, ramps",
+   "group": "Fields",
+   "ok": true,
+   "buildMs": 67.8,
+   "objects": 3,
+   "shapes": {
+    "sphere": 2,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 3112,
+   "materialLets": 27,
+   "fieldLets": 3,
+   "customPasses": 0,
+   "matLines": 78,
+   "wgslLines": 1511,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1346264448
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1346264448,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "F-02",
+   "title": "Marble from noise",
+   "group": "Fields",
+   "ok": true,
+   "buildMs": 66.9,
+   "objects": 3,
+   "shapes": {
+    "roundbox": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2319,
+   "materialLets": 13,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 55,
+   "wgslLines": 1487,
+   "uniforms": 2,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 900
+    },
+    "O": {
+     "lo": 0.03999999910593033,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "F-03",
+   "title": "Voronoi: cobbles and cells",
+   "group": "Fields",
+   "ok": true,
+   "buildMs": 67.3,
+   "objects": 2,
+   "shapes": {
+    "plane": 1,
+    "sphere": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {
+    "voronoi3": 1,
+    "bumpN_": 1
+   },
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 1854,
+   "materialLets": 18,
+   "fieldLets": 2,
+   "customPasses": 0,
+   "matLines": 46,
+   "wgslLines": 1492,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1081022720
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1081022720,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "F-04",
+   "title": "Bump: hammered metal",
+   "group": "Fields",
+   "ok": true,
+   "buildMs": 72.4,
+   "objects": 4,
+   "shapes": {
+    "sphere": 2,
+    "cylinder": 1,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "noise3": 1,
+    "voronoi3": 1,
+    "bumpN_": 2
+   },
+   "msCompensatedLobes": 3,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 2245,
+   "materialLets": 12,
+   "fieldLets": 4,
+   "customPasses": 0,
+   "matLines": 60,
+   "wgslLines": 1522,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.3490658402442932,
+     "hi": 1000
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "F-05",
+   "title": "Fields of time",
+   "group": "Fields",
+   "ok": true,
+   "buildMs": 71.2,
+   "objects": 3,
+   "shapes": {
+    "sphere": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 2365,
+   "materialLets": 19,
+   "fieldLets": 4,
+   "customPasses": 0,
+   "matLines": 64,
+   "wgslLines": 1497,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "gradient",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.023153366521000862,
+     "hi": 400
+    },
+    "O": {
+     "lo": 0.029999999329447746,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "gradient",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "F-06",
+   "title": "Build time vs. run time",
+   "group": "Fields",
+   "ok": true,
+   "buildMs": 81.4,
+   "objects": 3,
+   "shapes": {
+    "disk": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "bumpN_": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 4,
+   "matChars": 3335,
+   "materialLets": 23,
+   "fieldLets": 2,
+   "customPasses": 0,
+   "matLines": 82,
+   "wgslLines": 1543,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1261037056
+    },
+    "O": {
+     "lo": 0.009999999776482582,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1261037056,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "F-07",
+   "title": "World space and local space",
+   "group": "Fields",
+   "ok": true,
+   "buildMs": 68.4,
+   "objects": 3,
+   "shapes": {
+    "box": 2,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2975,
+   "materialLets": 27,
+   "fieldLets": 6,
+   "customPasses": 0,
+   "matLines": 78,
+   "wgslLines": 1511,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1376851712
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1376851712,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "F-08",
+   "title": "One material, many instances",
+   "group": "Fields",
+   "ok": true,
+   "buildMs": 84.1,
+   "objects": 401,
+   "shapes": {
+    "sphere": 400,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 2239,
+   "materialLets": 19,
+   "fieldLets": 5,
+   "customPasses": 0,
+   "matLines": 53,
+   "wgslLines": 1485,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1308434560
+    },
+    "O": {
+     "lo": 0.00007021677447482944,
+     "hi": 400
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1308434560,
+    "envType": "sky",
+    "bvhNodes": 289
+   }
+  },
+  {
+   "id": "G-01",
+   "title": "Analytic primitives",
+   "group": "Geometry",
+   "ok": true,
+   "buildMs": 70.9,
+   "objects": 11,
+   "shapes": {
+    "sphere": 1,
+    "box": 1,
+    "cylinder": 1,
+    "disk": 1,
+    "rect": 1,
+    "capsule": 1,
+    "torus": 1,
+    "roundbox": 1,
+    "cone": 1,
+    "prism": 1,
+    "plane": 1
+   },
+   "materials": 7,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 7,
+   "matChars": 5169,
+   "materialLets": 7,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 126,
+   "wgslLines": 1563,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1401754752
+    },
+    "O": {
+     "lo": 0.07712812721729279,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1401754752,
+    "envType": "sky",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "G-02",
+   "title": "Your own distance field",
+   "group": "Geometry",
+   "ok": true,
+   "buildMs": 69,
+   "objects": 4,
+   "shapes": {
+    "sdf": 3,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2576,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 65,
+   "wgslLines": 1586,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 3,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.25,
+     "hi": 900
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "G-03",
+   "title": "Heightfield terrain",
+   "group": "Geometry",
+   "ok": true,
+   "buildMs": 69.1,
+   "objects": 1,
+   "shapes": {
+    "heightfield": 1
+   },
+   "materials": 1,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 1165,
+   "materialLets": 11,
+   "fieldLets": 2,
+   "customPasses": 0,
+   "matLines": 28,
+   "wgslLines": 1467,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02565000019967556,
+     "hi": 1155371264
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 17.435596466064453
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1155371264,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "G-04",
+   "title": "900 cubes, one BVH",
+   "group": "Geometry",
+   "ok": true,
+   "buildMs": 81.2,
+   "objects": 901,
+   "shapes": {
+    "box": 900,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1846,
+   "materialLets": 12,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 46,
+   "wgslLines": 1478,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1332110464
+    },
+    "O": {
+     "lo": 0.0002662621554918587,
+     "hi": 900
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1332110464,
+    "envType": "sky",
+    "bvhNodes": 777
+   }
+  },
+  {
+   "id": "G-05",
+   "title": "Scatter: a forest by density",
+   "group": "Geometry",
+   "ok": true,
+   "buildMs": 90.7,
+   "objects": 442,
+   "shapes": {
+    "cylinder": 220,
+    "cone": 220,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 4,
+   "matChars": 3145,
+   "materialLets": 8,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 76,
+   "wgslLines": 1510,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1261037056
+    },
+    "O": {
+     "lo": 0.0039246464148163795,
+     "hi": 441
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1261037056,
+    "envType": "sky",
+    "bvhNodes": 369
+   }
+  },
+  {
+   "id": "G-06",
+   "title": "Hierarchy: an orrery",
+   "group": "Geometry",
+   "ok": true,
+   "buildMs": 69.1,
+   "objects": 4,
+   "shapes": {
+    "sphere": 3,
+    "disk": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2499,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 66,
+   "wgslLines": 1500,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 4
+    },
+    "O": {
+     "lo": 0.05999999865889549,
+     "hi": 3
+    },
+    "LI": {
+     "lo": 0.6000000238418579,
+     "hi": 4500
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "K-01",
+   "title": "A gear train in motion",
+   "group": "Machines",
+   "ok": true,
+   "buildMs": 347.3,
+   "objects": 15,
+   "shapes": {
+    "mesh": 14,
+    "plane": 1
+   },
+   "materials": 18,
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "fxCalls": {
+    "tangentWorld": 19
+   },
+   "msCompensatedLobes": 19,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 5,
+   "matChars": 14525,
+   "materialLets": 146,
+   "fieldLets": 13,
+   "customPasses": 0,
+   "matLines": 363,
+   "wgslLines": 1811,
+   "uniforms": 0,
+   "triangles": 12024,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "hdri",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": true,
+   "animation": true,
+   "behaviors": 0,
+   "hdri": "1024x512",
+   "sceneDataBytes": 17997120,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1125376
+    },
+    "O": {
+     "lo": 0.004999999888241291,
+     "hi": 76241
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "hdri",
+    "bvhNodes": 13
+   }
+  },
+  {
+   "id": "K-02",
+   "title": "A slider-crank, solved in JS",
+   "group": "Machines",
+   "ok": true,
+   "buildMs": 242.8,
+   "objects": 6,
+   "shapes": {
+    "mesh": 4,
+    "box": 1,
+    "plane": 1
+   },
+   "materials": 17,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 4,
+    "bumpN_": 4,
+    "tangentWorld": 10
+   },
+   "msCompensatedLobes": 14,
+   "refracting": 1,
+   "interiors": 0,
+   "stochasticBranches": 5,
+   "matChars": 12345,
+   "materialLets": 106,
+   "fieldLets": 17,
+   "customPasses": 0,
+   "matLines": 313,
+   "wgslLines": 1811,
+   "uniforms": 0,
+   "triangles": 4364,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "hdri",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": true,
+   "animation": true,
+   "behaviors": 0,
+   "hdri": "1024x512",
+   "sceneDataBytes": 17355360,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1085440
+    },
+    "O": {
+     "lo": 0.009999999776482582,
+     "hi": 30758
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "hdri",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "K-03",
+   "title": "Finishes: a chart of machined and coated metals",
+   "group": "Machines",
+   "ok": true,
+   "buildMs": 87.2,
+   "objects": 19,
+   "shapes": {
+    "mesh": 16,
+    "box": 1,
+    "plane": 1,
+    "rect": 1
+   },
+   "materials": 31,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 1,
+    "bumpN_": 1,
+    "tangentWorld": 28
+   },
+   "msCompensatedLobes": 30,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 15,
+   "matChars": 25750,
+   "materialLets": 216,
+   "fieldLets": 22,
+   "customPasses": 0,
+   "matLines": 634,
+   "wgslLines": 2107,
+   "uniforms": 1,
+   "triangles": 12288,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "hdri",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": "1024x512",
+   "sceneDataBytes": 16876448,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1055744
+    },
+    "O": {
+     "lo": 2.7755575615628914e-17,
+     "hi": 6201
+    },
+    "LI": {
+     "lo": 0.014999999664723873,
+     "hi": 67772.1484375
+    },
+    "sunRadiance": 0,
+    "envType": "hdri",
+    "bvhNodes": 15
+   }
+  },
+  {
+   "id": "K-04",
+   "title": "Faces, parts and ids",
+   "group": "Machines",
+   "ok": true,
+   "buildMs": 164.7,
+   "objects": 6,
+   "shapes": {
+    "mesh": 5,
+    "plane": 1
+   },
+   "materials": 11,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "tangentWorld": 10
+   },
+   "msCompensatedLobes": 10,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 7879,
+   "materialLets": 89,
+   "fieldLets": 9,
+   "customPasses": 0,
+   "matLines": 206,
+   "wgslLines": 1647,
+   "uniforms": 0,
+   "triangles": 15708,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "hdri",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": "1024x512",
+   "sceneDataBytes": 18161776,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1135616
+    },
+    "O": {
+     "lo": 2.449293581093244e-18,
+     "hi": 86532
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "hdri",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "K-05",
+   "title": "Lit by an HDRI",
+   "group": "Machines",
+   "ok": true,
+   "buildMs": 118.5,
+   "objects": 4,
+   "shapes": {
+    "sphere": 2,
+    "mesh": 1,
+    "cylinder": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "tangentWorld": 2
+   },
+   "msCompensatedLobes": 3,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 3234,
+   "materialLets": 20,
+   "fieldLets": 2,
+   "customPasses": 0,
+   "matLines": 85,
+   "wgslLines": 1520,
+   "uniforms": 0,
+   "triangles": 6048,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "hdri",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": "1024x512",
+   "sceneDataBytes": 17581072,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1099776
+    },
+    "O": {
+     "lo": 0.009999999776482582,
+     "hi": 50238
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "hdri",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "K-06",
+   "title": "A tray of fasteners: instancing",
+   "group": "Machines",
+   "ok": true,
+   "buildMs": 98.5,
+   "objects": 242,
+   "shapes": {
+    "mesh": 241,
+    "plane": 1
+   },
+   "materials": 12,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "tangentWorld": 10
+   },
+   "msCompensatedLobes": 10,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 5,
+   "matChars": 9903,
+   "materialLets": 92,
+   "fieldLets": 10,
+   "customPasses": 0,
+   "matLines": 248,
+   "wgslLines": 1690,
+   "uniforms": 0,
+   "triangles": 62908,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "hdri",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": "1024x512",
+   "sceneDataBytes": 16919424,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1057792
+    },
+    "O": {
+     "lo": 2.710505431213761e-20,
+     "hi": 8468
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "hdri",
+    "bvhNodes": 227
+   }
+  },
+  {
+   "id": "K-07",
+   "title": "Output: stills, sequences, video, EXR passes",
+   "group": "Machines",
+   "ok": true,
+   "buildMs": 185,
+   "objects": 7,
+   "shapes": {
+    "mesh": 4,
+    "cylinder": 2,
+    "plane": 1
+   },
+   "materials": 12,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "tangentWorld": 12
+   },
+   "msCompensatedLobes": 12,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 6,
+   "matChars": 10274,
+   "materialLets": 88,
+   "fieldLets": 8,
+   "customPasses": 0,
+   "matLines": 252,
+   "wgslLines": 1694,
+   "uniforms": 0,
+   "triangles": 12756,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "hdri",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": true,
+   "behaviors": 0,
+   "hdri": "1024x512",
+   "sceneDataBytes": 18420688,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1152000
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 102715
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "hdri",
+    "bvhNodes": 5
+   }
+  },
+  {
+   "id": "K-08",
+   "title": "Poses from an animation engine",
+   "group": "Machines",
+   "ok": true,
+   "buildMs": 97.3,
+   "objects": 9,
+   "shapes": {
+    "mesh": 8,
+    "plane": 1
+   },
+   "materials": 8,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {
+    "tangentWorld": 8
+   },
+   "msCompensatedLobes": 8,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 9,
+   "matChars": 8583,
+   "materialLets": 52,
+   "fieldLets": 4,
+   "customPasses": 0,
+   "matLines": 198,
+   "wgslLines": 1636,
+   "uniforms": 0,
+   "triangles": 2084,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "hdri",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": true,
+   "animation": true,
+   "behaviors": 0,
+   "hdri": "1024x512",
+   "sceneDataBytes": 17048800,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1065984
+    },
+    "O": {
+     "lo": 4.5924256971943795e-18,
+     "hi": 16890
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "hdri",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "K-09",
+   "title": "Lockstitch head (jig CAD, kine rig)",
+   "group": "Machines",
+   "ok": true,
+   "buildMs": 667.3,
+   "objects": 36,
+   "shapes": {
+    "mesh": 34,
+    "box": 1,
+    "plane": 1
+   },
+   "materials": 30,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert",
+    "sheen"
+   ],
+   "fxCalls": {
+    "tangentWorld": 16
+   },
+   "msCompensatedLobes": 24,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 18,
+   "matChars": 24516,
+   "materialLets": 181,
+   "fieldLets": 19,
+   "customPasses": 0,
+   "matLines": 618,
+   "wgslLines": 2078,
+   "uniforms": 1,
+   "triangles": 23701,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "hdri",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": true,
+   "animation": true,
+   "behaviors": 0,
+   "hdri": "1024x512",
+   "sceneDataBytes": 19923280,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1246208
+    },
+    "O": {
+     "lo": 0.000750000006519258,
+     "hi": 196545
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "hdri",
+    "bvhNodes": 31
+   }
+  },
+  {
+   "id": "L-01",
+   "title": "Lumens, candela, nits",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 68.4,
+   "objects": 4,
+   "shapes": {
+    "plane": 1,
+    "rect": 2,
+    "sphere": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1766,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 50,
+   "wgslLines": 1484,
+   "uniforms": 2,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 1,
+    "light.spot": 1,
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 33333.55859375
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 3.0616171314629196e-17,
+     "hi": 5556.625
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "L-02",
+   "title": "Sunny 16",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 69.4,
+   "objects": 4,
+   "shapes": {
+    "box": 2,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2554,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 65,
+   "wgslLines": 1499,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02565000019967556,
+     "hi": 1678528128
+    },
+    "O": {
+     "lo": 0.01736481860280037,
+     "hi": 60
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1678528128,
+    "envType": "sky",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "L-03",
+   "title": "The sun and the sky",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 67,
+   "objects": 3,
+   "shapes": {
+    "box": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2193,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 54,
+   "wgslLines": 1487,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1376851712
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 4
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1376851712,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "L-04",
+   "title": "Golden hour",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 70.3,
+   "objects": 9,
+   "shapes": {
+    "cylinder": 6,
+    "box": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2222,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 54,
+   "wgslLines": 1487,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.00930000003427267,
+     "hi": 644456832
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 8
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 644456832,
+    "envType": "sky",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "L-05",
+   "title": "Colour temperature",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 67.5,
+   "objects": 24,
+   "shapes": {
+    "sphere": 14,
+    "box": 8,
+    "plane": 1,
+    "rect": 1
+   },
+   "materials": 8,
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 1870,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 67,
+   "wgslLines": 1505,
+   "uniforms": 7,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 7
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 25755.787109375
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.03999999910593033,
+     "hi": 73734.7109375
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 15
+   }
+  },
+  {
+   "id": "L-06",
+   "title": "Size makes softness",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 70.1,
+   "objects": 8,
+   "shapes": {
+    "rect": 4,
+    "cylinder": 3,
+    "plane": 1
+   },
+   "materials": 6,
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2648,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 75,
+   "wgslLines": 1511,
+   "uniforms": 3,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 3
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 27482.12109375
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 9.184851394388759e-18,
+     "hi": 27482.12109375
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "L-07",
+   "title": "Spotlights on a stage",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 72.3,
+   "objects": 4,
+   "shapes": {
+    "cylinder": 1,
+    "sphere": 1,
+    "plane": 1,
+    "rect": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 4,
+   "matChars": 2871,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 72,
+   "wgslLines": 1506,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.spot": 3
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 4
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0.211354598402977,
+     "hi": 73405.625
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "L-08",
+   "title": "The inverse-square law",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 67.2,
+   "objects": 7,
+   "shapes": {
+    "rect": 5,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1598,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 43,
+   "wgslLines": 1476,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 51051.6640625
+    },
+    "O": {
+     "lo": 0.029999999329447746,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0.029999999329447746,
+     "hi": 5000
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 5
+   }
+  },
+  {
+   "id": "L-09",
+   "title": "Three-point lighting",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 67.9,
+   "objects": 8,
+   "shapes": {
+    "sphere": 1,
+    "capsule": 1,
+    "cylinder": 1,
+    "rect": 4,
+    "plane": 1
+   },
+   "materials": 7,
+   "lobes": [
+    "sheen",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 7,
+   "matChars": 4379,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 114,
+   "wgslLines": 1551,
+   "uniforms": 3,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 3
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 2528.345458984375
+    },
+    "O": {
+     "lo": 3.469446951953614e-18,
+     "hi": 20
+    },
+    "LI": {
+     "lo": 0.02072875201702118,
+     "hi": 5600
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "L-10",
+   "title": "A product in the studio",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 68,
+   "objects": 4,
+   "shapes": {
+    "roundbox": 2,
+    "cylinder": 2
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 2,
+   "interiors": 1,
+   "stochasticBranches": 1,
+   "matChars": 1715,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 51,
+   "wgslLines": 1485,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 1,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.3490658402442932,
+     "hi": 1200
+    },
+    "O": {
+     "lo": 0.019999999552965164,
+     "hi": 8
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "L-11",
+   "title": "Night street",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 72.3,
+   "objects": 11,
+   "shapes": {
+    "cylinder": 4,
+    "sphere": 4,
+    "plane": 1,
+    "box": 2
+   },
+   "materials": 8,
+   "lobes": [
+    "conductor",
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 2,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 4,
+   "matChars": 3528,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 101,
+   "wgslLines": 1539,
+   "uniforms": 4,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": true,
+   "lights": {
+    "light.point": 4
+   },
+   "sun": false,
+   "sky": false,
+   "env": "night",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.008333333767950535,
+     "hi": 41009.94921875
+    },
+    "O": {
+     "lo": 0.05000000074505806,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.07999999821186066,
+     "hi": 35843.96875
+    },
+    "sunRadiance": 0,
+    "envType": "night",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "L-12",
+   "title": "Neon: emission and MIS",
+   "group": "Light",
+   "ok": true,
+   "buildMs": 69.9,
+   "objects": 7,
+   "shapes": {
+    "capsule": 2,
+    "torus": 1,
+    "rect": 2,
+    "plane": 1,
+    "sphere": 1
+   },
+   "materials": 7,
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 3297,
+   "materialLets": 6,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 97,
+   "wgslLines": 1534,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1291.9232177734375
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 20
+    },
+    "LI": {
+     "lo": 3.6739405577555036e-17,
+     "hi": 1291.9232177734375
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 5
+   }
+  },
+  {
+   "id": "M-01",
+   "title": "The material chart",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 74.9,
+   "objects": 14,
+   "shapes": {
+    "sphere": 12,
+    "plane": 1,
+    "rect": 1
+   },
+   "materials": 14,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 6,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 8,
+   "matChars": 8120,
+   "materialLets": 8,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 210,
+   "wgslLines": 1654,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 900
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 11
+   }
+  },
+  {
+   "id": "M-02",
+   "title": "Measured metals",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 79.4,
+   "objects": 11,
+   "shapes": {
+    "sphere": 10,
+    "plane": 1
+   },
+   "materials": 11,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 10,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 4484,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 128,
+   "wgslLines": 1569,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.2617993950843811,
+     "hi": 1000
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "M-03",
+   "title": "Fresnel at grazing angles",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 84.2,
+   "objects": 17,
+   "shapes": {
+    "cylinder": 16,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1304,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 36,
+   "wgslLines": 1468,
+   "uniforms": 2,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.019999999552965164,
+     "hi": 1308434560
+    },
+    "O": {
+     "lo": 0.06731167435646057,
+     "hi": 16
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1308434560,
+    "envType": "sky",
+    "bvhNodes": 15
+   }
+  },
+  {
+   "id": "M-04",
+   "title": "Glass, water, diamond",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 72.3,
+   "objects": 5,
+   "shapes": {
+    "sphere": 4,
+    "plane": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 4,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 2210,
+   "materialLets": 9,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 70,
+   "wgslLines": 1505,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 800
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 40
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "M-05",
+   "title": "Frosted glass",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 68.6,
+   "objects": 7,
+   "shapes": {
+    "roundbox": 4,
+    "rect": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "materials": 7,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 4,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 3622,
+   "materialLets": 8,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 103,
+   "wgslLines": 1540,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 900
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 5
+   }
+  },
+  {
+   "id": "M-06",
+   "title": "Coloured glass: Beer–Lambert",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 68.9,
+   "objects": 5,
+   "shapes": {
+    "box": 4,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 1,
+   "interiors": 1,
+   "stochasticBranches": 1,
+   "matChars": 1028,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 29,
+   "wgslLines": 1461,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 1,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1360877184
+    },
+    "O": {
+     "lo": 0.004999999888241291,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1360877184,
+    "envType": "sky",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "M-07",
+   "title": "Car paint",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 67.7,
+   "objects": 12,
+   "shapes": {
+    "roundbox": 3,
+    "cylinder": 8,
+    "plane": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 2,
+   "refracting": 1,
+   "interiors": 1,
+   "stochasticBranches": 4,
+   "matChars": 3023,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 83,
+   "wgslLines": 1518,
+   "uniforms": 3,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 1,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.006995410192757845,
+     "hi": 1100
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 11
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "M-08",
+   "title": "Velvet and sheen",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 69.9,
+   "objects": 5,
+   "shapes": {
+    "roundbox": 2,
+    "sphere": 2,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "sheen",
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1550,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 47,
+   "wgslLines": 1480,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.3420201539993286,
+     "hi": 365025728
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 365025728,
+    "envType": "studio",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "M-09",
+   "title": "Brushed metal: anisotropy",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 70.4,
+   "objects": 5,
+   "shapes": {
+    "cylinder": 2,
+    "disk": 1,
+    "plane": 1,
+    "sphere": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 2,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 1666,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 47,
+   "wgslLines": 1481,
+   "uniforms": 3,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "gradient",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.014443843625485897,
+     "hi": 181826.625
+    },
+    "O": {
+     "lo": 0.0020000000949949026,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.03999999910593033,
+     "hi": 2700
+    },
+    "sunRadiance": 0,
+    "envType": "gradient",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "M-10",
+   "title": "Thin-film interference",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 68.9,
+   "objects": 9,
+   "shapes": {
+    "sphere": 8,
+    "plane": 1
+   },
+   "materials": 9,
+   "lobes": [
+    "conductor",
+    "thin",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 7,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 4248,
+   "materialLets": 8,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 106,
+   "wgslLines": 1545,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1000
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "M-11",
+   "title": "Wax, jade, skin",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 67.6,
+   "objects": 6,
+   "shapes": {
+    "cylinder": 1,
+    "torus": 1,
+    "sphere": 1,
+    "roundbox": 1,
+    "plane": 1,
+    "rect": 1
+   },
+   "materials": 6,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 4,
+   "interiors": 4,
+   "stochasticBranches": 1,
+   "matChars": 2123,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 69,
+   "wgslLines": 1505,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 4,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 2097.74853515625
+    },
+    "O": {
+     "lo": 0.029999999329447746,
+     "hi": 20
+    },
+    "LI": {
+     "lo": 0.19276750087738037,
+     "hi": 4000
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "M-12",
+   "title": "The white furnace",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 685.5,
+   "objects": 8,
+   "shapes": {
+    "sphere": 8
+   },
+   "materials": 8,
+   "lobes": [
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 4,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 0,
+   "matChars": 2699,
+   "materialLets": 0,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 88,
+   "wgslLines": 1526,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": false,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 100
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 7
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "M-13",
+   "title": "Infinity mirror",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 69.3,
+   "objects": 6,
+   "shapes": {
+    "rect": 3,
+    "sphere": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 2345,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 66,
+   "wgslLines": 1501,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "gradient",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 24,
+   "engine": "offline",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.005181516520678997,
+     "hi": 1647.7733154296875
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 20
+    },
+    "LI": {
+     "lo": 3.6739405577555036e-17,
+     "hi": 3500
+    },
+    "sunRadiance": 0,
+    "envType": "gradient",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "M-14",
+   "title": "Clear coat",
+   "group": "Materials",
+   "ok": true,
+   "buildMs": 68.7,
+   "objects": 5,
+   "shapes": {
+    "roundbox": 4,
+    "plane": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 4
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 8,
+   "matChars": 7090,
+   "materialLets": 53,
+   "fieldLets": 4,
+   "customPasses": 0,
+   "matLines": 162,
+   "wgslLines": 1597,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 900
+    },
+    "O": {
+     "lo": 0.07999999821186066,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "R-01",
+   "title": "The Cornell box",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 67.5,
+   "objects": 8,
+   "shapes": {
+    "rect": 6,
+    "box": 2
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2321,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 61,
+   "wgslLines": 1495,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 15165.9951171875
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 7
+    },
+    "LI": {
+     "lo": 2.4492935397342132e-17,
+     "hi": 15165.9951171875
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "R-02",
+   "title": "Product shot: mug and spoon",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 68.3,
+   "objects": 10,
+   "shapes": {
+    "cylinder": 4,
+    "torus": 1,
+    "capsule": 1,
+    "plane": 1,
+    "rect": 3
+   },
+   "materials": 7,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 7,
+   "matChars": 5059,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 121,
+   "wgslLines": 1558,
+   "uniforms": 2,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "emit": 2
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 5405.01611328125
+    },
+    "O": {
+     "lo": 7.470345866943973e-18,
+     "hi": 10
+    },
+    "LI": {
+     "lo": 0.037481702864170074,
+     "hi": 6000
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "R-03",
+   "title": "Still life by a window",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 68.6,
+   "objects": 11,
+   "shapes": {
+    "box": 1,
+    "roundbox": 1,
+    "sphere": 3,
+    "cylinder": 3,
+    "rect": 2,
+    "plane": 1
+   },
+   "materials": 9,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "sheen"
+   ],
+   "fxCalls": {
+    "fbm3": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 4,
+   "interiors": 3,
+   "stochasticBranches": 5,
+   "matChars": 5001,
+   "materialLets": 11,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 139,
+   "wgslLines": 1578,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 3,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 4280.2666015625
+    },
+    "O": {
+     "lo": 1.3877787807814457e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.05096001923084259,
+     "hi": 5600
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "R-04",
+   "title": "Dunes at golden hour",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 69,
+   "objects": 2,
+   "shapes": {
+    "heightfield": 1,
+    "plane": 1
+   },
+   "materials": 1,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "noise3": 1,
+    "bumpN_": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 1048,
+   "materialLets": 10,
+   "fieldLets": 3,
+   "customPasses": 0,
+   "matLines": 27,
+   "wgslLines": 1493,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.00930000003427267,
+     "hi": 757146432
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 56.70978927612305
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 757146432,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "R-05",
+   "title": "Jewellery on velvet",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 71.3,
+   "objects": 24,
+   "shapes": {
+    "torus": 19,
+    "sdf": 1,
+    "sphere": 3,
+    "plane": 1
+   },
+   "materials": 7,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert",
+    "sheen"
+   ],
+   "fxCalls": {
+    "sellmeier": 1
+   },
+   "msCompensatedLobes": 2,
+   "refracting": 1,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 3269,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 91,
+   "wgslLines": 1543,
+   "uniforms": 2,
+   "triangles": 0,
+   "sdfs": 1,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 2
+   },
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": true,
+   "integrator": "path",
+   "maxDepth": 12,
+   "engine": "offline",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 429172.125
+    },
+    "O": {
+     "lo": 1.787262936963477e-34,
+     "hi": 23
+    },
+    "LI": {
+     "lo": 0.009999999776482582,
+     "hi": 5600
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 15
+   }
+  },
+  {
+   "id": "R-06",
+   "title": "Billiards",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 70.2,
+   "objects": 13,
+   "shapes": {
+    "box": 3,
+    "sphere": 9,
+    "plane": 1
+   },
+   "materials": 12,
+   "lobes": [
+    "sheen",
+    "lambert",
+    "dielectric"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 22,
+   "matChars": 13308,
+   "materialLets": 11,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 296,
+   "wgslLines": 1738,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.spot": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 13
+    },
+    "O": {
+     "lo": 0.004000000189989805,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.7071067690849304,
+     "hi": 4525.8408203125
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 9
+   }
+  },
+  {
+   "id": "R-07",
+   "title": "A colour chart in daylight",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 75.2,
+   "objects": 26,
+   "shapes": {
+    "box": 25,
+    "plane": 1
+   },
+   "materials": 26,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 26,
+   "matChars": 19287,
+   "materialLets": 26,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 468,
+   "wgslLines": 1924,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02565000019967556,
+     "hi": 1401754752
+    },
+    "O": {
+     "lo": 0.0020000000949949026,
+     "hi": 25
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1401754752,
+    "envType": "sky",
+    "bvhNodes": 17
+   }
+  },
+  {
+   "id": "R-08",
+   "title": "Zen garden",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 67.6,
+   "objects": 4,
+   "shapes": {
+    "heightfield": 1,
+    "sdf": 3
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1813,
+   "materialLets": 10,
+   "fieldLets": 2,
+   "customPasses": 0,
+   "matLines": 44,
+   "wgslLines": 1536,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 3,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1200434432
+    },
+    "O": {
+     "lo": 0.014999999664723873,
+     "hi": 12
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1200434432,
+    "envType": "sky",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "R-09",
+   "title": "Marble in a museum",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 69.2,
+   "objects": 7,
+   "shapes": {
+    "box": 1,
+    "sphere": 1,
+    "capsule": 1,
+    "cylinder": 1,
+    "roundbox": 1,
+    "rect": 1,
+    "plane": 1
+   },
+   "materials": 4,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 1,
+   "interiors": 1,
+   "stochasticBranches": 3,
+   "matChars": 2538,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 65,
+   "wgslLines": 1499,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 1,
+   "fog": false,
+   "lights": {
+    "light.spot": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 7
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.26286476850509644,
+     "hi": 7451.3818359375
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 5
+   }
+  },
+  {
+   "id": "R-10",
+   "title": "Candlelight",
+   "group": "Scenes",
+   "ok": true,
+   "buildMs": 68.3,
+   "objects": 13,
+   "shapes": {
+    "cylinder": 7,
+    "capsule": 3,
+    "box": 1,
+    "rect": 1,
+    "plane": 1
+   },
+   "materials": 7,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 2,
+   "interiors": 1,
+   "stochasticBranches": 5,
+   "matChars": 4375,
+   "materialLets": 5,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 114,
+   "wgslLines": 1551,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 1,
+   "fog": false,
+   "lights": {
+    "light.point": 3
+   },
+   "sun": false,
+   "sky": false,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 13
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.019999999552965164,
+     "hi": 50926.94140625
+    },
+    "sunRadiance": 0,
+    "envType": "none",
+    "bvhNodes": 9
+   }
+  },
+  {
+   "id": "S-01",
+   "title": "Dispersion: hero wavelengths",
+   "group": "Spectral",
+   "ok": true,
+   "buildMs": 175.1,
+   "objects": 4,
+   "shapes": {
+    "sphere": 1,
+    "prism": 1,
+    "rect": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "sellmeier": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 1,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 1613,
+   "materialLets": 7,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 46,
+   "wgslLines": 1479,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": true,
+   "integrator": "path",
+   "maxDepth": 12,
+   "engine": "offline",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 40
+    },
+    "O": {
+     "lo": 3.0814879110195774e-33,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "S-02",
+   "title": "Diamond fire",
+   "group": "Spectral",
+   "ok": true,
+   "buildMs": 172,
+   "objects": 5,
+   "shapes": {
+    "sdf": 1,
+    "cylinder": 1,
+    "plane": 1,
+    "sphere": 2
+   },
+   "materials": 5,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "sellmeier": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 1,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 2182,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 61,
+   "wgslLines": 1511,
+   "uniforms": 2,
+   "triangles": 0,
+   "sdfs": 1,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 2
+   },
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": true,
+   "integrator": "path",
+   "maxDepth": 12,
+   "engine": "offline",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 286114.75
+    },
+    "O": {
+     "lo": 0.019999999552965164,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.029999999329447746,
+     "hi": 5600
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "S-03",
+   "title": "Soap bubbles",
+   "group": "Spectral",
+   "ok": true,
+   "buildMs": 42.5,
+   "objects": 8,
+   "shapes": {
+    "sphere": 6,
+    "plane": 1,
+    "rect": 1
+   },
+   "materials": 7,
+   "lobes": [
+    "thin",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 1,
+   "matChars": 2596,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 84,
+   "wgslLines": 1521,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": true,
+   "integrator": "path",
+   "maxDepth": 12,
+   "engine": "offline",
+   "post": [
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1100
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "S-04",
+   "title": "Incandescence",
+   "group": "Spectral",
+   "ok": true,
+   "buildMs": 42.8,
+   "objects": 8,
+   "shapes": {
+    "cylinder": 1,
+    "sphere": 6,
+    "plane": 1
+   },
+   "materials": 8,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 5497,
+   "materialLets": 71,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 172,
+   "wgslLines": 1610,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 1900
+    },
+    "O": {
+     "lo": 0.02500000037252903,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "V-01",
+   "title": "Fog and god rays",
+   "group": "Media",
+   "ok": true,
+   "buildMs": 42.6,
+   "objects": 12,
+   "shapes": {
+    "box": 10,
+    "plane": 1,
+    "sphere": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2220,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 54,
+   "wgslLines": 1487,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": true,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1051841216
+    },
+    "O": {
+     "lo": 0.10000000149011612,
+     "hi": 11
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1051841216,
+    "envType": "sky",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "V-02",
+   "title": "Phase functions",
+   "group": "Media",
+   "ok": true,
+   "buildMs": 45.3,
+   "objects": 5,
+   "shapes": {
+    "rect": 1,
+    "plane": 1,
+    "box": 3
+   },
+   "materials": 5,
+   "lobes": [
+    "lambert",
+    "dielectric",
+    "passthrough"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 3,
+   "stochasticBranches": 1,
+   "matChars": 1264,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 43,
+   "wgslLines": 1494,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 3,
+   "fog": false,
+   "lights": {
+    "emit": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 3027.66357421875
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.1538461595773697,
+     "hi": 5500
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "V-03",
+   "title": "Smoke: a heterogeneous volume",
+   "group": "Media",
+   "ok": true,
+   "buildMs": 43.5,
+   "objects": 2,
+   "shapes": {
+    "plane": 1,
+    "box": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "passthrough"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 1,
+   "stochasticBranches": 1,
+   "matChars": 842,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 24,
+   "wgslLines": 1480,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 1,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": false,
+   "env": "gradient",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.023153366521000862,
+     "hi": 515417536
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 515417536,
+    "envType": "gradient",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "V-04",
+   "title": "A cloud",
+   "group": "Media",
+   "ok": true,
+   "buildMs": 45.3,
+   "objects": 2,
+   "shapes": {
+    "plane": 1,
+    "box": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "passthrough"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 1,
+   "stochasticBranches": 1,
+   "matChars": 869,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 24,
+   "wgslLines": 1489,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 1,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.028920000419020653,
+     "hi": 1261037056
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 4
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1261037056,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "V-05",
+   "title": "Water, wine and milk",
+   "group": "Media",
+   "ok": true,
+   "buildMs": 43.5,
+   "objects": 8,
+   "shapes": {
+    "cylinder": 6,
+    "plane": 1,
+    "rect": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 4,
+   "interiors": 3,
+   "stochasticBranches": 1,
+   "matChars": 1958,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 62,
+   "wgslLines": 1497,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 3,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 900
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 7
+   }
+  },
+  {
+   "id": "W-01",
+   "title": "Behaviours",
+   "group": "Live",
+   "ok": true,
+   "buildMs": 43.4,
+   "objects": 5,
+   "shapes": {
+    "sphere": 2,
+    "cone": 1,
+    "cylinder": 1,
+    "plane": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 2,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2951,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 76,
+   "wgslLines": 1511,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 3,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1401754752
+    },
+    "O": {
+     "lo": 2.4492935397342132e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1401754752,
+    "envType": "sky",
+    "bvhNodes": 3
+   }
+  },
+  {
+   "id": "W-02",
+   "title": "Talk to the world",
+   "group": "Live",
+   "ok": true,
+   "buildMs": 46.5,
+   "objects": 15,
+   "shapes": {
+    "box": 1,
+    "cylinder": 7,
+    "sphere": 5,
+    "rect": 1,
+    "plane": 1
+   },
+   "materials": 9,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {
+    "fbm3": 1
+   },
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 18,
+   "matChars": 10519,
+   "materialLets": 15,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 234,
+   "wgslLines": 1673,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {
+    "light.point": 1
+   },
+   "sun": false,
+   "sky": false,
+   "env": "uniform",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 16000.1083984375
+    },
+    "O": {
+     "lo": 6.123234262925839e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0.05000000074505806,
+     "hi": 3000
+    },
+    "sunRadiance": 0,
+    "envType": "uniform",
+    "bvhNodes": 13
+   }
+  },
+  {
+   "id": "W-03",
+   "title": "What does a change cost?",
+   "group": "Live",
+   "ok": true,
+   "buildMs": 42.5,
+   "objects": 7,
+   "shapes": {
+    "sphere": 5,
+    "torus": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1845,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 47,
+   "wgslLines": 1480,
+   "uniforms": 1,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.30000001192092896,
+     "hi": 900
+    },
+    "O": {
+     "lo": 0.05999999865889549,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 5
+   }
+  },
+  {
+   "id": "W-04",
+   "title": "Kinetic sculpture",
+   "group": "Live",
+   "ok": true,
+   "buildMs": 42.2,
+   "objects": 7,
+   "shapes": {
+    "torus": 3,
+    "sphere": 1,
+    "cylinder": 2,
+    "plane": 1
+   },
+   "materials": 5,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 2,
+   "refracting": 1,
+   "interiors": 1,
+   "stochasticBranches": 2,
+   "matChars": 2498,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 69,
+   "wgslLines": 1504,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 1,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.3490658402442932,
+     "hi": 900
+    },
+    "O": {
+     "lo": 2.7755575615628914e-17,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 5
+   }
+  },
+  {
+   "id": "X-01",
+   "title": "One kernel, two backends",
+   "group": "GPU",
+   "ok": true,
+   "buildMs": 41.7,
+   "objects": 3,
+   "shapes": {
+    "sphere": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 1,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1840,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 47,
+   "wgslLines": 1480,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1346264448
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1346264448,
+    "envType": "sky",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "X-02",
+   "title": "Ten thousand spheres",
+   "group": "GPU",
+   "ok": true,
+   "buildMs": 88.5,
+   "objects": 10001,
+   "shapes": {
+    "sphere": 10000,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1997,
+   "materialLets": 14,
+   "fieldLets": 3,
+   "customPasses": 0,
+   "matLines": 48,
+   "wgslLines": 1480,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": true,
+   "env": null,
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02019999921321869,
+     "hi": 1308434560
+    },
+    "O": {
+     "lo": 0.000074999057687819,
+     "hi": 10000
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1308434560,
+    "envType": "sky",
+    "bvhNodes": 8191
+   }
+  },
+  {
+   "id": "X-03",
+   "title": "A procedural planet",
+   "group": "GPU",
+   "ok": true,
+   "buildMs": 45.5,
+   "objects": 3,
+   "shapes": {
+    "sdf": 1,
+    "sphere": 1,
+    "box": 1
+   },
+   "materials": 3,
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "passthrough"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 1,
+   "stochasticBranches": 2,
+   "matChars": 2257,
+   "materialLets": 18,
+   "fieldLets": 1,
+   "customPasses": 0,
+   "matLines": 58,
+   "wgslLines": 1513,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 1,
+   "media": 1,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": false,
+   "env": "night",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.05000000074505806,
+     "hi": 1825128576
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 11
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1825128576,
+    "envType": "night",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "X-04",
+   "title": "Menger sponge",
+   "group": "GPU",
+   "ok": true,
+   "buildMs": 41.6,
+   "objects": 2,
+   "shapes": {
+    "sdf": 1,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {},
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 2,
+   "matChars": 1454,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "customPasses": 0,
+   "matLines": 36,
+   "wgslLines": 1538,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 1,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": true,
+   "sky": false,
+   "env": "gradient",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.02955683507025242,
+     "hi": 1020657920
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 1020657920,
+    "envType": "gradient",
+    "bvhNodes": 1
+   }
+  },
+  {
+   "id": "X-05",
+   "title": "Kernels are cached",
+   "group": "GPU",
+   "ok": true,
+   "buildMs": 42.5,
+   "objects": 2,
+   "shapes": {
+    "torus": 1,
+    "plane": 1
+   },
+   "materials": 2,
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "fxCalls": {
+    "fbm3": 1
+   },
+   "msCompensatedLobes": 0,
+   "refracting": 0,
+   "interiors": 0,
+   "stochasticBranches": 3,
+   "matChars": 2279,
+   "materialLets": 12,
+   "fieldLets": 2,
+   "customPasses": 0,
+   "matLines": 54,
+   "wgslLines": 1486,
+   "uniforms": 0,
+   "triangles": 0,
+   "sdfs": 0,
+   "media": 0,
+   "fog": false,
+   "lights": {},
+   "sun": false,
+   "sky": false,
+   "env": "studio",
+   "spectral": false,
+   "integrator": "path",
+   "maxDepth": 5,
+   "engine": "realtime",
+   "post": [
+    "denoise",
+    "tonemap:agx"
+   ],
+   "motionBlur": false,
+   "animation": false,
+   "behaviors": 0,
+   "hdri": null,
+   "sceneDataBytes": 0,
+   "thinLens": true,
+   "packed": {
+    "U": {
+     "lo": 0.5,
+     "hi": 900
+    },
+    "O": {
+     "lo": 0.10468242317438126,
+     "hi": 30
+    },
+    "LI": {
+     "lo": 0,
+     "hi": 0
+    },
+    "sunRadiance": 0,
+    "envType": "studio",
+    "bvhNodes": 1
+   }
+  }
+ ]
+}

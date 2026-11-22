@@ -1,0 +1,4320 @@
+{
+ "presets": 105,
+ "byTier": [
+  [
+   "A-03",
+   "B-01",
+   "B-03",
+   "B-04",
+   "B-05",
+   "C-02",
+   "C-03",
+   "C-04",
+   "D-01",
+   "D-02",
+   "E-03",
+   "E-04",
+   "G-06",
+   "L-01",
+   "L-02",
+   "L-03",
+   "L-04",
+   "L-05",
+   "L-06",
+   "L-07",
+   "L-08",
+   "M-01",
+   "M-02",
+   "M-03",
+   "M-09",
+   "M-12",
+   "R-01",
+   "R-07"
+  ],
+  [
+   "B-02",
+   "C-01",
+   "C-05",
+   "C-06",
+   "D-04",
+   "E-05",
+   "E-07",
+   "G-01",
+   "L-09",
+   "L-10",
+   "L-11",
+   "L-12",
+   "M-06",
+   "M-07",
+   "M-08",
+   "M-10",
+   "M-11",
+   "M-13",
+   "R-02",
+   "R-06",
+   "R-09",
+   "R-10",
+   "S-03",
+   "V-01",
+   "V-05",
+   "W-01",
+   "W-03",
+   "W-04",
+   "X-01"
+  ],
+  [
+   "A-01",
+   "A-02",
+   "A-04",
+   "A-05",
+   "A-06",
+   "D-03",
+   "E-01",
+   "E-02",
+   "E-06",
+   "F-01",
+   "F-02",
+   "F-03",
+   "F-04",
+   "F-05",
+   "F-06",
+   "F-07",
+   "F-08",
+   "G-02",
+   "G-03",
+   "G-04",
+   "G-05",
+   "M-04",
+   "M-05",
+   "M-14",
+   "R-03",
+   "R-04",
+   "R-05",
+   "R-08",
+   "S-01",
+   "S-02",
+   "S-04",
+   "V-02",
+   "V-03",
+   "V-04",
+   "W-02",
+   "X-03",
+   "X-04",
+   "X-05"
+  ],
+  [
+   "K-01",
+   "K-02",
+   "K-03",
+   "K-04",
+   "K-05",
+   "K-06",
+   "K-07",
+   "K-08",
+   "K-09",
+   "X-02"
+  ]
+ ],
+ "cumulative": [
+  28,
+  57,
+  95,
+  105
+ ],
+ "reasonsAtTier": {
+  "surface field": 29,
+  "roundbox": 9,
+  "cone": 3,
+  "capsule": 7,
+  "torus": 9,
+  "custom integrator": 1,
+  "refraction": 10,
+  "custom pass": 1,
+  "prism": 1,
+  "sdf": 6,
+  "heightfield": 3,
+  "mesh": 9,
+  "hdri": 9,
+  "sheen": 3,
+  "medium": 8,
+  "fog": 2,
+  "thin sheet": 2,
+  "spectral": 1,
+  "density field": 4,
+  "10001 objects": 1
+ },
+ "presetsNeedingFeature": {
+  "T2:surface field": 39,
+  "T1:roundbox": 16,
+  "T1:cone": 5,
+  "T1:capsule": 7,
+  "T1:torus": 16,
+  "T1:refraction": 18,
+  "T2:custom integrator": 1,
+  "T2:custom pass": 1,
+  "T1:prism": 2,
+  "T2:sdf": 6,
+  "T2:heightfield": 3,
+  "T3:mesh": 9,
+  "T3:hdri": 9,
+  "T1:motion blur": 4,
+  "T1:anisotropy": 9,
+  "T1:sheen": 6,
+  "T1:medium": 13,
+  "T1:fog": 2,
+  "T1:thin sheet": 2,
+  "T1:spectral": 4,
+  "T2:density field": 4,
+  "T3:10001 objects": 1
+ },
+ "magnitude": {
+  "maxLight": 73734.7109375,
+  "maxSun": 1825128576,
+  "maxUniform": 1825128576
+ },
+ "rows": [
+  {
+   "id": "A-01",
+   "title": "mix: blending two BSDFs",
+   "objects": 3,
+   "materials": 3,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "sphere": 2,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 5,
+   "fieldLets": 1,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.5,
+   "buildMs": 99.8
+  },
+  {
+   "id": "A-02",
+   "title": "layer: varnish over wood",
+   "objects": 4,
+   "materials": 4,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "box": 2,
+    "plane": 1,
+    "sphere": 1
+   },
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 25,
+   "fieldLets": 2,
+   "sunRadiance": 0,
+   "LIhi": 2700,
+   "Uhi": 67343.1953125,
+   "Ulo": 0.5,
+   "buildMs": 84
+  },
+  {
+   "id": "A-03",
+   "title": "add: checked sums",
+   "objects": 4,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 3,
+    "plane": 1
+   },
+   "lobes": [
+    "lambert",
+    "conductor",
+    "dielectric"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 100,
+   "Ulo": 0.5,
+   "buildMs": 76.1
+  },
+  {
+   "id": "A-04",
+   "title": "material.define: a tile material",
+   "objects": 2,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "plane": 1,
+    "sphere": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 2,
+   "materialLets": 13,
+   "fieldLets": 1,
+   "sunRadiance": 1308434560,
+   "LIhi": 0,
+   "Uhi": 1308434560,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 70.4
+  },
+  {
+   "id": "A-05",
+   "title": "Fragments: rust and wear",
+   "objects": 3,
+   "materials": 3,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:roundbox"
+   ],
+   "shapes": {
+    "cylinder": 1,
+    "roundbox": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 3,
+   "materialLets": 37,
+   "fieldLets": 4,
+   "sunRadiance": 1346264448,
+   "LIhi": 0,
+   "Uhi": 1346264448,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 74.9
+  },
+  {
+   "id": "A-06",
+   "title": "Writing a fragment",
+   "objects": 4,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:roundbox"
+   ],
+   "shapes": {
+    "roundbox": 2,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 13,
+   "fieldLets": 2,
+   "sunRadiance": 1422056320,
+   "LIhi": 0,
+   "Uhi": 1422056320,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 70.6
+  },
+  {
+   "id": "B-01",
+   "title": "Hello, sphere",
+   "objects": 2,
+   "materials": 2,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 1346264448,
+   "LIhi": 0,
+   "Uhi": 1346264448,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 68.1
+  },
+  {
+   "id": "B-02",
+   "title": "Params are sliders",
+   "objects": 3,
+   "materials": 3,
+   "tier": 1,
+   "reasons": [
+    "roundbox"
+   ],
+   "allReasons": [
+    "T1:roundbox"
+   ],
+   "shapes": {
+    "sphere": 1,
+    "roundbox": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 4,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 1308434560,
+   "LIhi": 0,
+   "Uhi": 1308434560,
+   "Ulo": 0.009134058840572834,
+   "buildMs": 70.6
+  },
+  {
+   "id": "B-03",
+   "title": "Builders are values",
+   "objects": 26,
+   "materials": 3,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 25,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 1422056320,
+   "LIhi": 0,
+   "Uhi": 1422056320,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 81.5
+  },
+  {
+   "id": "B-04",
+   "title": "Diagnostics, as you type",
+   "objects": 4,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 3,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 600,
+   "Ulo": 0.5,
+   "buildMs": 68.9
+  },
+  {
+   "id": "B-05",
+   "title": "Defaults are announced",
+   "objects": 5,
+   "materials": 5,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "box": 1,
+    "sphere": 1,
+    "rect": 2,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 5,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 5,
+   "Ulo": 0.5,
+   "buildMs": 72.4
+  },
+  {
+   "id": "C-01",
+   "title": "Depth of field",
+   "objects": 16,
+   "materials": 3,
+   "tier": 1,
+   "reasons": [
+    "cone"
+   ],
+   "allReasons": [
+    "T1:cone"
+   ],
+   "shapes": {
+    "cylinder": 5,
+    "cone": 5,
+    "sphere": 5,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 800,
+   "Ulo": 0.5,
+   "buildMs": 77
+  },
+  {
+   "id": "C-02",
+   "title": "Bokeh and blades",
+   "objects": 43,
+   "materials": 6,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 41,
+    "cylinder": 1,
+    "rect": 1
+   },
+   "lobes": [
+    "lambert",
+    "conductor",
+    "dielectric"
+   ],
+   "env": "gradient",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 3400,
+   "Uhi": 1819.91943359375,
+   "Ulo": 0.0015176349552348256,
+   "buildMs": 70.9
+  },
+  {
+   "id": "C-03",
+   "title": "Focal length and perspective",
+   "objects": 27,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "box": 24,
+    "rect": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "sunRadiance": 1438527616,
+   "LIhi": 0,
+   "Uhi": 1438527616,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 69.9
+  },
+  {
+   "id": "C-04",
+   "title": "The exposure triangle",
+   "objects": 5,
+   "materials": 5,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "box": 3,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 5,
+   "fieldLets": 0,
+   "sunRadiance": 1376851712,
+   "LIhi": 0,
+   "Uhi": 1376851712,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 68.5
+  },
+  {
+   "id": "C-05",
+   "title": "Tone mapping",
+   "objects": 6,
+   "materials": 6,
+   "tier": 1,
+   "reasons": [
+    "capsule"
+   ],
+   "allReasons": [
+    "T1:capsule"
+   ],
+   "shapes": {
+    "capsule": 3,
+    "sphere": 1,
+    "rect": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 6,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 6,
+   "Ulo": 0.5,
+   "buildMs": 67.7
+  },
+  {
+   "id": "C-06",
+   "title": "Bloom, vignette, grain",
+   "objects": 9,
+   "materials": 3,
+   "tier": 1,
+   "reasons": [
+    "roundbox"
+   ],
+   "allReasons": [
+    "T1:roundbox"
+   ],
+   "shapes": {
+    "sphere": 7,
+    "roundbox": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "lambert",
+    "dielectric",
+    "conductor"
+   ],
+   "env": "gradient",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 40,
+   "Ulo": 0.0030352699104696512,
+   "buildMs": 68.8
+  },
+  {
+   "id": "D-01",
+   "title": "Units in practice",
+   "objects": 4,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 2,
+    "box": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 1,
+    "light.spot": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 5600,
+   "Uhi": 126584.34375,
+   "Ulo": 0.5,
+   "buildMs": 70.2
+  },
+  {
+   "id": "D-02",
+   "title": "Build time, run time: the errors",
+   "objects": 6,
+   "materials": 2,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 5,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 1346264448,
+   "LIhi": 0,
+   "Uhi": 1346264448,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 74.6
+  },
+  {
+   "id": "D-03",
+   "title": "Fragment contracts",
+   "objects": 2,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "cylinder": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 13,
+   "fieldLets": 1,
+   "sunRadiance": 1346264448,
+   "LIhi": 0,
+   "Uhi": 1346264448,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 69.8
+  },
+  {
+   "id": "D-04",
+   "title": "Explain and the IR",
+   "objects": 7,
+   "materials": 4,
+   "tier": 1,
+   "reasons": [
+    "torus"
+   ],
+   "allReasons": [
+    "T1:torus"
+   ],
+   "shapes": {
+    "cylinder": 4,
+    "torus": 2,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 1376851712,
+   "LIhi": 0,
+   "Uhi": 1376851712,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 81.7
+  },
+  {
+   "id": "E-01",
+   "title": "Integrators: what the denoiser sees",
+   "objects": 4,
+   "materials": 4,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:torus",
+    "T1:roundbox",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "torus": 1,
+    "roundbox": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 8,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 7,
+   "fieldLets": 1,
+   "sunRadiance": 1346264448,
+   "LIhi": 0,
+   "Uhi": 1346264448,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 69.2
+  },
+  {
+   "id": "E-02",
+   "title": "A custom integrator: toon shading",
+   "objects": 4,
+   "materials": 4,
+   "tier": 2,
+   "reasons": [
+    "custom integrator"
+   ],
+   "allReasons": [
+    "T2:custom integrator",
+    "T1:torus",
+    "T1:cone"
+   ],
+   "shapes": {
+    "sphere": 1,
+    "torus": 1,
+    "cone": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": false,
+   "lights": {},
+   "integrator": "custom:toon",
+   "maxDepth": null,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "sunRadiance": 1376851712,
+   "LIhi": 0,
+   "Uhi": 1376851712,
+   "Ulo": 0.3535533845424652,
+   "buildMs": 76.7
+  },
+  {
+   "id": "E-03",
+   "title": "How many bounces?",
+   "objects": 8,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "rect": 6,
+    "box": 2
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 4,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 4500,
+   "Uhi": 2576.44873046875,
+   "Ulo": 0.5,
+   "buildMs": 72.5
+  },
+  {
+   "id": "E-04",
+   "title": "NEE, BSDF sampling, MIS",
+   "objects": 9,
+   "materials": 9,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "box": 4,
+    "sphere": 4,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "lambert",
+    "dielectric"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 4
+   },
+   "integrator": "path",
+   "maxDepth": 8,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 4,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 844.8759155273438,
+   "Uhi": 571901.75,
+   "Ulo": 0.5,
+   "buildMs": 69.7
+  },
+  {
+   "id": "E-05",
+   "title": "Fireflies and the clamp",
+   "objects": 4,
+   "materials": 4,
+   "tier": 1,
+   "reasons": [
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:refraction"
+   ],
+   "shapes": {
+    "sphere": 2,
+    "box": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 8,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 4000,
+   "Uhi": 56979.97265625,
+   "Ulo": 0.5,
+   "buildMs": 68.7
+  },
+  {
+   "id": "E-06",
+   "title": "A custom pass",
+   "objects": 3,
+   "materials": 3,
+   "tier": 2,
+   "reasons": [
+    "custom pass"
+   ],
+   "allReasons": [
+    "T2:custom pass",
+    "T1:torus"
+   ],
+   "shapes": {
+    "sphere": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 1308434560,
+   "LIhi": 0,
+   "Uhi": 1308434560,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 69.3
+  },
+  {
+   "id": "E-07",
+   "title": "Realtime, preview, offline",
+   "objects": 4,
+   "materials": 4,
+   "tier": 1,
+   "reasons": [
+    "roundbox",
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:roundbox",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "sphere": 1,
+    "roundbox": 1,
+    "plane": 1,
+    "rect": 1
+   },
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 4000,
+   "Uhi": 3729.33056640625,
+   "Ulo": 0.5,
+   "buildMs": 69.9
+  },
+  {
+   "id": "F-01",
+   "title": "Checker, stripes, ramps",
+   "objects": 3,
+   "materials": 3,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "sphere": 2,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 27,
+   "fieldLets": 3,
+   "sunRadiance": 1346264448,
+   "LIhi": 0,
+   "Uhi": 1346264448,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 67.8
+  },
+  {
+   "id": "F-02",
+   "title": "Marble from noise",
+   "objects": 3,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:roundbox"
+   ],
+   "shapes": {
+    "roundbox": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 2,
+   "materialLets": 13,
+   "fieldLets": 1,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.5,
+   "buildMs": 66.9
+  },
+  {
+   "id": "F-03",
+   "title": "Voronoi: cobbles and cells",
+   "objects": 2,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "plane": 1,
+    "sphere": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 18,
+   "fieldLets": 2,
+   "sunRadiance": 1081022720,
+   "LIhi": 0,
+   "Uhi": 1081022720,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 67.3
+  },
+  {
+   "id": "F-04",
+   "title": "Bump: hammered metal",
+   "objects": 4,
+   "materials": 4,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "sphere": 2,
+    "cylinder": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 12,
+   "fieldLets": 4,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1000,
+   "Ulo": 0.3490658402442932,
+   "buildMs": 72.4
+  },
+  {
+   "id": "F-05",
+   "title": "Fields of time",
+   "objects": 3,
+   "materials": 3,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:torus"
+   ],
+   "shapes": {
+    "sphere": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "gradient",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 19,
+   "fieldLets": 4,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 400,
+   "Ulo": 0.023153366521000862,
+   "buildMs": 71.2
+  },
+  {
+   "id": "F-06",
+   "title": "Build time vs. run time",
+   "objects": 3,
+   "materials": 3,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:torus"
+   ],
+   "shapes": {
+    "disk": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 23,
+   "fieldLets": 2,
+   "sunRadiance": 1261037056,
+   "LIhi": 0,
+   "Uhi": 1261037056,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 81.4
+  },
+  {
+   "id": "F-07",
+   "title": "World space and local space",
+   "objects": 3,
+   "materials": 3,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "box": 2,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 27,
+   "fieldLets": 6,
+   "sunRadiance": 1376851712,
+   "LIhi": 0,
+   "Uhi": 1376851712,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 68.4
+  },
+  {
+   "id": "F-08",
+   "title": "One material, many instances",
+   "objects": 401,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "sphere": 400,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 19,
+   "fieldLets": 5,
+   "sunRadiance": 1308434560,
+   "LIhi": 0,
+   "Uhi": 1308434560,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 84.1
+  },
+  {
+   "id": "G-01",
+   "title": "Analytic primitives",
+   "objects": 11,
+   "materials": 7,
+   "tier": 1,
+   "reasons": [
+    "capsule",
+    "torus",
+    "roundbox",
+    "cone",
+    "prism"
+   ],
+   "allReasons": [
+    "T1:capsule",
+    "T1:torus",
+    "T1:roundbox",
+    "T1:cone",
+    "T1:prism"
+   ],
+   "shapes": {
+    "sphere": 1,
+    "box": 1,
+    "cylinder": 1,
+    "disk": 1,
+    "rect": 1,
+    "capsule": 1,
+    "torus": 1,
+    "roundbox": 1,
+    "cone": 1,
+    "prism": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 7,
+   "fieldLets": 0,
+   "sunRadiance": 1401754752,
+   "LIhi": 0,
+   "Uhi": 1401754752,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 70.9
+  },
+  {
+   "id": "G-02",
+   "title": "Your own distance field",
+   "objects": 4,
+   "materials": 4,
+   "tier": 2,
+   "reasons": [
+    "sdf"
+   ],
+   "allReasons": [
+    "T2:sdf"
+   ],
+   "shapes": {
+    "sdf": 3,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.25,
+   "buildMs": 69
+  },
+  {
+   "id": "G-03",
+   "title": "Heightfield terrain",
+   "objects": 1,
+   "materials": 1,
+   "tier": 2,
+   "reasons": [
+    "heightfield",
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:heightfield",
+    "T2:surface field"
+   ],
+   "shapes": {
+    "heightfield": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 11,
+   "fieldLets": 2,
+   "sunRadiance": 1155371264,
+   "LIhi": 0,
+   "Uhi": 1155371264,
+   "Ulo": 0.02565000019967556,
+   "buildMs": 69.1
+  },
+  {
+   "id": "G-04",
+   "title": "900 cubes, one BVH",
+   "objects": 901,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "box": 900,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 12,
+   "fieldLets": 1,
+   "sunRadiance": 1332110464,
+   "LIhi": 0,
+   "Uhi": 1332110464,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 81.2
+  },
+  {
+   "id": "G-05",
+   "title": "Scatter: a forest by density",
+   "objects": 442,
+   "materials": 4,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:cone"
+   ],
+   "shapes": {
+    "cylinder": 220,
+    "cone": 220,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 8,
+   "fieldLets": 1,
+   "sunRadiance": 1261037056,
+   "LIhi": 0,
+   "Uhi": 1261037056,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 90.7
+  },
+  {
+   "id": "G-06",
+   "title": "Hierarchy: an orrery",
+   "objects": 4,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 3,
+    "disk": 1
+   },
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 4500,
+   "Uhi": 4,
+   "Ulo": 0.5,
+   "buildMs": 69.1
+  },
+  {
+   "id": "K-01",
+   "title": "A gear train in motion",
+   "objects": 15,
+   "materials": 18,
+   "tier": 3,
+   "reasons": [
+    "mesh",
+    "hdri"
+   ],
+   "allReasons": [
+    "T3:mesh",
+    "T3:hdri",
+    "T2:surface field",
+    "T1:motion blur",
+    "T1:anisotropy"
+   ],
+   "shapes": {
+    "mesh": 14,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "env": "hdri",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": true,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 146,
+   "fieldLets": 13,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1125376,
+   "Ulo": 0.5,
+   "buildMs": 347.3
+  },
+  {
+   "id": "K-02",
+   "title": "A slider-crank, solved in JS",
+   "objects": 6,
+   "materials": 17,
+   "tier": 3,
+   "reasons": [
+    "mesh",
+    "hdri"
+   ],
+   "allReasons": [
+    "T3:mesh",
+    "T3:hdri",
+    "T2:surface field",
+    "T1:motion blur",
+    "T1:refraction",
+    "T1:anisotropy"
+   ],
+   "shapes": {
+    "mesh": 4,
+    "box": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "hdri",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": true,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 106,
+   "fieldLets": 17,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1085440,
+   "Ulo": 0.5,
+   "buildMs": 242.8
+  },
+  {
+   "id": "K-03",
+   "title": "Finishes: a chart of machined and coated metals",
+   "objects": 19,
+   "materials": 31,
+   "tier": 3,
+   "reasons": [
+    "mesh",
+    "hdri"
+   ],
+   "allReasons": [
+    "T3:mesh",
+    "T3:hdri",
+    "T2:surface field",
+    "T1:anisotropy"
+   ],
+   "shapes": {
+    "mesh": 16,
+    "box": 1,
+    "plane": 1,
+    "rect": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "hdri",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 216,
+   "fieldLets": 22,
+   "sunRadiance": 0,
+   "LIhi": 67772.1484375,
+   "Uhi": 1055744,
+   "Ulo": 0.5,
+   "buildMs": 87.2
+  },
+  {
+   "id": "K-04",
+   "title": "Faces, parts and ids",
+   "objects": 6,
+   "materials": 11,
+   "tier": 3,
+   "reasons": [
+    "mesh",
+    "hdri"
+   ],
+   "allReasons": [
+    "T3:mesh",
+    "T3:hdri",
+    "T2:surface field",
+    "T1:anisotropy"
+   ],
+   "shapes": {
+    "mesh": 5,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "hdri",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 89,
+   "fieldLets": 9,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1135616,
+   "Ulo": 0.5,
+   "buildMs": 164.7
+  },
+  {
+   "id": "K-05",
+   "title": "Lit by an HDRI",
+   "objects": 4,
+   "materials": 5,
+   "tier": 3,
+   "reasons": [
+    "mesh",
+    "hdri"
+   ],
+   "allReasons": [
+    "T3:mesh",
+    "T3:hdri",
+    "T2:surface field",
+    "T1:anisotropy"
+   ],
+   "shapes": {
+    "sphere": 2,
+    "mesh": 1,
+    "cylinder": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "hdri",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 20,
+   "fieldLets": 2,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1099776,
+   "Ulo": 0.5,
+   "buildMs": 118.5
+  },
+  {
+   "id": "K-06",
+   "title": "A tray of fasteners: instancing",
+   "objects": 242,
+   "materials": 12,
+   "tier": 3,
+   "reasons": [
+    "mesh",
+    "hdri"
+   ],
+   "allReasons": [
+    "T3:mesh",
+    "T3:hdri",
+    "T2:surface field",
+    "T1:anisotropy"
+   ],
+   "shapes": {
+    "mesh": 241,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "hdri",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 92,
+   "fieldLets": 10,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1057792,
+   "Ulo": 0.5,
+   "buildMs": 98.5
+  },
+  {
+   "id": "K-07",
+   "title": "Output: stills, sequences, video, EXR passes",
+   "objects": 7,
+   "materials": 12,
+   "tier": 3,
+   "reasons": [
+    "mesh",
+    "hdri"
+   ],
+   "allReasons": [
+    "T3:mesh",
+    "T3:hdri",
+    "T2:surface field",
+    "T1:anisotropy"
+   ],
+   "shapes": {
+    "mesh": 4,
+    "cylinder": 2,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "hdri",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": true,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 88,
+   "fieldLets": 8,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1152000,
+   "Ulo": 0.5,
+   "buildMs": 185
+  },
+  {
+   "id": "K-08",
+   "title": "Poses from an animation engine",
+   "objects": 9,
+   "materials": 8,
+   "tier": 3,
+   "reasons": [
+    "mesh",
+    "hdri"
+   ],
+   "allReasons": [
+    "T3:mesh",
+    "T3:hdri",
+    "T2:surface field",
+    "T1:motion blur",
+    "T1:anisotropy"
+   ],
+   "shapes": {
+    "mesh": 8,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": "hdri",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": true,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 52,
+   "fieldLets": 4,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1065984,
+   "Ulo": 0.5,
+   "buildMs": 97.3
+  },
+  {
+   "id": "K-09",
+   "title": "Lockstitch head (jig CAD, kine rig)",
+   "objects": 36,
+   "materials": 30,
+   "tier": 3,
+   "reasons": [
+    "mesh",
+    "hdri"
+   ],
+   "allReasons": [
+    "T3:mesh",
+    "T3:hdri",
+    "T2:surface field",
+    "T1:motion blur",
+    "T1:sheen",
+    "T1:anisotropy"
+   ],
+   "shapes": {
+    "mesh": 34,
+    "box": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert",
+    "sheen"
+   ],
+   "env": "hdri",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": true,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 181,
+   "fieldLets": 19,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1246208,
+   "Ulo": 0.5,
+   "buildMs": 667.3
+  },
+  {
+   "id": "L-01",
+   "title": "Lumens, candela, nits",
+   "objects": 4,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "plane": 1,
+    "rect": 2,
+    "sphere": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 1,
+    "light.spot": 1,
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 2,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 5556.625,
+   "Uhi": 33333.55859375,
+   "Ulo": 0.5,
+   "buildMs": 68.4
+  },
+  {
+   "id": "L-02",
+   "title": "Sunny 16",
+   "objects": 4,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "box": 2,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 1678528128,
+   "LIhi": 0,
+   "Uhi": 1678528128,
+   "Ulo": 0.02565000019967556,
+   "buildMs": 69.4
+  },
+  {
+   "id": "L-03",
+   "title": "The sun and the sky",
+   "objects": 3,
+   "materials": 3,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "box": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 1376851712,
+   "LIhi": 0,
+   "Uhi": 1376851712,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 67
+  },
+  {
+   "id": "L-04",
+   "title": "Golden hour",
+   "objects": 9,
+   "materials": 3,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "cylinder": 6,
+    "box": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 644456832,
+   "LIhi": 0,
+   "Uhi": 644456832,
+   "Ulo": 0.00930000003427267,
+   "buildMs": 70.3
+  },
+  {
+   "id": "L-05",
+   "title": "Colour temperature",
+   "objects": 24,
+   "materials": 8,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 14,
+    "box": 8,
+    "plane": 1,
+    "rect": 1
+   },
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 7
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 7,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 73734.7109375,
+   "Uhi": 25755.787109375,
+   "Ulo": 0.5,
+   "buildMs": 67.5
+  },
+  {
+   "id": "L-06",
+   "title": "Size makes softness",
+   "objects": 8,
+   "materials": 6,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "rect": 4,
+    "cylinder": 3,
+    "plane": 1
+   },
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 3
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 3,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 27482.12109375,
+   "Uhi": 27482.12109375,
+   "Ulo": 0.5,
+   "buildMs": 70.1
+  },
+  {
+   "id": "L-07",
+   "title": "Spotlights on a stage",
+   "objects": 4,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "cylinder": 1,
+    "sphere": 1,
+    "plane": 1,
+    "rect": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.spot": 3
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 73405.625,
+   "Uhi": 4,
+   "Ulo": 0.5,
+   "buildMs": 72.3
+  },
+  {
+   "id": "L-08",
+   "title": "The inverse-square law",
+   "objects": 7,
+   "materials": 3,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "rect": 5,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 5000,
+   "Uhi": 51051.6640625,
+   "Ulo": 0.5,
+   "buildMs": 67.2
+  },
+  {
+   "id": "L-09",
+   "title": "Three-point lighting",
+   "objects": 8,
+   "materials": 7,
+   "tier": 1,
+   "reasons": [
+    "capsule",
+    "sheen"
+   ],
+   "allReasons": [
+    "T1:capsule",
+    "T1:sheen"
+   ],
+   "shapes": {
+    "sphere": 1,
+    "capsule": 1,
+    "cylinder": 1,
+    "rect": 4,
+    "plane": 1
+   },
+   "lobes": [
+    "sheen",
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 3
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 3,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 5600,
+   "Uhi": 2528.345458984375,
+   "Ulo": 0.5,
+   "buildMs": 67.9
+  },
+  {
+   "id": "L-10",
+   "title": "A product in the studio",
+   "objects": 4,
+   "materials": 4,
+   "tier": 1,
+   "reasons": [
+    "roundbox",
+    "medium",
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:roundbox",
+    "T1:medium",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "roundbox": 2,
+    "cylinder": 2
+   },
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1200,
+   "Ulo": 0.3490658402442932,
+   "buildMs": 68
+  },
+  {
+   "id": "L-11",
+   "title": "Night street",
+   "objects": 11,
+   "materials": 8,
+   "tier": 1,
+   "reasons": [
+    "fog"
+   ],
+   "allReasons": [
+    "T1:fog"
+   ],
+   "shapes": {
+    "cylinder": 4,
+    "sphere": 4,
+    "plane": 1,
+    "box": 2
+   },
+   "lobes": [
+    "conductor",
+    "lambert",
+    "dielectric"
+   ],
+   "env": "night",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 4
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 4,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 35843.96875,
+   "Uhi": 41009.94921875,
+   "Ulo": 0.008333333767950535,
+   "buildMs": 72.3
+  },
+  {
+   "id": "L-12",
+   "title": "Neon: emission and MIS",
+   "objects": 7,
+   "materials": 7,
+   "tier": 1,
+   "reasons": [
+    "capsule",
+    "torus"
+   ],
+   "allReasons": [
+    "T1:capsule",
+    "T1:torus"
+   ],
+   "shapes": {
+    "capsule": 2,
+    "torus": 1,
+    "rect": 2,
+    "plane": 1,
+    "sphere": 1
+   },
+   "lobes": [
+    "lambert",
+    "dielectric"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 6,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 1291.9232177734375,
+   "Uhi": 1291.9232177734375,
+   "Ulo": 0.5,
+   "buildMs": 69.9
+  },
+  {
+   "id": "M-01",
+   "title": "The material chart",
+   "objects": 14,
+   "materials": 14,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 12,
+    "plane": 1,
+    "rect": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 8,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.5,
+   "buildMs": 74.9
+  },
+  {
+   "id": "M-02",
+   "title": "Measured metals",
+   "objects": 11,
+   "materials": 11,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 10,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1000,
+   "Ulo": 0.2617993950843811,
+   "buildMs": 79.4
+  },
+  {
+   "id": "M-03",
+   "title": "Fresnel at grazing angles",
+   "objects": 17,
+   "materials": 2,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "cylinder": 16,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 2,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 1308434560,
+   "LIhi": 0,
+   "Uhi": 1308434560,
+   "Ulo": 0.019999999552965164,
+   "buildMs": 84.2
+  },
+  {
+   "id": "M-04",
+   "title": "Glass, water, diamond",
+   "objects": 5,
+   "materials": 5,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "sphere": 4,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 9,
+   "fieldLets": 1,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 800,
+   "Ulo": 0.5,
+   "buildMs": 72.3
+  },
+  {
+   "id": "M-05",
+   "title": "Frosted glass",
+   "objects": 7,
+   "materials": 7,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:roundbox",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "roundbox": 4,
+    "rect": 1,
+    "sphere": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 8,
+   "fieldLets": 1,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.5,
+   "buildMs": 68.6
+  },
+  {
+   "id": "M-06",
+   "title": "Coloured glass: Beer–Lambert",
+   "objects": 5,
+   "materials": 2,
+   "tier": 1,
+   "reasons": [
+    "medium",
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:medium",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "box": 4,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 1360877184,
+   "LIhi": 0,
+   "Uhi": 1360877184,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 68.9
+  },
+  {
+   "id": "M-07",
+   "title": "Car paint",
+   "objects": 12,
+   "materials": 5,
+   "tier": 1,
+   "reasons": [
+    "roundbox",
+    "medium",
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:roundbox",
+    "T1:medium",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "roundbox": 3,
+    "cylinder": 8,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "conductor",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 3,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1100,
+   "Ulo": 0.006995410192757845,
+   "buildMs": 67.7
+  },
+  {
+   "id": "M-08",
+   "title": "Velvet and sheen",
+   "objects": 5,
+   "materials": 3,
+   "tier": 1,
+   "reasons": [
+    "roundbox",
+    "sheen"
+   ],
+   "allReasons": [
+    "T1:roundbox",
+    "T1:sheen"
+   ],
+   "shapes": {
+    "roundbox": 2,
+    "sphere": 2,
+    "plane": 1
+   },
+   "lobes": [
+    "sheen",
+    "lambert",
+    "dielectric"
+   ],
+   "env": "studio",
+   "sun": true,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 365025728,
+   "LIhi": 0,
+   "Uhi": 365025728,
+   "Ulo": 0.3420201539993286,
+   "buildMs": 69.9
+  },
+  {
+   "id": "M-09",
+   "title": "Brushed metal: anisotropy",
+   "objects": 5,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "cylinder": 2,
+    "disk": 1,
+    "plane": 1,
+    "sphere": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "gradient",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 3,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 2700,
+   "Uhi": 181826.625,
+   "Ulo": 0.014443843625485897,
+   "buildMs": 70.4
+  },
+  {
+   "id": "M-10",
+   "title": "Thin-film interference",
+   "objects": 9,
+   "materials": 9,
+   "tier": 1,
+   "reasons": [
+    "thin sheet"
+   ],
+   "allReasons": [
+    "T1:thin sheet"
+   ],
+   "shapes": {
+    "sphere": 8,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "thin",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 8,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1000,
+   "Ulo": 0.5,
+   "buildMs": 68.9
+  },
+  {
+   "id": "M-11",
+   "title": "Wax, jade, skin",
+   "objects": 6,
+   "materials": 6,
+   "tier": 1,
+   "reasons": [
+    "torus",
+    "roundbox",
+    "medium",
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:torus",
+    "T1:roundbox",
+    "T1:medium",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "cylinder": 1,
+    "torus": 1,
+    "sphere": 1,
+    "roundbox": 1,
+    "plane": 1,
+    "rect": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 4000,
+   "Uhi": 2097.74853515625,
+   "Ulo": 0.5,
+   "buildMs": 67.6
+  },
+  {
+   "id": "M-12",
+   "title": "The white furnace",
+   "objects": 8,
+   "materials": 8,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "sphere": 8
+   },
+   "lobes": [
+    "conductor"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 0,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 100,
+   "Ulo": 0.5,
+   "buildMs": 685.5
+  },
+  {
+   "id": "M-13",
+   "title": "Infinity mirror",
+   "objects": 6,
+   "materials": 5,
+   "tier": 1,
+   "reasons": [
+    "torus"
+   ],
+   "allReasons": [
+    "T1:torus"
+   ],
+   "shapes": {
+    "rect": 3,
+    "sphere": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "gradient",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 24,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 3500,
+   "Uhi": 1647.7733154296875,
+   "Ulo": 0.005181516520678997,
+   "buildMs": 69.3
+  },
+  {
+   "id": "M-14",
+   "title": "Clear coat",
+   "objects": 5,
+   "materials": 5,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:roundbox"
+   ],
+   "shapes": {
+    "roundbox": 4,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 53,
+   "fieldLets": 4,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.5,
+   "buildMs": 68.7
+  },
+  {
+   "id": "R-01",
+   "title": "The Cornell box",
+   "objects": 8,
+   "materials": 4,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "rect": 6,
+    "box": 2
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 15165.9951171875,
+   "Uhi": 15165.9951171875,
+   "Ulo": 0.5,
+   "buildMs": 67.5
+  },
+  {
+   "id": "R-02",
+   "title": "Product shot: mug and spoon",
+   "objects": 10,
+   "materials": 7,
+   "tier": 1,
+   "reasons": [
+    "torus",
+    "capsule"
+   ],
+   "allReasons": [
+    "T1:torus",
+    "T1:capsule"
+   ],
+   "shapes": {
+    "cylinder": 4,
+    "torus": 1,
+    "capsule": 1,
+    "plane": 1,
+    "rect": 3
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 2
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 2,
+   "materialLets": 4,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 6000,
+   "Uhi": 5405.01611328125,
+   "Ulo": 0.5,
+   "buildMs": 68.3
+  },
+  {
+   "id": "R-03",
+   "title": "Still life by a window",
+   "objects": 11,
+   "materials": 9,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:roundbox",
+    "T1:medium",
+    "T1:refraction",
+    "T1:sheen"
+   ],
+   "shapes": {
+    "box": 1,
+    "roundbox": 1,
+    "sphere": 3,
+    "cylinder": 3,
+    "rect": 2,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "sheen"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 11,
+   "fieldLets": 1,
+   "sunRadiance": 0,
+   "LIhi": 5600,
+   "Uhi": 4280.2666015625,
+   "Ulo": 0.5,
+   "buildMs": 68.6
+  },
+  {
+   "id": "R-04",
+   "title": "Dunes at golden hour",
+   "objects": 2,
+   "materials": 1,
+   "tier": 2,
+   "reasons": [
+    "heightfield",
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:heightfield",
+    "T2:surface field"
+   ],
+   "shapes": {
+    "heightfield": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 10,
+   "fieldLets": 3,
+   "sunRadiance": 757146432,
+   "LIhi": 0,
+   "Uhi": 757146432,
+   "Ulo": 0.00930000003427267,
+   "buildMs": 69
+  },
+  {
+   "id": "R-05",
+   "title": "Jewellery on velvet",
+   "objects": 24,
+   "materials": 7,
+   "tier": 2,
+   "reasons": [
+    "sdf"
+   ],
+   "allReasons": [
+    "T2:sdf",
+    "T1:torus",
+    "T1:spectral",
+    "T1:refraction",
+    "T1:sheen"
+   ],
+   "shapes": {
+    "torus": 19,
+    "sdf": 1,
+    "sphere": 3,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert",
+    "sheen"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 2
+   },
+   "integrator": "path",
+   "maxDepth": 12,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 2,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 5600,
+   "Uhi": 429172.125,
+   "Ulo": 0.5,
+   "buildMs": 71.3
+  },
+  {
+   "id": "R-06",
+   "title": "Billiards",
+   "objects": 13,
+   "materials": 12,
+   "tier": 1,
+   "reasons": [
+    "sheen"
+   ],
+   "allReasons": [
+    "T1:sheen"
+   ],
+   "shapes": {
+    "box": 3,
+    "sphere": 9,
+    "plane": 1
+   },
+   "lobes": [
+    "sheen",
+    "lambert",
+    "dielectric"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.spot": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 11,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 4525.8408203125,
+   "Uhi": 13,
+   "Ulo": 0.5,
+   "buildMs": 70.2
+  },
+  {
+   "id": "R-07",
+   "title": "A colour chart in daylight",
+   "objects": 26,
+   "materials": 26,
+   "tier": 0,
+   "reasons": [],
+   "allReasons": [],
+   "shapes": {
+    "box": 25,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 26,
+   "fieldLets": 0,
+   "sunRadiance": 1401754752,
+   "LIhi": 0,
+   "Uhi": 1401754752,
+   "Ulo": 0.02565000019967556,
+   "buildMs": 75.2
+  },
+  {
+   "id": "R-08",
+   "title": "Zen garden",
+   "objects": 4,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "sdf",
+    "heightfield",
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:sdf",
+    "T2:heightfield",
+    "T2:surface field"
+   ],
+   "shapes": {
+    "heightfield": 1,
+    "sdf": 3
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 10,
+   "fieldLets": 2,
+   "sunRadiance": 1200434432,
+   "LIhi": 0,
+   "Uhi": 1200434432,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 67.6
+  },
+  {
+   "id": "R-09",
+   "title": "Marble in a museum",
+   "objects": 7,
+   "materials": 4,
+   "tier": 1,
+   "reasons": [
+    "capsule",
+    "roundbox",
+    "medium",
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:capsule",
+    "T1:roundbox",
+    "T1:medium",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "box": 1,
+    "sphere": 1,
+    "capsule": 1,
+    "cylinder": 1,
+    "roundbox": 1,
+    "rect": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.spot": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 7451.3818359375,
+   "Uhi": 7,
+   "Ulo": 0.5,
+   "buildMs": 69.2
+  },
+  {
+   "id": "R-10",
+   "title": "Candlelight",
+   "objects": 13,
+   "materials": 7,
+   "tier": 1,
+   "reasons": [
+    "capsule",
+    "medium",
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:capsule",
+    "T1:medium",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "cylinder": 7,
+    "capsule": 3,
+    "box": 1,
+    "rect": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 3
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 5,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 50926.94140625,
+   "Uhi": 13,
+   "Ulo": 0.5,
+   "buildMs": 68.3
+  },
+  {
+   "id": "S-01",
+   "title": "Dispersion: hero wavelengths",
+   "objects": 4,
+   "materials": 3,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:prism",
+    "T1:spectral",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "sphere": 1,
+    "prism": 1,
+    "rect": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 12,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 7,
+   "fieldLets": 1,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 40,
+   "Ulo": 0.5,
+   "buildMs": 175.1
+  },
+  {
+   "id": "S-02",
+   "title": "Diamond fire",
+   "objects": 5,
+   "materials": 5,
+   "tier": 2,
+   "reasons": [
+    "sdf"
+   ],
+   "allReasons": [
+    "T2:sdf",
+    "T1:spectral",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "sdf": 1,
+    "cylinder": 1,
+    "plane": 1,
+    "sphere": 2
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 2
+   },
+   "integrator": "path",
+   "maxDepth": 12,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 2,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 5600,
+   "Uhi": 286114.75,
+   "Ulo": 0.5,
+   "buildMs": 172
+  },
+  {
+   "id": "S-03",
+   "title": "Soap bubbles",
+   "objects": 8,
+   "materials": 7,
+   "tier": 1,
+   "reasons": [
+    "spectral",
+    "thin sheet"
+   ],
+   "allReasons": [
+    "T1:spectral",
+    "T1:thin sheet"
+   ],
+   "shapes": {
+    "sphere": 6,
+    "plane": 1,
+    "rect": 1
+   },
+   "lobes": [
+    "thin",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 12,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1100,
+   "Ulo": 0.5,
+   "buildMs": 42.5
+  },
+  {
+   "id": "S-04",
+   "title": "Incandescence",
+   "objects": 8,
+   "materials": 8,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "cylinder": 1,
+    "sphere": 6,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 71,
+   "fieldLets": 1,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 1900,
+   "Ulo": 0.5,
+   "buildMs": 42.8
+  },
+  {
+   "id": "V-01",
+   "title": "Fog and god rays",
+   "objects": 12,
+   "materials": 3,
+   "tier": 1,
+   "reasons": [
+    "fog"
+   ],
+   "allReasons": [
+    "T1:fog"
+   ],
+   "shapes": {
+    "box": 10,
+    "plane": 1,
+    "sphere": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 1051841216,
+   "LIhi": 0,
+   "Uhi": 1051841216,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 42.6
+  },
+  {
+   "id": "V-02",
+   "title": "Phase functions",
+   "objects": 5,
+   "materials": 5,
+   "tier": 2,
+   "reasons": [
+    "density field"
+   ],
+   "allReasons": [
+    "T2:density field",
+    "T1:medium"
+   ],
+   "shapes": {
+    "rect": 1,
+    "plane": 1,
+    "box": 3
+   },
+   "lobes": [
+    "lambert",
+    "dielectric",
+    "passthrough"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "emit": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 5500,
+   "Uhi": 3027.66357421875,
+   "Ulo": 0.5,
+   "buildMs": 45.3
+  },
+  {
+   "id": "V-03",
+   "title": "Smoke: a heterogeneous volume",
+   "objects": 2,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "density field"
+   ],
+   "allReasons": [
+    "T2:density field",
+    "T1:medium"
+   ],
+   "shapes": {
+    "plane": 1,
+    "box": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "passthrough"
+   ],
+   "env": "gradient",
+   "sun": true,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 515417536,
+   "LIhi": 0,
+   "Uhi": 515417536,
+   "Ulo": 0.023153366521000862,
+   "buildMs": 43.5
+  },
+  {
+   "id": "V-04",
+   "title": "A cloud",
+   "objects": 2,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "density field"
+   ],
+   "allReasons": [
+    "T2:density field",
+    "T1:medium"
+   ],
+   "shapes": {
+    "plane": 1,
+    "box": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "passthrough"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 1261037056,
+   "LIhi": 0,
+   "Uhi": 1261037056,
+   "Ulo": 0.028920000419020653,
+   "buildMs": 45.3
+  },
+  {
+   "id": "V-05",
+   "title": "Water, wine and milk",
+   "objects": 8,
+   "materials": 5,
+   "tier": 1,
+   "reasons": [
+    "medium",
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:medium",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "cylinder": 6,
+    "plane": 1,
+    "rect": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 1,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.5,
+   "buildMs": 43.5
+  },
+  {
+   "id": "W-01",
+   "title": "Behaviours",
+   "objects": 5,
+   "materials": 5,
+   "tier": 1,
+   "reasons": [
+    "cone"
+   ],
+   "allReasons": [
+    "T1:cone"
+   ],
+   "shapes": {
+    "sphere": 2,
+    "cone": 1,
+    "cylinder": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 3,
+   "uniforms": 0,
+   "materialLets": 3,
+   "fieldLets": 0,
+   "sunRadiance": 1401754752,
+   "LIhi": 0,
+   "Uhi": 1401754752,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 43.4
+  },
+  {
+   "id": "W-02",
+   "title": "Talk to the world",
+   "objects": 15,
+   "materials": 9,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field"
+   ],
+   "shapes": {
+    "box": 1,
+    "cylinder": 7,
+    "sphere": 5,
+    "rect": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": "uniform",
+   "sun": false,
+   "sky": false,
+   "lights": {
+    "light.point": 1
+   },
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 15,
+   "fieldLets": 1,
+   "sunRadiance": 0,
+   "LIhi": 3000,
+   "Uhi": 16000.1083984375,
+   "Ulo": 0.5,
+   "buildMs": 46.5
+  },
+  {
+   "id": "W-03",
+   "title": "What does a change cost?",
+   "objects": 7,
+   "materials": 3,
+   "tier": 1,
+   "reasons": [
+    "torus"
+   ],
+   "allReasons": [
+    "T1:torus"
+   ],
+   "shapes": {
+    "sphere": 5,
+    "torus": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "conductor"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 1,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.30000001192092896,
+   "buildMs": 42.5
+  },
+  {
+   "id": "W-04",
+   "title": "Kinetic sculpture",
+   "objects": 7,
+   "materials": 5,
+   "tier": 1,
+   "reasons": [
+    "torus",
+    "medium",
+    "refraction"
+   ],
+   "allReasons": [
+    "T1:torus",
+    "T1:medium",
+    "T1:refraction"
+   ],
+   "shapes": {
+    "torus": 3,
+    "sphere": 1,
+    "cylinder": 2,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.3490658402442932,
+   "buildMs": 42.2
+  },
+  {
+   "id": "X-01",
+   "title": "One kernel, two backends",
+   "objects": 3,
+   "materials": 3,
+   "tier": 1,
+   "reasons": [
+    "torus"
+   ],
+   "allReasons": [
+    "T1:torus"
+   ],
+   "shapes": {
+    "sphere": 1,
+    "torus": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "conductor",
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 1346264448,
+   "LIhi": 0,
+   "Uhi": 1346264448,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 41.7
+  },
+  {
+   "id": "X-02",
+   "title": "Ten thousand spheres",
+   "objects": 10001,
+   "materials": 2,
+   "tier": 3,
+   "reasons": [
+    "10001 objects"
+   ],
+   "allReasons": [
+    "T3:10001 objects",
+    "T2:surface field"
+   ],
+   "shapes": {
+    "sphere": 10000,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": null,
+   "sun": true,
+   "sky": true,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 14,
+   "fieldLets": 3,
+   "sunRadiance": 1308434560,
+   "LIhi": 0,
+   "Uhi": 1308434560,
+   "Ulo": 0.02019999921321869,
+   "buildMs": 88.5
+  },
+  {
+   "id": "X-03",
+   "title": "A procedural planet",
+   "objects": 3,
+   "materials": 3,
+   "tier": 2,
+   "reasons": [
+    "sdf",
+    "surface field",
+    "density field"
+   ],
+   "allReasons": [
+    "T2:sdf",
+    "T2:surface field",
+    "T2:density field",
+    "T1:medium"
+   ],
+   "shapes": {
+    "sdf": 1,
+    "sphere": 1,
+    "box": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert",
+    "passthrough"
+   ],
+   "env": "night",
+   "sun": true,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 18,
+   "fieldLets": 1,
+   "sunRadiance": 1825128576,
+   "LIhi": 0,
+   "Uhi": 1825128576,
+   "Ulo": 0.05000000074505806,
+   "buildMs": 45.5
+  },
+  {
+   "id": "X-04",
+   "title": "Menger sponge",
+   "objects": 2,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "sdf"
+   ],
+   "allReasons": [
+    "T2:sdf"
+   ],
+   "shapes": {
+    "sdf": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "gradient",
+   "sun": true,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 2,
+   "fieldLets": 0,
+   "sunRadiance": 1020657920,
+   "LIhi": 0,
+   "Uhi": 1020657920,
+   "Ulo": 0.02955683507025242,
+   "buildMs": 41.6
+  },
+  {
+   "id": "X-05",
+   "title": "Kernels are cached",
+   "objects": 2,
+   "materials": 2,
+   "tier": 2,
+   "reasons": [
+    "surface field"
+   ],
+   "allReasons": [
+    "T2:surface field",
+    "T1:torus"
+   ],
+   "shapes": {
+    "torus": 1,
+    "plane": 1
+   },
+   "lobes": [
+    "dielectric",
+    "lambert"
+   ],
+   "env": "studio",
+   "sun": false,
+   "sky": false,
+   "lights": {},
+   "integrator": "path",
+   "maxDepth": 5,
+   "animation": false,
+   "behaviors": 0,
+   "uniforms": 0,
+   "materialLets": 12,
+   "fieldLets": 2,
+   "sunRadiance": 0,
+   "LIhi": 0,
+   "Uhi": 900,
+   "Ulo": 0.5,
+   "buildMs": 42.5
+  }
+ ]
+}

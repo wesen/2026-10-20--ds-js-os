@@ -1,0 +1,106 @@
+105/105 presets built; total 9319 ms in Node
+ok  A-01      3 obj   3 mat conductor+dielectric+lambert path studio 
+ok  A-02      4 obj   4 mat lambert+dielectric           path uniform 
+ok  A-03      4 obj   4 mat lambert+conductor+dielectric path uniform 
+ok  A-04      2 obj   2 mat dielectric+lambert+conductor path  sun sky 
+ok  A-05      3 obj   3 mat conductor+dielectric+lambert path  sun sky 
+ok  A-06      4 obj   2 mat dielectric+lambert           path  sun sky 
+ok  B-01      2 obj   2 mat dielectric+lambert           path  sun sky 
+ok  B-02      3 obj   3 mat dielectric+conductor+lambert path  sun sky 
+ok  B-03     26 obj   3 mat dielectric+lambert           path  sun sky 
+ok  B-04      4 obj   4 mat dielectric+lambert+conductor path studio 
+ok  B-05      5 obj   5 mat dielectric+lambert           path  
+ok  C-01     16 obj   3 mat dielectric+lambert           path studio 
+ok  C-02     43 obj   6 mat lambert+conductor+dielectric path gradient 
+ok  C-03     27 obj   4 mat dielectric+lambert           path  sun sky 
+ok  C-04      5 obj   5 mat dielectric+lambert           path  sun sky 
+ok  C-05      6 obj   6 mat lambert+dielectric           path  
+ok  C-06      9 obj   3 mat lambert+dielectric+conductor path gradient 
+ok  D-01      4 obj   4 mat dielectric+lambert           path uniform 
+ok  D-02      6 obj   2 mat dielectric+lambert           path  sun sky 
+ok  D-03      2 obj   2 mat conductor+dielectric+lambert path  sun sky 
+ok  D-04      7 obj   4 mat conductor+dielectric+lambert path  sun sky 
+ok  E-01      4 obj   4 mat conductor+dielectric+lambert path  sun sky 
+ok  E-02      4 obj   4 mat dielectric+lambert           custom:toon  sun 
+ok  E-03      8 obj   4 mat dielectric+lambert           path  
+ok  E-04      9 obj   9 mat conductor+lambert+dielectric path  
+ok  E-05      4 obj   4 mat dielectric+lambert           path uniform 
+ok  E-06      3 obj   3 mat dielectric+lambert           path  sun sky 
+ok  E-07      4 obj   4 mat dielectric+conductor+lambert path uniform 
+ok  F-01      3 obj   3 mat dielectric+lambert           path  sun sky 
+ok  F-02      3 obj   2 mat dielectric+lambert           path studio 
+ok  F-03      2 obj   2 mat dielectric+lambert+conductor path  sun sky 
+ok  F-04      4 obj   4 mat conductor+dielectric+lambert path studio 
+ok  F-05      3 obj   3 mat dielectric+lambert           path gradient 
+ok  F-06      3 obj   3 mat dielectric+lambert           path  sun sky 
+ok  F-07      3 obj   3 mat dielectric+lambert           path  sun sky 
+ok  F-08    401 obj   2 mat dielectric+lambert           path  sun sky 
+ok  G-01     11 obj   7 mat dielectric+lambert           path  sun sky 
+ok  G-02      4 obj   4 mat dielectric+lambert+conductor path studio 
+ok  G-03      1 obj   1 mat dielectric+lambert           path  sun sky 
+ok  G-04    901 obj   2 mat dielectric+lambert           path  sun sky 
+ok  G-05    442 obj   4 mat dielectric+lambert           path  sun sky 
+ok  G-06      4 obj   4 mat lambert+dielectric           path uniform 
+ok  K-01     15 obj  18 mat dielectric+conductor+lambert path hdri 
+ok  K-02      6 obj  17 mat conductor+dielectric+lambert path hdri 
+ok  K-03     19 obj  31 mat conductor+dielectric+lambert path hdri 
+ok  K-04      6 obj  11 mat conductor+dielectric+lambert path hdri 
+ok  K-05      4 obj   5 mat conductor+dielectric+lambert path hdri 
+ok  K-06    242 obj  12 mat conductor+dielectric+lambert path hdri 
+ok  K-07      7 obj  12 mat conductor+dielectric+lambert path hdri 
+ok  K-08      9 obj   8 mat dielectric+lambert+conductor path hdri 
+ok  K-09     36 obj  30 mat conductor+dielectric+lambert+sheen path hdri 
+ok  L-01      4 obj   4 mat dielectric+lambert           path  
+ok  L-02      4 obj   4 mat dielectric+lambert+conductor path  sun sky 
+ok  L-03      3 obj   3 mat dielectric+lambert           path  sun sky 
+ok  L-04      9 obj   3 mat dielectric+lambert           path  sun sky 
+ok  L-05     24 obj   8 mat lambert+dielectric           path  
+ok  L-06      8 obj   6 mat lambert+dielectric           path  
+ok  L-07      4 obj   4 mat dielectric+lambert           path  
+ok  L-08      7 obj   3 mat dielectric+lambert           path  
+ok  L-09      8 obj   7 mat sheen+dielectric+lambert     path  
+ok  L-10      4 obj   4 mat dielectric+conductor+lambert path studio 
+ok  L-11     11 obj   8 mat conductor+lambert+dielectric path night 
+ok  L-12      7 obj   7 mat lambert+dielectric           path  
+ok  M-01     14 obj  14 mat dielectric+lambert+conductor path studio 
+ok  M-02     11 obj  11 mat conductor+dielectric+lambert path studio 
+ok  M-03     17 obj   2 mat dielectric+lambert           path  sun sky 
+ok  M-04      5 obj   5 mat dielectric+lambert           path studio 
+ok  M-05      7 obj   7 mat dielectric+lambert           path studio 
+ok  M-06      5 obj   2 mat dielectric+lambert           path  sun sky 
+ok  M-07     12 obj   5 mat dielectric+conductor+lambert path studio 
+ok  M-08      5 obj   3 mat sheen+lambert+dielectric     path studio sun 
+ok  M-09      5 obj   4 mat conductor+dielectric+lambert path gradient 
+ok  M-10      9 obj   9 mat conductor+thin+dielectric+lambert path studio 
+ok  M-11      6 obj   6 mat dielectric+lambert           path uniform 
+ok  M-12      8 obj   8 mat conductor                    path uniform 
+ok  M-13      6 obj   5 mat conductor+dielectric+lambert path gradient 
+ok  M-14      5 obj   5 mat dielectric+lambert           path studio 
+ok  R-01      8 obj   4 mat dielectric+lambert           path  
+ok  R-02     10 obj   7 mat dielectric+lambert+conductor path uniform 
+ok  R-03     11 obj   9 mat dielectric+lambert+sheen     path uniform 
+ok  R-04      2 obj   1 mat dielectric+lambert           path  sun sky 
+ok  R-05     24 obj   7 mat conductor+dielectric+lambert+sheen path studio 
+ok  R-06     13 obj  12 mat sheen+lambert+dielectric     path uniform 
+ok  R-07     26 obj  26 mat dielectric+lambert           path  sun sky 
+ok  R-08      4 obj   2 mat dielectric+lambert           path  sun sky 
+ok  R-09      7 obj   4 mat dielectric+lambert           path uniform 
+ok  R-10     13 obj   7 mat dielectric+lambert           path  
+ok  S-01      4 obj   3 mat dielectric+lambert           path uniform 
+ok  S-02      5 obj   5 mat dielectric+lambert           path studio 
+ok  S-03      8 obj   7 mat thin+dielectric+lambert      path studio 
+ok  S-04      8 obj   8 mat dielectric+lambert           path uniform 
+ok  V-01     12 obj   3 mat dielectric+lambert           path  sun sky 
+ok  V-02      5 obj   5 mat lambert+dielectric+passthrough path uniform 
+ok  V-03      2 obj   2 mat dielectric+lambert+passthrough path gradient sun 
+ok  V-04      2 obj   2 mat dielectric+lambert+passthrough path  sun sky 
+ok  V-05      8 obj   5 mat dielectric+lambert           path studio 
+ok  W-01      5 obj   5 mat dielectric+lambert+conductor path  sun sky 
+ok  W-02     15 obj   9 mat dielectric+lambert+conductor path uniform 
+ok  W-03      7 obj   3 mat dielectric+lambert+conductor path studio 
+ok  W-04      7 obj   5 mat conductor+dielectric+lambert path studio 
+ok  X-01      3 obj   3 mat conductor+dielectric+lambert path  sun sky 
+ok  X-02  10001 obj   2 mat dielectric+lambert           path  sun sky 
+ok  X-03      3 obj   3 mat dielectric+lambert+passthrough path night sun 
+ok  X-04      2 obj   2 mat dielectric+lambert           path gradient sun 
+ok  X-05      2 obj   2 mat dielectric+lambert           path studio 
