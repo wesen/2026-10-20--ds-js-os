@@ -191,7 +191,7 @@ func TestWorldLayoutsWithoutSourceList(t *testing.T) {
 	vm, _ := compilerVM(t)
 	v, err := vm.RunString(`(() => {
 	  const w = compiler.at('worktree'), base = compiler.at('eaf0872');
-	  const dir = 'picocalc-os/worlds/';
+	  const dir = w.worlds + '/';
 	  const files = w.world('files'), agenda = w.world('agenda'), chess = w.world('chess');
 	  const size = world => w.typedRv32.compile(world.text, w.typedWorld.imports, 96 * 1024).image.length;
 	  return JSON.stringify({

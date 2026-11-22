@@ -132,7 +132,7 @@ class CompositorRestartTests(unittest.TestCase):
             shutil.copytree(OS / "fs-seed", root / "fs")
             script = ("wait 1500\nkey x\nwait 800\ncapture before.png\nkey f1\nwait 400\ncrash compositor\nwait 1500\n"
                       "key x\nwait 1500\ncapture after.png\n")
-            done = subprocess.run([str(BINARY), "-j", "js", "-o", str(root / "out"), "-f", str(root / "fs"), "-vv", "-"],
+            done = subprocess.run([str(BINARY), "-j", str(OS / "../apps/js/picocalc"), "-o", str(root / "out"), "-f", str(root / "fs"), "-vv", "-"],
                                   input=script, text=True, capture_output=True, cwd=OS, timeout=60)
             log = (root / "out/uart.log").read_text() + done.stderr
             self.assertEqual(done.returncode, 0, log)
@@ -148,7 +148,7 @@ class LauncherTests(unittest.TestCase):
     def test_a_declared_app_opens_by_its_letter_and_a_broken_screen_does_not_stop_the_compositor(self):
         with tempfile.TemporaryDirectory(prefix="appui-test-", dir=OS / "build") as d:
             root = Path(d)
-            shutil.copytree(OS / "js", root / "js")
+            shutil.copytree(OS / "../apps/js/picocalc", root / "js")
             shutil.copytree(OS / "fs-seed", root / "fs")
             manifest = json.loads((root / "js/system.json").read_text())
             manifest["worlds"].append({"name": "broken", "file": "apps/broken.js", "mem_kb": 320})

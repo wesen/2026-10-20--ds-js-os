@@ -15,7 +15,7 @@ const [gcc, emulator] = process.argv.slice(2).map(p => resolve(p));
 assert(gcc && emulator, 'pass ESP32-P4 GCC and the CJI RV32 emulator');
 const bench = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const rv32Options = process.env.TYPED_RV32_OPTIONS ? JSON.parse(process.env.TYPED_RV32_OPTIONS) : undefined;
-const root = resolve('picocalc-os/worlds/chess');
+const root = resolve('apps/typed/chess');
 const source = ['state', 'position', 'moves', 'search'].map(part => readFileSync(join(root, part + '.typed'), 'utf8')).join('\n');
 const {positions, reference} = JSON.parse(readFileSync(join(bench, 'reference/chess/reference-positions.json'), 'utf8'));
 positions.push({name:'kiwipete',fen:'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1',

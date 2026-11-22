@@ -10,8 +10,8 @@ import '../../lib/compiler.mjs';
 
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass RV32 GCC and CJI rv32emu');
-const source = readFileSync('picocalc-os/worlds/editor/layout.typed', 'utf8');
-const original = readFileSync('picocalc-os/js/apps/editor.js', 'utf8');
+const source = readFileSync('apps/typed/editor/layout.typed', 'utf8');
+const original = readFileSync('apps/js/picocalc/apps/editor.js', 'utf8');
 const wrap = vm.runInNewContext(original.slice(0, original.indexOf('function edCount')) + '\nedWrap');
 const wasm = typedWasm.compile(source);
 const rv32 = typedRv32.compile(source);
@@ -101,7 +101,7 @@ try {
     writeFileSync(join(work, 'fixtures.inc'), data.join('\n') + `\nstatic const void *const lines[] = {\n${pointers}\n};\n` +
         'static const int vectors[][7] = {\n' + vectors.map(v => `    {${v.join(',')}},\n`).join('') + '};\n');
     execFileSync(cc, ['-march=rv32im', '-mabi=ilp32', '-O2', '-fno-builtin', '-msmall-data-limit=0', '-mno-relax',
-        '-nostdlib', '-Wl,-Ttext=0x10000', '-Wl,-e,_start', '-I', work, '-I', 'picocalc-os/worlds/editor', '-o', exe, driver, asm,
+        '-nostdlib', '-Wl,-Ttext=0x10000', '-Wl,-e,_start', '-I', work, '-I', 'apps/typed/editor', '-o', exe, driver, asm,
         ...['libc.o', 'hostcalls.o', 'softfloat.o'].map(file => join(dirname(emu), file))], {stdio:'inherit'});
     const result = execFileSync(emu, [exe], {encoding:'utf8',timeout:15000});
     assert.equal(result.trim(), `${vectors.length} editor layout vectors passed`);

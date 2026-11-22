@@ -10,10 +10,10 @@ import '../../lib/compiler.mjs';
 
 const [cc, emulator] = process.argv.slice(2);
 assert(cc && emulator, 'pass the RV32 GCC and repository rv32emu paths');
-const app = readFileSync('picocalc-os/js/apps/agenda.js', 'utf8');
+const app = readFileSync('apps/js/picocalc/apps/agenda.js', 'utf8');
 const oracle = vm.runInNewContext(app.slice(0, app.indexOf('// ---- grouping')) + '\n({agDateWord, agTimeWord, agExpand})');
 const source = ['reminder', 'entry'].map(
-    name => readFileSync('picocalc-os/worlds/agenda/' + name + '.typed', 'utf8')
+    name => readFileSync('apps/typed/agenda/' + name + '.typed', 'utf8')
 ).join('\n');
 const {instance: {exports}} = await WebAssembly.instantiate(compileTyped(source));
 const {image, entries} = typedRv32.compile(source);

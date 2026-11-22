@@ -5,9 +5,9 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import '../../lib/compiler.mjs';
 
-const original = fs.readFileSync('picocalc-os/js/apps/agenda.js', 'utf8');
+const original = fs.readFileSync('apps/js/picocalc/apps/agenda.js', 'utf8');
 const parse = vm.runInNewContext(original.slice(0, original.indexOf('function agToggled')) + '\nagParse');
-const source = fs.readFileSync('picocalc-os/worlds/agenda/reminder.typed', 'utf8');
+const source = fs.readFileSync('apps/typed/agenda/reminder.typed', 'utf8');
 const { bytes, records } = typedWasm.compile(source);
 const { instance } = await WebAssembly.instantiate(bytes);
 const { memory, parseTask } = instance.exports;

@@ -17,13 +17,13 @@ module candela:stdlib.js third_party/candela/src/stdlib.js
 module candela:test.js third_party/candela/src/test.js
 module candela:units.js third_party/candela/src/units.js
 # The world's modules.
-memo world:kernel-memo.js worlds/candela-world/kernel-memo.js
-module world:shims.js worlds/candela-world/shims.js
-module world:runner.js worlds/candela-world/runner.js
-module world:subset.js worlds/candela-world/subset.js
-module world:frame.js worlds/candela-world/frame.js
-module world:program.js worlds/candela-world/program.js
+memo world:kernel-memo.js ../apps/js/worlds/candela-world/kernel-memo.js
+module world:shims.js ../apps/js/worlds/candela-world/shims.js
+module world:runner.js ../apps/js/worlds/candela-world/runner.js
+module world:subset.js ../apps/js/worlds/candela-world/subset.js
+module world:frame.js ../apps/js/worlds/candela-world/frame.js
+module world:program.js ../apps/js/worlds/candela-world/program.js
 # Scenes: the T0 presets by file name (PIN.json maps ids to files) and the world's own.
 text pin third_party/candela/PIN.json
 text-dir preset: third_party/candela/presets
-text-dir scene: worlds/candela-world/scenes
+text-dir scene: ../apps/js/worlds/candela-world/scenes

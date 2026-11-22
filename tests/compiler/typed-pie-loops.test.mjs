@@ -6,7 +6,7 @@ import "../../compiler/typed/typed-wasm.js";
 import "../../compiler/typed/typed-rv32.js";
 import "../../compiler/typed/typed-pie-loops.js";
 
-const source = readFileSync(new URL("../../picocalc-os/worlds/raytrace/raytrace.typed",import.meta.url),"utf8");
+const source = readFileSync(new URL("../../apps/typed/raytrace/raytrace.typed",import.meta.url),"utf8");
 function observe(text, name, pieLoops, streamFunctions=true, policy) {
     const events=[];
     const options={policy, pieLoops, streamFunctions, inspect:{function:name,emit:event=>events.push(event)}};

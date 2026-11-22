@@ -51,9 +51,9 @@
     Object.defineProperties(b, {
       read: { value: read },
       // A world assembled the way the firmware build does: the files named in
-      // picocalc-os/worlds/NAME/source.list, joined with newlines.
+      // apps/typed/NAME/source.list, joined with newlines.
       // A world assembled the way the firmware build does: the files named in
-      // picocalc-os/worlds/NAME/source.list, joined with newlines, or for a world
+      // apps/typed/NAME/source.list, joined with newlines, or for a world
       // without one, the files of its built-in layout (WORLD_LAYOUTS).
       world: {
         value: name => {

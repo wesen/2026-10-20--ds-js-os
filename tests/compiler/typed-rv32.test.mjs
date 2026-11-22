@@ -198,7 +198,7 @@ test("a checked constant read can use a halfword displacement and a dominating c
 
 test("the default policy applies the qualified options and stock reproduces the earlier default", () => {
     const {typedRv32} = compiler();
-    const src = readFileSync(new URL("../../picocalc-os/worlds/raytrace/raytrace.typed", import.meta.url), "utf8");
+    const src = readFileSync(new URL("../../apps/typed/raytrace/raytrace.typed", import.meta.url), "utf8");
     const qualified = {inlineGuardedReturns: true, inline: true,
         operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
             constants: true, share: true, pointers: true, split: true},
@@ -289,7 +289,7 @@ function mix(n: i32): i32 {
     // The opening ray frame is byte-identical to the C-verified reference, with fewer instructions.
     const sha = typedRayBench.fnv1a;
     const frame = options => typedRayBench.openingFrame(typedRv32.compile(
-        readFileSync(new URL("../../picocalc-os/worlds/raytrace/raytrace.typed", import.meta.url), "utf8"), [], 65536, options));
+        readFileSync(new URL("../../apps/typed/raytrace/raytrace.typed", import.meta.url), "utf8"), [], 65536, options));
     const stock = frame({policy: "stock"}), saved = frame(candidate);
     const leafHomes = frame({inline: false, operandLocations: {forward: true, capacity: true, homes: true}});
     assert.equal(sha(saved.bytes), sha(stock.bytes));

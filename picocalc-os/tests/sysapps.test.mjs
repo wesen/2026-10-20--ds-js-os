@@ -24,7 +24,7 @@ function load(file, globals) {
     screen(fn) { def.screen = fn; return this; }, hints(fn) { def.hints = fn; return this; },
   };
   const context = vm.createContext({ app: () => builder, ui: UI, ...globals });
-  vm.runInContext(readFileSync(new URL("../js/apps/" + file, import.meta.url), "utf8"), context);
+  vm.runInContext(readFileSync(new URL("../../apps/js/picocalc/apps/" + file, import.meta.url), "utf8"), context);
   const s = JSON.parse(JSON.stringify(def.state));
   const key = (name, ch = "", state = "down") => def.handlers.key(s, { key: name, ch, state }, { from: "compositor" });
   const type = (t) => { for (const c of t) key(c === " " ? "space" : c, c); };

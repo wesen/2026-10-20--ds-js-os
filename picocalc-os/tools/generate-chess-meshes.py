@@ -3,7 +3,7 @@
 import argparse
 from pathlib import Path
 
-PATH = Path(__file__).resolve().parents[1] / "worlds/chess/painter-3d.typed"
+PATH = Path(__file__).resolve().parents[2] / "apps/typed/chess/painter-3d.typed"
 MARKER = "// Generated extrusion tables follow. Run tools/generate-chess-meshes.py.\n"
 
 # Ordered outlines in the plane of the ears/muzzle, mitre or cross.

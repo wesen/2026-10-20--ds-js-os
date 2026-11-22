@@ -31,7 +31,7 @@ class Scenario:
         self.root = Path(self.temp.name)
         self.js = self.root / "js"
         self.js.mkdir()
-        shutil.copyfile(OS / "js/prelude.js", self.js / "prelude.js")
+        shutil.copyfile(OS / "../apps/js/picocalc/prelude.js", self.js / "prelude.js")
         self.fs = self.root / "files"
         self.fs.mkdir()
         self.worlds = []
@@ -384,7 +384,7 @@ class NativeAppOnTheSystemTests(unittest.TestCase):
             self.skipTest(f"build the example binaries first (make wasm); no dial.wasm in {NATIVES}")
         with tempfile.TemporaryDirectory(prefix="appui-dial-", dir=OS / "build") as d:
             root = Path(d)
-            shutil.copytree(OS / "js", root / "js")
+            shutil.copytree(OS / "../apps/js/picocalc", root / "js")
             shutil.copytree(OS / "fs-seed", root / "fs")
             (root / "fs/apps").mkdir(exist_ok=True)
             shutil.copyfile(NATIVES / "dial.wasm", root / "js/dial.wasm")

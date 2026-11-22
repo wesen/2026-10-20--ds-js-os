@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import { readFileSync } from 'node:fs';
 
-const source = readFileSync(new URL('../js/system/agent.js', import.meta.url), 'utf8');
+const source = readFileSync(new URL('../../apps/js/picocalc/system/agent.js', import.meta.url), 'utf8');
 const copy = x => x === undefined ? undefined : JSON.parse(JSON.stringify(x));
 const message = text => ({ type: 'message', role: 'assistant', status: 'completed', content: [{ type: 'output_text', text, annotations: [] }] });
 const call = (name, args, id = 'call_1') => ({ type: 'function_call', status: 'completed', call_id: id, name, arguments: JSON.stringify(args) });

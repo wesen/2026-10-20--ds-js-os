@@ -6,13 +6,13 @@ import {tmpdir} from 'node:os';
 import {dirname, join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import '../../lib/compiler.mjs';
-import '../../../picocalc-os/worlds/files/compile.js';
+import '../../../apps/typed/files/compile.js';
 
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass the ESP32-P4 cross-compiler and CJI rv32emu');
 const dir = mkdtempSync(join(tmpdir(), 'files-rv32-'));
 try {
-    const sdk = 'picocalc-os/sdk', world = 'picocalc-os/worlds/files';
+    const sdk = 'picocalc-os/sdk', world = 'apps/typed/files';
     const reactor = join(dir, 'reactor.elf'), module = join(dir, 'files.so'), driver = join(dir, 'driver.elf');
     execFileSync(cc, [
         '-march=rv32imafc_zicsr_zifencei', '-mabi=ilp32f', '-Os', '-fPIC', '-shared', '-nostartfiles',

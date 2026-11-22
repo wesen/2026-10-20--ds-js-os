@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import '../../lib/compiler.mjs';
 
-const annotated = readFileSync('picocalc-os/worlds/agenda/reminder.typed', 'utf8');
+const annotated = readFileSync('apps/typed/agenda/reminder.typed', 'utf8');
 const declarations = /\b(let|const) (\w+): (i32|bool) =/g;
 const inferred = annotated.replace(declarations, '$1 $2 =');
 assert(annotated !== inferred);

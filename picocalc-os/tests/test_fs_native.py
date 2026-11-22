@@ -23,7 +23,7 @@ class Scenario:
         self.root = Path(self.temp.name)
         self.js = self.root / "js"
         self.js.mkdir()
-        shutil.copyfile(OS / "js/prelude.js", self.js / "prelude.js")
+        shutil.copyfile(OS / "../apps/js/picocalc/prelude.js", self.js / "prelude.js")
         self.fs = self.root / "files"
         self.fs.mkdir()
         self.worlds = []

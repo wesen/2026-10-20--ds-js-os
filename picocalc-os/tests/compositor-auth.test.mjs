@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import vm from "node:vm";
 import { readFileSync } from "node:fs";
 
-const source = readFileSync(new URL("../js/system/compositor.js", import.meta.url), "utf8");
+const source = readFileSync(new URL("../../apps/js/picocalc/system/compositor.js", import.meta.url), "utf8");
 function setup() {
   const def = { handlers: {} }, sent = [];
   const builder = {
@@ -179,7 +179,7 @@ function driver(file) {
     provides() { return this; }, needs() { return this; }, state(s) { def.state = s; return this; }, onStart() { return this; },
     on(name, fn) { def.handlers[name] = fn; return this; }, every() { return this; },
   };
-  vm.runInNewContext(readFileSync(new URL("../js/drivers/" + file, import.meta.url), "utf8"),
+  vm.runInNewContext(readFileSync(new URL("../../apps/js/picocalc/drivers/" + file, import.meta.url), "utf8"),
     { driver: () => builder, sleep: async () => {}, now: () => 0, hw: {}, publish: () => {} });
   return { def, state: JSON.parse(JSON.stringify(def.state)) };
 }

@@ -9,8 +9,8 @@ import '../../lib/compiler.mjs';
 
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
-const editor = readFileSync('picocalc-os/worlds/editor/empty.typed', 'utf8');
-const original = readFileSync('picocalc-os/js/apps/editor.js', 'utf8');
+const editor = readFileSync('apps/typed/editor/empty.typed', 'utf8');
+const original = readFileSync('apps/js/picocalc/apps/editor.js', 'utf8');
 let view;
 const app = {
     title() { return this; }, key() { return this; }, about() { return this; },

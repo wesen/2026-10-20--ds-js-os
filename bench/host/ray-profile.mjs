@@ -23,7 +23,7 @@ const args = process.argv.slice(2);
 const option = name => { const i = args.indexOf(name); return i < 0 ? undefined : args[i + 1]; };
 const arms = option("--options") ? {custom: JSON.parse(option("--options"))} :
     option("--policy") ? {[option("--policy")]: {policy: option("--policy")}} : POLICIES;
-const source = readFileSync(new URL("picocalc-os/worlds/raytrace/raytrace.typed", root), "utf8");
+const source = readFileSync(new URL("apps/typed/raytrace/raytrace.typed", root), "utf8");
 const sha = bytes => createHash("sha256").update(bytes).digest("hex");
 
 const results = {};

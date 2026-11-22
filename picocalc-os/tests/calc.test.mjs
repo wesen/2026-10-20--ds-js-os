@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import vm from "node:vm";
 import { readFileSync } from "node:fs";
 
-const source = readFileSync(new URL("../js/apps/calc.js", import.meta.url), "utf8");
+const source = readFileSync(new URL("../../apps/js/picocalc/apps/calc.js", import.meta.url), "utf8");
 const plain = (x) => JSON.parse(JSON.stringify(x));   // values made in the VM have the VM's prototypes
 
 // The calculator in a VM with a fake builder, store, clock and sleep. Timers fire only when the test says so.

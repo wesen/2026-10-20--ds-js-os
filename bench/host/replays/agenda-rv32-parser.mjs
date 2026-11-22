@@ -13,7 +13,7 @@ const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass riscv32-esp-elf-gcc and the repository rv32emu executable');
 const work = mkdtempSync(join(tmpdir(), 'agenda-rv32-'));
 const dir = fileURLToPath(new URL('.', import.meta.url));
-const source = readFileSync('picocalc-os/worlds/agenda/reminder.typed', 'utf8');
+const source = readFileSync('apps/typed/agenda/reminder.typed', 'utf8');
 const {image, entries} = typedRv32.compile(source);
 const {instance} = await WebAssembly.instantiate(compileTyped(source));
 const wasm = new DataView(instance.exports.memory.buffer);

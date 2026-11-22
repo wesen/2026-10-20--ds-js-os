@@ -143,7 +143,7 @@ static int run_line(char *line, int lineno) {
 }
 
 int main(int argc, char **argv) {
-  const char *js = "js", *manifest = NULL, *script = NULL, *uart = NULL, *wall = NULL, *zone = "UTC0";
+  const char *js = "../apps/js/picocalc", *manifest = NULL, *script = NULL, *uart = NULL, *wall = NULL, *zone = "UTC0";
   double run_ms = 0;
   for (int i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "-j") && i + 1 < argc) js = argv[++i];

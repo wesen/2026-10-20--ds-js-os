@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import vm from "node:vm";
 import { readFileSync } from "node:fs";
 
-const source = readFileSync(new URL("../js/apps/agenda.js", import.meta.url), "utf8");
+const source = readFileSync(new URL("../../apps/js/picocalc/apps/agenda.js", import.meta.url), "utf8");
 const plain = (x) => JSON.parse(JSON.stringify(x));
 const NY = (y, m, d, hh = 0, mm = 0) => new Date(y, m - 1, d, hh, mm).getTime();   // a New York local time
 

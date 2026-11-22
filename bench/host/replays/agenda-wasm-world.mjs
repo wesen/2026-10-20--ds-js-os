@@ -6,11 +6,11 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import '../../lib/compiler.mjs';
-import '../../../picocalc-os/worlds/agenda/compile.js';
+import '../../../apps/typed/agenda/compile.js';
 
 const os = resolve('picocalc-os');
 const host = process.argv[2] ? resolve(process.argv[2]) : join(os, 'build/picocalc-host');
-const world = join(os, 'worlds/agenda');
+const world = join(os, '../apps/typed/agenda');
 const scratch = mkdtempSync(join(tmpdir(), 'picocalc-agenda-wasm-'));
 const runtime = join(os, 'build/agenda-reactor.wasm');
 const asset = join(scratch, 'agenda.wasm');
@@ -34,7 +34,7 @@ writeFileSync(asset, bytes);
 
 mkdirSync(join(fsRoot, 'notes'), {recursive: true});
 writeFileSync(join(fsRoot, 'notes/todo.txt'), '# Tasks\n- [ ] dentist 🦷 @2026-11-03 14:30 !15m\n- [x] done\n- book a train\n');
-writeFileSync(join(scratch, 'prelude.js'), readFileSync(join(os, 'js/prelude.js')));
+writeFileSync(join(scratch, 'prelude.js'), readFileSync(join(os, '../apps/js/picocalc/prelude.js')));
 writeFileSync(join(scratch, 'system.json'), JSON.stringify({worlds:[
     {name:'agenda-wasm',file:'agenda.wasm',engine:'wasm',claims:['fs:/notes'],mem_kb:384,budget_ms:100},
     {name:'peer',file:'peer.js',claims:['frames.read','sys.read'],mem_kb:512},
@@ -121,11 +121,11 @@ assert.equal(transition.length, 1);
 assert.equal(transition[0][0].text, 'transition at 01:30');
 assert(transition[0][2] >= transitionScheduled && transition[0][2] < transitionScheduled + 15000);
 // Check the real compositor and its display driver, separately from frame messages.
-const displayWorlds = JSON.parse(readFileSync(join(os, 'js/system.json'), 'utf8')).worlds
+const displayWorlds = JSON.parse(readFileSync(join(os, '../apps/js/picocalc/system.json'), 'utf8')).worlds
     .filter(world => ['keyboard', 'display', 'compositor', 'launcher'].includes(world.name));
 for (const world of displayWorlds) {
     mkdirSync(join(scratch, world.file.split('/')[0]), {recursive:true});
-    writeFileSync(join(scratch, world.file), readFileSync(join(os, 'js', world.file)));
+    writeFileSync(join(scratch, world.file), readFileSync(join(os, '../apps/js/picocalc', world.file)));
 }
 writeFileSync(join(scratch, 'focus.js'), `
 service("focus").onStart(async () => {
@@ -172,7 +172,7 @@ const groupFixture = [
     '- [ ] tomato @2026-11-02', '- [ ] yesterday @2026-10-31 09:00',
     '- [X] second done @2026-11-01', '- [ ] last undated', '',
 ].join('\n');
-writeFileSync(join(scratch, 'agenda.js'), readFileSync(join(os, 'js/apps/agenda.js')));
+writeFileSync(join(scratch, 'agenda.js'), readFileSync(join(os, '../apps/js/picocalc/apps/agenda.js')));
 const groupFrames = (name, text, keys, compact = false) => {
     const world = name === 'agenda' ? {...manifest.worlds[0], name, file:'agenda.js', engine:'js'} : manifest.worlds[0];
     writeFileSync(join(scratch, 'focus.js'), `
@@ -335,7 +335,7 @@ assert.deepEqual(refresh.views, [
 ]);
 
 // The real Editor has no notes-directory claim. F6 lets it edit precisely the granted file.
-writeFileSync(join(scratch, 'apps/editor.js'), readFileSync(join(os, 'js/apps/editor.js')));
+writeFileSync(join(scratch, 'apps/editor.js'), readFileSync(join(os, '../apps/js/picocalc/apps/editor.js')));
 writeFileSync(join(scratch, 'focus.js'), `
 service("focus").needs("frames").on("frames", (s, frame, msg) => {
     if (["editor", "agenda-wasm"].includes(msg.from))

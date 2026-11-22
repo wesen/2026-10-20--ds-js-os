@@ -661,7 +661,7 @@ Repository findings are grounded in the baseline commit above and the implemente
 - **R1.** [Baseline PicoCalc README](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/picocalc-os/README.md): hardware target, world architecture, original limitations, existing build flow.
 - **R2.** [Baseline kernel](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/picocalc-os/nucleus/kernel.c): turns, scheduling, deferred effects, supervision.
 - **R3.** [Baseline QuickJS binding](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/picocalc-os/nucleus/vm.c) and [MicroQuickJS binding](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/picocalc-os/nucleus/vm_mqjs.c): API differences and existing store precedent.
-- **R4.** [Baseline JS prelude](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/picocalc-os/js/prelude.js): Promise/turn dispatch and UI/message contract.
+- **R4.** [Baseline JS prelude](https://github.com/wesen/2026-10-20--ds-js-os/blob/3e0bcfa60f370f62aae9ee1ce8402d6bba1ff05d/apps/js/picocalc/prelude.js): Promise/turn dispatch and UI/message contract.
 - **R5.** [Waveshare ESP32-P4-WIFI6 documentation](https://docs.waveshare.com/ESP32-P4-WIFI6): base board and integrated C6.
 - **R6.** [ESP-IDF 5.4.2 Wi-Fi expansion](https://docs.espressif.com/projects/esp-idf/en/v5.4.2/esp32p4/api-guides/wifi-expansion.html): P4 requires a Wi-Fi coprocessor and remote Wi-Fi integration.
 - **R7.** [Waveshare base-board schematic](https://files.waveshare.com/wiki/ESP32-P4-WIFI6/ESP32-P4-WIFI6-datasheet.pdf): C6 SDIO and reset wiring.

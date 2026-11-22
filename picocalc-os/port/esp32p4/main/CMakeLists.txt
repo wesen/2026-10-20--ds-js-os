@@ -68,7 +68,7 @@ if(PICOCALC_NATIVE_ELF)
     list(APPEND BUNDLE_EXTRA_DEPS ${ELF_DIR}/system.elf.json)
     file(GLOB cji_frontend CONFIGURE_DEPENDS ${CJI_ROOT}/src/*.js)
     set(builtin_manifest ${CMAKE_CURRENT_BINARY_DIR}/system.cji.json)
-    file(READ ${OS}/js/system.json system_json)
+    file(READ ${OS}/../apps/js/picocalc/system.json system_json)
     string(JSON count LENGTH "${system_json}" worlds)
     math(EXPR last "${count} - 1")
     if(PICOCALC_TEST_CJI_PHASE3)
@@ -86,7 +86,7 @@ if(PICOCALC_NATIVE_ELF)
         string(JSON name GET "${system_json}" worlds ${i} name)
         if(name IN_LIST CJI_WORLDS)
             string(JSON file GET "${system_json}" worlds ${i} file)
-            set(cji_input_${name} ${OS}/js/${file})
+            set(cji_input_${name} ${OS}/../apps/js/picocalc/${file})
             string(JSON system_json SET "${system_json}" worlds ${i} engine "\"native\"")
             string(JSON system_json SET "${system_json}" worlds ${i} file "\"natives/${name}.elf\"")
         endif()
@@ -114,7 +114,7 @@ if(PICOCALC_NATIVE_ELF)
         list(APPEND BUNDLE_EXTRA "tests/grant-test.js=${test_dir}/sender.js")
         list(APPEND BUNDLE_EXTRA_DEPS ${test_dir}/sender.js)
     endif()
-    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${OS}/js/system.json)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${OS}/../apps/js/picocalc/system.json)
     if(PICOCALC_HEADLESS)
         target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_HEADLESS=1)
         # Remove in descending order so earlier indices remain valid. Keep the ELFs in the catalog.
@@ -221,9 +221,9 @@ if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES OR PICOCALC_TYPED_EDITOR OR PIC
     if(PICOCALC_NATIVE_ELF)
         set(typed_manifest "${system_json}")
     else()
-        file(READ "${OS}/js/system.json" typed_manifest)
+        file(READ "${OS}/../apps/js/picocalc/system.json" typed_manifest)
     endif()
-    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${OS}/js/system.json")
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${OS}/../apps/js/picocalc/system.json")
     string(JSON world_count LENGTH "${typed_manifest}" worlds)
     math(EXPR last_world "${world_count} - 1")
 endif()
@@ -258,9 +258,9 @@ if(PICOCALC_CHESS_3D AND PICOCALC_RV32_CHESS)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_CANDELA=1)
     target_sources(${COMPONENT_LIB} PRIVATE candela_p4.c ${OS}/nucleus/candela_scene.c)
     target_link_libraries(${COMPONENT_LIB} PRIVATE idf::espressif__elf_loader)
-    set(candela_dir ${OS}/worlds/candela)
+    set(candela_dir ${OS}/../apps/typed/candela)
     set(candela_slot ${CMAKE_CURRENT_BINARY_DIR}/candela-slot.elf)
-    set(candela_link ${OS}/worlds/candela/link.js)
+    set(candela_link ${OS}/../apps/typed/candela/link.js)
     set(candela_stub ${CMAKE_CURRENT_LIST_DIR}/candela_slot.c ${CMAKE_CURRENT_LIST_DIR}/candela_slot.S)
     add_custom_command(OUTPUT ${candela_slot}
         COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o ${candela_slot} ${candela_stub}
@@ -269,16 +269,16 @@ if(PICOCALC_CHESS_3D AND PICOCALC_RV32_CHESS)
     list(APPEND BUNDLE_EXTRA_DEPS ${candela_slot} ${candela_link})
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_RAY=1)
     target_sources(${COMPONENT_LIB} PRIVATE typed_ray_p4.c typed_ray_material_bench.c)
-    set(ray_source ${OS}/worlds/raytrace/raytrace.typed)
-    set(ray_linker ${OS}/worlds/raytrace/link.js)
+    set(ray_source ${OS}/../apps/typed/raytrace/raytrace.typed)
+    set(ray_linker ${OS}/../apps/typed/raytrace/link.js)
     list(APPEND BUNDLE_EXTRA "typed-ray/main.typed=${ray_source}" "typed-ray/link.js=${ray_linker}")
     list(APPEND BUNDLE_EXTRA_DEPS ${ray_source} ${ray_linker})
     set(ray_material ${CMAKE_CURRENT_BINARY_DIR}/typed-ray-material.typed)
-    set(ray_material_link ${OS}/worlds/raytrace/link-material.js)
+    set(ray_material_link ${OS}/../apps/typed/raytrace/link-material.js)
     add_custom_command(OUTPUT ${ray_material}
-        COMMAND ${PYTHON} ${OS}/worlds/raytrace/assemble-material.py ${ray_material}
-        DEPENDS ${OS}/worlds/raytrace/assemble-material.py ${OS}/worlds/raytrace/raytrace.typed
-            ${OS}/worlds/raytrace/material-frame.typed ${OS}/worlds/raytrace/material-phases.typed
+        COMMAND ${PYTHON} ${OS}/../apps/typed/raytrace/assemble-material.py ${ray_material}
+        DEPENDS ${OS}/../apps/typed/raytrace/assemble-material.py ${OS}/../apps/typed/raytrace/raytrace.typed
+            ${OS}/../apps/typed/raytrace/material-frame.typed ${OS}/../apps/typed/raytrace/material-phases.typed
             ${candela_dir}/builders.typed
             ${candela_dir}/materials.typed ${candela_dir}/hand.typed VERBATIM)
     list(APPEND BUNDLE_EXTRA "typedmat/main.typed=${ray_material}" "typedmat/link.js=${ray_material_link}")
@@ -307,15 +307,15 @@ if(PICOCALC_MOBILE_PAINTER)
     target_link_libraries(${COMPONENT_LIB} PRIVATE idf::espressif__elf_loader)
     set(painter_slot "${CMAKE_CURRENT_BINARY_DIR}/mobile-painter-slot.elf")
     set(painter_sources "${CMAKE_CURRENT_LIST_DIR}/mobile_painter_slot.c" "${CMAKE_CURRENT_LIST_DIR}/mobile_painter_slot.S")
-    set(painter_link "${OS}/worlds/chess/link-painter.js")
+    set(painter_link "${OS}/../apps/typed/chess/link-painter.js")
     set(painter_slot_flags)
     if(PICOCALC_CHESS_3D)
         target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_CHESS_3D=1)
-        set(painter_source "${OS}/worlds/chess/painter-3d.typed")
+        set(painter_source "${OS}/../apps/typed/chess/painter-3d.typed")
         # Size the native slot separately from the transport source limit.
         set(painter_slot_flags "-DMOBILE_PAINTER_NATIVE_SLOT_BYTES=32768")
     else()
-        set(painter_source "${OS}/worlds/chess/painter.typed")
+        set(painter_source "${OS}/../apps/typed/chess/painter.typed")
     endif()
     add_custom_command(OUTPUT "${painter_slot}"
         COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} ${painter_slot_flags} -o "${painter_slot}" ${painter_sources}
@@ -340,7 +340,7 @@ if(PICOCALC_TYPED_CHESS)
         endif()
         set(chess_engine wasm)
     endif()
-    set(chess_dir "${OS}/worlds/chess")
+    set(chess_dir "${OS}/../apps/typed/chess")
     file(STRINGS "${chess_dir}/source.list" chess_parts)
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${chess_dir}/source.list")
     set(chess_source "${CMAKE_CURRENT_BINARY_DIR}/chess.typed")
@@ -397,16 +397,16 @@ if(PICOCALC_CANDELA_WORLD)
                 "-DCONFIG_VERSION=\"${QJS_VERSION}\"" -o ${candela_bc} ${candela_gen}/candela-bc.c ${candela_qjs} -lm -lpthread
         DEPENDS ${candela_gen}/candela-bc.c ${candela_qjs} ${QJS}/quickjs.h VERBATIM)
     set(candela_front ${CMAKE_CURRENT_BINARY_DIR}/candela-front.qbc)
-    set(candela_list ${OS}/worlds/candela-world/bundle.list)
+    set(candela_list ${OS}/../apps/js/worlds/candela-world/bundle.list)
     file(GLOB candela_world_inputs CONFIGURE_DEPENDS ${OS}/third_party/candela/src/*.js ${OS}/third_party/candela/presets/*.js
-         ${OS}/worlds/candela-world/*.js ${OS}/worlds/candela-world/scenes/*.js)
+         ${OS}/../apps/js/worlds/candela-world/*.js ${OS}/../apps/js/worlds/candela-world/scenes/*.js)
     add_custom_command(OUTPUT ${candela_front}
         COMMAND ${candela_bc} ${candela_front} --list ${candela_list} ${OS}
         DEPENDS ${candela_bc} ${candela_list} ${candela_world_inputs} ${OS}/third_party/candela/PIN.json VERBATIM)
-    list(APPEND BUNDLE_EXTRA "candela/front.qbc=${candela_front}" "candela/world.js=${OS}/worlds/candela-world/main.js")
-    list(APPEND BUNDLE_EXTRA_DEPS ${candela_front} ${OS}/worlds/candela-world/main.js)
-    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${OS}/worlds/candela-world/manifest.json)
-    file(READ ${OS}/worlds/candela-world/manifest.json candela_world_entry)
+    list(APPEND BUNDLE_EXTRA "candela/front.qbc=${candela_front}" "candela/world.js=${OS}/../apps/js/worlds/candela-world/main.js")
+    list(APPEND BUNDLE_EXTRA_DEPS ${candela_front} ${OS}/../apps/js/worlds/candela-world/main.js)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${OS}/../apps/js/worlds/candela-world/manifest.json)
+    file(READ ${OS}/../apps/js/worlds/candela-world/manifest.json candela_world_entry)
     string(JSON candela_world_index LENGTH "${typed_manifest}" worlds)
     string(JSON typed_manifest SET "${typed_manifest}" worlds ${candela_world_index} "${candela_world_entry}")
 endif()
@@ -457,10 +457,10 @@ if(PICOCALC_CANDELA_GALLERY)
     set_source_files_properties(${OS}/nucleus/candela_gallery.c PROPERTIES COMPILE_OPTIONS "${cdl_fp}")
     target_sources(${COMPONENT_LIB} PRIVATE candela_gallery_p4.c ${OS}/nucleus/candela_gallery.c ${cdl}/vm/cdl_vm.c
         ${cdl}/gallery/candela_gallery_scenes.c ${cdl}/kernel/cdl_fixed_kernel.c ${gallery_sources})
-    list(APPEND BUNDLE_EXTRA "candela-gallery/gallery.js=${OS}/worlds/candela-gallery/gallery.js")
-    list(APPEND BUNDLE_EXTRA_DEPS ${OS}/worlds/candela-gallery/gallery.js)
-    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${OS}/worlds/candela-gallery/manifest.json)
-    file(READ ${OS}/worlds/candela-gallery/manifest.json gallery_entry)
+    list(APPEND BUNDLE_EXTRA "candela-gallery/gallery.js=${OS}/../apps/js/worlds/candela-gallery/gallery.js")
+    list(APPEND BUNDLE_EXTRA_DEPS ${OS}/../apps/js/worlds/candela-gallery/gallery.js)
+    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${OS}/../apps/js/worlds/candela-gallery/manifest.json)
+    file(READ ${OS}/../apps/js/worlds/candela-gallery/manifest.json gallery_entry)
     string(JSON gallery_index LENGTH "${typed_manifest}" worlds)
     string(JSON typed_manifest SET "${typed_manifest}" worlds ${gallery_index} "${gallery_entry}")
 endif()
@@ -478,7 +478,7 @@ if(PICOCALC_TYPED_EDITOR)
         set(editor_reactor "${PICOCALC_EDITOR_REACTOR}")
         set(editor_engine wasm)
     endif()
-    set(editor_dir "${OS}/worlds/editor")
+    set(editor_dir "${OS}/../apps/typed/editor")
     set(editor_list "${editor_dir}/source.list")
     file(STRINGS "${editor_list}" editor_parts)
     set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${editor_list}")
@@ -515,10 +515,10 @@ endif()
 if(PICOCALC_TYPED_FILES)
     if(PICOCALC_RV32_FILES)
         set(files_reactor "${CMAKE_CURRENT_BINARY_DIR}/files-reactor.elf")
-        set(files_sources "${OS}/worlds/files/world.c" "${OS}/worlds/files/rv32-slot.S")
+        set(files_sources "${OS}/../apps/typed/files/world.c" "${OS}/../apps/typed/files/rv32-slot.S")
         add_custom_command(OUTPUT "${files_reactor}"
             COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${files_reactor}" ${files_sources} ${OS}/sdk/nw_elf.c
-            DEPENDS ${files_sources} ${OS}/worlds/files/slots.h
+            DEPENDS ${files_sources} ${OS}/../apps/typed/files/slots.h
                     ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h ${OS}/sdk/nw_calls.inc
                     ${OS}/sdk/nw_wire.h ${OS}/sdk/nw_json.h ${OS}/sdk/nw_ui.h ${OS}/sdk/nw_utf16.h
             VERBATIM)
@@ -546,11 +546,11 @@ if(PICOCALC_TYPED_FILES)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_FILES=1)
     list(APPEND BUNDLE_EXTRA
         "system.typed-files.json=${files_manifest_path}"
-        "files/compile.js=${OS}/worlds/files/compile.js"
-        "files/files.typed=${OS}/worlds/files/files.typed"
+        "files/compile.js=${OS}/../apps/typed/files/compile.js"
+        "files/files.typed=${OS}/../apps/typed/files/files.typed"
         "files/reactor.bin=${files_reactor}")
     list(APPEND BUNDLE_EXTRA_DEPS
-        "${files_manifest_path}" "${files_reactor}" "${OS}/worlds/files/compile.js" "${OS}/worlds/files/files.typed")
+        "${files_manifest_path}" "${files_reactor}" "${OS}/../apps/typed/files/compile.js" "${OS}/../apps/typed/files/files.typed")
 endif()
 
 if(PICOCALC_TYPED_AGENDA)
@@ -559,7 +559,7 @@ if(PICOCALC_TYPED_AGENDA)
     endif()
     if(PICOCALC_RV32_AGENDA)
         set(agenda_reactor "${CMAKE_CURRENT_BINARY_DIR}/agenda-reactor.elf")
-        set(agenda_sources "${OS}/worlds/agenda/wasm-world.c" "${OS}/worlds/agenda/rv32-slot.S")
+        set(agenda_sources "${OS}/../apps/typed/agenda/wasm-world.c" "${OS}/../apps/typed/agenda/rv32-slot.S")
         add_custom_command(OUTPUT "${agenda_reactor}"
             COMMAND ${CMAKE_C_COMPILER} ${ELF_FLAGS} -o "${agenda_reactor}" ${agenda_sources} ${OS}/sdk/nw_elf.c
             DEPENDS ${agenda_sources} ${OS}/sdk/nw_elf.c ${OS}/sdk/nw_elf.h ${OS}/sdk/nw.h
@@ -591,21 +591,21 @@ if(PICOCALC_TYPED_AGENDA)
     target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_AGENDA=1)
     list(APPEND BUNDLE_EXTRA
         "system.typed-agenda.json=${agenda_manifest_path}"
-        "agenda/compile.js=${OS}/worlds/agenda/compile.js"
-        "agenda/reminder.typed=${OS}/worlds/agenda/reminder.typed"
-        "agenda/entry.typed=${OS}/worlds/agenda/entry.typed"
+        "agenda/compile.js=${OS}/../apps/typed/agenda/compile.js"
+        "agenda/reminder.typed=${OS}/../apps/typed/agenda/reminder.typed"
+        "agenda/entry.typed=${OS}/../apps/typed/agenda/entry.typed"
         "agenda/reactor.bin=${agenda_reactor}")
     list(APPEND BUNDLE_EXTRA_DEPS
         "${agenda_manifest_path}" "${agenda_reactor}"
-        "${OS}/worlds/agenda/compile.js" "${OS}/worlds/agenda/reminder.typed"
-        "${OS}/worlds/agenda/entry.typed")
+        "${OS}/../apps/typed/agenda/compile.js" "${OS}/../apps/typed/agenda/reminder.typed"
+        "${OS}/../apps/typed/agenda/entry.typed")
 endif()
 
-file(GLOB_RECURSE JS_FILES CONFIGURE_DEPENDS ${OS}/js/*.js ${OS}/js/*.json ${OS}/js/*.wasm)
+file(GLOB_RECURSE JS_FILES CONFIGURE_DEPENDS ${OS}/../apps/js/picocalc/*.js ${OS}/../apps/js/picocalc/*.json ${OS}/../apps/js/picocalc/*.wasm)
 set(BUNDLE ${CMAKE_CURRENT_BINARY_DIR}/js_bundle.c)
 add_custom_command(
     OUTPUT ${BUNDLE}
-    COMMAND ${CMAKE_COMMAND} -DJS_ROOT=${OS}/js "-DEXTRA=${BUNDLE_EXTRA}" -DOUT=${BUNDLE} -P ${CMAKE_CURRENT_LIST_DIR}/bundle_js.cmake
+    COMMAND ${CMAKE_COMMAND} -DJS_ROOT=${OS}/../apps/js/picocalc "-DEXTRA=${BUNDLE_EXTRA}" -DOUT=${BUNDLE} -P ${CMAKE_CURRENT_LIST_DIR}/bundle_js.cmake
     DEPENDS ${JS_FILES} ${BUNDLE_EXTRA_DEPS} ${CMAKE_CURRENT_LIST_DIR}/bundle_js.cmake
     VERBATIM)
 target_sources(${COMPONENT_LIB} PRIVATE ${BUNDLE})

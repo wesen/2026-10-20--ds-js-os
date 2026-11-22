@@ -36,7 +36,7 @@ class Scenario:
         self.root = Path(self.temp.name)
         self.js = self.root / "js"
         self.js.mkdir()
-        shutil.copyfile(OS / "js/prelude.js", self.js / "prelude.js")
+        shutil.copyfile(OS / "../apps/js/picocalc/prelude.js", self.js / "prelude.js")
         self.fixtures = self.root / "fixtures"
         self.fixtures.mkdir()
         self.store = self.root / "store"

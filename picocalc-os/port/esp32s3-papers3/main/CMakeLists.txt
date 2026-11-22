@@ -40,11 +40,11 @@ set_source_files_properties(
     # as the host build: upstream's warnings are not ours to fix; -fwrapv and -fno-strict-aliasing as for QuickJS
     PROPERTIES COMPILE_OPTIONS "-w;-fwrapv;-fno-strict-aliasing")
 
-file(GLOB_RECURSE JS_FILES CONFIGURE_DEPENDS ${OS}/js-papers3/*.js ${OS}/js-papers3/*.json)
+file(GLOB_RECURSE JS_FILES CONFIGURE_DEPENDS ${OS}/../apps/js/papers3/*.js ${OS}/../apps/js/papers3/*.json)
 set(BUNDLE ${CMAKE_CURRENT_BINARY_DIR}/js_bundle.c)
 add_custom_command(
     OUTPUT ${BUNDLE}
-    COMMAND ${CMAKE_COMMAND} -DJS_ROOT=${OS}/js-papers3 -DOUT=${BUNDLE} -P ${OS}/port/esp32p4/main/bundle_js.cmake
+    COMMAND ${CMAKE_COMMAND} -DJS_ROOT=${OS}/../apps/js/papers3 -DOUT=${BUNDLE} -P ${OS}/port/esp32p4/main/bundle_js.cmake
     DEPENDS ${JS_FILES} ${OS}/port/esp32p4/main/bundle_js.cmake
     VERBATIM)
 target_sources(${COMPONENT_LIB} PRIVATE ${BUNDLE})

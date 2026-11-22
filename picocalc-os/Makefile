@@ -41,8 +41,8 @@ ifeq ($(BOARD),papers3)
              host/port_host.c host/agent_host.c host/main_host.c host/native_proc.c
   HDRS    := nucleus/nucleus.h sdk/nw_wire.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
   BIN     := $(BUILD)/papers3-host
-  SCRIPTS := scripts-papers3
-  JSROOT  := js-papers3
+  SCRIPTS := ../apps/tours/papers3
+  JSROOT  := ../apps/js/papers3
   OUT     := out-papers3
 else
   BUILD   := $(if $(M32),build32,build)$(subst 32,,$(BUILD_SUFFIX))
@@ -54,8 +54,8 @@ else
              sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/agent_host.c host/net_host.c host/main_host.c host/native_proc.c
   HDRS    := nucleus/nucleus.h nucleus/raytrace_demo.h sdk/nw_wire.h nucleus/font_data.h sim/picocalc.h host/board.h
   BIN     := $(BUILD)/picocalc-host
-  SCRIPTS := scripts
-  JSROOT  := js
+  SCRIPTS := ../apps/tours/picocalc
+  JSROOT  := ../apps/js/picocalc
   OUT     := out
 endif
 
@@ -135,13 +135,13 @@ $(GEN)/mqjs_stdlib.h: $(ENG)/nucleus_stdlib.c $(ENG)/mqjs_stdlib.c $(ENG)/mquick
 	$(GEN)/stdlib-gen $(if $(M32),-m32) > $(GEN)/mqjs_stdlib.h 2>/dev/null
 	$(GEN)/stdlib-gen $(if $(M32),-m32) -a > $(GEN)/mquickjs_atom.h 2>/dev/null
 
-CANDELA_INPUTS := $(wildcard third_party/candela/src/*.js third_party/candela/presets/*.js worlds/candela-world/*.js \
-                  worlds/candela-world/scenes/*.js) third_party/candela/PIN.json worlds/candela-world/bundle.list \
-                  worlds/candela-world/manifest.json $(CANDELA_GEN)/candela-stage.py
+CANDELA_INPUTS := $(wildcard third_party/candela/src/*.js third_party/candela/presets/*.js ../apps/js/worlds/candela-world/*.js \
+                  ../apps/js/worlds/candela-world/scenes/*.js) third_party/candela/PIN.json ../apps/js/worlds/candela-world/bundle.list \
+                  ../apps/js/worlds/candela-world/manifest.json $(CANDELA_GEN)/candela-stage.py
 candela: $(BIN) $(BUILD)/candela-js/candela/front.qbc
 $(BUILD)/candela-bc: $(CANDELA_GEN)/candela-bc.c $(ENG_OBJ)
 	$(CC) $(CFLAGS) -o $@ $(CANDELA_GEN)/candela-bc.c $(ENG_OBJ) -lm -lpthread
-$(BUILD)/candela-js/candela/front.qbc: $(BUILD)/candela-bc $(CANDELA_INPUTS) $(wildcard js/*.js js/*/*.js js/*.json)
+$(BUILD)/candela-js/candela/front.qbc: $(BUILD)/candela-bc $(CANDELA_INPUTS) $(wildcard $(JSROOT)/*.js $(JSROOT)/*/*.js $(JSROOT)/*.json)
 	$(PYTHON) -I $(CANDELA_GEN)/candela-stage.py $(BUILD) $(BUILD)/candela-bc
 
 shots: $(BIN)
@@ -223,7 +223,7 @@ WASMS      := $(addprefix $(BUILD)/natives/,echo.wasm battery.wasm wprobe.wasm w
 wasm: $(WASMS)
 
 # Only the reactor is built here. The handheld compiles and links reminder.typed.
-AGENDA_SRC := worlds/agenda/wasm-world.c worlds/agenda/wasm-slot.c
+AGENDA_SRC := ../apps/typed/agenda/wasm-world.c ../apps/typed/agenda/wasm-slot.c
 .PHONY: agenda-reactor
 agenda-reactor: $(BUILD)/agenda-reactor.wasm
 
@@ -231,11 +231,11 @@ $(BUILD)/agenda-reactor.wasm: $(AGENDA_SRC) $(WASM_SDK)
 	@mkdir -p $(dir $@)
 	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(AGENDA_SRC) sdk/nw_wasm.c
 
-FILES_SRC := worlds/files/world.c worlds/files/wasm-slot.c
+FILES_SRC := ../apps/typed/files/world.c ../apps/typed/files/wasm-slot.c
 .PHONY: files-reactor
 files-reactor: $(BUILD)/files-reactor.wasm
 
-$(BUILD)/files-reactor.wasm: $(FILES_SRC) worlds/files/slots.h $(WASM_SDK)
+$(BUILD)/files-reactor.wasm: $(FILES_SRC) ../apps/typed/files/slots.h $(WASM_SDK)
 	@mkdir -p $(dir $@)
 	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(FILES_SRC) sdk/nw_wasm.c
 

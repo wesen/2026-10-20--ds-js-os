@@ -11,7 +11,7 @@ import '../../lib/compiler.mjs';
 const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
 const os = resolve('picocalc-os');
-const editorDir = join(os, 'worlds/editor');
+const editorDir = join(os, '../apps/typed/editor');
 const sources = readFileSync(join(editorDir, 'source.list'), 'utf8').trim().split('\n');
 const source = sources.map(name => readFileSync(join(editorDir, name), 'utf8') + '\n').join('');
 const wasmReactor = readFileSync(join(os, 'build/typed-world-reactor.wasm'));
@@ -19,7 +19,7 @@ const wasm = compileTypedWorld(source, wasmReactor);
 const wrongCall = source.replace('typedSdkScreen(output,', 'typedSdkScreen(0,');
 assert.throws(() => compileTypedWorld(wrongCall, wasmReactor), SyntaxError);
 const dir = mkdtempSync(join(tmpdir(), 'typed-editor-reactor-'));
-const system = JSON.parse(readFileSync(join(os, 'js/system.json'), 'utf8'));
+const system = JSON.parse(readFileSync(join(os, '../apps/js/picocalc/system.json'), 'utf8'));
 const worlds = system.worlds.filter(w => ['display', 'keyboard', 'compositor', 'launcher', 'files', 'editor'].includes(w.name));
 const large = process.argv.includes('--large');
 const edit = process.argv.includes('--edit');
@@ -89,7 +89,7 @@ const previewDenseActions = [
 const previewActions = previewDenseInline ? previewDenseActions : previewInline ? previewInlineActions : capacity ? previewLargeActions : markdownActions;
 
 // Compare the compositor's visual row model for each captured frame.
-const compositor = readFileSync(join(os, 'js/system/compositor.js'), 'utf8');
+const compositor = readFileSync(join(os, '../apps/js/picocalc/system/compositor.js'), 'utf8');
 const wrap = runInNewContext(compositor.slice(compositor.indexOf('const len ='), compositor.indexOf('// ---- layout:')) + '\nwrapText');
 function visualFrame(frame) {
     const node = frame.kids[1];
@@ -126,14 +126,14 @@ function run(name, compiled) {
     writeFileSync(join(fs, filename), contents);
     if (positions || navigation) mkdirSync(dirname(record), {recursive:true});
     if (positions) writeFileSync(record, JSON.stringify(seed));
-    copyFileSync(join(os, 'js/prelude.js'), join(js, 'prelude.js'));
+    copyFileSync(join(os, '../apps/js/picocalc/prelude.js'), join(js, 'prelude.js'));
     const entries = worlds.map(w => {
         if (w.name === 'editor' && compiled) {
             writeFileSync(join(js, 'editor.wasm'), wasm);
             return {...w, file:'editor.wasm', engine:'wasm', budget_ms:turnBudget, mem_kb:768};
         }
         mkdirSync(dirname(join(js, w.file)), {recursive:true});
-        copyFileSync(join(os, 'js', w.file), join(js, w.file));
+        copyFileSync(join(os, '../apps/js/picocalc', w.file), join(js, w.file));
         if ((large || capacity || longSearch) && w.name === 'editor') {
             return {...w, mem_kb:fullInline ? 8192 : 2048, ...(fullInline ? {budget_ms:1000} : {})};
         }

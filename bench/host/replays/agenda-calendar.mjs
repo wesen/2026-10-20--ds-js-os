@@ -4,9 +4,9 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 import '../../lib/compiler.mjs';
 const read = path => fs.readFileSync(path,'utf8');
-const app = read('picocalc-os/js/apps/agenda.js');
+const app = read('apps/js/picocalc/apps/agenda.js');
 const reference = vm.runInNewContext(app.slice(app.indexOf('function agValidDate'),app.indexOf('function agParse')) + '\nagValidDate');
-const bytes = compileTyped(read('picocalc-os/worlds/agenda/reminder.typed'));
+const bytes = compileTyped(read('apps/typed/agenda/reminder.typed'));
 const {instance} = await WebAssembly.instantiate(bytes);
 let cases=0;
 for (const year of [...Array(500).keys(), 1600, 1900, 1999, 2000, 2024, 2026, 2100, 2400, 9999]) {

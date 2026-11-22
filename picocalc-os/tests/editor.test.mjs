@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import vm from "node:vm";
 import { readFileSync } from "node:fs";
 
-const source = readFileSync(new URL("../js/apps/editor.js", import.meta.url), "utf8");
+const source = readFileSync(new URL("../../apps/js/picocalc/apps/editor.js", import.meta.url), "utf8");
 const plain = (x) => JSON.parse(JSON.stringify(x));   // values made in the VM have the VM's prototypes
 
 // A file handle backed by a string; writes are counted.

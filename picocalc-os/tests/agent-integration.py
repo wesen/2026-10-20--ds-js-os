@@ -48,7 +48,7 @@ def main():
         work = Path(temporary.name)
     fixture = ROOT / 'tests/fixtures/agent'
     state, files = work / 'store', work / 'files'
-    out, log, stats = run(binary, work, 'tour', (ROOT / 'scripts-agent/tour.txt').read_text(), fixture, state, files=files)
+    out, log, stats = run(binary, work, 'tour', (ROOT / '../apps/tours/agent/tour.txt').read_text(), fixture, state, files=files)
     record = json.loads((state / 'w/agent').read_text())['session']
     assert (files / 'notes/next').read_text() == 'study groups'
     assert record['notes'] == [] and record['version'] == 2, record
@@ -61,7 +61,7 @@ def main():
     # The same tour against a Chat Completions endpoint (the replies are the vLLM shape lunaroute returns).
     chat_state, chat_files = work / 'chat-store', work / 'chat-files'
     chat_env = {'PICOCALC_AGENT_API': 'chat', 'PICOCALC_AGENT_MODEL': 'deepseek-4.1-flash'}
-    out, log, _ = run(binary, work, 'chat-tour', (ROOT / 'scripts-agent/tour.txt').read_text(),
+    out, log, _ = run(binary, work, 'chat-tour', (ROOT / '../apps/tours/agent/tour.txt').read_text(),
                       ROOT / 'tests/fixtures/agent-chat', chat_state, chat_env, chat_files)
     record = json.loads((chat_state / 'w/agent').read_text())['session']
     assert (chat_files / 'notes/next').read_text() == 'study groups'

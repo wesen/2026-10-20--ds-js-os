@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import vm from "node:vm";
 import { readFileSync } from "node:fs";
 
-const source = readFileSync(new URL("../js/apps/chat.js", import.meta.url), "utf8");
+const source = readFileSync(new URL("../../apps/js/picocalc/apps/chat.js", import.meta.url), "utf8");
 
 function setup() {
   const def = { handlers: {} }, sent = [];

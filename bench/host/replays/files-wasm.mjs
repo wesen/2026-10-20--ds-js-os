@@ -6,11 +6,11 @@ import {tmpdir} from 'node:os';
 import {dirname, join, resolve} from 'node:path';
 import vm from 'node:vm';
 import '../../lib/compiler.mjs';
-import '../../../picocalc-os/worlds/files/compile.js';
+import '../../../apps/typed/files/compile.js';
 
 const os = resolve('picocalc-os');
-const world = join(os, 'worlds/files');
-const original = readFileSync(join(os, 'js/apps/files.js'), 'utf8');
+const world = join(os, '../apps/typed/files');
+const original = readFileSync(join(os, '../apps/js/picocalc/apps/files.js'), 'utf8');
 const source = readFileSync(join(world, 'files.typed'), 'utf8');
 const wasm = compileFiles(source, readFileSync(join(os, 'build/files-reactor.wasm')));
 const typed = typedWasm.compile(source);
@@ -38,7 +38,7 @@ for (const a of ['a', 'A', '𐀀', '\ue000', 'foo', 'foobar']) for (const b of [
     assert.equal(Math.sign(instance.exports.filesCompare(0, 1, 512, 0)), -1);
 }
 const base = mkdtempSync(join(tmpdir(), 'typed-files-'));
-const manifest = JSON.parse(readFileSync(join(os, 'js/system.json'), 'utf8'));
+const manifest = JSON.parse(readFileSync(join(os, '../apps/js/picocalc/system.json'), 'utf8'));
 const system = manifest.worlds.filter(w => ['keyboard','display','compositor','launcher','files','editor'].includes(w.name));
 const actions = [
     'key d', 'key enter', 'key backspace', 'key enter',
@@ -58,10 +58,10 @@ function run(variant) {
     const worlds = system.map(w => {
         if (w.name === 'files' && variant === 'wasm') return {...w, file:'files.wasm', engine:'wasm'};
         mkdirSync(dirname(join(js, w.file)), {recursive:true});
-        copyFileSync(join(os, 'js', w.file), join(js, w.file));
+        copyFileSync(join(os, '../apps/js/picocalc', w.file), join(js, w.file));
         return w;
     });
-    copyFileSync(join(os, 'js/prelude.js'), join(js, 'prelude.js'));
+    copyFileSync(join(os, '../apps/js/picocalc/prelude.js'), join(js, 'prelude.js'));
     writeFileSync(join(js, 'files.wasm'), wasm);
     writeFileSync(join(js, 'system.json'), JSON.stringify({worlds:[...worlds,
         {name:'probe',file:'probe.js',claims:['frames.read'],mem_kb:384}]}));
