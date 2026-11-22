@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 answers, each with a `Confidence:` line; questions 5 and 6 and parts of 1 and 2 flagged as dependent on the missing article) and `diary.md` (one step in the `diary-format.md` shape).
+
+DONE

@@ -1,0 +1,5 @@
+Files written: `answers.md`, `feedback.md`, `diary.md`.
+
+Key findings: the article's jargon is mostly covered by the glossary, but 6.4's middle row states "about 1.2 s" while justifying it with 3.14 − 1.99 = 1.15 s, the 6.8 flowchart renames the reactor's function table as "import table", and 6.6's recommendation rests on a model from Article 5 that this article never restates.
+
+DONE

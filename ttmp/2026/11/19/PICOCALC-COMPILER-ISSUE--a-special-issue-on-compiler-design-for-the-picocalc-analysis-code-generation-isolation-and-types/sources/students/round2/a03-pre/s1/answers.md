@@ -1,0 +1,25 @@
+# Answers — "3. Why Whole-Program Inference Costs Minutes"
+
+## 1
+`half` is a new function whose body can produce (or require) values of a different type or range than the ones `scale` was specialized for, so whole-program inference re-derives `scale`'s operand types and picks different machine instructions for it. If `half` forces the numeric domain to widen from integers to doubles, for example, `scale` must switch from int32 multiply/add to floating-point code. The implication is that `scale`'s correct code depends on facts about other functions, so compiling `scale` alone, without the rest of the program, cannot be guaranteed to produce the same code (or the same results). This is exactly the argument against separate compilation and for whole-program inference. I cannot know the exact mechanism in the article's example, but it has to be a shared type/range variable that `half` constrains.
+Confidence: 3
+
+## 2
+I cannot know the article's table without the article. The shape of such a loop trace is fixed, however: pass 1 typically starts at the lower bound of the initializer (`i = 0`), pass 2 discovers one more iteration (`[0,1]`) and pass 3 one more again (`[0,2]`), each pass extending the upper bound by the increment. Widening (in the sense of Kildall/Cousot) then replaces the creeping sequence with a jump to the limit of the lattice — usually `[0, +∞]` or the loop counter's maximum — so the analysis terminates; in the usual presentation the fixpoint is reached on the pass where widening fires (typically the third or fourth). The cost is precision: after widening the analysis knows much less about `i`, so it can no longer prove that the index is in bounds or that the arithmetic stays exact, and must fall back to slower or more conservative code.
+Confidence: 2
+
+## 3
+JavaScript's `1` comes from IEEE-754 double rounding: `max + 2` is `2^53 + 1`, which is not representable, so it rounds to `2^53`, and `2^53 - (2^53 - 1)` is `1`. The number `2` is the exact integer answer, `(2^53 - 1 + 2) - (2^53 - 1) = 2`, which is what you get if you evaluate in true integer (or arbitrary-precision) arithmetic rather than in doubles. So the CJI build without the range proof produced the arithmetically correct but JavaScript-incorrect answer: it assumed it could use exact integers, and it was wrong. The range proof is what licenses the integer path — it must establish that every intermediate stays inside the safe-integer range (|n| ≤ 2^53 − 1) where double arithmetic happens to be exact — and here that condition fails, so the compiler must stay in double arithmetic to preserve semantics.
+Confidence: 3
+
+## 4
+I cannot know the article's bookkeeping, but the ratio constrains it: 95/6 ≈ 16 passes per specialization round, so a round is a fixed sweep of roughly a dozen-plus analysis and transformation passes over the program. The straight reading of "seven complete range analyses" is initial analysis plus one re-analysis after each of the six specialization rounds, i.e. 6 + 1 = 7 — every round changes types, which invalidates ranges, which forces another full analysis. The 95 is then the sum of all passes actually run: the passes inside each of the six rounds plus the passes of the seven analyses (and probably the initial parse/lower passes), counted per function or per program point rather than per round. The point the numbers are meant to make is that cost multiplies: rounds × analyses × passes over the whole program, not over one function.
+Confidence: 2
+
+## 5
+I cannot know which measurement in section 3.5 this is without the article. The logic of such a section is a subtraction: you remove the range analysis, measure the compile time, and show that the time does not collapse — say the range analysis accounts for only a fraction and a large remainder is left. That remainder is normally attributed not to ranges but to the general fixed point machinery: repeatedly re-running the whole type/interval solver to a fixpoint after each specialization step, i.e. the iteration structure itself and the dataflow over all functions, plus code generation. A secondary candidate attribution is the bookkeeping data structures (worklists, union-find, hash-consing) that every re-analysis pays again.
+Confidence: 2
+
+## 6
+Self's two compilers are a fast, non-optimizing baseline compiler that produces code immediately, and a slower optimizing compiler that runs afterwards (in the background) and swaps in better code, with deoptimization as the safety net. On the handheld, the component already playing the first-compiler role should be the existing interpreter/bytecode virtual machine: it runs programs at once with no compile pause at all. What CJI lacks, on this reading, is the second half of the arrangement — it is a single whole-program optimizing compiler ahead of time, with no tiered recompilation, no background compilation while the program runs, and no deoptimization/on-stack replacement to fall back from optimistically typed code. I cannot confirm the handheld component's name without the article, but it must be whatever already executes code before CJI does.
+Confidence: 3

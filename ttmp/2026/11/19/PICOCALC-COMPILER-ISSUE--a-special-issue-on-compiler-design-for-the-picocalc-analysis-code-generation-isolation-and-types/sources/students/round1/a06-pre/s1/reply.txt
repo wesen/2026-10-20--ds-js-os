@@ -1,0 +1,3 @@
+Wrote `answers.md` (six answers with `Confidence:` lines) and `diary.md`. Key finding: no article file exists in this directory, so Q3, Q5, and parts of Q1/Q4 were answered by stating that fact and giving the method/reasoning shape instead of inventing figures.
+
+DONE

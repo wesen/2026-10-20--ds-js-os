@@ -1,0 +1,7 @@
+All three files are written in the working directory.
+
+- `answers.md` — six answers with working tables, each with a `Confidence:` line (4, 4, 5, 5, 5, 5). The one weak spot I flagged: the article never shows the backend's codegen for `i32.const`, so Q1's count of 10 is an inference (9 is defensible).
+- `feedback.md` — all six requested sections, including 13 per-section scores and a concrete add (full annotated 41-instruction `bump` listing) and cut (section 5.11).
+- `diary.md` — three steps in the `diary-format.md` structure (reading, quiz, feedback), recording what was hard: the unreconciled "41 instructions", the frontend/backend confusion in 5.6, and the contradiction around flushes.
+
+DONE

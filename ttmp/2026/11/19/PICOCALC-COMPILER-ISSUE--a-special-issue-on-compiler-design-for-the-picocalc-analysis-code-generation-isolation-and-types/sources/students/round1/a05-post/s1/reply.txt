@@ -1,0 +1,9 @@
+Files written in this directory:
+
+- `answers.md` — six numbered answers with working tables for Q1/Q2 and confidence lines (3, 4, 5, 5, 4, 5).
+- `feedback.md` — all six required sections: five "read twice" passages, twelve term entries (`PR`, `trap`, `SSA`, "lowering", QuickJS, "the world's turn" the worst offenders), nine unverifiable claims with what evidence is missing, per-section scores for 5.1–5.13, a quiz-answerability audit (Q1 is only derivable, not confirmable), and one addition (the full 41-instruction `bump` count) plus one cut (5.11's second half, or its byte-array anecdote).
+- `diary.md` — three steps (reading, quiz, feedback) in `diary-format.md` shape, recording what was hard.
+
+The main teaching failures I found: section 5.11 states 41% and 16% with no table while every other experiment gets one; the article repeatedly states precise project statistics (31 leaf functions, 228 `&&` blocks, stack depth 8, 2–3 s compile time) with no source; the `if` snippet in 5.2 omits its operand loads; and the quoted spill rule depends on "PR", which is never expanded.
+
+DONE

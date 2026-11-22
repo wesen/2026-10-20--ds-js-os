@@ -1,0 +1,7 @@
+All four steps are complete:
+
+- `answers.md` — six answers numbered as in §7.9, with working shown for the Q2 ordering argument, the Q3 stack-sum formula, and the Q4 back-edge trace; confidence 4/5/4/5/5/5.
+- `feedback.md` — the six required sections: five passages quoted with what was unclear, ~20 terms flagged (the two real gaps are **nucleus** and **CJI**, neither declared as borrowed nor defined anywhere), eleven unverifiable claims each with its missing evidence, nine section scores (lowest: §7.7 = 2), a note that all six quiz questions are answerable but Q3 and Q6 admit multiple defensible answers, and one addition (worked numeric example of the stack bound and fuel arithmetic) plus one cut (the CHERIoT sentence).
+- `diary.md` — three steps in `diary-format.md` format, recording that the article's weakness is missing artefacts (no 28-function list, no twenty-instruction table, no measured reactor stack constant, no line-count evidence) rather than weak prose.
+
+DONE

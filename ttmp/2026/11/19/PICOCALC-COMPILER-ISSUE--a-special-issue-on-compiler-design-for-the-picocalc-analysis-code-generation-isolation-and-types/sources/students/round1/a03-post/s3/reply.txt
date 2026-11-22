@@ -1,0 +1,7 @@
+All four steps are complete.
+
+- `answers.md` — six answers with `Confidence: N` (5, 4, 5, 5, 4, 4), including the widening trace and the 79-helper sum.
+- `feedback.md` — all six required sections; lowest section scores went to §3.2 (lattice ordering/widening thresholds left vague) and §3.6 (four prior systems, only Self really taught); quiz question 2 and partly question 5 flagged as unanswerable from the text.
+- `diary.md` — three steps (reading, quiz, feedback) in the format of `diary-format.md`.
+
+DONE

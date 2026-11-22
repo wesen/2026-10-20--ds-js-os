@@ -1,0 +1,6 @@
+DONE.
+
+Files written in this directory:
+- `answers.md` — six quiz answers with working and confidence ratings
+- `feedback.md` — six required critique sections with quotations
+- `diary.md` — three-step work diary in `diary-format.md` structure

@@ -1,0 +1,5 @@
+Wrote `answers.md` (6 answers with confidence ratings), `feedback.md` (all six required sections) and `diary.md` (3 steps in the given format), all in `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--a-special-issue-on-compiler-design-for-the-picocalc-analysis-code-generation-isolation-and-types/students/round1/a01-post/s3`.
+
+Weakest points found: section 1.5 mixes compiled size with reserved RAM and never explains the native/WebAssembly gap (so quiz Q4 is only answerable by guesswork — confidence 2), "cache disabled" and the 768 KiB limit are unexplained, and the article's central causal claim is deferred to Article 3 rather than shown.
+
+DONE

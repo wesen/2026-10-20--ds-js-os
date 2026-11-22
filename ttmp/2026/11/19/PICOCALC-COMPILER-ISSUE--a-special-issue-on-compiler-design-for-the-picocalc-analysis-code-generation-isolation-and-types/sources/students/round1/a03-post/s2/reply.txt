@@ -1,0 +1,3 @@
+All four files are complete: `answers.md`, `feedback.md`, `diary.md`, and the same directory holds the article.
+
+DONE

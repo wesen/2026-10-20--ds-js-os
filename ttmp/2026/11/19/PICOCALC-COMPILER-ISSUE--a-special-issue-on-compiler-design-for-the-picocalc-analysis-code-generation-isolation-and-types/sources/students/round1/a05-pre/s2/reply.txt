@@ -1,0 +1,3 @@
+Both files written: `answers.md` (6 answers, each with a `Confidence:` line) and `diary.md` (Step 1 in the required format). Questions 1, 2, 4 and 6 required article-specific facts (exact instruction listings, the section 5.3 measurement, and the section 5.9 loop); those are marked "I cannot know this without the article" with reasoning about the required answer shape instead of invented figures.
+
+DONE

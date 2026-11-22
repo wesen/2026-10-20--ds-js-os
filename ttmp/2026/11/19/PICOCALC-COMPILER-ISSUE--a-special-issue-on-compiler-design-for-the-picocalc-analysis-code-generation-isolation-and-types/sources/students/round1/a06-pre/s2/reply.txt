@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 answers, each with a `Confidence:` line) and `diary.md` (full investigation-entry format). Three questions were answerable from general design reasoning (1, 2, 6); three require the article's own figures or wording (3, 5) or its specific framing (4), and those are marked "I cannot know this without the article" with the reasoning the answer must satisfy.
+
+DONE

@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 answers, each with `Confidence: N`) and `diary.md` in the required format. No article was present in the directory, so questions 2, 5 and 6 are explicit reconstructions.
+
+DONE

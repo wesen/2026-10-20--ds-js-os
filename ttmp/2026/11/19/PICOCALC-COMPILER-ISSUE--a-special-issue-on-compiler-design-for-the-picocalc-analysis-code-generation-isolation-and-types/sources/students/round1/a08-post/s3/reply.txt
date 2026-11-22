@@ -1,0 +1,9 @@
+All four steps are complete. Files in this directory:
+
+- `answers.md` — six quiz answers with working (liveness table for Q2, state/entry-point table for Q4) and confidence ratings (5, 4, 3, 5, 4, 5).
+- `feedback.md` — passages read twice (5), undefined terms (13), unverifiable claims (9), section scores 8.1–8.9, unanswerable questions (Q3 only partially answerable), and one add / one cut.
+- `diary.md` — three steps (reading, quiz, feedback) in the `diary-format.md` template, recording the specific places I got stuck: the §8.3 tag numbering, the §8.5 `switch`/`goto` mix, and the missing frame-size arithmetic.
+
+Main failures of the article, in brief: §8.3's mapping from defunctionalization theory to the hand-written fields is half-stated (Q3 is guesswork), and every concrete quantity (71 fields, 1,024 units, six positions) is asserted without derivation.
+
+DONE

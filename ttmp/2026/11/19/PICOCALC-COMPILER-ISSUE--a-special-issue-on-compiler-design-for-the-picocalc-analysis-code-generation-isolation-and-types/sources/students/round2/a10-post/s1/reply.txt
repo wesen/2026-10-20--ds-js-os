@@ -1,0 +1,9 @@
+Files written:
+
+- `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--a-special-issue-on-compiler-design-for-the-picocalc-analysis-code-generation-isolation-and-types/students/round2/a10-post/s1/answers.md` — six answers, 2–6 sentences, with working shown and `Confidence:` lines.
+- `.../feedback.md` — the six required sections, quotes located against `article.md`.
+- `.../diary.md` — three steps in the `diary-format.md` format.
+
+Main findings: all six quiz questions were answerable (Q1 only partly, because the article never says how the linker obtains the compiler table's length). Checkable arithmetic held (1,734 bytes; 5.5×; 4.4×), while several claims rest on uncited records (build times, 660 kB, six bytes per unit, the device-language study). Four terms are neither in the glossary nor explained: *code unit*, *guard facts*, *static stack bound*, *mutation testing*.
+
+DONE

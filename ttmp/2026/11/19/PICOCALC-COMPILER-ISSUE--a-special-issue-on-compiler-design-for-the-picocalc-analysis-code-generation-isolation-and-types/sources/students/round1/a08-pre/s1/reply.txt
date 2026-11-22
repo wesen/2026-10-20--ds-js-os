@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 answers with confidence ratings) and `diary.md` (Step 1 in the required format). Note: the article itself was not in the directory, so answers are reasoned from general knowledge; Q2 (the `openFile` variable list) is flagged as unknowable without the text.
+
+DONE

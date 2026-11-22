@@ -1,0 +1,9 @@
+Files written in `s1/`:
+
+- **`answers.md`** — six answers with working shown for Q2/Q3 and a `Confidence:` line each (3, 5, 5, 5, 4, 4). Only Q1 needed a guess: the quoted "1.8 seconds after power-on" report never names its start event, and the 2.1 table has no power-on row.
+- **`feedback.md`** — 5 "read twice" quotes, 13 undefined/deferred terms, 11 unverifiable claims, scores for 2.1–2.9, Q1 and Q5 flagged as under-supported, plus one addition (printed totals/clock so every percentage is recomputable) and one cut (the second compositor trace in 2.3).
+- **`diary.md`** — three steps in `diary-format.md` shape, with the arithmetic that failed recorded exactly (`84 + 146 = 230 ≠ 235`; `500 ms / 16,792 ≈ 31 µs` vs. the article's 118 µs; 29.9 ms unreconstructable from the 2.4 table).
+
+The article's arithmetic clusters its failures in 2.4, which is awkward in a piece arguing that numbers must be checkable.
+
+DONE

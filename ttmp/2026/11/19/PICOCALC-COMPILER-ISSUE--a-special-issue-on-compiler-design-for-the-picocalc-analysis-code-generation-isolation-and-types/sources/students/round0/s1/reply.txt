@@ -1,0 +1,7 @@
+All four steps complete:
+
+- `pretest-answers.md` — 14 answers with confidence ratings, written before opening the brief
+- `brief-reactions.md` — 36 terms, 12 quoted claims, per-section scores (Code generation 1/5 worst, "What I would do next" 4/5 best), 18 questions, 8 lessons, 3 example requests
+- `diary.md` — three steps in the `diary-format.md` layout
+
+DONE

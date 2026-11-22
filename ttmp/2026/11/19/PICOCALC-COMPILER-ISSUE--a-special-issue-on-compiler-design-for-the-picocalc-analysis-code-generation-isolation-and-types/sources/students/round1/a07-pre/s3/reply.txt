@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 numbered answers, each with a `Confidence:` line) and `diary.md` (one step in `diary-format.md`'s format). Notes: `read .` failed (`EISDIR`), so I worked only from the three files named in `TASK.md`; questions 1, 3, 5 and 6 depend on article-specific enumerated lists (three safety properties, two summed quantities, section 7.6's two techniques) and were answered as reconstructions.
+
+DONE

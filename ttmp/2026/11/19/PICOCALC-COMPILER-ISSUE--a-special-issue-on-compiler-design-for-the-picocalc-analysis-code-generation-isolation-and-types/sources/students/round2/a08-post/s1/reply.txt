@@ -1,0 +1,9 @@
+Read `TASK.md`, read `article.md` and `glossary.md` in full, and wrote:
+
+- `answers.md` — six numbered answers with `Confidence:` lines (5, 4, 4, 5, 4, 5), working shown for the liveness mark-up (Q2) and the `start`/`resume` translation (Q4).
+- `feedback.md` — five quoted passages, nine unexplained terms, ten unverifiable claims, per-section scores (8.1=5, 8.2=3, 8.3=4, 8.4=4, 8.5=4, 8.6=3, 8.7=5, 8.8=4, 8.9=4), the partially unanswerable quiz items (2, 4, 5), and the add/cut pair.
+- `diary.md` — three steps in the `diary-format.md` format, recording what was hard.
+
+Main findings: the wished-for `openFile` listing breaks the buffer rule stated after it; the `sourceLength`/"saved variable" identification doesn't hold against `editorNormalize`; the two-field tag is never mapped to `frame.state`; and nearly all unverifiable claims are counts or quotes attributed to the project's own sources (71 fields, 1,024 units, 80 fields) with no citation.
+
+DONE.

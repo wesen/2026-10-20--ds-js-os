@@ -1,0 +1,9 @@
+Files created in `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--a-special-issue-on-compiler-design-for-the-picocalc-analysis-code-generation-isolation-and-types/students/round1/a08-post/s1`:
+
+- `answers.md` — six answers with `Confidence:` lines (5, 4, 4, 5, 4, 5)
+- `feedback.md` — double-read passages, undefined terms, unverifiable claims, per-section scores, quiz gaps, add/cut
+- `diary.md` — three steps (reading, quiz, feedback) in the `diary-format.md` format
+
+Main findings: the article is clear where it uses tables or listings (8.2, 8.7), weakest in 8.5, where the generated code tests `event.ok` / returns `DONE(0)` without matching the source it rewrites and where the dispatcher is elided with `{ ... }`.
+
+DONE.

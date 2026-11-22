@@ -1,0 +1,9 @@
+Files written in `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--a-special-issue-on-compiler-design-for-the-picocalc-analysis-code-generation-isolation-and-types/students/round1/a02-post/s2`:
+
+- `answers.md` — six answers with working and confidence lines
+- `feedback.md` — passages read twice, unexplained terms, unverifiable claims, section scores, unanswerable quiz questions, one addition / one cut
+- `diary.md` — three steps in `diary-format.md` format
+
+Main findings: section 2.4's arithmetic does not hold (shares imply a 48.7 ms denominator, not the stated 29.9 ms; 118 µs per token does not follow from "half a second" over 16,792 tokens), and the second compositor trace (84 + 146 = 230 of 235 ms) does not reconcile with the 293 ms in the main table.
+
+DONE

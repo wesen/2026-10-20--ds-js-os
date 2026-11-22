@@ -1,0 +1,3 @@
+All four files are written: `answers.md`, `feedback.md`, `diary.md` (the article and glossary were read in full first).
+
+DONE

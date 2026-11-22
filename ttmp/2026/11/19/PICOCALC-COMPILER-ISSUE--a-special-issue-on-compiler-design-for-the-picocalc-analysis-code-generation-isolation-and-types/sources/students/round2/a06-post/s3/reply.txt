@@ -1,0 +1,9 @@
+Files written in `s3`:
+
+- `answers.md` — all six quiz answers, working shown for Q3 and Q6, `Confidence:` lines (Q1–Q5 = 5, Q6 = 4)
+- `feedback.md` — the six required sections (6 passages read twice, 8 undefined terms, 10 unverifiable claims, section scores 6.1–6.10, questions, one add / one cut)
+- `diary.md` — three steps (reading, quiz, feedback) in the `diary-format.md` layout
+
+Main findings: the arithmetic (§6.5, §6.6) is fully checkable and teaches well; the weak spots are unprovenanced numbers (§6.2 memory peaks, §6.4's 1.2 s subtraction, §6.7's 627 → 198 ms) and undefined terms, chiefly "import table"/"function table" in the §6.8 diagram and the glossary's missing third meaning of *slot*. No quiz question was unanswerable, though Q4 and Q6 needed two paragraphs joined.
+
+DONE

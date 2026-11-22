@@ -1,0 +1,290 @@
+[
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s1",
+    "question": 1,
+    "score": 1,
+    "note": "Bounded slices, yield and resume given; no turn budget or stop on overrun; assumes the engine suspends automatically."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s1",
+    "question": 2,
+    "score": 2,
+    "note": "QuickJS, a WebAssembly engine and native with correct verdicts; WAMR unnamed, accepted as same engine. Guessable from quiz."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s1",
+    "question": 3,
+    "score": 0,
+    "note": "Names globals' types and callee signatures; neither is a key fact about callers' arguments or the index range."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s1",
+    "question": 4,
+    "score": 1,
+    "note": "Lower native code density appears only as an afterthought; main reason (links own runtime, drivers, engine) is wrong."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s1",
+    "question": 5,
+    "score": 1,
+    "note": "Message chain to display world and driver right; no nucleus, no JSON screen description, draw commands instead."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s1",
+    "question": 6,
+    "score": 1,
+    "note": "Bytecode right; CJI output hedged between native machine code and a typed intermediate form."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s2",
+    "question": 1,
+    "score": 1,
+    "note": "Yield at bounded intervals and resume; no turn budget, no stop on overrun, no saved progress or timer."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s2",
+    "question": 2,
+    "score": 1,
+    "note": "Three engine kinds with correct isolation verdicts, but no engine is named."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s2",
+    "question": 3,
+    "score": 1,
+    "note": "Receiver type of method calls approximates text-is-a-string; globals and callee signatures are not key facts."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s2",
+    "question": 4,
+    "score": 0,
+    "note": "Blames bundled compiler backends and duplicated runtime; never says machine code is larger than WebAssembly."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s2",
+    "question": 5,
+    "score": 1,
+    "note": "Chain of application, rendering world and display driver right; no nucleus, no screen description, compositor unnamed."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "Bytecode for an interpreter versus machine code needing type inference over the whole program. Correct before reading."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s3",
+    "question": 1,
+    "score": 1,
+    "note": "Bounded slice then return to event loop; no turn budget or stop on overrun; saving progress only implied."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s3",
+    "question": 2,
+    "score": 1,
+    "note": "QuickJS and WebAssembly engine right; third engine misnamed CJI, a compiler, though its native-code verdict is right."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s3",
+    "question": 3,
+    "score": 1,
+    "note": "Passed-in type, integer-or-float counter and call sites approximate key facts; vague, treats unit as a record."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s3",
+    "question": 4,
+    "score": 1,
+    "note": "Less compact native code mentioned as secondary; main reason (own runtime, allocator, driver glue) is wrong."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s3",
+    "question": 5,
+    "score": 1,
+    "note": "Application to compositor to driver world right; no nucleus; draw command instead of JSON screen description."
+  },
+  {
+    "article": "01",
+    "condition": "pre",
+    "student": "s3",
+    "question": 6,
+    "score": 2,
+    "note": "Bytecode for an interpreter versus native machine code after whole-program inference. Correct before reading."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s1",
+    "question": 1,
+    "score": 2,
+    "note": "Turn budget, overrun stopped and reported; save progress, request timer, continue in a later turn."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s1",
+    "question": 2,
+    "score": 2,
+    "note": "All three engines named; QuickJS and WAMR confine the program, native does not."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s1",
+    "question": 3,
+    "score": 2,
+    "note": "Text is a string at every call; unit depends on every caller; integer range of at also given."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s1",
+    "question": 4,
+    "score": 2,
+    "note": "Native machine code larger, 240,452 against 88,255 bytes; student notes the article never states the cause."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s1",
+    "question": 5,
+    "score": 2,
+    "note": "JSON screen description via nucleus to compositor, which draws; display driver world drives the LCD."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s1",
+    "question": 6,
+    "score": 2,
+    "note": "Bytecode for an interpreter versus RV32 machine code from untyped source needing whole-program inference."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s2",
+    "question": 1,
+    "score": 2,
+    "note": "Turn budget, world stopped and reported on overrun; save progress, ask for a timer, resume on timer event."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s2",
+    "question": 2,
+    "score": 2,
+    "note": "All three engines named with correct confinement verdicts."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s2",
+    "question": 3,
+    "score": 2,
+    "note": "Text is a string at every call site; unit depends on every caller; range of at also given."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s2",
+    "question": 4,
+    "score": 2,
+    "note": "Machine code takes more bytes than WebAssembly, ratio 2.72; student notes the cause is inferred, not stated."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s2",
+    "question": 5,
+    "score": 2,
+    "note": "JSON description via nucleus to compositor, which lays out and draws, then display driver, then LCD."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "Bytecode for an interpreter versus native machine code from unannotated source after whole-program inference."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s3",
+    "question": 1,
+    "score": 2,
+    "note": "Turn budget, nucleus stops and reports the world; save progress, request timer, resume on timer event."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s3",
+    "question": 2,
+    "score": 2,
+    "note": "All three engines named; only QuickJS and WAMR confine the program."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s3",
+    "question": 3,
+    "score": 2,
+    "note": "Text is a string at every call site; unit depends on every caller; range of at also given."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s3",
+    "question": 4,
+    "score": 2,
+    "note": "Native image 2.72 times the WebAssembly through lowering expansion; second cause flagged by student as a guess."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s3",
+    "question": 5,
+    "score": 2,
+    "note": "Full path given; adds a nucleus hop between compositor and display driver that the diagram does not show."
+  },
+  {
+    "article": "01",
+    "condition": "post",
+    "student": "s3",
+    "question": 6,
+    "score": 2,
+    "note": "Bytecode for an interpreter versus RV32 machine code from untyped source with global inference."
+  }
+]

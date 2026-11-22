@@ -1,0 +1,290 @@
+[
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s1",
+    "question": 1,
+    "score": 0,
+    "note": "Says the interval ends when the application is usable and accepts keys; not the nucleus accepting a screen description."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s1",
+    "question": 2,
+    "score": 2,
+    "note": "1/(1-0.2) = 1.25 with the formula shown. Correct before reading."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s1",
+    "question": 3,
+    "score": 1,
+    "note": "At most 2 ms of 559 given; blames OS, drivers and firmware, not waiting for its turn."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s1",
+    "question": 4,
+    "score": 0,
+    "note": "Cannot know; guesses GC pause time against a boot stall; no numbers, wrong context."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s1",
+    "question": 5,
+    "score": 1,
+    "note": "Generic count comparison with the real system; limit given is per-step time, not achievability of predicted counts."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s1",
+    "question": 6,
+    "score": 2,
+    "note": "Repetition separates noise; alternating order shares drift between configurations. Correct before reading."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s2",
+    "question": 1,
+    "score": 0,
+    "note": "Says the interval ends when the first screen is visible and accepts input; contradicts the key."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s2",
+    "question": 2,
+    "score": 2,
+    "note": "1/(1-0.2) = 1/0.8 = 1.25 with calculation. Correct before reading."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s2",
+    "question": 3,
+    "score": 1,
+    "note": "At most 2 ms given; names driver initialization, storage and runtime startup, not waiting behind other worlds."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s2",
+    "question": 4,
+    "score": 0,
+    "note": "Cannot know; guesses GC time and heap size for the boot interval; no numbers, wrong context."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s2",
+    "question": 5,
+    "score": 1,
+    "note": "Generic agreement with an independent count; limit given is hardware cost, not achievability of predicted counts."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "Noise and drift both given, with alternation sharing drift. Correct before reading."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s3",
+    "question": 1,
+    "score": 1,
+    "note": "Hedged endpoint; sees the screen is painted after the interval; names neither nucleus acceptance nor compositor or LCD."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s3",
+    "question": 2,
+    "score": 1,
+    "note": "1.25 with calculation, then calls it an 80 percent reduction of total time, which is wrong."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s3",
+    "question": 3,
+    "score": 1,
+    "note": "About 2 ms saved, nearly worthless; no mention of waiting for a turn or other worlds."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s3",
+    "question": 4,
+    "score": 0,
+    "note": "Cannot know; guesses small GC time and collection count during boot; no numbers, wrong context."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s3",
+    "question": 5,
+    "score": 1,
+    "note": "Generic cross-check of counts, not reproduction of the current backend; limit (achievability) roughly right."
+  },
+  {
+    "article": "02",
+    "condition": "pre",
+    "student": "s3",
+    "question": 6,
+    "score": 2,
+    "note": "Distribution against noise; alternation against drift. Correct before reading."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s1",
+    "question": 1,
+    "score": 1,
+    "note": "Hedges between end of boot compile and nucleus accepting the screen description; remaining wait correct. Question phrase ambiguous."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s1",
+    "question": 2,
+    "score": 2,
+    "note": "1/(1-0.2) = 1/0.8 = 1.25 with calculation."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s1",
+    "question": 3,
+    "score": 2,
+    "note": "About 2 ms of 559, 0.36 percent; the application was not given a turn; scheduler and compositor."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s1",
+    "question": 4,
+    "score": 2,
+    "note": "85.9 s is 5.8 percent; enlarging the heap saved 1.2 percent; 88 percent also cited."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s1",
+    "question": 5,
+    "score": 2,
+    "note": "Model reproduces current backend count for all 161 functions; does not show predicted counts are achievable."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s1",
+    "question": 6,
+    "score": 2,
+    "note": "Noise and incidental bias; alternation cancels drift and order bias."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s2",
+    "question": 1,
+    "score": 2,
+    "note": "Ends when the nucleus accepts the first screen description; compositor drawing and LCD transfer still to come."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s2",
+    "question": 2,
+    "score": 2,
+    "note": "1/(1-0.20) = 1.25 with calculation and a correct tenfold comparison."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s2",
+    "question": 3,
+    "score": 2,
+    "note": "At most 2 ms, speedup 1.004; the interval is waiting for a turn, mostly the compositor."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s2",
+    "question": 4,
+    "score": 2,
+    "note": "5.8 percent (85.9 s of 1,479.1 s) and the 1.2 percent heap saving; 88 percent also cited."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s2",
+    "question": 5,
+    "score": 2,
+    "note": "Reproduces current count for all 161 functions; says nothing about a real register-keeping backend reaching the predictions."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "Noise, incidental bias, and alternation against drift all given."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s3",
+    "question": 1,
+    "score": 2,
+    "note": "Ends when the nucleus accepts the first screen description; compositor drawing and LCD transfer remain. Notes phrase is undefined."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s3",
+    "question": 2,
+    "score": 2,
+    "note": "Formula, limit 1/0.8 = 1.25, and a correct twofold comparison."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s3",
+    "question": 3,
+    "score": 2,
+    "note": "0.36 percent, at most 1.004; time was spent waiting for a turn, over half in the compositor."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s3",
+    "question": 4,
+    "score": 2,
+    "note": "85.9 s of 1,479.1 s is 5.8 percent; heap enlargement saved 1.2 percent."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s3",
+    "question": 5,
+    "score": 2,
+    "note": "Matches real output for all 161 functions; does not establish that a real backend reaches 16,544 or 13,255."
+  },
+  {
+    "article": "02",
+    "condition": "post",
+    "student": "s3",
+    "question": 6,
+    "score": 2,
+    "note": "Noise, bias and drift given; student notes the drift argument is own inference, not in the article."
+  }
+]

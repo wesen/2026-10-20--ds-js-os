@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 answers, each with a `Confidence: N` line) and `diary.md` (one step in `diary-format.md` format). Q2–Q5 were answerable from general compiler knowledge; Q1 is unanswerable without the article's `nextIndex` body (confidence 2), and Q6 relies on inference about Static TypeScript (confidence 3).
+
+DONE.

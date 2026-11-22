@@ -1,0 +1,7 @@
+Files written in `students/round1/a02-post/s3`:
+
+- `answers.md` — six answers with working and confidence lines. Q2 (1.25×), Q3 (0.36%), Q4 (5.8% / 1.2%) fully verifiable; Q1 rests on an assumption the text never makes; Q5's assumptions live in Article 5.
+- `feedback.md` — arithmetic that did not reconcile: 118 µs/token vs 31 µs from "half a second over 16,792 tokens", 29.9 ms not matching any row sum, shares of a 48.7 ms denominator labelled as the RV32 path (51.1 ms), and 84 + 146 ≠ 235 ms. Section 2.4 scored 2.
+- `diary.md` — three steps (reading, quiz, feedback) in the `diary-format.md` shape.
+
+DONE

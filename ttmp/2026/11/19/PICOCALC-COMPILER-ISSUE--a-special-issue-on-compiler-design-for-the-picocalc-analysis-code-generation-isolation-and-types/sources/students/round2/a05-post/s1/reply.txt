@@ -1,0 +1,8 @@
+All four files are written: `answers.md`, `feedback.md`, `diary.md` (and `article.md`/`glossary.md` read in full).
+
+Summary of the session:
+- **answers.md** — six answers with working (quiz 1: 10 instructions; quiz 2: 3 instructions; quiz 5: 109,684 B ≈ 107 KiB) and confidence lines.
+- **feedback.md** — 7 quoted passages I reread, 5 genuinely unexplained terms (`i32`, bounds check, flash, `charCodeAt`, WebAssembly itself), 7 unverifiable claims (including "Experiment 4", model A's `bump` = 15 which I counted as 18, and the 58 KiB figure), scores for 5.1–5.13, a note that all quiz questions were answerable but two only just, plus one addition and one cut.
+- **diary.md** — three steps in the `diary-format.md` full format, recording what was hard (the model-A recount, the unstated string layout behind `lhu t2, 4(t2)`, and the ambiguity in quiz 2).
+
+DONE

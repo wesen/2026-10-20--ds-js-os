@@ -1,0 +1,3 @@
+Files written in `s3/`: `answers.md` (6 answers + confidence), `feedback.md` (6 required sections), `diary.md` (3 steps in diary-format).
+
+DONE

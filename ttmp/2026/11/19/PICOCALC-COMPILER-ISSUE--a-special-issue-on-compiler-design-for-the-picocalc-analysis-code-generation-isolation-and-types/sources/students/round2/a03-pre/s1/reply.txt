@@ -1,0 +1,3 @@
+Both files are written: `answers.md` (six answers with confidence lines) and `diary.md` (Step 1 in the required format). Note: the article itself was not in the directory, so Q2, Q4's exact decomposition, and Q5 are marked as unanswerable without it.
+
+DONE

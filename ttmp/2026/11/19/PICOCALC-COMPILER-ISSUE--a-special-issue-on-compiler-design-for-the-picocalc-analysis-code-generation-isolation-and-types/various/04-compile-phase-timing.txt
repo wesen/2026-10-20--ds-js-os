@@ -1,0 +1,7 @@
+compiler load (evaluate three compiler files): 2.35 ms
+source: 70857 UTF-16 units, 16792 tokens; Wasm module 88255 bytes; RV32 ELF 0 bytes
+tokenize only (the compiler's regex, no parsing): median 8.02 ms (min 7.98, max 8.30, 15 runs)
+frontend only: parse, check, emit Wasm function bodies: median 28.53 ms (min 28.19, max 31.42, 15 runs)
+frontend + RV32 lowering (no ELF link): median 48.70 ms (min 48.25, max 50.78, 15 runs)
+Wasm world: parse, check, emit, link into reactor: median 29.85 ms (min 29.30, max 36.37, 15 runs)
+heap in use after runs: 480916 bytes

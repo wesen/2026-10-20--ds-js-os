@@ -1,0 +1,18 @@
+{
+  "student": "s2",
+  "thinking_requested": "medium",
+  "model": "deepseek-4.1-flash",
+  "exit": 0,
+  "seconds": 58.8,
+  "session": "2026-11-19T17-40-05-501Z_01a1f4e4-eafd-7673-8621-81ae8614030d.jsonl",
+  "thinking_effective": "medium",
+  "files": [
+    "TASK.md",
+    "answers.md",
+    "diary-format.md",
+    "diary.md",
+    "quiz.md",
+    "reply.txt",
+    "stderr.txt"
+  ]
+}

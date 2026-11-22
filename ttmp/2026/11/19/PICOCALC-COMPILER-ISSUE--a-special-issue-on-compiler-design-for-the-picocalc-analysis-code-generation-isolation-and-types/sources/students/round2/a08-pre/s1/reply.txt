@@ -1,0 +1,3 @@
+Both files are written (`answers.md`, `diary.md`). Q1/Q5/Q6 answered from general knowledge of async lowering; Q2–Q4 flagged as article-dependent with reasoned expectations.
+
+DONE

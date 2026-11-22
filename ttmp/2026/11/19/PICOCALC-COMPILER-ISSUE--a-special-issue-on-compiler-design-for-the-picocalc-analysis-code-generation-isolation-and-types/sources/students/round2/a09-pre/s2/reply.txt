@@ -1,0 +1,6 @@
+Files written in `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--a-special-issue-on-compiler-design-for-the-picocalc-analysis-code-generation-isolation-and-types/students/round2/a09-pre/s2`:
+
+- `answers.md` — six numbered answers (2–5 sentences each), each with a `Confidence: N` line. Questions 1, 2, 3, 5 are marked as partly unknowable without the article and answered by describing the shape the answer must take; 4 and 6 are answered substantively.
+- `diary.md` — Step 1 entry in `diary-format.md` format, including the mis-numbering I caught and fixed, and the fact that I could not list the directory (`EISDIR`).
+
+DONE

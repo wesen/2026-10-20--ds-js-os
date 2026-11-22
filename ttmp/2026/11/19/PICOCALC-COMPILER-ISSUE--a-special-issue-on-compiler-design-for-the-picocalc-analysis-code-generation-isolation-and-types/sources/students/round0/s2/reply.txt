@@ -1,0 +1,3 @@
+Files created: `pretest-answers.md`, `brief-reactions.md`, `diary.md` (alongside `TASK.md`, `pretest.md`, `dense-brief.md`, `diary-format.md`). Steps done in order: pre-test written before the brief was read; reactions contain 46 terms, 20 claims, 7 section scores, 18 questions, 8 lessons, 3 examples.
+
+DONE.

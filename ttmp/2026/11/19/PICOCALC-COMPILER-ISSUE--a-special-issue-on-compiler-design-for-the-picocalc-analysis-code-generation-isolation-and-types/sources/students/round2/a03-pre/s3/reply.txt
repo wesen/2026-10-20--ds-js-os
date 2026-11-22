@@ -1,0 +1,3 @@
+Files written: `answers.md` (six answers, each with `Confidence: N`), `diary.md` (one step in the `diary-format.md` format). The article itself was not present in the directory, so Q2, Q4 and Q5 are explicitly flagged as unanswerable without it, with the shape of the expected answer given instead.
+
+DONE

@@ -1,0 +1,3 @@
+All three files written: `answers.md` (six answers with working and confidence), `feedback.md` (six requested sections, quoting the text), `diary.md` (three steps in the `diary-format.md` structure).
+
+DONE

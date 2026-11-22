@@ -1,0 +1,64 @@
+{
+  "editor": {
+    "functions": 120,
+    "actual": 43965,
+    "current": 43965,
+    "A": 16544,
+    "B": 13255,
+    "flushA": 155,
+    "flushB": 155,
+    "leaf": 31,
+    "shortCircuit": 228,
+    "mismatched": [],
+    "maxDepth": 8,
+    "localsOverBudget": 27,
+    "depthHistogram": {
+      "2": 15,
+      "3": 33,
+      "4": 35,
+      "5": 17,
+      "6": 8,
+      "7": 9,
+      "8": 3
+    }
+  },
+  "files": {
+    "functions": 7,
+    "actual": 1529,
+    "current": 1529,
+    "A": 593,
+    "B": 470,
+    "flushA": 0,
+    "flushB": 0,
+    "leaf": 5,
+    "shortCircuit": 42,
+    "mismatched": [],
+    "maxDepth": 4,
+    "localsOverBudget": 1,
+    "depthHistogram": {
+      "2": 5,
+      "3": 1,
+      "4": 1
+    }
+  },
+  "agenda": {
+    "functions": 34,
+    "actual": 7710,
+    "current": 7710,
+    "A": 2789,
+    "B": 2418,
+    "flushA": 6,
+    "flushB": 6,
+    "leaf": 9,
+    "shortCircuit": 115,
+    "mismatched": [],
+    "maxDepth": 5,
+    "localsOverBudget": 5,
+    "depthHistogram": {
+      "2": 8,
+      "3": 16,
+      "4": 6,
+      "5": 4
+    }
+  }
+}

@@ -1,0 +1,290 @@
+[
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 1,
+    "score": 2,
+    "note": "Wrong function dispatched silently, no diagnostic; both tables generated from one declaration. Answerable without the article."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 2,
+    "score": 1,
+    "note": "Generic format and parse steps only; no escaping or UTF-8 conversion, no JSON or garbage-collected tree."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 3,
+    "score": 0,
+    "note": "Gives TypeScript enum and parameter properties; none of the key's constructs or arithmetic differences."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 4,
+    "score": 1,
+    "note": "Backend codegen divergence detected: right. Undetected errors given as target-specific behaviour, not source logic."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 5,
+    "score": 1,
+    "note": "Rework argument present; no length multiplier, no hand-written continuations."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 6,
+    "score": 0,
+    "note": "Invents a prediction that is not in section 10.7."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 1,
+    "score": 2,
+    "note": "Silent mis-dispatch that nothing at link time notices; one source for both tables."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 2,
+    "score": 1,
+    "note": "Format, escape, parse named generically with invented framing steps; assumes draw commands, not a JSON tree."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 3,
+    "score": 1,
+    "note": "Main examples are TypeScript enum and parameter properties; mentions lost i32 wrapping without the rewrite."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 4,
+    "score": 1,
+    "note": "Detects backend divergence; undetected errors given as shared front-end and platform faults, not source logic."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 5,
+    "score": 1,
+    "note": "Hand-written continuations rewritten after await: present. Five-to-six-times multiplier absent."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 6,
+    "score": 0,
+    "note": "Says it cannot know; the guessed prediction is not in 10.7."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 1,
+    "score": 2,
+    "note": "Wrong function called and nothing complains; both tables generated from one description."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 2,
+    "score": 1,
+    "note": "Generic format, parse and escape of a command stream; none of the article's JSON or object-tree specifics."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 3,
+    "score": 1,
+    "note": "TypeScript enum and parameter properties; one key construct in passing (i32 wrap needs masking)."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 4,
+    "score": 1,
+    "note": "Backend miscompilation detected: right. Undetected errors given as shared parse or inference, not source logic."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 5,
+    "score": 1,
+    "note": "Port-twice argument only; no multiplier, no hand-made continuations."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 6,
+    "score": 0,
+    "note": "Cannot know; the guessed predictions are not in section 10.7."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 1,
+    "score": 2,
+    "note": "Wrong callee, arguments mean something else, only the count is checked; one source generates all lists."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 2,
+    "score": 2,
+    "note": "Steps 1, 2 and 4 named with their content."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 3,
+    "score": 2,
+    "note": "Addition needs (a+b)|0 and multiplication Math.imul; division and charCodeAt also given."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 4,
+    "score": 2,
+    "note": "Detects backend lowering errors; cannot detect errors in the program's own logic."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 5,
+    "score": 2,
+    "note": "Multiplier, hand continuations, twelve ports made obsolete. Key's 'five to six times' fails for Agenda (4.4x)."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 6,
+    "score": 2,
+    "note": "Cache prediction: warm boot still takes seconds; look at hashing and load costs."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 1,
+    "score": 2,
+    "note": "Wrong function with reinterpreted arguments, count check passes; three lists generated from one file."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 2,
+    "score": 2,
+    "note": "Steps 1, 2 and 4, each described."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 3,
+    "score": 2,
+    "note": "Addition and multiplication rewrites, plus division, charCodeAt and records."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 4,
+    "score": 2,
+    "note": "Detects wrong code from the WebAssembly or RV32 backend; not errors in the source's logic."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 5,
+    "score": 2,
+    "note": "Multiplier, hand-written continuations in state fields, twelve ports obsolete. Key's multiplier fails for Agenda."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "593-instruction prediction; a far-off count means the counting model is wrong, re-examine before Editor."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 1,
+    "score": 2,
+    "note": "Wrong function, wrong-meaning arguments, count check blind to permutation; single generated source."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 2,
+    "score": 2,
+    "note": "Steps 1, 2 and 4, with step 3 and 5 correctly excluded."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 3,
+    "score": 2,
+    "note": "Addition with worked overflow and Math.imul for multiplication."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 4,
+    "score": 2,
+    "note": "Detects backend implementation errors; cannot detect errors in the source's own logic."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 5,
+    "score": 2,
+    "note": "Multiplier (Editor 5.5x), hand-written continuations, twelve ports obsolete. Cites 10.5 where 10.6 is meant."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 6,
+    "score": 2,
+    "note": "593-instruction prediction; a count materially above it refutes; re-examine the model before Editor."
+  }
+]

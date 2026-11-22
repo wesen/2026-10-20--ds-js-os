@@ -1,0 +1,290 @@
+[
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 1,
+    "score": 2,
+    "note": "All six sites become compile errors; compiler lists the work. Answerable without the article."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 2,
+    "score": 2,
+    "note": "Prevents passing one where the other is expected; no run-time cost. Derivable from the question."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 3,
+    "score": 1,
+    "note": "Back-edge reason right; fact hedged between two guesses; invalidation omits assignment to `at`."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 4,
+    "score": 2,
+    "note": "Negative index passes the signed test; unsigned type makes one test cover both bounds."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 5,
+    "score": 1,
+    "note": "No-escape rule and copy-out given; the rule about being live across a wait is missing."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 6,
+    "score": 2,
+    "note": "Each branch must consume the grant exactly once; consuming operations named generically."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 1,
+    "score": 2,
+    "note": "Each site omitting the case is a compile error with exact locations; prevents silent fall-through."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 2,
+    "score": 2,
+    "note": "Unit cannot be passed as Point; erased, no run-time cost."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 3,
+    "score": 1,
+    "note": "Fact not identified (three candidates); invalidation by mutating call only; back-edge reasoning correct."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 4,
+    "score": 2,
+    "note": "Signed test proves only the upper bound; one unsigned compare implies both."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 5,
+    "score": 1,
+    "note": "No-escape idea and copy-out present; wait rule missing; second rule given is bulk reset."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "Every path consumes exactly once; both arms reach the same consumed state."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 1,
+    "score": 2,
+    "note": "Six sites become compile errors; the compiler discovers the places to change."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 2,
+    "score": 2,
+    "note": "Prevents passing Unit as Point; zero run-time cost."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 3,
+    "score": 1,
+    "note": "Guesses `i < len` among alternatives; back-edge reasoning right; calls not mentioned, invalidation vague."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 4,
+    "score": 1,
+    "note": "Both points present, but says the signed test justifies dropping the `at >= 0` half: reversed."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 5,
+    "score": 1,
+    "note": "No-escape rule and copy-out present; the rule about waits is missing."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 6,
+    "score": 1,
+    "note": "States exactly-once per path, then claims a returning and a consuming branch can both type-check."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 1,
+    "score": 2,
+    "note": "Compiler rejects all six until updated, yielding the list of sites; prevents forgotten cases."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 2,
+    "score": 2,
+    "note": "Point cannot be passed as Unit; representation unchanged, no run-time cost."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 3,
+    "score": 2,
+    "note": "Fact, the three invalidating events and re-establishment by the loop condition all stated."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 4,
+    "score": 2,
+    "note": "Signed guard holds for -1; unsigned index type makes the guard imply both bounds."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 5,
+    "score": 2,
+    "note": "Both rules and copying into application-owned storage stated."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 6,
+    "score": 2,
+    "note": "Every path ends in exactly one consuming operation; both branches consume the same handles."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 1,
+    "score": 2,
+    "note": "Six errors, one per match omitting the name; a to-do list of sites."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 2,
+    "score": 2,
+    "note": "Code-point column cannot be passed as code-unit offset; costs nothing at run time."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 3,
+    "score": 2,
+    "note": "Fact, invalidation by assignment or length-changing call, and re-test at loop top all stated."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 4,
+    "score": 2,
+    "note": "Guard true for -1 says nothing about `at >= 0`; unsigned type implies whole check."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 5,
+    "score": 2,
+    "note": "Both rules and copy into storage owned for the application's life."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "Every path ends in exactly one consuming operation; neither branch forgets or reuses."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 1,
+    "score": 2,
+    "note": "Compiler reports every match omitting the new name; missed case cannot ship."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 2,
+    "score": 2,
+    "note": "One coordinate system cannot be passed as another; representation and code unchanged."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 3,
+    "score": 2,
+    "note": "Fact, invalidation at assignment or length-changing call, re-established each iteration."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 4,
+    "score": 2,
+    "note": "Worked -1 example; unsigned index type makes the guard imply both bounds."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 5,
+    "score": 2,
+    "note": "Both rules and copy into application-lifetime storage."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 6,
+    "score": 1,
+    "note": "Exactly-once stated, but says revoke in one branch and store-in-state in the other is rejected. Article wording ambiguous."
+  }
+]

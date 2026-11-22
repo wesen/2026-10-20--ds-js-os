@@ -1,0 +1,3 @@
+All four steps are done: `answers.md` (6 numbered answers, each with `Confidence: N`) and `diary.md` (single step in the required format). The article was absent from the directory as expected, so questions 4 and 5 carry the lowest confidence and are flagged as article-dependent.
+
+DONE

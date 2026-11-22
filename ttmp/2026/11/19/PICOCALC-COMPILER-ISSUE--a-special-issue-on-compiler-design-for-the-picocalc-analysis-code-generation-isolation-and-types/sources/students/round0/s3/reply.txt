@@ -1,0 +1,10 @@
+Files written in `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--a-special-issue-on-compiler-design-for-the-picocalc-analysis-code-generation-isolation-and-types/students/round0/s3`:
+
+- `pretest-answers.md` — 14 answers written before reading the brief, with confidence ratings (lowest: 2 on the timed-handler question, 3 on whole-program inference).
+- `dense-brief.md` — read only after the pre-test was saved.
+- `brief-reactions.md` — 31 unexplained terms, 23 claims I could not follow, per-section clarity scores (3/3/2/2/4/2/2), 14 questions, an eight-lesson teaching order, and three places where a worked example would help most.
+- `diary.md` — three entries in the `diary-format.md` structure (pre-test, reading, reactions).
+
+Main honest finding: I could follow the brief wherever it gave a chain of reasoning (the isolation section) and retained almost nothing where it gave a list of named techniques (code generation, type-system directions), because those sections assume literature I have not read.
+
+DONE

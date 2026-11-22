@@ -1,0 +1,7 @@
+All four deliverables are in place:
+
+- `answers.md` — six numbered answers with `Confidence` lines (Q1: 4, Q2–Q5: 5, Q6: 4)
+- `feedback.md` — six required sections: 6 doubled-back passages, 15 undefined terms, 9 unverifiable claims, scores for all nine sections, answerability of the quiz, one addition (worked trace of the table-order failure) and one cut (step 11, user mode under PMP)
+- `diary.md` — three steps (reading, quiz, feedback) in `diary-format.md` shape
+
+DONE

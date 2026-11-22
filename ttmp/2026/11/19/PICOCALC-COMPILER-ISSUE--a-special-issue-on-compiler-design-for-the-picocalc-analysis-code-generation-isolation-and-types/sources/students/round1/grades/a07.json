@@ -1,0 +1,290 @@
+[
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 1,
+  "score": 1,
+  "note": "Contract-versus-enforcement right; names an 'authority/interface' property and files jumps under memory safety, not control safety."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 2,
+  "score": 2,
+  "note": "Ordering contradiction and call-graph cycle check both given."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 3,
+  "score": 1,
+  "note": "Acyclic graph and known frames; sums own frame plus largest callee bound, omits the reactor's stack."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 4,
+  "score": 2,
+  "note": "Never returns, device hangs; fuel traps at back-edge; no later completion. Return-time budget check not mentioned."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 5,
+  "score": 0,
+  "note": "Names PMP hardware and the bounds check itself; neither address masking nor pattern checking."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 6,
+  "score": 2,
+  "note": "No chip dependence; PMP contains code that bypassed the analysis. 'No runtime cost' for the verifier is loose."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 1,
+  "score": 2,
+  "note": "Nothing stops a jump to an unlisted address; identifies the control-flow property."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 2,
+  "score": 2,
+  "note": "f before and after g is impossible; explicit cycle check on the call graph."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 3,
+  "score": 1,
+  "note": "Acyclic graph, fixed frames; own frame plus worst callee requirement; reactor stack missing."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 4,
+  "score": 2,
+  "note": "Never returns, everything starves; fuel traps; work cannot be finished later."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 5,
+  "score": 1,
+  "note": "Wrong confining technique (PMP); but explains that a check-verifier cannot know which register holds the length."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 6,
+  "score": 1,
+  "note": "Verifier needs no hardware feature; PMP advantage given (survives verifier or compiler bugs) is not in key."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 1,
+  "score": 1,
+  "note": "Contract-versus-wall right; names 'capability/interface confinement' and calls the property undeterminable, not control safety."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 2,
+  "score": 2,
+  "note": "Definition-order argument; signature pass plus explicit acyclicity check."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 3,
+  "score": 1,
+  "note": "No recursion, frames known; frame plus maximum callee bound; reactor stack missing."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 4,
+  "score": 2,
+  "note": "Never returns, machine hangs; fuel traps at backward branch; trap is terminal, no continuation."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 5,
+  "score": 0,
+  "note": "Guesses compiler bounds check versus PMP hardware; neither technique of section 7.6."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 6,
+  "score": 1,
+  "note": "Verifier needs no protection hardware; PMP advantage given (independent of verifier correctness) is not in key."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 1,
+  "score": 2,
+  "note": "List is unenforced, code can jump to any address; control safety."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 2,
+  "score": 2,
+  "note": "Both orders impossible; explicit cycle search after reading signatures."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 3,
+  "score": 2,
+  "note": "Acyclic graph, fixed frames; chain frame sum plus reactor stack."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 4,
+  "score": 2,
+  "note": "Budget check never reached, kernel stalls; fuel traps at back-edge; no resumption."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 5,
+  "score": 2,
+  "note": "Masking forces address into region; pattern still matches, proving only that some length was checked."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 6,
+  "score": 2,
+  "note": "Reactor call is a jump, no chip features; PMP covers any compiler including CJI."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 1,
+  "score": 2,
+  "note": "Notes memory safety is also implicated but settles on control safety; jump to any address."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 2,
+  "score": 2,
+  "note": "Both orders impossible; read signatures, build call graph, reject cycles."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 3,
+  "score": 2,
+  "note": "Constant frames, acyclic graph; largest chain sum plus deepest reachable reactor stack."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 4,
+  "score": 2,
+  "note": "Check runs only on return, so kernel stalls; fuel traps on back-edge; no resumption."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 5,
+  "score": 2,
+  "note": "Mask and add confine regardless; pattern keeps its shape, checked against some length only."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 6,
+  "score": 2,
+  "note": "No chip feature, jump per reactor call; PMP covers any compiler including CJI."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 1,
+  "score": 2,
+  "note": "Loader bookkeeping, not enforcement; code can jump anywhere; control safety."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 2,
+  "score": 2,
+  "note": "Contradictory order requirements; signatures first, then cycle search and rejection."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 3,
+  "score": 2,
+  "note": "Acyclic graph, known frames; largest frame sum along a chain plus reactor stack."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 4,
+  "score": 2,
+  "note": "Never returns, kernel stalled; fuel ends turn with a fault; no suspend and resume."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 5,
+  "score": 2,
+  "note": "Masking confines whatever the compare did; pattern still present, compares against some length."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 6,
+  "score": 2,
+  "note": "Jump instead of trap, no hardware needed; PMP covers any compiler, no per-access cost."
+ }
+]

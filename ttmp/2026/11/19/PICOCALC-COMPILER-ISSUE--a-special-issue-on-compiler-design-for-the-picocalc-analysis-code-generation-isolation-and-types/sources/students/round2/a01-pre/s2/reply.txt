@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 answers + confidence lines) and `diary.md` (Step 1 in the required format).
+
+DONE

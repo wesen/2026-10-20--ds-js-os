@@ -1,0 +1,7 @@
+Three files written in `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--.../students/round2/a04-post/s3`:
+
+- `answers.md` — six numbered answers with working (Q1: `J₁ = i + 1` ⟹ `[6, 8]`; Q4: 11,760 − 9,019 = 2,741) and `Confidence:` lines.
+- `feedback.md` — six required sections: 6 double-read passages, 8 undefined terms (topological order, dominance, relations/rules, bi-abduction, separate compilation, polynomial time, "companion report"), 9 unverifiable claims (notably the 62%/29% cache arithmetic and the "raised precision" claim), section scores 4.1=4, 4.2=5, 4.3=3, 4.4=4, 4.5=4, and one add (worked widening/narrowing example) / one cut ("rules over relations" sentence).
+- `diary.md` — three steps (reading, quiz, feedback) in the `diary-format.md` shape, with failures recorded verbatim.
+
+DONE

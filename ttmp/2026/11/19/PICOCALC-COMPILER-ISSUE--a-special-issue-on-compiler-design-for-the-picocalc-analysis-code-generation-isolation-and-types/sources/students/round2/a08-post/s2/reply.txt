@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 answers with confidence), `feedback.md` (six requested sections), `diary.md` (three steps in the diary format).
+
+DONE

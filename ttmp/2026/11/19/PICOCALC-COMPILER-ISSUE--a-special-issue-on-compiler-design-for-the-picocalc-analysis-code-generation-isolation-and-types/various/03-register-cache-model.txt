@@ -1,0 +1,24 @@
+
+== editor: 120 functions (31 leaf), 228 value-producing if blocks (&& / ||)
+   emitted today:            43965 instructions
+   model of today's scheme:  43965  (0 functions disagree with the real image)
+   model A (stack in regs):  16544  = 37.6% of today, 2.66x smaller
+   model B (+locals in regs): 13255  = 30.1% of today, 3.32x smaller
+   flush cost inside A/B: 155/155; deepest operand stack: 8; functions with more locals than the register budget: 27
+   operand-stack depth histogram (max depth: functions): {"2":15,"3":33,"4":35,"5":17,"6":8,"7":9,"8":3}
+
+== files: 7 functions (5 leaf), 42 value-producing if blocks (&& / ||)
+   emitted today:            1529 instructions
+   model of today's scheme:  1529  (0 functions disagree with the real image)
+   model A (stack in regs):  593  = 38.8% of today, 2.58x smaller
+   model B (+locals in regs): 470  = 30.7% of today, 3.25x smaller
+   flush cost inside A/B: 0/0; deepest operand stack: 4; functions with more locals than the register budget: 1
+   operand-stack depth histogram (max depth: functions): {"2":5,"3":1,"4":1}
+
+== agenda: 34 functions (9 leaf), 115 value-producing if blocks (&& / ||)
+   emitted today:            7710 instructions
+   model of today's scheme:  7710  (0 functions disagree with the real image)
+   model A (stack in regs):  2789  = 36.2% of today, 2.76x smaller
+   model B (+locals in regs): 2418  = 31.4% of today, 3.19x smaller
+   flush cost inside A/B: 6/6; deepest operand stack: 5; functions with more locals than the register budget: 5
+   operand-stack depth histogram (max depth: functions): {"2":8,"3":16,"4":6,"5":4}

@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 numbered answers + confidence lines) and `diary.md` (Step 1 in the `diary-format.md` format). Note: no article file exists in this directory (`article.md`/`README.md` → ENOENT), so question 6 is explicitly unanswerable and others are hedged accordingly.
+
+DONE

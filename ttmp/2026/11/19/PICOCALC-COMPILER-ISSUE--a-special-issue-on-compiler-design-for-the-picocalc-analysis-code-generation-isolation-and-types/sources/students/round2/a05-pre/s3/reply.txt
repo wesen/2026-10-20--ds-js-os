@@ -1,0 +1,3 @@
+Wrote `answers.md` (6 answers, each with a `Confidence:` line — confidently derivable only for Q1/Q2; Q3–Q6 flagged as needing the missing article) and `diary.md` in the required format.
+
+DONE

@@ -1,0 +1,290 @@
+[
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 1,
+    "score": 2,
+    "note": "Catches count mismatch, misses swaps; one source generates header, table and stubs. Guessable from the question."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 2,
+    "score": 1,
+    "note": "Format and parse right; counts transmission as text-only, omits UTF-8 conversion; 'deciding what changed' is no step."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 3,
+    "score": 2,
+    "note": "Integer coercions `|0` and `Math.imul`; structs to flat arrays. Answerable without the article."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 4,
+    "score": 1,
+    "note": "Backend divergence right; names shared front-end and target errors, not source logic. Valid limit, but not the key's."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 5,
+    "score": 1,
+    "note": "Avoid-porting-twice reasoning right; no figures, no length multiplier."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s1",
+    "question": 6,
+    "score": 0,
+    "note": "No prediction from the article; describes only the form an answer would take."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 1,
+    "score": 2,
+    "note": "Catches grown or shrunk table, misses order; description as single source with derived count."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 2,
+    "score": 1,
+    "note": "Format, quote, parse guessed; transport and screen write remain. No UTF-8 conversion step; generic."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 3,
+    "score": 2,
+    "note": "`(a + b) | 0` and truncating division given; the enum point is outside the key."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 4,
+    "score": 1,
+    "note": "Backend errors right; names shared parser or checker bugs, not source logic. Valid limit, but not the key's."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 5,
+    "score": 1,
+    "note": "Write-once reasoning right; no figures from section 10.1."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s2",
+    "question": 6,
+    "score": 0,
+    "note": "Invented prediction, not one from section 10.7."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 1,
+    "score": 1,
+    "note": "Catch and miss right; remedy is link-time verification of named entries, not generating all lists."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 2,
+    "score": 1,
+    "note": "Format and parse right; counts transmission as text-only; 'deciding what changed' is not a step."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 3,
+    "score": 1,
+    "note": "Truncating division right; multiplication fixed by masking, not `Math.imul`; struct copies outside the key."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 4,
+    "score": 1,
+    "note": "Backend errors right; names shared front-end errors, not source logic. Valid limit, but not the key's."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 5,
+    "score": 1,
+    "note": "Port-once reasoning right; no figures from section 10.1."
+  },
+  {
+    "article": "10",
+    "condition": "pre",
+    "student": "s3",
+    "question": 6,
+    "score": 0,
+    "note": "Invented prediction, not one from section 10.7."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 1,
+    "score": 2,
+    "note": "Catches unequal lengths, misses reordering; all lists generated from one file."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 2,
+    "score": 2,
+    "note": "Steps 1, 2, 4 text-only; 3 remains as inter-world copy; 5 is the compositor's job."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 3,
+    "score": 2,
+    "note": "Semantics differ; `(a + b) | 0` and `Math.imul`, plus the other rows."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 4,
+    "score": 2,
+    "note": "Detects backend errors; cannot detect errors in the source program's logic."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 5,
+    "score": 2,
+    "note": "5.5 and 4.4, hand-written continuations, twelve ports made obsolete by `await`."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s1",
+    "question": 6,
+    "score": 2,
+    "note": "593-instruction prediction; higher count refutes; counting model re-examined before Editor."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 1,
+    "score": 2,
+    "note": "Catches unequal lengths, misses order; generation from one file. Notes world.c order is unchecked."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 2,
+    "score": 2,
+    "note": "Steps 1, 2, 4 text-only; 3 remains with any protocol; 5 is the compositor's job."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 3,
+    "score": 2,
+    "note": "Semantics differ; `(a + b) | 0` and `Math.imul`, plus the other three rows."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 4,
+    "score": 2,
+    "note": "Tests the backends; cannot detect an error in the typed source's own logic."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 5,
+    "score": 2,
+    "note": "Figures recomputed, continuations named, twelve ports would be rewritten."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "593 prediction, count near 1,529 refutes, re-examine the model. Notes 1,529/593 = 2.58, not 2.7."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 1,
+    "score": 2,
+    "note": "Length mismatch caught, reordering missed; one file generates table, trampolines and prototypes."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 2,
+    "score": 2,
+    "note": "Steps 1, 2, 4 text-only; 3 remains under any protocol; 5 is the compositor's job."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 3,
+    "score": 2,
+    "note": "Semantics differ; `(a + b) | 0` and `Math.imul`, plus the other rows."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 4,
+    "score": 2,
+    "note": "Detects errors in the lowerings; cannot detect an error in the source's logic."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 5,
+    "score": 2,
+    "note": "5.5 and 4.4, hand-written continuations, twelve ports made obsolete."
+  },
+  {
+    "article": "10",
+    "condition": "post",
+    "student": "s3",
+    "question": 6,
+    "score": 2,
+    "note": "Cache prediction under 100 ms; slow warm boot refutes; look at hashing and load costs."
+  }
+]

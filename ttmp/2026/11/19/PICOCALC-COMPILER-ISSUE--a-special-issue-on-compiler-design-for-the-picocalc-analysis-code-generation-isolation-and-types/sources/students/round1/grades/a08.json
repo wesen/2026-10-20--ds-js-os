@@ -1,0 +1,290 @@
+[
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 1,
+  "score": 0,
+  "note": "Describes the token as a caller-supplied state record (the frame), not a request number matched against events."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 2,
+  "score": 0,
+  "note": "Generic guess; treats handle as live and misreads `stop` as a marker, not a recomputed variable."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 3,
+  "score": 2,
+  "note": "Continuation as data: tag selecting code plus saved variables, hand-written instead of compiler-derived. General knowledge."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 4,
+  "score": 1,
+  "note": "Right 0/1/2 shape; wrong contents: open then read, state 2 resumes in an epilogue."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 5,
+  "score": 2,
+  "note": "No recursion gives one static instance; at most one in flight, more needs extra copies."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 6,
+  "score": 2,
+  "note": "Other code runs and changes state during a wait; programmer must choose the yield points."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 1,
+  "score": 0,
+  "note": "Token described as a record standing for the suspended activation; no request number, no comparison with events."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 2,
+  "score": 1,
+  "note": "`stop` dead and length/progress counters live, but file descriptor wrongly live; recomputation not given."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 3,
+  "score": 2,
+  "note": "Tag names the resumption point, saved variables are captured locals; dispatch hand-written. General knowledge."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 4,
+  "score": 1,
+  "note": "Start and after-first-wait right; third state guessed as 'finished', not waiting for the yield."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 5,
+  "score": 2,
+  "note": "No recursion or overlapping invocations, so static storage; at most one simultaneous instance."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 6,
+  "score": 2,
+  "note": "Other code runs and mutates state during a wait; programmer should choose well-understood yield points."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 1,
+  "score": 1,
+  "note": "Integer identifying an in-flight request; says state is written into the token, not stored and compared."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 2,
+  "score": 1,
+  "note": "Generic: loop bound live, `stop` conditionally dead after its last comparison; handle hedged, recomputation absent."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 3,
+  "score": 2,
+  "note": "Tag says which continuation, saved variables are its free variables; programmer writes struct and switch."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 4,
+  "score": 1,
+  "note": "Correct 0/1/2 shape; no read or yield, no reload of variables or loop test."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 5,
+  "score": 2,
+  "note": "No recursion, single-threaded; at most one in-flight instance. Omits that more frames can be declared."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 6,
+  "score": 2,
+  "note": "Event loop runs other code that changes state; programmer knows which interruption points are safe."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 1,
+  "score": 2,
+  "note": "Number returned at once identifying the request; stored, compared with each event's token."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 2,
+  "score": 2,
+  "note": "length, read, written live; handle, ok, stop dead; stop recomputed each outer iteration."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 3,
+  "score": 2,
+  "note": "Tag is which token field is non-zero; unitsRead, unitsWritten, sourceLength saved; hand-built."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 4,
+  "score": 2,
+  "note": "0 starts the read; 1 tests ok, initialises, loops; 2 reloads and goes to loop test."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 5,
+  "score": 2,
+  "note": "No recursion, one fixed frame; one frame is one instance, larger number must be declared."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 6,
+  "score": 2,
+  "note": "Other events handled during a wait may change the document; explicit await marks those points."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 1,
+  "score": 2,
+  "note": "Number naming one request; stored in persistent state, compared with the completion event's token."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 2,
+  "score": 2,
+  "note": "Three live, handle/ok/stop dead; stop rewritten before any read after resuming."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 3,
+  "score": 2,
+  "note": "Rest of computation as tag plus saved variables; readToken non-zero and position fields, hand-written."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 4,
+  "score": 2,
+  "note": "0 requests read; 1 tests success, initialises, loop_test; 2 reloads three locals, loop_test."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 5,
+  "score": 2,
+  "note": "Acyclic call graph gives one activation; one frame one instance, larger count declared."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 6,
+  "score": 2,
+  "note": "State may change under suspended work; explicit await marks where interleavings occur."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 1,
+  "score": 2,
+  "note": "Number from the reactor identifying the request; kept in a field, compared with event tokens."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 2,
+  "score": 2,
+  "note": "Table: length, read, written live; handle, ok, stop dead; stop recomputed before being read."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 3,
+  "score": 2,
+  "note": "Tag is which token is non-zero; three fields are saved variables; author encodes it by hand."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 4,
+  "score": 2,
+  "note": "0 starts and requests read; 1 tests event.ok, initialises, loop_test; 2 reloads, loop_test."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 5,
+  "score": 2,
+  "note": "Acyclic graph, one static frame; one live instance, maximum must be declared."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 6,
+  "score": 2,
+  "note": "Other events can modify the document during a wait; explicit await marks interleaving points."
+ }
+]

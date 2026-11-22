@@ -1,0 +1,1382 @@
+[
+  {
+    "dir": "sources/students/round1/a01-post/s1",
+    "session": "2026-11-19T17-36-49-965Z_01a1f4e1-ef2c-7376-8ecc-34541708f3ca.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 5542,
+    "max_context_tokens": 10742,
+    "assistant_turns": 7,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 72061
+  },
+  {
+    "dir": "sources/students/round1/a01-post/s2",
+    "session": "2026-11-19T17-36-49-966Z_01a1f4e1-ef2d-7144-ac5e-5abeb3e85bd9.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      "",
+      "diary.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 11834,
+    "max_context_tokens": 17317,
+    "assistant_turns": 8,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 103923
+  },
+  {
+    "dir": "sources/students/round1/a01-post/s3",
+    "session": "2026-11-19T17-36-49-988Z_01a1f4e1-ef44-7743-a920-6928d609ec0e.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 8911,
+    "max_context_tokens": 14108,
+    "assistant_turns": 6,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 131080
+  },
+  {
+    "dir": "sources/students/round1/a01-pre/s1",
+    "session": "2026-11-19T17-36-49-892Z_01a1f4e1-eee2-77d2-b5cf-8cffa5872f6a.jsonl",
+    "tool_calls": 10,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "article.md",
+      "README.md",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3858,
+    "max_context_tokens": 6672,
+    "assistant_turns": 9,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 139514
+  },
+  {
+    "dir": "sources/students/round1/a01-pre/s2",
+    "session": "2026-11-19T17-36-49-869Z_01a1f4e1-eecc-740b-89da-66d52a5012ad.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4081,
+    "max_context_tokens": 7404,
+    "assistant_turns": 7,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 88427
+  },
+  {
+    "dir": "sources/students/round1/a01-pre/s3",
+    "session": "2026-11-19T17-36-49-950Z_01a1f4e1-ef1d-75ea-b379-93b2fcd803e5.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "article.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4141,
+    "max_context_tokens": 6517,
+    "assistant_turns": 7,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 120900
+  },
+  {
+    "dir": "sources/students/round1/a02-post/s1",
+    "session": "2026-11-19T17-36-49-970Z_01a1f4e1-ef2d-757a-a6cc-f2beb2820ea4.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md",
+      "diary.md"
+    ],
+    "output_tokens": 9357,
+    "max_context_tokens": 14790,
+    "assistant_turns": 7,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 117983
+  },
+  {
+    "dir": "sources/students/round1/a02-post/s2",
+    "session": "2026-11-19T17-37-51-201Z_01a1f4e2-de61-732c-aaf0-b38a96cc6b6b.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 11920,
+    "max_context_tokens": 17356,
+    "assistant_turns": 8,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 132856
+  },
+  {
+    "dir": "sources/students/round1/a02-post/s3",
+    "session": "2026-11-19T17-38-03-990Z_01a1f4e3-1056-74e2-894d-2e0ab50bbd3a.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "diary-format.md",
+      "article.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 11418,
+    "max_context_tokens": 16829,
+    "assistant_turns": 6,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 104837
+  },
+  {
+    "dir": "sources/students/round1/a02-pre/s1",
+    "session": "2026-11-19T17-36-49-947Z_01a1f4e1-ef19-7407-ac8d-ffe9a316ff33.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 2943,
+    "max_context_tokens": 5235,
+    "assistant_turns": 6,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 86992
+  },
+  {
+    "dir": "sources/students/round1/a02-pre/s2",
+    "session": "2026-11-19T17-36-49-885Z_01a1f4e1-eedc-7311-befa-464eb86a8a2e.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3267,
+    "max_context_tokens": 5559,
+    "assistant_turns": 6,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 82865
+  },
+  {
+    "dir": "sources/students/round1/a02-pre/s3",
+    "session": "2026-11-19T17-36-50-144Z_01a1f4e1-efdf-7287-95ff-a7055ab81521.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4235,
+    "max_context_tokens": 6527,
+    "assistant_turns": 6,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 58882
+  },
+  {
+    "dir": "sources/students/round1/a03-post/s1",
+    "session": "2026-11-19T17-38-35-917Z_01a1f4e3-8d0c-7334-a578-60f6ca5003fa.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 9986,
+    "max_context_tokens": 15885,
+    "assistant_turns": 8,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 262909
+  },
+  {
+    "dir": "sources/students/round1/a03-post/s2",
+    "session": "2026-11-19T17-38-49-928Z_01a1f4e3-c3c7-7357-a947-22a3ded40a7f.jsonl",
+    "tool_calls": 16,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      "feedback.md",
+      "feedback.md",
+      "feedback.md",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md",
+      "diary.md",
+      "feedback.md",
+      "feedback.md",
+      "feedback.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 15178,
+    "max_context_tokens": 22883,
+    "assistant_turns": 14,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 238214
+  },
+  {
+    "dir": "sources/students/round1/a03-post/s3",
+    "session": "2026-11-19T17-38-52-811Z_01a1f4e3-cf0b-72ad-aa04-833c89017a71.jsonl",
+    "tool_calls": 9,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "",
+      "diary-format.md",
+      "article.md",
+      "diary.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md",
+      "diary.md"
+    ],
+    "output_tokens": 8677,
+    "max_context_tokens": 14635,
+    "assistant_turns": 10,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 127480
+  },
+  {
+    "dir": "sources/students/round1/a03-pre/s1",
+    "session": "2026-11-19T17-38-14-755Z_01a1f4e3-3a63-7481-af06-8ebecde58c57.jsonl",
+    "tool_calls": 9,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "answers.md",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4437,
+    "max_context_tokens": 7058,
+    "assistant_turns": 9,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 69229
+  },
+  {
+    "dir": "sources/students/round1/a03-pre/s2",
+    "session": "2026-11-19T17-38-18-908Z_01a1f4e3-4a9b-7024-916b-2e7ffc4a3aa6.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 6050,
+    "max_context_tokens": 8877,
+    "assistant_turns": 8,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 82840
+  },
+  {
+    "dir": "sources/students/round1/a03-pre/s3",
+    "session": "2026-11-19T17-38-20-288Z_01a1f4e3-5000-73e1-9789-439415dc4326.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "context.md",
+      "article.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4136,
+    "max_context_tokens": 6609,
+    "assistant_turns": 6,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 97781
+  },
+  {
+    "dir": "sources/students/round1/a04-post/s1",
+    "session": "2026-11-19T17-39-43-224Z_01a1f4e4-93f8-776b-b00c-4ea49dbb925e.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md",
+      "diary.md"
+    ],
+    "output_tokens": 7177,
+    "max_context_tokens": 13964,
+    "assistant_turns": 7,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 59342
+  },
+  {
+    "dir": "sources/students/round1/a04-post/s2",
+    "session": "2026-11-19T17-39-50-295Z_01a1f4e4-af97-7150-8729-b03b18014efc.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 9818,
+    "max_context_tokens": 17086,
+    "assistant_turns": 7,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 109373
+  },
+  {
+    "dir": "sources/students/round1/a04-post/s3",
+    "session": "2026-11-19T17-39-59-649Z_01a1f4e4-d421-71cd-a39b-52bb133159d3.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "diary-format.md",
+      "article.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 9999,
+    "max_context_tokens": 16786,
+    "assistant_turns": 7,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 168222
+  },
+  {
+    "dir": "sources/students/round1/a04-pre/s1",
+    "session": "2026-11-19T17-39-02-895Z_01a1f4e3-f66e-74ff-953d-6f9929b2e2a2.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3413,
+    "max_context_tokens": 6717,
+    "assistant_turns": 8,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 57943
+  },
+  {
+    "dir": "sources/students/round1/a04-pre/s2",
+    "session": "2026-11-19T17-39-11-559Z_01a1f4e4-1847-702a-9108-74e9ef8be5f8.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 5620,
+    "max_context_tokens": 8208,
+    "assistant_turns": 6,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 90335
+  },
+  {
+    "dir": "sources/students/round1/a04-pre/s3",
+    "session": "2026-11-19T17-39-25-525Z_01a1f4e4-4ed5-72f0-8c03-e0234cafd997.jsonl",
+    "tool_calls": 5,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3768,
+    "max_context_tokens": 6031,
+    "assistant_turns": 5,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 73339
+  },
+  {
+    "dir": "sources/students/round1/a05-post/s1",
+    "session": "2026-11-19T17-40-43-307Z_01a1f4e5-7eab-718c-a7cd-8b2a85f0c9d7.jsonl",
+    "tool_calls": 9,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "diary-format.md",
+      "article.md",
+      "feedback.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "feedback.md",
+      "diary.md",
+      "diary.md"
+    ],
+    "output_tokens": 13312,
+    "max_context_tokens": 23043,
+    "assistant_turns": 10,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 189689
+  },
+  {
+    "dir": "sources/students/round1/a05-post/s2",
+    "session": "2026-11-19T17-40-43-943Z_01a1f4e5-8127-75d8-8c3b-2457d66b5004.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 13695,
+    "max_context_tokens": 23241,
+    "assistant_turns": 8,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 168009
+  },
+  {
+    "dir": "sources/students/round1/a05-post/s3",
+    "session": "2026-11-19T17-40-58-071Z_01a1f4e5-b857-7292-98a3-53e738fa88ee.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      "feedback.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md",
+      "diary.md"
+    ],
+    "output_tokens": 15631,
+    "max_context_tokens": 25865,
+    "assistant_turns": 8,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 177575
+  },
+  {
+    "dir": "sources/students/round1/a05-pre/s1",
+    "session": "2026-11-19T17-40-02-243Z_01a1f4e4-de42-7334-8bcc-859b78940d98.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "diary.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4918,
+    "max_context_tokens": 7362,
+    "assistant_turns": 7,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 54432
+  },
+  {
+    "dir": "sources/students/round1/a05-pre/s2",
+    "session": "2026-11-19T17-40-05-501Z_01a1f4e4-eafd-7673-8621-81ae8614030d.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 5059,
+    "max_context_tokens": 7401,
+    "assistant_turns": 6,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 57362
+  },
+  {
+    "dir": "sources/students/round1/a05-pre/s3",
+    "session": "2026-11-19T17-40-40-276Z_01a1f4e5-72d4-7176-8e2f-fb9f26a4c6b7.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "article.md",
+      "README.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4755,
+    "max_context_tokens": 7297,
+    "assistant_turns": 7,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 55314
+  },
+  {
+    "dir": "sources/students/round1/a06-post/s1",
+    "session": "2026-11-19T17-41-41-013Z_01a1f4e6-6014-72ba-885f-67e170602560.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 8317,
+    "max_context_tokens": 14872,
+    "assistant_turns": 6,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 192432
+  },
+  {
+    "dir": "sources/students/round1/a06-post/s2",
+    "session": "2026-11-19T17-42-27-014Z_01a1f4e7-13c5-75ad-96ed-9ce38dde6a39.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 9224,
+    "max_context_tokens": 15775,
+    "assistant_turns": 5,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 89077
+  },
+  {
+    "dir": "sources/students/round1/a06-post/s3",
+    "session": "2026-11-19T17-42-49-225Z_01a1f4e7-6a88-7430-adf2-84e775f2c9d4.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 8738,
+    "max_context_tokens": 15315,
+    "assistant_turns": 7,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 212461
+  },
+  {
+    "dir": "sources/students/round1/a06-pre/s1",
+    "session": "2026-11-19T17-41-01-664Z_01a1f4e5-c660-7703-ab9e-621ecac216f8.jsonl",
+    "tool_calls": 9,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "",
+      "article.md",
+      "README.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3527,
+    "max_context_tokens": 6059,
+    "assistant_turns": 8,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 107714
+  },
+  {
+    "dir": "sources/students/round1/a06-pre/s2",
+    "session": "2026-11-19T17-41-04-272Z_01a1f4e5-d08f-74db-911b-c89b6f0dff3b.jsonl",
+    "tool_calls": 5,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3965,
+    "max_context_tokens": 6252,
+    "assistant_turns": 5,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 80906
+  },
+  {
+    "dir": "sources/students/round1/a06-pre/s3",
+    "session": "2026-11-19T17-41-37-001Z_01a1f4e6-5068-71e4-babe-fd3ba53d7f95.jsonl",
+    "tool_calls": 5,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3746,
+    "max_context_tokens": 6033,
+    "assistant_turns": 5,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 71796
+  },
+  {
+    "dir": "sources/students/round1/a07-post/s1",
+    "session": "2026-11-19T17-43-00-257Z_01a1f4e7-95a1-7182-9afd-59edc9c7bd4d.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      "diary.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 10563,
+    "max_context_tokens": 18303,
+    "assistant_turns": 7,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 160962
+  },
+  {
+    "dir": "sources/students/round1/a07-post/s2",
+    "session": "2026-11-19T17-43-33-494Z_01a1f4e8-1776-73bf-b190-424688fe50b0.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "diary-format.md",
+      "article.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 11455,
+    "max_context_tokens": 18872,
+    "assistant_turns": 8,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 139902
+  },
+  {
+    "dir": "sources/students/round1/a07-post/s3",
+    "session": "2026-11-19T17-43-54-591Z_01a1f4e8-69df-7696-8680-afabd1364272.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 9924,
+    "max_context_tokens": 17704,
+    "assistant_turns": 8,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 171423
+  },
+  {
+    "dir": "sources/students/round1/a07-pre/s1",
+    "session": "2026-11-19T17-42-49-743Z_01a1f4e7-6c8f-75d6-88f2-96c67fac7702.jsonl",
+    "tool_calls": 5,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4262,
+    "max_context_tokens": 6547,
+    "assistant_turns": 5,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 68333
+  },
+  {
+    "dir": "sources/students/round1/a07-pre/s2",
+    "session": "2026-11-19T17-42-50-103Z_01a1f4e7-6df7-771a-a356-d66e97d3b14b.jsonl",
+    "tool_calls": 5,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3573,
+    "max_context_tokens": 5858,
+    "assistant_turns": 5,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 155107
+  },
+  {
+    "dir": "sources/students/round1/a07-pre/s3",
+    "session": "2026-11-19T17-42-50-781Z_01a1f4e7-709c-72bc-94ee-3807e020383f.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4499,
+    "max_context_tokens": 6806,
+    "assistant_turns": 6,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 77603
+  },
+  {
+    "dir": "sources/students/round1/a08-post/s1",
+    "session": "2026-11-19T17-44-09-975Z_01a1f4e8-a5f7-75c6-805f-1bf7441961c1.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "diary-format.md",
+      "article.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 7720,
+    "max_context_tokens": 14441,
+    "assistant_turns": 6,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 69006
+  },
+  {
+    "dir": "sources/students/round1/a08-post/s2",
+    "session": "2026-11-19T17-44-53-503Z_01a1f4e9-4ffe-7103-9054-c3e918ec5257.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 12255,
+    "max_context_tokens": 18998,
+    "assistant_turns": 7,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 111046
+  },
+  {
+    "dir": "sources/students/round1/a08-post/s3",
+    "session": "2026-11-19T17-44-55-073Z_01a1f4e9-5620-739b-a3f2-9a1d67d0220d.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md",
+      "feedback.md"
+    ],
+    "output_tokens": 9581,
+    "max_context_tokens": 16324,
+    "assistant_turns": 7,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 223869
+  },
+  {
+    "dir": "sources/students/round1/a08-pre/s1",
+    "session": "2026-11-19T17-43-57-091Z_01a1f4e8-73a2-769a-b68c-d4e23912454c.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "article.md",
+      "README.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4072,
+    "max_context_tokens": 6532,
+    "assistant_turns": 7,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 81781
+  },
+  {
+    "dir": "sources/students/round1/a08-pre/s2",
+    "session": "2026-11-19T17-43-57-511Z_01a1f4e8-7547-72d1-b670-44ca80a80cf5.jsonl",
+    "tool_calls": 5,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3773,
+    "max_context_tokens": 6011,
+    "assistant_turns": 5,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 66573
+  },
+  {
+    "dir": "sources/students/round1/a08-pre/s3",
+    "session": "2026-11-19T17-43-59-450Z_01a1f4e8-7cda-7479-8b36-cad13a599b00.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "answers.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4676,
+    "max_context_tokens": 7038,
+    "assistant_turns": 7,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 52664
+  },
+  {
+    "dir": "sources/students/round1/a09-post/s1",
+    "session": "2026-11-19T17-45-26-558Z_01a1f4e9-d11e-76b0-8279-d1b7031474e7.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 9333,
+    "max_context_tokens": 16889,
+    "assistant_turns": 7,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 103096
+  },
+  {
+    "dir": "sources/students/round1/a09-post/s2",
+    "session": "2026-11-19T17-45-42-619Z_01a1f4ea-0fdb-731a-aed3-d70dc7424ee6.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "diary-format.md",
+      "article.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md",
+      "diary.md"
+    ],
+    "output_tokens": 10981,
+    "max_context_tokens": 18562,
+    "assistant_turns": 9,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 131535
+  },
+  {
+    "dir": "sources/students/round1/a09-post/s3",
+    "session": "2026-11-19T17-45-49-292Z_01a1f4ea-29ec-7628-888f-8473574efe6a.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "diary-format.md",
+      "article.md",
+      "answers.md",
+      "feedback.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 10084,
+    "max_context_tokens": 17776,
+    "assistant_turns": 7,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 86867
+  },
+  {
+    "dir": "sources/students/round1/a09-pre/s1",
+    "session": "2026-11-19T17-45-05-537Z_01a1f4e9-7f00-7538-af76-49d3b58f5a4e.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 2779,
+    "max_context_tokens": 5065,
+    "assistant_turns": 6,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 42328
+  },
+  {
+    "dir": "sources/students/round1/a09-pre/s2",
+    "session": "2026-11-19T17-45-20-294Z_01a1f4e9-b8a5-7105-a069-fb184b24d80a.jsonl",
+    "tool_calls": 6,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3920,
+    "max_context_tokens": 6206,
+    "assistant_turns": 6,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 55636
+  },
+  {
+    "dir": "sources/students/round1/a09-pre/s3",
+    "session": "2026-11-19T17-45-20-491Z_01a1f4e9-b96a-73c2-898a-570535e5ab1e.jsonl",
+    "tool_calls": 5,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 3224,
+    "max_context_tokens": 5488,
+    "assistant_turns": 5,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 47235
+  },
+  {
+    "dir": "sources/students/round1/a10-post/s1",
+    "session": "2026-11-19T17-46-23-050Z_01a1f4ea-adca-7597-bbf2-72a3d63fd448.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      "feedback.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 8749,
+    "max_context_tokens": 15134,
+    "assistant_turns": 7,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 100796
+  },
+  {
+    "dir": "sources/students/round1/a10-post/s2",
+    "session": "2026-11-19T17-46-45-898Z_01a1f4eb-070a-7686-89f0-7fa3f76c1831.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md",
+      ""
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "diary.md"
+    ],
+    "output_tokens": 8160,
+    "max_context_tokens": 14352,
+    "assistant_turns": 7,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 75001
+  },
+  {
+    "dir": "sources/students/round1/a10-post/s3",
+    "session": "2026-11-19T17-46-47-528Z_01a1f4eb-0d68-779a-8bc1-288ae284b78d.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "article.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "feedback.md",
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 11302,
+    "max_context_tokens": 17487,
+    "assistant_turns": 5,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 117934
+  },
+  {
+    "dir": "sources/students/round1/a10-pre/s1",
+    "session": "2026-11-19T17-45-54-801Z_01a1f4ea-3f71-7382-bad2-f808a4b85780.jsonl",
+    "tool_calls": 5,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 2120,
+    "max_context_tokens": 4347,
+    "assistant_turns": 5,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 77462
+  },
+  {
+    "dir": "sources/students/round1/a10-pre/s2",
+    "session": "2026-11-19T17-46-09-160Z_01a1f4ea-7788-7795-bb24-164f77c42b35.jsonl",
+    "tool_calls": 8,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "",
+      "article.md",
+      "README.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4561,
+    "max_context_tokens": 7010,
+    "assistant_turns": 7,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 61659
+  },
+  {
+    "dir": "sources/students/round1/a10-pre/s3",
+    "session": "2026-11-19T17-46-17-391Z_01a1f4ea-97ae-7451-9acc-f907121e3b4b.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "quiz.md",
+      "diary-format.md",
+      "README.md",
+      "article.md"
+    ],
+    "writes": [
+      "answers.md",
+      "diary.md"
+    ],
+    "output_tokens": 4347,
+    "max_context_tokens": 6774,
+    "assistant_turns": 6,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 58538
+  }
+]

@@ -1,0 +1,7 @@
+All three files are written:
+
+- `answers.md` — six numbered answers with working (the `i` trace, the join/round arithmetic) and a `Confidence: N` line each.
+- `feedback.md` — quotes for passages read twice, undefined terms, unverifiable claims, per-section scores (3.3 and 3.5 lowest at 3; 3.4 and 3.6 highest at 5), quiz questions that could not be fully answered, and one add / one cut.
+- `diary.md` — three steps in `diary-format.md` shape, recording what was hard (chiefly the section 3.5 measurement table and the difficulty of separating "wrong number" from "underspecified number").
+
+DONE

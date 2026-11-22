@@ -1,0 +1,7 @@
+Files written in `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--a-special-issue-on-compiler-design-for-the-picocalc-analysis-code-generation-isolation-and-types/students/round1/a06-post/s2`:
+
+- `answers.md` — six numbered answers with working and `Confidence:` lines
+- `feedback.md` — six required sections (passages re-read, unexplained terms, unverifiable claims, section scores, quiz gaps, add/cut)
+- `diary.md` — three steps (reading, quiz, feedback) in the `diary-format.md` format
+
+DONE

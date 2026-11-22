@@ -1,0 +1,7 @@
+Files written:
+
+- `answers.md` — six answers with working (Q3 shows `2147483647 + 1` under i32 wrap, Q5 derives 1730/316 ≈ 5.5, Q6 derives 593/1529 ≈ 0.39) and a `Confidence:` line each (4 or 5; Q5 = 4).
+- `feedback.md` — all six sections; findings include: the "three engines, two compilers, two run-time systems and three reactors" summary does not decompose from its own table; Agenda's numbers (468 + 869 C lines vs 307 JS) fall outside the "five to six times longer" claim; Q2's expected answer set (steps 1, 2, 4) is inferential because 10.3 never marks which steps are text-caused; PMP, per-turn arena and guard facts are undefined in roadmap rows where risk is being judged.
+- `diary.md` — three steps in the `diary-format.md` format, with the verbatim prompt and the failures I actually hit (missing step 2 in the first Q2 draft; the collapsed claim I moved after re-checking).
+
+DONE

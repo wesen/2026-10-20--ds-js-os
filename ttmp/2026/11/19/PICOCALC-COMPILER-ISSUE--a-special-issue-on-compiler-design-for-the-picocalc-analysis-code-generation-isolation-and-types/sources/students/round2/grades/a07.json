@@ -1,0 +1,290 @@
+[
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 1,
+  "score": 1,
+  "note": "Contract-not-enforcement right; names an 'isolation/authority' property, not control safety."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 2,
+  "score": 1,
+  "note": "Definition-before-use and lost stack bound right; proposes a fixpoint around cycles, not a check that rejects them."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 3,
+  "score": 2,
+  "note": "Own frame plus largest callee need; callees already translated. Reactor callee not mentioned."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 4,
+  "score": 1,
+  "note": "Iterations versus work and typed callee's static cost right; reactor charged a fixed amount, not worst case for arguments."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 5,
+  "score": 1,
+  "note": "Names hardware confinement, not address masking; reason a shape-checking verifier accepts the mistyped base is right."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s1",
+  "question": 6,
+  "score": 1,
+  "note": "Verifier advantage right; PMP advantage offered (independent of compiler correctness) is not in the key, which is narrow here."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 1,
+  "score": 1,
+  "note": "Meaning right; files it under 'confinement of authority', not control safety."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 2,
+  "score": 2,
+  "note": "Guessed all three: definition-before-use single pass, call-graph phase rejecting cycles, static stack figure lost."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 3,
+  "score": 2,
+  "note": "Frame plus maximum callee need; every callee already translated. Reactor callee not mentioned."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 4,
+  "score": 1,
+  "note": "Iterations versus work right; typed call hedged; reactor charged a fixed amount per call, not worst case."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 5,
+  "score": 1,
+  "note": "Names region isolation versus verifier, not masking versus pattern checking; gist of both reasons right."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s2",
+  "question": 6,
+  "score": 1,
+  "note": "Verifier advantage right; PMP advantage offered (holds when compiler or verifier is wrong) is not in the narrow key."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 1,
+  "score": 2,
+  "note": "Nothing stops jumps off the list; names the control-flow property and excludes memory safety."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 2,
+  "score": 1,
+  "note": "Only the lost compile-time stack bound is right; 'static stack allocation' as cause, fix-up pass instead of cycle check."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 3,
+  "score": 2,
+  "note": "Own frame plus largest callee need; callees already translated under define-before-use. Reactor callee not mentioned."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 4,
+  "score": 1,
+  "note": "Iterations versus work and typed callee's precomputed cost right; reactor charged a fixed toll, not worst case."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 5,
+  "score": 0,
+  "note": "Says run-time bounds checks confine and static type checking accepts; neither technique nor reason matches."
+ },
+ {
+  "article": "07",
+  "condition": "pre",
+  "student": "s3",
+  "question": 6,
+  "score": 1,
+  "note": "No special hardware right; PMP as backstop is not in the narrow key; verifier's 'zero overhead' overstated."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 1,
+  "score": 2,
+  "note": "List is an unenforced agreement; code can jump to any address; control safety."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 2,
+  "score": 2,
+  "note": "Name registered after body; explicit cycle check after reading signatures; compile-time stack bound lost."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 3,
+  "score": 2,
+  "note": "Frame plus largest callee need, typed or reactor; callees defined earlier, so already computed."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 4,
+  "score": 2,
+  "note": "Iterations versus executed instructions; typed callee's straight-line cost; reactor worst case for arguments."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 5,
+  "score": 2,
+  "note": "Masking forces any address into the world's region; pattern check sees a complete sequence against some length word."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s1",
+  "question": 6,
+  "score": 2,
+  "note": "Jump not trap, no chip features; PMP covers any compiler including CJI. Extra 'diagnostics' advantage misattributed, not penalized."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 1,
+  "score": 2,
+  "note": "Promise not barrier; one jump bypasses the table; control safety."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 2,
+  "score": 2,
+  "note": "Name entered after body is translated; explicit cycle check; compile-time maximum stack use disappears."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 3,
+  "score": 2,
+  "note": "Frame plus largest callee need, typed or reactor; every callee already translated."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 4,
+  "score": 2,
+  "note": "All four points: iterations, instructions per trip, callee's straight-line cost, reactor worst case for arguments."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 5,
+  "score": 2,
+  "note": "Masking lands the access in the world's region; pattern check never confirms the base is a buffer."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s2",
+  "question": 6,
+  "score": 2,
+  "note": "Jump instead of trap, no chip feature; PMP confines code from any compiler including CJI."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 1,
+  "score": 2,
+  "note": "List not enforced; code can jump to any address; control safety, distinguished from memory and time."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 2,
+  "score": 2,
+  "note": "Name recorded after body; explicit cycle check after signatures; compile-time stack bound lost."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 3,
+  "score": 2,
+  "note": "Frame plus largest callee need, typed or reactor; callees earlier in file, already known."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 4,
+  "score": 2,
+  "note": "All four points, with a correct worked example (43 per iteration)."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 5,
+  "score": 2,
+  "note": "Masking forces the address into the world's data; pattern check sees a complete sequence on a wrong base."
+ },
+ {
+  "article": "07",
+  "condition": "post",
+  "student": "s3",
+  "question": 6,
+  "score": 2,
+  "note": "Jump against trap, no chip feature; PMP covers any compiler including CJI."
+ }
+]

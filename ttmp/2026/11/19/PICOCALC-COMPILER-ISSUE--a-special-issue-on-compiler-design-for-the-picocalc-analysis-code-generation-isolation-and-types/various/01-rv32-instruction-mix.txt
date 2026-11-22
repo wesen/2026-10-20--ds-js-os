@@ -1,0 +1,72 @@
+
+== editor: 120 functions, 70859 source bytes, 36917 Wasm body bytes, 175860 RV32 bytes (43965 instructions)
+   RV32 bytes per Wasm body byte: 4.76
+   slotLoad         12020  27.3%
+   slotStore        12310  28.0%
+   localLoad         5367  12.2%
+   localStore         834   1.9%
+   argSpill           335   0.8%
+   raSaveRestore      240   0.5%
+   frame              240   0.5%
+   memLoad            979   2.2%
+   memStore          1878   4.3%
+   alu               2957   6.7%
+   constant          3488   7.9%
+   branch            1037   2.4%
+   jal               1473   3.4%
+   call               283   0.6%
+   jalr               120   0.3%
+   ebreak             404   0.9%
+   operand-stack traffic (slotLoad+slotStore):  55.3%
+   all sp-relative traffic incl. locals:        70.2%
+   adjacent store-then-load of the same slot:  7490 pairs ( 34.1% of instructions)
+   branch-over-jump pairs: 1009, of which target within conditional-branch range: 1008
+   branch-over-trap pairs: 28
+
+== files: 7 functions, 2831 source bytes, 1128 Wasm body bytes, 6116 RV32 bytes (1529 instructions)
+   RV32 bytes per Wasm body byte: 5.42
+   slotLoad           361  23.6%
+   slotStore          403  26.4%
+   localLoad          140   9.2%
+   localStore          25   1.6%
+   argSpill            18   1.2%
+   raSaveRestore       14   0.9%
+   frame               14   0.9%
+   memLoad             21   1.4%
+   memStore             1   0.1%
+   alu                165  10.8%
+   constant           130   8.5%
+   branch              75   4.9%
+   jal                142   9.3%
+   call                 5   0.3%
+   jalr                 7   0.5%
+   ebreak               8   0.5%
+   operand-stack traffic (slotLoad+slotStore):  50.0%
+   all sp-relative traffic incl. locals:        61.9%
+   adjacent store-then-load of the same slot:  262 pairs ( 34.3% of instructions)
+   branch-over-jump pairs: 75, of which target within conditional-branch range: 75
+   branch-over-trap pairs: 0
+
+== agenda: 34 functions, 17533 source bytes, 5432 Wasm body bytes, 30840 RV32 bytes (7710 instructions)
+   RV32 bytes per Wasm body byte: 5.68
+   slotLoad          1964  25.5%
+   slotStore         2081  27.0%
+   localLoad          751   9.7%
+   localStore         184   2.4%
+   argSpill            90   1.2%
+   raSaveRestore       68   0.9%
+   frame               68   0.9%
+   memLoad             93   1.2%
+   memStore            27   0.4%
+   alu                766   9.9%
+   constant           634   8.2%
+   branch             323   4.2%
+   jal                463   6.0%
+   call                80   1.0%
+   jalr                34   0.4%
+   ebreak              84   1.1%
+   operand-stack traffic (slotLoad+slotStore):  52.5%
+   all sp-relative traffic incl. locals:        65.8%
+   adjacent store-then-load of the same slot:  1289 pairs ( 33.4% of instructions)
+   branch-over-jump pairs: 274, of which target within conditional-branch range: 274
+   branch-over-trap pairs: 49

@@ -1,0 +1,5 @@
+Wrote `answers.md` (6 answers + confidence lines) and `diary.md`.
+
+Notes: the article was never supplied, so Q1, Q4 and Q5 were marked "I cannot know this without the article" plus best-guess shape. Q2 (Amdahl 1.25×) and Q3 (2/559 ≈ 0.36%) were computable from the quiz alone. Directory listing was unavailable (`EISDIR` on `.`), so only `TASK.md`, `quiz.md`, `diary-format.md` were used.
+
+DONE

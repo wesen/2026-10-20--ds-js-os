@@ -1,0 +1,9 @@
+Files written in this directory:
+
+- **`answers.md`** — all six quiz answers with worked steps (jump function `J₁ = i + 1`, [5, 7] → [6, 8]; 11,760 − 9,019 = 2,741) and a `Confidence: N` line each.
+- **`feedback.md`** — five passages I had to reread, twelve terms unexplained or explained only after use (checked against `glossary.md`), ten unverifiable claims with what's missing, per-section scores, quiz-answerability notes (none unanswerable), and one add / one cut.
+- **`diary.md`** — three steps in `diary-format.md` format: reading, quiz, feedback, with the difficulties recorded.
+
+Main honest findings: §4.2 is the clearest part (costs stated plainly, four real systems); the four technique subsections after the waste table are quoteable but not reconstructable (no worked example except the π one); and the recurring defect is speed claims without a machine or baseline ("up to 450 times", "under ten seconds", "well over ten times faster") — while the article is otherwise careful to name the 360 MHz device. Also noted: `narrowing` is in neither the glossary nor bold, "exact" summary is never defined, and the table's demand row contains no evidence where the other four rows have numbers.
+
+DONE

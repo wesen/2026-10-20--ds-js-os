@@ -1,0 +1,3 @@
+Both files are written: `answers.md` (6 answers, each with a `Confidence:` line) and `diary.md` (one step in the `diary-format.md` shape). All six questions got reasoning; none could be answered from the article's own vocabulary since the article was not provided, so confidences are 2–3.
+
+DONE

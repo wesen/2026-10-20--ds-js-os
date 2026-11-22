@@ -1,0 +1,290 @@
+[
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 1,
+    "score": 1,
+    "note": "Places guessed wrong; does say the representation stays an integer and nothing changes at run time."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 2,
+    "score": 1,
+    "note": "Bytes, characters and wrapped view guessed; no UTF-16 units; mistake generic, not code point for code unit."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 3,
+    "score": 1,
+    "note": "Bound fact and re-derivation at loop head right; events omit assignment to `at`, invent callbacks and escapes."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 4,
+    "score": 2,
+    "note": "Signed test admits negatives; unsigned type makes one comparison sufficient. Answerable without the article."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 5,
+    "score": 1,
+    "note": "No-escape rule and copy-out right; second rule (reset only without live borrows) is not the wait rule."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s1",
+    "question": 6,
+    "score": 2,
+    "note": "Consumed exactly once per branch; branches may differ. Answerable without the article."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 1,
+    "score": 1,
+    "note": "Places guessed wrong; integer representation right, but claims code generation drops the default arm."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 2,
+    "score": 1,
+    "note": "Bytes and code points guessed; no code units or wrapped rows; mistake generic, though emoji mentioned."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 3,
+    "score": 1,
+    "note": "Fact and re-test reason right; write and call named, but third event is a control-flow join."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 4,
+    "score": 2,
+    "note": "Negative index passes the signed test; unsigned type makes a single comparison suffice."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 5,
+    "score": 1,
+    "note": "No-escape rule and copy-out right; wait rule missing, wholesale freeing given instead."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "Consumed exactly once on each path; different consuming operations allowed."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 1,
+    "score": 0,
+    "note": "Places guessed wrong; says the generated code and perhaps the representation change, contradicting the key."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 2,
+    "score": 1,
+    "note": "Only byte offset and characters match; mistake generic (ASCII tests hide mix-ups), not the code-unit confusion."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 3,
+    "score": 1,
+    "note": "Re-derivation each iteration right; fact vague; events include allocation and suspension, omit index assignment."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 4,
+    "score": 2,
+    "note": "Signed test admits negatives; unsigned type makes the guard imply both bounds."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 5,
+    "score": 1,
+    "note": "No-escape rule and copy-out right; second rule (no finalizers) is not the wait rule."
+  },
+  {
+    "article": "09",
+    "condition": "pre",
+    "student": "s3",
+    "question": 6,
+    "score": 1,
+    "note": "Allows a live grant after both branches; hedges on different disposal. Key stricter than article's 'same set'."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 1,
+    "score": 2,
+    "note": "Key handler 14/15 and `event.kind === 4`; nothing changes, names are small integers."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 2,
+    "score": 2,
+    "note": "All four systems; code-point column for code-unit offset; wrong only with two-unit characters."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 3,
+    "score": 2,
+    "note": "Fact, the three discarding events and the re-test reason all given."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 4,
+    "score": 2,
+    "note": "Signed guard gives the upper bound only; unsigned `index` makes the guard the whole check."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 5,
+    "score": 2,
+    "note": "Both rules and the copy into application-lifetime storage."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s1",
+    "question": 6,
+    "score": 2,
+    "note": "Consumed exactly once per branch; one may revoke what the other stores."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 1,
+    "score": 2,
+    "note": "Two places plus the third; generated code unchanged because names are small integers."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 2,
+    "score": 2,
+    "note": "All four systems; the code-point/code-unit mistake with a correct worked offset."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 3,
+    "score": 2,
+    "note": "Fact, three events and re-test reason given. Notes 'three kinds' is really two kinds, three instances."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 4,
+    "score": 2,
+    "note": "Signed test true for -1; unsigned `index` comparison is exactly the bounds check."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 5,
+    "score": 2,
+    "note": "Both rules and the copy into application-owned storage."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s2",
+    "question": 6,
+    "score": 2,
+    "note": "Consumed exactly once per branch; manner may differ. Notes 'same set of handles' is ambiguous."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 1,
+    "score": 2,
+    "note": "Two places plus the third; nothing changes in generated code, names are small integers."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 2,
+    "score": 2,
+    "note": "All four systems; code-point column passed as code-unit offset; fails only with emoji-like characters."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 3,
+    "score": 2,
+    "note": "Fact, three events and re-test reason all given."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 4,
+    "score": 2,
+    "note": "Signed guard misses negatives; unsigned `index` guard equals the bounds check."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 5,
+    "score": 2,
+    "note": "Both rules and the copy into application-lifetime storage."
+  },
+  {
+    "article": "09",
+    "condition": "post",
+    "student": "s3",
+    "question": 6,
+    "score": 2,
+    "note": "Consumed exactly once per branch; same set of handles, manner may differ."
+  }
+]

@@ -1,0 +1,3 @@
+I wrote `answers.md` (six numbered answers, each with a `Confidence:` line) and `diary.md` (Step 1 in the required format), flagging Q2 and Q4 as unknowable without the article.
+
+DONE

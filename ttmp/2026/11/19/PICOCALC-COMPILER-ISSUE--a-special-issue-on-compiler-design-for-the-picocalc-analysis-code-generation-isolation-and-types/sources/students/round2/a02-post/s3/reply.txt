@@ -1,0 +1,8 @@
+Files written in `s3/`:
+- `answers.md` — 6 answers, working shown, confidence lines
+- `feedback.md` — 7 required sections, scores for 2.1–2.9
+- `diary.md` — 3 steps in the `diary-format.md` format
+
+Checks I made: every quiz answer is 3–5 sentences and ends with `Confidence: N`; all quoted passages in `feedback.md` were matched against `article.md` verbatim; the arithmetic (1.6/37.2 = 4.3%, 1/0.957 = 1.045, 85.9/1480 = 5.8%, 1988/16792 = 118 µs, 8.0×66/16792 ≈ 31 µs) reproduces the article's stated figures. Places where I could not confirm the text: *segment*, *RV32* and *WebAssembly* are never defined in the article or glossary, and the 1,475 s / 1,480 s totals for the CJI run are never reconciled.
+
+DONE

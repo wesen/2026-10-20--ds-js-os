@@ -1,0 +1,290 @@
+[
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 1,
+  "score": 1,
+  "note": "Identifies a pending request and must be stored; says it is presented back to the runtime, not compared with events."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 2,
+  "score": 0,
+  "note": "Guesses a file descriptor as live and hedges on stop; none of length, read, written."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 3,
+  "score": 0,
+  "note": "Cannot know; generic state-plus-discriminator guess, no field names."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 4,
+  "score": 1,
+  "note": "start with arguments to first wait, resume on completion; continuation per state only generic."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 5,
+  "score": 1,
+  "note": "Several activations at once right; layout and the one-instance restriction not given."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s1",
+  "question": 6,
+  "score": 2,
+  "note": "Other code runs during a wait and changes state assumed fixed; waits only where the programmer placed them."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 1,
+  "score": 1,
+  "note": "Identifier of a pending operation, stored across the gap; matching left to the runtime, not the application."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 2,
+  "score": 0,
+  "note": "Guesses handle and buffer live; stop called dead for a wrong reason (last use before the wait)."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 3,
+  "score": 0,
+  "note": "Cannot know; generic kind-plus-stage guess, wrong saved variables."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 4,
+  "score": 1,
+  "note": "start with parameters to first wait, resume with completion; states generic, no read or loop-test specifics."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 5,
+  "score": 1,
+  "note": "Same function suspended several times right; proposes per-activation frames and a different restriction."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s2",
+  "question": 6,
+  "score": 2,
+  "note": "Other code runs and mutates shared state during a wait; safe only where the author decided."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 1,
+  "score": 1,
+  "note": "Names one pending operation and must be kept; then handed back when polling, not compared with event tokens."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 2,
+  "score": 0,
+  "note": "Guesses handle live; stop 'only consumed in the prologue', not recomputed each iteration."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 3,
+  "score": 0,
+  "note": "Cannot know; generic pc-plus-phase guess, no field names."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 4,
+  "score": 1,
+  "note": "start with arguments to first wait, resume with completion value; states only generic."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 5,
+  "score": 1,
+  "note": "Helper shared by two tasks right; layout vague; restriction hedged among several options."
+ },
+ {
+  "article": "08",
+  "condition": "pre",
+  "student": "s3",
+  "question": 6,
+  "score": 2,
+  "note": "Other tasks run and mutate intermediate state; waits stay at explicit points."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 1,
+  "score": 2,
+  "note": "Number for one request; stored in persistent state; compared with each completion event's token."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 2,
+  "score": 2,
+  "note": "length, read, written live; handle, ok, stop dead; stop recomputed each outer iteration. Key is silent on text."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 3,
+  "score": 2,
+  "note": "readToken with boolean reading; unitsRead, unitsWritten, sourceLength. Key follows the article in calling sourceLength saved, which is doubtful."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 4,
+  "score": 2,
+  "note": "start once with arguments; resume per matching event; state 1 tests ok, state 2 reloads; both reach loop test."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 5,
+  "score": 2,
+  "note": "Two tasks share a helper; one frame per reachable async function per kind of task; one instance at a time."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s1",
+  "question": 6,
+  "score": 2,
+  "note": "Other events handled during a wait may change state; explicit await marks those places."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 1,
+  "score": 2,
+  "note": "Number identifying one request; stored; handler compares event.token with stored tokens and continues on a match."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 2,
+  "score": 2,
+  "note": "length, read, written live; stop, ok, handle dead; stop reassigned before any read after resume."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 3,
+  "score": 2,
+  "note": "readToken and reading; unitsRead, unitsWritten, sourceLength. Notes reading alone distinguishes the two waits."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 4,
+  "score": 2,
+  "note": "start once with (handle, state); resume with matching event; states 1 and 2 described as in the outline."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 5,
+  "score": 2,
+  "note": "Shared helper overwritten by second task; frames per kind of task from call-graph walk; one instance unless more sets declared."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s2",
+  "question": 6,
+  "score": 2,
+  "note": "State can change under the suspended function; explicit await marks interleaving points."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 1,
+  "score": 2,
+  "note": "Number identifying the request; remembered in a state field; event.token compared with stored tokens."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 2,
+  "score": 2,
+  "note": "length, read, written live; handle, ok, stop dead; stop recomputed before any use."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 3,
+  "score": 2,
+  "note": "readToken and reading; sourceLength, unitsRead, unitsWritten; pair encodes three situations."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 4,
+  "score": 2,
+  "note": "start once with arguments; resume per matching completion; state 1 after read, state 2 reloads, both to loop_test."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 5,
+  "score": 2,
+  "note": "Two tasks share a helper; one frame per reachable async function per kind of task; one instance at a time."
+ },
+ {
+  "article": "08",
+  "condition": "post",
+  "student": "s3",
+  "question": 6,
+  "score": 2,
+  "note": "Other events may change the application's state during a wait; explicit await makes the places visible."
+ }
+]

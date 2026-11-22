@@ -1,0 +1,71 @@
+[
+  {
+    "dir": "sources/students/round0/s1",
+    "session": "2026-11-19T17-12-19-256Z_01a1f4cb-7e37-7350-a301-4e4ba9420b8d.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "pretest.md",
+      "diary-format.md",
+      "dense-brief.md"
+    ],
+    "writes": [
+      "pretest-answers.md",
+      "brief-reactions.md",
+      "diary.md"
+    ],
+    "output_tokens": 10327,
+    "max_context_tokens": 13954,
+    "assistant_turns": 7,
+    "thinking": "low",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 102457
+  },
+  {
+    "dir": "sources/students/round0/s2",
+    "session": "2026-11-19T17-12-19-244Z_01a1f4cb-7e2b-7397-bf9a-cb1aca7cec12.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "pretest.md",
+      "diary-format.md",
+      "dense-brief.md"
+    ],
+    "writes": [
+      "pretest-answers.md",
+      "brief-reactions.md",
+      "diary.md"
+    ],
+    "output_tokens": 11276,
+    "max_context_tokens": 14906,
+    "assistant_turns": 8,
+    "thinking": "medium",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 122590
+  },
+  {
+    "dir": "sources/students/round0/s3",
+    "session": "2026-11-19T17-12-19-258Z_01a1f4cb-7e39-7601-9c64-fa41e656a025.jsonl",
+    "tool_calls": 7,
+    "outside_paths": [],
+    "reads": [
+      "TASK.md",
+      "pretest.md",
+      "diary-format.md",
+      "dense-brief.md"
+    ],
+    "writes": [
+      "pretest-answers.md",
+      "brief-reactions.md",
+      "diary.md"
+    ],
+    "output_tokens": 13416,
+    "max_context_tokens": 17043,
+    "assistant_turns": 7,
+    "thinking": "high",
+    "model": "lunaroute/deepseek-4.1-flash",
+    "model_ms": 132830
+  }
+]

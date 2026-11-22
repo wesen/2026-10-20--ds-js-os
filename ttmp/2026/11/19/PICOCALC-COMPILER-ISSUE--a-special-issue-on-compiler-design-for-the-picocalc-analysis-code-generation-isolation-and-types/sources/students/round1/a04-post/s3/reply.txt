@@ -1,0 +1,7 @@
+Files written:
+
+- `answers.md` — six answers, working shown for Q1 (`J₁ = i + 1`, `i ∈ [5,7] → [6,8]`), each with a confidence rating (5, 4, 4, 5, 4, 4).
+- `feedback.md` — all six required sections; 6 passages re-read, 14 undefined terms, 12 unverifiable claims, section scores (4.1:4, 4.2:4, 4.3:3, 4.4:5, 4.5:4), Q5 flagged as only partly answerable, add a premise paragraph / cut the MicroPython paragraph.
+- `diary.md` — three steps (reading, quiz, feedback) in the `diary-format.md` structure.
+
+DONE

@@ -1,0 +1,5 @@
+Wrote `answers.md` (6 answers, working shown, confidence lines), `feedback.md` (all six sections, sections scored), and `diary.md` (three steps in the `diary-format.md` structure).
+
+Main findings: the arithmetic mostly checks out, but percentage columns sum to 99, the 29.9 ms WebAssembly path is introduced confusingly, three boot figures (559 ms / 462 ms / 2.04 s) are never related to each other, and the article leans on evidence outside itself (the project's diary, an unpublished workstation profile). The glossary's *Token* entry gives the split-phase meaning, which misleads a reader looking up "16,792 tokens", and Editor/Agenda/Files have no explanation anywhere.
+
+DONE

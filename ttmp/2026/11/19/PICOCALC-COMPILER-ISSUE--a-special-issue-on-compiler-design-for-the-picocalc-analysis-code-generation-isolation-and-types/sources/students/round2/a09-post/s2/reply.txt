@@ -1,0 +1,11 @@
+All four steps are complete.
+
+**Files written to `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--a-special-issue-on-compiler-design-for-the-picocalc-analysis-code-generation-isolation-and-types/students/round2/a09-post/s2`:**
+
+- `answers.md` — six answers with `Confidence:` lines (5, 4, 5, 5, 5, 4) plus notes on the three non-5s; working shown for the `a🙂b` byte/code-unit/code-point counts and the `at = -1` signedness argument.
+- `feedback.md` — 8 quoted passages I re-read, 14 terms used before explanation or never explained (checked against `glossary.md` first), 12 unverifiable claims, a 12-row section score table (9.4, 9.5, 9.8 lowest at 3), quiz-answerability notes, and one add (a worked `countUnit` instruction listing) / one cut (the capturing-types sentence in 9.7).
+- `diary.md` — three steps in `diary-format.md` form, with what was hard recorded per step.
+
+Main honest finding: the article is reliable where it argues from its own mechanism (9.2, 9.3, 9.6), and unfalsifiable where it argues from instruction counts borrowed from other articles (9.4's 20-vs-4 claim never reconciles with "load the length, compare and branch, and the trap itself", which is three items plus a trap).
+
+DONE

@@ -1,0 +1,3 @@
+Created `answers.md` (6 numbered answers, each with `Confidence: N`) and `diary.md` (Step 1, full prescribed format). Nothing else in the directory was modified.
+
+DONE

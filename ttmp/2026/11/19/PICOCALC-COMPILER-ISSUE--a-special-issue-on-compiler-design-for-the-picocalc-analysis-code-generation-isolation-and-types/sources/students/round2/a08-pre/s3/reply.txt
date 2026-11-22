@@ -1,0 +1,3 @@
+Files written: `answers.md` (6 answers, each with a `Confidence:` line), `diary.md` (Step 1 in the `diary-format.md` shape).
+
+DONE

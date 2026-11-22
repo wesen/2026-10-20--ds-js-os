@@ -1,0 +1,3 @@
+Files written: `answers.md` (6 answers, each with a `Confidence` line), `diary.md` (Step 1 in the required format). No `article.md` exists here, so every answer states that limitation explicitly and then reasons from compiler/sandboxing principles.
+
+DONE

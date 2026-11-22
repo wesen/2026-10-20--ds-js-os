@@ -1,0 +1,9 @@
+Files written in this directory:
+
+- `answers.md` — six answers to §7.9, with `Confidence:` lines (5, 5, 5, 5, 4, 4)
+- `feedback.md` — all six required sections; lowest section scores went to 7.6 and 7.7 (3 each) for using `sp`/`frame`/`confined` and `CJI` before defining them
+- `diary.md` — three steps in the `diary-format.md` shape (reading, quiz, feedback), including the one revision I made mid-task: my first draft of answer 5 overstated address masking as independent of the compiler.
+
+No tool or command failures occurred in this session.
+
+DONE

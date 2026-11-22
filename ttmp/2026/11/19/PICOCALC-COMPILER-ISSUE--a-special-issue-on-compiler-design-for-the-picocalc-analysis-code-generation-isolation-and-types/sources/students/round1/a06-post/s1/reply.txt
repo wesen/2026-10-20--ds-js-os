@@ -1,0 +1,7 @@
+All four steps are complete:
+
+- **`answers.md`** — six numbered answers, 2–6 sentences each, with working shown for Q1, Q3, Q6, and a `Confidence:` line after each (5, 5, 5, 4, 5, 4).
+- **`feedback.md`** — the six required sections; notable findings: the slim-binary paragraph is internally self-tensioned (Q4 depends on it), the CJI record's three fields contradict the five-input key of 6.3, 58% of 3.14 s leaves ≈1.32 s not the stated 1.2 s, and 4.76 bytes/function-byte doesn't match 240 kB/88 kB ≈ 2.7. Section scores range 3–5.
+- **`diary.md`** — three steps in the `diary-format.md` shape, recording what was hard (answerable-but-repair-needed quiz questions, distinguishing "unverifiable" from "disagree").
+
+DONE

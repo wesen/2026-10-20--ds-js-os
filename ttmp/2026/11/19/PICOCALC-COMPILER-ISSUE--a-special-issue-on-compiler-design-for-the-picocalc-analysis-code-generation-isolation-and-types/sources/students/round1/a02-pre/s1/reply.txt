@@ -1,0 +1,3 @@
+Files written: `answers.md` (six numbered answers with `Confidence` lines) and `diary.md` (Step 1 in the required format).
+
+DONE

@@ -1,0 +1,5 @@
+Wrote `answers.md`, `feedback.md`, and `diary.md` in `/home/manuel/code/wesen/2026-10-20--ds-js-os/ttmp/2026/11/19/PICOCALC-COMPILER-ISSUE--a-special-issue-on-compiler-design-for-the-picocalc-analysis-code-generation-isolation-and-types/students/round2/a05-post/s3`.
+
+Highlights of the read: the arithmetic mostly checks out (the 34.1% pair share, the byte counts = 4 × instruction counts, the 2.7×/3.3× multipliers, the 107–120 KiB saving), with one real inconsistency — 5.7's "11 to 14 percent" does not follow from subtracting the 5.3 rows, which gives 11.9–14.9%. The biggest teaching gap is that 5.5 asserts the flush rule as a correctness requirement and never shows a single flush.
+
+DONE

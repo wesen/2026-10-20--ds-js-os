@@ -1,0 +1,9 @@
+All four deliverables are written.
+
+- `answers.md` — six answers with working and `Confidence:` lines (5, 5, 4, 5, 4, 4)
+- `feedback.md` — five passages read twice, thirteen undefined terms, ten unverifiable claims, section scores (§4.1=4, §4.2=5, §4.3=3, §4.4=5, §4.5=4), quiz-question gaps, one add and one cut
+- `diary.md` — three steps in the `diary-format.md` format
+
+Main finding: the 11,760 function visits are used in §4.1 first as evidence of waste and then as evidence that CJI already skips most revisits (9,019 skipped), which forced a subtraction the article never states.
+
+DONE

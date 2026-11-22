@@ -1,0 +1,5 @@
+Files written: `answers.md`, `feedback.md`, `diary.md`.
+
+Notable findings: the article's arguments are almost all arithmetic on numbers printed elsewhere (Articles 1–2, Experiment 3), so nine claims can't be checked from the text; the 6.5 conclusion switches units from turns to key presses; and the 6.8 diagram uses "import table," a term the prose never defines.
+
+DONE
