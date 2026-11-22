@@ -1,0 +1,2699 @@
+{
+ "node": "v24.18.0",
+ "candela": {
+  "archiveSha256": "873b2dd4bb9c32cac08751baf9fa6960ee4377306a04b2e118a8969dd940df5d",
+  "kernel": "253d242df1a8827903e218c9ad119558d313f92da9f582ec3a25a6b8f7fb45c4"
+ },
+ "fixedKernelSha256": "8925739795c775a2910c0096eb59dac235bd35719b5255539019b41cde12942d",
+ "fixedKernelBytes": 62446,
+ "scenes": {
+  "A-03": {
+   "ok": true,
+   "diags": [
+    {
+     "code": "W420",
+     "severity": "warning",
+     "loc": "scene.js:208"
+    }
+   ],
+   "wgsl": {
+    "bytes": 65363,
+    "lines": 1508,
+    "sha256": "399451d546b6bc2877a117640adee9d73c590e10be1c0ec04234f18ba369f5d0"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "d42b39d6ac108b43c4831b0a9648a201ec07548be138fff15ffd384dec1b3128"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "2c95a4ed8ca13ed99232e653676ed4ce6c3c58152eebdacf21907ca3516c49e3"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "98868b2a451098b929f82abe77ae7998e21468a594f1623af7126cdb4fffccc9"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "d42b39d6ac108b43c4831b0a9648a201ec07548be138fff15ffd384dec1b3128"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "2c95a4ed8ca13ed99232e653676ed4ce6c3c58152eebdacf21907ca3516c49e3"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "98868b2a451098b929f82abe77ae7998e21468a594f1623af7126cdb4fffccc9"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "bf82503a5845aed20160ac007f3af87326a5dea90ff8f0d12c6b32b3b1bba3b9",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2716,
+    "sha256": "74ec0cb15bc43537c8086144325e0a398768440173a93ad352b67af94c1567d1",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "B-01": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 64426,
+    "lines": 1468,
+    "sha256": "3cd66c929575ca4e61040cd485b6437988b35cc65b275cfe030936246ef84c7e"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "e63acbd178f8e9a6a88e7b1b26f98e69103adc9f4bb97e61757118e1d865b65e"
+    },
+    "O": {
+     "n": 48,
+     "sha256": "b2ea26017afd943c0d7f3fc11ad9562cd039842ee2ab03cc5dc8b533ebb0dc22"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 8,
+     "sha256": "fe46c5c89b717ee8c6086deffd3b94ed776f362e8538a104e7957e32fc100fca"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "e63acbd178f8e9a6a88e7b1b26f98e69103adc9f4bb97e61757118e1d865b65e"
+    },
+    "O": {
+     "n": 48,
+     "sha256": "b2ea26017afd943c0d7f3fc11ad9562cd039842ee2ab03cc5dc8b533ebb0dc22"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 8,
+     "sha256": "fe46c5c89b717ee8c6086deffd3b94ed776f362e8538a104e7957e32fc100fca"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "2bc359e3423056da5c3782c2b5de020cf923601567cc03d7eaac34f1349aad82",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 1779,
+    "sha256": "8e47c2b775001f7e254bfa90952411269d35a1d3014696b4ebea2cd348f617ec",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "B-03": {
+   "ok": true,
+   "diags": [
+    {
+     "code": "I205",
+     "severity": "info",
+     "loc": null
+    }
+   ],
+   "wgsl": {
+    "bytes": 65215,
+    "lines": 1487,
+    "sha256": "343f5281a7572c5a99b15c6636d6927af392fb5c5f523944636fe7db31672acd"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "0f32a2e060d9f0024061be7ad0553d26c88f5ea27379fd3130a620c7248ad8e1"
+    },
+    "O": {
+     "n": 624,
+     "sha256": "41c48a4a6f69b86e40402176ffaff525e13f8dfe72cbb98df3f08a0ea8d0ba3c"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 152,
+     "sha256": "1351356e5495f1b5a600b1300bfde09d9edf3e7a0f4a77e823d2ae3e3ec6dfe4"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "0f32a2e060d9f0024061be7ad0553d26c88f5ea27379fd3130a620c7248ad8e1"
+    },
+    "O": {
+     "n": 624,
+     "sha256": "41c48a4a6f69b86e40402176ffaff525e13f8dfe72cbb98df3f08a0ea8d0ba3c"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 152,
+     "sha256": "1351356e5495f1b5a600b1300bfde09d9edf3e7a0f4a77e823d2ae3e3ec6dfe4"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "329be09941c0ed12b074271df992743f650b8bc21e37a1551ea255dab7068f49",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2568,
+    "sha256": "aaa25332681160178ecefc16fd35974fe4bd02cae00aeda0e80172c1eed0d9f8",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "B-04": {
+   "ok": true,
+   "diags": [
+    {
+     "code": "W330",
+     "severity": "warning",
+     "loc": "scene.js:174"
+    },
+    {
+     "code": "W335",
+     "severity": "warning",
+     "loc": "scene.js:316"
+    },
+    {
+     "code": "W420",
+     "severity": "warning",
+     "loc": "scene.js:208"
+    }
+   ],
+   "wgsl": {
+    "bytes": 66077,
+    "lines": 1513,
+    "sha256": "d615c67a4f186d76e050872c39dde0c03de5c71abad36d89adba5374ea25cd1b"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "0fa6b33a33cc3998137cefaa341cd072931906fea965b8bd951f7cb97ce25a50"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "5f17be09db13c1ed404d4810012c80ec7c0c4019436537d8349c5cd28c501c44"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "0c33e7716ace85cd7dff22284a9ee3eebfc369843b9ea80331497e9798f8a96c"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "0fa6b33a33cc3998137cefaa341cd072931906fea965b8bd951f7cb97ce25a50"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "5f17be09db13c1ed404d4810012c80ec7c0c4019436537d8349c5cd28c501c44"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "0c33e7716ace85cd7dff22284a9ee3eebfc369843b9ea80331497e9798f8a96c"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "8d439e747d311945a5123a71a3a00eedf5715d23ab8a1c107d5a3e06c5b9bd57",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 3430,
+    "sha256": "47b681b9593b54a9da5c8f4d02a11308368d7e07e1165b82c649797d165c50f5",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "B-05": {
+   "ok": true,
+   "diags": [
+    {
+     "code": "I207",
+     "severity": "info",
+     "loc": null
+    },
+    {
+     "code": "I208",
+     "severity": "info",
+     "loc": null
+    }
+   ],
+   "wgsl": {
+    "bytes": 66321,
+    "lines": 1519,
+    "sha256": "163c83b1382ea856d0eaf520efd74033b0810cfcc9929a7b408e889356df4c4a"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "e4f28f05d5ee43b2a042cd852733b44f2e55c9a25af6fd0fd7514b93723fc413"
+    },
+    "O": {
+     "n": 120,
+     "sha256": "ed980b3ab9764ecb20a9fb54ac2e64d32ab1c9718a8fda11926e11ad7d699b76"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "7bf3a4d4f9033ce5ce78e637c8afe6c2ae600ff47a8f42d4d61790bb5ff0026e"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "e4f28f05d5ee43b2a042cd852733b44f2e55c9a25af6fd0fd7514b93723fc413"
+    },
+    "O": {
+     "n": 120,
+     "sha256": "ed980b3ab9764ecb20a9fb54ac2e64d32ab1c9718a8fda11926e11ad7d699b76"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "7bf3a4d4f9033ce5ce78e637c8afe6c2ae600ff47a8f42d4d61790bb5ff0026e"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "c6295ed6952d47e3b18b2e4b9403715259c121c6c90e61c31289d3d2e80e2498",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 3674,
+    "sha256": "2994252b0adf9f0229e2be69d56377fdf3ca1c0b514cf15ccce7e9953501870c",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "C-02": {
+   "ok": true,
+   "diags": [
+    {
+     "code": "I205",
+     "severity": "info",
+     "loc": null
+    }
+   ],
+   "wgsl": {
+    "bytes": 65392,
+    "lines": 1508,
+    "sha256": "045982f7e1f44ffd693658bd0783f1e6e06796a40d0b13743431c312062b47a4"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "b4d0459af35bb82fd2a0207e928a41da6182843ffe4a19c7acf52fec4b7fb660"
+    },
+    "O": {
+     "n": 1032,
+     "sha256": "124134df6f59e254fb0e7095319c8f5596f000e366e3ddabf937f1ba5d4fa0e5"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "898f58c4f5eb49627f4855ce0de8e461a321785e9b363e34621fdad22de33390"
+    },
+    "BV": {
+     "n": 248,
+     "sha256": "523db89461675a372425fc5c34f701185dcc02fe61a9c0b14ab832d080e78454"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "b4d0459af35bb82fd2a0207e928a41da6182843ffe4a19c7acf52fec4b7fb660"
+    },
+    "O": {
+     "n": 1032,
+     "sha256": "124134df6f59e254fb0e7095319c8f5596f000e366e3ddabf937f1ba5d4fa0e5"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "898f58c4f5eb49627f4855ce0de8e461a321785e9b363e34621fdad22de33390"
+    },
+    "BV": {
+     "n": 248,
+     "sha256": "523db89461675a372425fc5c34f701185dcc02fe61a9c0b14ab832d080e78454"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "73f481b1e86aa55ca084c3022989d6f9db195b99af30a34a0e4c71d6bdc1be0e",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 7.93663793900257
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2745,
+    "sha256": "12674445ff643a62a4cb30ebad947160efc100253bd8bc914ad4c7da4efc39f8",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "blades",
+     "kind": "int",
+     "static": true,
+     "value": 6
+    },
+    {
+     "id": "rot",
+     "kind": "angle",
+     "static": true,
+     "value": 0
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "C-03": {
+   "ok": true,
+   "diags": [
+    {
+     "code": "I205",
+     "severity": "info",
+     "loc": null
+    }
+   ],
+   "wgsl": {
+    "bytes": 65999,
+    "lines": 1506,
+    "sha256": "60a570ed192066ca3825fe65b2a53f16b0873c14ee31b33b108b2f39bc60f962"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "9d3da893da29da21d3928f7693958407c81906bab24ef1efa54e4d5a772d761f"
+    },
+    "O": {
+     "n": 648,
+     "sha256": "19d3dc1ab59bdfefa89f083654bd801862e27150c4d42ac36b5187883f992938"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 152,
+     "sha256": "529f6ab0c750f01529c915fdbd9f3fc1ca163b2e598a0a99e63d1a9ffa2ea3d3"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "9d3da893da29da21d3928f7693958407c81906bab24ef1efa54e4d5a772d761f"
+    },
+    "O": {
+     "n": 648,
+     "sha256": "19d3dc1ab59bdfefa89f083654bd801862e27150c4d42ac36b5187883f992938"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 152,
+     "sha256": "529f6ab0c750f01529c915fdbd9f3fc1ca163b2e598a0a99e63d1a9ffa2ea3d3"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "ded3b87ef14e238bb8fe0566c5fe18e60416504059001d89bdf4e55b50b85012",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 3352,
+    "sha256": "493659ed0e534d1a6c80bd07fec7d87b01a0edef47773959daeb3c44837f85e0",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "f",
+     "kind": "float",
+     "static": true,
+     "value": 50
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "C-04": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 66764,
+    "lines": 1525,
+    "sha256": "2fd0e71627d96afe2a5fc2a7c67c9423e6ebef1f4c359c00e5f25667fef5e8b7"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "ac3d53dab84791cd470f473449dc481d39af5a8d0ff1a0d715f342a6d796506d"
+    },
+    "O": {
+     "n": 120,
+     "sha256": "9c000f02f4757ec5172f9d53800fa1cd9c71ca686e63b20aaae42ac379ccb1fc"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "ee5b4ee2eae471d4034c7e6d87054bd5c61f0ecf082f9968e0f3942f00140ceb"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "ac3d53dab84791cd470f473449dc481d39af5a8d0ff1a0d715f342a6d796506d"
+    },
+    "O": {
+     "n": 120,
+     "sha256": "9c000f02f4757ec5172f9d53800fa1cd9c71ca686e63b20aaae42ac379ccb1fc"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "ee5b4ee2eae471d4034c7e6d87054bd5c61f0ecf082f9968e0f3942f00140ceb"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "6d5aa58c4b991f47686aa5576c36b7daa31e554167e30d8a5ab073c4c7f3eb4c",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "physical",
+    "ev": 13.965784284662087,
+    "physicalEV": 13.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 4117,
+    "sha256": "e4c52447be45c795037a3cdef4dacf448f89f7953d6b2403df63488696a0dd29",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "N",
+     "kind": "float",
+     "static": true,
+     "value": 8
+    },
+    {
+     "id": "t",
+     "kind": "float",
+     "static": true,
+     "value": 0.004
+    },
+    {
+     "id": "iso",
+     "kind": "float",
+     "static": true,
+     "value": 100
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "D-01": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65401,
+    "lines": 1495,
+    "sha256": "b0be2e397b42eba26f50335192273902bab9b2bafb5aa1ba2c794a3d4cccdf9b"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "4d74d5a487207fae12b75bb59db1c97e1b5037cc216337a8238184c6cd3f7b6c"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "90ed3723cc2e85b2a33ae6168148aeed703808cbc81431fb9023422a6cc35d85"
+    },
+    "LI": {
+     "n": 48,
+     "sha256": "aeb0ca89144397e4b69bc5838d1cb72d543bf84def5058fe1a871e7275b36e90"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "21b4395c757a533e16dc7d30aae700c91b5cd42e2210b812d2c0ca313a650b22"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "4d74d5a487207fae12b75bb59db1c97e1b5037cc216337a8238184c6cd3f7b6c"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "90ed3723cc2e85b2a33ae6168148aeed703808cbc81431fb9023422a6cc35d85"
+    },
+    "LI": {
+     "n": 48,
+     "sha256": "aeb0ca89144397e4b69bc5838d1cb72d543bf84def5058fe1a871e7275b36e90"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "21b4395c757a533e16dc7d30aae700c91b5cd42e2210b812d2c0ca313a650b22"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "e9b76ac6ffb336957c0efe691f44f570cbe397fd5df50cd36ab94ffd10328820",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 10.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2754,
+    "sha256": "16cd6bf7ec3d12828311f18e84cbeb8ec0e71f95e09962fd2afa615968490948",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "D-02": {
+   "ok": true,
+   "diags": [
+    {
+     "code": "W501",
+     "severity": "warning",
+     "loc": "scene.js:484"
+    }
+   ],
+   "wgsl": {
+    "bytes": 64434,
+    "lines": 1468,
+    "sha256": "1f9feb39379a17e842b0bf498051679f53d206c0b145f3abfac8ef19c9d248c1"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "52966393f0b522179ca6089c8fc9b24004aec5b29719b4f712844f19af006534"
+    },
+    "O": {
+     "n": 144,
+     "sha256": "f49fc990d08a1aa25cd91e1527fcfd61fa39f5dc5fbdc66c27ee1491b668d6e4"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "fa2c4b115740d89881c552801de4dbdc0b9caafbd6627b0131940ecbf3da6a00"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "52966393f0b522179ca6089c8fc9b24004aec5b29719b4f712844f19af006534"
+    },
+    "O": {
+     "n": 144,
+     "sha256": "f49fc990d08a1aa25cd91e1527fcfd61fa39f5dc5fbdc66c27ee1491b668d6e4"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "fa2c4b115740d89881c552801de4dbdc0b9caafbd6627b0131940ecbf3da6a00"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "aa47108fdc1f5ef34648d7f5f311181dc3ecac516823126689bc5d838f2f1741",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 1787,
+    "sha256": "5a96473b48a0ddde49c06b268c40821db499b3fe7e8cd18b402f1fefab231692",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "gloss",
+     "kind": "float",
+     "static": false,
+     "value": 0.3
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "E-03": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65426,
+    "lines": 1495,
+    "sha256": "68b176b22264219095dfd5c08d898aa924c52608e3a2f19999f7a56e588a130e"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "6418fb0e3b48bab2f69b2363aeb2dce432bf75de592c31a28723ea80ba19b8cd"
+    },
+    "O": {
+     "n": 192,
+     "sha256": "e0da1f2af6a6df4ebc5801bd5e48b3ca5b96f28fdf61eb3161482666b58b0511"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "ed062df7f166445b597ec0bfd869f322179647244df03564f5f179a9fc588ab8"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "6093a5a4dcf474c128929a04c15d682310f611e38ac9eba94059001576a82dd6"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "6418fb0e3b48bab2f69b2363aeb2dce432bf75de592c31a28723ea80ba19b8cd"
+    },
+    "O": {
+     "n": 192,
+     "sha256": "e0da1f2af6a6df4ebc5801bd5e48b3ca5b96f28fdf61eb3161482666b58b0511"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "ed062df7f166445b597ec0bfd869f322179647244df03564f5f179a9fc588ab8"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "6093a5a4dcf474c128929a04c15d682310f611e38ac9eba94059001576a82dd6"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "e5977c0f7fdfd25c88d60d1847d467d88bee83f18be54aa75a7a250a4978eeee",
+   "post": {
+    "tonemap": "agx",
+    "denoise": false,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2779,
+    "sha256": "3f190d883b6a52306c6bed5e717a1e568628cb82fa61ca06667b34aa88f4675f",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "depth",
+     "kind": "int",
+     "static": true,
+     "value": 4
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "E-04": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 66071,
+    "lines": 1529,
+    "sha256": "f62e51f47b4b024c798d3e2e7e4493559471540043db1bb46b9ec386b982a601"
+   },
+   "pack0": {
+    "U": {
+     "n": 176,
+     "sha256": "1a9852727fa5c42e54eae23fe931d7e3a3f9a918f072dcaaa8e80f18734754ec"
+    },
+    "O": {
+     "n": 216,
+     "sha256": "f23895e410ebf90a5469ebd60738ca816addce76a985dffe0dc43bc595bfe038"
+    },
+    "LI": {
+     "n": 96,
+     "sha256": "5e878fbeab75beb7c4bf8135b189030957d4ef7416f0d36dd5029e4dc246b342"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "3a6f57a77181ba5ad4bc79502eef780172923a3dd2474765b6e628d036c85b06"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 176,
+     "sha256": "1a9852727fa5c42e54eae23fe931d7e3a3f9a918f072dcaaa8e80f18734754ec"
+    },
+    "O": {
+     "n": 216,
+     "sha256": "f23895e410ebf90a5469ebd60738ca816addce76a985dffe0dc43bc595bfe038"
+    },
+    "LI": {
+     "n": 96,
+     "sha256": "5e878fbeab75beb7c4bf8135b189030957d4ef7416f0d36dd5029e4dc246b342"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "3a6f57a77181ba5ad4bc79502eef780172923a3dd2474765b6e628d036c85b06"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "1abb112aa07cbf5a3f524bc2db164cf0db2c39d56815e77147b89129544bce36",
+   "post": {
+    "tonemap": "agx",
+    "denoise": false,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 3424,
+    "sha256": "f46d0828f420fee7bf9caa435783459d503634a66f19fc735e01727dac24b6c2",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "strategy",
+     "kind": "choice",
+     "static": true,
+     "value": "MIS"
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "G-06": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65558,
+    "lines": 1500,
+    "sha256": "533e2fed0cffd4440e64c40910aac2b940af555adf876402ae712e3f1baf7c98"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "f39e0da5f472719647e84968eb6912f00707e1c8a3ccd66554fc600c8fa3c702"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "7393fc7709ef28b273d3e3850c20e1ff2f47b094eb0e5f780461c4464ae6fc81"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "f519e71ca3ab9c2e52419171438b9e49d9118a8466fdfec0984bdd20a5f36365"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "d89aed48a71d9d9c383a7576d9f54923bc2da4687c44395f33ed23c305ad9cc7"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "f39e0da5f472719647e84968eb6912f00707e1c8a3ccd66554fc600c8fa3c702"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "99f0bfb1d1a3a35055ca6907e558857992553e48198bb2797a3db9cc29a9477e"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "f519e71ca3ab9c2e52419171438b9e49d9118a8466fdfec0984bdd20a5f36365"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "65df93c59968e9d5b6693f83c936ad0c55b7d60e8347179f1a178f7c5624d8d8"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "27259c77316834a3b07cc545bf7dacf6717503669364be6b814041c1b9925b12",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2911,
+    "sha256": "4ea07d1f152acd46a9612ed2f04952d35b003e952317de0812f3f5c4d43619cf",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "L-01": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 64825,
+    "lines": 1484,
+    "sha256": "a08e817c01bc02c02832b2cdf74bcf983b820f2b2541747fd1b5dded3e1b442d"
+   },
+   "pack0": {
+    "U": {
+     "n": 168,
+     "sha256": "7058ffde93d96789b43c028032827dbba4c31705e9c6eb9b0500099304bbfbc9"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "29290154d7db62bcd3608d47802cf45fc04474ef27b8ea94552d0a37be042c42"
+    },
+    "LI": {
+     "n": 72,
+     "sha256": "be592f5e3dc526d9f82e369d92ac911bea350409f4d3c34085b23d514bb18497"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "b596b79682f729cf70873fac5f6233a2bf78b1fd2f79598501ef1d9463718651"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 168,
+     "sha256": "7058ffde93d96789b43c028032827dbba4c31705e9c6eb9b0500099304bbfbc9"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "29290154d7db62bcd3608d47802cf45fc04474ef27b8ea94552d0a37be042c42"
+    },
+    "LI": {
+     "n": 72,
+     "sha256": "be592f5e3dc526d9f82e369d92ac911bea350409f4d3c34085b23d514bb18497"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "b596b79682f729cf70873fac5f6233a2bf78b1fd2f79598501ef1d9463718651"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "a6c9bb2587bb01f702bff635d78caa7c6e024bf35dc8a4b3e85688f63d1cfeef",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2178,
+    "sha256": "1cdc3485cfe2b1f795a271c2436092dd23af10fb03565cbd492b76589b322f51",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "L-02": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65613,
+    "lines": 1499,
+    "sha256": "cf9aab48527fbd95ca56502794b236eef0e79cbb962274fca36ad2899771c70c"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "bdb5cf0aca59d49c1139062519599ff58e021ebf412d00fc00613c202e90a641"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "bce67db5fa03fc8d333d92588f4c241e9e58e948a175ed43f27c8b2a73f9912f"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "f1e14ead33f5ca10ee8811b2238b12cdd27ddaf0efe635bc39088d6985f60ce3"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "bdb5cf0aca59d49c1139062519599ff58e021ebf412d00fc00613c202e90a641"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "bce67db5fa03fc8d333d92588f4c241e9e58e948a175ed43f27c8b2a73f9912f"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "f1e14ead33f5ca10ee8811b2238b12cdd27ddaf0efe635bc39088d6985f60ce3"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "600860bcbe3cdeb4e06ceb620f1e2d270610db38262bc601f72788f0b47e7208",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "physical",
+    "ev": 14.965784284662087,
+    "physicalEV": 14.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2966,
+    "sha256": "439b9d8db66024916fde6dec4b86c369864f61918d8cfb2cbf2699c54f138080",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "shutter",
+     "kind": "float",
+     "static": true,
+     "value": 0.008
+    },
+    {
+     "id": "fstop",
+     "kind": "float",
+     "static": true,
+     "value": 16
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "L-03": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65206,
+    "lines": 1487,
+    "sha256": "db8340d71bbc6822de9a002213e64e521ff74b9e2efd6bd5ca3fc94f497c325b"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "b638336c2239604c081362047247d987462b95cc25a0d77c50882fbb59593c47"
+    },
+    "O": {
+     "n": 72,
+     "sha256": "993bf238b5fcde97d0d989c4d3f0dca76c25a1946585765a6b4aa4d7702628d1"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 8,
+     "sha256": "ea8cfcffb7c78070d9cfff8de0f85a70a8b897b0e705c815f75e57ce89565806"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "b638336c2239604c081362047247d987462b95cc25a0d77c50882fbb59593c47"
+    },
+    "O": {
+     "n": 72,
+     "sha256": "993bf238b5fcde97d0d989c4d3f0dca76c25a1946585765a6b4aa4d7702628d1"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 8,
+     "sha256": "ea8cfcffb7c78070d9cfff8de0f85a70a8b897b0e705c815f75e57ce89565806"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "d1e77caaf2f20aaf6e7effac87def1476c293748be9cde3756aa7654c6756753",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2559,
+    "sha256": "3fe5f9f378cf9a0c54708fd19a822a79bb51e09b90829996961cb15240e034c7",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "elevation",
+     "kind": "angle",
+     "static": false,
+     "value": 0.7853981633974483
+    },
+    {
+     "id": "azimuth",
+     "kind": "angle",
+     "static": false,
+     "value": 1.0471975511965976
+    },
+    {
+     "id": "turbidity",
+     "kind": "float",
+     "static": true,
+     "value": 3
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "L-04": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65235,
+    "lines": 1487,
+    "sha256": "9287f06b5b9572c484113a8164136b808301fdd9eee6a4550538c2e33ae7bf6a"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "1084206ece93f12db9365fea898495169fe83c1d47d21b73b9c204580a625aa2"
+    },
+    "O": {
+     "n": 216,
+     "sha256": "be78a5a9d09b9cdbbcb0119a49a5d3911a79f29908504474882faea5f2fe3239"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "723d74078519be3954868a5299dadfa74395b92965e731b5c23a14f49c44ae22"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "1084206ece93f12db9365fea898495169fe83c1d47d21b73b9c204580a625aa2"
+    },
+    "O": {
+     "n": 216,
+     "sha256": "be78a5a9d09b9cdbbcb0119a49a5d3911a79f29908504474882faea5f2fe3239"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "723d74078519be3954868a5299dadfa74395b92965e731b5c23a14f49c44ae22"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "653e01899b47cc07b2c424a32e2c5bd68a791b2c78304469ed1d0f0de6b53b6c",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2588,
+    "sha256": "f0e002fe38a3c9223f80208b1df397514db50272db0524f47385450b10b82cc0",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "L-05": {
+   "ok": true,
+   "diags": [
+    {
+     "code": "I205",
+     "severity": "info",
+     "loc": null
+    }
+   ],
+   "wgsl": {
+    "bytes": 65113,
+    "lines": 1505,
+    "sha256": "0c07e7b9193d097f9b820e911e543de1244d5d6eac7a7c7c9dfa80cf886d741a"
+   },
+   "pack0": {
+    "U": {
+     "n": 188,
+     "sha256": "b1b83c971e7c596a17aed8db9ddee561e5aac7d4ebd9dfa9d6ca68a82dbffe6b"
+    },
+    "O": {
+     "n": 576,
+     "sha256": "84f3c7111182e0e5b4b93344c8d437a0d87decc2f24985e8c7a6ec9ebfe0a8a5"
+    },
+    "LI": {
+     "n": 168,
+     "sha256": "8ea89bc885a0deafaa502d91dd7fd60e2470bc1019ba0577f49cc8b8001343a9"
+    },
+    "BV": {
+     "n": 120,
+     "sha256": "b138f9bcfb7afa7076c6f6254b651969e9046d0da571c3d59f6c06edaa80772e"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 188,
+     "sha256": "b1b83c971e7c596a17aed8db9ddee561e5aac7d4ebd9dfa9d6ca68a82dbffe6b"
+    },
+    "O": {
+     "n": 576,
+     "sha256": "84f3c7111182e0e5b4b93344c8d437a0d87decc2f24985e8c7a6ec9ebfe0a8a5"
+    },
+    "LI": {
+     "n": 168,
+     "sha256": "8ea89bc885a0deafaa502d91dd7fd60e2470bc1019ba0577f49cc8b8001343a9"
+    },
+    "BV": {
+     "n": 120,
+     "sha256": "b138f9bcfb7afa7076c6f6254b651969e9046d0da571c3d59f6c06edaa80772e"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "2d225e7374137e09f459eec3d3b03c5ced191063b5d2ec0f0ec0af91ac32338c",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2466,
+    "sha256": "e4cc6b7affdb5c86c34a14836fe5430e06d621ac41b506d5f8bfa4bca4753a76",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "L-06": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65799,
+    "lines": 1511,
+    "sha256": "b8dd907e84ee06347a23007c50ca478b1868d6ee180c84ceb5454b20f75c044c"
+   },
+   "pack0": {
+    "U": {
+     "n": 172,
+     "sha256": "374f54efdde7f5603c26bd496a09405cb467a35c7c70098b1ae893948e0f0b29"
+    },
+    "O": {
+     "n": 192,
+     "sha256": "df8d0025bf88e1894c76a01c357f29bfd6aef13a729ab47e9d401c2690c858fe"
+    },
+    "LI": {
+     "n": 72,
+     "sha256": "00899419f1a28a4d3a5be6452aac5cde13203440379725d0ca3d5f89fee3e48d"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "8cfb1813b7c28d280025cb865cd28cd478bf4a8a711a01d54f3c05aed5d08b52"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 172,
+     "sha256": "374f54efdde7f5603c26bd496a09405cb467a35c7c70098b1ae893948e0f0b29"
+    },
+    "O": {
+     "n": 192,
+     "sha256": "df8d0025bf88e1894c76a01c357f29bfd6aef13a729ab47e9d401c2690c858fe"
+    },
+    "LI": {
+     "n": 72,
+     "sha256": "00899419f1a28a4d3a5be6452aac5cde13203440379725d0ca3d5f89fee3e48d"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "8cfb1813b7c28d280025cb865cd28cd478bf4a8a711a01d54f3c05aed5d08b52"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "15b2a3515596b7bd92336aa004fd7f89f8e61c8da6aa58bdf4e9720933db1166",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 3152,
+    "sha256": "1e0bc3314589a277670d9666b5abe5470ab5c052eb37fb36cb2b9eccf97a14c0",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "L-07": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65930,
+    "lines": 1506,
+    "sha256": "b468d628e48f136b8301838f38bfd88ae7038ae8c9ea847475ea23f478bba652"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "9ef9a012382ea0b95e51bacd7d41ae01b006b7c2c36ba18eb77a76218a787c88"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "83516a816bd88347a7597af55c6eb99f39a20747bf2bc2e3dc8fa5764c0046ba"
+    },
+    "LI": {
+     "n": 72,
+     "sha256": "1b32eed9aa74c599c266b2204ac3e7f3f25fd98947d332a675d7af8e63038e0f"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "fc7d30f2582dff137e2790a39d8931e87e671389abb79841582248bf4a810f35"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "9ef9a012382ea0b95e51bacd7d41ae01b006b7c2c36ba18eb77a76218a787c88"
+    },
+    "O": {
+     "n": 96,
+     "sha256": "83516a816bd88347a7597af55c6eb99f39a20747bf2bc2e3dc8fa5764c0046ba"
+    },
+    "LI": {
+     "n": 72,
+     "sha256": "1b32eed9aa74c599c266b2204ac3e7f3f25fd98947d332a675d7af8e63038e0f"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "fc7d30f2582dff137e2790a39d8931e87e671389abb79841582248bf4a810f35"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "cf69c0f4cde19616e9b82339d09fe4ff32914ab49219085b0150d3ed8e144a3a",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "fixed",
+    "ev": 7.5,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 3283,
+    "sha256": "2f530f64814d258ee5d725a1ff34a157e16257525c217f264384ef5be51788a7",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "L-08": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 64611,
+    "lines": 1476,
+    "sha256": "4778c44152715d4493dc23f35948af1a60021f282d2dc4f37205446aa2f03b1d"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "b346b63db857e1f726dca92a38433632923fc4d31e1683e7bac4e07b80a7fc04"
+    },
+    "O": {
+     "n": 168,
+     "sha256": "328858048a9fe04078b633f2dd0c02d11323922d483ea55c1388a97629e8fe8e"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "d82eb084324f788aa73c9a19ac39e6ca3b8bbdee08b4b29178d7ae861f72b8b9"
+    },
+    "BV": {
+     "n": 40,
+     "sha256": "e6ecb45641bb35dda18204c0f61309bf57174122b211cbce55544971d08e5d25"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "b346b63db857e1f726dca92a38433632923fc4d31e1683e7bac4e07b80a7fc04"
+    },
+    "O": {
+     "n": 168,
+     "sha256": "328858048a9fe04078b633f2dd0c02d11323922d483ea55c1388a97629e8fe8e"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "d82eb084324f788aa73c9a19ac39e6ca3b8bbdee08b4b29178d7ae861f72b8b9"
+    },
+    "BV": {
+     "n": 40,
+     "sha256": "e6ecb45641bb35dda18204c0f61309bf57174122b211cbce55544971d08e5d25"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "d6b826bacbf9ba7074b2e68c619b81618e268d52b2b42fea8aa2795342cd17f5",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "fixed",
+    "ev": 6,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 1964,
+    "sha256": "18c4d787bcdf2e268d663e08514e79e389d73e36542ed96b0951e0fd846a8423",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "M-01": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 71647,
+    "lines": 1654,
+    "sha256": "679849f1ae2f79c498b1635818bc50d9e5b738fac4275964cc46620e322dd4e4"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "fbf5b51a380b74b774cb0cb10c6d6f07108e3ad8e7119455fe09c836e3b5fbc1"
+    },
+    "O": {
+     "n": 336,
+     "sha256": "47e9bf520d517a3a44fbe2d172f44d07a38fd24f34aa623499ff828bf37e042e"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 88,
+     "sha256": "9e6f02dc68f0e7b08e7292980e23ae73f811ab353cc4649335ba7734daecee7a"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "fbf5b51a380b74b774cb0cb10c6d6f07108e3ad8e7119455fe09c836e3b5fbc1"
+    },
+    "O": {
+     "n": 336,
+     "sha256": "47e9bf520d517a3a44fbe2d172f44d07a38fd24f34aa623499ff828bf37e042e"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 88,
+     "sha256": "9e6f02dc68f0e7b08e7292980e23ae73f811ab353cc4649335ba7734daecee7a"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "540ee7611ac3e17dff12f9ecfee580f309b4a96c908e5be4ab2b273db37824f8",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 9000,
+    "sha256": "42f7fec91a73f0845ffb6552b8041b74fcbf3dac6f9f5cd7c9c94ca46d3aa87b",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "M-02": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 67867,
+    "lines": 1569,
+    "sha256": "d22fed6e00f1e6d6a34567ff04e7b3e737a09cdb8ad402494165bf167bb1ed9b"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "31290c3fe22e7d9f06c883e27a4f2731e7352d936d83f8f56f27a809a0400a65"
+    },
+    "O": {
+     "n": 264,
+     "sha256": "4bb511644ecfcc757f6667b46c6c419f6d720c32f47e2942b5a633705bcfcee8"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "8e14e9636ab853024f59a195e69583bcd2e37a65b4c7c3cafb03d03fb23295da"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "31290c3fe22e7d9f06c883e27a4f2731e7352d936d83f8f56f27a809a0400a65"
+    },
+    "O": {
+     "n": 264,
+     "sha256": "4bb511644ecfcc757f6667b46c6c419f6d720c32f47e2942b5a633705bcfcee8"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "8e14e9636ab853024f59a195e69583bcd2e37a65b4c7c3cafb03d03fb23295da"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "258265e0e7aa85bef0585f8a87a8c521675721b56b9331f7f80f2a317ebac2ce",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 5220,
+    "sha256": "d0061e79dd4806d30651167b38bd87404d2ffbecedbcefc009c2d71cb5287f50",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "M-03": {
+   "ok": true,
+   "diags": [
+    {
+     "code": "I205",
+     "severity": "info",
+     "loc": null
+    }
+   ],
+   "wgsl": {
+    "bytes": 64271,
+    "lines": 1468,
+    "sha256": "3e2f6c8f1c98c578f807d00a1ee786a0f0c0ff4f3fa045a6486ed0b5761c9288"
+   },
+   "pack0": {
+    "U": {
+     "n": 168,
+     "sha256": "dbc48999e2af44fc7e27f182f90fbd78179eafd9a0854d011aa178d34ae119f0"
+    },
+    "O": {
+     "n": 408,
+     "sha256": "0b77841945abb9d0079a930577c1a4d04e2731a207c223c916d58e2c855b5bbd"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 120,
+     "sha256": "588976facd79438b5a2a9d9465b8a3a917db0897cad2dfbcbdf0c0e9dd17e15a"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 168,
+     "sha256": "dbc48999e2af44fc7e27f182f90fbd78179eafd9a0854d011aa178d34ae119f0"
+    },
+    "O": {
+     "n": 408,
+     "sha256": "0b77841945abb9d0079a930577c1a4d04e2731a207c223c916d58e2c855b5bbd"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 120,
+     "sha256": "588976facd79438b5a2a9d9465b8a3a917db0897cad2dfbcbdf0c0e9dd17e15a"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "1cbb4a448c9463cfd52c7b45f743f3744872ec2e8b2199351484982c06f33d07",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 1624,
+    "sha256": "3b65d5b8dafc88dc82ba4daac76ec859298e87045a6767e6a70b89660c210986",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "n",
+     "kind": "float",
+     "static": false,
+     "value": 1.5
+    },
+    {
+     "id": "rough",
+     "kind": "float",
+     "static": false,
+     "value": 0.02
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "M-09": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 64725,
+    "lines": 1481,
+    "sha256": "8673dec7620db1f831673cf1a6f124aba6aff320d12cf53105ae59f40ede0099"
+   },
+   "pack0": {
+    "U": {
+     "n": 172,
+     "sha256": "33c89b74e13aabacc8cafea1ff5d194410eacae4b27c5bcfc978adbfe7269f39"
+    },
+    "O": {
+     "n": 120,
+     "sha256": "ad4252f184428f2e6fc3bcdbd3b086aa8821fef6bfba6db0423cc271066f7e96"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "0f79111f8ffaafaf7525bda2ca4070ce14e2cad7b748399778e29ee449a9a977"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "612cb59f56000a14eec59c882b8dd31ca9ee7611f15ef9a7205f800c68311a8b"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 172,
+     "sha256": "33c89b74e13aabacc8cafea1ff5d194410eacae4b27c5bcfc978adbfe7269f39"
+    },
+    "O": {
+     "n": 120,
+     "sha256": "ad4252f184428f2e6fc3bcdbd3b086aa8821fef6bfba6db0423cc271066f7e96"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "0f79111f8ffaafaf7525bda2ca4070ce14e2cad7b748399778e29ee449a9a977"
+    },
+    "BV": {
+     "n": 24,
+     "sha256": "612cb59f56000a14eec59c882b8dd31ca9ee7611f15ef9a7205f800c68311a8b"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "f835b991f9d23c0b47ede5425f8e03f1108084116149ee8940e1378b174a46b6",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2078,
+    "sha256": "d01b3fde4793953452614b0cf265fc112928e869916122f20786e31b3b04bf29",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "along",
+     "kind": "float",
+     "static": false,
+     "value": 0.08
+    },
+    {
+     "id": "across",
+     "kind": "float",
+     "static": false,
+     "value": 0.45
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  },
+  "M-12": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65942,
+    "lines": 1526,
+    "sha256": "bab3da63b0b7a14302b5b8f2aeef414e5a0888f81e9ddeeceaa13abb1bab199a"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "ad04f8b694b7d45e335c0453ef8fde5f0672db5b355e3074af87ee7cff79129f"
+    },
+    "O": {
+     "n": 192,
+     "sha256": "9c4b5afd084577284f6218d825ea24088c66f583949c8213c34caa19294bce1e"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "9aa42813c8fa69a22b694974e59f97acd574b8afe18013bbaf0eea7c593cf940"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "ad04f8b694b7d45e335c0453ef8fde5f0672db5b355e3074af87ee7cff79129f"
+    },
+    "O": {
+     "n": 192,
+     "sha256": "9c4b5afd084577284f6218d825ea24088c66f583949c8213c34caa19294bce1e"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "9aa42813c8fa69a22b694974e59f97acd574b8afe18013bbaf0eea7c593cf940"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "1e9c9bf4d6cc0a30b09b34ac2ff51e5b1b16652e0af5ae87ef7b994588ebb5f1",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "fixed",
+    "ev": 8.6,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 3295,
+    "sha256": "b6c5d4e3cc4dca02496520d1e2b9898f859c327f9d18e80e06fd9dc2fa6cc926",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "R-01": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 65380,
+    "lines": 1495,
+    "sha256": "f5036155c7359f6aaed223916affe2105f1398cf2ed6533b63d9d0d0308162d4"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "3c783890fb3519f2729eec626af4aa605e737c77b64d6fe5a8df908db293596e"
+    },
+    "O": {
+     "n": 192,
+     "sha256": "bb268962b355cc506bcd610826d2d14cb782abb6d39df02f8410deae91b28f56"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "5563293174843fdd0caf2a815fcd9cf4b0eca884da457830305980c577d096af"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "20490b867976ca203218d4a8cf8290c0493c7a9bc02a52fe445e4a179742dc88"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "3c783890fb3519f2729eec626af4aa605e737c77b64d6fe5a8df908db293596e"
+    },
+    "O": {
+     "n": 192,
+     "sha256": "bb268962b355cc506bcd610826d2d14cb782abb6d39df02f8410deae91b28f56"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "5563293174843fdd0caf2a815fcd9cf4b0eca884da457830305980c577d096af"
+    },
+    "BV": {
+     "n": 56,
+     "sha256": "20490b867976ca203218d4a8cf8290c0493c7a9bc02a52fe445e4a179742dc88"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "77ac345bfa7c0d2f88a6aaaf71e76f4491b6ce07b29fdd21f9a07caa5a400c53",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 2733,
+    "sha256": "e562ed4b471d92cfe7ad2a064b54c59d4176b5e285e6bb9e3be26a53c40015ce",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "R-07": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 83390,
+    "lines": 1924,
+    "sha256": "5af69cb935a964c38fe9581ce87bb5cc6f3874fae245b208d60d1233cdef0405"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "678caae210aefe15950ccf3109ce1e07e105a160e5dd4345945d6fdf08178736"
+    },
+    "O": {
+     "n": 624,
+     "sha256": "fe50732312d43723342c6c2d38660b91a32868cdc6d324261ee50a66536b5316"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 136,
+     "sha256": "25bbef523c538e044e9cbf60414f9fa29afd6afd2ac33a5c4dc0937511880690"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "678caae210aefe15950ccf3109ce1e07e105a160e5dd4345945d6fdf08178736"
+    },
+    "O": {
+     "n": 624,
+     "sha256": "fe50732312d43723342c6c2d38660b91a32868cdc6d324261ee50a66536b5316"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 136,
+     "sha256": "25bbef523c538e044e9cbf60414f9fa29afd6afd2ac33a5c4dc0937511880690"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "1da210d1d24a86df9c2bf952dce050590b4f7d7581e96b95e7dcb7ccebce5475",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "physical",
+    "ev": 13.965784284662087,
+    "physicalEV": 13.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 20743,
+    "sha256": "e4e31b914269d50a43130db640911626dc17a8ea5e5abf5b1a215e5257b43d86",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [],
+   "animated": false,
+   "behaviors": 0
+  },
+  "B-01p": {
+   "ok": true,
+   "diags": [],
+   "wgsl": {
+    "bytes": 64434,
+    "lines": 1468,
+    "sha256": "6d9332de7b80720a561debed5644f4defbec7f0ea9b05b8a6b5c0fafca78c5ee"
+   },
+   "pack0": {
+    "U": {
+     "n": 164,
+     "sha256": "cfe541dbce5a2e46fa2dff516a1f898c1d2b7c72e7e7eaad9e3dab43dc9bf7ab"
+    },
+    "O": {
+     "n": 48,
+     "sha256": "b2ea26017afd943c0d7f3fc11ad9562cd039842ee2ab03cc5dc8b533ebb0dc22"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 8,
+     "sha256": "fe46c5c89b717ee8c6086deffd3b94ed776f362e8538a104e7957e32fc100fca"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "packT": {
+    "U": {
+     "n": 164,
+     "sha256": "cfe541dbce5a2e46fa2dff516a1f898c1d2b7c72e7e7eaad9e3dab43dc9bf7ab"
+    },
+    "O": {
+     "n": 48,
+     "sha256": "b2ea26017afd943c0d7f3fc11ad9562cd039842ee2ab03cc5dc8b533ebb0dc22"
+    },
+    "LI": {
+     "n": 24,
+     "sha256": "2ea9ab9198d1638007400cd2c3bef1cc745b864b76011a0e1bc52180ac6452d4"
+    },
+    "BV": {
+     "n": 8,
+     "sha256": "fe46c5c89b717ee8c6086deffd3b94ed776f362e8538a104e7957e32fc100fca"
+    },
+    "SDs": {
+     "n": 0,
+     "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "SDd": {
+     "n": 4,
+     "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+    },
+    "dynBase": 0
+   },
+   "frameU160": "86bed2a73d6d9cc709a50c105689db1c1082411056b31b7d5cfd4fbf658fe2c2",
+   "post": {
+    "tonemap": "agx",
+    "denoise": true,
+    "bloom": 0,
+    "falseColor": false,
+    "vignette": 0,
+    "grain": 0,
+    "custom": 0,
+    "exposure": "auto",
+    "ev": null,
+    "physicalEV": 12.965784284662087
+   },
+   "sections": {
+    "fieldBytes": 168,
+    "matBytes": 1787,
+    "sha256": "169b726a58344fb3d02dc5643d9f44115c64dc8cac60eb015fa604271eca4c6a",
+    "spectral": false
+   },
+   "subset": [],
+   "params": [
+    {
+     "id": "rough",
+     "kind": "float",
+     "static": false,
+     "value": 0.4
+    }
+   ],
+   "animated": false,
+   "behaviors": 0
+  }
+ }
+}

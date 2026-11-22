@@ -1,0 +1,136 @@
+{
+ "source": "candela-workspace(1).zip, the candela/ directory",
+ "archiveSha256": "873b2dd4bb9c32cac08751baf9fa6960ee4377306a04b2e118a8969dd940df5d",
+ "modules": {
+  "candela.js": "b5e7ddedb3840199e8704ec82a823727c8fec8300bd663bb4c838fd9bfd372f9",
+  "diag.js": "9d52b0d1bd6aba364fc19ec3abeb3f2d62fbbb08b18995f867f5a25df5dca934",
+  "units.js": "32a56e2c441ab8d553c27af7ceacd96a481d8dfe41fc25f5f44f07d3acc15920",
+  "fx.js": "a3a6cb83e6a176fb98dd236cdd50262af7584cd7e61ee6bc60ed00ca83e7be83",
+  "params.js": "513b264cfa69dba3bd803c27801ab58f6c1e201768207a7f12a5006a36298e2d",
+  "scene.js": "2603a3fb69d74310c31307586bb410156b3767e8a26d02b68f05c44f19f27270",
+  "stdlib.js": "bced698d4fa8a395d8d9c7c1c143541403b2bfa9191c2df7d701491a55a48aa5",
+  "compile.js": "6f5926cc1b8fe98a5ec3e3eb5dae0cc02efae75e67b115c99acca33aa2368f90",
+  "fragments.js": "aa54efc4b5f53b03cfedf4e206dfe45d235554d6344bd10bb974a5b9a2ca0be1",
+  "test.js": "66d088f09d43923e00087041cd8d1ad475d6e4c79c12bfd3346a62751bf9c307",
+  "ir.js": "c5126dee919af33888b2d2e4ef06d5e4819ee836f15238c4b8a1b06a53298cb6",
+  "mesh.js": "2485ddbb4b0bb1eb22368c282005b9abb8fbe01411b86cf04681ba783cefa219",
+  "hdri.js": "b8ed5e25ef3ac4657543a766097cd9cd27de4d4c5d30d70f2c5b479282cc76ff",
+  "finish.js": "76f265e2f7410838d21b8f252ab47da61b77c66df353ff4ac3bbf558d37826b0",
+  "kernel.js": "253d242df1a8827903e218c9ad119558d313f92da9f582ec3a25a6b8f7fb45c4"
+ },
+ "presets": {
+  "A-03": {
+   "file": "A-03-add.js",
+   "sha256": "572ef0176cf5fcfcf09e54796caf23f3cc8dfdb455cfee03bca31f596c0538e6"
+  },
+  "B-01": {
+   "file": "B-01-hello-sphere.js",
+   "sha256": "0fcce88d4dee34aa84e550d8c5eab1b3c97767ebe7fb0efd29d51f0e412d9d06"
+  },
+  "B-03": {
+   "file": "B-03-values.js",
+   "sha256": "286790ac3989146620aa9738ffd18bdf113b721dbaff0b1f61a3f3491a6ce44b"
+  },
+  "B-04": {
+   "file": "B-04-diagnostics.js",
+   "sha256": "0f3081c47549220748c928dbd28e6d6a9ca59cfc082d4dfbd5ccff7bba852792"
+  },
+  "B-05": {
+   "file": "B-05-defaults.js",
+   "sha256": "9777fbb324a90daeac6ed0b847f86f503f2d2850335565079544bda913bf5753"
+  },
+  "C-02": {
+   "file": "C-02-bokeh.js",
+   "sha256": "1f1265fc26b79cb5858342a4d0cc910e2976a6ff3911e8bae72b4508ce931e96"
+  },
+  "C-03": {
+   "file": "C-03-dolly-zoom.js",
+   "sha256": "043a10217a6b72f9eeaef6d2a072d9b3dcd8ffa4c3e33b09e9fa5ce73a8f0be8"
+  },
+  "C-04": {
+   "file": "C-04-exposure.js",
+   "sha256": "d054976e4a9298a3f9c0ac3dacbec6352c37200e7bc605a52674fc84158355d5"
+  },
+  "D-01": {
+   "file": "D-01-units.js",
+   "sha256": "50ddbc5fbb0fd169a64229ab08d77675158b608e35bf9d2089289c277394c161"
+  },
+  "D-02": {
+   "file": "D-02-stages.js",
+   "sha256": "4ae00d2d3ede46f066aa3e374fd5990671ef01bcefea1a5b624e800ba31b3568"
+  },
+  "E-03": {
+   "file": "E-03-bounces.js",
+   "sha256": "4378bad1ade879b14f527f236bd0cd4cd590dd627ad7c58246865d9687a33d95"
+  },
+  "E-04": {
+   "file": "E-04-mis.js",
+   "sha256": "02f17a65988f0e702cea593119c1819cd6364c946262e065943bc78e8ada1236"
+  },
+  "G-06": {
+   "file": "G-06-hierarchy.js",
+   "sha256": "6e917348e32d78010fbc40c61650d692a444348a4e879b5697e4d9e3a79f68cb"
+  },
+  "L-01": {
+   "file": "L-01-lumens.js",
+   "sha256": "c8084978fb3f8ef064ce2157c44ffc5a1d8d94609766aaa6edb53dac81abad52"
+  },
+  "L-02": {
+   "file": "L-02-sunny-16.js",
+   "sha256": "3beaae4d13c702f6d7759030e34e1909d500c0f0f1a31926bccc81dd2edbf1d2"
+  },
+  "L-03": {
+   "file": "L-03-sun-and-sky.js",
+   "sha256": "f65c4fb1bae91ab1efcd6d48fc43db2590f812bdf0215396e833482a0cc58e27"
+  },
+  "L-04": {
+   "file": "L-04-golden-hour.js",
+   "sha256": "119fc4924e98023149cd62adc280e617641dc47094434402ca50a5c067651dff"
+  },
+  "L-05": {
+   "file": "L-05-temperature.js",
+   "sha256": "8c6a2c5665acb49483576a911610402b84712af23ea627f9fc3b779663d10a96"
+  },
+  "L-06": {
+   "file": "L-06-soft-shadows.js",
+   "sha256": "49c0a11a3b816496fb76aaa77d3728d80c8e31d689665c5d95bef14915c2497a"
+  },
+  "L-07": {
+   "file": "L-07-spotlights.js",
+   "sha256": "2a94ef663ede3dc05dc5c006d082268e110605911c241e4cbec96648e11458f7"
+  },
+  "L-08": {
+   "file": "L-08-inverse-square.js",
+   "sha256": "c6a203622bc78848ea64f26114ea0a32252f2ae450757dbf4e28fad805b7da17"
+  },
+  "M-01": {
+   "file": "M-01-chart.js",
+   "sha256": "06015fedde42f623c77ba2b78a94f04cd0deb7789ee1c9fda02d2d935d06e88f"
+  },
+  "M-02": {
+   "file": "M-02-metals.js",
+   "sha256": "1974bafd6d153fd4ccde775ad2888d27668019fd2fc137e95784ef7f84b4c496"
+  },
+  "M-03": {
+   "file": "M-03-fresnel.js",
+   "sha256": "13acfc280cc0bce3cb884291b8556f0c1a89dc6dc57bb6f465142d2a73d82b8c"
+  },
+  "M-09": {
+   "file": "M-09-brushed.js",
+   "sha256": "77ffb049acf44eb5e456576a8e6d73416faed70fff5f9b1f3cdcd5a3ef5e9d96"
+  },
+  "M-12": {
+   "file": "M-12-multiscatter.js",
+   "sha256": "0f2c6d80969c480c792392678b93601a3c9b47a6300718e28c2186384fabb1c8"
+  },
+  "R-01": {
+   "file": "R-01-cornell.js",
+   "sha256": "ed9bb5acaef0279035844e78de780c6bdd9c8d66f9de692d38392a0ad3d2075b"
+  },
+  "R-07": {
+   "file": "R-07-colorchecker.js",
+   "sha256": "a2a1056041db71d719999f515e5820b0c1636ac155d152f6724865072620603c"
+  }
+ },
+ "tier": "T0 of PICOCALC-CANDELA-P4 various/02-tiers.json"
+}

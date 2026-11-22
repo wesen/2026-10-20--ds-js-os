@@ -1,0 +1,6 @@
+{
+  "name": "candela-front-end-vendored",
+  "private": true,
+  "type": "module",
+  "description": "Not part of Candela: tells Node that src/*.js are ES modules, for the host reference tests"
+}
