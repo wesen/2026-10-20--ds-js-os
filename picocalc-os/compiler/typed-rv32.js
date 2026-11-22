@@ -1803,7 +1803,8 @@ function planLocations(fn, options, inlineCall) {
     }
     for (const local of pointerWrites.keys()) for (const write of writesOf.get(local) ?? [])
         if (write.inc !== undefined && Math.abs(2 * write.inc) <= 2047) increments.set(write.at, write.inc);
-    return {receiver,forward,homes,direct,pointers,pointerWrites,increments};
+    // scores and intervals are what planSavedHomes chose from; only observePlan reads them.
+    return {receiver,forward,homes,direct,pointers,pointerWrites,increments,scores,intervals};
 }
 
 // Callee-saved registers a function may claim as homes. Each claimed register costs a
@@ -2003,6 +2004,8 @@ function compile(source, imports = [], maxSourceLength, requested) {
         if (!compiled) {
             const plan = options?.operandLocations ? planLocations(fn, {...options.operandLocations, select: options.select},
                 index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn) : undefined;
+            // observePlan(name, plan): a read-only view of the operand-location plan, for tools.
+            if (plan) options?.observePlan?.(fn.name, plan);
             const emit = longBranches => {
                 const emitter = new Emitter(fn, callables, targets);
                 emitter.select = options?.select;
