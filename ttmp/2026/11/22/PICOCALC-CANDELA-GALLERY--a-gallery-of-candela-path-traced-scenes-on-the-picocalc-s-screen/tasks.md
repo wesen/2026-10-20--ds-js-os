@@ -8,5 +8,5 @@
 - [x] Prove the playable firmware is unchanged without the option <!-- t:3y63 -->
 - [x] Device run: per-scene timings, digests against the references, health <!-- t:1csj -->
 - [x] Leave the gallery installed if healthy; update /tmp/picocalc-current-playable.txt <!-- t:oo3v -->
-- [ ] Vault report <!-- t:2sjs -->
+- [x] Vault report <!-- t:2sjs -->
 - [ ] Milestone B: the Candela world's front end on the real renderer <!-- t:06os -->

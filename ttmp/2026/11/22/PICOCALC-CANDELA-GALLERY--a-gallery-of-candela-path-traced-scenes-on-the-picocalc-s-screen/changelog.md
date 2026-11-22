@@ -37,3 +37,7 @@ Full device run of a396d3b: 18/18 digests equal RV32; per-scene timings; probe 1
 ### Related Files
 
 - /home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-a2a22bb8f46d24aa3/ttmp/2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/various/device-04-a396d3b/summary-tables.txt — per-scene timings and agreement
+
+## 2026-11-22
+
+Vault report pushed to go-go-parc (1bedc98): Projects/2026/11/22/PROJECT REPORT - PicoCalc Candela - Eighteen Path-Traced Scenes on the Handheld's Own Screen - A Technical Deep Dive.md, with three figures in _assets/

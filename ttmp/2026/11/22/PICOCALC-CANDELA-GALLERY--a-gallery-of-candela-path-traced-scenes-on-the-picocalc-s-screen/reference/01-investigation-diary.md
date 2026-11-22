@@ -268,3 +268,45 @@ I built the image from a396d3b on main 5c01d81 and ran the whole measurement wit
 
 ### Technical details
 - Restore target before the run: `/tmp/picocalc-playable-3353264/build 8acb94cc18ac1c174691c458a173a05be7cf9fb05d32d5531a6035c5dfcf4636` (main 3353264). Now installed: `/tmp/picocalc-candela-gallery-a396d3b/build 28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6`.
+
+## Step 6: Publish the vault report
+
+The project report is in the vault with three figures (the device contact sheet, B-01 and W-02 captures). Milestone B was not started; its plan is in the design doc's Section 10.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Write the vault report at the milestone, append-only: stage only the report and its assets, commit, push.
+**Inferred user intent:** A durable account of the gallery next to the earlier Candela reports.
+**Commit (code):** N/A (vault commit 1bedc98 in go-go-parc).
+
+### What I did
+- Wrote `Projects/2026/11/22/PROJECT REPORT - PicoCalc Candela - Eighteen Path-Traced Scenes on the Handheld's Own Screen - A Technical Deep Dive.md` and copied `picocalc-candela-gallery-{contact-sheet,b01-30spp,w02-12spp}.png` to `Projects/2026/11/22/_assets/`.
+- Staged those four files only; committed; pushed (1c4a9b8..1bedc98, no rebase needed).
+
+### Why
+- The brief asks for a vault report at the milestone.
+
+### What worked
+- The push was accepted at once.
+
+### What didn't work
+- N/A
+
+### What I learned
+- N/A
+
+### What was tricky to build
+- N/A
+
+### What warrants a second pair of eyes
+- N/A
+
+### What should be done in the future
+- Milestone B, and the report's open questions: keyboard polling with the keyboard off (8.4% of core 1), repaints of unchanged frames, display cost, the heaviest scenes.
+
+### Code review instructions
+- N/A
+
+### Technical details
+- N/A
