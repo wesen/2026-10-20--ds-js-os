@@ -79,3 +79,93 @@ This step produced the design document only. It describes the current layout wit
 ### Technical details
 
 - The current playable firmware: app `e7b771aabc1a9cb0719caa5e30a1b7beed7d4ed33e05e600766246ea492a19b5`, partition table `72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30`. Build tree at time of writing: `/tmp/picocalc-scalar-breakdown-verified/build`.
+
+## Step 2: Revise the design for the 98 commits since it was written
+
+The design was a day old, and in that day the repository had grown by 2,396 tracked files. The new work included the Candela path tracer on the P4, the RV32 backend split, the trace-REPL workbench and its help pages, and more RAY-PARITY board and replay scripts. This step re-measured every count, added the new instances of each problem, and found two new kinds of problem: firmware sources whose source of truth is a ticket, and a tool that reads compiler paths at every revision. It also recorded the three decisions the user made. Nothing was moved.
+
+### Prompt Context
+
+**User prompt (verbatim):** "update it for the new code that we have written since."
+
+**Mid-turn message (verbatim):** "papers3 is still valuable.  I think out/ is just results? ignore .docmgr operations I think"
+
+**Assistant interpretation:** Revise the design document so that its inventory, problems, mapping, phases and gates describe the current tree, and turn three of the four open questions into decisions. Check the `out/` guess before relying on it.
+
+**Inferred user intent:** Have a plan that can be executed against today's tree, not yesterday's.
+
+### What I did
+
+- Ran `git diff --name-status 243cc05 HEAD` outside `ttmp/` and grouped it by directory. The new paths:
+  - 61 files under `third_party/candela`;
+  - seven `nucleus/candela_*` files and `port/esp32p4/main/candela_gallery_p4.c`;
+  - 13 `compiler/rv32/` modules with `build.mjs` and a README;
+  - two QuickJS worlds, `worlds/candela-world` and `worlds/candela-gallery`;
+  - three Candela tools;
+  - 36 new files in `pkg/` and 34 in `cmd/` (the workbench, the help pages and the examples).
+- Recounted with the Step 1 commands:
+  - 7,365 tracked files, 6,391 of them under `ttmp/` and 1,719 ticket scripts;
+  - 104 tickets in 11 day folders;
+  - 137 scripts that name another ticket's path (122 before);
+  - AGENTS.md with 18 links, 12 into tickets.
+- Grepped the 13 new tickets' scripts for paths into other tickets and read each hit. The findings:
+  - `PICOCALC-RAYTRACE/scripts/device/board_common.py` now has seven importers in five tickets, and it still names a `/tmp` playable build with SHA `33b439d0…`.
+  - `CANDELA-WORLD/scripts/lib/board_health.py` became a second shared library.
+  - COMPILE-BUDGET's `05-replays-policy.sh` is a third copy of the replay suite.
+  - RAY-PARITY's `10-stage-board.py` is another string-replacing variant of the board harness.
+  - `/tmp/picocalc-current-playable.txt` is now written by two scripts and read by four.
+- Read `third_party/candela/VENDOR.json`. Its 15 files come from CANDELA-CPU-KERNEL and CANDELA-SECTIONS ticket scripts, and its note says "do not edit here, regenerate in the source tickets".
+- Read `pkg/tracecompiler/compiler.go` lines 38–44, where the module table names `picocalc-os/compiler/…` and `picocalc-os/tools/…` paths. `compiler.at(rev)` loads them at any revision.
+- Checked the `out/` guess:
+  - `git grep` over the Makefile, tests and tools found the host native tests writing `out/uart.log`, `out/before.png` and `out/after.png` during their own run;
+  - `test_sys_native.py:142` compares `before.png` with `after.png` from the same run;
+  - nothing reads the 143 tracked captures.
+- Rewrote the design document:
+  - Section 1 (inventory), Section 2.1 (new instances) and new Sections 2.2 (generated firmware sources in tickets), 2.6 (build-time source patch) and 2.7 (history-reading tools);
+  - rules 1, 3 and 4 tightened;
+  - target layout and mapping updated, with a new Section 4.2 listing the ticket code to promote and what becomes a parameter;
+  - Sections 5.1 and 5.3 updated, and new Sections 5.5 (Candela generators) and 5.6 (trace REPL across moves);
+  - a new Phase B2, updated gates and risks, and Section 8 split into decided and open questions.
+- Added two tasks: 4dwu (Phase B2) and v3ua (a revision-aware module table before Phase C).
+
+### Why
+
+A plan whose gates name yesterday's numbers would fail its own first gate. Phase A's gate, for example, named the RAY-PARITY Step 5 medians and the old pinned digests. The Candela copy also changes the priorities. The firmware build now consumes ticket code, which is a stronger reason to promote than a copied harness, so it gets its own phase (B2) directly after the playable record.
+
+### What worked
+
+- Every new claim in Sections 1, 2 and 4 has a path, a count or a grep behind it.
+- The check on `out/` confirmed the user's guess and turned it into a precise decision: remove the tracked captures, but keep `out/` as an ignored working directory, because the host tests write into it.
+
+### What didn't work
+
+- My first cross-ticket grep printed nothing. A `grep -v` that dropped lines naming the script's own ticket also dropped lines that named another ticket in the same path. Filtering on the last path component fixed it.
+- My first draft's Candela gate said that the x86 host build's frame-0 digests must equal the RV32 reference. That is false: CANDELA-GALLERY measured 11 of 18 scenes differing between host and device, because glibc and newlib round differently. The gate now uses the RV32 reference build, which equals the device in all 18 scenes.
+- Two CMake line references in Section 9 had shifted (the device compiler now ends at 154, and the Typed bundle starts at 221). They were re-read and corrected.
+
+### What I learned
+
+- `port/esp32p4/build-smooth-chess.sh` already holds the playable flags in the repository. Phase B can turn it into `profiles/playable.env` instead of reconstructing the flags from ticket scripts.
+- The repository now has three RV32 interpreters: `rv32emu` in C (used by the replays), `tools/rv32-interp.js` (the reference) and `pkg/tracerv32` in Go (tested against the reference). They have different jobs, so the design gives each one a home instead of merging them.
+
+### What was tricky to build
+
+Deciding where the Candela generators belong. They are not part of the firmware, the compiler or the measurement harness. They are build-time generators whose output the firmware compiles, which is the definition of `tools/gen/`, and the vendored JavaScript and generated C stay under `firmware/third_party/candela/`. Tracking the generated C (and not generating it in CMake) follows the RV32 bundle's pattern: track it, and check it by regenerating.
+
+### What warrants a second pair of eyes
+
+- Section 5.6, the revision-aware module table. The alternative is to let `compiler.at` work only on one side of each move. That would break reproducing recorded workbench results that name old revisions.
+- Section 8's remaining open questions: cji's future, and whether the gallery stays an option of the playable profile.
+
+### What should be done in the future
+
+- Phase A, then B and B2, when no `worktree-agent-*` branch is open. Today all six agent branches are merged into main.
+
+### Code review instructions
+
+Read the design document's Sections 2.1, 2.2, 2.6 and 2.7 (what is new), 4.2 (what gets promoted), 5.5 and 5.6, and the Phase A, B2 and C gates in Section 6. The commands under "What I did" reproduce every count.
+
+### Technical details
+
+- Base of the comparison: `243cc05` (2026-11-21 20:26). Head at measurement: `5c2fb9c`.
+- The current playable image: app `28d9a81241870a45f75c19f0406c4c0fc8c182e2a855cbab3dae6c99caf203a6`, partition table `72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30`. The build tree is `/tmp/picocalc-candela-gallery-a396d3b/build`.

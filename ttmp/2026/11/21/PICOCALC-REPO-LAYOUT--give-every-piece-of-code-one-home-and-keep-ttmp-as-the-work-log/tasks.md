@@ -11,3 +11,5 @@
 - [ ] Phase G: one root Makefile with test, test-replays, firmware, playable and bench-board <!-- t:wd80 -->
 - [ ] Phase H: rewrite AGENTS.md as a layout and command reference; promote current guides to docs/ <!-- t:3fup -->
 - [ ] Phase I: ttmp hygiene (close finished tickets, ticket index); no renames <!-- t:1ank -->
+- [ ] Phase B2: promote the Candela generators (CPU-KERNEL, SECTIONS, GALLERY) to tools/gen/candela, regenerate third_party/candela from them, fold the gallery compositor patch into compositor.js <!-- t:4dwu -->
+- [ ] Before Phase C: make the trace REPL's compiler module table revision-aware (pkg/tracecompiler) so compiler.at works on both sides of each move <!-- t:v3ua -->
