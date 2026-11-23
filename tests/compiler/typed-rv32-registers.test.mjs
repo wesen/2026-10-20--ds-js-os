@@ -15,7 +15,8 @@ const rv32 = path => import(new URL("../../compiler/typed/rv32/" + path, import.
 const {FunctionCode} = await rv32("emit/function-code.js");
 const {planLocations} = await rv32("plan/locations.js");
 const {POLICIES} = await rv32("policy.js");
-const {ENCODE} = await rv32("encoding/instructions.js");
+const {encoder} = await rv32("encoding/instructions.js");
+const ENCODE = new Proxy({}, {get: (_, key) => encoder(key)});
 const {F, X, FA0, T5, T6, REGISTER_CLASSES, argumentRegisters, classOf, isSavedRegister} = await rv32("encoding/registers.js");
 const T = typedTape;
 

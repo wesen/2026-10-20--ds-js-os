@@ -9,9 +9,14 @@ import {homedir, tmpdir} from "node:os";
 import {join} from "node:path";
 import test from "node:test";
 
-const {ENCODE, INSTRUCTION_ROWS, assembly, moveWord, loadWord, storeWord} =
+const {encoder, INSTRUCTION_ROWS: RAW_ROWS, instructionKey, instructionFields, moveWord, loadWord, storeWord} =
     await import(new URL("../../compiler/typed/rv32/encoding/instructions.js", import.meta.url));
 const {instruction} = await import(new URL("../../compiler/typed/rv32/encoding/registers.js", import.meta.url));
+const {assembly} = await import(new URL("../../compiler/typed/rv32/encoding/assembly.js", import.meta.url));
+const INSTRUCTION_ROWS = RAW_ROWS.map(([mnemonic, match, operands]) =>
+    ({mnemonic, key: instructionKey(mnemonic), match, operands, fields: instructionFields(operands)}));
+// ENCODE.key: the table's encoders, all made (the compiler makes each on first use).
+const ENCODE = Object.fromEntries(INSTRUCTION_ROWS.map(row => [row.key, encoder(row.key)]));
 
 function espGcc() {
     if (process.env.P4_GCC) return process.env.P4_GCC;

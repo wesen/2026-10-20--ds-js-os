@@ -229,7 +229,7 @@ in `t0`-`t4`; nothing emits float arithmetic until PICOCALC-TYPED-F32 adds the t
 
 `rv32/encoding/instructions.js` is one table of every instruction the backend may emit: RV32IM, the Zicsr instructions
 (on `fflags`, `frm`, `fcsr`), all of RV32F and the five PIE instructions of `typed-pie-loops.js`. A row is its mnemonic,
-its fixed bits and its assembler operand syntax (`"fd, f1, f2, rm"`), and `ENCODE.fadd_s(rd, a, b, rm)` its encoder; an
+its fixed bits and its assembler operand syntax (`"fd, f1, f2, rm"`), and `encoder("fadd_s")(rd, a, b, rm)` its encoder, made on first use (85 closures made at load cost the QuickJS realm 35 KB); an
 encoder rejects a register of the wrong class. `tests/compiler/typed-rv32-encoding.test.mjs` assembles every row with
 GNU `as` from the ESP toolchain (the newest `riscv32-esp-elf`, as `bench/lib/toolchain.sh` finds it) over edge and random
 operands and compares the words; it also checks that the six integer formats the emitters call (`instruction.r` ...)

@@ -4,9 +4,7 @@ import {A0, FA0, STACK_REGISTERS, RA, calleeRegisters, isSavedRegister} from "..
 export class CallMethods {
     call(index) {
         const callee = this.functions[index], count = callee.params.length;
-        // ilp32f: integer arguments in a0-a7, f32 arguments in fa0-fa7. The operand stack holds every value in
-        // an integer register (PICOCALC-TYPED-F32 decides otherwise), so an f32 argument moves across (fmv.w.x)
-        // and an f32 result back (fmv.x.w). The registers are computed once per callee (registers.js).
+        // ilp32f; the operand stack is x registers, so an f32 argument or result crosses with fmv.
         const incoming = calleeRegisters(callee);
         for (let i = count - 1; i >= 0; i--) {
             const arg = incoming[i];

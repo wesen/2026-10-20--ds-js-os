@@ -135,7 +135,7 @@ function mayContainProducer(tape) {
     return false;
 }
 
-// ins: the backend's encoders (ENCODE of rv32/encoding/instructions.js).
+// ins: the backend's encoder(key) (rv32/encoding/instructions.js).
 function lower(fn,callables,targets,mode,FunctionCode,ins) {
     // An explicitly observed function still reports the reason for each rejection.
     if (!fn.nativeInspection && !mayContainProducer(fn.code)) return null;
@@ -156,11 +156,12 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
         plans.set(p.loop,p);
     }
     if (!plans.size) return null;
-    const minInputU16=ins.esp_min_u16_a(1,t6);        // esp.min.u16.a q1,t6
-    const broadcast=ins.esp_vldbc_16_ip(0,t5,0);      // esp.vldbc.16.ip q0,t5,0
-    const packetLoad=ins.esp_vld_128_ip(1,input,16);  // esp.vld.128.ip q1,a5,16
-    const subtract=ins.esp_vsub_s16(2,0,1);           // esp.vsub.s16 q2,q0,q1
-    const packetStore=ins.esp_vst_128_ip(2,t5,16);    // esp.vst.128.ip q2,t5,16
+    const minInputU16=ins("esp_min_u16_a")(1,t6);        // esp.min.u16.a q1,t6
+    const broadcast=ins("esp_vldbc_16_ip")(0,t5,0);      // esp.vldbc.16.ip q0,t5,0
+    const packetLoad=ins("esp_vld_128_ip")(1,input,16);  // esp.vld.128.ip q1,a5,16
+    const subtract=ins("esp_vsub_s16")(2,0,1);           // esp.vsub.s16 q2,q0,q1
+    const packetStore=ins("esp_vst_128_ip")(2,t5,16);    // esp.vst.128.ip q2,t5,16
+    const addi=ins("addi"), add=ins("add"), sub=ins("sub"), slli=ins("slli"), andi=ins("andi");
     class PackedFunction extends FunctionCode {
         constructor() {
             super(fn,callables,targets);
@@ -176,10 +177,10 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             if(v.local!==undefined) this.readLocal(reg,v.local);
             else this.constant(reg,v.constant);
         }
-        immediate(to,from,n) {this.emit(ins.addi(to,from,n));}
-        plus(to,a,b) {this.emit(ins.add(to,a,b));}
-        minus(to,a,b) {this.emit(ins.sub(to,a,b));}
-        twice(to,from) {this.emit(ins.slli(to,from,1));}
+        immediate(to,from,n) {this.emit(addi(to,from,n));}
+        plus(to,a,b) {this.emit(add(to,a,b));}
+        minus(to,a,b) {this.emit(sub(to,a,b));}
+        twice(to,from) {this.emit(slli(to,from,1));}
 
         grouped(p) {
             const selectedMode=p.selectedMode ?? mode;
@@ -231,7 +232,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             this.mark(group);
             this.minus(t5,limit,x); this.constant(t6,8);
             this.branch(6,t5,t6,ordinary); // ordinary loop handles short tail
-            this.emit(ins.andi(t5,input,15)); this.branch(1,t5,zero,single);
+            this.emit(andi(t5,input,15)); this.branch(1,t5,zero,single);
             note("admission and packet control",p.loop,p.loop+2);
             this.immediate(t5,sp,this.packet);
             if(vectorProducer) {

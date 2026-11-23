@@ -5,30 +5,16 @@
 "use strict";
 
 // rv32/encoding/registers.js
-// RV32 registers, their classes and the six base instruction formats.
-//
-// A register is a number: 0-31 are the integer registers x0-x31, 32-63 the float registers f0-f31 (f_n is
-// 32 + n). The class is reg >> 5 (X or F) and the field value reg & 31. Integer code is therefore unchanged:
-// every integer register keeps its plain number, and only the float encoders mask (encoding/instructions.js).
-// The integer formats below take field values as they are, so they must never see a float register.
+// RV32 registers, their classes and the six integer instruction formats. A register is a number: x_n is n, f_n is
+// 32 + n, so reg >> 5 is its class and integer code keeps its numbers. The formats below must not get an f register.
 const X = 0, F = 1;
 const ZERO = 0, RA = 1, SP = 2, A0 = 10, T5 = 30, T6 = 31;
 const F0 = 32, FA0 = 42;
 const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
 const classOf = reg => reg >> 5;
 
-// The register names GNU as accepts (ABI names), by register number.
-const REGISTER_NAMES = ["zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1",
-    "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11",
-    "t3", "t4", "t5", "t6",
-    "ft0", "ft1", "ft2", "ft3", "ft4", "ft5", "ft6", "ft7", "fs0", "fs1",
-    "fa0", "fa1", "fa2", "fa3", "fa4", "fa5", "fa6", "fa7", "fs2", "fs3", "fs4", "fs5", "fs6", "fs7", "fs8", "fs9",
-    "fs10", "fs11", "ft8", "ft9", "ft10", "ft11"];
-
-// The ilp32f calling convention, one table per class. arguments: in order (the first also returns the
-// result); saved: callee-saved; homes: the callee-saved registers the planner may claim (s0 stays free as a
-// possible frame pointer; every fs register may be claimed); stack: the emitter's operand-stack registers;
-// scratch: registers the emitter clobbers freely.
+// ilp32f per class: arguments (the first returns), callee-saved, homes the planner may claim (not s0), the
+// emitter's operand-stack and scratch registers.
 const range = (from, to) => Array.from({length: to - from + 1}, (_, i) => from + i);
 const REGISTER_CLASSES = [
     {id: X, name: "x", arguments: range(10, 17), saved: [8, 9, ...range(18, 27)], homes: [9, ...range(18, 27)],
@@ -37,15 +23,13 @@ const REGISTER_CLASSES = [
         temporaries: [...range(32, 39), ...range(60, 63)], stack: range(32, 36), scratch: [62, 63]},
 ];
 
-// A Typed value type's register class: f32 lives in float registers, everything else (i32, bool, enums,
-// records and buffers as addresses) in integer registers.
+// f32 values live in f registers, every other Typed type in x registers.
 const typeClass = type => type === "f32" ? F : X;
 
 // A callee-saved register (of either class) that the planner may claim as a home.
 const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27) || reg === 40 || reg === 41 || (reg >= 50 && reg <= 59);
 
-// The incoming register of each parameter under ilp32f: the integer parameters take a0-a7 in order and the
-// f32 parameters fa0-fa7, independently. More than eight of one class is outside the register convention.
+// Each parameter's incoming register: integers take a0-a7, f32 fa0-fa7, each class in order.
 function argumentRegisters(types) {
     const out = new Array(types.length);
     let x = 0, f = 0;
@@ -57,8 +41,7 @@ function argumentRegisters(types) {
     return out;
 }
 
-// argumentRegisters of a function descriptor's parameters, kept on the descriptor (fn.registers): a call site
-// asks for its callee's on every call.
+// argumentRegisters of a descriptor, cached on it (fn.registers): every call site asks for its callee's.
 const calleeRegisters = fn => fn.registers ??= argumentRegisters(fn.params);
 
 const instruction = {
@@ -72,19 +55,14 @@ const instruction = {
 };
 
 // rv32/encoding/instructions.js
-// The instruction table: every instruction the RV32 backend may emit, as one row each, and ENCODE, an encoder
-// per row. RV32IM, the Zicsr instructions (the backend touches only fflags, frm and fcsr), all of RV32F and the
-// Espressif PIE instructions of typed-pie-loops.js. tests/compiler/typed-rv32-encoding.test.mjs assembles every
-// row with GNU as from the ESP toolchain and compares the words.
-//
-// A row is [mnemonic, match, operands]: match holds the fixed bits, and operands is the instruction's assembler
-// syntax, whose fields (below) give both the bits and the encoder's arguments, in the order they appear:
-// ENCODE.lw(rd, offset, base) for "xd, i12(x1)", ENCODE.fadd_s(rd, a, b, rm) for "fd, f1, f2, rm". The key is
-// the mnemonic with "." replaced by "_". A register argument is a register number of encoding/registers.js
-// (f_n is 32 + n); an encoder throws when it gets a register of the other class. rm, the rounding mode, may be
-// omitted: it is then 7 (dynamic, frm), as GNU as assembles it.
+// The instruction table: RV32IM, Zicsr, RV32F and the PIE words of typed-pie-loops.js, one row each, and ENCODE,
+// an encoder per row. A row is [mnemonic, fixed bits, assembler operands]; the operands' fields give the bits and
+// the encoder's arguments in order: encoder("lw")(rd, offset, base) for "xd, i12(x1)". Keys replace "." by "_".
+// Registers are numbers of registers.js (f_n = 32 + n); an encoder throws on the other class. An omitted rm is 7
+// (dynamic), as GNU as assembles it. tests/compiler/typed-rv32-encoding.test.mjs checks every row against GNU as;
+// encoding/assembly.js (not bundled) writes a row's assembler text. QuickJS keeps every function's source, so the
+// comments here are short.
 
-const ROUNDING = ["rne", "rtz", "rdn", "rup", "rmm", , , "dyn"];
 const CSR = {fflags: 1, frm: 2, fcsr: 3};
 
 function wrongClass(field, r) { return new TypeError("RV32 " + field + " operand is not " + (field[0] === "f" ? "a float" : "an integer") + " register: " + r); }
@@ -98,9 +76,8 @@ const espField = (field, shift) => r => {
 // A PIE post-increment: imm / scale as a signed 8-bit value, bit 0 at 9, bits 1-4 at 20-23, bits 5-7 at 28-30.
 const espStep = scale => imm => { const k = imm / scale; return ((k & 1) << 9) | (((k >> 1) & 15) << 20) | (((k >> 5) & 7) << 28); };
 
-// The fields an operand string may name. Register fields: x/f for the class, d (rd, bit 7), 1 (rs1, bit 15),
-// 2 (rs2, bit 20), 3 (rs3, bit 27). The PIE fields: qu/qv/qx/qy/qm the vector registers q0-q7 of the
-// respective instruction forms, er/ed a PIE address register at bit 15/7, e2/e16 a post-increment.
+// Fields: x/f + d, 1, 2, 3 (rd, rs1, rs2, rs3); PIE: qu/qv/qx/qy/qm the q register of each form, er/ed an
+// address register at bit 15/7, e2/e16 a post-increment.
 const INSTRUCTION_FIELDS = {
     xd: xField("xd", 7), x1: xField("x1", 15), x2: xField("x2", 20),
     fd: fField("fd", 7), f1: fField("f1", 15), f2: fField("f2", 20), f3: fField("f3", 27),
@@ -156,10 +133,12 @@ const INSTRUCTION_ROWS = [
     ["esp.vldbc.16.ip", 0x8600203b, "qu, er, e2"], ["esp.vld.128.ip", 0x0200203b, "qu, er, e16"],
     ["esp.vst.128.ip", 0x8200203b, "qu, er, e16"], ["esp.vsub.s16", 0x028406df, "qv, qx, qy"],
     ["esp.min.u16.a", 0x9090505b, "qm, ed"],
-].map(([mnemonic, match, operands]) => ({mnemonic, key: mnemonic.replaceAll(".", "_"), match, operands,
-    fields: operands.match(/[a-z]+\d*/g) ?? []}));
+];
 
-function encoder({match, fields}) {
+const instructionKey = mnemonic => mnemonic.replaceAll(".", "_");
+const instructionFields = operands => operands.match(/[a-z]+\d*/g) ?? [];
+
+function makeEncoder(match, fields) {
     const [a, b, c, d, e] = fields.map(name => INSTRUCTION_FIELDS[name]);
     switch (fields.length) {
     case 0: return () => match >>> 0;
@@ -170,31 +149,23 @@ function encoder({match, fields}) {
     default: return (p, q, r, s, t) => (match | a(p) | b(q) | c(r) | d(s) | e(t)) >>> 0;
     }
 }
-const ENCODE = Object.create(null);
-for (const row of INSTRUCTION_ROWS) ENCODE[row.key] = encoder(row);
+// encoder(key): a row's encoder, made on first use and kept (all 85 at load cost QuickJS 35 KB).
+const ENCODERS = Object.create(null);
+function encoder(key) {
+    const known = ENCODERS[key];
+    if (known) return known;
+    const row = INSTRUCTION_ROWS.find(([mnemonic]) => instructionKey(mnemonic) === key);
+    if (!row) throw new TypeError("no RV32 instruction " + key);
+    return ENCODERS[key] = makeEncoder(row[1], instructionFields(row[2]));
+}
 
-// Class-aware moves, loads and stores of one 32-bit value (the emitters' load, store and move use these).
+// Class-aware move, load and store of one word; the integer forms through the formats of registers.js.
 function moveWord(to, from) {
-    if (to < 32) return from < 32 ? ENCODE.addi(to, from, 0) : ENCODE.fmv_x_w(to, from);
-    return from < 32 ? ENCODE.fmv_w_x(to, from) : ENCODE.fsgnj_s(to, from, from);
+    if (to < 32) return from < 32 ? instruction.i(0x13, to, 0, from, 0) >>> 0 : encoder("fmv_x_w")(to, from);
+    return from < 32 ? encoder("fmv_w_x")(to, from) : encoder("fsgnj_s")(to, from, from);
 }
-const loadWord = (reg, offset, base) => reg < 32 ? ENCODE.lw(reg, offset, base) : ENCODE.flw(reg, offset, base);
-const storeWord = (reg, offset, base) => reg < 32 ? ENCODE.sw(reg, offset, base) : ENCODE.fsw(reg, offset, base);
-
-// The GNU as text of a row with the given encoder arguments (registers by number, q registers as 0-7, rm by
-// number or undefined for the default; a branch or jump offset relative to the instruction): for tests and tools.
-function assembly(row, args) {
-    let k = 0;
-    const text = row.operands.replace(/[a-z]+\d*/g, field => {
-        const v = args[k++];
-        if (field === "rm") return v === undefined ? "" : ROUNDING[v];
-        if (/^[xf][d123]$|^e[rd]$/.test(field)) return REGISTER_NAMES[v];
-        if (field[0] === "q") return "q" + v;
-        if (field === "b13" || field === "j21") return (v < 0 ? ".-" : ".+") + Math.abs(v);
-        return String(v);
-    });
-    return (row.mnemonic + " " + text.replace(/, $/, "")).trim();
-}
+const loadWord = (reg, offset, base) => reg < 32 ? instruction.i(0x03, reg, 2, base, offset) >>> 0 : encoder("flw")(reg, offset, base);
+const storeWord = (reg, offset, base) => reg < 32 ? instruction.s(2, base, reg, offset) >>> 0 : encoder("fsw")(reg, offset, base);
 
 // rv32/encoding/tape.js
 // The tape's opcodes, block types, effects and walkers (compiler/typed/tape.js, loaded first).
@@ -566,9 +537,7 @@ class BranchMethods {
 class CallMethods {
     call(index) {
         const callee = this.functions[index], count = callee.params.length;
-        // ilp32f: integer arguments in a0-a7, f32 arguments in fa0-fa7. The operand stack holds every value in
-        // an integer register (PICOCALC-TYPED-F32 decides otherwise), so an f32 argument moves across (fmv.w.x)
-        // and an f32 result back (fmv.x.w). The registers are computed once per callee (registers.js).
+        // ilp32f; the operand stack is x registers, so an f32 argument or result crosses with fmv.
         const incoming = calleeRegisters(callee);
         for (let i = count - 1; i >= 0; i--) {
             const arg = incoming[i];
@@ -1759,7 +1728,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
         if (guarded === true || guarded(fn.name)) ctx.Emitter = GuardedReturnCode;
     }});
     if (mode !== undefined) inlined.push({name: "pie", terminal: true,
-        run: (fn, ctx) => typedPieLoops.lower(fn, callables, targets, mode, ctx.Emitter, ENCODE)});
+        run: (fn, ctx) => typedPieLoops.lower(fn, callables, targets, mode, ctx.Emitter, encoder)});
     stages.unshift(...inlined, {name: "inline", checkpoint: true});
 
     // timing: an array that receives {fn, pass, ms, cells} for every stage a function runs (cells: the

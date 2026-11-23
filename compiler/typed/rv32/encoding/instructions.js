@@ -1,17 +1,12 @@
-// The instruction table: every instruction the RV32 backend may emit, as one row each, and ENCODE, an encoder
-// per row. RV32IM, the Zicsr instructions (the backend touches only fflags, frm and fcsr), all of RV32F and the
-// Espressif PIE instructions of typed-pie-loops.js. tests/compiler/typed-rv32-encoding.test.mjs assembles every
-// row with GNU as from the ESP toolchain and compares the words.
-//
-// A row is [mnemonic, match, operands]: match holds the fixed bits, and operands is the instruction's assembler
-// syntax, whose fields (below) give both the bits and the encoder's arguments, in the order they appear:
-// ENCODE.lw(rd, offset, base) for "xd, i12(x1)", ENCODE.fadd_s(rd, a, b, rm) for "fd, f1, f2, rm". The key is
-// the mnemonic with "." replaced by "_". A register argument is a register number of encoding/registers.js
-// (f_n is 32 + n); an encoder throws when it gets a register of the other class. rm, the rounding mode, may be
-// omitted: it is then 7 (dynamic, frm), as GNU as assembles it.
-import {REGISTER_NAMES} from "./registers.js";
+// The instruction table: RV32IM, Zicsr, RV32F and the PIE words of typed-pie-loops.js, one row each, and encoder(),
+// an encoder per row. A row is [mnemonic, fixed bits, assembler operands]; the operands' fields give the bits and
+// the encoder's arguments in order: encoder("lw")(rd, offset, base) for "xd, i12(x1)". Keys replace "." by "_".
+// Registers are numbers of registers.js (f_n = 32 + n); an encoder throws on the other class. An omitted rm is 7
+// (dynamic), as GNU as assembles it. tests/compiler/typed-rv32-encoding.test.mjs checks every row against GNU as;
+// encoding/assembly.js (not bundled) writes a row's assembler text. QuickJS keeps every function's source, so the
+// comments here are short.
+import {instruction} from "./registers.js";
 
-export const ROUNDING = ["rne", "rtz", "rdn", "rup", "rmm", , , "dyn"];
 export const CSR = {fflags: 1, frm: 2, fcsr: 3};
 
 function wrongClass(field, r) { return new TypeError("RV32 " + field + " operand is not " + (field[0] === "f" ? "a float" : "an integer") + " register: " + r); }
@@ -25,9 +20,8 @@ const espField = (field, shift) => r => {
 // A PIE post-increment: imm / scale as a signed 8-bit value, bit 0 at 9, bits 1-4 at 20-23, bits 5-7 at 28-30.
 const espStep = scale => imm => { const k = imm / scale; return ((k & 1) << 9) | (((k >> 1) & 15) << 20) | (((k >> 5) & 7) << 28); };
 
-// The fields an operand string may name. Register fields: x/f for the class, d (rd, bit 7), 1 (rs1, bit 15),
-// 2 (rs2, bit 20), 3 (rs3, bit 27). The PIE fields: qu/qv/qx/qy/qm the vector registers q0-q7 of the
-// respective instruction forms, er/ed a PIE address register at bit 15/7, e2/e16 a post-increment.
+// Fields: x/f + d, 1, 2, 3 (rd, rs1, rs2, rs3); PIE: qu/qv/qx/qy/qm the q register of each form, er/ed an
+// address register at bit 15/7, e2/e16 a post-increment.
 export const INSTRUCTION_FIELDS = {
     xd: xField("xd", 7), x1: xField("x1", 15), x2: xField("x2", 20),
     fd: fField("fd", 7), f1: fField("f1", 15), f2: fField("f2", 20), f3: fField("f3", 27),
@@ -83,10 +77,12 @@ export const INSTRUCTION_ROWS = [
     ["esp.vldbc.16.ip", 0x8600203b, "qu, er, e2"], ["esp.vld.128.ip", 0x0200203b, "qu, er, e16"],
     ["esp.vst.128.ip", 0x8200203b, "qu, er, e16"], ["esp.vsub.s16", 0x028406df, "qv, qx, qy"],
     ["esp.min.u16.a", 0x9090505b, "qm, ed"],
-].map(([mnemonic, match, operands]) => ({mnemonic, key: mnemonic.replaceAll(".", "_"), match, operands,
-    fields: operands.match(/[a-z]+\d*/g) ?? []}));
+];
 
-function encoder({match, fields}) {
+export const instructionKey = mnemonic => mnemonic.replaceAll(".", "_");
+export const instructionFields = operands => operands.match(/[a-z]+\d*/g) ?? [];
+
+function makeEncoder(match, fields) {
     const [a, b, c, d, e] = fields.map(name => INSTRUCTION_FIELDS[name]);
     switch (fields.length) {
     case 0: return () => match >>> 0;
@@ -97,28 +93,20 @@ function encoder({match, fields}) {
     default: return (p, q, r, s, t) => (match | a(p) | b(q) | c(r) | d(s) | e(t)) >>> 0;
     }
 }
-export const ENCODE = Object.create(null);
-for (const row of INSTRUCTION_ROWS) ENCODE[row.key] = encoder(row);
+// encoder(key): a row's encoder, made on first use and kept (all 85 at load cost QuickJS 35 KB).
+const ENCODERS = Object.create(null);
+export function encoder(key) {
+    const known = ENCODERS[key];
+    if (known) return known;
+    const row = INSTRUCTION_ROWS.find(([mnemonic]) => instructionKey(mnemonic) === key);
+    if (!row) throw new TypeError("no RV32 instruction " + key);
+    return ENCODERS[key] = makeEncoder(row[1], instructionFields(row[2]));
+}
 
-// Class-aware moves, loads and stores of one 32-bit value (the emitters' load, store and move use these).
+// Class-aware move, load and store of one word; the integer forms through the formats of registers.js.
 export function moveWord(to, from) {
-    if (to < 32) return from < 32 ? ENCODE.addi(to, from, 0) : ENCODE.fmv_x_w(to, from);
-    return from < 32 ? ENCODE.fmv_w_x(to, from) : ENCODE.fsgnj_s(to, from, from);
+    if (to < 32) return from < 32 ? instruction.i(0x13, to, 0, from, 0) >>> 0 : encoder("fmv_x_w")(to, from);
+    return from < 32 ? encoder("fmv_w_x")(to, from) : encoder("fsgnj_s")(to, from, from);
 }
-export const loadWord = (reg, offset, base) => reg < 32 ? ENCODE.lw(reg, offset, base) : ENCODE.flw(reg, offset, base);
-export const storeWord = (reg, offset, base) => reg < 32 ? ENCODE.sw(reg, offset, base) : ENCODE.fsw(reg, offset, base);
-
-// The GNU as text of a row with the given encoder arguments (registers by number, q registers as 0-7, rm by
-// number or undefined for the default; a branch or jump offset relative to the instruction): for tests and tools.
-export function assembly(row, args) {
-    let k = 0;
-    const text = row.operands.replace(/[a-z]+\d*/g, field => {
-        const v = args[k++];
-        if (field === "rm") return v === undefined ? "" : ROUNDING[v];
-        if (/^[xf][d123]$|^e[rd]$/.test(field)) return REGISTER_NAMES[v];
-        if (field[0] === "q") return "q" + v;
-        if (field === "b13" || field === "j21") return (v < 0 ? ".-" : ".+") + Math.abs(v);
-        return String(v);
-    });
-    return (row.mnemonic + " " + text.replace(/, $/, "")).trim();
-}
+export const loadWord = (reg, offset, base) => reg < 32 ? instruction.i(0x03, reg, 2, base, offset) >>> 0 : encoder("flw")(reg, offset, base);
+export const storeWord = (reg, offset, base) => reg < 32 ? instruction.s(2, base, reg, offset) >>> 0 : encoder("fsw")(reg, offset, base);
