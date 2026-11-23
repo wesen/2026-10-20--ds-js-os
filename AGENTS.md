@@ -39,7 +39,7 @@ migration target. Earlier designs that chose C for speed or convenience, such as
 ## Build, test, measure
 
 ```sh
-make test                                   # Node, generated files, Go, the host binary's Python tests, cji
+make test                                   # Node, generated files, file lengths, Go, the host binary's Python tests, cji
 make test-host OPTIONS='{"policy":"kernel"}'  # ray frame, Chess oracle, 24 replays with one set of compile options
 make -C firmware shots                      # host simulator tours -> firmware/out/
 make firmware PROFILE=playable              # ESP-IDF v5.4.2; profiles in firmware/port/esp32p4/profiles/

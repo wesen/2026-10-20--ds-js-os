@@ -28,10 +28,12 @@ test: test-node test-generated test-go test-native test-cji
 test-node:
 	$(MAKE) -s -C firmware test-apps
 
-# Generated files that are tracked must equal what their generator writes now.
+# Generated files that are tracked must equal what their generator writes now; no source file is over 500 lines
+# unless tools/file-length-exceptions.txt lists it with a reason.
 test-generated:
 	node compiler/typed/rv32/build.mjs --check
 	node tools/gen/candela/regenerate.mjs --check
+	node tools/check-file-length.mjs
 
 test-go:
 	go test ./...
