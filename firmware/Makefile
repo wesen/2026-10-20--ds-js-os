@@ -157,6 +157,7 @@ test-apps:
 	$(NODE) ../tests/apps/sysapps.test.mjs
 	$(NODE) ../tests/compiler/typed-rv32.test.mjs
 	$(NODE) ../tests/compiler/typed-wasm-inspect.test.mjs
+	$(NODE) ../tests/compiler/typed-async.test.mjs
 	$(NODE) ../tests/compiler/typed-inspect.test.mjs
 	$(NODE) ../tests/compiler/typed-pie-loops.test.mjs
 	$(NODE) ../tests/compiler/typed-tape.test.mjs
