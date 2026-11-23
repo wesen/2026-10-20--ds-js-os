@@ -14,10 +14,11 @@
 //
 // Two kernel arms render the same scenes (PICOCALC-CANDELA-TYPED): "cpp", the generated C++ kernel with the section
 // interpreter (cg, cgs), and, with PICOCALC_CANDELA_TYPED, "typed", the kernel and sections in Typed compiled to RV32
-// on the handheld (candela_typed_p4.c: cgt, cgts). The gallery draws with ARM_DEFAULT (C++) unless the console
-// chooses (gallery arm typed). Typed's program is compiled on its first use after a firmware update and read from the
-// compiled-module cache afterwards; while it loads, the gallery draws with C++ and the caption says so, and the next
-// scene after it is ready draws with Typed. "scene" records name the arm that drew the scene.
+// on the handheld (candela_typed_p4.c: cgt, cgts). The gallery draws with ARM_DEFAULT, Typed where the firmware has
+// it, unless the console chooses. Typed's program is compiled on its first use after a firmware update (114 s on the
+// device, in the background) and read from the compiled-module cache afterwards (0.3 s); while it loads, the gallery
+// draws with C++ and the caption says so, and the next scene after it is ready draws with Typed. "scene" records name
+// the arm that drew the scene.
 //
 // UART records, one JSON object per line after "CGAL ": scene (when a scene ends), first (its first image), pass,
 // digest (console: gallery digest ID PASSES [psram|internal|quiet] [typed|cpp]), status, error. Console: gallery
@@ -45,7 +46,7 @@ static const char *const ARM[] = {"cpp", "typed"};
 extern const cg_instance cgt_gallery, cgts_gallery;
 #define ARMS 2
 #ifndef ARM_DEFAULT
-#define ARM_DEFAULT ARM_CPP   // Typed once its program compiles beside the running system (PICOCALC-COMPILE-CACHE)
+#define ARM_DEFAULT ARM_TYPED   // C++ stays selectable as the benchmark (PICOCALC-COMPILE-CACHE)
 #endif
 #else
 #define ARMS 1
