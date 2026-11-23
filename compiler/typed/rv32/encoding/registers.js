@@ -28,20 +28,30 @@ export const OPERAND_STACKS = [STACK_REGISTERS, F_STACK];
 // A callee-saved register (of either class) that the planner may claim as a home.
 export const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27) || reg === 40 || reg === 41 || (reg >= 50 && reg <= 59);
 
-// Each parameter's incoming register: integers take a0-a7, f32 fa0-fa7, each class in order.
+// Each parameter's incoming location, as ilp32f passes it: integers take a0-a7 and f32 fa0-fa7, each class in order; an
+// f32 beyond fa7 takes the next free integer register (its bits); a parameter with no register left takes the next
+// stack word k, at the caller's sp + 4k, written here as -1 - k. out.stack is the number of stack words.
 export function argumentRegisters(types) {
     const out = new Array(types.length);
-    let x = 0, f = 0;
+    let x = 0, f = 0, k = 0;
     for (let i = 0; i < types.length; i++) {
-        if (types[i] === "f32") out[i] = FA0 + f++;
-        else out[i] = A0 + x++;
+        if (types[i] === "f32" && f < 8) out[i] = FA0 + f++;
+        else if (x < 8) out[i] = A0 + x++;
+        else out[i] = -1 - k++;
     }
-    if (x > 8 || f > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
+    out.stack = k;
     return out;
 }
 
 // argumentRegisters of a descriptor, cached on it (fn.registers): every call site asks for its callee's.
 export const calleeRegisters = fn => fn.registers ??= argumentRegisters(fn.params);
+
+// Whether parameter p of fn arrives in a register of its own class (not on the stack, not an f32 in an x register):
+// only such a parameter may stay in its incoming register or feed the prologue's capacity and pointer homes.
+export const inOwnRegister = (fn, p) => {
+    const reg = calleeRegisters(fn)[p];
+    return reg >= 0 && reg >> 5 === typeClass(fn.params[p]);
+};
 
 export const instruction = {
     r: (op, rd, f3, a, b, f7 = 0) => (f7 << 25) | (b << 20) | (a << 15) | (f3 << 12) | (rd << 7) | op,

@@ -216,27 +216,45 @@ export class FunctionCode {
         const count = this.program.params.length;
         const incoming = calleeRegisters(this.program);
         const saved = this.frameless ? [] : this.savedRegisters();
+        // The stack-argument area of the calls this function makes, at the bottom of the frame (ilp32f: the caller's
+        // sp + 4k): the slots start above it.
+        const outgoing = this.frameless ? 0 : this.outgoingWords(), base = 4 * outgoing;
         // A large frame (more locals than sp's 12-bit offsets reach, PICOCALC-CANDELA-TYPED): ra, s0 and the saved
-        // registers at the bottom, the locals and spills above them, and s0 = sp + 2032 as the base of every slot at
-        // 2032 or more (load/store pick the base). Only functions with that many locals take this form.
-        this.large = !this.frameless && 4 * (this.locals + saved.length + 2) > LARGE_FRAME_LOCALS;
+        // registers at the bottom (above the stack-argument area), the locals and spills above them, and s0 = sp + 2032
+        // as the base of every slot at 2032 or more (load/store pick the base). Only functions with that many locals
+        // take this form.
+        this.large = !this.frameless && 4 * (outgoing + this.locals + saved.length + 2) > LARGE_FRAME_LOCALS;
         if (this.large) {
-            this.slotBase = 8 + 4 * saved.length;
+            this.slotBase = base + 8 + 4 * saved.length;
             this.emit(0);
             this.emit(0);
             this.emit(instruction.r(0x33, SP, 0, SP, T5, 0x20));
-            this.emit(instruction.s(2, SP, RA, 0));
-            this.emit(instruction.s(2, SP, S0, 4));
-            for (let k = 0; k < saved.length; k++) this.emit(storeWord(saved[k], 8 + 4 * k, SP));
+            this.emit(instruction.s(2, SP, RA, base));
+            this.emit(instruction.s(2, SP, S0, base + 4));
+            for (let k = 0; k < saved.length; k++) this.emit(storeWord(saved[k], base + 8 + 4 * k, SP));
             this.emit(instruction.i(0x13, S0, 0, SP, LARGE_BASE));
         } else if (!this.frameless) {
             // The frame size depends on the deepest spill, known only after the body, so the
             // prologue is emitted as placeholders and patched below.
             this.emit(0);
             this.emit(0);
+            if (outgoing) this.slotBase = base;
         }
         if (!this.large) for (let k = 0; k < saved.length; k++) this.emit(0);
-        for (let i = 0; i < count; i++) this.writeLocal(incoming[i], i);
+        for (let i = 0; i < count; i++) if (incoming[i] >= 0) this.writeLocal(incoming[i], i);
+        // Parameters on the stack (ilp32f, beyond the argument registers): from the caller's sp, t5 here, into their
+        // homes or slots.
+        if (incoming.stack) {
+            this.callerStack(T5);
+            for (let i = 0; i < count; i++) if (incoming[i] < 0) {
+                const home = this.locations?.homes.get(i), offset = 4 * (-1 - incoming[i]);
+                if (home !== undefined) this.load(home, offset, T5);
+                else {
+                    this.load(T6, offset, T5);
+                    this.store(T6, (this.slotBase ?? 0) + 4 * i);
+                }
+            }
+        }
         // Capacity homes belong to unwritten parameters, still in their argument registers here.
         for (const [id, reg] of this.locations?.homes ?? []) {
             if (typeof id === "string") {
@@ -264,10 +282,11 @@ export class FunctionCode {
             const lo = (frame << 20) >> 20;
             this.words[0] = (((frame - lo) & 0xfffff000) | (T5 << 7) | 0x37) >>> 0;
             this.words[1] = instruction.i(0x13, T5, 0, T5, lo) >>> 0;
+            this.patchCallerStacks(S0, frame - LARGE_BASE);
             this.mark(this.exit);
-            for (let k = 0; k < saved.length; k++) this.emit(loadWord(saved[k], 8 + 4 * k, SP));
-            this.emit(instruction.i(0x03, RA, 2, SP, 0));
-            this.emit(instruction.i(0x03, S0, 2, SP, 4));
+            for (let k = 0; k < saved.length; k++) this.emit(loadWord(saved[k], base + 8 + 4 * k, SP));
+            this.emit(instruction.i(0x03, RA, 2, SP, base));
+            this.emit(instruction.i(0x03, S0, 2, SP, base + 4));
             this.emit(((frame - lo) & 0xfffff000) | (T5 << 7) | 0x37);
             this.emit(instruction.i(0x13, T5, 0, T5, lo));
             this.emit(instruction.r(0x33, SP, 0, SP, T5));
@@ -275,8 +294,9 @@ export class FunctionCode {
             this.patchBranches();
             return this;
         }
-        const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
+        const frame = (4 * (outgoing + this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
+        this.patchCallerStacks(SP, frame);
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
         this.words[1] = instruction.s(2, SP, RA, frame - 4) >>> 0;
         for (let k = 0; k < saved.length; k++)
@@ -289,6 +309,11 @@ export class FunctionCode {
         this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
         this.patchBranches();
         return this;
+    }
+
+    // The caller's sp is the frame's top: sp + frame, or s0 + frame - 2032 in a large frame (callerStack).
+    patchCallerStacks(from, offset) {
+        for (const {at, reg} of this.callerStacks ?? []) this.words[at] = instruction.i(0x13, reg, 0, from, offset) >>> 0;
     }
 }
 mixin(FunctionCode, StackMethods, HomeMethods, AddressMethods, BranchMethods, ArithmeticMethods, CallMethods, FloatMethods);

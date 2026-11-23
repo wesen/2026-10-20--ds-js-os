@@ -77,9 +77,16 @@ function build(policy) {
 }
 
 test("ilp32f argument registers: integers in a0-a7, f32 in fa0-fa7, each class counted on its own", () => {
-    assert.deepEqual(argumentRegisters(["i32", "f32", "bool", "f32"]), [10, 42, 11, 43]);
-    assert.deepEqual(argumentRegisters(fn.params), [42, 43, 10]);
-    assert.throws(() => argumentRegisters(Array(9).fill("f32")), /eight register arguments/);
+    assert.deepEqual([...argumentRegisters(["i32", "f32", "bool", "f32"])], [10, 42, 11, 43]);
+    assert.deepEqual([...argumentRegisters(fn.params)], [42, 43, 10]);
+    // Beyond eight of a class (PICOCALC-TYPED-VALUES): an f32 takes the next integer register, then the stack words
+    // (-1 - k for word k); an integer the stack words.
+    const nine = argumentRegisters([...Array(9).fill("f32"), "i32"]);
+    assert.deepEqual([...nine], [42, 43, 44, 45, 46, 47, 48, 49, 10, 11]);
+    assert.equal(nine.stack, 0);
+    const spilled = argumentRegisters([...Array(9).fill("i32"), "f32", ...Array(9).fill("f32"), "i32"]);
+    assert.deepEqual([...spilled], [10, 11, 12, 13, 14, 15, 16, 17, -1, 42, 43, 44, 45, 46, 47, 48, 49, -2, -3, -4]);
+    assert.equal(spilled.stack, 4);
     assert.deepEqual(REGISTER_CLASSES[F].homes.map(r => r - 32), [8, 9, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]);
     assert(REGISTER_CLASSES[F].homes.every(isSavedRegister) && REGISTER_CLASSES[X].homes.every(isSavedRegister));
 });

@@ -167,3 +167,23 @@ Decisions taken against the code, in the order the features landed (diary steps 
   `div_u` by a constant; `hoist` moves an unsigned division only with a literal divisor, like a signed one; every
   other pass meets the rows inside the ranges it already tests (`I32_EQ..I32_GE_U`, `I32_ADD..I32_SHR_U`).
 - The P4's lexical index (`typed_lex_index.c`) learns `?`; `u32` and `continue` are words it already tokenizes.
+
+### More than eight parameters per class
+
+- **ilp32f exactly**, so that C could call any Typed function and the convention needs no second description: integers
+  in `a0`-`a7`, f32 in `fa0`-`fa7`; an f32 beyond `fa7` takes the next free integer register (the psABI's "passed
+  according to the integer calling convention"), and whatever finds no register takes the next 4-byte stack word, in
+  parameter order, at the caller's `sp + 4k`. `argumentRegisters` writes stack word k as `-1 - k` and counts them in
+  `.stack`; it no longer throws.
+- **The caller** reserves a stack-argument area at the bottom of its frame, as large as its largest call needs
+  (`outgoingWords`, a walk of the tape's calls that a program without stack words skips), and stores those arguments
+  there just before the call (`sw`/`fsw` from the operand stack). Slots move up by the area (`slotBase`); a large frame
+  puts `ra`, `s0` and the saved registers above it. The arguments are written only at the `call` itself, so a call
+  among the arguments of another cannot overwrite them.
+- **The callee** copies its stack parameters into their homes (`lw`/`flw`) or slots in the prologue, from the caller's
+  sp computed as `addi t5, sp, frame` (or `addi t5, s0, frame - 2032` in a large frame), a placeholder patched once the
+  frame is known. Copying costs one or two instructions per stack parameter per call; addressing them in place would
+  need every slot access patched with the frame size.
+- The planner keeps no stack parameter, and no f32 that arrived in an integer register, in its incoming register
+  (`inOwnRegister`), and builds capacity and pointer homes only from parameters that did arrive in their own class's
+  register. A leaf with more than eight parameters was already declined.

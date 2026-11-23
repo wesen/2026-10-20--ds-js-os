@@ -35,20 +35,30 @@ const OPERAND_STACKS = [STACK_REGISTERS, F_STACK];
 // A callee-saved register (of either class) that the planner may claim as a home.
 const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27) || reg === 40 || reg === 41 || (reg >= 50 && reg <= 59);
 
-// Each parameter's incoming register: integers take a0-a7, f32 fa0-fa7, each class in order.
+// Each parameter's incoming location, as ilp32f passes it: integers take a0-a7 and f32 fa0-fa7, each class in order; an
+// f32 beyond fa7 takes the next free integer register (its bits); a parameter with no register left takes the next
+// stack word k, at the caller's sp + 4k, written here as -1 - k. out.stack is the number of stack words.
 function argumentRegisters(types) {
     const out = new Array(types.length);
-    let x = 0, f = 0;
+    let x = 0, f = 0, k = 0;
     for (let i = 0; i < types.length; i++) {
-        if (types[i] === "f32") out[i] = FA0 + f++;
-        else out[i] = A0 + x++;
+        if (types[i] === "f32" && f < 8) out[i] = FA0 + f++;
+        else if (x < 8) out[i] = A0 + x++;
+        else out[i] = -1 - k++;
     }
-    if (x > 8 || f > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
+    out.stack = k;
     return out;
 }
 
 // argumentRegisters of a descriptor, cached on it (fn.registers): every call site asks for its callee's.
 const calleeRegisters = fn => fn.registers ??= argumentRegisters(fn.params);
+
+// Whether parameter p of fn arrives in a register of its own class (not on the stack, not an f32 in an x register):
+// only such a parameter may stay in its incoming register or feed the prologue's capacity and pointer homes.
+const inOwnRegister = (fn, p) => {
+    const reg = calleeRegisters(fn)[p];
+    return reg >= 0 && reg >> 5 === typeClass(fn.params[p]);
+};
 
 const instruction = {
     r: (op, rd, f3, a, b, f7 = 0) => (f7 << 25) | (b << 20) | (a << 15) | (f3 << 12) | (rd << 7) | op,
@@ -568,11 +578,17 @@ class BranchMethods {
 class CallMethods {
     call(index) {
         const callee = this.functions[index], count = callee.params.length;
-        // ilp32f: integer arguments in a0-a7, f32 in fa0-fa7, each popped from its class's operand stack.
+        // ilp32f: integer arguments in a0-a7, f32 in fa0-fa7, each popped from its class's operand stack; an f32
+        // beyond fa7 in the next integer register; the rest in the stack words at sp + 4k (outgoingWords).
         const incoming = calleeRegisters(callee);
         for (let i = count - 1; i >= 0; i--) {
-            const arg = incoming[i];
-            this.move(arg, this.pop(arg));
+            const arg = incoming[i], cls = typeClass(callee.params[i]);
+            if (arg >= 0 && arg >> 5 === cls) this.move(arg, this.pop(arg));
+            else {
+                const value = this.pop(cls ? FT10 : T5);
+                if (arg >= 0) this.move(arg, value);
+                else this.store(value, 4 * (-1 - arg));
+            }
         }
         // Only the values below the arguments survive the call. A pending direct read stays in
         // its home: a function that calls keeps homes only in callee-saved registers.
@@ -591,6 +607,26 @@ class CallMethods {
         this.push(callee.result === "f32" ? FA0 : A0);
     }
 
+
+    // The words of the stack-argument area at the bottom of the frame: the most any call of this function passes on
+    // the stack. A program none of whose functions takes a stack word skips the walk.
+    outgoingWords() {
+        const functions = this.functions;
+        functions.stackWords ??= functions.reduce((most, fn) => Math.max(most, calleeRegisters(fn).stack), 0);
+        if (!functions.stackWords) return 0;
+        const tape = this.program.code;
+        let words = 0;
+        for (let at = 0; at < tape.length; at += 1 + CELLS[tape[at]])
+            if (tape[at] === CALL) words = Math.max(words, calleeRegisters(functions[tape[at + 1]]).stack);
+        return words;
+    }
+
+    // reg = the caller's sp, where the incoming stack words are: a placeholder lower() patches once the frame is known.
+    callerStack(reg) {
+        this.usesFrame = true;
+        (this.callerStacks ??= []).push({at: this.words.length, reg});
+        this.emit(0);
+    }
 
     // Callee-saved registers that the plan uses as homes, saved below the return address.
     savedRegisters() {
@@ -1216,27 +1252,45 @@ class FunctionCode {
         const count = this.program.params.length;
         const incoming = calleeRegisters(this.program);
         const saved = this.frameless ? [] : this.savedRegisters();
+        // The stack-argument area of the calls this function makes, at the bottom of the frame (ilp32f: the caller's
+        // sp + 4k): the slots start above it.
+        const outgoing = this.frameless ? 0 : this.outgoingWords(), base = 4 * outgoing;
         // A large frame (more locals than sp's 12-bit offsets reach, PICOCALC-CANDELA-TYPED): ra, s0 and the saved
-        // registers at the bottom, the locals and spills above them, and s0 = sp + 2032 as the base of every slot at
-        // 2032 or more (load/store pick the base). Only functions with that many locals take this form.
-        this.large = !this.frameless && 4 * (this.locals + saved.length + 2) > LARGE_FRAME_LOCALS;
+        // registers at the bottom (above the stack-argument area), the locals and spills above them, and s0 = sp + 2032
+        // as the base of every slot at 2032 or more (load/store pick the base). Only functions with that many locals
+        // take this form.
+        this.large = !this.frameless && 4 * (outgoing + this.locals + saved.length + 2) > LARGE_FRAME_LOCALS;
         if (this.large) {
-            this.slotBase = 8 + 4 * saved.length;
+            this.slotBase = base + 8 + 4 * saved.length;
             this.emit(0);
             this.emit(0);
             this.emit(instruction.r(0x33, SP, 0, SP, T5, 0x20));
-            this.emit(instruction.s(2, SP, RA, 0));
-            this.emit(instruction.s(2, SP, S0, 4));
-            for (let k = 0; k < saved.length; k++) this.emit(storeWord(saved[k], 8 + 4 * k, SP));
+            this.emit(instruction.s(2, SP, RA, base));
+            this.emit(instruction.s(2, SP, S0, base + 4));
+            for (let k = 0; k < saved.length; k++) this.emit(storeWord(saved[k], base + 8 + 4 * k, SP));
             this.emit(instruction.i(0x13, S0, 0, SP, LARGE_BASE));
         } else if (!this.frameless) {
             // The frame size depends on the deepest spill, known only after the body, so the
             // prologue is emitted as placeholders and patched below.
             this.emit(0);
             this.emit(0);
+            if (outgoing) this.slotBase = base;
         }
         if (!this.large) for (let k = 0; k < saved.length; k++) this.emit(0);
-        for (let i = 0; i < count; i++) this.writeLocal(incoming[i], i);
+        for (let i = 0; i < count; i++) if (incoming[i] >= 0) this.writeLocal(incoming[i], i);
+        // Parameters on the stack (ilp32f, beyond the argument registers): from the caller's sp, t5 here, into their
+        // homes or slots.
+        if (incoming.stack) {
+            this.callerStack(T5);
+            for (let i = 0; i < count; i++) if (incoming[i] < 0) {
+                const home = this.locations?.homes.get(i), offset = 4 * (-1 - incoming[i]);
+                if (home !== undefined) this.load(home, offset, T5);
+                else {
+                    this.load(T6, offset, T5);
+                    this.store(T6, (this.slotBase ?? 0) + 4 * i);
+                }
+            }
+        }
         // Capacity homes belong to unwritten parameters, still in their argument registers here.
         for (const [id, reg] of this.locations?.homes ?? []) {
             if (typeof id === "string") {
@@ -1264,10 +1318,11 @@ class FunctionCode {
             const lo = (frame << 20) >> 20;
             this.words[0] = (((frame - lo) & 0xfffff000) | (T5 << 7) | 0x37) >>> 0;
             this.words[1] = instruction.i(0x13, T5, 0, T5, lo) >>> 0;
+            this.patchCallerStacks(S0, frame - LARGE_BASE);
             this.mark(this.exit);
-            for (let k = 0; k < saved.length; k++) this.emit(loadWord(saved[k], 8 + 4 * k, SP));
-            this.emit(instruction.i(0x03, RA, 2, SP, 0));
-            this.emit(instruction.i(0x03, S0, 2, SP, 4));
+            for (let k = 0; k < saved.length; k++) this.emit(loadWord(saved[k], base + 8 + 4 * k, SP));
+            this.emit(instruction.i(0x03, RA, 2, SP, base));
+            this.emit(instruction.i(0x03, S0, 2, SP, base + 4));
             this.emit(((frame - lo) & 0xfffff000) | (T5 << 7) | 0x37);
             this.emit(instruction.i(0x13, T5, 0, T5, lo));
             this.emit(instruction.r(0x33, SP, 0, SP, T5));
@@ -1275,8 +1330,9 @@ class FunctionCode {
             this.patchBranches();
             return this;
         }
-        const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
+        const frame = (4 * (outgoing + this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
+        this.patchCallerStacks(SP, frame);
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
         this.words[1] = instruction.s(2, SP, RA, frame - 4) >>> 0;
         for (let k = 0; k < saved.length; k++)
@@ -1289,6 +1345,11 @@ class FunctionCode {
         this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
         this.patchBranches();
         return this;
+    }
+
+    // The caller's sp is the frame's top: sp + frame, or s0 + frame - 2032 in a large frame (callerStack).
+    patchCallerStacks(from, offset) {
+        for (const {at, reg} of this.callerStacks ?? []) this.words[at] = instruction.i(0x13, reg, 0, from, offset) >>> 0;
     }
 }
 mixin(FunctionCode, StackMethods, HomeMethods, AddressMethods, BranchMethods, ArithmeticMethods, CallMethods, FloatMethods);
@@ -1481,8 +1542,9 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reus
         // An incoming register the leaf may keep: not a0 (the emitter's scratch), not a7 while it caches a capacity.
         // fa0 is only ever written by a return, so an f32 parameter may stay there, the first one included.
         const floating = floatingFunction(fn), a0 = floating && a0Free(fn.code);
-        const keeps = reg => (reg !== A0 || a0) && !(capacityCached && reg === A0 + 7);
-        for (let p = 0; p < fn.params.length; p++) if (keeps(incoming[p]) && (scores.get(p) ?? 0) >= 2) {
+        // A parameter on the stack, or an f32 in an x register, has no incoming register to keep.
+        const keeps = p => inOwnRegister(fn, p) && (incoming[p] !== A0 || a0) && !(capacityCached && incoming[p] === A0 + 7);
+        for (let p = 0; p < fn.params.length; p++) if (keeps(p) && (scores.get(p) ?? 0) >= 2) {
             homes.set(p, incoming[p]);
             opened.push({reg: incoming[p], cls: keyClass(fn, p), spans: [span(p)]});
         }
@@ -1498,7 +1560,7 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reus
         // written in the body, may take it: parameter, capacity and pointer homes are filled in
         // the prologue, from the incoming registers (RAY-PARITY Step 21).
         if (reuseArgs) for (let p = 1; p < fn.params.length; p++)
-            if (!homes.has(p) && keeps(incoming[p])) free.push({reg: incoming[p], cls: keyClass(fn, p), cost: 0, localsOnly: true});
+            if (!homes.has(p) && keeps(p)) free.push({reg: incoming[p], cls: keyClass(fn, p), cost: 0, localsOnly: true});
     }
     for (const {id, homes: saved} of REGISTER_CLASSES) if (!closed[id]) for (const reg of saved) free.push({reg, cls: id, cost: 2});
     for (const [id, score] of [...scores].sort((a, b) => b[1] - a[1])) {
@@ -1667,7 +1729,7 @@ function planLocations(fn, options, inlineCall) {
     if (options.capacities) {
         receiver = undefined;
         for (const [local, uses] of capacityUses)
-            if (local < fn.params.length && !writes.has(local) && uses > 1) scores.set(-1 - local, uses - 1);
+            if (local < fn.params.length && inOwnRegister(fn, local) && !writes.has(local) && uses > 1) scores.set(-1 - local, uses - 1);
     }
     const forward = new Set(), homes = new Map();
     if (options.forward) for (const {id, at} of candidates) {
@@ -1703,6 +1765,8 @@ function planLocations(fn, options, inlineCall) {
         const params = fn.params.length;
         for (const access of pointerAccesses) {
             if (!forward.has(access.at) || access.r >= params || readEarly.has(access.L) || readEarly.has(access.M)) continue;
+            // The prologue makes a pointer home from the incoming registers: no parameter on the stack takes part.
+            if (!inOwnRegister(fn, access.r) || [access.L, access.M].some(x => x < params && !inOwnRegister(fn, x))) continue;
             const key = "p" + access.r + ":" + access.L + (access.M === undefined ? "" : "+" + access.M);
             if (!groups.has(key)) groups.set(key, {r: access.r, L: access.L, M: access.M, list: []});
             groups.get(key).list.push(access);

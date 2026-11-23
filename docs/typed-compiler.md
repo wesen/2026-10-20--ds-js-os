@@ -283,7 +283,13 @@ A register is a number: `0`-`31` are `x0`-`x31`, `32`-`63` are `f0`-`f31`, so `r
 keeps the plain numbers it always had (`rv32/encoding/registers.js`). `REGISTER_CLASSES` holds, per class, the ilp32f
 tables: argument registers (`a0`-`a7`, `fa0`-`fa7`), callee-saved registers, the homes the planner may claim (`s1`-`s11`;
 `fs0`-`fs11`), the operand-stack and scratch registers. `argumentRegisters(params)` assigns integer and `f32` parameters
-to their classes independently. The planner gives each key the class of its type (`fn.params`, `fn.localTypes` for frame
+to their classes independently, as ilp32f does beyond eight of a class too: an `f32` after `fa7` takes the next free
+integer register (its bits), and a parameter with no register left takes the next stack word, written `-1 - k` for
+the word at the caller's `sp + 4k` (PICOCALC-TYPED-VALUES). A caller's frame starts with a stack-argument area as large
+as its largest call needs (`outgoingWords`; the slots and, in a large frame, `ra`, `s0` and the saved registers sit
+above it); a callee copies its stack parameters into their homes or slots in the prologue from the caller's `sp`
+(`callerStack`: `addi t5, sp, frame`, patched once the frame is known). A parameter on the stack, or an `f32` in an
+integer register, never stays in its incoming register and feeds no capacity or pointer home. The planner gives each key the class of its type (`fn.params`, `fn.localTypes` for frame
 locals) and plans each class with its own free list and the same rules; the emitter's `load`, `store` and `move` pick
 `flw`, `fsw`, `fmv.s`, `fmv.x.w` or `fmv.w.x` for a float register, the prologue saves claimed `fs` registers, a call
 passes `f32` arguments in `fa` registers and an `f32` result returns in `fa0`. The operand stack has a register file per
