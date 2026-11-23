@@ -363,3 +363,93 @@ you the user has power-cycled it; continue host-side work").
 
 ### Technical details
 - Events: `Ir Dr Dw I1mr D1mr D1mw ILmr DLmr DLmw`.
+
+## Step 6: The TYPED-PIPELINE pair on the host, arena churn, and arena parking
+
+Simulating TYPED-PIPELINE's own control and candidate showed what the earlier callgrind hid: the candidate's compile
+itself runs 1.1 % more instructions (Agenda), while its smaller bundle is cheaper to read, so the two cancelled in a
+count of whole rounds. Counting the embedder's heap calls then exposed a cost that is cheap on the host and dear on
+the P4: QuickJS returns a 4 KB arena the moment it empties and takes a new one when it needs it again, thousands of
+times per compile, by an amount that moves with whatever else the realm holds. Each is a TLSF allocation in PSRAM on
+the device. The compile now parks freed arenas and reuses them.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** item (2): find the cause of the slowdown, and fix it if it can be fixed.
+**Inferred user intent:** a mechanism, not a shrug.
+**Commit (code):** de8065d — "feat(p4): count a compile's calls to the port heap and the time inside them";
+7682d93 — "feat(p4): a compile reuses QuickJS's freed arenas instead of returning them to the PSRAM heap"
+
+### What I did
+- `scripts/13-cachesim-pipeline.sh`: e219349 (control) and 211383b (candidate) extracted with `git archive`, the
+  same simulated caches, Agenda (`interactive`, then reminder + entry, no imports) and Chess (`balanced`, a world).
+- `scripts/14-cg-diff.py`: per-function self-cost differences between two callgrind outputs; call counts of the
+  embedder functions from `callgrind_annotate --tree=caller`.
+- `scripts/15-qjs-arenas.c`: a device-like allocator (it does not maintain `malloc_size`, so no cycle collection, as
+  in `typed_p4.c`) counting mallocs, frees and reallocs during the compile only, with `PARK=1` the parking policy.
+- `typed_p4.c`: `heap: {mallocs, frees, reallocs, reused, us}` in TYPEDCOMPILE (cycle counter around each port heap
+  call); arena parking: requests of 3584..4096 bytes take 4096-byte blocks, up to 64 freed ones are parked and
+  reused, parked blocks stay counted as live, the teardown frees them.
+- Built the arm `cc6e0008` (7682d93: strip, kernel group, counters, parking) and the strip-source arm `d8071198`
+  (3f883ef with `COMPILER_STRIP` = `JS_STRIP_SOURCE`, built dirty and reverted).
+
+### Why
+- Equal instruction totals with a device-only slowdown pointed at a cost that is cheap per instruction on the host
+  and expensive on the P4: PSRAM misses, or calls into a heap that is cheap on glibc and not in ESP-IDF.
+
+### What worked
+- TYPED-PIPELINE pair, compile only (current QuickJS): Agenda 121.12 M -> 122.50 M instructions (+1.1 %), simulated
+  L2 data misses 113,153 -> 119,369 (+5.5 %); Chess 629.70 M -> 632.09 M (+0.38 %), L2 data misses -0.5 %, L2
+  instruction misses +4.9 %. Agenda's extra work: more objects and properties (`add_property` 8,647 -> 9,270 calls,
+  `JS_CreateProperty` 9,249 -> 9,923), more JS calls (`JS_CallInternal` 69,373 -> 69,632), and 1,032 -> 1,679 new
+  arenas (`js_malloc_new_arena`).
+- Current code, arenas created during one compile (host, default allocator): Agenda 2,559 (lazy, unstripped), 2,132
+  (all groups), 2,850 (lazy, stripped), 4,706 (all, stripped); Chess 4,110, 3,547, 4,033, 5,126.
+- Device-like allocator, compile only:
+
+| compile | strip | park | mallocs | frees | reallocs | reused | realm | peak |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Agenda | none | off | 3,708 | 3,688 | 1,456 | 0 | 905 KB | 2,477 KB |
+| Agenda | none | on | 2,242 | 2,159 | 1,456 | 1,466 | 920 KB | 2,499 KB |
+| Agenda | debug | off | 3,012 | 2,992 | 1,455 | 0 | 583 KB | 2,153 KB |
+| Agenda | debug | on | 2,244 | 2,160 | 1,456 | 768 | 590 KB | 2,173 KB |
+| Chess | none | off | 4,149 | 3,942 | 1,488 | 0 | 1,134 KB | 2,997 KB |
+| Chess | none | on | 1,955 | 1,684 | 1,488 | 2,194 | 1,148 KB | 3,026 KB |
+| Chess | debug | off | 3,266 | 3,053 | 1,488 | 0 | 679 KB | 2,559 KB |
+| Chess | debug | on | 1,961 | 1,684 | 1,488 | 1,305 | 687 KB | 2,590 KB |
+
+  Images identical in every run (Agenda 66,252 B, Chess 37,848 B). Stripping alone takes 324 KB (Agenda) and 438 KB
+  (Chess) off the host's compile peak.
+
+### What didn't work
+- `14-cg-diff.py` first summed the annotated call-tree sections and matched names carrying call counts (`JS_CallInternal'2
+  (69,632x)`), giving totals of 1.88 G; it now reads only the flat profile.
+- A zsh loop passed three group files as one argument (`typed-rv32-inline.js typed-rv32-loops.js typed-rv32-kernel.js:
+  No such file or directory`); the lazy rows above are unaffected, the all rows were not rerun.
+
+### What I learned
+- The earlier callgrind compared whole cached rounds: the candidate read 213 KB less bytecode and executed more in the
+  compile, and the totals matched. On the P4 reading bytecode is sequential and cheap per instruction; the compile is
+  pointer-chasing in PSRAM.
+- Arena churn is chaotic: it depends on which size classes sit near an arena boundary when the compile starts, i.e.
+  on everything the realm holds. That is why any change to the loaded bundles moves a compile's time by a fixed,
+  reproducible amount in either direction.
+
+### What was tricky to build
+- Parking must not change the heap cap's meaning: parked blocks stay in `live`, a reused block does not count twice,
+  and rounding arena requests up to 4096 bytes makes every parked block fit every arena request.
+
+### What warrants a second pair of eyes
+- `compile_free` parks any block whose usable size is 4096..4159, which includes a large block QuickJS asked for at
+  that size; it is reused for an arena or a large block of at most 4096 bytes, which fits.
+
+### What should be done in the future
+- The device decides: TYPEDCOMPILE's heap counters on the P4, parking off and on in one image (E4), and the boot
+  study arm.
+
+### Code review instructions
+- `git show 7682d93 -- firmware/port/esp32p4/main/typed_p4.c`; `scripts/15-qjs-arenas.c` build line in its header.
+
+### Technical details
+- QuickJS arena request: `sizeof(JSMallocArena)` (24 B on RV32) + n_blocks x block_size, n_blocks =
+  (4096 - 24) / block_size, so 3608..4096 bytes for block sizes up to 512.
