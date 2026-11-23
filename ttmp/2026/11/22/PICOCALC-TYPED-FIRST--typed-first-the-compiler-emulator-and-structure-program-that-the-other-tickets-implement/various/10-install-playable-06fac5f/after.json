@@ -1,0 +1,44 @@
+{
+  "build": "/home/manuel/.cache/picocalc/firmware/a5420d946215843916c5318b28f2a7b94c60ee8b33f8723ad098dd96101acb43",
+  "sha256": "a5420d946215843916c5318b28f2a7b94c60ee8b33f8723ad098dd96101acb43",
+  "health": {
+    "peripherals": "on",
+    "worlds": [
+      "agenda",
+      "chess",
+      "compositor",
+      "display",
+      "editor",
+      "files",
+      "keyboard",
+      "snake"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 5371195,
+      "relocate_us": 1352,
+      "native_us": 1428,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "i2c": {
+      "busyMs": 2055.2,
+      "transfers": 333,
+      "bytes": 1336,
+      "errors": 0
+    },
+    "spi": {
+      "busyMs": 205.05,
+      "transfers": 38,
+      "bytes": 896770,
+      "errors": 0
+    },
+    "restartingAfterSettle": []
+  }
+}
