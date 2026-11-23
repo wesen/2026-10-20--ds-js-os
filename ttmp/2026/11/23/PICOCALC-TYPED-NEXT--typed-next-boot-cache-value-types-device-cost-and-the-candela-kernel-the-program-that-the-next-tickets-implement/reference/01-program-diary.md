@@ -137,3 +137,27 @@ BOARD-HARNESS fixed and tested four harness defects and found a fifth. Its board
   3. the `--health-only` gate.
 
   Then release the other agents for board work.
+
+## Step 4: TYPED-VALUES merged; CANDELA-KERNEL-CODEGEN launched
+
+TYPED-VALUES delivered all seven language features on both targets with every host gate green and integer images byte-identical. Only its device check is outstanding, waiting on the board. I merged it and launched wave 2.
+
+### What I did
+
+- **Merged `worktree-agent-a78b28ed420b7fd04`** (`83dadd8` … `976fca5`). Clean merge; bundles current; `make test` exit 0; gates pass with both policies (ray `430f0d501659`, Chess 6,981 words, 25/25).
+- **Decisions the ticket made** (its design's Refinements):
+  - `value record Vec3 {…}`, constructed `Vec3(a, b, c)` and scalar-replaced by the front end; no pass sees a value record.
+  - Record results through Wasm multi-value, and on RV32 in a0–a7/fa0–fa7, then the caller's stack-argument area.
+  - `continue` through a block around the body.
+  - `?:` as `if (result T)`.
+  - `u32` as an i32 with unsigned operations.
+  - `new Float32Array(N)` local arrays, with counted-loop counters unchecked (proved in the front end).
+- **Effects it measured:**
+  - A Vec3 loop: 3,020 instructions against 5,124 for the memory-record workaround.
+  - Boot apps compile 1–7 % slower on host QuickJS. Chess is estimated at about 65 % of its deadline on the P4; the device check will settle it.
+- **Launched CANDELA-KERNEL-CODEGEN** (Opus, `xhigh`). Host steps first: regenerate, keep the three Candela checks, profile, then compiler work. The board study waits for the power cycle.
+
+### What warrants a second pair of eyes
+
+- **The TYPED-VALUES device check is now on the coordinator.** The next playable install, after the power cycle, must confirm every boot compile within 75 % of its deadline, Chess above all.
+- **A pre-existing bug the ticket found:** Wasm inspection crashes on `0xfc`-prefixed operations, so `i32(f32)` cannot be inspected through Wasm. It is a task.
