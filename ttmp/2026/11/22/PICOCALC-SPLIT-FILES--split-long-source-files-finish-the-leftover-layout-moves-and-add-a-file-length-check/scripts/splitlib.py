@@ -30,7 +30,7 @@ def lines_of(path):
     return (REPO / path).read_text().splitlines(keepends=True)
 
 
-def split(source, parts, moved=(), edits=None, dry=None):
+def split(source, parts, moved=(), edits=None, dry=None, post=()):
     dry = sys.argv[1:] == ["--dry-run"] if dry is None else dry
     assert sys.argv[1:] in ([], ["--dry-run"]), "usage: SCRIPT [--dry-run]"
     if not dry:
@@ -80,4 +80,23 @@ def split(source, parts, moved=(), edits=None, dry=None):
             text = text.replace(old, new)
         p.write_text(text)
         print("edited", path, len(reps), "replacements")
+    for cmd in post:   # e.g. goimports on the parts: imports are re-derived, never hand-copied
+        subprocess.run(cmd, cwd=REPO, check=True)
+        print("ran", " ".join(cmd))
     subprocess.run(["git", "add", *texts.keys(), *(edits or {}).keys()], cwd=REPO, check=True)
+
+
+def go_split(source, keep, parts, edits=None):
+    """Split a Go file: the source keeps the line ranges `keep`; each of `parts` ({path: (comment, ranges)}) gets the
+    package clause, the source's whole import block and its ranges; goimports then drops the imports a file does not
+    use (it never has to guess one)."""
+    src = lines_of(source)
+    pkg = next(l for l in src if l.startswith("package "))
+    a = next(i for i, l in enumerate(src) if l.startswith("import ("))
+    b = next(i for i in range(a, len(src)) if src[i] == ")\n")
+    imports = "".join(src[a:b + 1])
+    out = [Part(source, keep)]
+    for path, (comment, ranges) in parts.items():
+        out.append(Part(path, ranges, head=f"{pkg}\n{comment}\n\n{imports}\n"))
+    files = [source, *parts.keys()]
+    split(source, out, edits=edits, post=[["goimports", "-w", *files], ["gofmt", "-l", "-w", *files]])
