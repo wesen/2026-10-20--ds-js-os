@@ -1,5 +1,5 @@
 // wimport: a WebAssembly module that imports a function picocalc-os does not provide (as a module would that wants
-// to open files through WASI), for tests/test_native_worlds.py. The kernel must refuse it before any of its code runs.
+// to open files through WASI), for tests/native/test_native_worlds.py. The kernel must refuse it before any of its code runs.
 #include "nw.h"
 
 __attribute__((import_module("wasi_snapshot_preview1"), import_name("path_open")))

@@ -1,5 +1,5 @@
 /* rv32emu's parts (bench/emu): the machine's state and the interfaces between its files. main.c explains the
- * program; docs/rv32-executors.md gives its role next to the reference interpreter and pkg/tracerv32. */
+ * program; docs/rv32-executors.md gives its role next to the reference interpreter and tools/trace-repl/pkg/tracerv32. */
 #ifndef RV32EMU_MACHINE_H
 #define RV32EMU_MACHINE_H
 #define _GNU_SOURCE

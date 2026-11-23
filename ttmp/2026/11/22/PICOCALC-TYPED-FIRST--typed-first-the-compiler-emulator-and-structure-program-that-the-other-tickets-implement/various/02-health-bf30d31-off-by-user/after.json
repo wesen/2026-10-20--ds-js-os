@@ -1,0 +1,101 @@
+{
+  "build": "/home/manuel/.cache/picocalc/firmware/1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6",
+  "sha256": "1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6",
+  "health": {
+    "peripherals": "off by user",
+    "keyboard": "off by user",
+    "display": "off by user",
+    "worlds": {
+      "compositor": {
+        "engine": "native",
+        "file": "natives/compositor.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "snake": {
+        "engine": "native",
+        "file": "natives/snake.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "keyboard": {
+        "engine": "native",
+        "file": "natives/keyboard.elf",
+        "state": "waiting",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "display": {
+        "engine": "native",
+        "file": "natives/display.elf",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "files": {
+        "engine": "native",
+        "file": "files/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "editor": {
+        "engine": "native",
+        "file": "editor/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "agenda": {
+        "engine": "native",
+        "file": "agenda/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      },
+      "chess": {
+        "engine": "native",
+        "file": "chess/compiled.bin",
+        "state": "idle",
+        "restarts": 0,
+        "last_error": ""
+      }
+    },
+    "judged": [
+      "snake",
+      "files",
+      "editor",
+      "agenda",
+      "chess"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 5330306,
+      "relocate_us": 1336,
+      "native_us": 1427,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "i2c": {
+      "busyMs": 404492.61,
+      "transfers": 23340,
+      "bytes": 93460,
+      "errors": 23340
+    },
+    "spi": {
+      "busyMs": 1662.69,
+      "transfers": 614,
+      "bytes": 6627874,
+      "errors": 0
+    },
+    "restartingAfterSettle": []
+  }
+}

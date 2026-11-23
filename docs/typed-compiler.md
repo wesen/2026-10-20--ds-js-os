@@ -19,7 +19,7 @@ object on `globalThis`, and the loaders evaluate them in this order:
 
 Every loader lists them: `bench/lib/compiler.mjs` (all bench scripts), the tests in `tests/compiler/`,
 `compiler/typed/tools/typed-inspect.mjs`, `bench/board/stage.mjs` (the board app's cold compiles), the trace REPL's
-module table (`pkg/tracecompiler/compiler.go`) and the firmware, which bundles them as `typed/tape.js`, `typed/wasm.js`
+module table (`tools/trace-repl/pkg/tracecompiler/compiler.go`) and the firmware, which bundles them as `typed/tape.js`, `typed/wasm.js`
 and so on (`firmware/port/esp32p4/main/CMakeLists.txt`, `BUNDLE_EXTRA`) and evaluates them in `typed_p4.c`, keeping each
 file's QuickJS bytecode so that later compiles skip the parse.
 

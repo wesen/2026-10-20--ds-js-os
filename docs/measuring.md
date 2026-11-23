@@ -137,6 +137,6 @@ device-compiler tool, so one commit gives one app digest wherever it is built. `
 ## See also
 
 - `docs/typed-compiler-and-the-ray-tracer.md`: what the compiler optimizations are and how they were measured.
-- `cmd/trace-repl/doc/01-trace-repl-user-guide.md` (`trace-repl help trace-repl-user-guide`): the workbench that
+- `tools/trace-repl/doc/01-trace-repl-user-guide.md` (`trace-repl help trace-repl-user-guide`): the workbench that
   scores studies and queries compiler evidence.
 - `bench/README.md`: the directory map.

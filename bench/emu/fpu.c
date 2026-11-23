@@ -1,4 +1,4 @@
-/* rv32emu: RV32F on binary32 bit patterns, the same algorithm as pkg/tracerv32/fpu.go (uint64 significands with a
+/* rv32emu: RV32F on binary32 bit patterns, the same algorithm as tools/trace-repl/pkg/tracerv32/fpu.go (uint64 significands with a
  * sticky bit) and the semantics of the reference interpreter and the ESP32-P4 (bench/reference/rv32): the canonical
  * NaN for every NaN result, tininess after rounding, saturating conversions that raise NV alone. Every operation
  * ORs the flags it raises into fcsr. */

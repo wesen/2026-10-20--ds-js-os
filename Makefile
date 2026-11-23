@@ -29,11 +29,13 @@ test: test-node test-generated test-go test-native test-cji test-rv32
 test-node:
 	$(MAKE) -s -C firmware test-apps
 
-# Generated files that are tracked must equal what their generator writes now.
+# Generated files that are tracked must equal what their generator writes now; no source file is over 500 lines
+# unless tools/file-length-exceptions.txt lists it with a reason.
 test-generated:
 	node compiler/typed/rv32/build.mjs --check
 	node tools/gen/candela/regenerate.mjs --check
 	node bench/rv32/vectors.mjs --check
+	node tools/check-file-length.mjs
 
 test-go:
 	go test ./...
@@ -47,7 +49,7 @@ test-cji:
 	$(MAKE) -s -C compiler/cji test
 
 # The RV32 conformance suite (bench/reference/rv32, RV32F captured on the ESP32-P4) on the reference interpreter and
-# rv32emu; pkg/tracerv32 runs it in test-go. docs/rv32-executors.md.
+# rv32emu; tools/trace-repl/pkg/tracerv32 runs it in test-go. docs/rv32-executors.md.
 test-rv32:
 	node --test tests/rv32/conformance.test.mjs tests/rv32/rv32emu.test.mjs
 

@@ -68,3 +68,38 @@ Pure moves: `make test`, the host gates, `make -C firmware shots` byte-identical
 - **Moves and deletes** go through checked Python scripts in the ticket's `scripts/` (dry run, asserted counts), never shell one-liners.
 - **Diary.** Each ticket keeps `reference/01-diary.md` in the investigation format (Prompt Context, What I did, Why, What worked, What didn't work with exact errors, What I learned, What was tricky, What warrants a second pair of eyes, Future work, Code review instructions, Technical details), one step per milestone, with commit hashes.
 - **Commits** are focused, at validated boundaries, with the trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+
+## Refinements (2026-11-22)
+
+What the implementation found when it checked this design against the code (the diary has the evidence).
+
+- **The check** is `tools/check-file-length.mjs` with `tools/file-length-exceptions.txt` (`PATH -- REASON`, or
+  `DIR/** -- REASON`), run by `make test-generated`. Limit 500. A listed file that is gone or under the limit is an
+  error, so entries come off when their tickets land. Source means C/C++/assembly, JavaScript, Go, Python, Typed,
+  shell, Makefiles and CMakeLists.txt; Markdown and JSON are not checked. The table above started at 400 lines; the
+  files between 400 and 500 (`repo.go`, `install.c`, `agenda-wasm-world.mjs`, `test_native_worlds.py`, the two
+  Candela files) are not split.
+- **Over 500 and not in the table:** `tests/compiler/typed-rv32.test.mjs` (1,109; listed under TYPED-PIPELINE, whose
+  rv32 modules it tests and to which TAPE and PIPELINE both add tests), `tests/apps/calc.test.mjs` (goes with
+  `calc.js`), `compiler/typed/rv32/10-function-code.js` and `30-version-loops.js` (rv32 sources: TYPED-PIPELINE),
+  `firmware/nucleus/nucleus.h` (586, split here) and `apps/js/picocalc/system/agent.js` (569).
+- **query.js** is not split into goja modules: its 2,500 lines are one closure whose parts reference each other in
+  every direction. It becomes `pkg/traceapi/query/NN-*.js`, files that share one scope, joined by `install.go` in
+  file-name order, the pattern `compiler/typed/rv32/*.js` already uses.
+- **C files** get one internal header each (`vm_quickjs.h`, `kernel_internal.h`, `native_internal.h`, `vm_mqjs.h`):
+  the functions one part calls in another lose `static` there. `native.c`'s call helpers became `static inline`
+  instead, because a global `fail` would collide with the QuickJS binding's. `vm.c`'s one operation table became two
+  (`VM_OPS` in `vm_ops.c`, the system operations in `vm_sys.c`); `native.c`'s system-call switch lost its device cases
+  to `nat_syscall_device`, called just before it.
+- **QuickJS worlds stay one file.** `kernel.c`'s `add_world` reads the manifest entry's one `file` and evaluates it as
+  one script; the prelude has no module mechanism. A bundling step would leave a generated file just as long, and a
+  multi-file manifest entry is manifest work (PICOCALC-TYPED-APP-MANIFEST, which also changes the compositor's
+  ray-tracer and painter paths). Both compositors and `agent.js` are on the exception list for that reason.
+- **Deferred:** `firmware/sdk/typed/world.c` (528; four build lists, one of them the P4 `main/CMakeLists.txt` world
+  runtime) and `firmware/port/esp32p4/main/agent_p4.c` (648; Wi-Fi and HTTPS around some twenty file-scope statics,
+  listed in `main/CMakeLists.txt`) wait for PICOCALC-TYPED-APP-MANIFEST.
+- **The firmware's tests:** the Node tests go to `tests/apps/`, the Python tests and the agent fixtures to
+  `tests/native/`. The CJI fixtures (`firmware/tests/fixtures/cji-{grants,phase3}`) stay: they are inputs of the P4
+  build in `main/CMakeLists.txt`.
+- **The trace REPL** goes to `tools/trace-repl/` (the command, `doc/`, `examples/`) and `tools/trace-repl/pkg/trace*`;
+  `go.mod` stays at the root.

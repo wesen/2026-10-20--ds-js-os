@@ -1,4 +1,4 @@
-// probe: a native world that tries to leave its sandbox, for tests/test_native_worlds.py. Its name picks the attempt
+// probe: a native world that tries to leave its sandbox, for tests/native/test_native_worlds.py. Its name picks the attempt
 // (manifest entries probe_open, probe_socket, ... all run this binary); it logs what it is about to do, then does it.
 // Each attempt except alloc and stdio must kill the process; those two must fail inside it, and the world carries on.
 #include <fcntl.h>
