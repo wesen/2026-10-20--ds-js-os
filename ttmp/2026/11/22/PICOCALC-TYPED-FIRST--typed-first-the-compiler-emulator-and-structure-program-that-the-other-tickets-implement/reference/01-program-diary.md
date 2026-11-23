@@ -358,3 +358,48 @@ Agenda and Files are complete Typed worlds; no app-specific C is left. The merge
 
 - **A safety rule was broken.** The agent stopped a stuck board script with `pkill` instead of a checked script. It is recorded in its diary. The rule exists because a `pkill -f` once killed its own shell.
 - **A console timeout gap.** `device.Console` never times out while the gallery prints `CGAL` lines. A follow-up for `bench/board/device.py`, together with the painter wait for peripherals off.
+
+## Step 12: F32 merged, vault report 2, CANDELA-TYPED's host milestones merged, the keyboard wedged again
+
+F32 is merged and its firmware was installed and healthy. Vault report 2 (executors and floats) is published. CANDELA-TYPED came back with its host milestones done and its device milestone stopped by a panic. That panic left the keyboard's I2C wedged, which needs a power cycle by a person.
+
+### What I did
+
+- **Merged F32.** Clean merge; bundles current.
+  - `make test` failed once:
+
+    ```
+    <ref *1> Error: spawnSync git ENOBUFS
+    ```
+
+    `tools/check-file-length.mjs` reads `git ls-files -z` with Node's default 1 MB buffer, and the list was now 1,051,090 bytes. I raised `maxBuffer` (`0a227fc`).
+  - After the fix, `make test` exit 0; gates pass (25/25 both policies).
+- **F32 firmware.** Built and installed at `0a227fc` (`2be7f2af…`): health passed with peripherals on, gallery 18/18. Committed.
+- **Chess margin after F32.** CANDELA-TYPED's experiment image, which includes F32, measured Chess's boot compile at 4.19 s of 6 s (70 %) and the Chess painter at 5.68 s of 8 s (71 %). Both are within the 75 % rule. The console's `typed` command lists apps and limits, not times.
+- **Started the install in the background with a shell `&`** instead of the tool's background mode. It survived, and I watched it with a `pgrep` loop. Next time I'll use the tool's background mode.
+- **Vault report 2:** "PROJECT REPORT - PicoCalc Compiler - Floats in Typed - RV32F Semantics Captured on the ESP32-P4, Three Conformant Executors and f32 Within 1.33x of GCC - A Technical Deep Dive", go-go-parc `8be0838`.
+- **Merged CANDELA-TYPED's host milestones.** Clean merge; `make test` exit 0; gates pass (25/25 both policies).
+  - **Generator.** A WGSL→Typed generator (`tools/gen/candela/kernel-typed.mjs`) emits the kernel and all 18 scenes as one program: 372 KB of source, 403 KB of RV32 under `kernel`.
+  - **Image error.** All 18 scenes are within the pre-fixed image-error bound (E_rel ≤ 0.02; worst R-04 at 4.3e-4). 7 scenes are bit-identical to the C++ kernel.
+  - **Wasm against RV32.** Identical on the 8 of 18 scenes checked so far.
+  - **Compiler fix:** large RV32 frames through `s0`, with pinned digests unchanged.
+  - The Typed arm is in a separate `candela-typed` profile, not in playable.
+
+### What didn't work
+
+- **The device milestone.**
+  - The whole program compiled on the handheld, but took 85.9 s with a 16.3 MB QuickJS heap peak.
+  - The watchdog fired on CPU 0 during the compile.
+  - After the compile the firmware panicked: `assert failed: ... cache_utils.c:152 (esp_task_stack_is_sane_cache_disabled())`. The ELF relocation ran on a PSRAM stack while the cache was disabled. The fix (relocate on a small task with an internal-RAM stack) is built but not run.
+- **The keyboard after the panic.** Every keyboard transfer NACKs. My `typed` query showed i2c0 at 15,937 transfers and 15,937 errors.
+  - The agent restored the playable image (`2be7f2af`, verified), but its health check fails on the keyboard.
+  - It tried `off-by-user` once, the permission system refused because the keyboard is not off on purpose, and it stopped. That was correct.
+  - The board needs a power cycle by the user.
+
+### What I learned
+
+- **Candela's whole kernel as one Typed program is far beyond a boot compile.** 86 s and 16 MB on the device. A compile cache, keyed by source digest and policy and kept in flash, is a prerequisite for making the Typed arm the default. The generator's compiler wishes are recorded as tasks: `continue`, a conditional expression, u32, local records and arrays, more than 8 parameters per class, multiple results, f32 range analyses, and locals multiplying under inlining (607 in one function).
+
+### What should be done next
+
+- **After the power cycle:** run CANDELA-TYPED's device milestone (`scripts/04-device.py`, then `gallery.py --arm typed` and `--arm cpp`), then the paired board study.
