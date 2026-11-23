@@ -30,9 +30,27 @@ def lines_of(path):
     return (REPO / path).read_text().splitlines(keepends=True)
 
 
+def revert(source, parts, edits):
+    """--revert: undo an applied, uncommitted split (while its fix-ups are being worked out): the source and the edited
+    files come back from HEAD, the new parts (and only they) are removed."""
+    new = [p.path for p in parts if p.path != source]
+    tracked = subprocess.run(["git", "ls-tree", "--name-only", "HEAD", "--", *new], cwd=REPO, capture_output=True,
+                             text=True, check=True).stdout.split()
+    assert not tracked, f"parts already committed, not reverting: {tracked}"
+    subprocess.run(["git", "reset", "-q", "--", source, *new, *edits], cwd=REPO, check=True)
+    subprocess.run(["git", "checkout", "HEAD", "--", source, *edits], cwd=REPO, check=True)
+    for path in new:
+        if (REPO / path).exists():
+            (REPO / path).unlink()
+            print("removed", path)
+    print("restored", source, *edits)
+
+
 def split(source, parts, moved=(), edits=None, dry=None, post=()):
+    if sys.argv[1:] == ["--revert"]:
+        return revert(source, parts, list(edits or {}))
     dry = sys.argv[1:] == ["--dry-run"] if dry is None else dry
-    assert sys.argv[1:] in ([], ["--dry-run"]), "usage: SCRIPT [--dry-run]"
+    assert sys.argv[1:] in ([], ["--dry-run"]), "usage: SCRIPT [--dry-run | --revert]"
     if not dry:
         dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=REPO,
                                capture_output=True, text=True).stdout
