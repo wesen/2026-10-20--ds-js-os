@@ -78,3 +78,17 @@ PICOCALC-TYPED-FIRST finished with a list of follow-ups. This step turned the on
 ### What warrants a second pair of eyes
 
 - **The cache key must include every compiler bundle a compile may load,** including the lazily loaded pass groups. A key that misses one serves stale modules after a firmware update that changed only that group.
+
+## Step 2: Wave 1 launched
+
+Four tickets started in parallel, each on an Opus subagent at `xhigh` effort in its own worktree from `6e9c08c`: COMPILE-CACHE, TYPED-VALUES, COMPILER-DEVICE-COST and BOARD-HARNESS. CANDELA-KERNEL-CODEGEN waits for TYPED-VALUES.
+
+### What I did
+
+- **Wrote each brief to stand alone:** the ticket line; files to read in order; the design doc; the diary skill's investigation format; milestones; gates with their numbers (ray `430f0d501659`, Chess 6,981 words, 25/25); and the board rules.
+- **Added a rule from TYPED-FIRST's last step:** stop every background shell before the final report.
+- **Constrained BOARD-HARNESS's 30-minute compositor run** to the installed image, sampled in short lock acquisitions, so the three agents that flash experiment images are not locked out for half an hour.
+
+### What warrants a second pair of eyes
+
+- **Three agents share one board.** The lock serializes operations, but an agent may restore playable between another agent's two steps. Each agent re-installs its own image per session, so that is safe, but board timings may be noisier than in TYPED-FIRST.
