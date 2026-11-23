@@ -8,13 +8,13 @@
 // ---- frontend/lexer.js
 // The front end's lexer: the token regexp, the reserved words, and the lexical index a host may provide (the P4's C
 // scanner) so that the lexer reads precomputed token rows instead of running the regexp.
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~]))/y;
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~?\[\]]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
-const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32", "f32",
+const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32", "f32", "u32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer",
-    "else", "for", "break", "enum", "match", "type", "distinct",
-    "async", "await"]);
+    "else", "for", "break", "continue", "enum", "match", "type", "distinct",
+    "async", "await", "new"]);
 
 // An index belongs to one exact source string in one compilation.
 let lexicalScope = null;
@@ -224,10 +224,10 @@ class Lexer {
         return value;
     }
 
-    type(records, enums, distinct) {
+    type(records, enums, distinct, values) {
         const { value } = this.token;
-        if (value !== "i32" && value !== "f32" && value !== "bool" && value !== "string" && value !== "buffer" &&
-            !records.has(value) && !enums?.has(value) && !distinct?.has(value))
+        if (value !== "i32" && value !== "f32" && value !== "u32" && value !== "bool" && value !== "string" && value !== "buffer" &&
+            !records.has(value) && !enums?.has(value) && !distinct?.has(value) && !values?.has(value))
             this.fail("unknown type " + value);
         this.next();
         return value;
@@ -265,9 +265,13 @@ class Lexer {
 }
 
 // ---- frontend/declarations.js
-// The signature pass: records, enums, distinct types, member aliases, function signatures, and the call graph's
-// acyclicity check; and the layouts the backends publish.
-function scanSignatures(lex, records, declared, functionBase, enums, distinct, asyncSpans = false) {
+// The signature pass: records, value records, enums, distinct types, member aliases, function signatures, and the call
+// graph's acyclicity check; and the layouts the backends publish.
+//
+// A value record parameter is its leaves, consecutive parameters in field order (fn.params, fn.paramNames "v.x"); the
+// signature as written is fn.sourceParams and fn.sourceNames, present only when a value record appears. A value record
+// result is fn.result (its name) and fn.results, the types of its leaves.
+function scanSignatures(lex, records, declared, functionBase, enums, distinct, asyncSpans = false, values) {
     const functions = [];
     while (lex.token.kind !== "eof") {
         const start = lex.token.at;
@@ -275,25 +279,42 @@ function scanSignatures(lex, records, declared, functionBase, enums, distinct, a
         { if (lex.token.value !== "function") lex.fail("expected function"); lex.next(); }
         const name = lex.ident();
         if (name === "memory") lex.fail("reserved memory export");
-        if (declared.has(name) || distinct.has(name)) lex.fail("duplicate function " + name);
+        if (declared.has(name) || distinct.has(name) || values?.has(name)) lex.fail("duplicate function " + name);
         const params = [], paramNames = [];
         const paramAts = asyncSpans ? [] : null;
+        let sourceParams, sourceNames;
         { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         if (!(lex.token.value === ")" && (lex.next(), true))) {
+            const names = [], types = [];
             do {
                 paramAts?.push(lex.token.at);
                 const id = lex.ident();
                 { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
-                params.push(lex.type(records, enums, distinct));
-                if (paramNames.includes(id)) lex.fail("duplicate local " + id);
-                paramNames.push(id);
+                const type = lex.type(records, enums, distinct, values);
+                if (names.includes(id)) lex.fail("duplicate local " + id);
+                names.push(id);
+                types.push(type);
+                const value = values?.get(type);
+                if (value) {
+                    sourceParams = types;
+                    for (let k = 0; k < value.leaves.length; k++) {
+                        params.push(value.leaves[k]);
+                        paramNames.push(id + "." + value.paths[k]);
+                    }
+                } else {
+                    params.push(type);
+                    paramNames.push(id);
+                }
             } while ((lex.token.value === "," && (lex.next(), true)));
             { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+            if (sourceParams) sourceNames = names;
         }
         { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
-        const result = lex.type(records, enums, distinct);
+        const result = lex.type(records, enums, distinct, values);
         if (lex.token.value !== "{") lex.fail("expected {");
         const fn = {name, index: functionBase + functions.length, params, paramNames, result, bodyAt: lex.token.at};
+        if (sourceParams) Object.assign(fn, {sourceParams, sourceNames});
+        if (values?.has(result)) fn.results = values.get(result).leaves;
         declared.set(name, fn);
         functions.push(fn);
         const end = lex.skipBody();
@@ -393,7 +414,7 @@ function checkMembers(lex, aliases, declared, records) {
             const fail = message => { lex.token.at = member.at; lex.fail(owner + "." + name + ": " + message); };
             const fn = declared.get(member.target);
             if (!fn) fail("unknown target " + member.target);
-            if (receiver && fn.params[0] !== owner) fail("target must take " + owner + " as its first parameter");
+            if (receiver && (fn.sourceParams ?? fn.params)[0] !== owner) fail("target must take " + owner + " as its first parameter");
             if (member.options) {
                 const fields = records.get(member.options);
                 const first = fn.params.length - fields.size;
@@ -407,29 +428,64 @@ function checkMembers(lex, aliases, declared, records) {
     }
 }
 
+// value record Name { field: type; ... }: a record whose variables are values, not references to memory. Its layout:
+// fields (name -> {type, offset, width}, offset and width in leaves), leaves (the scalar type of each leaf, nested
+// value records flattened in field order) and paths ("o.x", for parameter names).
+function parseValueRecord(lex, name, records, enums, distinct, values) {
+    const fields = new Map(), leaves = [], paths = [];
+    lex.expect("{");
+    while (lex.token.value !== "}") {
+        const field = lex.ident();
+        if (fields.has(field)) lex.fail("duplicate field " + field + " in " + name);
+        lex.expect(":");
+        const type = lex.type(records, enums, distinct, values);
+        lex.expect(";");
+        const nested = values.get(type);
+        fields.set(field, {type, offset: leaves.length, width: nested ? nested.leaves.length : 1});
+        if (nested) {
+            leaves.push(...nested.leaves);
+            for (const path of nested.paths) paths.push(field + "." + path);
+        } else {
+            leaves.push(type);
+            paths.push(field);
+        }
+    }
+    lex.next();
+    if (!fields.size) lex.fail("empty value record " + name);
+    return {fields, leaves, paths};
+}
+
 function parseDeclarations(lex, recordEnds) {
     const records = new Map();
     const enums = new Map();
     const distinct = new Set();
+    const values = new Map();
     let aliases;
     while (lex.token.value === "record" || lex.token.value === "enum" || lex.token.value === "type" ||
-           lex.token.value === "namespace" || lex.token.value === "methods") {
+           lex.token.value === "namespace" || lex.token.value === "methods" || lex.token.value === "value") {
         const kind = lex.token.value;
         lex.next();
+        if (kind === "value") lex.expect("record");
         const name = lex.ident();
         if (kind === "methods" || kind === "namespace") {
             aliases ??= {namespaces: new Map(), methods: new Map()};
             if (kind === "methods") {
-                if (!records.has(name) && !distinct.has(name) && !enums.has(name)) lex.fail("unknown receiver type " + name);
+                if (!records.has(name) && !distinct.has(name) && !enums.has(name) && !values.has(name))
+                    lex.fail("unknown receiver type " + name);
                 parseMembers(lex, aliases.methods, name, records);
             } else {
-                if (records.has(name) || enums.has(name) || distinct.has(name)) lex.fail("namespace collides with type " + name);
+                if (records.has(name) || enums.has(name) || distinct.has(name) || values.has(name))
+                    lex.fail("namespace collides with type " + name);
                 parseMembers(lex, aliases.namespaces, name, records);
             }
             continue;
         }
-        if (records.has(name) || enums.has(name) || distinct.has(name) || aliases?.namespaces.has(name))
+        if (records.has(name) || enums.has(name) || distinct.has(name) || values.has(name) || aliases?.namespaces.has(name))
             lex.fail("duplicate " + kind + " " + name);
+        if (kind === "value") {
+            values.set(name, parseValueRecord(lex, name, records, enums, distinct, values));
+            continue;
+        }
         if (kind === "enum") {
             enums.set(name, parseEnum(lex, name));
             continue;
@@ -456,7 +512,7 @@ function parseDeclarations(lex, recordEnds) {
         { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
         records.set(name, fields);
     }
-    return {records, enums, distinct, aliases};
+    return {records, enums, distinct, aliases, values};
 }
 
 function recordLayouts(records) {
@@ -479,9 +535,14 @@ const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET
     I32_SHL, I32_SHR_S, I32_SHR_U, RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS,
     F32, F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG, F32_CEIL,
     F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
-    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX} = typedTape;
+    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX,
+    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U, F32_CONVERT_I32_U, U32_TRUNC_F32, ARRAY_ADDRESS, ARRAY_ZERO} = typedTape;
+// An integer literal takes the integer type its context needs (i32, u32 or a distinct type); a decimal literal from
+// 2^31 to 2^32 - 1 is a u32 (U32_LITERAL), its i32 cell holding the same 32 bits.
 const LITERAL = Symbol("integer literal");
-const scalarType = type => type === LITERAL ? "i32" : type;
+const U32_LITERAL = Symbol("u32 literal");
+const scalarType = type => type === LITERAL ? "i32" : type === U32_LITERAL ? "u32" : type;
+const unsignedType = type => type === "u32" || type === U32_LITERAL;
 // [precedence, operand type (null: any scalar), result type, opcode], with JavaScript's precedences. A distinct
 // integer type passes through the NOMINAL levels (| ^ &, equality, relational, + -): two operands of one distinct
 // type, or one and a literal, and an i32 result keeps the type. Shifts and * / % take and give i32.
@@ -498,11 +559,19 @@ const BINARY = Object.assign(Object.create(null), Object.fromEntries([
     ["%", [10, "i32", "i32", I32_REM_S]],
 ]));
 const NOMINAL = new Set([3, 4, 5, 6, 7, 9]);
+// Two literals give a literal (whose type its context decides) under the operators whose bits do not depend on
+// signedness, and so does a literal shifted by << or >>> by any count; / % and >> are signed on literals, so their
+// result is an i32.
+const LITERAL_OPERATORS = new Set(["+", "-", "*", "&", "|", "^", "<<", ">>>"]);
+// On u32 operands: the unsigned comparisons, division and remainder; >> is an error (>>> is the logical shift).
+const UNSIGNED = Object.assign(Object.create(null), {"<": I32_LT_U, "<=": I32_LE_U, ">": I32_GT_U, ">=": I32_GE_U,
+    "/": I32_DIV_U, "%": I32_REM_U});
 const PREFIX = 11; // the operand of a prefix operator binds tighter than every binary operator
 
 class ExpressionParser {
-    constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases) {
+    constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases, values) {
         this.aliases = aliases;
+        this.values = values;
         this.records = records;
         this.enums = enums;
         this.distinct = distinct;
@@ -527,7 +596,9 @@ class ExpressionParser {
     }
 
     want(type, expected) {
-        if (type === expected || type === LITERAL && (expected === "i32" || this.distinct.has(expected))) return;
+        if (type === expected || type === LITERAL && (expected === "i32" || expected === "u32" || this.distinct.has(expected)) ||
+            type === U32_LITERAL && expected === "u32") return;
+        if (type === U32_LITERAL) this.lex.fail("i32 literal out of range");
         if (expected === "bool" && type === "BoolExpr")
             this.lex.fail("per-hit BoolExpr cannot control scene construction; use a staged select");
         this.lex.fail("expected " + expected + ", got " + scalarType(type));
@@ -590,10 +661,10 @@ class ExpressionParser {
         case "~": { // ~x is x ^ -1
             lex.next();
             const type = this.expr(PREFIX);
-            this.want(type, "i32");
+            if (!unsignedType(type)) this.want(type, "i32");
             this.emitConst(-1);
             this.code.push(I32_XOR);
-            return type;
+            return unsignedType(type) ? "u32" : type;
         }
         case "true": {
             lex.next();
@@ -613,10 +684,10 @@ class ExpressionParser {
             lex.next();
             { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
             const type = this.expr();
-            // f32 -> i32 truncates toward zero and saturates; NaN gives 2^31 - 1 (tape.js f32.to_i32).
+            // f32 -> i32 truncates toward zero and saturates; NaN gives 2^31 - 1 (tape.js f32.to_i32). A u32 keeps its bits.
             if (type === "f32") this.code.push(I32_TRUNC_F32);
-            else if (!this.enums.has(type) && !this.distinct.has(type))
-                lex.fail("i32 conversion requires an f32, an enum or a distinct integer, got " + scalarType(type));
+            else if (!this.enums.has(type) && !this.distinct.has(type) && !unsignedType(type))
+                lex.fail("i32 conversion requires an f32, a u32, an enum or a distinct integer, got " + scalarType(type));
             { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
             return "i32";
         }
@@ -628,14 +699,18 @@ class ExpressionParser {
             const type = this.expr();
             lex.expect(")");
             if (type === "f32") return type;
-            if (scalarType(type) !== "i32" && !this.distinct.has(type))
-                lex.fail("f32 conversion requires an i32, got " + scalarType(type));
+            const unsigned = unsignedType(type);
+            if (scalarType(type) !== "i32" && !this.distinct.has(type) && !unsigned)
+                lex.fail("f32 conversion requires an i32 or a u32, got " + scalarType(type));
             if (this.code.length === at + 2 && this.code[at] === I32_CONST) {
                 this.code[at] = F32_CONST;
-                this.code[at + 1] = f32Bits(this.code[at + 1]);
-            } else this.code.push(F32_CONVERT_I32_S);
+                this.code[at + 1] = f32Bits(unsigned ? this.code[at + 1] >>> 0 : this.code[at + 1]);
+            } else this.code.push(unsigned ? F32_CONVERT_I32_U : F32_CONVERT_I32_S);
             return "f32";
         }
+        case "u32":
+            lex.next();
+            return this.unsignedConversion();
         }
         if (lex.token.kind === "float") {
             this.emitFloat(lex.floatValue());
@@ -644,10 +719,10 @@ class ExpressionParser {
         }
         if (lex.token.kind === "int") {
             const value = lex.integerValue();
-            if (value > 2147483647) lex.fail("i32 literal out of range");
-            this.emitConst(value);
+            if (value > 4294967295) lex.fail("integer literal out of range");
+            this.emitConst(value | 0);
             lex.next();
-            return LITERAL;
+            return value > 2147483647 ? U32_LITERAL : LITERAL;
         }
         const name = lex.ident();
         if ((lex.token.value === "(" && (lex.next(), true))) {
@@ -657,6 +732,7 @@ class ExpressionParser {
                 { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
                 return generatedType ?? name;
             }
+            if (this.values?.has(name)) return this.construct(name);
             return this.call(name);
         }
         const binding = this.locals.get(name);
@@ -677,6 +753,8 @@ class ExpressionParser {
             this.emitConst(0);
             return "SurfacePoint";
         }
+        if (this.values?.has(binding.type)) return this.valueRead(binding.type, binding.index);
+        if (binding.array) return this.arrayRead(binding.array);
         if (binding.type === "i32" || binding.type === "bool") {
             this.emitIndex(LOCAL_GET, binding.index);
             return binding.type;
@@ -747,18 +825,34 @@ class ExpressionParser {
             } else {
                 const numeric = NOMINAL.has(precedence);
                 const nominal = numeric && this.distinct.has(type);
-                if (!input && !nominal && scalarType(type) !== "i32" && type !== "bool" && !this.enums.has(type))
+                // u32 operands (or a literal and a u32) take the unsigned comparisons, division and remainder. A
+                // shift's count is any integer; its left operand gives the type.
+                let unsigned = unsignedType(type);
+                const shift = precedence === 8;
+                if (!unsigned && !input && !nominal && scalarType(type) !== "i32" && type !== "bool" && !this.enums.has(type))
                     lex.fail("expected scalar equality operands");
-                let expected = nominal || !input ? scalarType(type) : input;
+                if (unsigned && op === ">>") lex.fail("operator >> is not defined on u32; use >>>");
+                let expected = unsigned ? "u32" : nominal || !input ? scalarType(type) : input;
                 this.want(type, expected);
                 lex.next();
                 const right = this.expr(precedence + 1);
-                if (numeric && type === LITERAL && this.distinct.has(right)) expected = right;
-                this.want(right, expected);
-                this.code.push(opcode);
-                type = result === "i32" ? expected : result;
+                if (shift) {
+                    if (!unsignedType(right)) this.want(right, "i32");
+                } else {
+                    if (type === LITERAL && unsignedType(right)) {
+                        unsigned = true;
+                        expected = "u32";
+                    } else if (numeric && type === LITERAL && this.distinct.has(right)) expected = right;
+                    this.want(right, expected);
+                }
+                this.code.push(unsigned && UNSIGNED[op] ? UNSIGNED[op] : opcode);
+                type = type === LITERAL && (right === LITERAL || shift) && LITERAL_OPERATORS.has(op) ? LITERAL :
+                    result === "i32" ? expected : result;
             }
         }
+        // c ? a : b, JavaScript's loosest operator above assignment and right-associative: each arm is a whole
+        // expression, so a ? b : c ? d : e is a ? b : (c ? d : e).
+        if (minPrecedence === 0 && lex.token.value === "?") type = this.choice(type);
         this.depth--;
         return type;
     }
@@ -825,6 +919,8 @@ class ExpressionParser {
             const name = lex.ident();
             if (lex.token.value === "(") {
                 type = this.memberCall(this.aliases?.methods.get(type), scalarType(type), true, name);
+            } else if (this.values?.has(type)) {
+                type = this.stackField(type, name);
             } else {
                 const field = this.field(type, name);
                 this.emitMemory(field.type === "f32" ? F32_LOAD : I32_LOAD, 2, field.offset);
@@ -891,10 +987,12 @@ class ExpressionParser {
             this.emitMemory(I32_LOAD, 2, this.records.get("WorldState").get(startField).offset);
             this.code.push(I32_EQZ, IF, I32);
         }
-        const end = options ? callee.params.length - this.records.get(options).size : callee.params.length;
+        // A value record argument leaves its leaves on the stack, the callee's consecutive parameters.
+        const params = callee.sourceParams ?? callee.params;
+        const end = options ? params.length - this.records.get(options).size : params.length;
         for (let i = first; i < end; i++) {
             if (i !== first) lex.expect(",");
-            this.want(this.expr(), callee.params[i]);
+            this.want(this.expr(), params[i]);
         }
         if (options) {
             if (end !== first) lex.expect(",");
@@ -987,20 +1085,23 @@ class FloatParsing {
             this.code.push(name === "min" ? F32_MIN : F32_MAX);
             return "f32";
         }
-        this.want(first, "i32");
+        // Two i32, or two u32 (compared unsigned); a literal takes the other operand's type.
+        if (!unsignedType(first) && first !== LITERAL) this.want(first, "i32");
         this.emitIndex(LOCAL_SET, a);
         { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
-        this.want(this.expr(), "i32");
+        const second = this.expr();
+        const unsigned = unsignedType(first) || first === LITERAL && unsignedType(second);
+        this.want(second, unsigned ? "u32" : "i32");
         this.emitIndex(LOCAL_SET, b);
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         this.emitIndex(LOCAL_GET, a);
         this.emitIndex(LOCAL_GET, b);
-        this.code.push(I32_LT_S, IF, I32);
+        this.code.push(unsigned ? I32_LT_U : I32_LT_S, IF, I32);
         this.emitIndex(LOCAL_GET, name === "min" ? a : b);
         this.code.push(ELSE);
         this.emitIndex(LOCAL_GET, name === "min" ? b : a);
         this.code.push(END);
-        return "i32";
+        return unsigned ? "u32" : "i32";
     }
 
     // The checked address of f32 element i of a buffer: UTF-16 units 2i and 2i + 1, the check on 2i + 1, the f32 at
@@ -1020,9 +1121,327 @@ for (const name of Object.getOwnPropertyNames(FloatParsing.prototype))
     if (name !== "constructor") Object.defineProperty(ExpressionParser.prototype, name,
         Object.getOwnPropertyDescriptor(FloatParsing.prototype, name));
 
+// ---- frontend/values.js
+// The front end's value types (PICOCALC-TYPED-VALUES): the conditional expression, the u32 conversion and value records.
+// Their methods are ExpressionParser's (copied onto its prototype below, as floats.js does).
+//
+// A value record is scalar-replaced as it is parsed: a local of a value record type is one local per leaf (its scalar
+// fields, nested value records flattened in field order), consecutive from binding.index, and an expression of a value
+// record type leaves its leaves on the operand stack in that order, as a call of a function with a record result
+// does (WebAssembly's multi-value). A field of a local is a local.get of its leaf; storing a value is one local.set
+// per leaf, the last first; a parameter of a value record type is its leaves, as consecutive parameters.
+class ValueParsing {
+    // u32(x) after "u32": an integer keeps its bits; f32 -> u32 truncates toward zero and saturates, NaN gives 2^32 - 1
+    // (tape.js f32.to_u32).
+    unsignedConversion() {
+        const lex = this.lex;
+        lex.expect("(");
+        const type = this.expr();
+        lex.expect(")");
+        if (type === "f32") this.code.push(U32_TRUNC_F32);
+        else if (scalarType(type) !== "i32" && !unsignedType(type) && !this.enums.has(type) && !this.distinct.has(type))
+            lex.fail("u32 conversion requires an integer or an f32, got " + scalarType(type));
+        return "u32";
+    }
+
+    // The conditional expression after its condition: if (result T) a else b end. The block type is the first
+    // arm's, written once that arm is parsed; both arms have one type (a literal takes the other arm's).
+    choice(condition) {
+        const lex = this.lex;
+        this.want(condition, "bool");
+        lex.next();
+        const at = this.code.length;
+        this.code.push(IF, I32);
+        const first = this.expr();
+        lex.expect(":");
+        if (this.values?.has(first)) return this.valueChoice(at, first);
+        if (first === "f32") this.code[at + 1] = F32;
+        this.code.push(ELSE);
+        const second = this.expr();
+        this.code.push(END);
+        return this.unify(first, second);
+    }
+
+    // A conditional of value records: a block type has one value, so each arm stores its leaves into the same fresh
+    // locals (if (void) a; set; else b; set; end) and the result reads them.
+    valueChoice(at, type) {
+        this.code[at + 1] = VOID;
+        const index = this.valueLocals(type);
+        this.setLeaves(type, index);
+        this.code.push(ELSE);
+        this.want(this.expr(), type);
+        this.setLeaves(type, index);
+        this.code.push(END);
+        this.pushLeaves(type, index);
+        return type;
+    }
+
+    // The type of two values that meet (the arms of a conditional): one type, or a literal and an integer type.
+    unify(a, b) {
+        if (a === b) return a;
+        const integer = type => type === "i32" || type === "u32" || this.distinct.has(type);
+        if (a === LITERAL && (integer(b) || b === U32_LITERAL)) return b;
+        if (b === LITERAL && (integer(a) || a === U32_LITERAL)) return a;
+        if (unsignedType(a) && unsignedType(b)) return "u32";
+        this.lex.fail("conditional arms have different types: " + scalarType(a) + " and " + scalarType(b));
+    }
+
+    // The number of operand-stack values of a type: a value record's leaves, else one.
+    width(type) { return this.values?.get(type)?.leaves.length ?? 1; }
+
+    // Consecutive locals for the leaves of a value record; the first one's index.
+    valueLocals(type) {
+        const first = this.nextLocal;
+        for (const leaf of this.values.get(type).leaves) {
+            const index = this.nextLocal++;
+            if (leaf === "f32") (this.floatLocals ??= []).push(index);
+        }
+        return first;
+    }
+
+    // A named local of a value record type (a declaration or a parameter).
+    valueLocal(name, type, mutable) {
+        if (this.locals.has(name)) this.lex.fail("duplicate local " + name);
+        const index = this.valueLocals(type);
+        this.locals.set(name, {type, index, mutable});
+        return index;
+    }
+
+    pushLeaves(type, index) {
+        for (let k = 0, n = this.width(type); k < n; k++) this.emitIndex(LOCAL_GET, index + k);
+    }
+
+    setLeaves(type, index) {
+        for (let k = this.width(type) - 1; k >= 0; k--) this.emitIndex(LOCAL_SET, index + k);
+    }
+
+    // Drop a value nobody reads: one drop per leaf.
+    drop(type) {
+        for (let k = this.width(type); k > 0; k--) this.code.push(DROP);
+    }
+
+    // Type(a, b, ...) after its "(": one argument per field, in field order, each of its field's type (a nested value
+    // record takes any expression of its type). The leaves stay on the operand stack.
+    construct(type) {
+        const lex = this.lex;
+        let first = true;
+        for (const field of this.values.get(type).fields.values()) {
+            if (!first) lex.expect(",");
+            first = false;
+            this.want(this.expr(), field.type);
+        }
+        lex.expect(")");
+        return type;
+    }
+
+    valueField(type, name) {
+        const field = this.values.get(type).fields.get(name);
+        if (!field) this.lex.fail("unknown field " + type + "." + name);
+        return field;
+    }
+
+    // Part of a value record held in locals from index: .field follows nested value records, then the part is read,
+    // one local.get per leaf. A method call on a value takes its leaves as the receiver.
+    valueRead(type, index) {
+        const lex = this.lex;
+        while (this.values.has(type) && lex.token.value === ".") {
+            lex.next();
+            const name = lex.ident();
+            if (lex.token.value === "(") {
+                this.pushLeaves(type, index);
+                return this.memberCall(this.aliases?.methods.get(type), type, true, name);
+            }
+            const field = this.valueField(type, name);
+            type = field.type;
+            index += field.offset;
+        }
+        this.pushLeaves(type, index);
+        return type;
+    }
+
+    // .name of a value record on the operand stack (a call's result, a constructor, a conditional): its leaves go to
+    // fresh locals and the field is read from them.
+    stackField(type, name) {
+        const index = this.valueLocals(type);
+        this.setLeaves(type, index);
+        const field = this.valueField(type, name);
+        return this.valueRead(field.type, index + field.offset);
+    }
+}
+for (const name of Object.getOwnPropertyNames(ValueParsing.prototype))
+    if (name !== "constructor") Object.defineProperty(ExpressionParser.prototype, name,
+        Object.getOwnPropertyDescriptor(ValueParsing.prototype, name));
+
+// ---- frontend/arrays.js
+// Local arrays (PICOCALC-TYPED-VALUES): `const a = new Float32Array(16)`, JavaScript's typed arrays of a fixed length
+// that live in the function. Their methods are ExpressionParser's (copied onto its prototype below, as values.js does).
+//
+// A function's arrays are one area of fn.arrayBytes bytes, each array at a byte offset in it; array.address pushes
+// the address of an offset (RV32: in the frame; WebAssembly: a static area at the top of the module's memory, which
+// is enough because a function is never active twice, the call graph being acyclic). The declaration zeroes the
+// array (array.zero), as JavaScript's `new` and WGSL's `var` do, each time it runs. `a[i]` checks i against the
+// length, unsigned, so a negative index traps too (`local.get i; i32.const n; i32.ge_u; if; unreachable; end`), then
+// reads or writes the word at address + 4i. Two indices cost no check at run time: a literal, checked here, and the
+// counter of a counted loop that proves it in range (countedRange, proveChecks). `a.length` is a literal. An array is
+// not a value: it is not assigned, passed, returned or compared.
+const ARRAY_ELEMENTS = new Map([["Int32Array", "i32"], ["Uint32Array", "u32"], ["Float32Array", "f32"]]);
+const ARRAY_LIMIT = 1024;
+
+class ArrayParsing {
+    // `new T(n)` of `let|const id = new T(n)`, at "new": n an integer literal from 1 to ARRAY_LIMIT.
+    arrayDeclaration(id, annotation) {
+        const lex = this.lex;
+        if (annotation !== null) lex.fail("an array takes the type of its new expression, without an annotation");
+        lex.next();
+        const type = lex.token.value, element = ARRAY_ELEMENTS.get(type);
+        if (!element) lex.fail("expected Int32Array, Uint32Array or Float32Array after new");
+        lex.next();
+        lex.expect("(");
+        const length = lex.token.kind === "int" ? Number(lex.token.value) : NaN;
+        if (!(length >= 1 && length <= ARRAY_LIMIT)) lex.fail("an array's length is an integer literal from 1 to " + ARRAY_LIMIT);
+        lex.next();
+        lex.expect(")");
+        if (this.locals.has(id)) lex.fail("duplicate local " + id);
+        const offset = this.arrayBytes ?? 0;
+        this.arrayBytes = offset + 4 * length;
+        this.locals.set(id, {type, array: {offset, length, element}});
+        this.code.push(ARRAY_ZERO, offset, 4 * length);
+    }
+
+    // `[i]` after an array's name: the element's address on the operand stack, checked.
+    arrayElement(array) {
+        const lex = this.lex, code = this.code;
+        lex.expect("[");
+        const start = code.length;
+        const type = this.expr();
+        lex.expect("]");
+        if (type !== LITERAL && type !== U32_LITERAL && type !== "i32" && type !== "u32")
+            lex.fail("an array index is an i32 or a u32, got " + scalarType(type));
+        const {offset, length} = array;
+        if (code.length === start + 2 && code[start] === I32_CONST) {
+            const index = code[start + 1] >>> 0;
+            if (index >= length) lex.fail("array index " + index + " out of range for length " + length);
+            this.truncate(start);
+            code.push(ARRAY_ADDRESS, offset + 4 * index);
+            return;
+        }
+        // A local is read again for the address; any other index is computed once into a fresh local.
+        let local;
+        if (code.length === start + 2 && code[start] === LOCAL_GET) {
+            local = code[start + 1];
+            this.truncate(start);
+            // The counter of an enclosing counted loop below the length: the check may go when the loop ends.
+            for (let k = (this.countedLoops?.length ?? 0) - 1; k >= 0; k--) {
+                const proof = this.countedLoops[k];
+                if (proof.local !== local || proof.code !== code) continue;
+                if (proof.bound <= length) (this.boundChecks ??= []).push({at: code.length, proof});
+                break;
+            }
+        } else this.emitIndex(LOCAL_SET, local = this.nextLocal++);
+        this.emitIndex(LOCAL_GET, local);
+        this.emitConst(length);
+        code.push(I32_GE_U, IF, VOID, UNREACHABLE, END, ARRAY_ADDRESS, offset);
+        this.emitIndex(LOCAL_GET, local);
+        this.emitConst(2);
+        code.push(I32_SHL, I32_ADD);
+    }
+
+    // A counted loop's range proof, after its header: `for (k = c; k < n; k = k + s)` (the tape `const c; set k`,
+    // `get k; const n; lt; eqz; br_if 1` and the update `get k; const s; add; set k`) holds k below n whenever its
+    // body starts, when the body never writes k: unsigned for lt_u, and for lt_s when c and s are not negative, so k
+    // never is. initAt is where the header's initialization starts, conditionAt its condition.
+    countedRange(initAt, conditionAt, update) {
+        const code = this.code;
+        if (conditionAt - initAt !== 8 || code.length !== conditionAt + 8 || code[initAt] !== I32_CONST ||
+            code[initAt + 2] !== LOCAL_SET) return null;
+        const local = code[initAt + 3], first = code[initAt + 1];
+        if (code[conditionAt] !== LOCAL_GET || code[conditionAt + 1] !== local || code[conditionAt + 2] !== I32_CONST)
+            return null;
+        if (update.length !== 7 || update[0] !== LOCAL_GET || update[1] !== local || update[2] !== I32_CONST ||
+            update[4] !== I32_ADD || update[5] !== LOCAL_SET || update[6] !== local) return null;
+        const bound = code[conditionAt + 3], compare = code[conditionAt + 4], step = update[3];
+        if (compare === I32_LT_U) return {local, bound: bound >>> 0, code};
+        if (compare === I32_LT_S && first >= 0 && step >= 0 && bound >= 0 && bound <= 1 << 30 && step <= 1 << 30)
+            return {local, bound, code};
+        return null;
+    }
+
+    // A counted loop's body has ended at the tape's end, from bodyAt: unless it writes the counter, the checks of
+    // the counter it recorded are removed (nine cells each; the positions of later checks move down).
+    proveChecks(proof, bodyAt) {
+        const code = this.code, checks = this.boundChecks ?? [];
+        this.boundChecks = checks.filter(check => check.proof !== proof);
+        for (let at = bodyAt; at < code.length; at += 1 + CELLS[code[at]])
+            if (code[at] === LOCAL_SET && code[at + 1] === proof.local) return;
+        const mine = checks.filter(check => check.proof === proof).sort((x, y) => y.at - x.at);
+        for (const {at} of mine) {
+            if (code[at] !== LOCAL_GET || code[at + 1] !== proof.local || code[at + 4] !== I32_GE_U || code[at + 5] !== IF ||
+                code[at + 7] !== UNREACHABLE || code[at + 8] !== END) throw new Error("array check moved at " + at);
+            code.copyWithin(at, at + 9);
+            code.length -= 9;
+            code.spans?.splice(at, 9);
+            for (const check of this.boundChecks) if (check.at > at) check.at -= 9;
+        }
+    }
+
+    // Drop the tape from start (an inspection tape's spans too).
+    truncate(start) {
+        this.code.length = start;
+        if (this.code.spans) this.code.spans.length = start;
+    }
+
+    // An array's name in an expression: `a[i]` or `a.length`.
+    arrayRead(array) {
+        const lex = this.lex;
+        if (lex.accept(".")) {
+            if (lex.ident() !== "length") lex.fail("an array has only .length");
+            this.emitConst(array.length);
+            return LITERAL;
+        }
+        if (lex.token.value !== "[") lex.fail("an array is not a value; index it or read its length");
+        this.arrayElement(array);
+        this.emitMemory(array.element === "f32" ? F32_LOAD : I32_LOAD, 2, 0);
+        return array.element;
+    }
+
+    // `a[i] = e;` as a statement.
+    arrayAssignment(array, statement) {
+        const lex = this.lex;
+        if (!statement || lex.token.value !== "[") lex.fail("an array is not assignable; assign its elements");
+        this.arrayElement(array);
+        lex.expect("=");
+        this.want(this.expr(), array.element);
+        this.emitMemory(array.element === "f32" ? F32_STORE : I32_STORE, 2, 0);
+    }
+}
+for (const name of Object.getOwnPropertyNames(ArrayParsing.prototype))
+    if (name !== "constructor") Object.defineProperty(ExpressionParser.prototype, name,
+        Object.getOwnPropertyDescriptor(ArrayParsing.prototype, name));
+
 // ---- frontend/statements.js
 // The front end's parser and type checker, part two: blocks, conditionals, loops, match, declarations and
 // assignments, and one function's body. typed-async.js (async/body.js) subclasses FunctionEmitter as its TypeChecker.
+
+// Whether a loop body that starts after the `{` at `from` contains the word continue (outside comments and strings).
+// Nested loops' continues count too: an unneeded continue block costs no instruction. One test per source decides
+// whether any body needs the scan, so a program without continue pays one search per source.
+const CONTINUE_SCAN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"|\bcontinue\b/g;
+let continueSource = null, continueFound = false;
+function bodyContinues(source, from) {
+    if (source !== continueSource) {
+        continueSource = source;
+        continueFound = source.includes("continue");
+    }
+    if (!continueFound) return false;
+    CONTINUE_SCAN.lastIndex = from;
+    for (let depth = 1, token; (token = CONTINUE_SCAN.exec(source));) {
+        if (token[0] === "{") depth++;
+        else if (token[0] === "}") { if (--depth === 0) return false; }
+        else if (token[0] === "continue") return true;
+    }
+    return false;
+}
+
 class FunctionEmitter extends ExpressionParser {
     result(type, branch) {
         { if (this.lex.token.value !== "return") this.lex.fail("expected return"); this.lex.next(); }
@@ -1097,16 +1516,23 @@ class FunctionEmitter extends ExpressionParser {
         const lex = this.lex;
         const enclosing = this.locals;
         { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
+        const initAt = this.code.length;
         if (counted) {
             this.locals = new Map(enclosing);
             if (lex.token.value === "let") this.declaration();
             else this.assignment(lex.ident());
             { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
         }
-        // Expression control blocks close within expr(), before any break can appear.
-        this.loopExits.push(this.controls);
+        // Expression control blocks close within expr(), before any break can appear. A loop is
+        //     block; loop; C; eqz; br_if 1; B; [update]; br 0; end; end
+        // and break is a br to the outer block. When the body has a continue, B is block; B; end and continue is a br
+        // to that block's end, which reaches the update and the back edge: a br to the loop itself would skip the
+        // update, and the condition once the rotate pass has moved it to the bottom.
+        const exit = this.controls;
+        this.loopExits.push(exit);
         this.controls += 2;
         this.code.push(BLOCK, VOID, LOOP, VOID);
+        const conditionAt = this.code.length;
         this.want(this.expr(), "bool");
         this.code.push(I32_EQZ, BR_IF, 1);
         let update;
@@ -1119,7 +1545,26 @@ class FunctionEmitter extends ExpressionParser {
             this.code = loopCode;
         }
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+        // A counted loop's range proof removes its counter's array checks (frontend/arrays.js) when it holds.
+        const proof = counted && this.arrayBytes ? this.countedRange(initAt, conditionAt, update) : null;
+        if (proof) (this.countedLoops ??= []).push(proof);
+        const bodyAt = this.code.length;
+        const continues = lex.token.value === "{" && bodyContinues(lex.source, lex.offset);
+        (this.loopContinues ??= []).push(continues ? exit + 2 : -1);
+        if (continues) {
+            this.code.push(BLOCK, VOID);
+            this.controls++;
+        }
         this.block(result);
+        if (continues) {
+            this.code.push(END);
+            this.controls--;
+        }
+        this.loopContinues.pop();
+        if (proof) {
+            this.countedLoops.pop();
+            this.proveChecks(proof, bodyAt);
+        }
         if (update) {
             if (this.inspection) this.code.append(update);
             else for (const cell of update) this.code.push(cell);
@@ -1135,7 +1580,7 @@ class FunctionEmitter extends ExpressionParser {
         const mutable = lex.token.value === "let";
         lex.next();
         const id = lex.ident();
-        const annotation = (lex.token.value === ":" && (lex.next(), true)) ? lex.type(this.records, this.enums, this.distinct) : null;
+        const annotation = (lex.token.value === ":" && (lex.next(), true)) ? lex.type(this.records, this.enums, this.distinct, this.values) : null;
         if (mutable && annotation !== null && lex.isGeneratedLocal?.(id) && lex.token.value === ";") {
             // Every continuation path reaches the original initializer or a reload
             // before reading this slot, including on targets with uninitialized frames.
@@ -1143,24 +1588,29 @@ class FunctionEmitter extends ExpressionParser {
             return;
         }
         { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
+        if (lex.token.value === "new") return this.arrayDeclaration(id, annotation);
         const type = this.expr();
         if (annotation !== null) this.want(type, annotation);
-        this.emitIndex(LOCAL_SET, this.local(id, annotation ?? scalarType(type), mutable));
+        const declared = annotation ?? scalarType(type);
+        if (this.values?.has(declared)) this.setLeaves(declared, this.valueLocal(id, declared, mutable));
+        else this.emitIndex(LOCAL_SET, this.local(id, declared, mutable));
     }
 
     assignment(id, statement = false) {
         const lex = this.lex;
         const local = this.locals.get(id);
         if (!local) lex.fail("unknown local " + id);
+        if (this.values?.has(local.type)) return this.valueAssignment(id, local, statement);
+        if (local.array) return this.arrayAssignment(local.array, statement);
         if (statement && (lex.token.value === "." && (lex.next(), true))) {
             if (local.type === "buffer") this.bufferWrite(local.index);
             else {
                 const name = lex.ident();
                 this.emitIndex(LOCAL_GET, local.index);
                 if (lex.token.value === "(") {
-                    const type = this.memberCall(this.aliases?.methods.get(local.type), local.type, true, name);
-                    if (lex.token.value === ".") this.postfix(type);
-                    this.code.push(DROP);
+                    let type = this.memberCall(this.aliases?.methods.get(local.type), local.type, true, name);
+                    if (lex.token.value === ".") type = this.postfix(type);
+                    this.drop(type);
                     return;
                 }
                 const field = this.field(local.type, name);
@@ -1174,6 +1624,47 @@ class FunctionEmitter extends ExpressionParser {
             this.want(this.expr(), local.type);
             this.emitIndex(LOCAL_SET, local.index);
         }
+    }
+
+    // An assignment to a value record local or a part of it: v = e, v.f = e, v.o.f = e (a mutable local), a store
+    // through a record reference it holds (v.r.f = e), a method call on a part of it, or a buffer write.
+    valueAssignment(id, local, statement) {
+        const lex = this.lex;
+        let type = local.type, index = local.index;
+        while (statement && this.values.has(type) && lex.token.value === ".") {
+            lex.next();
+            const name = lex.ident();
+            if (lex.token.value === "(") {
+                this.pushLeaves(type, index);
+                let result = this.memberCall(this.aliases?.methods.get(type), type, true, name);
+                if (lex.token.value === ".") result = this.postfix(result);
+                this.drop(result);
+                return;
+            }
+            const field = this.valueField(type, name);
+            type = field.type;
+            index += field.offset;
+        }
+        if (statement && lex.accept(".")) {
+            if (type === "buffer") return this.bufferWrite(index);
+            const name = lex.ident();
+            this.emitIndex(LOCAL_GET, index);
+            if (lex.token.value === "(") {
+                let result = this.memberCall(this.aliases?.methods.get(type), type, true, name);
+                if (lex.token.value === ".") result = this.postfix(result);
+                this.drop(result);
+                return;
+            }
+            const field = this.field(type, name);
+            lex.expect("=");
+            this.want(this.expr(), field.type);
+            this.emitMemory(field.type === "f32" ? F32_STORE : I32_STORE, 2, field.offset);
+            return;
+        }
+        if (!local.mutable) lex.fail("expected mutable local " + id);
+        lex.expect("=");
+        this.want(this.expr(), type);
+        this.setLeaves(type, index);
     }
 
     matchGroup(slot, values) {
@@ -1275,20 +1766,29 @@ class FunctionEmitter extends ExpressionParser {
             this.emitIndex(BR, this.controls - exit - 1);
             return;
         }
+        case "continue": {
+            lex.next();
+            const target = this.loopContinues?.at(-1);
+            if (target === undefined) lex.fail("continue outside a loop");
+            if (target < 0) lex.fail("continue the loop's body scan did not find");
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
+            this.emitIndex(BR, this.controls - target - 1);
+            return;
+        }
         case "const": case "let":
             this.declaration();
             break;
         default: {
             const id = lex.ident();
             if ((lex.token.value === "(" && (lex.next(), true))) {
-                const type = this.call(id);
-                if (lex.token.value === ".") this.postfix(type);
-                this.code.push(DROP); // drop the unused call result
+                let type = this.call(id);
+                if (lex.token.value === ".") type = this.postfix(type);
+                this.drop(type); // drop the unused call result
             } else if (!this.locals.has(id) && this.aliases?.namespaces.has(id)) {
                 lex.expect(".");
-                const type = this.memberCall(this.aliases.namespaces.get(id), id, false);
-                if (lex.token.value === ".") this.postfix(type);
-                this.code.push(DROP);
+                let type = this.memberCall(this.aliases.namespaces.get(id), id, false);
+                if (lex.token.value === ".") type = this.postfix(type);
+                this.drop(type);
             } else {
                 this.assignment(id, true);
             }
@@ -1299,8 +1799,13 @@ class FunctionEmitter extends ExpressionParser {
 
     function(fn) {
         const lex = this.lex;
-        const {params, paramNames, result} = fn;
-        for (let i = 0; i < params.length; i++) this.local(paramNames[i], params[i]);
+        const {params, paramNames, result, sourceParams} = fn;
+        // A value record parameter is its leaves, consecutive parameters: one value local.
+        if (sourceParams) for (let i = 0; i < sourceParams.length; i++) {
+            if (this.values?.has(sourceParams[i])) this.valueLocal(fn.sourceNames[i], sourceParams[i], false);
+            else this.local(fn.sourceNames[i], sourceParams[i]);
+        }
+        else for (let i = 0; i < params.length; i++) this.local(paramNames[i], params[i]);
         lex.offset = fn.bodyAt;
         lex.next();
         { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
@@ -1315,6 +1820,7 @@ class FunctionEmitter extends ExpressionParser {
 
     finish(fn) {
         if (this.literals) fn.literals = this.literals;
+        if (this.arrayBytes) fn.arrayBytes = this.arrayBytes;
         // fn.localTypes: the type class of each frame local ("f32" or "i32"), only when one is an f32; the RV32
         // planner and the Wasm local declarations read it.
         const params = fn.params.length;
@@ -1463,7 +1969,7 @@ function originalError(error, lex, lowered, base) {
 
 function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignatures, inspect) {
     const {original, declarations, fields, bodies, generated} = lowered.plan;
-    const {enums, distinct, aliases} = declarations;
+    const {enums, distinct, aliases, values} = declarations;
     const records = new Map(declarations.records);
     if (fields.length) {
         const state = new Map(records.get("WorldState"));
@@ -1484,7 +1990,8 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
     const ordinaryCount = functions.length;
     let generatedSignatures;
     try {
-        generatedSignatures = scanSignatures(generatedLex, records, declared, functionBase + ordinaryCount, enums, distinct);
+        generatedSignatures = scanSignatures(generatedLex, records, declared, functionBase + ordinaryCount, enums, distinct,
+            false, values);
     } catch (error) {
         throw originalError(error, generatedLex, lowered, lowered.generatedAt);
     }
@@ -1512,7 +2019,7 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
             fn.bodyAt = body.at;
         }
         try {
-            const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+            const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases, values);
             if (inspect) finishFunction(emitter, fn, inspect,
                 lex === originalLex ? undefined : lex === generatedLex ? "synthetic-source" : "rewritten-body");
             else emitter.function(fn);
@@ -1529,15 +2036,15 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
 function emitFunctions(source, functionBase, imported, onFunction, onSignatures, inspect) {
     const lex = new Lexer(source, 0, source.length, true);
     const declared = new Map(imported.map(fn => [fn.name, fn]));
-    const {records, enums, distinct, aliases} = parseDeclarations(lex);
+    const {records, enums, distinct, aliases, values} = parseDeclarations(lex);
     for (const name of distinct) if (declared.has(name)) lex.fail("duplicate imported function " + name);
-    const functions = scanSignatures(lex, records, declared, functionBase, enums, distinct);
+    const functions = scanSignatures(lex, records, declared, functionBase, enums, distinct, false, values);
     if (!functions.length) lex.fail("expected a function");
     checkMembers(lex, aliases, declared, records);
     if (onSignatures) onSignatures(functions);
     const edges = functions.map(() => []);
     for (const [i, fn] of functions.entries()) {
-        const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+        const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases, values);
         if (inspect) finishFunction(emitter, fn, inspect);
         else emitter.function(fn);
         if (onFunction) onFunction(fn);
@@ -1614,6 +2121,19 @@ function pushTruncate(out, scratch) {
     out.push(F32_NE, 0x1b); // NaN: select 2^31 - 1
 }
 
+// f32.to_u32 (RV32F's fcvt.wu.s rtz): i32.trunc_sat_f32_u, but 2^32 - 1 for NaN. `scratch` is an f32 local.
+function pushTruncateUnsigned(out, scratch) {
+    out.push(LOCAL_SET);
+    pushUnsigned(out, scratch);
+    out.push(I32_CONST, 0x7f, LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(0xfc, 0x01, LOCAL_GET); // i32.trunc_sat_f32_u
+    pushUnsigned(out, scratch);
+    out.push(LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(F32_NE, 0x1b); // NaN: select 2^32 - 1
+}
+
 // f32.min_num and f32.max_num (RV32F's fmin.s, fmax.s): the other operand when one is NaN, else f32.min or f32.max,
 // which order -0 below +0 as fmin.s does. a and b are f32 scratch locals:
 //   select(select(min(a, b), a, b === b), b, a === a)
@@ -1639,6 +2159,17 @@ function localGroups(types) {
     return [...unsigned(groups.length), ...groups.flatMap(([count, type]) => [...unsigned(count), type])];
 }
 
+// array.address offset: the static address fn.arrayBase + offset. array.zero offset bytes: memory.fill (bulk memory).
+function pushArray(out, fn, op, offset, bytes) {
+    out.push(I32_CONST);
+    pushSigned(out, fn.arrayBase + offset);
+    if (op === ARRAY_ZERO) {
+        out.push(I32_CONST, 0, I32_CONST);
+        pushSigned(out, bytes);
+        out.push(0xfc, 0x0b, 0x00);
+    }
+}
+
 // fn.body: the framed body (size, locals, instructions) of fn's tape. `marks`, when given, receives the byte offset
 // of each tape operation within the instructions, by ordinal. Returns the instructions' length.
 function encodeFunction(fn, marks) {
@@ -1651,7 +2182,9 @@ function encodeFunction(fn, marks) {
         const n = CELLS[op];
         if (marks) marks.push(out.length);
         // Most operands fit one LEB128 byte; those take the short paths.
-        if (n === 1 && op !== I32_CONST && op !== F32_CONST && tape[at + 1] < 128) {
+        if (op === ARRAY_ADDRESS || op === ARRAY_ZERO) {
+            pushArray(out, fn, op, tape[at + 1], tape[at + 2]);
+        } else if (n === 1 && op !== I32_CONST && op !== F32_CONST && tape[at + 1] < 128) {
             out.push(op, tape[at + 1]);
         } else if (n === 0 && op < I32_TRUNC_F32) {
             out.push(op);
@@ -1672,6 +2205,9 @@ function encodeFunction(fn, marks) {
         } else if (op === I32_TRUNC_F32) {
             scratch = true;
             pushTruncate(out, first);
+        } else if (op === U32_TRUNC_F32) {
+            scratch = true;
+            pushTruncateUnsigned(out, first);
         } else if (op === F32_MIN || op === F32_MAX) {
             scratch = true;
             pushMinMax(out, op, first, first + 1);
@@ -1699,7 +2235,13 @@ function compileWasmFunctions(source, functionBase, imported, maxSourceLength, o
     let tapeEvent = null;
     const frontOptions = inspect && typeof inspect.emit === "function"
         ? {...options, inspect: {function: inspect.function, emit(event) { tapeEvent = event; }}} : options;
+    // Local arrays: each function's area below the previous one's, from the top of the module's memory.
+    let arrayTop = (options?.memoryPages ?? 1) * 65536;
     return compileFunctions(source, functionBase, imported, maxSourceLength, undefined, fn => {
+        if (fn.arrayBytes) {
+            fn.arrayBase = arrayTop -= fn.arrayBytes;
+            if (arrayTop < 0) throw new SyntaxError("local arrays exceed the module's memory");
+        }
         const event = tapeEvent;
         tapeEvent = null;
         const marks = event ? [] : undefined;
@@ -1724,9 +2266,13 @@ function section(id, data) {
 // A Typed type as a Wasm value type: f32 is F32, every other type an i32.
 const valueType = type => type === "f32" ? F32 : I32;
 
+// A record result is several results (WebAssembly's multi-value), one per leaf.
 function signature(fn) {
-    return [0x60, ...vec(fn.params.map(valueType)), 1, valueType(fn.result)];
+    return [0x60, ...vec(fn.params.map(valueType)), ...vec((fn.results ?? [fn.result]).map(valueType))];
 }
+
+// What compile, linkWorld and typedRv32.compile publish of each function.
+const publicSignature = ({name, params, result, results}) => ({name, params, result, ...(results && {results})});
 
 // options.maxSourceLength (default 64 KiB) and options.memoryPages (the exported memory's fixed size in 64 KiB pages,
 // default 1) serve large programs such as the Candela kernel (PICOCALC-CANDELA-TYPED); the defaults keep every module.
@@ -1759,7 +2305,7 @@ function compile(source, options) {
         records: recordLayouts(records),
         enums: enumLayouts(enums),
         distinct: [...distinct],
-        signatures: functions.map(({ name, params, result }) => ({ name, params, result })),
+        signatures: functions.map(publicSignature),
         ...(asyncLayout && {asyncLayout}),
         ...(asyncSource && {asyncSource}),
     };
@@ -1938,6 +2484,9 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength, opti
     });
     const {functions, records, enums, distinct, asyncLayout, asyncSource} =
         compileWasmFunctions(source, base, imported, maxSourceLength, options);
+    // The runtime owns a linked world's memory, so there is no static area for local arrays.
+    const arrays = functions.find(fn => fn.arrayBytes);
+    if (arrays) throw new SyntaxError("local arrays need a module's own memory; a linked Wasm world has none (" + arrays.name + ")");
     for (const entry of entries) {
         const bytesName = Array.from(entry, ch => ch.charCodeAt(0)).join(",");
         const slot = exports.find(item => item.name === bytesName && item.kind === 0)?.index - importCount;
@@ -1959,7 +2508,7 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength, opti
     for (const part of sections) if (replacement.has(part.id)) part.bytes = replacement.get(part.id);
     return {bytes: encodeModule(header, sections), records: recordLayouts(records),
         enums: enumLayouts(enums), distinct: [...distinct],
-        signatures: functions.map(({name, params, result}) => ({name, params, result})),
+        signatures: functions.map(publicSignature),
         ...(asyncLayout && {asyncLayout}), ...(asyncSource && {asyncSource})};
 }
 
@@ -1969,11 +2518,12 @@ function invoke(exports, signature, args) {
     const words = args.map((value, i) => {
         if (signature.params[i] === "bool" && typeof value === "boolean") return Number(value);
         if (signature.params[i] === "i32" && i32(value)) return value;
+        if (signature.params[i] === "u32" && Number.isInteger(value) && value >= 0 && value <= 0xffffffff) return value | 0;
         if (signature.params[i] === "f32" && typeof value === "number") return value;
         throw new TypeError(signature.name + " expects " + signature.params[i] + " at argument " + i);
     });
     const value = exports[signature.name](...words);
-    return signature.result === "bool" ? value !== 0 : value;
+    return signature.result === "bool" ? value !== 0 : signature.result === "u32" ? value >>> 0 : value;
 }
 
 // What the bundle publishes. typed-async.js uses the front end's pieces; typed-rv32.js uses compileFunctions and the
@@ -1985,5 +2535,6 @@ globalThis.compileTyped = (source, options) => {
     return bytes;
 };
 globalThis.typedWasm = {compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
-    parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts, withLexIndices};
+    parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts, withLexIndices,
+    publicSignature};
 })();

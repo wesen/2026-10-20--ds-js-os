@@ -156,7 +156,7 @@ test("every ALU and immediate form of instruction selection is a row of the tabl
     const {ALU, IMMEDIATE_FORMS} = await import(new URL("../../compiler/typed/rv32/encoding/selection.js", import.meta.url));
     const rowOf = (word, mask) => INSTRUCTION_ROWS.find(row => ((row.match & mask) >>> 0) === ((word & mask) >>> 0))?.mnemonic;
     const alu = [...ALU.values()].map(([f3, f7]) => rowOf(instruction.r(0x33, 0, f3, 0, 0, f7), 0xfe00707f));
-    assert.deepEqual(alu.sort(), ["add", "and", "div", "mul", "or", "rem", "sll", "sra", "srl", "sub", "xor"]);
+    assert.deepEqual(alu.sort(), ["add", "and", "div", "divu", "mul", "or", "rem", "remu", "sll", "sra", "srl", "sub", "xor"]);
     const forms = new Set();
     for (const form of IMMEDIATE_FORMS.values()) for (const c of [0, 1, 2, 3, 8, 255, -5, 31])
         for (const [f3, imm] of form(c) ?? []) {

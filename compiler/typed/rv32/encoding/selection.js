@@ -1,9 +1,11 @@
 // Instruction-selection tables: ALU operations, fused predicates, immediate forms, constantForm.
-import {I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR, I32_SHL, I32_SHR_S, I32_SHR_U, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, IF, BR_IF} from "./tape.js";
+import {I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR, I32_SHL, I32_SHR_S, I32_SHR_U, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, IF, BR_IF,
+    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U} from "./tape.js";
 
 export const ALU = new Map([
     [I32_ADD,[0,0]], [I32_SUB,[0,0x20]], [I32_MUL,[0,1]], [I32_DIV_S,[4,1]], [I32_REM_S,[6,1]],
     [I32_AND,[7,0]], [I32_OR,[6,0]], [I32_XOR,[4,0]], [I32_SHL,[1,0]], [I32_SHR_S,[5,0x20]], [I32_SHR_U,[5,0]],
+    [I32_DIV_U,[5,1]], [I32_REM_U,[7,1]], // divu, remu
 ]);
 
 // select.branches: the branch funct3 taken when the predicate holds, and whether the
@@ -17,6 +19,9 @@ export const PREDICATES = new Map([
     [I32_LE_S,[5,true]],  // le_s
     [I32_GE_S,[5,false]], // ge_s
     [I32_GE_U,[7,false]], // ge_u
+    [I32_LT_U,[6,false]], // lt_u: bltu
+    [I32_GT_U,[6,true]],  // gt_u: bltu, operands reversed
+    [I32_LE_U,[7,true]],  // le_u: bgeu, operands reversed
 ]);
 
 export const fitsImmediate = n => n >= -2048 && n <= 2047;
@@ -40,6 +45,10 @@ export const IMMEDIATE_FORMS = new Map([
     [I32_GE_S, c => fitsImmediate(c) ? [[2, c], [4, 1]] : null],               // !(a < c)
     [I32_GE_U, c => fitsImmediate(c) ? [[3, c], [4, 1]] : null],               // !(a <u c)
     [I32_EQ, c => fitsImmediate(c) ? [[4, c], [3, 1]] : null],               // xori, seqz
+    [I32_LT_U, c => fitsImmediate(c) ? [[3, c]] : null],                       // sltiu (the immediate sign-extends to c)
+    // u32 division and remainder by a power of two: srli, andi (c is never 0 here: constantForm gives "zero").
+    [I32_DIV_U, c => powerOfTwo(c) >= 0 ? [[5, powerOfTwo(c)]] : null],
+    [I32_REM_U, c => powerOfTwo(c) >= 0 && fitsImmediate(c - 1) ? [[7, c - 1]] : null],
 ]);
 
 // How select lowers the literal at tape[at] (an i32.const operand cell), given the next

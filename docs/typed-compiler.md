@@ -59,6 +59,8 @@ into one IIFE (one scope, so they are not ES modules) with the bundler every com
 | `frontend/declarations.js` | records, enums, distinct types, member aliases (`parseDeclarations`), `scanSignatures`, `checkAcyclic`, `recordLayouts` |
 | `frontend/expressions.js` | the tape's constants for the bundle; `ExpressionParser`: the tape writer (`emitConst`, `emitFloat`, `emitIndex`, `emitMemory`, `codeUnitAddress`, `emitLiteralStores`) and the expressions |
 | `frontend/floats.js` | the f32 operators and `Math` functions, `Math.min`/`max`, `getF32`/`setF32` addresses, the tape surgery of a negated or converted literal (methods of `ExpressionParser`) |
+| `frontend/values.js` | the value types (PICOCALC-TYPED-VALUES): the conditional expression, `u32(x)`, value records (methods of `ExpressionParser`) |
+| `frontend/arrays.js` | local arrays: `new Int32Array(n)`, `a[i]`, `a.length` (methods of `ExpressionParser`) |
 | `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`async/body.js` subclasses it) |
 | `frontend/inspect.js` | the front end's `frontend` inspection event (`target: "tape"`) |
 | `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async lowering (`emitSpanFunctions`; `originalError` maps lowered-code diagnostics to original positions) |
@@ -111,15 +113,16 @@ pops and pushes (WebAssembly's encodings: `I32 = 0x7f`), and a bit set of effect
 | `LOADS` | reads memory | `i32.load`, `i32.load16_u`, `f32.load` |
 | `CALLS` | calls a function (whose own effects are the callee's) | `call` |
 | `BRANCHES` | may transfer control away from the next operation | `if`, `else`, `br`, `br_if`, `return`, `unreachable` |
-| `TRAPS` | may trap | `i32.div_s`, `i32.rem_s`, `text.checked_address`, `unreachable` |
+| `TRAPS` | may trap | `i32.div_s`, `i32.div_u`, `i32.rem_s`, `i32.rem_u`, `text.checked_address`, `unreachable` |
 | `CONTROL` | opens, separates or closes a block, or leaves the function | `block`, `loop`, `if`, `else`, `end`, `br`, `return`, `unreachable` |
 
-The table has 66 rows: `unreachable`, `block`, `loop`, `if`, `else`, `end`, `br`, `br_if`, `return`, `call`, `drop`,
-`local.get`, `local.set`, `i32.load`, `i32.load16_u`, `i32.store`, `i32.store16`, `i32.const`, eight comparisons
-(`eqz`, `eq`, `ne`, `lt_s`, `gt_s`, `le_s`, `ge_s`, `ge_u`), eleven arithmetic and bitwise operations (`add`, `sub`,
-`mul`, `div_s`, `rem_s`, `and`, `or`, `xor`, `shl`, `shr_s`, `shr_u`), the f32 rows (`f32.load`, `f32.store`,
-`f32.const`, six comparisons, `abs`, `neg`, `ceil`, `floor`, `trunc`, `sqrt`, `add`, `sub`, `mul`, `div`, `copysign`,
-`f32.convert_i32_s`, `i32.reinterpret_f32`, `f32.reinterpret_i32`) and the pseudo-ops:
+The table has 75 rows: `unreachable`, `block`, `loop`, `if`, `else`, `end`, `br`, `br_if`, `return`, `call`, `drop`,
+`local.get`, `local.set`, `i32.load`, `i32.load16_u`, `i32.store`, `i32.store16`, `i32.const`, eleven comparisons
+(`eqz`, `eq`, `ne`, `lt_s`, `lt_u`, `gt_s`, `gt_u`, `le_s`, `le_u`, `ge_s`, `ge_u`), thirteen arithmetic and bitwise
+operations (`add`, `sub`, `mul`, `div_s`, `div_u`, `rem_s`, `rem_u`, `and`, `or`, `xor`, `shl`, `shr_s`, `shr_u`), the
+f32 rows (`f32.load`, `f32.store`, `f32.const`, six comparisons, `abs`, `neg`, `ceil`, `floor`, `trunc`, `sqrt`, `add`,
+`sub`, `mul`, `div`, `copysign`, `f32.convert_i32_s`, `f32.convert_i32_u`, `i32.reinterpret_f32`,
+`f32.reinterpret_i32`) and the pseudo-ops:
 
 | Opcode | Name | Cells | Meaning |
 |---|---|---|---|
@@ -128,6 +131,9 @@ The table has 66 rows: `unreachable`, `block`, `loop`, `if`, `else`, `end`, `br`
 | `0xf3` | `text.unchecked_address receiver position j` | 3 | the address of `receiver[position + j]` without a check; written by loop versioning inside a loop whose range it proved |
 | `0xf4` | `f32.to_i32` | 0 | f32 to i32 toward zero, saturating, NaN to 2^31-1 (RV32F's `fcvt.w.s rtz`; Wasm: `i32.trunc_sat_f32_s` and a NaN select) |
 | `0xf5`, `0xf6` | `f32.min_num`, `f32.max_num` | 0 | the other operand when one is NaN (RV32F's `fmin.s`, `fmax.s`; Wasm: `f32.min`/`max` and two NaN selects) |
+| `0xf7` | `f32.to_u32` | 0 | f32 to u32 toward zero, saturating (negative to 0), NaN to 2^32-1 (RV32F's `fcvt.wu.s rtz`; Wasm: `i32.trunc_sat_f32_u` and a NaN select) |
+| `0xf8` | `array.address offset` | 1 | the address of byte `offset` of the function's local-array area (RV32: `addi rd, sp, base + offset`; Wasm: `i32.const` of a static address) |
+| `0xf9` | `array.zero offset bytes` | 2 | zeroes `bytes` bytes of the area from `offset` (RV32: `sw zero` per word up to 16, else a loop; Wasm: `memory.fill`) |
 
 A value is an `i32` or an `f32` (`F32 = 0x7d`): `bool`, enums, `buffer`, `string` and record references are `i32` at the
 tape level. An `f32.const` cell holds the literal's IEEE bits as an i32 (its Wasm encoding is four little-endian bytes,
@@ -167,9 +173,11 @@ encoding: only loop versioning writes it. So the WebAssembly oracle runs exactly
 
 ### Operators and literals
 
-The binary operators are JavaScript's, with its precedences, from loosest: `||`; `&&`; `|`; `^`; `&`; `===` `!==`;
-`<` `<=` `>` `>=`; `<<` `>>` `>>>`; `+` `-`; `*` `/` `%`. The prefix operators `!`, `-` and `~` bind tighter than all
-of them. All are on `i32` (`&&`, `||` and `!` on `bool`); a bitwise operator on a `bool` is a type error, so
+The binary operators are JavaScript's, with its precedences, from loosest: `?:`; `||`; `&&`; `|`; `^`; `&`; `===`
+`!==`; `<` `<=` `>` `>=`; `<<` `>>` `>>>`; `+` `-`; `*` `/` `%`. The prefix operators `!`, `-` and `~` bind tighter than
+all of them. The conditional expression `c ? a : b` is right-associative and each arm is a whole expression, as in
+JavaScript; `c` is a `bool`, both arms have one type (a literal takes the other arm's integer type), and the tape is
+`c; if (result T); a; else; b; end`. All are on `i32` (`&&`, `||` and `!` on `bool`); a bitwise operator on a `bool` is a type error, so
 JavaScript's trap `a & 1 === 1` (which means `a & (1 === 1)`) does not compile. A shift uses the low five bits of its
 count, `>>>` is logical, `~x` is written to the tape as `x ^ -1`. A `distinct` integer type keeps its type through
 `|`, `^`, `&`, `+` and `-` with an operand of the same type or a literal, as before for `+` and `-`; shifts, `*`, `/`
@@ -177,6 +185,55 @@ and `%` take and give `i32` (convert with `i32(...)`). Integer literals are deci
 `-2147483648`) or hex: `0x` or `0X` and one to eight hex digits, the i32 of those 32 bits, so `0xffffffff` is `-1`
 and `0x80000000` is `-2147483648` (an enum member's value too). Any other word after `0x` is an error. The P4's
 lexical index (`firmware/port/esp32p4/main/typed_lex_index.c`) tokenizes the same way as the lexer's `TOKEN`.
+
+`u32` is an unsigned 32-bit integer, an `i32` on the tape and in registers. `+ - * & | ^ ~ <<` are as on `i32`;
+`< <= > >=`, `/` and `%` are unsigned (`lt_u`, `gt_u`, `le_u`, `ge_u`, `div_u`, `rem_u`; RV32 `sltu`, `bltu`/`bgeu`,
+`divu`, `remu`, and a shift or mask for a power of two); `>>>` is logical and `>>` is an error on a `u32`; unary minus
+is an error; a shift's count is any integer. `u32` and `i32` do not mix: `u32(x)` and `i32(x)` keep the bits, `f32(x)`
+converts the unsigned value and `u32(x)` of an f32 truncates and saturates (NaN to 2^32-1, `f32.to_u32`). A literal
+takes its context's type, so a hex literal is the same 32 bits as an `i32` or a `u32`; a decimal literal from 2^31 to
+2^32-1 is a `u32`. Two literals stay a literal under `+ - * & | ^ << >>>`; `/ % >>` of literals are `i32`.
+
+`continue` jumps to the end of its loop's body: a body that contains the word gets a block around it (`block; B; end`)
+and `continue` is a branch to that block's end, so a `for` loop's update runs and the condition is tested again, also
+after `rotate` has moved the condition to the bottom of the loop. The front end decides before parsing the body by
+scanning its text for the word (`bodyContinues` in `frontend/statements.js`).
+
+### Value records
+
+`value record Vec3 { x: f32; y: f32; z: f32; }` declares a record whose variables are values, where `record` declares
+a reference to memory the host lays out. A field is a scalar, a record reference or an earlier value record; its
+leaves are its scalar fields with nested value records flattened in field order (`Ray { o: Vec3; d: Vec3; }` has six).
+`Vec3(1.0, 2.0, 3.0)` constructs one, one argument per field. The front end replaces it by scalars as it parses: a
+local is one local per leaf, `v.o.x` is one `local.get`, an expression leaves its leaves on the operand stack, and
+`let b = a` copies (`v.x = e` needs a `let`). A parameter is its leaves, consecutive parameters (`fn.params`, names
+`v.x`; `fn.sourceParams` keeps the signature as written); methods take the receiver's leaves. A function may return
+one: its result is the leaves (`fn.results`; WebAssembly multi-value, `(result f32 f32 f32)`), `f(x).y` stores them into
+fresh locals and reads one, and `c ? a : b` of two stores each arm into the same locals. `===` on them is an error. No
+pass and no backend sees a value record, only scalar locals and calls with several results.
+
+RV32 returns a record result's leaves as the arguments arrive: integers in `a0`-`a7`, `f32` in `fa0`-`fa7`, and a leaf
+beyond its class's eight in the next word of the caller's stack-argument area (`resultLocations`, `calleeResults`); a
+single result keeps `a0` or `fa0`. The callee writes stack leaves through the caller's sp (`returnValue`); a frameless
+leaf with stack leaves is declined. The passes with an abstract operand stack push `arity.results(i)` values for a
+call, and `inline` inlines such a callee by storing its leaves into result locals at each `return` and its end.
+
+### Local arrays
+
+`const a = new Float32Array(16)` (also `Int32Array`, `Uint32Array`, with `let` or `const`) declares an array of a
+literal length from 1 to 1024 whose elements are `f32`, `i32` or `u32`. The declaration zeroes it each time it runs, as
+JavaScript's `new` and WGSL's `var` do. `a[i]` reads and `a[i] = e;` writes an element; the index is an `i32` or a
+`u32`, compared unsigned with the length (a negative index traps too: `local.get i; i32.const n; i32.ge_u; if;
+unreachable; end`). Two indices need no check at run time: a literal, which the compiler checks, and the counter of an
+enclosing counted loop `for (k = c; k < n; k = k + s)` with `n` at most the length, whose body never writes `k`
+(`c` and `s` not negative for a signed `k`): the front end records such a check and removes it when the loop's body
+ends without a write of `k` (`countedRange`, `proveChecks` in `frontend/arrays.js`). `a.length` is a literal.
+An array is not a value: it is not assigned, passed, returned or compared, and it never aliases memory. A function's
+arrays are one area (`fn.arrayBytes`): RV32 places it in the frame between the stack-argument area and the slots (in a
+large frame, above `ra`, `s0` and the saved registers), and the Wasm backend at a static address below the previous
+function's area from the top of the module's memory, which is correct because the call graph is acyclic (no function
+is active twice); `linkWorld` refuses arrays, as the runtime owns a linked world's memory. A function with arrays has a
+frame, and `inline` leaves its calls in place.
 
 RV32 lowers `and`, `or`, `xor`, `sll`, `sra`, `srl` and, when the right operand is a literal (`select.immediates`;
 the `commute` pass moves a literal to the right of `&`, `|` and `^`), `andi`, `ori`, `xori` for literals in
@@ -273,7 +330,13 @@ A register is a number: `0`-`31` are `x0`-`x31`, `32`-`63` are `f0`-`f31`, so `r
 keeps the plain numbers it always had (`rv32/encoding/registers.js`). `REGISTER_CLASSES` holds, per class, the ilp32f
 tables: argument registers (`a0`-`a7`, `fa0`-`fa7`), callee-saved registers, the homes the planner may claim (`s1`-`s11`;
 `fs0`-`fs11`), the operand-stack and scratch registers. `argumentRegisters(params)` assigns integer and `f32` parameters
-to their classes independently. The planner gives each key the class of its type (`fn.params`, `fn.localTypes` for frame
+to their classes independently, as ilp32f does beyond eight of a class too: an `f32` after `fa7` takes the next free
+integer register (its bits), and a parameter with no register left takes the next stack word, written `-1 - k` for
+the word at the caller's `sp + 4k` (PICOCALC-TYPED-VALUES). A caller's frame starts with a stack-argument area as large
+as its largest call needs (`outgoingWords`; the slots and, in a large frame, `ra`, `s0` and the saved registers sit
+above it); a callee copies its stack parameters into their homes or slots in the prologue from the caller's `sp`
+(`callerStack`: `addi t5, sp, frame`, patched once the frame is known). A parameter on the stack, or an `f32` in an
+integer register, never stays in its incoming register and feeds no capacity or pointer home. The planner gives each key the class of its type (`fn.params`, `fn.localTypes` for frame
 locals) and plans each class with its own free list and the same rules; the emitter's `load`, `store` and `move` pick
 `flw`, `fsw`, `fmv.s`, `fmv.x.w` or `fmv.w.x` for a float register, the prologue saves claimed `fs` registers, a call
 passes `f32` arguments in `fa` registers and an `f32` result returns in `fa0`. The operand stack has a register file per

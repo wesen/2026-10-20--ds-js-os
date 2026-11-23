@@ -64,6 +64,19 @@ function pushTruncate(out, scratch) {
     out.push(F32_NE, 0x1b); // NaN: select 2^31 - 1
 }
 
+// f32.to_u32 (RV32F's fcvt.wu.s rtz): i32.trunc_sat_f32_u, but 2^32 - 1 for NaN. `scratch` is an f32 local.
+function pushTruncateUnsigned(out, scratch) {
+    out.push(LOCAL_SET);
+    pushUnsigned(out, scratch);
+    out.push(I32_CONST, 0x7f, LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(0xfc, 0x01, LOCAL_GET); // i32.trunc_sat_f32_u
+    pushUnsigned(out, scratch);
+    out.push(LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(F32_NE, 0x1b); // NaN: select 2^32 - 1
+}
+
 // f32.min_num and f32.max_num (RV32F's fmin.s, fmax.s): the other operand when one is NaN, else f32.min or f32.max,
 // which order -0 below +0 as fmin.s does. a and b are f32 scratch locals:
 //   select(select(min(a, b), a, b === b), b, a === a)
@@ -89,6 +102,17 @@ function localGroups(types) {
     return [...unsigned(groups.length), ...groups.flatMap(([count, type]) => [...unsigned(count), type])];
 }
 
+// array.address offset: the static address fn.arrayBase + offset. array.zero offset bytes: memory.fill (bulk memory).
+function pushArray(out, fn, op, offset, bytes) {
+    out.push(I32_CONST);
+    pushSigned(out, fn.arrayBase + offset);
+    if (op === ARRAY_ZERO) {
+        out.push(I32_CONST, 0, I32_CONST);
+        pushSigned(out, bytes);
+        out.push(0xfc, 0x0b, 0x00);
+    }
+}
+
 // fn.body: the framed body (size, locals, instructions) of fn's tape. `marks`, when given, receives the byte offset
 // of each tape operation within the instructions, by ordinal. Returns the instructions' length.
 function encodeFunction(fn, marks) {
@@ -101,7 +125,9 @@ function encodeFunction(fn, marks) {
         const n = CELLS[op];
         if (marks) marks.push(out.length);
         // Most operands fit one LEB128 byte; those take the short paths.
-        if (n === 1 && op !== I32_CONST && op !== F32_CONST && tape[at + 1] < 128) {
+        if (op === ARRAY_ADDRESS || op === ARRAY_ZERO) {
+            pushArray(out, fn, op, tape[at + 1], tape[at + 2]);
+        } else if (n === 1 && op !== I32_CONST && op !== F32_CONST && tape[at + 1] < 128) {
             out.push(op, tape[at + 1]);
         } else if (n === 0 && op < I32_TRUNC_F32) {
             out.push(op);
@@ -122,6 +148,9 @@ function encodeFunction(fn, marks) {
         } else if (op === I32_TRUNC_F32) {
             scratch = true;
             pushTruncate(out, first);
+        } else if (op === U32_TRUNC_F32) {
+            scratch = true;
+            pushTruncateUnsigned(out, first);
         } else if (op === F32_MIN || op === F32_MAX) {
             scratch = true;
             pushMinMax(out, op, first, first + 1);
@@ -149,7 +178,13 @@ function compileWasmFunctions(source, functionBase, imported, maxSourceLength, o
     let tapeEvent = null;
     const frontOptions = inspect && typeof inspect.emit === "function"
         ? {...options, inspect: {function: inspect.function, emit(event) { tapeEvent = event; }}} : options;
+    // Local arrays: each function's area below the previous one's, from the top of the module's memory.
+    let arrayTop = (options?.memoryPages ?? 1) * 65536;
     return compileFunctions(source, functionBase, imported, maxSourceLength, undefined, fn => {
+        if (fn.arrayBytes) {
+            fn.arrayBase = arrayTop -= fn.arrayBytes;
+            if (arrayTop < 0) throw new SyntaxError("local arrays exceed the module's memory");
+        }
         const event = tapeEvent;
         tapeEvent = null;
         const marks = event ? [] : undefined;

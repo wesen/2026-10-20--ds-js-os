@@ -64,20 +64,23 @@ class FloatParsing {
             this.code.push(name === "min" ? F32_MIN : F32_MAX);
             return "f32";
         }
-        this.want(first, "i32");
+        // Two i32, or two u32 (compared unsigned); a literal takes the other operand's type.
+        if (!unsignedType(first) && first !== LITERAL) this.want(first, "i32");
         this.emitIndex(LOCAL_SET, a);
         { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
-        this.want(this.expr(), "i32");
+        const second = this.expr();
+        const unsigned = unsignedType(first) || first === LITERAL && unsignedType(second);
+        this.want(second, unsigned ? "u32" : "i32");
         this.emitIndex(LOCAL_SET, b);
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         this.emitIndex(LOCAL_GET, a);
         this.emitIndex(LOCAL_GET, b);
-        this.code.push(I32_LT_S, IF, I32);
+        this.code.push(unsigned ? I32_LT_U : I32_LT_S, IF, I32);
         this.emitIndex(LOCAL_GET, name === "min" ? a : b);
         this.code.push(ELSE);
         this.emitIndex(LOCAL_GET, name === "min" ? b : a);
         this.code.push(END);
-        return "i32";
+        return unsigned ? "u32" : "i32";
     }
 
     // The checked address of f32 element i of a buffer: UTF-16 units 2i and 2i + 1, the check on 2i + 1, the f32 at
