@@ -42,7 +42,8 @@ front end       Lexer → signature pass (records, enums, distinct types, acycli
 ### The front end's modules
 
 `typed-wasm.js` is generated: `node compiler/typed/frontend/build.mjs` concatenates these modules, in this order,
-into one IIFE (one scope, so they are not ES modules), and `--check`, run by `make test-generated` and by
+into one IIFE (one scope, so they are not ES modules) with the bundler every compiler build shares
+(`compiler/typed/bundle.mjs`, which also scope-hoists the RV32 backend's ES modules), and `--check`, run by `make test-generated` and by
 `tests/compiler/typed-wasm-inspect.test.mjs`, fails when the bundle is stale. Edit the modules, never the bundle.
 
 | Module | Contents |
