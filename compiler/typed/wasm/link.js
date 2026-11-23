@@ -75,11 +75,12 @@ function invoke(exports, signature, args) {
     const words = args.map((value, i) => {
         if (signature.params[i] === "bool" && typeof value === "boolean") return Number(value);
         if (signature.params[i] === "i32" && i32(value)) return value;
+        if (signature.params[i] === "u32" && Number.isInteger(value) && value >= 0 && value <= 0xffffffff) return value | 0;
         if (signature.params[i] === "f32" && typeof value === "number") return value;
         throw new TypeError(signature.name + " expects " + signature.params[i] + " at argument " + i);
     });
     const value = exports[signature.name](...words);
-    return signature.result === "bool" ? value !== 0 : value;
+    return signature.result === "bool" ? value !== 0 : signature.result === "u32" ? value >>> 0 : value;
 }
 
 // What the bundle publishes. typed-async.js uses the front end's pieces; typed-rv32.js uses compileFunctions and the

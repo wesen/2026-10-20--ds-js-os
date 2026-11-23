@@ -105,3 +105,65 @@ Order: 1–3 first (small), then 6, then 4 and 5 together, then 7. Each lands wi
 
 - Heap-allocated records, closures and generics.
 - Changing Candela's generator (PICOCALC-CANDELA-KERNEL-CODEGEN).
+
+## Refinements (2026-11-23)
+
+Decisions taken against the code, in the order the features landed (diary steps 2 onwards).
+
+### Every feature
+
+- **Identity.** A program that uses none of the new features compiles to the same tapes and images: the 84-digest
+  harness (PICOCALC-TYPED-PIPELINE's, with Files and Agenda as the multi-file worlds they now are, copied to this
+  ticket's `scripts/`) is `IDENTICAL 84 of 84` after each feature.
+- **Where the front end's new code lives.** `frontend/values.js` (methods copied onto `ExpressionParser`, as `floats.js`
+  does), so `expressions.js` stays under the 500-line limit.
+
+### `continue`
+
+- A loop was `block; loop; C; eqz; br_if 1; B; [update]; br 0; end; end`. `continue` cannot be a `br` to the loop: that
+  skips a `for` loop's update, and once the `rotate` pass has moved C to the bottom (`loop; B; C; br_if 0`), a branch to
+  the loop also skips the condition. So a body that continues is wrapped: `...; br_if 1; block; B; end; [update]; br 0`,
+  and `continue` is a `br` to that block's end. Every pass already handles a forward branch out of a block.
+- The front end is streaming and has no syntax tree, so it decides before parsing the body whether to open the block:
+  `bodyContinues` scans the body's text from its `{` to the matching `}` for the word `continue` (skipping comments and
+  strings). A `continue` of a nested loop also counts; the extra block costs no instruction (RV32 emits nothing for
+  `block` and `end`). A source without the word anywhere pays one `includes` per source; loops in programs without
+  `continue` keep their tapes, which the identity harness checks.
+- `continue` in an `async` function's own statement parser (`async/body.js`) is not supported (it parses `break`
+  only); recorded as a task.
+
+### The conditional expression
+
+- `c ? a : b` is JavaScript's: looser than `||`, right-associative, each arm a whole expression. It is parsed after the
+  binary operators at precedence 0 (`expr(0)`), so `a || b ? c : d` is `(a || b) ? c : d`.
+- The tape is `c; if (result T); a; else; b; end`, the form `&&`, `||` and `Math.min` already write, so no pass or
+  backend needed a change; RV32 fuses a comparison into the `if`'s branch. T is `I32` until the first arm is parsed and
+  then patched to `F32` if the arm is an f32 (one cell; the front end writes T before it knows the arm's type).
+- **No `select`.** A `select` row would need RV32 lowering (a branchless sequence of four instructions, or a branch
+  anyway) and teaching every pass with an abstract stack; the fused compare-and-branch is two instructions per arm.
+- Both arms have one type, with no implicit conversion. A literal takes the other arm's integer type
+  (`k > 0 ? id : 7` is an `Id`); a `u32` literal meets only `u32`.
+
+### `u32`
+
+- A distinct numeric type, an `i32` on the tape and in registers. Tape rows `i32.lt_u` (0x49), `gt_u` (0x4b), `le_u`
+  (0x4d), `div_u` (0x6e), `rem_u` (0x70), `f32.convert_i32_u` (0xb3), all Wasm's own opcodes, and one pseudo-op
+  `f32.to_u32` (0xf7): RV32F's `fcvt.wu.s` rule (truncate, saturate, NaN to 2^32 - 1); Wasm expands it to
+  `i32.trunc_sat_f32_u` and a NaN select, as `f32.to_i32` does.
+- Operators: `+ - * & | ^ ~ <<` as on `i32`; `< <= > >=`, `/` and `%` unsigned; `>>>` logical; **`>>` is an error** on
+  `u32` (JavaScript's `>>` is arithmetic; giving it a logical meaning on one type would surprise a reader, and `>>>` says
+  what it does). A shift's count may be any integer; the left operand gives the result's type. Unary minus is an error.
+  Mixing `u32` and `i32` is an error; `u32(x)` and `i32(x)` convert (bits unchanged), `f32(x)` of a `u32` rounds the
+  unsigned value (`fcvt.s.wu`), `u32(x)` of an f32 is `f32.to_u32`. `Math.min`/`max` compare two `u32` unsigned.
+- **Literals.** A hex literal stays 32 bits that take their context's type, as today: `0xffffffff` is `-1` as an `i32`
+  and 4294967295 as a `u32`, with the same bits; so hex literals above 2^31 are not `u32` by themselves. A decimal
+  literal from 2^31 to 2^32 - 1 is a `u32` (an `i32` context reports "i32 literal out of range" as before); above that,
+  "integer literal out of range". Two literals give a literal under `+ - * & | ^ << >>>` (and a literal shifted by any
+  count), whose bits do not depend on signedness, so `1 << 5` fits a `u32`; under `/ % >>` they give an `i32`, because
+  the front end must choose the signed or the unsigned operation when it writes it. This widens what compiled before
+  (`const f: Flags = 1 + 2` is now accepted) and changes no tape.
+- RV32: `sltu`/`sltiu`, fused `bltu`/`bgeu`, `divu`/`remu` behind the zero check (no overflow check), and a division or
+  remainder by a power of two as `srli`/`andi`. The passes: `value-sets` folds the new rows; `ranges` bounds `rem_u` and
+  `div_u` by a constant; `hoist` moves an unsigned division only with a literal divisor, like a signed one; every
+  other pass meets the rows inside the ranges it already tests (`I32_EQ..I32_GE_U`, `I32_ADD..I32_SHR_U`).
+- The P4's lexical index (`typed_lex_index.c`) learns `?`; `u32` and `continue` are words it already tokenizes.

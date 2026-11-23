@@ -58,8 +58,11 @@ const ROWS = [
     [0x46, "I32_EQ", "i32.eq", [], [I32, I32], [I32], 0],
     [0x47, "I32_NE", "i32.ne", [], [I32, I32], [I32], 0],
     [0x48, "I32_LT_S", "i32.lt_s", [], [I32, I32], [I32], 0],
+    [0x49, "I32_LT_U", "i32.lt_u", [], [I32, I32], [I32], 0],
     [0x4a, "I32_GT_S", "i32.gt_s", [], [I32, I32], [I32], 0],
+    [0x4b, "I32_GT_U", "i32.gt_u", [], [I32, I32], [I32], 0],
     [0x4c, "I32_LE_S", "i32.le_s", [], [I32, I32], [I32], 0],
+    [0x4d, "I32_LE_U", "i32.le_u", [], [I32, I32], [I32], 0],
     [0x4e, "I32_GE_S", "i32.ge_s", [], [I32, I32], [I32], 0],
     [0x4f, "I32_GE_U", "i32.ge_u", [], [I32, I32], [I32], 0],
     // f32 comparisons: false when an operand is NaN, except ne (true), in WebAssembly and RV32F alike.
@@ -73,7 +76,9 @@ const ROWS = [
     [0x6b, "I32_SUB", "i32.sub", [], [I32, I32], [I32], 0],
     [0x6c, "I32_MUL", "i32.mul", [], [I32, I32], [I32], 0],
     [0x6d, "I32_DIV_S", "i32.div_s", [], [I32, I32], [I32], TRAPS],
+    [0x6e, "I32_DIV_U", "i32.div_u", [], [I32, I32], [I32], TRAPS],
     [0x6f, "I32_REM_S", "i32.rem_s", [], [I32, I32], [I32], TRAPS],
+    [0x70, "I32_REM_U", "i32.rem_u", [], [I32, I32], [I32], TRAPS],
     [0x71, "I32_AND", "i32.and", [], [I32, I32], [I32], 0],
     [0x72, "I32_OR", "i32.or", [], [I32, I32], [I32], 0],
     [0x73, "I32_XOR", "i32.xor", [], [I32, I32], [I32], 0],
@@ -94,8 +99,9 @@ const ROWS = [
     [0x94, "F32_MUL", "f32.mul", [], [F32, F32], [F32], 0],
     [0x95, "F32_DIV", "f32.div", [], [F32, F32], [F32], 0],
     [0x98, "F32_COPYSIGN", "f32.copysign", [], [F32, F32], [F32], 0],
-    // i32 -> f32, rounded to nearest even; the bits of an f32 as an i32 and back.
+    // i32 -> f32 and u32 -> f32, rounded to nearest even; the bits of an f32 as an i32 and back.
     [0xb2, "F32_CONVERT_I32_S", "f32.convert_i32_s", [], [I32], [F32], 0],
+    [0xb3, "F32_CONVERT_I32_U", "f32.convert_i32_u", [], [I32], [F32], 0],
     [0xbc, "I32_REINTERPRET_F32", "i32.reinterpret_f32", [], [F32], [I32], 0],
     [0xbe, "F32_REINTERPRET_I32", "f32.reinterpret_i32", [], [I32], [F32], 0],
     // Pseudo-ops, only in the numeric tape. Each operand is a local, except where noted.
@@ -115,6 +121,9 @@ const ROWS = [
     [0xf4, "I32_TRUNC_F32", "f32.to_i32", [], [F32], [I32], 0],
     [0xf5, "F32_MIN", "f32.min_num", [], [F32, F32], [F32], 0],
     [0xf6, "F32_MAX", "f32.max_num", [], [F32, F32], [F32], 0],
+    // f32 -> u32 toward zero, saturating (negative values give 0); NaN gives 2^32 - 1 (fcvt.wu.s rtz; Wasm's
+    // i32.trunc_sat_f32_u gives 0).
+    [0xf7, "U32_TRUNC_F32", "f32.to_u32", [], [F32], [I32], 0],
 ];
 
 const rows = [];

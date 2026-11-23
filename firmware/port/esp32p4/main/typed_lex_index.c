@@ -108,7 +108,7 @@ static enum token_kind scan_token(scan_state *s) {
                         (*p == '>' && p[1] == '>' && p[2] == '>'))) width = 3;
     else if (remain >= 2 && (((*p == '<' || *p == '>') && p[1] == '=') ||
              ((*p == '<' || *p == '>' || *p == '&' || *p == '|') && p[1] == *p))) width = 2;
-    else if (*p && *p < 128 && strchr("{}():;,.=-+*/%!<>&|^~", *p)) width = 1;
+    else if (*p && *p < 128 && strchr("{}():;,.=-+*/%!<>&|^~?", *p)) width = 1;
     if (!width) return 0;
     advance_ascii(s, width);
     return OPERATOR;

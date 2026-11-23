@@ -182,6 +182,7 @@ const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, RETURN, CALL, DROP, L
     F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG, F32_CEIL,
     F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
     I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX,
+    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U, F32_CONVERT_I32_U, U32_TRUNC_F32,
     cells: CELLS, effects: EFFECTS, next: opNext, close: opClose, row: tapeRow} = typedTape;
 // The f32 operations (a row that pops or pushes an f32): passes with an abstract operand stack take their pops and
 // pushes from the row (tapeRow(op).pop.length, .push.length).
@@ -268,6 +269,7 @@ function divisionMagic(d) {
 const ALU = new Map([
     [I32_ADD,[0,0]], [I32_SUB,[0,0x20]], [I32_MUL,[0,1]], [I32_DIV_S,[4,1]], [I32_REM_S,[6,1]],
     [I32_AND,[7,0]], [I32_OR,[6,0]], [I32_XOR,[4,0]], [I32_SHL,[1,0]], [I32_SHR_S,[5,0x20]], [I32_SHR_U,[5,0]],
+    [I32_DIV_U,[5,1]], [I32_REM_U,[7,1]], // divu, remu
 ]);
 
 // select.branches: the branch funct3 taken when the predicate holds, and whether the
@@ -281,6 +283,9 @@ const PREDICATES = new Map([
     [I32_LE_S,[5,true]],  // le_s
     [I32_GE_S,[5,false]], // ge_s
     [I32_GE_U,[7,false]], // ge_u
+    [I32_LT_U,[6,false]], // lt_u: bltu
+    [I32_GT_U,[6,true]],  // gt_u: bltu, operands reversed
+    [I32_LE_U,[7,true]],  // le_u: bgeu, operands reversed
 ]);
 
 const fitsImmediate = n => n >= -2048 && n <= 2047;
@@ -304,6 +309,10 @@ const IMMEDIATE_FORMS = new Map([
     [I32_GE_S, c => fitsImmediate(c) ? [[2, c], [4, 1]] : null],               // !(a < c)
     [I32_GE_U, c => fitsImmediate(c) ? [[3, c], [4, 1]] : null],               // !(a <u c)
     [I32_EQ, c => fitsImmediate(c) ? [[4, c], [3, 1]] : null],               // xori, seqz
+    [I32_LT_U, c => fitsImmediate(c) ? [[3, c]] : null],                       // sltiu (the immediate sign-extends to c)
+    // u32 division and remainder by a power of two: srli, andi (c is never 0 here: constantForm gives "zero").
+    [I32_DIV_U, c => powerOfTwo(c) >= 0 ? [[5, powerOfTwo(c)]] : null],
+    [I32_REM_U, c => powerOfTwo(c) >= 0 && fitsImmediate(c - 1) ? [[7, c - 1]] : null],
 ]);
 
 // How select lowers the literal at tape[at] (an i32.const operand cell), given the next
@@ -334,7 +343,7 @@ class ArithmeticMethods {
         const out = stored ?? this.resultRegister();
         const alu = ALU.get(op);
         if (alu) {
-            if (op === I32_DIV_S || op === I32_REM_S) {
+            if (op === I32_DIV_S || op === I32_REM_S || op === I32_DIV_U || op === I32_REM_U) {
                 this.emit(instruction.b(1, b, ZERO, 8));
                 this.emit(0x00100073);
             }
@@ -355,12 +364,13 @@ class ArithmeticMethods {
             if (op === I32_EQ) this.emit(instruction.i(0x13, out, 3, out, 1)); // seqz
             else this.emit(instruction.r(0x33, out, 3, ZERO, out)); // snez
         } else {
-            const unsigned = op === I32_GE_U;
-            if (![I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U].includes(op))
+            const unsigned = op === I32_GE_U || op === I32_LT_U || op === I32_GT_U || op === I32_LE_U;
+            if (![I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, I32_LT_U, I32_GT_U, I32_LE_U].includes(op))
                 throw new SyntaxError("unsupported RV32 operator " + op);
-            const swap = op === I32_GT_S || op === I32_LE_S;
+            // slt or sltu; a > b is b < a; a <= b and a >= b negate b < a and a < b.
+            const swap = op === I32_GT_S || op === I32_LE_S || op === I32_GT_U || op === I32_LE_U;
             this.emit(instruction.r(0x33, out, unsigned ? 3 : 2, swap ? b : a, swap ? a : b));
-            if (op === I32_LE_S || op === I32_GE_S || unsigned)
+            if (op === I32_LE_S || op === I32_GE_S || op === I32_GE_U || op === I32_LE_U)
                 this.emit(instruction.i(0x13, out, 4, out, 1));
         }
         this.result(out, stored);
@@ -601,7 +611,7 @@ const RETURNED = Symbol("computed in fa0 for the return that follows");
 const FLOAT_OPERATIONS = new Uint8Array(256);
 for (const op of [F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG,
     F32_CEIL, F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
-    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX]) FLOAT_OPERATIONS[op] = 1;
+    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX, F32_CONVERT_I32_U, U32_TRUNC_F32]) FLOAT_OPERATIONS[op] = 1;
 // Two f32 operands, an f32 result: the encoder key and its rounding mode (undefined: sign injection, min, max).
 const FLOAT_BINARY = new Map([
     [F32_ADD, ["fadd_s", RNE]], [F32_SUB, ["fsub_s", RNE]], [F32_MUL, ["fmul_s", RNE]], [F32_DIV, ["fdiv_s", RNE]],
@@ -683,17 +693,20 @@ class FloatMethods {
             else this.emit(encoder(op === F32_ABS ? "fsgnjx_s" : "fsgnjn_s")(out, a, a));
             return this.floatDone(out, stored);
         }
-        case F32_CONVERT_I32_S: case F32_REINTERPRET_I32: {
+        case F32_CONVERT_I32_S: case F32_CONVERT_I32_U: case F32_REINTERPRET_I32: {
             const a = this.pop(T5);
             const [out, stored] = this.floatResult(F);
-            this.emit(op === F32_CONVERT_I32_S ? encoder("fcvt_s_w")(out, a, RNE) : encoder("fmv_w_x")(out, a));
+            this.emit(op === F32_REINTERPRET_I32 ? encoder("fmv_w_x")(out, a) :
+                encoder(op === F32_CONVERT_I32_S ? "fcvt_s_w" : "fcvt_s_wu")(out, a, RNE));
             return this.floatDone(out, stored);
         }
-        case I32_TRUNC_F32: case I32_REINTERPRET_F32: {
-            // fcvt.w.s rtz saturates, and gives 2^31 - 1 for NaN: Typed's rule (tape.js f32.to_i32).
+        case I32_TRUNC_F32: case U32_TRUNC_F32: case I32_REINTERPRET_F32: {
+            // fcvt.w.s and fcvt.wu.s rtz saturate, and give 2^31 - 1 and 2^32 - 1 for NaN: Typed's rules (tape.js
+            // f32.to_i32, f32.to_u32).
             const a = this.pop(FT10);
             const [out, stored] = this.floatResult(0);
-            this.emit(op === I32_TRUNC_F32 ? encoder("fcvt_w_s")(out, a, RTZ) : encoder("fmv_x_w")(out, a));
+            this.emit(op === I32_REINTERPRET_F32 ? encoder("fmv_x_w")(out, a) :
+                encoder(op === I32_TRUNC_F32 ? "fcvt_w_s" : "fcvt_wu_s")(out, a, RTZ));
             return this.floatDone(out, stored);
         }
         }
@@ -1336,7 +1349,7 @@ class GuardedReturnCode extends FunctionCode {
 // The f32 operations other than memory accesses need no frame either (they use t5, t6, ft10 and ft11 at most).
 const LEAF_OPERATIONS = new Set([
     BLOCK, IF, ELSE, END, BR, BR_IF, RETURN, DROP, LOCAL_GET, I32_CONST, I32_EQZ,
-    I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, ...ALU.keys(),
+    I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, I32_LT_U, I32_GT_U, I32_LE_U, ...ALU.keys(),
     ...[...FLOAT_OPERATIONS.keys()].filter(op => FLOAT_OPERATIONS[op] && op !== F32_LOAD && op !== F32_STORE),
 ]);
 const LEAF_SPILL = Symbol("frameless function needs an operand spill");
@@ -2221,5 +2234,5 @@ globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES,
     passes: PASSES.map(({name, group, kind, needs}) => ({name, group, kind, needs: needs ?? [], file: GROUPS[group]}))};
 
 // The names the pass-group bundles import from this one.
-globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, floatingFunction, installPasses, opClose, opNext, replaceTape, tapeRow};
+globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, floatingFunction, installPasses, opClose, opNext, replaceTape, tapeRow};
 })();

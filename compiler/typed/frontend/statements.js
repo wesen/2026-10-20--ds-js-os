@@ -1,5 +1,26 @@
 // The front end's parser and type checker, part two: blocks, conditionals, loops, match, declarations and
 // assignments, and one function's body. typed-async.js (async/body.js) subclasses FunctionEmitter as its TypeChecker.
+
+// Whether a loop body that starts after the `{` at `from` contains the word continue (outside comments and strings).
+// Nested loops' continues count too: an unneeded continue block costs no instruction. One test per source decides
+// whether any body needs the scan, so a program without continue pays one search per source.
+const CONTINUE_SCAN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"|\bcontinue\b/g;
+let continueSource = null, continueFound = false;
+function bodyContinues(source, from) {
+    if (source !== continueSource) {
+        continueSource = source;
+        continueFound = source.includes("continue");
+    }
+    if (!continueFound) return false;
+    CONTINUE_SCAN.lastIndex = from;
+    for (let depth = 1, token; (token = CONTINUE_SCAN.exec(source));) {
+        if (token[0] === "{") depth++;
+        else if (token[0] === "}") { if (--depth === 0) return false; }
+        else if (token[0] === "continue") return true;
+    }
+    return false;
+}
+
 class FunctionEmitter extends ExpressionParser {
     result(type, branch) {
         { if (this.lex.token.value !== "return") this.lex.fail("expected return"); this.lex.next(); }
@@ -80,8 +101,13 @@ class FunctionEmitter extends ExpressionParser {
             else this.assignment(lex.ident());
             { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
         }
-        // Expression control blocks close within expr(), before any break can appear.
-        this.loopExits.push(this.controls);
+        // Expression control blocks close within expr(), before any break can appear. A loop is
+        //     block; loop; C; eqz; br_if 1; B; [update]; br 0; end; end
+        // and break is a br to the outer block. When the body has a continue, B is block; B; end and continue is a br
+        // to that block's end, which reaches the update and the back edge: a br to the loop itself would skip the
+        // update, and the condition once the rotate pass has moved it to the bottom.
+        const exit = this.controls;
+        this.loopExits.push(exit);
         this.controls += 2;
         this.code.push(BLOCK, VOID, LOOP, VOID);
         this.want(this.expr(), "bool");
@@ -96,7 +122,18 @@ class FunctionEmitter extends ExpressionParser {
             this.code = loopCode;
         }
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+        const continues = lex.token.value === "{" && bodyContinues(lex.source, lex.offset);
+        (this.loopContinues ??= []).push(continues ? exit + 2 : -1);
+        if (continues) {
+            this.code.push(BLOCK, VOID);
+            this.controls++;
+        }
         this.block(result);
+        if (continues) {
+            this.code.push(END);
+            this.controls--;
+        }
+        this.loopContinues.pop();
         if (update) {
             if (this.inspection) this.code.append(update);
             else for (const cell of update) this.code.push(cell);
@@ -250,6 +287,15 @@ class FunctionEmitter extends ExpressionParser {
             if (exit === undefined) lex.fail("break outside a loop");
             { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
             this.emitIndex(BR, this.controls - exit - 1);
+            return;
+        }
+        case "continue": {
+            lex.next();
+            const target = this.loopContinues?.at(-1);
+            if (target === undefined) lex.fail("continue outside a loop");
+            if (target < 0) lex.fail("continue the loop's body scan did not find");
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
+            this.emitIndex(BR, this.controls - target - 1);
             return;
         }
         case "const": case "let":

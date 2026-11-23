@@ -4,7 +4,7 @@
 (() => {
 "use strict";
 if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-loops.js");
-const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape} = globalThis.typedRv32Modules;
+const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape} = globalThis.typedRv32Modules;
 
 // rv32/passes/conjunctions.js
 // The conjunctions pass.
@@ -89,6 +89,11 @@ function i32Fold(op, x, y) {
     case I32_LE_S: return x <= y ? 1 : 0;
     case I32_GE_S: return x >= y ? 1 : 0;
     case I32_GE_U: return (x >>> 0) >= (y >>> 0) ? 1 : 0;
+    case I32_LT_U: return (x >>> 0) < (y >>> 0) ? 1 : 0;
+    case I32_GT_U: return (x >>> 0) > (y >>> 0) ? 1 : 0;
+    case I32_LE_U: return (x >>> 0) <= (y >>> 0) ? 1 : 0;
+    case I32_DIV_U: return y === 0 ? undefined : Math.trunc((x >>> 0) / (y >>> 0)) | 0;
+    case I32_REM_U: return y === 0 ? undefined : ((x >>> 0) % (y >>> 0)) | 0;
     case I32_ADD: return (x + y) | 0;
     case I32_SUB: return (x - y) | 0;
     case I32_MUL: return Math.imul(x, y);
@@ -437,6 +442,9 @@ function foldValueSets(code, arity, sink = true) {
 // rv32/passes/hoist.js
 // The hoist option of the version pass: loop invariants and subexpressions into the guard block.
 
+// A division or remainder: it traps on a zero divisor (and div_s on -2^31 / -1), so it moves only with a literal divisor.
+const dividing = op => op === I32_DIV_S || op === I32_REM_S || op === I32_DIV_U || op === I32_REM_U;
+
 // the hoist pass: a statement of a versioned loop's fast copy that computes the same value in
 // every iteration moves into the guard block, after the guard's terms and before the loop.
 // A statement `E; set X` moves when:
@@ -546,7 +554,7 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
                     buffers.push(a);
                 } else if (op === I32_LOAD16_U) ok = prev >= 0 && body[prev] === UNCHECKED_ADDRESS;
                 else if (op === I32_LOAD) ok = body[p + 2] === 0 && prev >= 0 && body[prev] === LOCAL_GET && invariant(body[prev + 1]);
-                else if (op === I32_DIV_S || op === I32_REM_S) ok = prev >= 0 && body[prev] === I32_CONST && body[prev + 1] !== 0 && body[prev + 1] !== -1;
+                else if (dividing(op)) ok = prev >= 0 && body[prev] === I32_CONST && body[prev + 1] !== 0 && body[prev + 1] !== -1;
                 else ok = op === I32_EQZ || (op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U);
             }
             if (!ok) continue;
@@ -657,7 +665,7 @@ function hoistSubexpressions(body, k, arity, fresh) {
         case I32_EQZ: combine(i, 1, true); break;
         default: {
             if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
-            if (op === I32_DIV_S || op === I32_REM_S) {
+            if (dividing(op)) {
                 const d = slots.at(-1);
                 const constant = d?.inv && d.start === d.end && body[ops[d.start]] === I32_CONST ? body[ops[d.start] + 1] : undefined;
                 combine(i, 2, constant !== undefined && constant !== 0 && constant !== -1, 2);
@@ -1072,6 +1080,8 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
             } else if (op === I32_SHR_S && y[0] === y[1] && y[0] >= 0 && y[0] < 32) r = [x[0] >> y[0], x[1] >> y[0]];
             else if (op === I32_AND && (x[0] >= 0 || y[0] >= 0))
                 r = [0, Math.min(x[0] >= 0 ? x[1] : Infinity, y[0] >= 0 ? y[1] : Infinity)]; // a non-negative operand bounds it
+            else if (op === I32_REM_U && y[0] === y[1] && y[0] > 0) r = [0, y[0] - 1];
+            else if (op === I32_DIV_U && y[0] === y[1] && y[0] > 0 && x[0] >= 0) r = [Math.trunc(x[0] / y[0]), Math.trunc(x[1] / y[0])];
             else if (op === I32_SHR_U && y[0] === y[1] && y[0] > 0 && y[0] < 32)
                 r = x[0] >= 0 ? [x[0] >>> y[0], x[1] >>> y[0]] : [0, 2 ** (32 - y[0]) - 1];
             stack.push(r);

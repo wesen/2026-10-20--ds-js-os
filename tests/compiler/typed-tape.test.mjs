@@ -189,13 +189,15 @@ test("every tape the compiler produces from apps/typed matches the tape table", 
     assert(tapes > 2000, "checked " + tapes + " tapes");
     t.diagnostic(tapes + " tapes checked");
     assert.deepEqual([...phases].sort(), ["commute", "conjunctions", "inline", "rotate", "sets", "split", "version"]);
-    // Every row is exercised, so none is dead weight: the tape has every row but the bitwise operations and the f32
-    // rows, which no app uses yet (typed-bitwise.test.mjs and typed-f32.test.mjs exercise them), and the Wasm
+    // Every row is exercised, so none is dead weight: the tape has every row but the bitwise operations, the f32
+    // rows and the u32 rows, which no app uses yet (typed-bitwise.test.mjs, typed-f32.test.mjs and
+    // typed-values.test.mjs exercise them), and the Wasm
     // backend's bytes never hold a pseudo-op. i32.shl is also the Wasm backend's own (its expansion of
     // text.checked_address computes the UTF-16 address).
     const missing = codes => plain(T.rows.filter(row => !codes.has(row.code)).map(row => row.name));
     const floats = plain(T.rows.filter(row => row.pop && [...row.pop, ...row.push].includes(T.F32)).map(row => row.name));
-    assert.deepEqual(missing(all), ["i32.and", "i32.or", "i32.xor", "i32.shl", "i32.shr_u", ...floats].sort((a, b) =>
+    const unsigned = ["i32.lt_u", "i32.gt_u", "i32.le_u", "i32.div_u", "i32.rem_u"];
+    assert.deepEqual(missing(all), ["i32.and", "i32.or", "i32.xor", "i32.shl", "i32.shr_u", ...unsigned, ...floats].sort((a, b) =>
         T[T.rows.find(r => r.name === a).constant] - T[T.rows.find(r => r.name === b).constant]));
     assert(wasm.has(T.I32_SHL));
     assert.deepEqual([T.CHECKED_ADDRESS, T.LITERAL_STORES, T.UNCHECKED_ADDRESS].filter(op => wasm.has(op)), []);

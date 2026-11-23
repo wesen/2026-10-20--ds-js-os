@@ -17,6 +17,7 @@ export const MODULES = [
     "frontend/declarations.js",
     "frontend/expressions.js",
     "frontend/floats.js",
+    "frontend/values.js",
     "frontend/statements.js",
     "frontend/inspect.js",
     "frontend/compile.js",

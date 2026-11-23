@@ -2,7 +2,8 @@
 import {divisionMagic} from "../encoding/division.js";
 import {T6, T5, instruction, ZERO, A0} from "../encoding/registers.js";
 import {ALU, constantForm, IMMEDIATE_FORMS, powerOfTwo, fitsImmediate} from "../encoding/selection.js";
-import {I32_DIV_S, I32_REM_S, I32_EQ, I32_NE, I32_GE_U, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S} from "../encoding/tape.js";
+import {I32_DIV_S, I32_REM_S, I32_EQ, I32_NE, I32_GE_U, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_LT_U, I32_GT_U, I32_LE_U,
+    I32_DIV_U, I32_REM_U} from "../encoding/tape.js";
 
 export class ArithmeticMethods {
     binary(op) {
@@ -12,7 +13,7 @@ export class ArithmeticMethods {
         const out = stored ?? this.resultRegister();
         const alu = ALU.get(op);
         if (alu) {
-            if (op === I32_DIV_S || op === I32_REM_S) {
+            if (op === I32_DIV_S || op === I32_REM_S || op === I32_DIV_U || op === I32_REM_U) {
                 this.emit(instruction.b(1, b, ZERO, 8));
                 this.emit(0x00100073);
             }
@@ -33,12 +34,13 @@ export class ArithmeticMethods {
             if (op === I32_EQ) this.emit(instruction.i(0x13, out, 3, out, 1)); // seqz
             else this.emit(instruction.r(0x33, out, 3, ZERO, out)); // snez
         } else {
-            const unsigned = op === I32_GE_U;
-            if (![I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U].includes(op))
+            const unsigned = op === I32_GE_U || op === I32_LT_U || op === I32_GT_U || op === I32_LE_U;
+            if (![I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, I32_LT_U, I32_GT_U, I32_LE_U].includes(op))
                 throw new SyntaxError("unsupported RV32 operator " + op);
-            const swap = op === I32_GT_S || op === I32_LE_S;
+            // slt or sltu; a > b is b < a; a <= b and a >= b negate b < a and a < b.
+            const swap = op === I32_GT_S || op === I32_LE_S || op === I32_GT_U || op === I32_LE_U;
             this.emit(instruction.r(0x33, out, unsigned ? 3 : 2, swap ? b : a, swap ? a : b));
-            if (op === I32_LE_S || op === I32_GE_S || unsigned)
+            if (op === I32_LE_S || op === I32_GE_S || op === I32_GE_U || op === I32_LE_U)
                 this.emit(instruction.i(0x13, out, 4, out, 1));
         }
         this.result(out, stored);

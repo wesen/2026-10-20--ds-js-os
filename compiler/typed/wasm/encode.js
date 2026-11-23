@@ -64,6 +64,19 @@ function pushTruncate(out, scratch) {
     out.push(F32_NE, 0x1b); // NaN: select 2^31 - 1
 }
 
+// f32.to_u32 (RV32F's fcvt.wu.s rtz): i32.trunc_sat_f32_u, but 2^32 - 1 for NaN. `scratch` is an f32 local.
+function pushTruncateUnsigned(out, scratch) {
+    out.push(LOCAL_SET);
+    pushUnsigned(out, scratch);
+    out.push(I32_CONST, 0x7f, LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(0xfc, 0x01, LOCAL_GET); // i32.trunc_sat_f32_u
+    pushUnsigned(out, scratch);
+    out.push(LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(F32_NE, 0x1b); // NaN: select 2^32 - 1
+}
+
 // f32.min_num and f32.max_num (RV32F's fmin.s, fmax.s): the other operand when one is NaN, else f32.min or f32.max,
 // which order -0 below +0 as fmin.s does. a and b are f32 scratch locals:
 //   select(select(min(a, b), a, b === b), b, a === a)
@@ -122,6 +135,9 @@ function encodeFunction(fn, marks) {
         } else if (op === I32_TRUNC_F32) {
             scratch = true;
             pushTruncate(out, first);
+        } else if (op === U32_TRUNC_F32) {
+            scratch = true;
+            pushTruncateUnsigned(out, first);
         } else if (op === F32_MIN || op === F32_MAX) {
             scratch = true;
             pushMinMax(out, op, first, first + 1);

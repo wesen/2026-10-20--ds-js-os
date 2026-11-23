@@ -1,5 +1,6 @@
 // The sets pass.
-import {I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR, I32_SHL, I32_SHR_S, I32_SHR_U, opNext, BLOCK, IF, END, I32, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, I32_EQZ, LOOP, ELSE, BR, BR_IF, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, VOID, opClose, CELLS} from "../encoding/tape.js";
+import {I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR, I32_SHL, I32_SHR_S, I32_SHR_U, opNext, BLOCK, IF, END, I32, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, I32_EQZ, LOOP, ELSE, BR, BR_IF, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, VOID, opClose, CELLS,
+    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U} from "../encoding/tape.js";
 
 // the sets pass: precompute a pure value block over a local that holds one of a few constants.
 // A value block (`block (result i32)`) whose body is straight-line arithmetic over constants and
@@ -27,6 +28,11 @@ function i32Fold(op, x, y) {
     case I32_LE_S: return x <= y ? 1 : 0;
     case I32_GE_S: return x >= y ? 1 : 0;
     case I32_GE_U: return (x >>> 0) >= (y >>> 0) ? 1 : 0;
+    case I32_LT_U: return (x >>> 0) < (y >>> 0) ? 1 : 0;
+    case I32_GT_U: return (x >>> 0) > (y >>> 0) ? 1 : 0;
+    case I32_LE_U: return (x >>> 0) <= (y >>> 0) ? 1 : 0;
+    case I32_DIV_U: return y === 0 ? undefined : Math.trunc((x >>> 0) / (y >>> 0)) | 0;
+    case I32_REM_U: return y === 0 ? undefined : ((x >>> 0) % (y >>> 0)) | 0;
     case I32_ADD: return (x + y) | 0;
     case I32_SUB: return (x - y) | 0;
     case I32_MUL: return Math.imul(x, y);

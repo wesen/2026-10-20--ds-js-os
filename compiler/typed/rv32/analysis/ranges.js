@@ -1,5 +1,5 @@
 // Local value ranges and division facts (the ranges and facts passes).
-import {opNext, ELSE, END, BLOCK, IF, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, BR_IF, BR, RETURN, UNREACHABLE, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, CALL, LOOP, I32, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_SHR_U, I32_AND, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, CELLS, VOID, I32_LT_S, opClose} from "../encoding/tape.js";
+import {opNext, ELSE, END, BLOCK, IF, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, BR_IF, BR, RETURN, UNREACHABLE, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, CALL, LOOP, I32, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_SHR_U, I32_AND, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, CELLS, VOID, I32_LT_S, opClose, I32_DIV_U, I32_REM_U} from "../encoding/tape.js";
 
 // the facts pass: division and remainder by a positive constant whose dividend is never
 // negative, so the emitter can drop the rounding bias and the sign correction. Two steps:
@@ -75,6 +75,8 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
             } else if (op === I32_SHR_S && y[0] === y[1] && y[0] >= 0 && y[0] < 32) r = [x[0] >> y[0], x[1] >> y[0]];
             else if (op === I32_AND && (x[0] >= 0 || y[0] >= 0))
                 r = [0, Math.min(x[0] >= 0 ? x[1] : Infinity, y[0] >= 0 ? y[1] : Infinity)]; // a non-negative operand bounds it
+            else if (op === I32_REM_U && y[0] === y[1] && y[0] > 0) r = [0, y[0] - 1];
+            else if (op === I32_DIV_U && y[0] === y[1] && y[0] > 0 && x[0] >= 0) r = [Math.trunc(x[0] / y[0]), Math.trunc(x[1] / y[0])];
             else if (op === I32_SHR_U && y[0] === y[1] && y[0] > 0 && y[0] < 32)
                 r = x[0] >= 0 ? [x[0] >>> y[0], x[1] >>> y[0]] : [0, 2 ** (32 - y[0]) - 1];
             stack.push(r);

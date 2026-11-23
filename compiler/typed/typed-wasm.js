@@ -8,12 +8,12 @@
 // ---- frontend/lexer.js
 // The front end's lexer: the token regexp, the reserved words, and the lexical index a host may provide (the P4's C
 // scanner) so that the lexer reads precomputed token rows instead of running the regexp.
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~]))/y;
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~?]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
-const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32", "f32",
+const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32", "f32", "u32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer",
-    "else", "for", "break", "enum", "match", "type", "distinct",
+    "else", "for", "break", "continue", "enum", "match", "type", "distinct",
     "async", "await"]);
 
 // An index belongs to one exact source string in one compilation.
@@ -226,7 +226,7 @@ class Lexer {
 
     type(records, enums, distinct) {
         const { value } = this.token;
-        if (value !== "i32" && value !== "f32" && value !== "bool" && value !== "string" && value !== "buffer" &&
+        if (value !== "i32" && value !== "f32" && value !== "u32" && value !== "bool" && value !== "string" && value !== "buffer" &&
             !records.has(value) && !enums?.has(value) && !distinct?.has(value))
             this.fail("unknown type " + value);
         this.next();
@@ -479,9 +479,14 @@ const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET
     I32_SHL, I32_SHR_S, I32_SHR_U, RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS,
     F32, F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG, F32_CEIL,
     F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
-    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX} = typedTape;
+    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX,
+    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U, F32_CONVERT_I32_U, U32_TRUNC_F32} = typedTape;
+// An integer literal takes the integer type its context needs (i32, u32 or a distinct type); a decimal literal from
+// 2^31 to 2^32 - 1 is a u32 (U32_LITERAL), its i32 cell holding the same 32 bits.
 const LITERAL = Symbol("integer literal");
-const scalarType = type => type === LITERAL ? "i32" : type;
+const U32_LITERAL = Symbol("u32 literal");
+const scalarType = type => type === LITERAL ? "i32" : type === U32_LITERAL ? "u32" : type;
+const unsignedType = type => type === "u32" || type === U32_LITERAL;
 // [precedence, operand type (null: any scalar), result type, opcode], with JavaScript's precedences. A distinct
 // integer type passes through the NOMINAL levels (| ^ &, equality, relational, + -): two operands of one distinct
 // type, or one and a literal, and an i32 result keeps the type. Shifts and * / % take and give i32.
@@ -498,6 +503,13 @@ const BINARY = Object.assign(Object.create(null), Object.fromEntries([
     ["%", [10, "i32", "i32", I32_REM_S]],
 ]));
 const NOMINAL = new Set([3, 4, 5, 6, 7, 9]);
+// Two literals give a literal (whose type its context decides) under the operators whose bits do not depend on
+// signedness, and so does a literal shifted by << or >>> by any count; / % and >> are signed on literals, so their
+// result is an i32.
+const LITERAL_OPERATORS = new Set(["+", "-", "*", "&", "|", "^", "<<", ">>>"]);
+// On u32 operands: the unsigned comparisons, division and remainder; >> is an error (>>> is the logical shift).
+const UNSIGNED = Object.assign(Object.create(null), {"<": I32_LT_U, "<=": I32_LE_U, ">": I32_GT_U, ">=": I32_GE_U,
+    "/": I32_DIV_U, "%": I32_REM_U});
 const PREFIX = 11; // the operand of a prefix operator binds tighter than every binary operator
 
 class ExpressionParser {
@@ -527,7 +539,9 @@ class ExpressionParser {
     }
 
     want(type, expected) {
-        if (type === expected || type === LITERAL && (expected === "i32" || this.distinct.has(expected))) return;
+        if (type === expected || type === LITERAL && (expected === "i32" || expected === "u32" || this.distinct.has(expected)) ||
+            type === U32_LITERAL && expected === "u32") return;
+        if (type === U32_LITERAL) this.lex.fail("i32 literal out of range");
         if (expected === "bool" && type === "BoolExpr")
             this.lex.fail("per-hit BoolExpr cannot control scene construction; use a staged select");
         this.lex.fail("expected " + expected + ", got " + scalarType(type));
@@ -590,10 +604,10 @@ class ExpressionParser {
         case "~": { // ~x is x ^ -1
             lex.next();
             const type = this.expr(PREFIX);
-            this.want(type, "i32");
+            if (!unsignedType(type)) this.want(type, "i32");
             this.emitConst(-1);
             this.code.push(I32_XOR);
-            return type;
+            return unsignedType(type) ? "u32" : type;
         }
         case "true": {
             lex.next();
@@ -613,10 +627,10 @@ class ExpressionParser {
             lex.next();
             { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
             const type = this.expr();
-            // f32 -> i32 truncates toward zero and saturates; NaN gives 2^31 - 1 (tape.js f32.to_i32).
+            // f32 -> i32 truncates toward zero and saturates; NaN gives 2^31 - 1 (tape.js f32.to_i32). A u32 keeps its bits.
             if (type === "f32") this.code.push(I32_TRUNC_F32);
-            else if (!this.enums.has(type) && !this.distinct.has(type))
-                lex.fail("i32 conversion requires an f32, an enum or a distinct integer, got " + scalarType(type));
+            else if (!this.enums.has(type) && !this.distinct.has(type) && !unsignedType(type))
+                lex.fail("i32 conversion requires an f32, a u32, an enum or a distinct integer, got " + scalarType(type));
             { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
             return "i32";
         }
@@ -628,13 +642,26 @@ class ExpressionParser {
             const type = this.expr();
             lex.expect(")");
             if (type === "f32") return type;
-            if (scalarType(type) !== "i32" && !this.distinct.has(type))
-                lex.fail("f32 conversion requires an i32, got " + scalarType(type));
+            const unsigned = unsignedType(type);
+            if (scalarType(type) !== "i32" && !this.distinct.has(type) && !unsigned)
+                lex.fail("f32 conversion requires an i32 or a u32, got " + scalarType(type));
             if (this.code.length === at + 2 && this.code[at] === I32_CONST) {
                 this.code[at] = F32_CONST;
-                this.code[at + 1] = f32Bits(this.code[at + 1]);
-            } else this.code.push(F32_CONVERT_I32_S);
+                this.code[at + 1] = f32Bits(unsigned ? this.code[at + 1] >>> 0 : this.code[at + 1]);
+            } else this.code.push(unsigned ? F32_CONVERT_I32_U : F32_CONVERT_I32_S);
             return "f32";
+        }
+        case "u32": {
+            // An integer keeps its bits; f32 -> u32 truncates toward zero and saturates, NaN gives 2^32 - 1
+            // (tape.js f32.to_u32).
+            lex.next();
+            lex.expect("(");
+            const type = this.expr();
+            lex.expect(")");
+            if (type === "f32") this.code.push(U32_TRUNC_F32);
+            else if (scalarType(type) !== "i32" && !unsignedType(type) && !this.enums.has(type) && !this.distinct.has(type))
+                lex.fail("u32 conversion requires an integer or an f32, got " + scalarType(type));
+            return "u32";
         }
         }
         if (lex.token.kind === "float") {
@@ -644,10 +671,10 @@ class ExpressionParser {
         }
         if (lex.token.kind === "int") {
             const value = lex.integerValue();
-            if (value > 2147483647) lex.fail("i32 literal out of range");
-            this.emitConst(value);
+            if (value > 4294967295) lex.fail("integer literal out of range");
+            this.emitConst(value | 0);
             lex.next();
-            return LITERAL;
+            return value > 2147483647 ? U32_LITERAL : LITERAL;
         }
         const name = lex.ident();
         if ((lex.token.value === "(" && (lex.next(), true))) {
@@ -747,18 +774,34 @@ class ExpressionParser {
             } else {
                 const numeric = NOMINAL.has(precedence);
                 const nominal = numeric && this.distinct.has(type);
-                if (!input && !nominal && scalarType(type) !== "i32" && type !== "bool" && !this.enums.has(type))
+                // u32 operands (or a literal and a u32) take the unsigned comparisons, division and remainder. A
+                // shift's count is any integer; its left operand gives the type.
+                let unsigned = unsignedType(type);
+                const shift = precedence === 8;
+                if (!unsigned && !input && !nominal && scalarType(type) !== "i32" && type !== "bool" && !this.enums.has(type))
                     lex.fail("expected scalar equality operands");
-                let expected = nominal || !input ? scalarType(type) : input;
+                if (unsigned && op === ">>") lex.fail("operator >> is not defined on u32; use >>>");
+                let expected = unsigned ? "u32" : nominal || !input ? scalarType(type) : input;
                 this.want(type, expected);
                 lex.next();
                 const right = this.expr(precedence + 1);
-                if (numeric && type === LITERAL && this.distinct.has(right)) expected = right;
-                this.want(right, expected);
-                this.code.push(opcode);
-                type = result === "i32" ? expected : result;
+                if (shift) {
+                    if (!unsignedType(right)) this.want(right, "i32");
+                } else {
+                    if (type === LITERAL && unsignedType(right)) {
+                        unsigned = true;
+                        expected = "u32";
+                    } else if (numeric && type === LITERAL && this.distinct.has(right)) expected = right;
+                    this.want(right, expected);
+                }
+                this.code.push(unsigned && UNSIGNED[op] ? UNSIGNED[op] : opcode);
+                type = type === LITERAL && (right === LITERAL || shift) && LITERAL_OPERATORS.has(op) ? LITERAL :
+                    result === "i32" ? expected : result;
             }
         }
+        // c ? a : b, JavaScript's loosest operator above assignment and right-associative: each arm is a whole
+        // expression, so a ? b : c ? d : e is a ? b : (c ? d : e).
+        if (minPrecedence === 0 && lex.token.value === "?") type = this.choice(type);
         this.depth--;
         return type;
     }
@@ -987,20 +1030,23 @@ class FloatParsing {
             this.code.push(name === "min" ? F32_MIN : F32_MAX);
             return "f32";
         }
-        this.want(first, "i32");
+        // Two i32, or two u32 (compared unsigned); a literal takes the other operand's type.
+        if (!unsignedType(first) && first !== LITERAL) this.want(first, "i32");
         this.emitIndex(LOCAL_SET, a);
         { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
-        this.want(this.expr(), "i32");
+        const second = this.expr();
+        const unsigned = unsignedType(first) || first === LITERAL && unsignedType(second);
+        this.want(second, unsigned ? "u32" : "i32");
         this.emitIndex(LOCAL_SET, b);
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         this.emitIndex(LOCAL_GET, a);
         this.emitIndex(LOCAL_GET, b);
-        this.code.push(I32_LT_S, IF, I32);
+        this.code.push(unsigned ? I32_LT_U : I32_LT_S, IF, I32);
         this.emitIndex(LOCAL_GET, name === "min" ? a : b);
         this.code.push(ELSE);
         this.emitIndex(LOCAL_GET, name === "min" ? b : a);
         this.code.push(END);
-        return "i32";
+        return unsigned ? "u32" : "i32";
     }
 
     // The checked address of f32 element i of a buffer: UTF-16 units 2i and 2i + 1, the check on 2i + 1, the f32 at
@@ -1020,9 +1066,65 @@ for (const name of Object.getOwnPropertyNames(FloatParsing.prototype))
     if (name !== "constructor") Object.defineProperty(ExpressionParser.prototype, name,
         Object.getOwnPropertyDescriptor(FloatParsing.prototype, name));
 
+// ---- frontend/values.js
+// The front end's value types (PICOCALC-TYPED-VALUES): the conditional expression. Their methods are ExpressionParser's
+// (copied onto its prototype below, as floats.js does).
+class ValueParsing {
+    // The conditional expression after its condition: if (result T) a else b end. The block type is the first
+    // arm's, written once that arm is parsed; both arms have one type (a literal takes the other arm's).
+    choice(condition) {
+        const lex = this.lex;
+        this.want(condition, "bool");
+        lex.next();
+        const at = this.code.length;
+        this.code.push(IF, I32);
+        const first = this.expr();
+        lex.expect(":");
+        if (first === "f32") this.code[at + 1] = F32;
+        this.code.push(ELSE);
+        const second = this.expr();
+        this.code.push(END);
+        return this.unify(first, second);
+    }
+
+    // The type of two values that meet (the arms of a conditional): one type, or a literal and an integer type.
+    unify(a, b) {
+        if (a === b) return a;
+        const integer = type => type === "i32" || type === "u32" || this.distinct.has(type);
+        if (a === LITERAL && (integer(b) || b === U32_LITERAL)) return b;
+        if (b === LITERAL && (integer(a) || a === U32_LITERAL)) return a;
+        if (unsignedType(a) && unsignedType(b)) return "u32";
+        this.lex.fail("conditional arms have different types: " + scalarType(a) + " and " + scalarType(b));
+    }
+}
+for (const name of Object.getOwnPropertyNames(ValueParsing.prototype))
+    if (name !== "constructor") Object.defineProperty(ExpressionParser.prototype, name,
+        Object.getOwnPropertyDescriptor(ValueParsing.prototype, name));
+
 // ---- frontend/statements.js
 // The front end's parser and type checker, part two: blocks, conditionals, loops, match, declarations and
 // assignments, and one function's body. typed-async.js (async/body.js) subclasses FunctionEmitter as its TypeChecker.
+
+// Whether a loop body that starts after the `{` at `from` contains the word continue (outside comments and strings).
+// Nested loops' continues count too: an unneeded continue block costs no instruction. One test per source decides
+// whether any body needs the scan, so a program without continue pays one search per source.
+const CONTINUE_SCAN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"|\bcontinue\b/g;
+let continueSource = null, continueFound = false;
+function bodyContinues(source, from) {
+    if (source !== continueSource) {
+        continueSource = source;
+        continueFound = source.includes("continue");
+    }
+    if (!continueFound) return false;
+    CONTINUE_SCAN.lastIndex = from;
+    for (let depth = 1, token; (token = CONTINUE_SCAN.exec(source));) {
+        if (token[0] === "{") depth++;
+        else if (token[0] === "}") { if (--depth === 0) return false; }
+        else if (token[0] === "continue") return true;
+    }
+    return false;
+}
+
 class FunctionEmitter extends ExpressionParser {
     result(type, branch) {
         { if (this.lex.token.value !== "return") this.lex.fail("expected return"); this.lex.next(); }
@@ -1103,8 +1205,13 @@ class FunctionEmitter extends ExpressionParser {
             else this.assignment(lex.ident());
             { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
         }
-        // Expression control blocks close within expr(), before any break can appear.
-        this.loopExits.push(this.controls);
+        // Expression control blocks close within expr(), before any break can appear. A loop is
+        //     block; loop; C; eqz; br_if 1; B; [update]; br 0; end; end
+        // and break is a br to the outer block. When the body has a continue, B is block; B; end and continue is a br
+        // to that block's end, which reaches the update and the back edge: a br to the loop itself would skip the
+        // update, and the condition once the rotate pass has moved it to the bottom.
+        const exit = this.controls;
+        this.loopExits.push(exit);
         this.controls += 2;
         this.code.push(BLOCK, VOID, LOOP, VOID);
         this.want(this.expr(), "bool");
@@ -1119,7 +1226,18 @@ class FunctionEmitter extends ExpressionParser {
             this.code = loopCode;
         }
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+        const continues = lex.token.value === "{" && bodyContinues(lex.source, lex.offset);
+        (this.loopContinues ??= []).push(continues ? exit + 2 : -1);
+        if (continues) {
+            this.code.push(BLOCK, VOID);
+            this.controls++;
+        }
         this.block(result);
+        if (continues) {
+            this.code.push(END);
+            this.controls--;
+        }
+        this.loopContinues.pop();
         if (update) {
             if (this.inspection) this.code.append(update);
             else for (const cell of update) this.code.push(cell);
@@ -1273,6 +1391,15 @@ class FunctionEmitter extends ExpressionParser {
             if (exit === undefined) lex.fail("break outside a loop");
             { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
             this.emitIndex(BR, this.controls - exit - 1);
+            return;
+        }
+        case "continue": {
+            lex.next();
+            const target = this.loopContinues?.at(-1);
+            if (target === undefined) lex.fail("continue outside a loop");
+            if (target < 0) lex.fail("continue the loop's body scan did not find");
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
+            this.emitIndex(BR, this.controls - target - 1);
             return;
         }
         case "const": case "let":
@@ -1614,6 +1741,19 @@ function pushTruncate(out, scratch) {
     out.push(F32_NE, 0x1b); // NaN: select 2^31 - 1
 }
 
+// f32.to_u32 (RV32F's fcvt.wu.s rtz): i32.trunc_sat_f32_u, but 2^32 - 1 for NaN. `scratch` is an f32 local.
+function pushTruncateUnsigned(out, scratch) {
+    out.push(LOCAL_SET);
+    pushUnsigned(out, scratch);
+    out.push(I32_CONST, 0x7f, LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(0xfc, 0x01, LOCAL_GET); // i32.trunc_sat_f32_u
+    pushUnsigned(out, scratch);
+    out.push(LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(F32_NE, 0x1b); // NaN: select 2^32 - 1
+}
+
 // f32.min_num and f32.max_num (RV32F's fmin.s, fmax.s): the other operand when one is NaN, else f32.min or f32.max,
 // which order -0 below +0 as fmin.s does. a and b are f32 scratch locals:
 //   select(select(min(a, b), a, b === b), b, a === a)
@@ -1672,6 +1812,9 @@ function encodeFunction(fn, marks) {
         } else if (op === I32_TRUNC_F32) {
             scratch = true;
             pushTruncate(out, first);
+        } else if (op === U32_TRUNC_F32) {
+            scratch = true;
+            pushTruncateUnsigned(out, first);
         } else if (op === F32_MIN || op === F32_MAX) {
             scratch = true;
             pushMinMax(out, op, first, first + 1);
@@ -1969,11 +2112,12 @@ function invoke(exports, signature, args) {
     const words = args.map((value, i) => {
         if (signature.params[i] === "bool" && typeof value === "boolean") return Number(value);
         if (signature.params[i] === "i32" && i32(value)) return value;
+        if (signature.params[i] === "u32" && Number.isInteger(value) && value >= 0 && value <= 0xffffffff) return value | 0;
         if (signature.params[i] === "f32" && typeof value === "number") return value;
         throw new TypeError(signature.name + " expects " + signature.params[i] + " at argument " + i);
     });
     const value = exports[signature.name](...words);
-    return signature.result === "bool" ? value !== 0 : value;
+    return signature.result === "bool" ? value !== 0 : signature.result === "u32" ? value >>> 0 : value;
 }
 
 // What the bundle publishes. typed-async.js uses the front end's pieces; typed-rv32.js uses compileFunctions and the
