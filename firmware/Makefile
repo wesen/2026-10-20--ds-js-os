@@ -36,10 +36,10 @@ ifeq ($(BOARD),papers3)
   ENG_SRC := mquickjs.c dtoa.c libm.c cutils.c
   GEN     := $(BUILD)/gen
   CFLAGS  += -I$(GEN) -I$(ENG) -DBOARD_PAPERS3 -DNUCLEUS_GRAY8 -DNUCLEUS_FONT_HEADER='"font_paper.h"' -DMQJS_VERSION=\"$(shell cat $(ENG)/VERSION)\"
-  OS_SRC  := nucleus/agent_transport.c nucleus/kernel.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
+  OS_SRC  := nucleus/agent_transport.c nucleus/kernel.c nucleus/kernel_channels.c nucleus/kernel_supervision.c nucleus/kernel_reports.c nucleus/vm_mqjs.c nucleus/vm_mqjs_ops.c nucleus/vm_mqjs_gfx.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_json.c nucleus/native_device.c nucleus/native_wasm.c \
              sim/papers3/board.c sim/papers3/bus.c sim/papers3/epd.c sim/papers3/gt911.c sim/papers3/bm8563.c \
              host/port_host.c host/agent_host.c host/main_host.c host/native_proc.c
-  HDRS    := nucleus/nucleus.h sdk/nw_wire.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
+  HDRS    := nucleus/nucleus.h nucleus/native_internal.h nucleus/nucleus_native.h nucleus/kernel_internal.h sdk/nw_wire.h nucleus/vm_mqjs.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
   BIN     := $(BUILD)/papers3-host
   SCRIPTS := ../apps/tours/papers3
   JSROOT  := ../apps/js/papers3
@@ -50,9 +50,9 @@ else
   ENG_SRC := quickjs.c libregexp.c libunicode.c cutils.c dtoa.c
   CFLAGS  += -I$(ENG) -DCONFIG_VERSION=\"2026-06-04\"
   CFLAGS  += -DPICOCALC_RAYTRACE=1
-  OS_SRC  := nucleus/raytrace_demo.c nucleus/agent_transport.c nucleus/kernel.c nucleus/vm.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
+  OS_SRC  := nucleus/raytrace_demo.c nucleus/agent_transport.c nucleus/kernel.c nucleus/kernel_channels.c nucleus/kernel_supervision.c nucleus/kernel_reports.c nucleus/vm.c nucleus/vm_ops.c nucleus/vm_sys.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_json.c nucleus/native_device.c nucleus/native_wasm.c \
              sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/agent_host.c host/net_host.c host/main_host.c host/native_proc.c
-  HDRS    := nucleus/nucleus.h nucleus/raytrace_demo.h sdk/nw_wire.h nucleus/font_data.h sim/picocalc.h host/board.h
+  HDRS    := nucleus/nucleus.h nucleus/native_internal.h nucleus/nucleus_native.h nucleus/kernel_internal.h nucleus/vm_quickjs.h nucleus/raytrace_demo.h sdk/nw_wire.h nucleus/font_data.h sim/picocalc.h host/board.h
   BIN     := $(BUILD)/picocalc-host
   SCRIPTS := ../apps/tours/picocalc
   JSROOT  := ../apps/js/picocalc
@@ -151,10 +151,10 @@ shots: $(BIN)
 
 # App logic and Typed compiler checks in Node (no host binary needed).
 test-apps:
-	$(NODE) tests/editor.test.mjs
-	$(NODE) tests/calc.test.mjs
-	$(NODE) tests/agenda.test.mjs
-	$(NODE) tests/sysapps.test.mjs
+	$(NODE) ../tests/apps/editor.test.mjs
+	$(NODE) ../tests/apps/calc.test.mjs
+	$(NODE) ../tests/apps/agenda.test.mjs
+	$(NODE) ../tests/apps/sysapps.test.mjs
 	$(NODE) ../tests/compiler/typed-rv32.test.mjs
 	$(NODE) ../tests/compiler/typed-wasm-inspect.test.mjs
 	$(NODE) ../tests/compiler/typed-inspect.test.mjs
@@ -163,33 +163,33 @@ test-apps:
 
 # The wall clock through the host binary: clock.wall/set/zone, Date, -w and -z.
 test-clock: $(BIN)
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_clock_native.py
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_clock_native.py
 
 # System services through the host binary: guarded channels, the log ring, the simulated network and time zone,
 # and apps from storage (sys.spawn, sys.stop).
 test-sys: $(BIN)
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_sys_native.py
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_loader_native.py
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_sys_native.py
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_loader_native.py
 
 # Files through the host binary: claims, paths, rights, narrowing, passing and revoking handles (no device needed).
 test-fs: $(BIN)
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_fs_native.py
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_fs_native.py
 
 # These tests make no provider API calls. The normal suite uses deterministic local fixtures.
 test-agent: $(BIN)
 	@test "$(BOARD)" = picocalc || { echo "The agent currently targets the PicoCalc QuickJS build"; exit 1; }
-	$(NODE) tests/agent.test.mjs
-	$(NODE) tests/chat-ui.test.mjs
-	$(NODE) tests/compositor-auth.test.mjs
-	$(PYTHON) tests/agent-integration.py --binary $(BIN)
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_agent_native.py
+	$(NODE) ../tests/apps/agent.test.mjs
+	$(NODE) ../tests/apps/chat-ui.test.mjs
+	$(NODE) ../tests/apps/compositor-auth.test.mjs
+	$(PYTHON) ../tests/native/agent-integration.py --binary $(BIN)
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_agent_native.py
 
 # Requires libcurl development headers, OpenSSL CLI, and permission to bind a localhost test socket.
 # All TLS requests stay on loopback, with an explicitly trusted test certificate and a dummy token.
 test-agent-live: $(BIN)
 	@test "$(BOARD)" = picocalc || { echo "The agent currently targets the PicoCalc QuickJS build"; exit 1; }
 	$(MAKE) AGENT_LIVE=1 all
-	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_TEST_LIVE_BINARY=$(if $(filter 1,$(AGENT_LIVE)),$(BUILD),$(BUILD)-agent)/picocalc-host $(PYTHON) tests/test_agent_native.py --live
+	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_TEST_LIVE_BINARY=$(if $(filter 1,$(AGENT_LIVE)),$(BUILD),$(BUILD)-agent)/picocalc-host $(PYTHON) ../tests/native/test_agent_native.py --live
 
 # Native worlds (PICOCALC-NATIVE): the example binaries, each linked statically with the process runtime, and the tests
 # that run them under the host's sandbox (a process with a seccomp filter; x86-64 only, so not with M32=1).
@@ -258,7 +258,7 @@ $(BUILD)/natives/%.wasm: natives/%.cc $(WASM_SDK)
 	$(WASM_ENV) clang++-18 $(WASM_FLAGS) $(WASM_LINK) -fno-exceptions -fno-rtti -o $@ $< $@-rt.o
 
 test-native: $(BIN) natives $(if $(filter 1,$(M32)),,wasm)
-	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_NATIVES=$(BUILD)/natives $(PYTHON) tests/test_native_worlds.py
+	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_NATIVES=$(BUILD)/natives $(PYTHON) ../tests/native/test_native_worlds.py
 
 clean:
 	rm -rf build build32 build-san build32-san build-agent build32-agent build-san-agent build32-san-agent build-papers3*

@@ -33,13 +33,14 @@ migration target. Earlier designs that chose C for speed or convenience, such as
 | `bench/` | Host gates, the board study harness, `rv32emu`, reference data ([guide](docs/measuring.md)) |
 | `tests/compiler/` | The Typed compiler's tests and pinned image digests |
 | `tools/gen/candela/` | Generators of `firmware/third_party/candela`'s generated files |
-| `cmd/trace-repl`, `pkg/` | The compiler-evidence workbench (Go and goja) |
+| `tools/device/` | The boards' serial tools: console capture (`p4cap`, `s3cap`), file upload, agent provisioning |
+| `tools/trace-repl/` | The compiler-evidence workbench (Go and goja; `pkg/` holds its packages) |
 | `docs/` | Current guides ([index](docs/README.md)) |
 
 ## Build, test, measure
 
 ```sh
-make test                                   # Node, generated files, Go, the host binary's Python tests, cji
+make test                                   # Node, generated files, file lengths, Go, the host binary's Python tests, cji
 make test-host OPTIONS='{"policy":"kernel"}'  # ray frame, Chess oracle, 24 replays with one set of compile options
 make -C firmware shots                      # host simulator tours -> firmware/out/
 make firmware PROFILE=playable              # ESP-IDF v5.4.2; profiles in firmware/port/esp32p4/profiles/
@@ -70,7 +71,7 @@ serial port at a time; `bench/board/device.py` holds the lock for every board op
 - The [independent RV32 studies](ttmp/2026/11/19/PICOCALC-RV32-STUDIES--independent-picocalc-compiler-studies-of-branch-lowering-and-output-lifetime/index.md) and the [combined integration trial](ttmp/2026/11/19/PICOCALC-RV32-COMBINED--qualify-branch-fusion-with-compact-output-in-the-streamed-picocalc-compiler/analysis/01-what-happens-when-two-native-compiler-optimizations-share-the-same-output.md) measure branch lowering and native output allocation; the [integration guide](ttmp/2026/11/19/PICOCALC-COMPILER-INTEGRATION--integrate-qualified-compiler-optimizations-into-the-picocalc-toolchain/design-doc/01-production-integration-of-the-typed-compiler-optimizations.md) describes the compiler entry points.
 - The [playable firmware qualification](ttmp/2026/11/20/PICOCALC-NATIVE-PROMOTION--qualify-late-text-lowering-and-streaming-frameless-leaves-on-the-playable-picocalc/analysis/01-promoting-two-native-compiler-changes-to-the-playable-picocalc.md) follows two compiler changes through complete Chess and Editor ELFs on the device.
 - [How the Typed compiler reaches C on the ray tracer](docs/typed-compiler-and-the-ray-tracer.md) and [Candela on the P4](docs/candela-on-the-p4.md) are the current guides to the two largest workloads.
-- The trace REPL: [CLI and session protocol](cmd/trace-repl/README.md), [user guide](cmd/trace-repl/doc/01-trace-repl-user-guide.md) (`trace-repl help trace-repl-user-guide`; 25 runnable scripts in `trace-repl help trace-repl-query-examples`).
+- The trace REPL: [CLI and session protocol](tools/trace-repl/README.md), [user guide](tools/trace-repl/doc/01-trace-repl-user-guide.md) (`trace-repl help trace-repl-user-guide`; 25 runnable scripts in `trace-repl help trace-repl-query-examples`).
 - [Reorganizing the repository](ttmp/2026/11/21/PICOCALC-REPO-LAYOUT--give-every-piece-of-code-one-home-and-keep-ttmp-as-the-work-log/design-doc/01-reorganizing-the-repository-a-design-for-one-home-per-concern.md) explains this layout and why.
 
 ## Active tickets

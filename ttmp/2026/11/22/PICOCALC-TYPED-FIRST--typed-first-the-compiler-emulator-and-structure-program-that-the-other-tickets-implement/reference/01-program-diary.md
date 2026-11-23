@@ -83,3 +83,73 @@ Four subagents started at `56cd256`, each in its own git worktree, on the ticket
 ### What warrants a second pair of eyes
 
 - **Three tickets may want the board at once.** CONFORMANCE (capture), APP-MANIFEST (qualification) and SPLIT-FILES (a probe boot) may all want it. `bench/board/device.py`'s lock serializes them. Each brief requires restoring the playable image, but an agent that dies mid-experiment could leave an experiment image installed. After each wave I check with `python3 bench/board/run.py --probe`.
+
+## Step 3: TAPE and CONFORMANCE merged, wave 2 launched
+
+The first two tickets came back with every gate passing. TAPE fast-forwarded onto `main`, ending at `0e375c2`. CONFORMANCE needed a merge commit (`bf30d31`), because its branch was fast-forwarded to `4b9a80b`, not to TAPE. Both pass on `main`, and wave 2 (FRONTEND, PIPELINE) started from `bf30d31`.
+
+### What I did
+
+- Merged both branches and reran the gates on `main`:
+  - `make test`: exit 0. It now includes `test-rv32` and the tape-coverage test.
+  - `gates.sh` with the default policy: ray 4,888,369 instructions, digest `430f0d501659`; Chess 6,981 words, 128,152,624 instructions; 24/24 replays.
+  - `gates.sh` with `kernel`: ray 3,239,635 instructions, same digest; Chess 118,361,847 instructions; 24/24 replays.
+- Reran `firmware/tools/wasm-toolchain.sh` in the main checkout. Both agents reported that `firmware/build/wasm-toolchain/res/lib/wasi` still pointed into `picocalc-os/`, which was left over from the rename in Phase D.
+- Started FRONTEND and PIPELINE. BITWISE waits for both, because it edits the tokenizer in `typed-wasm.js` and the RV32 emitters.
+- Started building and installing the playable firmware at `bf30d31`. TAPE adds `typed/tape.js` to the compiler bundle, so the image changes.
+
+### What the agents found (from their reports; details in their diaries)
+
+- **TAPE.**
+  - With the design's singular effect names, `CALL = 4` (an effect bit) overwrote the opcode constant `CALL = 0x10`, and every call compiled as an `if`. `tape.js` now refuses a name defined twice.
+  - The compiler bytecode cache on the device held 8 entries for 8 sources. A ninth source would never have been cached, so the cache now holds 12.
+  - Output stayed byte-identical over 84 digests.
+- **CONFORMANCE.**
+  - The suite has 15,664 vectors, 15,454 of them run on the P4 (chip revision 1.3, `misa` 0x40901125).
+  - The P4's FPU follows the RISC-V F specification in every captured case: canonical NaN `0x7fc00000`, subnormals kept, tininess detected after rounding, `fcvt` saturating.
+  - All three executors now run RV32IMF. rv32emu turned out to have been RV32IMC, not what its Makefile claimed. It is kept rather than replaced by the Go machine.
+
+### What didn't work
+
+- **Go in worktrees.** `go test` fails there, because `go.mod`'s `replace ../go-go-golems/go-go-goja` is relative. Both agents worked around it with a GOWORK or `-modfile` file outside the tree. Wave 2's briefs say so.
+
+### What warrants a second pair of eyes
+
+- **Wave 2 has two bundlers.** FRONTEND bundles `typed-wasm.js` from its modules with its own generator, while PIPELINE writes the bundler for `rv32/`. I allowed both and will unify them after merging, if that is simpler.
+
+## Step 4: A playable install with the keyboard off, and SPLIT-FILES merged
+
+The playable build at `bf30d31` is installed and recorded. SPLIT-FILES is merged with three conflicts resolved by hand. The two wave-2 agents were told to merge the new `main` before reporting.
+
+### What I did
+
+- **Install, first attempt.** `make playable` built `1f99bf386f64a3dd…` (app digest prefix). `playable.py install` wrote and verified it, then failed health on the keyboard:
+
+  ```
+  ValueError: physical keyboard I2C0 did not qualify: {'busyMs': 4821.6, 'transfers': 260, 'bytes': 1043, 'errors': 260} -> {'busyMs': 4969.05, 'transfers': 266, 'bytes': 1068, 'errors': 266}
+  ```
+
+  Every transfer errored. That is the pattern of a keyboard the user has switched off. SPLIT-FILES saw the same on its probe boot.
+- **Install, second attempt.** Per the standing rule, I reran `install … --health-only --peripherals off-by-user`. It passed (every judged world up, nothing restarting) and rewrote `PLAYABLE.json`: commit `bf30d31`, dirty false, peripherals off-by-user. Committed with the evidence in `various/01-install-playable-bf30d31` and `various/02-health-bf30d31-off-by-user`.
+- **Merging SPLIT-FILES** (`9be534a`). Conflicts and what I did:
+  - Root `Makefile`, `test-generated`: CONFORMANCE's `vectors.mjs --check` and SPLIT-FILES' `check-file-length.mjs`. Kept both.
+  - CONFORMANCE's new `pkg/tracerv32/{conformance_test,fpexec,fpu}.go`: they followed the directory's move to `tools/trace-repl/pkg/tracerv32`. The conformance test's relative path to the vectors went from `../../` to `../../../../`.
+  - The `bench/emu/emu.c` entry in `tools/file-length-exceptions.txt` was removed. CONFORMANCE split that file, and the check fails on entries that are no longer needed.
+  - Repointed `pkg/trace*` references in the docs and code CONFORMANCE added (`docs/rv32-executors.md`, `docs/typed-compiler.md`, `bench/emu`, `bench/host/rv32-interp.js`, the root `Makefile`, `tests/rv32`).
+- **Gates on the merge.** `make test` exit 0. `gates.sh` default and `kernel`: digests and counts as in Step 3, with 24/24 replays both times.
+- **Messages to FRONTEND and PIPELINE.** They are told to merge `main` (new paths, the length check, removing their exception entries) and to report against the merged state.
+
+### What didn't work
+
+- **The first install's health check.** It failed as shown above. Not debugged, per the rule about switched-off peripherals.
+- **The restore in SPLIT-FILES' probe.** `make restore-playable PERIPHERALS=off-by-user` reported "painter sources=0" after restoring `f8f36bd1`. Chess never sends its painter sources while the display is off. The board was then on the recorded image, and it is superseded by this step's install.
+
+### What warrants a second pair of eyes
+
+- **Health with the display off.** "Off-by-user" health passes, but the painter check depends on the display being on. While the user keeps the peripherals off, health checks don't cover the painter path.
+- **The installed firmware lags `main`.** SPLIT-FILES changes the firmware (the nucleus split and the device-tools text in Settings). I install the next playable after APP-MANIFEST, which also changes the firmware, to avoid two installs back to back.
+
+### What SPLIT-FILES left
+
+- **Long files left alone:** the two `compositor.js` files and `agent.js` (a QuickJS world loads one file), and `sdk/typed/world.c` and `agent_p4.c` (compiled from APP-MANIFEST's lists). They have tasks in its ticket.
+- **PaperS3 links fail before and after.** `native.c` was never in its CMake list, and the host build is missing `port_net_*` and `port_tz_set`.

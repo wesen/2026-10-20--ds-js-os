@@ -9,7 +9,7 @@ agreement with each other and with the board (PICOCALC-RV32-CONFORMANCE).
 | Executor | Where | Runs | Its job |
 |---|---|---|---|
 | The reference interpreter | `bench/host/rv32-interp.js` | images from `typedRv32.compile` | The readable definition. It runs next to the compiler in any JavaScript VM (Node, goja, QuickJS), counts every instruction and checks the calling convention at each call and return. The ray profile and the compiler's tests use it. |
-| The Go machine | `pkg/tracerv32` | the same images | A predecoded twin of the reference, about 1,200 times faster than the reference in goja, for counts and profiles in the trace REPL (`rv32.run`). It implements the reference's loop statement by statement, including its fault messages and the order of its checks, and is tested for bit identity against it. |
+| The Go machine | `tools/trace-repl/pkg/tracerv32` | the same images | A predecoded twin of the reference, about 1,200 times faster than the reference in goja, for counts and profiles in the trace REPL (`rv32.run`). It implements the reference's loop statement by statement, including its fault messages and the order of its checks, and is tested for bit identity against it. |
 | rv32emu | `bench/emu` | whole programs: an ELF firmware and its modules | The machine for complete C and Typed programs: it loads executables, relocatable objects and shared modules as the board's `elf_loader` does and answers the firmware library's host calls (output, time, the heap, maths, 64-bit and soft-float helpers). The 24 replays, the Chess oracle, cji's fixtures and Candela's RV32 reference run on it. |
 
 All three execute RV32IMF: the integer base and multiply/divide, the single-precision floating-point extension with
@@ -68,11 +68,11 @@ Each executor has a runner in `make test`:
 
 ```sh
 make test-rv32          # tests/rv32/conformance.test.mjs (the reference) and rv32emu.test.mjs (bench/emu/build/rv32emu-vectors)
-go test ./pkg/tracerv32 -run Conformance        # the Go machine (part of make test-go)
+go test ./tools/trace-repl/pkg/tracerv32 -run Conformance        # the Go machine (part of make test-go)
 node bench/rv32/vectors.mjs --check             # vectors.jsonl is what the generator and the capture give (make test-generated)
 ```
 
-`pkg/traceapi`'s tests also compare the reference and the Go machine on 4,000 random programs (now with F
+`tools/trace-repl/pkg/traceapi`'s tests also compare the reference and the Go machine on 4,000 random programs (now with F
 instructions and the new options) and on 20,000 random single F instructions.
 
 ### Capturing on the board

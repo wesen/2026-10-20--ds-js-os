@@ -1,10 +1,10 @@
 {
   "profile": "playable",
-  "commit": "f2e67ee",
+  "commit": "bf30d31",
   "dirty": false,
   "app": {
     "file": "picocalc-os-p4.bin",
-    "sha256": "f8f36bd1120251588de1c27911de2aa9069af828d3db9db6fb029773dc8af1e0"
+    "sha256": "1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6"
   },
   "partitionTable": {
     "sha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
@@ -12,18 +12,15 @@
   "bootloader": {
     "sha256": "8fddc159afedd2b5e83bb529ff872a35520d2a574fa51b4840e03bcd6f3b86a1"
   },
-  "store": "~/.cache/picocalc/firmware/f8f36bd1120251588de1c27911de2aa9069af828d3db9db6fb029773dc8af1e0",
-  "peripherals": "on",
+  "store": "~/.cache/picocalc/firmware/1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6",
+  "peripherals": "off-by-user",
   "health": {
     "judged": [
-      "agenda",
-      "chess",
-      "compositor",
-      "display",
-      "editor",
+      "snake",
       "files",
-      "keyboard",
-      "snake"
+      "editor",
+      "agenda",
+      "chess"
     ],
     "restartingAfterSettle": []
   }

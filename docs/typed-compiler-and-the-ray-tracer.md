@@ -266,7 +266,7 @@ The Editor replays had been failing since November 20 for a reason unrelated to 
 
 ### 6.4 The trace REPL as a compiler sandbox
 
-The trace REPL (`cmd/trace-repl`) is a Go service that keeps JavaScript sessions alive between requests. Its query language answers questions about captured LLVM pass dumps. Its session VM can also hold the Typed compiler. `scripts/01-open-compiler-session.py PORT --baseline REV` loads the frontend, the async rewriter, the world linker and two backends into one session: the working tree's as `typedRv32` and the one at `REV` as `typedRv32Base`. It also loads every Typed source, including the assembled worlds. Two drivers use such a session:
+The trace REPL (`tools/trace-repl`) is a Go service that keeps JavaScript sessions alive between requests. Its query language answers questions about captured LLVM pass dumps. Its session VM can also hold the Typed compiler. `scripts/01-open-compiler-session.py PORT --baseline REV` loads the frontend, the async rewriter, the world linker and two backends into one session: the working tree's as `typedRv32` and the one at `REV` as `typedRv32Base`. It also loads every Typed source, including the assembled worlds. Two drivers use such a session:
 
 - `02-planner-equivalence.py` compiles every input with both backends under seven option sets and compares the bytes. Use it for any change that should not alter output.
 - `03-compile-cost.py` interleaves base and candidate compiles and reports medians.
@@ -486,5 +486,5 @@ Signed 16-bit and 32-bit indexed arrays would let source state what it stores. T
 | `bench/host/typed-ray-bench.js` | `typedRayBench.openingFrame/frameProfile` |
 | `bench/host/ray-profile.mjs` | Opening-frame profiler with digest check |
 | `tests/compiler/typed-rv32.test.mjs` | Backend unit tests, including the policy test |
-| `cmd/trace-repl/README.md` | REPL service protocol |
+| `tools/trace-repl/README.md` | REPL service protocol |
 | this ticket `scripts/` | REPL session setup, planner equivalence, compile cost, repaired replays |

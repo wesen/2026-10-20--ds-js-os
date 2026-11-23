@@ -1,6 +1,6 @@
 // The reference RV32IMF interpreter: the readable executor that runs next to the Typed compiler in any JavaScript VM,
 // with per-instruction execution counts and calling-convention checks. docs/rv32-executors.md gives its role next to
-// pkg/tracerv32 (its Go twin) and bench/emu (rv32emu); bench/reference/rv32/vectors.jsonl is the conformance suite
+// tools/trace-repl/pkg/tracerv32 (its Go twin) and bench/emu (rv32emu); bench/reference/rv32/vectors.jsonl is the conformance suite
 // all three pass, with the RV32F expectations captured on the ESP32-P4.
 //
 // This is a classic script with no imports. It runs unchanged in Node (vm.runInThisContext or a plain <script>), in

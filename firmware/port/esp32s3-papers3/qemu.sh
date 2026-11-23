@@ -1,6 +1,6 @@
 #!/bin/sh
 # Run the firmware in Espressif's QEMU (machine esp32s3) and drive its console: build the S3_QEMU variant
-# (sdkconfig.qemu), merge a 16 MB flash image, boot it with UART0 bridged to a pty, and run tools/s3cap.py on it.
+# (sdkconfig.qemu), merge a 16 MB flash image, boot it with UART0 bridged to a pty, and run tools/device/s3cap.py on it.
 #
 #   ./qemu.sh [SECONDS] [-c "AT_SECONDS COMMAND"]...      e.g. ./qemu.sh 36 -c "28 stats" -c "30 heap"
 #
@@ -25,6 +25,6 @@ T=$(mktemp -d /tmp/s3qemu.XXXXXX)
 sleep 1
 socat PTY,link=$T/tty,raw,echo=0 UNIX-CONNECT:$T/s & SPID=$!
 sleep 1
-python3 ../../tools/s3cap.py -p $T/tty --no-reset -s "$SECS" "$@" || true
+python3 ../../../tools/device/s3cap.py -p $T/tty --no-reset -s "$SECS" "$@" || true
 kill $QPID $SPID 2>/dev/null || true
 rm -rf $T

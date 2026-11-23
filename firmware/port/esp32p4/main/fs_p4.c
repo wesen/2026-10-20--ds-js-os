@@ -1,7 +1,7 @@
 // Files on the ESP32-P4: a FAT filesystem with wear levelling in the "files" flash partition, mounted at /files.
 // nucleus/fs.c does the work with POSIX calls through ESP-IDF's VFS. A job runs on the "fs" worker task; the
 // finished job comes back through p4_kq and the kernel task settles the world's promise. The console's ls, cat and
-// df read directly, for debugging; put writes a file sent over the console (tools/p4put.py), which no world can do:
+// df read directly, for debugging; put writes a file sent over the console (tools/device/p4put.py), which no world can do:
 // it is how a WebAssembly app gets into apps/ without a network.
 //
 // Where the worker runs matters. While ESP-IDF erases or writes flash, it parks the other CPU too (the flash cache
