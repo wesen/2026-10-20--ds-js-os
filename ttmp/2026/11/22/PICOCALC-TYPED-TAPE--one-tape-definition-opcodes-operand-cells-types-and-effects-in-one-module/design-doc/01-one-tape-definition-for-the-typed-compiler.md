@@ -75,3 +75,40 @@ Changing what the passes do; typing the operand stack beyond the table's columns
 - **Moves and deletes** go through checked Python scripts in the ticket's `scripts/` (dry run, asserted counts), never shell one-liners.
 - **Diary.** Each ticket keeps `reference/01-diary.md` in the investigation format (Prompt Context, What I did, Why, What worked, What didn't work with exact errors, What I learned, What was tricky, What warrants a second pair of eyes, Future work, Code review instructions, Technical details), one step per milestone, with commit hashes.
 - **Commits** are focused, at validated boundaries, with the trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+
+## Refinements (2026-11-22)
+
+Checked against the code at `4b9a80b` before and during the implementation. The design held; these are the places
+where the code asked for something more precise or different.
+
+1. **Names are closure constants, not `T.X` lookups.** The passes compare opcodes in their inner loops, and a property
+   read per comparison would add work in bare QuickJS. `rv32/00-encoding.js`, `typed-wasm.js` and `typed-pie-loops.js`
+   destructure the names from `typedTape` once at load (`const {LOCAL_GET, …, cells: CELLS, effects: EFFECTS,
+   next: opNext, close: opClose} = typedTape`); every reference is then one closure-variable read, as cheap as a
+   literal. Constant names follow the Wasm names (`I32_ADD`, `LOCAL_GET`, `BR_IF`); the pseudo-ops are
+   `CHECKED_ADDRESS`, `LITERAL_STORES`, `UNCHECKED_ADDRESS`, and keep the inspector's operation names
+   `text.checked_address`, `text.literal_stores` (docs and tests use them); `0xf3` gains `text.unchecked_address`.
+2. **Effect bits are plural** (`STORES`, `LOADS`, `CALLS`, `BRANCHES`, `TRAPS`, `CONTROL`). With the design's singular
+   names the effect `CALL = 4` overwrote the opcode `CALL = 0x10` in the published object and every call became an
+   `if` (see the diary, Step 2). `tape.js` now refuses a name defined twice. `LOADS` is added to the design's five bits.
+3. **Walkers.** `next(tape, at)` returns `NaN` for an opcode outside the tape (the old `opNext` returned `at`, which
+   loops); `close(tape, at)` replaces `opClose`. `decode(tape, wasm)` replaces `inspectOperations`' private table and
+   `typedWasm.decodeNumericOperations` (removed); with `wasm` it reads LEB128 immediates.
+4. **Effects replace the inline store tests** in `storeless` (`70-compile.js`) and in the planner's purity test
+   (`50-planner.js`). Elsewhere the passes test opcodes for their stack shapes, not their effects, and keep named tests.
+   `LEAF_OPERANDS` (a second cell-count table in `11-leaf-code.js`) became the set `LEAF_OPERATIONS` plus `CELLS`.
+5. **Literals that stay hex**: RV32 encodings (`0x13`, `0x33`, `0x00100073`, funct7 `0x20`; PICOCALC-RV32-REGISTERS
+   owns them), Wasm module bytes (`0x60`, the magic), `0x71` in `40-ranges.js` (an `i32.and` rule that no tape can reach
+   until PICOCALC-TYPED-BITWISE adds the row; commented), and `0xff` in a test that needs an invalid opcode.
+   `typed-inspect.mjs` runs outside the compiler's realm and tests operation names (`o.op === "call"`) instead.
+6. **The coverage test** (`tests/compiler/typed-tape.test.mjs`) compiles 12 units under `stock` and `kernel` (the
+   firmware's assemblies: Chess with the embedded 3D painter, Agenda as reminder + entry, Candela's three stages) and
+   walks the 4,184 tapes with a typed operand-stack check, which uses the pop/push columns and so checks them too. A
+   negative test shows that a wrong cell count fails the walk. `i32.shl` appears only in the Wasm mode's bytes.
+7. **The device cache.** `typed_p4.c` keeps the bytecode of each evaluated compiler file in a table of 8 entries; the
+   playable firmware already evaluated 8 sources, so `typed/tape.js` would have left one uncached (parsed on every
+   compile). The table has 12 entries.
+8. **Trace REPL.** `typedTape` is an optional module (absent before this ticket), so older revisions still load; their
+   `missing` list grows by one.
+9. **Board.** The coordinator made the board probe optional for this ticket. The QuickJS cost was measured on the host
+   instead (`scripts/02-qjs-compile-time.c`, `scripts/03-compare-qjs-compile-time.py`; numbers in the diary).
