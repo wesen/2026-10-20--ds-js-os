@@ -1,38 +1,19 @@
-// Rewrite typed async functions before emission. The reactor owns each frame
-// in WorldState, so only its scalar fields survive an event boundary.
+// Generated from compiler/typed/async/ by compiler/typed/async/build.mjs. Edit those files, not this one.
+// Lower typed async functions before emission. The reactor owns each frame in WorldState, so only its scalar
+// fields survive an event boundary. Runs in a bare QuickJS realm after typed-wasm.js; publishes typedAsync.
 (() => {
 "use strict";
 
+// ---- async/scan.js
+// The whole-program pre-pass: which functions are async, the task operations (start, cancel, pending, resume)
+// in every body, the call graph and its acyclicity. The front end streams each function to the backend, so the
+// generated functions and the frames must be known before the first ordinary body is compiled.
 // Existing typed sources use start and pending as locals and record fields.
 const candidate = /\b(?:async|await)\b|\b(?:start|cancel)\b\s*(?:\/\/[^\n]*\n\s*)*[a-zA-Z_]\w*|\b(?:resume|pending)\b\s*(?:\/\/[^\n]*\n\s*)*\(/;
 const ambient = new Map([["event", "WorldEvent"], ["state", "WorldState"],
     ["output", "buffer"], ["hints", "buffer"]]);
 const completion = 4;
 const ordinaryCall = /\/\/[^\n]*|"(?:[^"\\\r\n]|\\.)*"|(?<member>\.\s*(?:\/\/[^\n]*\n\s*)*)?(?<name>\b[a-zA-Z_]\w*)\s*(?:\/\/[^\n]*\n\s*)*\(/g;
-
-// Use the real expression/statement checker over already lexed source tokens.
-// Its type and mutability checks do not require allocating instruction bytes.
-class TypeChecker extends typedWasm.FunctionEmitter {
-    constructor(lex, functions, {records, enums, distinct, aliases}, locals, nextLocal) {
-        super(lex, functions, records, undefined, 0, enums, distinct, aliases);
-        this.locals = locals;
-        this.nextLocal = nextLocal;
-        this.code = {push() {}};
-    }
-    emitConst() {}
-    emitIndex() {}
-    emitMemory() {}
-}
-
-function rangeLexer(source, tokens) {
-    const lex = Object.create(typedWasm.Lexer.prototype);
-    lex.source = source;
-    const at = tokens.at(-1).end;
-    let i = 0;
-    lex.next = () => { lex.token = tokens[i++] ?? {value: "", kind: "eof", at}; };
-    lex.next();
-    return lex;
-}
 
 function isOperation(tokens, i) {
     const {value} = tokens[i];
@@ -71,49 +52,6 @@ function tokensFrom(source, from, to) {
         tokens.push(lex.token);
     }
     return tokens;
-}
-
-class Cursor {
-    constructor(source, tokens, i = 0) {
-        this.source = source;
-        this.tokens = tokens;
-        this.i = i;
-    }
-
-    get token() { return this.tokens[this.i]; }
-    get value() { return this.token.value; }
-
-    fail(message, at = this.token.at) { fail(this.source, at, message); }
-
-    take() {
-        const token = this.token;
-        if (token.kind === "eof") this.fail("unexpected end of source");
-        this.i++;
-        return token;
-    }
-
-    accept(value) {
-        if (this.value !== value) return false;
-        this.take();
-        return true;
-    }
-
-    expect(value) {
-        if (!this.accept(value)) this.fail("expected " + value);
-    }
-
-    range(end) {
-        const from = this.i;
-        let depth = 0;
-        while (depth || this.value !== end) {
-            if (!depth && (this.value === ")" || this.value === "{" || this.value === "}"))
-                this.fail("expected " + end);
-            if (this.value === "(") depth++;
-            if (this.value === ")") depth--;
-            this.take();
-        }
-        return this.tokens.slice(from, this.i);
-    }
 }
 
 // Reuse C-produced lexically valid rows. A null body result requests the old
@@ -300,6 +238,77 @@ function assertAcyclic({functions}) {
     const signatures = [...functions.values()];
     const edges = signatures.map(fn => [...fn.edges].map(target => target.index));
     typedWasm.checkAcyclic(signatures, edges);
+}
+
+// ---- async/body.js
+// An async function's body as a statement skeleton (AsyncBody): each expression and simple statement is checked
+// by the front end's own FunctionEmitter with its tape writers turned off (TypeChecker); the skeleton keeps
+// the bindings each statement uses and defines, for liveness.
+// Use the real expression/statement checker over already lexed source tokens.
+// Its type and mutability checks do not require allocating instruction bytes.
+class TypeChecker extends typedWasm.FunctionEmitter {
+    constructor(lex, functions, {records, enums, distinct, aliases}, locals, nextLocal) {
+        super(lex, functions, records, undefined, 0, enums, distinct, aliases);
+        this.locals = locals;
+        this.nextLocal = nextLocal;
+        this.code = {push() {}};
+    }
+    emitConst() {}
+    emitIndex() {}
+    emitMemory() {}
+}
+
+function rangeLexer(source, tokens) {
+    const lex = Object.create(typedWasm.Lexer.prototype);
+    lex.source = source;
+    const at = tokens.at(-1).end;
+    let i = 0;
+    lex.next = () => { lex.token = tokens[i++] ?? {value: "", kind: "eof", at}; };
+    lex.next();
+    return lex;
+}
+
+class Cursor {
+    constructor(source, tokens, i = 0) {
+        this.source = source;
+        this.tokens = tokens;
+        this.i = i;
+    }
+
+    get token() { return this.tokens[this.i]; }
+    get value() { return this.token.value; }
+
+    fail(message, at = this.token.at) { fail(this.source, at, message); }
+
+    take() {
+        const token = this.token;
+        if (token.kind === "eof") this.fail("unexpected end of source");
+        this.i++;
+        return token;
+    }
+
+    accept(value) {
+        if (this.value !== value) return false;
+        this.take();
+        return true;
+    }
+
+    expect(value) {
+        if (!this.accept(value)) this.fail("expected " + value);
+    }
+
+    range(end) {
+        const from = this.i;
+        let depth = 0;
+        while (depth || this.value !== end) {
+            if (!depth && (this.value === ")" || this.value === "{" || this.value === "}"))
+                this.fail("expected " + end);
+            if (this.value === "(") depth++;
+            if (this.value === ")") depth--;
+            this.take();
+        }
+        return this.tokens.slice(from, this.i);
+    }
 }
 
 class AsyncBody extends Cursor {
@@ -564,6 +573,8 @@ class AsyncBody extends Cursor {
     }
 }
 
+// ---- async/liveness.js
+// Liveness over the statement skeleton: the bindings live after each wait, which a frame saves in WorldState.
 function contains(sequence, property) {
     return sequence.some(node => node[property]);
 }
@@ -644,6 +655,9 @@ function analyze(program) {
     }
 }
 
+// ---- async/allocate.js
+// Frames in WorldState: one per task and async function it reaches, with state, token, the saved scalars and,
+// for a function awaited from two places, its caller; and the asyncLayout the backends publish.
 function allocate(program) {
     const tasks = new Map();
     const frames = [];
@@ -695,6 +709,9 @@ function allocate(program) {
     return {tasks, frames, fields, layout};
 }
 
+// ---- async/text.js
+// The lowered program as chunks: copied ranges of the original source and generated text, each with the original
+// position diagnostics report (originalAt); and the text helpers of the generated functions.
 class GeneratedText {
     constructor(source) {
         this.original = source;
@@ -765,6 +782,25 @@ function render(program, data) {
     return parts.join("");
 }
 
+const stateField = (frame, kind) => "state." + frame.base + kind;
+const call = (name, args) => name + "(" + args.join(", ") + ")";
+const formal = ({name, type}) => name + ": " + type;
+const signature = (name, params, result) => "function " + name + "(" + params.map(formal).join(", ") + "): " + result + " {";
+
+function encode(value, type) {
+    if (type === "i32") return value;
+    return "i32(" + value + ")";
+}
+
+function decode(program, value, type) {
+    if (type === "i32") return value;
+    if (type === "bool") return value + " === 1";
+    return call(program.prefix + "word_" + type, [value]);
+}
+
+// ---- async/lower.js
+// One frame's step function: the body cut at its waits into pieces dispatched by pc, with saves before each
+// suspension and reloads on resumption.
 function cut(fn) {
     const pieces = [];
     function piece(at, transfer) {
@@ -828,22 +864,6 @@ function cut(fn) {
 
     const entry = sequence(fn.body, null);
     return {entry, pieces: pieces.reverse()};
-}
-
-const stateField = (frame, kind) => "state." + frame.base + kind;
-const call = (name, args) => name + "(" + args.join(", ") + ")";
-const formal = ({name, type}) => name + ": " + type;
-const signature = (name, params, result) => "function " + name + "(" + params.map(formal).join(", ") + "): " + result + " {";
-
-function encode(value, type) {
-    if (type === "i32") return value;
-    return "i32(" + value + ")";
-}
-
-function decode(program, value, type) {
-    if (type === "i32") return value;
-    if (type === "bool") return value + " === 1";
-    return call(program.prefix + "word_" + type, [value]);
 }
 
 function emitStep(program, writer, frame) {
@@ -988,6 +1008,9 @@ function emitStep(program, writer, frame) {
     line("}");
 }
 
+// ---- async/tasks.js
+// The task operations' functions: start (with its busy check), cancel, pending, and resume, the dispatcher that
+// routes a completion event to the innermost waiting frame and up through its callers.
 function zero(type, types) {
     if (type === "bool") return "false";
     if (types.enums.has(type)) return type + "." + types.enums.get(type).keys().next().value;
@@ -1097,6 +1120,9 @@ function emitTaskOperations(program, writer, allocation) {
     if (resume) emitDispatcher(program, writer, allocation, resume);
 }
 
+// ---- async/rewrite.js
+// The entry: prepare (scan, check, analyze, allocate) and rewrite (the lowered program and its plan for the
+// front end, compileFunctions in frontend/compile.js); what the bundle publishes.
 function prepare(source, imports) {
     if (!candidate.test(source)) return null;
     const program = readProgram(source, imports);

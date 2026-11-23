@@ -12,7 +12,7 @@ object on `globalThis`, and the loaders evaluate them in this order:
 |---|---|---|
 | `tape.js` | `typedTape` | The tape's definition: opcodes, operand cells, operand and result types, effects, walkers |
 | `typed-wasm.js` | `typedWasm` | The front end (lexer, signature pass, parser and type checker writing the tape) and the WebAssembly backend, built from `frontend/*.js` and `wasm/*.js` by `node compiler/typed/frontend/build.mjs` |
-| `typed-async.js` | `typedAsync` | Rewrites `async` functions into ordinary Typed source before emission (worlds only) |
+| `typed-async.js` | `typedAsync` | Lowers `async` functions into ordinary Typed functions over `WorldState` frames before emission (worlds that have them), built from `async/*.js` by `node compiler/typed/async/build.mjs` |
 | `typed-rv32.js` | `typedRv32` | The RV32 backend, built from `rv32/*.js` by `node compiler/typed/rv32/build.mjs` ([README](../compiler/typed/rv32/README.md)) |
 | `typed-world.js` | `typedWorld`, `compileTypedWorld*` | The world ABI: two entries and the SDK imports, in trampoline order |
 | `typed-pie-loops.js` | `typedPieLoops` | Optional: ESP32-P4 PIE vector words for qualifying loops (`pieLoops`) |
@@ -27,7 +27,7 @@ file's QuickJS bytecode so that later compiles skip the parse.
 
 ```
 Typed source
-  │  typed-async.js (worlds with async functions): rewritten into ordinary Typed source
+  │  typed-async.js (worlds with async functions): lowered into ordinary Typed source, which keeps its original positions
   ▼
 front end       Lexer → signature pass (records, enums, distinct types, acyclic calls) → FunctionEmitter,
   │             one function at a time, no syntax tree → the function's tape
@@ -48,13 +48,35 @@ into one IIFE (one scope, so they are not ES modules), and `--check`, run by `ma
 | `frontend/lexer.js` | `TOKEN`, `RESERVED`, the host-provided lexical index (`withLexIndices`, `indexFor`), `Lexer` |
 | `frontend/declarations.js` | records, enums, distinct types, member aliases (`parseDeclarations`), `scanSignatures`, `checkAcyclic`, `recordLayouts` |
 | `frontend/expressions.js` | the tape's constants for the bundle; `ExpressionParser`: the tape writer (`emitConst`, `emitIndex`, `emitMemory`, `codeUnitAddress`, `emitLiteralStores`) and the expressions |
-| `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`typed-async.js` subclasses it) |
+| `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`async/body.js` subclasses it) |
 | `frontend/inspect.js` | the front end's `frontend` inspection event (`target: "tape"`) |
-| `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async rewrite |
+| `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async lowering (`emitSpanFunctions`, whose lexers report original positions) |
 | `wasm/encode.js` | `encodeFunction` (tape → Wasm body), `compileWasmFunctions` (the front end driven for the Wasm backend) |
 | `wasm/module.js` | `compile` (a module of Typed functions), `WasmReader`, section reading and writing |
 | `wasm/inspect.js` | the Wasm backend's `frontend` and `emission` events, in Wasm operations and module byte ranges |
 | `wasm/link.js` | `linkWorld`, `invoke`, and what the bundle publishes |
+
+### The async lowering's modules
+
+An `async` function that awaits an SDK request or another async function becomes a *step function* over a static
+frame in `WorldState` (PICOCALC-CONTINUATION-G, PICOCALC-EDITOR-ASYNC). `typed-async.js` is generated from
+`compiler/typed/async/` by `node compiler/typed/async/build.mjs` the same way, and its `--check` runs in
+`make test-generated`. Its tests are `tests/compiler/typed-async.test.mjs`.
+
+| Module | Contents |
+|---|---|
+| `async/scan.js` | the whole-program pre-pass: task operations (`start`, `cancel`, `pending`, `resume`) in every body, from the lexical index when the host provides one (`indexedBodies`); call edges and acyclicity |
+| `async/body.js` | `AsyncBody`: an async body as a statement skeleton, each expression checked by `TypeChecker`, the front end's `FunctionEmitter` with its tape writers off |
+| `async/liveness.js` | the bindings live after each wait (`analyze`); a live non-scalar is an error |
+| `async/allocate.js` | the frames' fields in `WorldState` and `asyncLayout` |
+| `async/text.js` | `GeneratedText`: copied chunks of the source and generated text, each with an original position (`originalAt`) |
+| `async/lower.js` | `cut` and `emitStep`: one frame's step function dispatched by `pc` |
+| `async/tasks.js` | the generated `start`, `cancel`, `pending` and `resume` functions |
+| `async/rewrite.js` | `prepare`, `rewrite` and `typedAsync` |
+
+The lowered program is text, but its unchanged bodies are read from the original source, and the lexers of the rewritten
+bodies and of the generated functions report diagnostics at original positions (`configureGeneratedLexer`), so an
+error never needs a second compile. Why this is text and not a pass over the tape: PICOCALC-TYPED-ASYNC-TAPE's study.
 
 Two properties are deliberate. The compiler streams: `typedRv32.compile` asks the front end for one function at a
 time (`compileFunctions(..., onFunction)`) and lowers it before the next is parsed, so peak memory is one function's

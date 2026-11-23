@@ -377,6 +377,12 @@ test("diagnostics keep their messages and source positions on both targets", () 
     else assert.deepEqual(seen, diagnostics.map(([, expected]) => expected));
 });
 
+test("typed-async.js is the build of compiler/typed/async/", async () => {
+    const {bundle} = await import(new URL("../../compiler/typed/async/build.mjs", import.meta.url));
+    assert(readFileSync(new URL("../../compiler/typed/typed-async.js", import.meta.url), "utf8") === bundle(),
+        "edit compiler/typed/async/, never typed-async.js, then run node compiler/typed/async/build.mjs");
+});
+
 test("a lowered program compiles alone on WebAssembly", () => {
     const standalone = compileTyped(stateRecord + `
 async function complete(state: WorldState): bool { state.normalized = 5; return true; }
