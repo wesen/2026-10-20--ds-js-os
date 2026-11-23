@@ -161,3 +161,28 @@ TYPED-VALUES delivered all seven language features on both targets with every ho
 
 - **The TYPED-VALUES device check is now on the coordinator.** The next playable install, after the power cycle, must confirm every boot compile within 75 % of its deadline, Chess above all.
 - **A pre-existing bug the ticket found:** Wasm inspection crashes on `0xfc`-prefixed operations, so `i32(f32)` cannot be inspected through Wasm. It is a task.
+
+## Step 5: COMPILER-DEVICE-COST's host work done; merge held for the board study
+
+COMPILER-DEVICE-COST finished everything that can be done off the board and stopped at the board pause. I did not merge it. Its changes are safe functionally, but two of them (debug stripping and arena reuse) exist to change device memory and time, and neither has been measured on the P4.
+
+### What the ticket delivered (host)
+
+- **`TYPEDCOMPILE` instrumentation** per compile: per-source load and run time, heap, teardown, and PSRAM-heap calls.
+- **`JS_STRIP_DEBUG`** in every compile runtime. Compiler bytecode went from 1,065 KB to 191 KB (to 263 KB with `JS_STRIP_SOURCE` only). The compile peak dropped 324 KB for Agenda and 438 KB for Chess with a device-like allocator. Compile-error messages are identical (33 cases); stack traces lose file:line.
+- **A deviation from the design.** Moving `split` alone changed nothing: Files compiles under `interactive`, and `default` needs `version` and `hoist`. Instead the kernel-only passes became a third group (`typed-rv32-kernel.js`).
+- **One bundler** (`compiler/typed/bundle.mjs`), with every bundle byte-identical.
+- **Arena reuse,** outside the ticket: compiles keep up to 64 freed 4 KB arenas. On the host, Chess's heap allocations fell from 4,149 to 1,955.
+- **The pass-group slowdown,** partly explained. The compile runs 0.4–1.1 % more instructions in the lazy layout, and the arena churn changes with which bundles are loaded. That accounts for about 20 of Chess's 96 ms.
+
+### What's left (board)
+
+1. An in-image session of about 18 min.
+2. A paired boot study, 4 arms × 3 blocks.
+3. The final image gate.
+
+All of it is scripted.
+
+### What warrants a second pair of eyes
+
+- **The board runs the ticket's bench image `fa144453`, not playable.** After the power cycle the first step must be `make restore-playable` from main, before anything else judges health.
