@@ -12,9 +12,13 @@
 // TARGET_PASSES passes and has been shown for HOLD_MS more, or after MAX_SHOW_MS on screen; then the next scene
 // starts. The gallery world's skip counter (a key) moves to the next or previous scene at once.
 //
+// Two kernel arms render the same scenes (PICOCALC-CANDELA-TYPED): "cpp", the generated C++ kernel with the section
+// interpreter (cg, cgs), and, with PICOCALC_CANDELA_TYPED, "typed", the kernel and sections in Typed compiled to RV32
+// on the handheld (candela_typed_p4.c: cgt, cgts). The gallery draws with ARM_DEFAULT unless the console chooses.
+//
 // UART records, one JSON object per line after "CGAL ": scene (when a scene ends), first (its first image), pass,
-// digest (console: gallery digest ID PASSES [psram|internal|quiet]), status, error. Console: gallery status|next|prev|
-// scene ID|pause|resume|digest ID PASSES [psram|internal|quiet]|probe MS|list.
+// digest (console: gallery digest ID PASSES [psram|internal|quiet] [typed|cpp]), status, error. Console: gallery
+// status|next|prev|scene ID|pause|resume|arm [typed|cpp]|digest ID PASSES [psram|internal|quiet] [typed|cpp]|probe MS|list.
 #include "candela_gallery.h"
 #include "esp_cpu.h"
 #include "esp_heap_caps.h"
@@ -32,11 +36,23 @@
 
 extern const cg_instance cg_gallery, cgs_gallery;
 extern const char cg_kernel_fixed_sha256[];
+enum { ARM_CPP, ARM_TYPED };
+static const char *const ARM[] = {"cpp", "typed"};
+#if PICOCALC_CANDELA_TYPED
+extern const cg_instance cgt_gallery, cgts_gallery;
+#define ARMS 2
+#ifndef ARM_DEFAULT
+#define ARM_DEFAULT ARM_CPP
+#endif
+#else
+#define ARMS 1
+#define ARM_DEFAULT ARM_CPP
+#endif
 
 enum { SIDE = 320, TARGET_PASSES = 64, HOLD_MS = 6000, MAX_SHOW_MS = 60000, VISIBLE_MS = 2000,
        PASS_DISPLAY_MS = 400, LONG_DISPLAY_MS = 1500, DISPLAY_SHARE = 10, STACK = 24 * 1024, PRIORITY = 1 };
-enum { C_STEP, C_SCENE, C_PAUSE, C_RESUME, C_DIGEST, C_STATUS, C_PROBE };
-typedef struct { int op, a, b, c; } command;
+enum { C_STEP, C_SCENE, C_PAUSE, C_RESUME, C_DIGEST, C_STATUS, C_PROBE, C_ARM };
+typedef struct { int op, a, b, c, d; } command;
 
 static QueueHandle_t commands;
 static uint16_t *frames[3];
@@ -57,7 +73,15 @@ static void *fast(size_t n) {
   return p ? p : big(n);
 }
 static const cg_alloc ALLOC = {big, fast, heap_caps_free};
-static const cg_instance *instance_for(const cg_scene_desc *d) { return d->spectral ? &cgs_gallery : &cg_gallery; }
+static int arm = ARM_DEFAULT;     // the gallery's arm (the worker's; a digest names its own)
+static const cg_instance *instance_of(const cg_scene_desc *d, int a) {
+#if PICOCALC_CANDELA_TYPED
+  if (a == ARM_TYPED) return d->spectral ? &cgts_gallery : &cgt_gallery;
+#endif
+  (void)a;
+  return d->spectral ? &cgs_gallery : &cg_gallery;
+}
+static const cg_instance *instance_for(const cg_scene_desc *d) { return instance_of(d, arm); }
 
 static void publish(void) {
   writer = (int)(atomic_exchange(&mid, (unsigned)writer | 4u) & 3u);
@@ -120,12 +144,12 @@ static void end_scene(const char *reason) {
   const cg_scene_desc *d = st.scene;
   const double render_s = sc.render_us / 1e6, samples = (double)st.samples;
   const unsigned passes = st.pass;
-  printf("CGAL {\"ev\":\"scene\",\"id\":\"%s\",\"w\":%d,\"h\":%d,\"reason\":\"%s\",\"passes\":%u,\"samples\":%" PRIu64
+  printf("CGAL {\"ev\":\"scene\",\"id\":\"%s\",\"arm\":\"%s\",\"w\":%d,\"h\":%d,\"reason\":\"%s\",\"passes\":%u,\"samples\":%" PRIu64
          ",\"firstImageMs\":%.1f,\"coarseMs\":%.1f,\"halfMs\":%.1f,\"pass1Ms\":%.1f,\"renderMs\":%.1f,\"shownMs\":%.1f,"
          "\"secPerPass\":%.4f,\"samplesPerSec\":%.1f,\"cyclesPerSample\":%.1f,\"displays\":%u,\"displayMs\":%.1f,"
          "\"displayCyclesMean\":%.0f,\"skyRebuilt\":%u,\"ev100\":%.4f,\"metered\":%u,\"meanLum\":%.6g,"
          "\"internalFree0\":%u,\"internalMinFree\":%u,\"psramFree0\":%u,\"psramMinFree\":%u,\"internalPeakUse\":%d,\"psramPeakUse\":%d}\n",
-         d->id, d->w, d->h, reason, passes, st.samples,
+         d->id, ARM[arm], d->w, d->h, reason, passes, st.samples,
          sc.first_us ? (sc.first_us - sc.start_us) / 1e3 : -1.0, sc.coarse_us ? (sc.coarse_us - sc.start_us) / 1e3 : -1.0,
          sc.half_us ? (sc.half_us - sc.start_us) / 1e3 : -1.0, sc.pass1_us ? (sc.pass1_us - sc.start_us) / 1e3 : -1.0,
          sc.render_us / 1e3, sc.shown_us / 1e3, passes ? render_s / (samples / (d->w * d->h)) : 0.0,
@@ -182,9 +206,9 @@ static void show(int64_t t) {
 }
 
 static void status(void) {
-  printf("CGAL {\"ev\":\"status\",\"scene\":\"%s\",\"index\":%d,\"scenes\":%u,\"pass\":%u,\"sub\":%u,\"samples\":%" PRIu64
+  printf("CGAL {\"ev\":\"status\",\"arm\":\"%s\",\"scene\":\"%s\",\"index\":%d,\"scenes\":%u,\"pass\":%u,\"sub\":%u,\"samples\":%" PRIu64
          ",\"renderMs\":%.1f,\"displays\":%u,\"paused\":%d,\"done\":%d,\"visible\":%d,\"kernel\":\"%s\",\"internalFree\":%u,\"psramFree\":%u}\n",
-         current >= 0 ? cg_scenes[current].id : "", current, cg_nscenes, st.pass, st.sub, st.samples, sc.render_us / 1e3,
+         ARM[arm], current >= 0 ? cg_scenes[current].id : "", current, cg_nscenes, st.pass, st.sub, st.samples, sc.render_us / 1e3,
          sc.displays, paused, done, now_us() - atomic_load(&last_paint_us) < VISIBLE_MS * 1000LL, cg_kernel_fixed_sha256,
          (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL), (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
 }
@@ -198,11 +222,13 @@ static void status(void) {
 // stack, and with nothing else on core 1 (above the kernel task, which then waits the few seconds the digest takes).
 enum { V_PSRAM, V_INTERNAL, V_QUIET };
 static const char *const VARIANT[] = {"psram", "internal", "quiet"};
-static void digest(int k, int passes, int variant) {
+static void digest(int k, int passes, int variant, int a) {
   cdl_pixout *line = (variant == V_PSRAM ? big : fast)(sizeof(cdl_pixout) * CG_MAX_SIDE);
   const cg_scene_desc *d = &cg_scenes[k];
   if (!line) { snprintf(err, sizeof err, "out of memory"); record_error("digest"); return; }
-  if (cg_begin(&st, d, instance_for(d), &ALLOC, err, sizeof err)) { record_error("digest"); heap_caps_free(line); return; }
+  const int64_t b0 = now_us();
+  if (cg_begin(&st, d, instance_of(d, a), &ALLOC, err, sizeof err)) { record_error("digest"); heap_caps_free(line); return; }
+  const int64_t b1 = now_us();
   double lum0, lum;
   uint32_t c0 = esp_cpu_get_cycle_count();
   const uint32_t f0 = cg_frame0_digest(&st, line, &lum0);
@@ -218,25 +244,25 @@ static void digest(int k, int passes, int variant) {
   const uint32_t acc = cg_acc_digest(&st, &lum);
   cg_display(&st, disp, CG_FAST);
   const uint32_t dsp = cg_fnv(2166136261u, disp, sizeof(uint16_t) * st.w * st.h);
-  printf("CGAL {\"ev\":\"digest\",\"id\":\"%s\",\"w\":%d,\"h\":%d,\"frame0\":\"%08" PRIx32 "\",\"frame0MeanLum\":%.9g,\"frame0CyclesPerSample\":%.1f,"
+  printf("CGAL {\"ev\":\"digest\",\"id\":\"%s\",\"arm\":\"%s\",\"beginMs\":%.1f,\"w\":%d,\"h\":%d,\"frame0\":\"%08" PRIx32 "\",\"frame0MeanLum\":%.9g,\"frame0CyclesPerSample\":%.1f,"
          "\"passes\":%u,\"acc\":\"%08" PRIx32 "\",\"meanLum\":%.9g,\"disp\":\"%08" PRIx32 "\",\"ev100\":%.9g,\"cyclesPerSample\":%.1f,"
          "\"seconds\":%.3f,\"samples\":%" PRIu64 ",\"variant\":\"%s\"}\n",
-         d->id, st.w, st.h, f0, lum0, (double)frame0_cycles / (st.w * st.h), st.pass, acc, lum, dsp, st.ev,
+         d->id, ARM[a], (b1 - b0) / 1e3, st.w, st.h, f0, lum0, (double)frame0_cycles / (st.w * st.h), st.pass, acc, lum, dsp, st.ev,
          (double)cycles / (double)st.samples, (t1 - t0) / 1e6, st.samples, VARIANT[variant]);
   fflush(stdout);
   cg_end(&st);
   heap_caps_free(line);
 }
 
-typedef struct { int k, passes, variant; TaskHandle_t waiter; } digest_job;
+typedef struct { int k, passes, variant, arm; TaskHandle_t waiter; } digest_job;
 static void digest_task(void *arg) {
   digest_job *j = arg;
-  digest(j->k, j->passes, j->variant);
+  digest(j->k, j->passes, j->variant, j->arm);
   xTaskNotifyGive(j->waiter);
   vTaskSuspend(NULL);   // the worker deletes this task once notified
 }
-static void digest_on_helper(int k, int passes, int variant) {
-  digest_job j = {k, passes, variant, xTaskGetCurrentTaskHandle()};
+static void digest_on_helper(int k, int passes, int variant, int a) {
+  digest_job j = {k, passes, variant, a, xTaskGetCurrentTaskHandle()};
   TaskHandle_t h = NULL;
   const UBaseType_t caps = variant == V_PSRAM ? MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT : MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT;
   if (xTaskCreatePinnedToCoreWithCaps(digest_task, "gallery-d", STACK, &j, variant == V_QUIET ? 6 : PRIORITY, &h, 1, caps) != pdPASS) {
@@ -310,11 +336,16 @@ static void handle(const command *c) {
       const int resume = current;
       end_scene("digest");
       current = -1;
-      digest_on_helper(c->a, c->b, c->c);
+      digest_on_helper(c->a, c->b, c->c, c->d);
       begin_scene(resume < 0 ? 0 : resume);
       break;
     }
     case C_STATUS: status(); break;
+    case C_ARM:
+      end_scene("arm");
+      arm = c->a;
+      begin_scene(current < 0 ? 0 : current);
+      break;
     case C_PROBE: probe(c->a); break;
   }
 }
@@ -384,20 +415,27 @@ void p4_gallery_start(void) {
     printf("CGAL {\"ev\":\"error\",\"what\":\"start\",\"error\":\"out of memory\"}\n");
 }
 
+static int arm_named(const char *s) {
+  for (int a = 0; a < ARMS; a++) if (!strcmp(s, ARM[a])) return a;
+  return -1;
+}
+
 static int find(const char *id) {
   for (unsigned k = 0; k < cg_nscenes; k++) if (!strcmp(cg_scenes[k].id, id)) return (int)k;
   return -1;
 }
 
 void p4_gallery_console(const char *args) {
-  char a[16] = "", b[16] = "", v[16] = "psram"; int n = 0;
-  const int got = sscanf(args, "%15s %15s %d %15s", a, b, &n, v);
-  command c = {C_STATUS, 0, 0, 0};
+  char a[16] = "", b[16] = "", v[16] = "psram", w[16] = ""; int n = 0;
+  const int got = sscanf(args, "%15s %15s %d %15s %15s", a, b, &n, v, w);
+  command c = {C_STATUS, 0, 0, 0, arm};
   if (got < 1 || !strcmp(a, "status")) c.op = C_STATUS;
   else if (!strcmp(a, "next")) { c.op = C_STEP; c.a = 1; }
   else if (!strcmp(a, "prev")) { c.op = C_STEP; c.a = -1; }
   else if (!strcmp(a, "pause")) c.op = C_PAUSE;
   else if (!strcmp(a, "resume")) c.op = C_RESUME;
+  else if (!strcmp(a, "arm") && got >= 2 && arm_named(b) >= 0) { c.op = C_ARM; c.a = arm_named(b); }
+  else if (!strcmp(a, "arm")) { printf("CGAL {\"ev\":\"arm\",\"arm\":\"%s\",\"arms\":%d}\n", ARM[arm], ARMS); return; }
   else if (!strcmp(a, "probe") && got >= 2 && atoi(b) >= 100 && atoi(b) <= 60000) { c.op = C_PROBE; c.a = atoi(b); }
   else if (!strcmp(a, "list")) {
     for (unsigned k = 0; k < cg_nscenes; k++)
@@ -406,10 +444,11 @@ void p4_gallery_console(const char *args) {
     return;
   } else if (!strcmp(a, "scene") && got >= 2 && find(b) >= 0) { c.op = C_SCENE; c.a = find(b); }
   else if (!strcmp(a, "digest") && got >= 3 && find(b) >= 0 && n >= 1 && n <= 1024 &&
-           (!strcmp(v, "psram") || !strcmp(v, "internal") || !strcmp(v, "quiet"))) {
+           (!strcmp(v, "psram") || !strcmp(v, "internal") || !strcmp(v, "quiet")) && (got < 5 || arm_named(w) >= 0)) {
     c.op = C_DIGEST; c.a = find(b); c.b = n; c.c = !strcmp(v, "psram") ? V_PSRAM : !strcmp(v, "internal") ? V_INTERNAL : V_QUIET;
+    c.d = got >= 5 ? arm_named(w) : arm;
   }
-  else { puts("gallery status|next|prev|pause|resume|list|scene ID|digest ID PASSES [psram|internal|quiet]|probe MS"); return; }
+  else { puts("gallery status|next|prev|pause|resume|list|arm [typed|cpp]|scene ID|digest ID PASSES [psram|internal|quiet] [typed|cpp]|probe MS"); return; }
   p4_gallery_start();
   if (!commands || xQueueSend(commands, &c, 0) != pdTRUE) puts("gallery: not running or busy");
 }
