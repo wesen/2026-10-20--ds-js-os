@@ -65,4 +65,21 @@ Each subagent should keep their own diary, and when they come back, write vault 
 ### Technical details
 
 - Designs: `ttmp/2026/11/22/PICOCALC-*/design-doc/01-*.md`, `PICOCALC-TYPED-F32/design-doc/02-*.md`, `PICOCALC-AGENDA-TYPED-WORLD/design-doc/02-*.md`.
-- Base commit for wave 1: recorded in Step 2.
+- Commit: `56cd256` (tickets and designs).
+
+## Step 2: Wave 1 launched
+
+Four subagents started at `56cd256`, each in its own git worktree, on the tickets with no dependencies: PICOCALC-TYPED-TAPE, PICOCALC-RV32-CONFORMANCE, PICOCALC-TYPED-APP-MANIFEST and PICOCALC-SPLIT-FILES. Each brief names the files to read (AGENTS.md, the program design, its own design), the diary skill's investigation format, the gates, the board rules (the serial lock, experiment images only, restore the playable image, never write `PLAYABLE.json`), and the files the other three own.
+
+### Why these four together
+
+- **Disjoint files.** They touch largely disjoint files:
+  - TAPE: `compiler/typed`, the loaders, one line in the bundle list;
+  - CONFORMANCE: the executors and a capture app;
+  - APP-MANIFEST: the P4 port and profiles;
+  - SPLIT-FILES: the nucleus, `pkg`, `cmd` and tools.
+- **Ordered for merging.** SPLIT-FILES does the trace-repl move last, so it rebases easily over TAPE's change to `pkg/tracecompiler`.
+
+### What warrants a second pair of eyes
+
+- **Three tickets may want the board at once.** CONFORMANCE (capture), APP-MANIFEST (qualification) and SPLIT-FILES (a probe boot) may all want it. `bench/board/device.py`'s lock serializes them. Each brief requires restoring the playable image, but an agent that dies mid-experiment could leave an experiment image installed. After each wave I check with `python3 bench/board/run.py --probe`.
