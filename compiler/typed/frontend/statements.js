@@ -1,5 +1,5 @@
 // The front end's parser and type checker, part two: blocks, conditionals, loops, match, declarations and
-// assignments, and one function's body. typed-async.js subclasses FunctionEmitter as its TypeChecker.
+// assignments, and one function's body. typed-async.js (async/body.js) subclasses FunctionEmitter as its TypeChecker.
 class FunctionEmitter extends ExpressionParser {
     result(type, branch) {
         { if (this.lex.token.value !== "return") this.lex.fail("expected return"); this.lex.next(); }

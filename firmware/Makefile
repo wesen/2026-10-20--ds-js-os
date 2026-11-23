@@ -160,6 +160,7 @@ test-apps:
 	$(NODE) ../tests/compiler/typed-rv32-loops.test.mjs
 	$(NODE) ../tests/compiler/typed-rv32-kernel.test.mjs
 	$(NODE) ../tests/compiler/typed-wasm-inspect.test.mjs
+	$(NODE) ../tests/compiler/typed-async.test.mjs
 	$(NODE) ../tests/compiler/typed-inspect.test.mjs
 	$(NODE) ../tests/compiler/typed-pie-loops.test.mjs
 	$(NODE) ../tests/compiler/typed-tape.test.mjs
