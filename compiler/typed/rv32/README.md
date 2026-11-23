@@ -27,8 +27,8 @@ bundle up front. The modules also run unbundled in Node (`package.json` sets `"t
 | `policy.js` | `POLICIES` (each a pass list plus planner and emitter switches), `resolveOptions` (`passes`, `enable`, `disable`) |
 | `link.js` | `linkSlot` |
 | `encoding/` | `tape.js` (the names from `compiler/typed/tape.js`), `registers.js` (register numbers, the two register classes and their ilp32f tables, `argumentRegisters`, the six integer formats), `instructions.js` (the instruction table: RV32IM, Zicsr, RV32F, PIE; `encoder(key)`, made on first use; class-aware `moveWord`/`loadWord`/`storeWord`), `assembly.js` (a row's GNU as text, for tests and tools; in no bundle), `selection.js` (ALU, predicates, immediates, `constantForm`), `division.js` (division magic numbers) |
-| `emit/` | `function-code.js` (`FunctionCode`: constructor, `step`, `lower`) and its method groups `stack.js`, `homes.js`, `addresses.js`, `branches.js`, `arithmetic.js`, `calls.js` (joined by `mixin.js`); `leaf-code.js`, `guarded-return.js`, `inspection.js` |
-| `passes/` | `registry.js` (the pass table, groups, `loadPasses`), the group entries, and one module per pass: `inline.js`, `commute.js`, `rotate.js`, `conjunctions.js`, `value-sets.js`, `version-loops.js`, `hoist.js`, `split-locals.js` |
+| `emit/` | `function-code.js` (`FunctionCode`: constructor, `step`, `lower`) and its method groups `stack.js`, `homes.js`, `addresses.js`, `branches.js`, `arithmetic.js`, `calls.js`, `floats.js` (f32, RV32F) (joined by `mixin.js`); `leaf-code.js`, `guarded-return.js`, `inspection.js` |
+| `passes/` | `registry.js` (the pass table, groups, `loadPasses`), the group entries, and one module per pass: `inline.js`, `fields.js`, `commute.js`, `rotate.js`, `conjunctions.js`, `value-sets.js`, `version-loops.js`, `hoist.js`, `split-locals.js` |
 | `analysis/` | `ranges.js` (`localRanges`, `divisionFacts`), `storeless.js` |
 | `plan/` | `locations.js` (`planLocations`), `saved-homes.js` (homes per register class, `keyClass`) |
 

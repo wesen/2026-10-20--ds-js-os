@@ -1,0 +1,79 @@
+{
+ "N": 2000,
+ "hashes": {
+  "sphere": [
+   "2b6082ab",
+   "e7716b1a",
+   "e7716b1a"
+  ],
+  "ggx": [
+   "db024a2d",
+   "160a7c60",
+   "160a7c60"
+  ],
+  "norm3": [
+   "6d45b189",
+   "9df0569b",
+   "9df0569b"
+  ]
+ },
+ "kernels": {
+  "sphere": {
+   "cyclesPerCall": {
+    "gcc -O2": 75.1305,
+    "gcc -O2 -ffp-contract=off": 78.8985,
+    "typed kernel": 99.996
+   },
+   "typed/gcc -O2": {
+    "median": 1.3309620143222185,
+    "min": 1.3309574673401614,
+    "max": 1.331063948729211,
+    "typedFaster": 0
+   },
+   "typed/gcc -O2 -ffp-contract=off": {
+    "median": 1.267394183666356,
+    "min": 1.1824125801779433,
+    "max": 1.2674955797638738,
+    "typedFaster": 0
+   }
+  },
+  "ggx": {
+   "cyclesPerCall": {
+    "gcc -O2": 290.0395,
+    "gcc -O2 -ffp-contract=off": 306.0405,
+    "typed kernel": 364.044
+   },
+   "typed/gcc -O2": {
+    "median": 1.2551531774120421,
+    "min": 1.2551445578964244,
+    "max": 1.2551721403464011,
+    "typedFaster": 0
+   },
+   "typed/gcc -O2 -ffp-contract=off": {
+    "median": 1.18952883686963,
+    "min": 1.1895206680161612,
+    "max": 1.1895468083472611,
+    "typedFaster": 0
+   }
+  },
+  "norm3": {
+   "cyclesPerCall": {
+    "gcc -O2": 104.0435,
+    "gcc -O2 -ffp-contract=off": 104.0425,
+    "typed kernel": 122.0415
+   },
+   "typed/gcc -O2": {
+    "median": 1.1729853378634898,
+    "min": 1.1729853378634898,
+    "max": 1.1729853378634898,
+    "typedFaster": 0
+   },
+   "typed/gcc -O2 -ffp-contract=off": {
+    "median": 1.172996611961458,
+    "min": 1.172996611961458,
+    "max": 1.172996611961458,
+    "typedFaster": 0
+   }
+  }
+ }
+}

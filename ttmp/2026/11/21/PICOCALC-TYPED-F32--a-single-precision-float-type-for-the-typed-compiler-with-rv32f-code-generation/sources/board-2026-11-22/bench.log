@@ -1,0 +1,99 @@
+@Q+‰±¥¹RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40020020 size=26790h (157584) map
+I (128) esp_image: segment 1: paddr=000367b8 vaddr=30100000 size=00044h (    68) load
+I (130) esp_image: segment 2: paddr=00036804 vaddr=4ff00000 size=09814h ( 38932) load
+I (140) esp_image: segment 3: paddr=00040020 vaddr=40000020 size=12f84h ( 77700) map
+I (155) esp_image: segment 4: paddr=00052fac vaddr=4ff09814 size=03a24h ( 14884) load
+I (160) esp_image: segment 5: paddr=000569d8 vaddr=4ff0d280 size=076e8h ( 30440) load
+I (171) boot: Loaded app from partition at offset 0x10000
+I (171) boot: Disabling RNG early entropy source...
+I (181) cpu_start: Multicore app
+I (190) cpu_start: Pro cpu start user code
+I (191) cpu_start: cpu freq: 360000000 Hz
+I (191) app_init: Application information:
+I (191) app_init: Project name:     f32-fragments
+I (195) app_init: App version:      1
+I (198) app_init: Compile time:     Nov 22 2026 23:18:44
+I (203) app_init: ELF file SHA256:  86128f14e...
+I (208) app_init: ESP-IDF:          v5.4.2
+I (212) efuse_init: Min chip rev:     v0.1
+I (215) efuse_init: Max chip rev:     v1.99 
+I (219) efuse_init: Chip rev:         v1.3
+I (223) heap_init: Initializing. RAM available for dynamic allocation:
+I (230) heap_init: At 4FF16000 len 00024FC0 (147 KiB): RAM
+I (235) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (240) heap_init: At 4FF40000 len 00060000 (384 KiB): RAM
+I (245) heap_init: At 50108080 len 00007F80 (31 KiB): RTCRAM
+I (250) heap_init: At 30100044 len 00001FBC (7 KiB): TCM
+I (256) spi_flash: detected chip: generic
+W (259) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (269) spi_flash: flash io: dio
+I (273) main_task: Started on CPU0
+I (283) main_task: Calling app_main()
+F32FRAG BEGIN 2000 6
+F32FRAG HASH sphere 2b6082ab e7716b1a e7716b1a
+F32FRAG HASH ggx db024a2d 160a7c60 160a7c60
+F32FRAG HASH norm3 6d45b189 9df0569b 9df0569b
+F32FRAG ROW sphere 0 0 0 150275 2b6082ab
+F32FRAG ROW sphere 0 1 1 169155 e7716b1a
+F32FRAG ROW sphere 0 2 2 200011 e7716b1a
+F32FRAG ROW ggx 0 0 0 580079 db024a2d
+F32FRAG ROW ggx 0 1 1 612081 160a7c60
+F32FRAG ROW ggx 0 2 2 728093 160a7c60
+F32FRAG ROW norm3 0 0 0 208087 6d45b189
+F32FRAG ROW norm3 0 1 1 208085 9df0569b
+F32FRAG ROW norm3 0 2 2 244083 9df0569b
+F32FRAG ROW sphere 1 0 2 200007 e7716b1a
+F32FRAG ROW sphere 1 1 1 157797 e7716b1a
+F32FRAG ROW sphere 1 2 0 150261 2b6082ab
+F32FRAG ROW ggx 1 0 2 728083 160a7c60
+F32FRAG ROW ggx 1 1 1 612081 160a7c60
+F32FRAG ROW ggx 1 2 0 580079 db024a2d
+F32FRAG ROW norm3 1 0 2 244083 9df0569b
+F32FRAG ROW norm3 1 1 1 208085 9df0569b
+F32FRAG ROW norm3 1 2 0 208087 6d45b189
+F32FRAG ROW sphere 2 0 1 157797 e7716b1a
+F32FRAG ROW sphere 2 1 2 199991 e7716b1a
+F32FRAG ROW sphere 2 2 0 150261 2b6082ab
+F32FRAG ROW ggx 2 0 1 612081 160a7c60
+F32FRAG ROW ggx 2 1 2 728099 160a7c60
+F32FRAG ROW ggx 2 2 0 580079 db024a2d
+F32FRAG ROW norm3 2 0 1 208085 9df0569b
+F32FRAG ROW norm3 2 1 2 244083 9df0569b
+F32FRAG ROW norm3 2 2 0 208087 6d45b189
+F32FRAG ROW sphere 3 0 0 150261 2b6082ab
+F32FRAG ROW sphere 3 1 2 199991 e7716b1a
+F32FRAG ROW sphere 3 2 1 157797 e7716b1a
+F32FRAG ROW ggx 3 0 0 580079 db024a2d
+F32FRAG ROW ggx 3 1 2 728083 160a7c60
+F32FRAG ROW ggx 3 2 1 612081 160a7c60
+F32FRAG ROW norm3 3 0 0 208087 6d45b189
+F32FRAG ROW norm3 3 1 2 244083 9df0569b
+F32FRAG ROW norm3 3 2 1 208085 9df0569b
+F32FRAG ROW sphere 4 0 2 199993 e7716b1a
+F32FRAG ROW sphere 4 1 0 150261 2b6082ab
+F32FRAG ROW sphere 4 2 1 157797 e7716b1a
+F32FRAG ROW ggx 4 0 2 728093 160a7c60
+F32FRAG ROW ggx 4 1 0 580079 db024a2d
+F32FRAG ROW ggx 4 2 1 612081 160a7c60
+F32FRAG ROW norm3 4 0 2 244083 9df0569b
+F32FRAG ROW norm3 4 1 0 208087 6d45b189
+F32FRAG ROW norm3 4 2 1 208085 9df0569b
+F32FRAG ROW sphere 5 0 1 157797 e7716b1a
+F32FRAG ROW sphere 5 1 0 150261 2b6082ab
+F32FRAG ROW sphere 5 2 2 199991 e7716b1a
+F32FRAG ROW ggx 5 0 1 612081 160a7c60
+F32FRAG ROW ggx 5 1 0 580079 db024a2d
+F32FRAG ROW ggx 5 2 2 728083 160a7c60
+F32FRAG ROW norm3 5 0 1 208085 9df0569b
+F32FRAG ROW norm3 5 1 0 208087 6d45b189
+F32FRAG ROW norm3 5 2 2 244083 9df0569b
+F32FRAG END
