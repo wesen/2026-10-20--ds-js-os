@@ -26,9 +26,21 @@ static void account(compile_heap *heap, size_t old, size_t current) {
   if (heap->live > heap->peak) heap->peak = heap->live;
 }
 
+// A compile must not take the PSRAM the running worlds need: the gallery's Typed program, compiled beside them,
+// once left PSRAM empty and the keyboard, compositor, snake and settings worlds failed for want of memory
+// (PICOCALC-COMPILE-CACHE diary step 6). Past RESERVE_FROM bytes of live heap (no boot compile gets there), an
+// allocation that would leave less than RESERVE free is refused, and the compile fails instead.
+enum { RESERVE = 3 << 20, RESERVE_FROM = 8 << 20 };
+static bool psram_spare(compile_heap *heap, size_t size) {
+  if (heap->live < RESERVE_FROM || heap_caps_get_free_size(MALLOC_CAP_SPIRAM) >= size + RESERVE) return true;
+  heap->no_psram++;
+  return false;
+}
+
 static void *compile_malloc(JSMallocState *state, size_t size) {
   compile_heap *heap = state->opaque;
   if (heap->live >= heap->limit || size > heap->limit - heap->live) { heap->over_limit++; return NULL; }
+  if (!psram_spare(heap, size)) return NULL;
   void *ptr = port_heap_malloc(size);
   if (ptr) account(heap, 0, port_heap_usable(ptr));
   else heap->no_psram++;
@@ -48,6 +60,7 @@ static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
   size_t old = port_heap_usable(ptr);
   size_t retained = heap->live - old;
   if (retained >= heap->limit || size > heap->limit - retained) { heap->over_limit++; return NULL; }
+  if (size > old && !psram_spare(heap, size)) return NULL;
   void *next = port_heap_realloc(ptr, size);
   if (next) account(heap, old, port_heap_usable(next));
   else heap->no_psram++;
@@ -306,10 +319,15 @@ static char *read_edited(const p4_typed_app *app, size_t *length) {
 }
 
 // Real compiles (not cache hits) running now, and when the last one ended: a background compile waits for quiet.
-static volatile int compiles_running;
-static volatile vtime_t compiles_ended = -1;
-bool p4_typed_compiles_quiet(int64_t quiet_us) {
-  return !compiles_running && (compiles_ended < 0 || port_clock() - compiles_ended >= quiet_us);
+// Per core: the cache's writer (core 1) waits only for compiles that share its core.
+static volatile int compiles_running[2];
+static volatile vtime_t compiles_ended[2] = {-1, -1};
+bool p4_typed_compiles_quiet(int core, int64_t quiet_us) {
+  for (int c = 0; c < 2; c++)
+    if ((core < 0 || c == core) &&
+        (compiles_running[c] || (compiles_ended[c] >= 0 && port_clock() - compiles_ended[c] < quiet_us)))
+      return false;
+  return true;
 }
 
 bool p4_typed_app_cached(const p4_typed_app *app, int variant) {
@@ -332,7 +350,8 @@ static char *compile_app(const p4_typed_app *app, int variant, const char *text,
   const bool keyed = cached && p4_typed_cache_key(app, bundled, text, text_length, &limits, key);
   char *module = keyed ? p4_typed_cache_read(app->name, key, length, port_clock() - asked) : NULL;
   if (module) return module;
-  __atomic_add_fetch(&compiles_running, 1, __ATOMIC_SEQ_CST);
+  const int core = xPortGetCoreID();
+  __atomic_add_fetch(&compiles_running[core], 1, __ATOMIC_SEQ_CST);
   const vtime_t started = port_clock();
   size_t source_length = text_length, reactor_length = 0;
   char *source = text ? NULL : p4_bundle_read(bundled, &source_length, NULL, 0);
@@ -345,8 +364,8 @@ static char *compile_app(const p4_typed_app *app, int variant, const char *text,
   }
   free(reactor);
   free(source);
-  compiles_ended = port_clock();
-  __atomic_sub_fetch(&compiles_running, 1, __ATOMIC_SEQ_CST);
+  compiles_ended[core] = port_clock();
+  __atomic_sub_fetch(&compiles_running[core], 1, __ATOMIC_SEQ_CST);
   if (module && keyed) p4_typed_cache_store(app->name, kind ? kind : bundled, key, module, *length, port_clock() - started);
   return module;
 }

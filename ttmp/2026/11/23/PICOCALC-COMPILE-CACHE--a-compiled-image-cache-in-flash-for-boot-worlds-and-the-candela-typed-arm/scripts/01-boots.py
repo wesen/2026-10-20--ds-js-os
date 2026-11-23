@@ -6,7 +6,8 @@ usage (repository root): python3 ttmp/.../scripts/01-boots.py OUT --build DIR ST
 Steps, run in order:
   flash            hold the running firmware, then write DIR's app (the next reset boots it)
   boot:TAG[:S]     reset (esptool verify_flash, which resets) and capture the boot with host timestamps, sending
-                   `trace on` every 0.5 s for the first 15 s as PICOCALC-AGENDA-TYPED-WORLD's 02-boot-capture.py did
+                   `trace on` every 0.5 s (as PICOCALC-AGENDA-TYPED-WORLD's 02-boot-capture.py did) until every watched
+                   world has sent its first frame, then `trace off` (the trace slows the compiles that follow), or 40 s
                    (the first "W <- frames from APP" line is APP's first frame), until every cache miss has its
                    "cache stored" line (the writer runs after the boot) or 120 s; with S, for at least S seconds.
                    The gallery's records (CGAL) are kept too: its Typed program loads after the boot.
@@ -40,7 +41,7 @@ MISS = re.compile(r"(\S+) cache (miss|corrupt|unread \(no memory\)) key_us=(\d+)
 STORED = re.compile(r"(\S+) cache stored seq=(\d+) module_bytes=(\d+) us=(\d+) prepare_us=(\d+) write_us=(\d+) "
                     r"commit_us=(\d+) free_kb=(\d+)")
 NOT_STORED = re.compile(r"(\S+) cache not stored: (.*)$")
-FRAME = re.compile(r"\[\s*([\d.]+)\] (\S+) <- frames from (\S+)")
+FRAME = re.compile(r"\[\s*([\d.]+)\] (\S+) <- (?:frames|painter\.frame) from (\S+)")   # Chess draws through its painter
 RECORD = re.compile(r"^(TCACHE|TCVERIFY) (\{.*\})")
 WATCH = ("agenda", "files", "editor", "chess")
 

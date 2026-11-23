@@ -183,7 +183,7 @@ double cgt_loading_s(void) { return loading && load_started_us ? (esp_timer_get_
 // Not while another compile runs or has just run: the painter's compile after a cold boot has a deadline, and two
 // compiles share PSRAM's bandwidth.
 void cgt_prepare(void) {
-  if (loaded || failed || loading || !p4_typed_compiles_quiet(10 * 1000000)) return;
+  if (loaded || failed || loading || !p4_typed_compiles_quiet(-1, 10 * 1000000)) return;
   loading = true;
   if (xTaskCreatePinnedToCoreWithCaps(load_task, "cgt-load", 8 * 1024, NULL, 1, NULL, 0,
                                       MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT) != pdPASS)
