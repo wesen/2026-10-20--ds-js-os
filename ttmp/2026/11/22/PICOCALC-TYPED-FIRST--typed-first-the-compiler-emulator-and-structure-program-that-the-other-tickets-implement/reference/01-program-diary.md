@@ -429,3 +429,47 @@ The user power-cycled the PicoCalc. The keyboard answers again. A fresh boot of 
 
 - **A compositor turn-budget overrun** (80 ms) on a playable image that had been up for hours, after the keyboard wedge and recovery. It may come from the I2C error storm making the keyboard path slow, or it may be a real overrun. Watch for it on future health checks.
 - **A "power cycle" doesn't reset the P4 while USB is connected.** A health check after a power cycle should reboot the board (or reinstall) before judging world errors.
+
+## Step 14: CANDELA-TYPED's device milestones merged, vault report 3, the final playable, main pushed
+
+The program is complete. All twelve tickets are merged and gated, the four vault reports are published, the latest playable is installed and healthy, and `main` is on `origin`.
+
+### Prompt Context
+
+**User messages (verbatim, in order):**
+- "what are all these agents doing? are they blocked>"
+- "I don't know what they are waiting for, but it seems that it's just hanging or maybe done"
+- "what about the others?"
+- "So the 3 genpurp are just hangin?" (with a pasted agent list)
+- "ok, do we have PRs or so?"
+- "push main"
+
+### What I did
+
+- **Merged CANDELA-TYPED's device milestones** (`a21a3bd`, `af25b2b`, `56d05dd`). Clean merge; `make test` exit 0; default gates pass (ray `430f0d501659`, Chess 6,981 words, 25/25).
+  - **Device:** the Typed program compiles on the P4 in 84.8 s, with a 16.3 MB QuickJS peak and a 788 KB module; relocation takes 59 ms. `gallery.py --arm typed` and `--arm cpp` are both 18/18. Chess compiles at 69.8 % of its deadline and the painter at 71.9 %.
+  - **Paired study:** Typed/C++ cycles per sample, geometric mean 1.76 over 18 scenes; 0.81× on R-08, 2.79× on V-02.
+  - **Host:** Wasm and RV32 are bit-identical on all 18 scenes.
+- **Vault report 3:** "PROJECT REPORT - PicoCalc Candela - The Path Tracer in Typed - Generated from WGSL, Compiled on the ESP32-P4, 1.76x the C++ Kernel - A Technical Deep Dive", go-go-parc `57224e3`. Before committing, I replaced an unverified claim about the I2C bus with what was observed.
+- **Playable rebuilt** at `46f57c0`. The app changed (`507a7064…`), so I installed it: health passed with peripherals on, gallery 18/18 (C++ arm).
+- **Agents.** Six had finished but kept holding background shells: Candela front end, APP-MANIFEST, PIPELINE, AGENDA-TYPED-WORLD, CANDELA-TYPED, and the PIPELINE resume.
+  - The user saw them as "waiting"; two of them the user had resumed from the transcript view.
+  - None had a process or uncommitted work, and their last commits were hours old. I stopped all of them with TaskStop.
+- **Worktrees.** All 19 agent worktrees have their work on `main`.
+  - Three show as unmerged because their commits arrived rebased; I matched them by commit message.
+  - The CPU-KERNEL worktree has only `__pycache__` files.
+  - Removal is offered, not done.
+- **Pushed `main`** on request: 147 commits, `5c2fb9c..46f57c0`.
+- **Closed the 16 program tasks** (12 merges, 4 reports) and added the follow-ups as tasks.
+
+### What I learned
+
+- **"Waiting on N shells" does not mean an agent is working.** An agent that returns its report while a background shell is still alive stays listed as waiting indefinitely. Process lists and worktree commit times are the real evidence. Agents should be told to close their background shells before reporting.
+
+### What should be done next
+
+The follow-up tasks, in the order they pay off:
+1. **A compiled-image cache in flash.** It fixes the 2.8 s boot regression and unblocks the Typed Candela arm as the default.
+2. **Fixed-kernel code quality** (local records, multiple results), measured against the 1.76× baseline.
+3. **`JS_STRIP_SOURCE`.**
+4. **The P4-only pass-group slowdown.**
