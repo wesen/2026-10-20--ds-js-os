@@ -1,4 +1,6 @@
-// Promoted from PICOCALC-AGENDA-COMPILER scripts/04-check-wasm-world.mjs (PICOCALC-REPO-LAYOUT Phase A); run from the repository root.
+// Agenda as a complete Typed world on the generic reactor (Wasm), against the JavaScript Agenda as the oracle.
+// From PICOCALC-AGENDA-COMPILER scripts/04-check-wasm-world.mjs; PICOCALC-AGENDA-TYPED-WORLD moved the app off its C
+// reactor. Run from the repository root.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -6,37 +8,33 @@ import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import '../../lib/compiler.mjs';
-import '../../../apps/typed/agenda/compile.js';
 
 const os = resolve('firmware');
 const host = process.argv[2] ? resolve(process.argv[2]) : join(os, 'build/picocalc-host');
 const world = join(os, '../apps/typed/agenda');
 const scratch = mkdtempSync(join(tmpdir(), 'picocalc-agenda-wasm-'));
-const runtime = join(os, 'build/agenda-reactor.wasm');
+const runtime = join(os, 'build/typed-world-reactor.wasm');
 const asset = join(scratch, 'agenda.wasm');
 const fsRoot = join(scratch, 'fs');
 const out = join(scratch, 'out');
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 
-execFileSync('make', ['-C', os, 'agenda-reactor'], {stdio: ['ignore', 'pipe', 'inherit']});
+execFileSync('make', ['-C', os, 'typed-world-reactor'], {stdio: ['ignore', 'pipe', 'inherit']});
 
-const source = ['reminder.typed', 'entry.typed'].map(name => readFileSync(join(world, name), 'utf8')).join('\n');
+const {sources} = JSON.parse(readFileSync(join(world, 'app.json'), 'utf8'));
+const source = sources.map(name => readFileSync(join(world, name), 'utf8') + '\n').join('');
 const object = readFileSync(runtime);
-const bytes = compileAgenda(source, object);
+const bytes = compileTypedWorld(source, object);
 assert(WebAssembly.validate(bytes));
-assert.throws(() => typedWasm.linkWorld(source.replace('title: buffer, task: Task): bool {\n    if (!scanTask',
-    'title: buffer, task: Task, unused: i32): bool {\n    if (!scanTask'), object, ['parseTask']), /slot signature mismatch/);
-assert.throws(() => compileAgenda(source.replace('    done: bool;\n    textStart: i32;',
-    '    textStart: i32;\n    done: bool;'), object), /Task fields do not match/);
-assert.throws(() => compileAgenda(source.replace('record EntryError {\n    start: i32;\n    end: i32;',
-    'record EntryError {\n    end: i32;\n    start: i32;'), object), /EntryError fields do not match/);
+assert.throws(() => compileTypedWorld(source.replace('    kind: i32;\n    ask: bool;', '    ask: bool;\n    kind: i32;'), object),
+    /shared WorldEvent record/);
 writeFileSync(asset, bytes);
 
 mkdirSync(join(fsRoot, 'notes'), {recursive: true});
 writeFileSync(join(fsRoot, 'notes/todo.txt'), '# Tasks\n- [ ] dentist 🦷 @2026-11-03 14:30 !15m\n- [x] done\n- book a train\n');
 writeFileSync(join(scratch, 'prelude.js'), readFileSync(join(os, '../apps/js/picocalc/prelude.js')));
 writeFileSync(join(scratch, 'system.json'), JSON.stringify({worlds:[
-    {name:'agenda-wasm',file:'agenda.wasm',engine:'wasm',claims:['fs:/notes'],mem_kb:384,budget_ms:100},
+    {name:'agenda-wasm',file:'agenda.wasm',engine:'wasm',claims:['fs:/notes'],mem_kb:768,budget_ms:100},
     {name:'peer',file:'peer.js',claims:['frames.read','sys.read'],mem_kb:512},
     {name:'compositor',file:'notify.js',mem_kb:384},
 ]}));
@@ -51,13 +49,8 @@ service("peer")
   .on("frames", (s, frame, msg) => { if (msg.from === "agenda-wasm") log("AGENDA_FRAME " + JSON.stringify(frame.frame.tree)); })
   .onStart(async () => {
     await sleep(30);
-    const result = await ask("agenda-wasm", "agenda.parse", {line: "- [ ] dentist 🦷 @2026-11-03 14:30 !15m"});
-    log("AGENDA_REPLY " + JSON.stringify(result));
     const world = sys.worlds().find(w => w.name === "agenda-wasm");
     log("AGENDA_ENGINE " + JSON.stringify([world.engine, world.state, world.kind]));
-    try {
-      await ask("agenda-wasm", "agenda.parse", {line: 7});
-    } catch (e) { log("AGENDA_REJECT " + e.message); }
   });
 `);
 execFileSync(host, ['-vv', '-j', scratch, '-o', out, '-f', fsRoot, '-w', 'unset', '-t', '1000'],
@@ -70,19 +63,19 @@ const deniedOutput = join(scratch, 'denied');
 execFileSync(host, ['-vv', '-j', scratch, '-o', deniedOutput, '-f', fsRoot, '-t', '1000'],
     {stdio:['ignore','pipe','pipe'],timeout:15000});
 const denied = readFileSync(join(deniedOutput, 'uart.log'), 'utf8');
-assert.match(denied, /Agenda could not start its notes read/);
-assert.doesNotMatch(denied, /AGENDA_FRAME/);
+// Without the claim Agenda shows why, as the JavaScript Agenda does.
+const deniedFrame = JSON.parse(denied.match(/AGENDA_FRAME (.+)$/m)[1]);
+assert.equal(deniedFrame.kids[0].s, '');
+assert.match(deniedFrame.kids[2].s, /fs:\/notes/);
+assert.equal(deniedFrame.kids[2].color, 'accent');
 assert.doesNotMatch(log, /crashed/);
 const jsonLine = key => JSON.parse(log.match(new RegExp(key + ' (.+)$','m'))[1]);
-assert.deepEqual(jsonLine('AGENDA_REPLY'),
-    {title:'dentist 🦷',done:false,dateValid:true,timeValid:true,leadMinutes:15});
 const initialList = jsonLine('AGENDA_FRAME').kids[0];
 assert.deepEqual(initialList.items.map(item => item.label),
     ['TUE 3 NOV 2026', '14:30  dentist 🦷', 'NO DATE', 'book a train']);
 assert.equal(initialList.sel, 1);
 assert.match(log, /agenda-wasm: \d+ WebAssembly instructions \(event 4\)/);
 assert.deepEqual(jsonLine('AGENDA_ENGINE'), ['wasm','idle','app']);
-assert.match(log, /AGENDA_REJECT expected a bounded Agenda line/);
 writeFileSync(join(scratch, 'system.json'), JSON.stringify({worlds: [
     {...manifest.worlds[0], claims:['fs:/notes']}, ...manifest.worlds.slice(1),
 ]}));
@@ -423,12 +416,11 @@ for (const phase of ['read', 'first-after-refusal', 'first-after-timeout', 'curr
 for (const phase of ['refused', 'timed-out', 'replaced'])
     assert.match(capabilityLog, new RegExp('EDITOR_CAP ' + phase + ' .* was revoked'));
 assert.equal([...capabilityLog.matchAll(/EDITOR_OPEN editor/g)].length, 2);
-const instructions = [...log.matchAll(/agenda-wasm: (\d+) WebAssembly instructions \(event 0, agenda.parse\)/g)]
+const instructions = [...log.matchAll(/agenda-wasm: (\d+) WebAssembly instructions \(event 4\)/g)]
     .map(match => Number(match[1]));
-assert.equal(instructions.length, 2);
 console.log(JSON.stringify({linkedBytes:bytes.length, sourceSha:sha(source), runtimeSha:sha(object),
-    linkedSha:sha(bytes), reply:jsonLine('AGENDA_REPLY'), frame:jsonLine('AGENDA_FRAME'),
-    engine:jsonLine('AGENDA_ENGINE'), deniedWithoutNotesClaim:true, perMessageInstructions:instructions,
+    linkedSha:sha(bytes), frame:jsonLine('AGENDA_FRAME'),
+    engine:jsonLine('AGENDA_ENGINE'), deniedWithoutNotesClaim:deniedFrame.kids[2].s, readInstructions:instructions,
     screenshot:{sha256:sha(screenshot), bytes:screenshot.length},
     taskEntry:{savedNotes, invalidPromptUnchanged:true, createsMissingFile:true},
     taskView:{matchesOriginalGroupedFrames:groups.length, matchesOriginalDoneOnlyFrames:doneFrames.length,

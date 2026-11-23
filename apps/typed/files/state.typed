@@ -1,0 +1,34 @@
+// Files' records: the shared WorldEvent and the world's state.
+record WorldEvent {
+    kind: i32;
+    ask: bool;
+    token: i32;
+    ok: bool;
+}
+
+record WorldState {
+    root: i32;
+    token: i32;
+    pending: i32;
+    given: i32;
+    offered: i32;
+    count: i32;
+    selected: i32;
+    prompt: i32;
+    freeKnown: bool;
+    freeHigh: i32;
+    freeLow: i32;
+    more: bool;
+    refreshAfterOpen: bool;
+    pathLength: i32;
+    keepLength: i32;
+    confirmLength: i32;
+    removedLength: i32;
+    inputLength: i32;
+    renameLength: i32;
+    noteLength: i32;
+    // The JSON scanner's last number, as MiB and the bytes below a MiB, and the end of its last value.
+    numberHigh: i32;
+    numberLow: i32;
+    scanEnd: i32;
+}

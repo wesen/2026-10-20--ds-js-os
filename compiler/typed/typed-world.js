@@ -39,6 +39,14 @@
         ["typedSdkPointIndex", "string,i32,i32,i32", "i32"],
         ["typedSdkPainterSource", "buffer,i32", "i32"],
         ["typedSdkPainterFrame", "buffer", "i32"],
+        ["typedSdkFsOpen", "buffer,i32", "i32"],
+        ["typedSdkFsAt", "i32,buffer,i32,i32", "i32"],
+        ["typedSdkFsOp", "i32,buffer,i32,buffer,i32,buffer,i32", "i32", true],
+        ["typedSdkAskFile", "buffer,i32,buffer,i32,i32,buffer,i32,i32", "i32", true],
+        ["typedSdkRevoke", "i32", "i32"],
+        ["typedSdkClock", "i32", "i32"],
+        ["typedSdkClockOffset", "i32", "i32"],
+        ["typedSdkClockZone", "buffer", "i32"],
     ].map(([name, params, result, awaitable = false]) => ({
         name, params: params ? params.split(",") : [], result, awaitable,
     }));

@@ -149,13 +149,17 @@ def add_app(build, name, worlds, fallbacks):
             text += "\n" + "\n".join([embedded.read_text()] + pieces) + "\n"
         source = build.source(f"{name}/source.typed", text)
     edit = manifest.get("editable")
-    tail = None
+    head = tail = None
     if edit:
-        assert manifest["sources"][0] == edit["source"], f"{name}: only the first source can be edited"
-        tail = build.source(f"{name}/tail.typed", assemble(build, rel, manifest["sources"][1:]))
+        # The editable source may follow others (Agenda's parser follows its records): head, the file, tail.
+        sources = manifest["sources"]
+        assert sources.count(edit["source"]) == 1, f"{name}: the editable source must be listed once"
+        at = sources.index(edit["source"])
+        head = build.source(f"{name}/head.typed", assemble(build, rel, sources[:at]))
+        tail = build.source(f"{name}/tail.typed", assemble(build, rel, sources[at + 1:]))
     build.row(name=name, world=kind == "world", source=source, link=build.link(name, manifest["link"]),
               entry=manifest["entry"], compiler=compiler, reactor=build.reactor(name, manifest["reactor"]),
-              variants=variants, edit=edit, tail=tail, **limits(manifest))
+              variants=variants, edit=edit, head=head, tail=tail, **limits(manifest))
     if "host" in manifest:
         build.host(manifest["host"])
     if painter:
@@ -163,7 +167,7 @@ def add_app(build, name, worlds, fallbacks):
         build.row(name=unit, world=False, source=build.source(unit + "/source.typed",
                                                               build.repo_path(rel / painter["source"]).read_text()),
                   link=build.link(unit, painter["link"]), entry=painter["entry"], compiler=[],
-                  reactor=build.reactor(unit, painter["reactor"]), variants=[], edit=None, tail=None, **limits(painter))
+                  reactor=build.reactor(unit, painter["reactor"]), variants=[], edit=None, head=None, tail=None, **limits(painter))
         build.host(painter["host"])
     if kind == "world":
         spec = manifest["world"]
@@ -202,7 +206,7 @@ def c_table(rows):
             f" .reactor = {cstr(r['reactor'])}, .policy = {cstr(r['policy'])}, .heap_bytes = {r['heap']},"
             f" .deadline_us = {r['deadline']},"
             f" .variants = {f'variants_{i}' if r['variants'] else 'NULL'}, .n_variants = {len(r['variants'])},"
-            f" .edit_file = {cstr(edit.get('file'))}, .edit_tail = {cstr(r['tail'])},"
+            f" .edit_file = {cstr(edit.get('file'))}, .edit_head = {cstr(r['head'])}, .edit_tail = {cstr(r['tail'])},"
             f" .edit_limit = {int(edit.get('limitBytes', 0))}}},")
     lines += ["};", f"const size_t p4_typed_app_count = {len(rows)};", ""]
     return "\n".join(lines)

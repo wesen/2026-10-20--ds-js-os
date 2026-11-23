@@ -1,0 +1,53 @@
+// Agenda's records: the shared WorldEvent and the world's state. The first eleven fields are the task the parser
+// fills (reminder.typed); the replays read them at these offsets.
+record WorldEvent {
+    kind: i32;
+    ask: bool;
+    token: i32;
+    ok: bool;
+}
+
+record WorldState {
+    taskDone: bool;
+    taskTextStart: i32;
+    taskDueStart: i32;
+    taskDueEnd: i32;
+    taskTimeStart: i32;
+    taskDateValid: bool;
+    taskTimeValid: bool;
+    taskLeadStart: i32;
+    taskLeadEnd: i32;
+    taskLeadMinutes: i32;
+    taskTitleLength: i32;
+    // normalizeEntry writes the offending token's UTF-16 span here.
+    errorStart: i32;
+    errorEnd: i32;
+    lineLength: i32;
+    notes: i32;
+    todo: i32;
+    readToken: i32;
+    remindAfterRead: bool;
+    loadedAt: i32;
+    hasSnapshot: bool;
+    snapshotLength: i32;
+    itemCount: i32;
+    openCount: i32;
+    visibleCount: i32;
+    selected: i32;
+    today: i32;
+    tomorrow: i32;
+    showDone: bool;
+    promptKind: i32;
+    promptLength: i32;
+    pendingChange: i32;
+    newTaskLength: i32;
+    originalLength: i32;
+    confirming: bool;
+    editRead: i32;
+    editWrite: i32;
+    editorToken: i32;
+    editorPending: i32;
+    editorFile: i32;
+    noteLength: i32;
+    errorLength: i32;
+}

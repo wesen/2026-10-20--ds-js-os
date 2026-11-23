@@ -2,7 +2,7 @@
 #
 #   make test                            every fast suite: Node, generated files, Go, the host binary's Python tests, cji,
 #                                        the RV32 conformance suite
-#   make test-host [OPTIONS=JSON]        the compiler gates: ray frame, Chess oracle, 24 replays (OPTIONS='{"policy":"kernel"}')
+#   make test-host [OPTIONS=JSON]        the compiler gates: ray frame, Chess oracle, 25 replays (OPTIONS='{"policy":"kernel"}')
 #   make firmware PROFILE=playable       build a firmware profile (firmware/port/esp32p4/profiles/*.env) into BUILD
 #   make playable                        build the playable profile at HEAD and store its image by digest
 #   make install-playable                install the image just built, health-check it, update firmware/PLAYABLE.json

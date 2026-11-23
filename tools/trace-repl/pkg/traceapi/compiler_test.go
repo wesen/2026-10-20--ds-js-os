@@ -196,11 +196,14 @@ func TestWorldLayoutsFromAppManifests(t *testing.T) {
 	  const dir = w.worlds + '/';
 	  const files = w.world('files'), agenda = w.world('agenda'), chess = w.world('chess');
 	  const size = world => w.typedRv32.compile(world.text, w.typedWorld.imports, 96 * 1024).image.length;
+	  const sources = name => w.read(dir + name + '/app.json').json().sources;
+	  const joined = name => sources(name).map(s => w.read(dir + name + '/' + s).text + '\n').join('');
+	  const paths = (world, name) => world.files.map(f => f.path.slice(dir.length)).join() ===
+	    sources(name).map(s => name + '/' + s).join();
 	  return JSON.stringify({
 	    layouts: [files.layout, agenda.layout, chess.layout],
-	    files: files.text === w.read(dir + 'files/files.typed').text + '\n' && files.files.length === 1,
-	    agenda: agenda.text === w.read(dir + 'agenda/reminder.typed').text + '\n' + w.read(dir + 'agenda/entry.typed').text + '\n' &&
-	      agenda.files.map(f => f.path.slice(dir.length)).join() === 'agenda/reminder.typed,agenda/entry.typed',
+	    files: files.text === joined('files') && paths(files, 'files'),
+	    agenda: agenda.text === joined('agenda') && paths(agenda, 'agenda') && sources('agenda').includes('reminder.typed'),
 	    compiles: size(files) > 0 && size(agenda) > 0,
 	    atCommit: base.world('agenda').layout,
 	    loaded: compiler.loaded().map(l => [l.requested, l.revision.length, l.key.length, l.files.length > 4]),

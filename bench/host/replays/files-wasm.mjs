@@ -1,4 +1,6 @@
-// Promoted from PICOCALC-TYPED-APPS scripts/01-check-files-wasm.mjs (PICOCALC-REPO-LAYOUT Phase A); run from the repository root.
+// Files as a complete Typed world on the generic reactor (Wasm), against the JavaScript Files as the oracle.
+// From PICOCALC-TYPED-APPS scripts/01-check-files-wasm.mjs; PICOCALC-AGENDA-TYPED-WORLD moved the app off its C reactor.
+// Run from the repository root.
 import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
@@ -6,14 +8,15 @@ import {tmpdir} from 'node:os';
 import {dirname, join, resolve} from 'node:path';
 import vm from 'node:vm';
 import '../../lib/compiler.mjs';
-import '../../../apps/typed/files/compile.js';
 
 const os = resolve('firmware');
 const world = join(os, '../apps/typed/files');
 const original = readFileSync(join(os, '../apps/js/picocalc/apps/files.js'), 'utf8');
-const source = readFileSync(join(world, 'files.typed'), 'utf8');
-const wasm = compileFiles(source, readFileSync(join(os, 'build/files-reactor.wasm')));
-const typed = typedWasm.compile(source);
+const {sources} = JSON.parse(readFileSync(join(world, 'app.json'), 'utf8'));
+const source = sources.map(name => readFileSync(join(world, name), 'utf8') + '\n').join('');
+const wasm = compileTypedWorld(source, readFileSync(join(os, 'build/typed-world-reactor.wasm')));
+// The name rule alone, as a module.
+const typed = typedWasm.compile(readFileSync(join(world, 'files.typed'), 'utf8'));
 const {instance} = await WebAssembly.instantiate(typed.bytes);
 const mem = new DataView(instance.exports.memory.buffer);
 function encode(text, base) {
@@ -30,12 +33,6 @@ for (const name of names) {
     const n = instance.exports.filesName(0, 512);
     assert.equal(n, nameRule.test(expected) ? expected.length : -1, JSON.stringify(name));
     if (n >= 0) assert.equal(Array.from({length:n}, (_, i) => String.fromCharCode(mem.getUint16(516 + 2*i, true))).join(''), expected);
-}
-for (const a of ['a', 'A', '𐀀', '\ue000', 'foo', 'foobar']) for (const b of ['a','A','𐀀','\ue000','foo']) {
-    encode(a, 0);
-    encode(b, 512);
-    assert.equal(Math.sign(instance.exports.filesCompare(0, 0, 512, 0)), a < b ? -1 : a > b ? 1 : 0);
-    assert.equal(Math.sign(instance.exports.filesCompare(0, 1, 512, 0)), -1);
 }
 const base = mkdtempSync(join(tmpdir(), 'typed-files-'));
 const manifest = JSON.parse(readFileSync(join(os, '../apps/js/picocalc/system.json'), 'utf8'));
@@ -55,8 +52,12 @@ function run(variant) {
     mkdirSync(join(fs, 'folder'), {recursive:true});
     writeFileSync(join(fs, 'outside.txt'), 'x'.repeat(1280));
     writeFileSync(join(fs, 'folder/one.txt'), 'existing\n');
+    // Sorting by UTF-16 unit with directories first, and sizes in every unit.
+    // (Names after outside.txt, so the selection the keys walk is the same.)
+    for (const name of ['zeta', 'pq', 'Ärger', '𐀀x', '\ue000y']) writeFileSync(join(fs, name), 'x'.repeat(name.length * 700));
+    writeFileSync(join(fs, 'zbig.bin'), Buffer.alloc(2726297));
     const worlds = system.map(w => {
-        if (w.name === 'files' && variant === 'wasm') return {...w, file:'files.wasm', engine:'wasm'};
+        if (w.name === 'files' && variant === 'wasm') return {...w, file:'files.wasm', engine:'wasm', mem_kb:768};
         mkdirSync(dirname(join(js, w.file)), {recursive:true});
         copyFileSync(join(os, '../apps/js/picocalc', w.file), join(js, w.file));
         return w;
@@ -99,13 +100,16 @@ service("probe").needs("frames").on("frames", (s,m,msg) => {
     assert.equal(states[13][4], 'F5 again deletes Renamed (it must be empty)');
     assert.equal(states[14][4], 'Deleted Renamed');
     assert(states.at(-1)[1].some(([label]) => label === 'blank.txt'));
+    assert.deepEqual(states[2][1].map(([label]) => label),
+        ['folder/', 'outside.txt', 'pq', 'zbig.bin', 'zeta', 'Ärger', '𐀀x', '\ue000y']);
+    assert.deepEqual(states[2][1][3], ['zbig.bin', '2.6 MB']);
     return states;
 }
 try {
     const legacy = run('js'), compiled = run('wasm');
     assert.deepEqual(compiled, legacy);
     console.log(JSON.stringify({nameCases:names.length, matchedFrames:compiled.length, wasmBytes:wasm.length,
-        rv32CodeBytes:typedRv32.compile(source).image.length, editorWrites:true}));
+        rv32CodeBytes:typedRv32.compile(source, typedWorld.imports, 96 * 1024).image.length, editorWrites:true}));
 } finally {
     if (process.argv.includes("--keep-fixture")) console.error(base);
     else rmSync(base, {recursive:true,force:true});

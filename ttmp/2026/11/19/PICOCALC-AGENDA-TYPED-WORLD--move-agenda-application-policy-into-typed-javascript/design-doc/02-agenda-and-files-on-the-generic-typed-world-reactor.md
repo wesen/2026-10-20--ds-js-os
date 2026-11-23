@@ -46,3 +46,70 @@ Editor and Chess are complete Typed worlds: their sources link against the gener
 - **Moves and deletes** go through checked Python scripts in the ticket's `scripts/` (dry run, asserted counts), never shell one-liners.
 - **Diary.** Each ticket keeps `reference/01-diary.md` in the investigation format (Prompt Context, What I did, Why, What worked, What didn't work with exact errors, What I learned, What was tricky, What warrants a second pair of eyes, Future work, Code review instructions, Technical details), one step per milestone, with commit hashes.
 - **Commits** are focused, at validated boundaries, with the trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+
+## Refinements (2026-11-22)
+
+Checked against the code at `6195cab` (main after TYPED-APP-MANIFEST, TYPED-FRONTEND and SPLIT-FILES) before
+implementing.
+
+**What was there.** APP-MANIFEST had already deleted the per-app port files (`agenda_p4.c`, `files_p4.c`): both apps were
+rows of the generated table, and only their reactors were C. Agenda's C (`wasm-world.c`, 869 lines) held the whole app
+except the parser and the entry grammar: reading and splitting the file, the sorted task index, grouping and the 25-row
+window, the screen, prompts and diagnostics, the four file changes, reminders and the `fired` store, the editor hand-off,
+and an `agenda.parse` ask that only a replay used. Files' C (`world.c`, 334 lines) held listing, sorting, sizes, the
+prompts and every filesystem operation; `files.typed` had four helpers. `compile.js` in each app checked those helpers'
+slot signatures.
+
+**What the platform must provide, and nothing else.** The generic reactor had no filesystem directory calls, no
+editor hand-off, no clock beyond a timestamp and no timer. The new SDK imports, added in `world.c`, `typed-world.js` and
+`sdk/typed/rv32-slot.S` together (the trampoline table grows from 30 to 39), are:
+
+| Import | Platform call |
+|---|---|
+| `typedSdkFsOpen(claim, n)` | `nw_fs_open` |
+| `typedSdkFsAt(dir, path, n, rights)` | `nw_fs_at` (rights 1 r, 2 w, 3 rw) |
+| `typedSdkFsOp(handle, op, n, path, n, arg, n)` (awaitable) | `nw_fs_op` (a negative argument length passes none) |
+| `typedSdkAskFile(to, n, type, n, file, name, n, timeout)` (awaitable) | `nw_ask_file` |
+| `typedSdkRevoke(handle)` | `nw_revoke` |
+| `typedSdkClock(field)` | 0 `nw_clock_today`, 1 wall seconds since 2000 (i32 until 2068), 2 seconds since boot |
+| `typedSdkClockOffset(epochMinutes)` | `nw_clock_offset` in minutes (-100000 unknown) |
+| `typedSdkClockZone(buffer)` | `nw_clock_zone` |
+
+and three small extensions of what existed: `typedSdkEventText` field 4 returns the payload's JSON text (Files parses
+directory listings and `info` replies in Typed); `typedSdkEventInt` reads `true`/`false` as 1/0 (the editor's
+`{"ok":true}`); a world declares one timer through `typedWorldMeta(5)` (its period in ms), because the kernel accepts
+`nw_every` only during `nw_init`; its ticks arrive as kind 1 with token 0 (the timer's index). A timer import
+(`typedSdkEvery`) was tried first and dropped for that reason.
+
+**Typed has no local records and no arrays**, so the design changed in three places:
+
+- `parseTask` and `normalizeEntry` write their results into `WorldState`, whose first eleven fields are the task (in the
+  old `Task` order) and the next two the entry error; `record Task` and `record EntryError` are gone. The parser replays
+  compile `state.typed` before `reminder.typed`; the RV32 parser and entry runners read the same offsets.
+- All memory is the runtime's buffers (`typedSdkBuffer`), each with a fixed role per app (listed at the top of
+  `apps/typed/agenda/text.typed` and `apps/typed/files/listing.typed`). Agenda's task index is five units per task in
+  buffer 10 (at most 12,000 tasks; the C used `malloc`), kept sorted by binary insertion while the file is parsed.
+  Files' entries are 104 units each in buffer 0, sorted the same way.
+- Every text an SDK call reads starts at offset 0 of a buffer, so lines are copied (`typedSdkCopySpan`) into a line
+  buffer before parsing, and the pieces of one call (`to`, `type`, `name`) sit in different buffers.
+
+**Edits happen in buffer 0.** The C edited a fresh copy of the file. Agenda now reads the change's fresh copy into
+buffer 0 (the display snapshot), edits it there and re-indexes it without publishing, so the list never points into
+text that has changed; the write's settlement re-reads the file and publishes, as before. When a change cannot be saved,
+the world empties the index and re-reads the file.
+
+**Behavior changes, all toward the JavaScript Agenda:** without its `fs:/notes` claim the world shows the reason
+(`agenda has no claim on fs:/notes`) instead of publishing nothing; the `agenda.parse` ask is gone. Lines over 2,048
+units are still not tasks; files over 65,536 UTF-16 units cannot be read (the C limit was 65,536 bytes). Reminder keys
+over about 2,000 units cannot be recorded and do not ring.
+
+**Deadlines.** Agenda's source grows from 470 to about 1,500 lines (71 KB, Editor's size): the host compiles it in 0.7×
+Editor's time, so on the P4 it needs about 2 s with `interactive`. Its deadline goes from 1,700 to 4,000 ms and Files'
+from 1,700 to 3,000 ms. On the P4 (merged with PIPELINE): Agenda 2.516 s (63 %), Files 1.391 s (46 %). Every boot
+app's first frame waits for all boot compiles, so Agenda's first frame moves 2.8 s later; the diary has the numbers.
+
+**Gates as implemented.** `agenda-wasm-world.mjs` and `files-wasm.mjs` now run the Typed worlds on the generic Wasm
+reactor and keep every JavaScript-oracle comparison (Files gained sorting and size cases). `files-rv32.mjs` and the new
+`agenda-rv32.mjs` run one scripted session on both the RV32 ELF (rv32emu) and the Wasm build against the same scripted
+kernel (`typed-world-transcript.mjs` and its C driver) and require byte-identical system-call transcripts, plus checks
+on the writes, sends and frames. The replay count becomes 25.

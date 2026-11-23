@@ -6,10 +6,10 @@ and a difference between two uses is a parameter, not a copy.
 
 | Path | What it is |
 | --- | --- |
-| `host/gates.sh [--options JSON]` | The three host gates with one set of compile options: ray frame, Chess oracle, 24 replays |
+| `host/gates.sh [--options JSON]` | The three host gates with one set of compile options: ray frame, Chess oracle, 25 replays |
 | `host/ray-profile.mjs` | Opening ray frame under named policies or options; must reproduce `reference/ray-opening.json` |
 | `host/chess-engine.mjs GCC EMU` | Chess engine oracle: 6,981 words against chess 1.11.2, plus executed instructions |
-| `host/replays/run.sh [--options JSON]` | The 24 host workflows (Files, Agenda, Editor; WASM and RV32 on rv32emu) |
+| `host/replays/run.sh [--options JSON]` | The 25 host workflows (Files, Agenda, Editor; WASM and RV32 on rv32emu) |
 | `emu/` | `rv32emu` (RV32IMFC, split by concern), plus cji's freestanding C runtime built for it (`compiler/cji/tools/rv32/fw/`); `make -C bench/emu` |
 | `rv32/` | The RV32 conformance vectors' generator (`generate.mjs`) and suite (`vectors.mjs`); [docs/rv32-executors.md](../docs/rv32-executors.md) |
 | `board/` | The ESP32-P4 harness and the device library (flash, health, restore, install); `rv32-vectors/`, `rv32-build.sh`, `rv32-capture.py` capture the conformance vectors |

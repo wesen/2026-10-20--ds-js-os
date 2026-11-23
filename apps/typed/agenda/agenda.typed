@@ -1,0 +1,302 @@
+// Agenda: the tasks in notes/todo.txt, grouped by day, with reminders. The file is the database; the editor and
+// the agent can change it too, so every change re-reads the file. The behavior follows apps/js/picocalc/apps/agenda.js.
+function typedWorldMeta(field: i32, output: buffer): i32 {
+    if (field === 0) return output.writeLiteral(0, "app");
+    if (field === 1) return output.writeLiteral(0, "Agenda");
+    if (field === 2) return output.writeLiteral(0, "t");
+    if (field === 3) return output.writeLiteral(0, "Tasks from notes/todo.txt by day, with reminders on the network clock.");
+    if (field === 4) return output.writeLiteral(0, "[[\"rect\",4,2,32,28],[\"fill\",4,2,32,6],[\"fill\",10,0,2,5],[\"fill\",28,0,2,5],[\"fill\",9,12,4,3],[\"fill\",18,12,4,3],[\"fill\",27,12,4,3],[\"fill\",9,19,4,3],[\"fill\",18,19,4,3,\"accent\"],[\"fill\",27,19,4,3]]");
+    if (field === 5) return 15000;
+    return 0;
+}
+
+function agDrop(handle: i32): i32 {
+    if (handle <= 0) return 0;
+    typedSdkRevoke(handle);
+    return typedSdkRelease(handle);
+}
+
+// "Editor: " and why, or "no answer".
+function agEditorNote(state: WorldState, why: buffer, length: i32): i32 {
+    const note = typedSdkBuffer(3);
+    let at = note.writeLiteral(0, "Editor: ");
+    if (length > 0) {
+        at = typedSdkCopySpan(typedSdkView(why, Math.min(length, 200)), 0, Math.min(length, 200), typedSdkBuffer(3), at);
+    } else {
+        at = at + note.writeLiteral(at, "no answer");
+    }
+    state.noteLength = at;
+    return at;
+}
+
+function agOpenEditor(state: WorldState, output: buffer, hints: buffer): i32 {
+    const path = typedSdkBuffer(2);
+    const file = typedSdkFsAt(state.notes, path, path.writeLiteral(0, "todo.txt"), 3);
+    if (file > 0) {
+        const to = typedSdkBuffer(1);
+        const verb = typedSdkBuffer(6);
+        const name = typedSdkBuffer(2);
+        const token = typedSdkAskFile(to, to.writeLiteral(0, "editor"), verb, verb.writeLiteral(0, "open"), file,
+            name, name.writeLiteral(0, "notes/todo.txt"), 3000);
+        if (token > 0) {
+            state.editorPending = file;
+            state.editorToken = token;
+            return 0;
+        }
+    }
+    const why = typedSdkBuffer(2);
+    const length = typedSdkError(why);
+    agDrop(file);
+    agEditorNote(state, typedSdkBuffer(2), length);
+    return agShow(state, output, hints);
+}
+
+function agEditorReply(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    const key = typedSdkBuffer(6);
+    let accepted = false;
+    if (event.ok) { accepted = typedSdkEventInt(key, key.writeLiteral(0, "ok")) === 1; }
+    const pending = state.editorPending;
+    state.editorToken = 0;
+    state.editorPending = 0;
+    if (accepted) {
+        agDrop(state.editorFile);
+        state.editorFile = pending;
+        const to = typedSdkBuffer(1);
+        const verb = typedSdkBuffer(6);
+        return typedSdkSend(to, to.writeLiteral(0, "compositor"), verb, verb.writeLiteral(0, "open"),
+            output, output.writeLiteral(0, "{\"app\":\"editor\"}"));
+    }
+    agDrop(pending);
+    const why = typedSdkBuffer(2);
+    let length = -1;
+    if (event.ok) {
+        const name = typedSdkBuffer(6);
+        length = typedSdkEventText(3, name, name.writeLiteral(0, "why"), why);
+    } else {
+        length = typedSdkEventText(2, why, 0, why);
+    }
+    agEditorNote(state, typedSdkBuffer(2), length);
+    return agShow(state, output, hints);
+}
+
+// 1 up, 2 down, 3 enter, 4 space, 5 f2, 6 f3, 7 f4, 8 f5, 9 f6, 10 esc, 11 backspace; 0 for any other key.
+function agKeyCode(name: buffer, length: i32): i32 {
+    const known = typedSdkBuffer(6);
+    if (agSame(name, length, known, known.writeLiteral(0, "up"))) return 1;
+    if (agSame(name, length, known, known.writeLiteral(0, "down"))) return 2;
+    if (agSame(name, length, known, known.writeLiteral(0, "enter"))) return 3;
+    if (agSame(name, length, known, known.writeLiteral(0, "space"))) return 4;
+    if (agSame(name, length, known, known.writeLiteral(0, "f2"))) return 5;
+    if (agSame(name, length, known, known.writeLiteral(0, "f3"))) return 6;
+    if (agSame(name, length, known, known.writeLiteral(0, "f4"))) return 7;
+    if (agSame(name, length, known, known.writeLiteral(0, "f5"))) return 8;
+    if (agSame(name, length, known, known.writeLiteral(0, "f6"))) return 9;
+    if (agSame(name, length, known, known.writeLiteral(0, "esc"))) return 10;
+    if (agSame(name, length, known, known.writeLiteral(0, "backspace"))) return 11;
+    return 0;
+}
+
+// The selected task's line [start, end) of the snapshot; false when nothing is selected.
+function agSelectedLine(state: WorldState): i32 {
+    if (state.selected < 0) return -1;
+    return agOffset(typedSdkBuffer(10), state.selected);
+}
+
+function agBrowseKey(state: WorldState, key: i32, once: bool, output: buffer, hints: buffer): i32 {
+    const deleteKey = once && key === 8;
+    if (!deleteKey) { state.confirming = false; }
+    const hadNote = state.noteLength > 0;
+    state.noteLength = 0;
+    const start = agSelectedLine(state);
+    const text = agSnapshot(state);
+    let end = -1;
+    if (start >= 0) { end = agLineEnd(text, start); }
+    if (once && key === 5) {
+        state.promptKind = 1;
+        state.promptLength = 0;
+        return agShow(state, output, hints);
+    }
+    if (once && start >= 0 && key === 6) {
+        if (!agParseSpan(state, text, start, end)) return 0;
+        if (!agKeepOriginal(state, text, start, end)) return 0;
+        const count = Math.min(end - (start + state.taskTextStart), 2048);
+        typedSdkCopySpan(text, start + state.taskTextStart, start + state.taskTextStart + count, typedSdkBuffer(5), 2048);
+        state.promptLength = count;
+        state.promptKind = 2;
+        return agShow(state, output, hints);
+    }
+    if (once && start >= 0 && (key === 3 || key === 4)) {
+        if (!agKeepOriginal(state, text, start, end)) return 0;
+        return agRequestChange(state, 3, output, hints);
+    }
+    if (deleteKey && start >= 0) {
+        if (state.confirming && agIsOriginal(state, text, start, end)) {
+            state.confirming = false;
+            return agRequestChange(state, 4, output, hints);
+        }
+        if (!agParseSpan(state, text, start, end)) return 0;
+        agKeepOriginal(state, text, start, end);
+        state.confirming = true;
+        const note = typedSdkBuffer(3);
+        let at = note.writeLiteral(0, "F5 again deletes: ");
+        if (state.taskTitleLength > 0) {
+            const title = agTitle(state);
+            at = typedSdkCopySpan(title, 0, agClip(title, 0, title.length, 80), typedSdkBuffer(3), at);
+        } else {
+            at = at + note.writeLiteral(at, "(untitled)");
+        }
+        state.noteLength = at;
+        return agShow(state, output, hints);
+    }
+    if (once && state.notes >= 0 && key === 9) return agOpenEditor(state, output, hints);
+    if (once && key === 7) {
+        state.showDone = !state.showDone;
+        agLayout(state, agSelectedRow(state));
+        return agShow(state, output, hints);
+    }
+    if (key === 1) {
+        if (state.selected > 0) {
+            state.selected = state.selected - 1;
+        } else if (state.selected < 0 && state.visibleCount > 0) {
+            state.selected = 0;
+        }
+        return agShow(state, output, hints);
+    }
+    if (key === 2) {
+        if (state.selected + 1 < state.visibleCount) { state.selected = state.selected + 1; }
+        return agShow(state, output, hints);
+    }
+    if (hadNote) return agShow(state, output, hints);
+    return 0;
+}
+
+function agPromptKey(state: WorldState, key: i32, once: bool, output: buffer, hints: buffer): i32 {
+    if (once && key === 10) {
+        state.promptKind = 0;
+        state.noteLength = 0;
+        return agShow(state, output, hints);
+    }
+    if (once && key === 3) return agSubmit(state, output, hints);
+    if (key === 11) {
+        if (state.promptLength > 0) {
+            const prompt = typedSdkView(typedSdkBuffer(5), 2048 + state.promptLength);
+            state.promptLength = typedSdkPointIndex(prompt, 2048, prompt.length,
+                typedSdkCodePoints(prompt, 2048, prompt.length) - 1) - 2048;
+        }
+        return agShow(state, output, hints);
+    }
+    const name = typedSdkBuffer(6);
+    const ch = typedSdkBuffer(2);
+    const length = typedSdkEventText(3, name, name.writeLiteral(0, "ch"), ch);
+    if (state.promptLength >= 120 || length !== 1 || ch.charCodeAt(0) < 32 || ch.charCodeAt(0) > 126) return 0;
+    const prompt = typedSdkBuffer(5);
+    prompt.setCharCodeAt(2048 + state.promptLength, ch.charCodeAt(0));
+    state.promptLength = state.promptLength + 1;
+    return agShow(state, output, hints);
+}
+
+function agKeyEvent(state: WorldState, output: buffer, hints: buffer): i32 {
+    if (state.editRead > 0 || state.editWrite > 0 || state.editorToken > 0) return 0;
+    const field = typedSdkBuffer(6);
+    const value = typedSdkBuffer(2);
+    const keyLength = typedSdkEventText(3, field, field.writeLiteral(0, "key"), value);
+    if (keyLength < 0) return 0;
+    const key = agKeyCode(typedSdkBuffer(2), keyLength);
+    const stateLength = typedSdkEventText(3, field, field.writeLiteral(0, "state"), value);
+    if (stateLength < 0) return 0;
+    const word = typedSdkBuffer(6);
+    if (agSame(value, stateLength, word, word.writeLiteral(0, "up"))) return 0;
+    const once = !agSame(value, stateLength, word, word.writeLiteral(0, "hold"));
+    if (state.promptKind === 0) return agBrowseKey(state, key, once, output, hints);
+    return agPromptKey(state, key, once, output, hints);
+}
+
+function agStart(state: WorldState, output: buffer, hints: buffer): i32 {
+    state.selected = -1;
+    state.today = -2;
+    state.tomorrow = -1;
+    state.todo = -1;
+    const claim = typedSdkBuffer(2);
+    state.notes = typedSdkFsOpen(claim, claim.writeLiteral(0, "fs:/notes"));
+    if (state.notes >= 0) {
+        const path = typedSdkBuffer(2);
+        state.todo = typedSdkFsAt(state.notes, path, path.writeLiteral(0, "todo.txt"), 3);
+    }
+    if (state.todo < 0) {
+        state.errorLength = Math.max(0, typedSdkError(typedSdkBuffer(4)));
+        agLayout(state, -1);
+        return agShow(state, output, hints);
+    }
+    agRequestFile(state, true);
+    return 0;
+}
+
+// The display read settled.
+function agRead(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    state.readToken = 0;
+    const ring = state.remindAfterRead;
+    state.remindAfterRead = false;
+    let length = -1;
+    if (event.ok) {
+        length = typedSdkEventText(2, typedSdkBuffer(6), 0, typedSdkBuffer(0));
+        if (length < 0) { agEmpty(state); }
+    } else if (agMissing()) {
+        length = 0;
+    }
+    if (length >= 0) {
+        state.snapshotLength = length;
+        agIndex(state, ring, output);
+        return agShow(state, output, hints);
+    }
+    const error = typedSdkBuffer(4);
+    state.errorLength = error.writeLiteral(0, "Could not read notes/todo.txt");
+    if (ring) { agCheckReminders(state, output); }
+    return agShow(state, output, hints);
+}
+
+function agTick(state: WorldState, output: buffer, hints: buffer): i32 {
+    if (typedSdkClock(0) !== state.today) {
+        agLayout(state, agSelectedRow(state));
+        agShow(state, output, hints);
+    }
+    if ((!state.hasSnapshot || typedSdkClock(2) - state.loadedAt > 300) && agRequestFile(state, true)) return 0;
+    return agCheckReminders(state, output);
+}
+
+// The message's type and sender: 1 key from the compositor, 2 focus from the compositor, 0 anything else.
+function agMessage(): i32 {
+    const text = typedSdkBuffer(2);
+    const word = typedSdkBuffer(6);
+    const from = typedSdkEventText(1, text, 0, text);
+    if (!agSame(text, from, word, word.writeLiteral(0, "compositor"))) return 0;
+    const verb = typedSdkEventText(0, text, 0, text);
+    if (agSame(text, verb, word, word.writeLiteral(0, "key"))) return 1;
+    if (agSame(text, verb, word, word.writeLiteral(0, "focus"))) return 2;
+    return 0;
+}
+
+function agDispatch(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    if (event.kind === 2) return agStart(state, output, hints);
+    if (event.kind === 1) return agTick(state, output, hints);
+    if (event.kind === 4 && state.editRead > 0 && event.token === state.editRead) {
+        state.editRead = 0;
+        return agChangeFile(event, state, output, hints);
+    }
+    if (event.kind === 4 && state.editorToken > 0 && event.token === state.editorToken)
+        return agEditorReply(event, state, output, hints);
+    if (event.kind === 4 && state.editWrite > 0 && event.token === state.editWrite)
+        return agWritten(event, state, output, hints);
+    if (event.kind === 4 && state.readToken > 0 && event.token === state.readToken)
+        return agRead(event, state, output, hints);
+    if (event.kind !== 0) return 0;
+    const message = agMessage();
+    if (message === 1) return agKeyEvent(state, output, hints);
+    if (message === 2) { agRequestFile(state, false); }
+    return 0;
+}
+
+// Every turn is complete when it returns: pending reads and asks settle in later events.
+function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    agDispatch(event, state, output, hints);
+    return 0;
+}

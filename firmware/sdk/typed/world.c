@@ -64,6 +64,10 @@ void nw_init(void)
         if (length > SCREEN_CAP || utf8(output.units, length, screen_bytes, sizeof screen_bytes) < 0 ||
             declare[field](screen_bytes) < 0) nw_log("typed world metadata rejected");
     }
+    // Field 5 is the period of the world's one timer in ms (0: none); its ticks arrive with token 0.
+    output.length = SCREEN_CAP;
+    int period = typedWorldMeta(5, &output);
+    if (period > 0 && nw_every(period) < 0) nw_log("typed world timer rejected");
 }
 
 #ifdef __wasm__
@@ -358,7 +362,7 @@ static int event_key(const void *buffer, int length, char key[96])
 }
 
 // 0: message type, 1: sender, 2: JSON string at the payload root,
-// 3: JSON string in a named member of an object payload.
+// 3: JSON string in a named member of an object payload, 4: the payload's JSON text.
 SDK(typedSdkEventText) int typedSdkEventText(int field, const void *key_buffer, int key_length, void *buffer)
 {
     int cap = capacity(buffer);
@@ -368,6 +372,7 @@ SDK(typedSdkEventText) int typedSdkEventText(int field, const void *key_buffer, 
     if (field == 1) return nw_utf16_decode(current->from, units, cap);
     const char *end = current->json + current->json_len;
     if (field == 2) return json_text(current->json, end, units, cap);
+    if (field == 4) return nw_utf16_decode(current->json, units, cap);
     if (field != 3) return -1;
     char key[96];
     if (event_key(key_buffer, key_length, key) < 0) return -1;
@@ -395,6 +400,13 @@ SDK(typedSdkEventInt) int typedSdkEventInt(const void *buffer, int length)
     char key[96];
     if (!current || event_key(buffer, length, key) < 0) return -1;
     const char *p = nw_json_find(current->json, key);
+    // A boolean member reads as 1 or 0.
+    // (No strncmp: the firmware gives modules only a few C library functions.)
+    if (p && ((p[0] == 't' && p[1] == 'r' && p[2] == 'u' && p[3] == 'e') ||
+              (p[0] == 'f' && p[1] == 'a' && p[2] == 'l' && p[3] == 's' && p[4] == 'e'))) {
+        const char *after = nw_json__ws(p + (*p == 't' ? 4 : 5));
+        return *after == '}' || *after == ',' ? *p == 't' : -1;
+    }
     if (!p || *p < '0' || *p > '9') return -1;
     int value = 0;
     do {
@@ -513,13 +525,86 @@ SDK(typedSdkReply) int typedSdkReply(const void *buffer, int length)
     return nw_reply(screen_bytes);
 }
 
+// Text arguments that are paths, claims or names.
+static char path_bytes[3 * 256 + 1], argument_bytes[3 * 256 + 1];
+static const char *text_argument(const void *buffer, int length, char *out, int cap)
+{
+    if (length < 0 || length > capacity(buffer) || utf8(units_at(buffer), length, out, cap) < 0) return NULL;
+    return out;
+}
+
+SDK(typedSdkFsOpen) int typedSdkFsOpen(const void *claim, int length)
+{
+    char name[96];
+    return text_argument(claim, length, name, sizeof name) ? nw_fs_open(name) : -1;
+}
+
+// Rights: 1 read, 2 write, 3 both.
+SDK(typedSdkFsAt) int typedSdkFsAt(int dir, const void *path, int length, int rights)
+{
+    static const char *const modes[] = {"r", "w", "rw"};
+    if (rights < 1 || rights > 3 || !text_argument(path, length, path_bytes, sizeof path_bytes)) return -1;
+    return nw_fs_at(dir, path_bytes, modes[rights - 1]);
+}
+
+// A negative argument length passes no argument (list, info, mkdir, remove).
+SDK(typedSdkFsOp) int typedSdkFsOp(int handle, const void *operation, int operation_length,
+                                  const void *path, int path_length, const void *argument, int argument_length)
+{
+    char verb[16];
+    if (!text_argument(operation, operation_length, verb, sizeof verb) ||
+        !text_argument(path, path_length, path_bytes, sizeof path_bytes)) return -1;
+    const char *text = NULL;
+    if (argument_length >= 0 &&
+        !(text = text_argument(argument, argument_length, argument_bytes, sizeof argument_bytes))) return -1;
+    return nw_fs_op(handle, verb, path_bytes, text);
+}
+
+SDK(typedSdkAskFile) int typedSdkAskFile(const void *to, int to_length, const void *type, int type_length,
+                                        int file, const void *name, int name_length, int timeout_ms)
+{
+    char dest[96], message[96];
+    if (event_key(to, to_length, dest) < 0 || event_key(type, type_length, message) < 0 ||
+        !text_argument(name, name_length, path_bytes, sizeof path_bytes)) return -1;
+    return nw_ask_file(dest, message, file, path_bytes, timeout_ms);
+}
+
+SDK(typedSdkRevoke) int typedSdkRevoke(int handle) { return nw_revoke(handle); }
+
+// 0: the local date as YYYYMMDD, 1: wall seconds since 2000-01-01 UTC, 2: seconds since boot; -1 when unknown.
+SDK(typedSdkClock) int typedSdkClock(int field)
+{
+    if (field == 0) return nw_clock_today();
+    if (field == 1) {
+        int64_t wall = nw_clock_wall();
+        return wall < 0 ? -1 : (int)(wall / 1000 - INT64_C(946684800));
+    }
+    if (field == 2) return (int)(nw_now() / 1000000);
+    return -1;
+}
+
+// The zone's offset in minutes at a nominal epoch minute; -100000 when unknown.
+SDK(typedSdkClockOffset) int typedSdkClockOffset(int epoch_minutes)
+{
+    int minutes;
+    return nw_clock_offset((int64_t)epoch_minutes * 60000, &minutes) < 0 ? -100000 : minutes;
+}
+
+SDK(typedSdkClockZone) int typedSdkClockZone(void *buffer)
+{
+    int cap = capacity(buffer);
+    char zone[64];
+    if (cap < 0 || nw_clock_zone(zone, sizeof zone) < 0) return -1;
+    return nw_utf16_decode(zone, (uint16_t *)((uint32_t *)buffer + 1), cap);
+}
+
 int nw_on_event(const nw_event *event)
 {
     output.length = SCREEN_CAP;
     hints.length = HINT_CAP;
     event_info.kind = event->kind;
     event_info.ask = !!event->ask;
-    event_info.token = event->token;
+    event_info.token = event->kind == NW_TICK ? event->timer : event->token;
     event_info.ok = !!event->ok;
     current = event;
     int result = typedWorldEvent(&event_info, world_state, &output, &hints);

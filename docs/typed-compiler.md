@@ -260,7 +260,7 @@ and locals and runs it on the reference interpreter.
 - **WebAssembly** runs the same source in Node's engine; `bench/board/stage.mjs` checks every frame fixture of the ray
   tracer against it, and the Wasm reactors replay the worlds.
 - **The host gates** (`make test-host`, [measuring](measuring.md)): the opening ray frame's digest `430f0d50…`, the Chess
-  engine against chess 1.11.2 on 6,981 words, and 24 recorded workflows on `rv32emu`.
+  engine against chess 1.11.2 on 6,981 words, and 25 recorded workflows on `rv32emu`.
 - **Byte identity**: `tests/compiler/typed-rv32.test.mjs` pins the image digest of each policy, so a refactor that
   claims no output change fails if any image moves.
 - **The tape table**: `tests/compiler/typed-tape.test.mjs` compiles every Typed unit in `apps/typed` under `stock` and

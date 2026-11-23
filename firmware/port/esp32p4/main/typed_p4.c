@@ -258,7 +258,8 @@ p4_compile_limits p4_typed_app_limits(const p4_typed_app *app) {
   return (p4_compile_limits){.heap_bytes = app->heap_bytes, .duration_us = app->deadline_us, .policy = app->policy};
 }
 
-// The app's first source replaced by its editable file under the store (Agenda: notes/agenda.typed), then the rest.
+// The app's editable source replaced by its file under the store (Agenda: notes/agenda.typed for reminder.typed),
+// between the sources before and after it.
 static char *read_edited(const p4_typed_app *app, size_t *length) {
   const char *root = port_fs_root();
   char path[160];
@@ -266,13 +267,16 @@ static char *read_edited(const p4_typed_app *app, size_t *length) {
     return NULL;
   FILE *file = fopen(path, "rb");
   if (!file) return NULL;
-  size_t tail_length = 0;
-  char *tail = p4_bundle_read(app->edit_tail, &tail_length, NULL, 0);
-  char *text = tail ? malloc(app->edit_limit + 1 + tail_length + 1) : NULL;
-  size_t n = text ? fread(text, 1, app->edit_limit + 1, file) : 0;
-  bool ok = text && !ferror(file) && n <= app->edit_limit && !memchr(text, 0, n) &&
-            utf8_valid((const unsigned char *)text, n);
+  size_t head_length = 0, tail_length = 0;
+  char *head = p4_bundle_read(app->edit_head, &head_length, NULL, 0);
+  char *tail = head ? p4_bundle_read(app->edit_tail, &tail_length, NULL, 0) : NULL;
+  char *text = tail ? malloc(head_length + app->edit_limit + 1 + tail_length + 1) : NULL;
+  if (text) memcpy(text, head, head_length);
+  size_t read = text ? fread(text + head_length, 1, app->edit_limit + 1, file) : 0;
+  bool ok = text && !ferror(file) && read <= app->edit_limit && !memchr(text + head_length, 0, read) &&
+            utf8_valid((const unsigned char *)text + head_length, read);
   fclose(file);
+  size_t n = head_length + read;
   if (ok) {
     text[n++] = '\n';
     memcpy(text + n, tail, tail_length);
@@ -283,6 +287,7 @@ static char *read_edited(const p4_typed_app *app, size_t *length) {
     free(text);
     text = NULL;
   }
+  free(head);
   free(tail);
   return text;
 }

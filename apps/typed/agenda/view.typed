@@ -1,0 +1,215 @@
+// The screen: the grouped list (25 rows around the selection), the prompt and the status line, as the JSON tree
+// the JavaScript Agenda's ui.* calls build.
+function agWeekday(out: buffer, at: i32, weekday: i32, upper: bool, full: bool): i32 {
+    if (full && upper) {
+        if (weekday === 0) return at + out.writeLiteral(at, "SUNDAY");
+        if (weekday === 1) return at + out.writeLiteral(at, "MONDAY");
+        if (weekday === 2) return at + out.writeLiteral(at, "TUESDAY");
+        if (weekday === 3) return at + out.writeLiteral(at, "WEDNESDAY");
+        if (weekday === 4) return at + out.writeLiteral(at, "THURSDAY");
+        if (weekday === 5) return at + out.writeLiteral(at, "FRIDAY");
+        return at + out.writeLiteral(at, "SATURDAY");
+    }
+    if (upper) {
+        if (weekday === 0) return at + out.writeLiteral(at, "SUN");
+        if (weekday === 1) return at + out.writeLiteral(at, "MON");
+        if (weekday === 2) return at + out.writeLiteral(at, "TUE");
+        if (weekday === 3) return at + out.writeLiteral(at, "WED");
+        if (weekday === 4) return at + out.writeLiteral(at, "THU");
+        if (weekday === 5) return at + out.writeLiteral(at, "FRI");
+        return at + out.writeLiteral(at, "SAT");
+    }
+    if (weekday === 0) return at + out.writeLiteral(at, "Sun");
+    if (weekday === 1) return at + out.writeLiteral(at, "Mon");
+    if (weekday === 2) return at + out.writeLiteral(at, "Tue");
+    if (weekday === 3) return at + out.writeLiteral(at, "Wed");
+    if (weekday === 4) return at + out.writeLiteral(at, "Thu");
+    if (weekday === 5) return at + out.writeLiteral(at, "Fri");
+    return at + out.writeLiteral(at, "Sat");
+}
+
+function agMonth(out: buffer, at: i32, month: i32, upper: bool): i32 {
+    if (upper) {
+        if (month === 1) return at + out.writeLiteral(at, "JAN");
+        if (month === 2) return at + out.writeLiteral(at, "FEB");
+        if (month === 3) return at + out.writeLiteral(at, "MAR");
+        if (month === 4) return at + out.writeLiteral(at, "APR");
+        if (month === 5) return at + out.writeLiteral(at, "MAY");
+        if (month === 6) return at + out.writeLiteral(at, "JUN");
+        if (month === 7) return at + out.writeLiteral(at, "JUL");
+        if (month === 8) return at + out.writeLiteral(at, "AUG");
+        if (month === 9) return at + out.writeLiteral(at, "SEP");
+        if (month === 10) return at + out.writeLiteral(at, "OCT");
+        if (month === 11) return at + out.writeLiteral(at, "NOV");
+        return at + out.writeLiteral(at, "DEC");
+    }
+    if (month === 1) return at + out.writeLiteral(at, "Jan");
+    if (month === 2) return at + out.writeLiteral(at, "Feb");
+    if (month === 3) return at + out.writeLiteral(at, "Mar");
+    if (month === 4) return at + out.writeLiteral(at, "Apr");
+    if (month === 5) return at + out.writeLiteral(at, "May");
+    if (month === 6) return at + out.writeLiteral(at, "Jun");
+    if (month === 7) return at + out.writeLiteral(at, "Jul");
+    if (month === 8) return at + out.writeLiteral(at, "Aug");
+    if (month === 9) return at + out.writeLiteral(at, "Sep");
+    if (month === 10) return at + out.writeLiteral(at, "Oct");
+    if (month === 11) return at + out.writeLiteral(at, "Nov");
+    return at + out.writeLiteral(at, "Dec");
+}
+
+// "Tue 3 Nov", optionally upper-case and with the full weekday.
+function agShortDate(out: buffer, at: i32, date: i32, upper: bool, full: bool): i32 {
+    let end = agWeekday(out, at, entryWeekday(date), upper, full);
+    end = end + out.writeLiteral(end, " ");
+    end = agDigits(out, end, date % 100);
+    end = end + out.writeLiteral(end, " ");
+    return agMonth(out, end, date / 100 % 100, upper);
+}
+
+function agHeader(state: WorldState, out: buffer, offset: i32, group: i32): i32 {
+    let at = offset + out.writeLiteral(offset, "{\"label\":\"");
+    if (group === -1) {
+        at = at + out.writeLiteral(at, "OVERDUE");
+    } else if (group === 100000000) {
+        at = at + out.writeLiteral(at, "NO DATE");
+    } else if (group === 100000001) {
+        at = at + out.writeLiteral(at, "DONE");
+    } else {
+        if (group === state.today) { at = at + out.writeLiteral(at, "TODAY · "); }
+        if (group === state.tomorrow && group !== state.today) { at = at + out.writeLiteral(at, "TOMORROW · "); }
+        at = agShortDate(out, at, group, true, group === state.today);
+        if (group !== state.today && group !== state.tomorrow &&
+            (state.today < 0 || group / 10000 !== state.today / 10000)) {
+            at = at + out.writeLiteral(at, " ");
+            at = agDigits(out, at, group / 10000);
+        }
+    }
+    return at + out.writeLiteral(at, "\",\"color\":\"accent\"}");
+}
+
+function agItem(state: WorldState, out: buffer, offset: i32, item: i32): i32 {
+    const items = typedSdkBuffer(10);
+    const minute = agMinute(items, item);
+    const text = agSnapshot(state);
+    const start = agOffset(items, item);
+    if (!agParseSpan(state, text, start, agLineEnd(text, start))) return offset;
+    let at = offset + out.writeLiteral(offset, "{\"label\":\"");
+    if (minute >= 0) {
+        at = agTwo(out, at, minute / 60);
+        at = at + out.writeLiteral(at, ":");
+        at = agTwo(out, at, minute % 60);
+        at = at + out.writeLiteral(at, "  ");
+    }
+    if (state.taskTitleLength > 0) {
+        const title = agTitle(state);
+        at = agQuoted(out, at, title, 0, agClip(title, 0, title.length, 80));
+    } else {
+        at = at + out.writeLiteral(at, "(untitled)");
+    }
+    if (state.taskDone) {
+        at = at + out.writeLiteral(at, "\",\"icon\":\"✓\",\"iconColor\":\"muted\",\"color\":\"muted\",\"right\":\"");
+    } else {
+        at = at + out.writeLiteral(at, "\",\"icon\":\"·\",\"iconColor\":\"ink\",\"color\":\"\",\"right\":\"");
+    }
+    const date = agTaskDate(state);
+    const overdue = state.today >= 0 && date >= 0 && date < state.today;
+    if (overdue) {
+        at = agShortDate(out, at, date, false, false);
+    } else if (state.taskLeadStart >= 0 && state.taskLeadEnd - state.taskLeadStart < 32) {
+        at = agQuoted(out, at, agLine(state), state.taskLeadStart, state.taskLeadEnd);
+    }
+    if (overdue) return at + out.writeLiteral(at, "\",\"rightColor\":\"accent\"}");
+    return at + out.writeLiteral(at, "\",\"rightColor\":\"muted\"}");
+}
+
+function agList(state: WorldState, out: buffer, offset: i32): i32 {
+    const items = typedSdkBuffer(10);
+    const total = agRow(items, state.visibleCount - 1) + 1;
+    let row = -1;
+    if (state.selected >= 0) { row = agRow(items, state.selected); }
+    let first = row - 12;
+    if (first > total - 25) { first = total - 25; }
+    if (first < 0) { first = 0; }
+    const last = first + 24;
+    let index = 0;
+    if (state.selected >= 0) { index = state.selected; }
+    while (index > 0 && agRow(items, index - 1) >= first) { index = index - 1; }
+    let at = offset + out.writeLiteral(offset, "{\"t\":\"list\",\"font\":\"s\",\"lead\":6,\"grow\":1,\"sel\":");
+    at = agSigned(out, at, row - first);
+    at = at + out.writeLiteral(at, ",\"windowStart\":");
+    at = agDigits(out, at, first);
+    at = at + out.writeLiteral(at, ",\"totalItems\":");
+    at = agDigits(out, at, total);
+    at = at + out.writeLiteral(at, ",\"items\":[");
+    for (let i = index; i < state.visibleCount && agRow(typedSdkBuffer(10), i) <= last + 1; i = i + 1) {
+        const itemRow = agRow(typedSdkBuffer(10), i);
+        const header = itemRow > first && (i === 0 || itemRow > agRow(typedSdkBuffer(10), i - 1) + 1);
+        if (itemRow > last && !header) { break; }
+        if (i !== index) { at = at + out.writeLiteral(at, ","); }
+        if (header) {
+            at = agHeader(state, out, at, agGroup(state, agKey(typedSdkBuffer(10), i)));
+            if (itemRow > last) { break; }
+            at = at + out.writeLiteral(at, ",");
+        }
+        at = agItem(state, out, at, i);
+    }
+    return at + out.writeLiteral(at, "]}");
+}
+
+function agStatus(state: WorldState, out: buffer, offset: i32): i32 {
+    let at = offset + out.writeLiteral(offset, "{\"t\":\"text\",\"s\":\"");
+    if (state.noteLength > 0) {
+        at = agQuoted(out, at, typedSdkView(typedSdkBuffer(3), state.noteLength), 0, state.noteLength);
+    } else if (state.errorLength > 0) {
+        at = agQuoted(out, at, typedSdkView(typedSdkBuffer(4), state.errorLength), 0, state.errorLength);
+    } else if (state.promptKind > 0) {
+        at = at + out.writeLiteral(at, "@today @tue @+3d @11-15  14:30 or 2pm  !15m before");
+    } else {
+        const zone = typedSdkBuffer(6);
+        let length = -1;
+        if (state.today >= 0) { length = typedSdkClockZone(zone); }
+        if (length >= 0) {
+            const view = typedSdkView(zone, length);
+            at = agQuoted(out, at, view, 0, typedSdkSeek(view, 0, length, 44, 44, 44, 44));
+        } else {
+            at = at + out.writeLiteral(at, "clock not set: reminders wait");
+        }
+        at = at + out.writeLiteral(at, " · ");
+        at = agDigits(out, at, state.openCount);
+        at = at + out.writeLiteral(at, " open · ");
+        at = agDigits(out, at, state.itemCount - state.openCount);
+        at = at + out.writeLiteral(at, " done");
+    }
+    if (state.noteLength > 0 || state.errorLength > 0)
+        return at + out.writeLiteral(at, "\",\"font\":\"s\",\"color\":\"accent\"}");
+    return at + out.writeLiteral(at, "\",\"font\":\"s\",\"color\":\"muted\"}");
+}
+
+function agShow(state: WorldState, output: buffer, hints: buffer): i32 {
+    let at = output.writeLiteral(0, "{\"t\":\"col\",\"gap\":4,\"kids\":[");
+    if (state.visibleCount > 0) {
+        at = agList(state, output, at);
+    } else if (state.errorLength > 0) {
+        at = at + output.writeLiteral(at, "{\"t\":\"text\",\"s\":\"\",\"font\":\"s\",\"color\":\"muted\",\"wrap\":true,\"grow\":1}");
+    } else {
+        at = at + output.writeLiteral(at, "{\"t\":\"text\",\"s\":\"No tasks. F2 adds one, like: dentist @tue 14:30 !15m\",\"font\":\"s\",\"color\":\"muted\",\"wrap\":true,\"grow\":1}");
+    }
+    if (state.promptKind > 0) {
+        if (state.promptKind === 1) {
+            at = at + output.writeLiteral(at, ",{\"t\":\"input\",\"prompt\":\"New: \",\"font\":\"s\",\"value\":\"");
+        } else {
+            at = at + output.writeLiteral(at, ",{\"t\":\"input\",\"prompt\":\"Edit: \",\"font\":\"s\",\"value\":\"");
+        }
+        const prompt = typedSdkView(typedSdkBuffer(5), 2048 + state.promptLength);
+        const points = typedSdkCodePoints(prompt, 2048, prompt.length);
+        at = agQuoted(output, at, prompt, typedSdkPointIndex(prompt, 2048, prompt.length, points - 80), prompt.length);
+        at = at + output.writeLiteral(at, "\"}");
+    } else {
+        at = at + output.writeLiteral(at, ",{\"t\":\"gap\",\"h\":0}");
+    }
+    at = at + output.writeLiteral(at, ",");
+    at = agStatus(state, output, at);
+    at = at + output.writeLiteral(at, "]}");
+    if (state.promptKind > 0) return typedSdkScreen(output, at, hints, hints.writeLiteral(0, "Enter ok  Esc cancel"));
+    return typedSdkScreen(output, at, hints, hints.writeLiteral(0, "⏎ tick F2 add F3 edit F4 all F5 del F6 ed"));
+}

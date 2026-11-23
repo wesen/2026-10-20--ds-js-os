@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import '../../lib/compiler.mjs';
 const original=fs.readFileSync('apps/js/picocalc/apps/agenda.js','utf8');
 const parse=vm.runInNewContext(original.slice(0,original.indexOf('function agToggled'))+'\nagParse');
-const source=fs.readFileSync('apps/typed/agenda/reminder.typed','utf8');
+const source=fs.readFileSync('apps/typed/agenda/state.typed','utf8')+fs.readFileSync('apps/typed/agenda/reminder.typed','utf8');
 const {instance}=await WebAssembly.instantiate(compileTyped(source));
 const memory=new DataView(instance.exports.memory.buffer);
 function run(token) {

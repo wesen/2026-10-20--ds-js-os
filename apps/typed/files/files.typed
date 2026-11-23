@@ -1,4 +1,4 @@
-// Files policy. The reactor owns UTF-8 conversion, capabilities and pending I/O.
+// Files' rules for names, selection and keys; browse.typed is the world that uses them.
 function filesSpace(c: i32): bool {
     return (c >= 9 && c <= 13) || c === 32 || c === 160 || c === 5760 ||
         (c >= 8192 && c <= 8202) || c === 8232 || c === 8233 || c === 8239 ||
@@ -29,18 +29,6 @@ function filesName(value: string, output: buffer): i32 {
     return count;
 }
 
-function filesCompare(left: string, leftDir: bool, right: string, rightDir: bool): i32 {
-    if (leftDir && !rightDir) return -1;
-    if (rightDir && !leftDir) return 1;
-    let at = 0;
-    while (at < left.length && at < right.length) {
-        const order = left.charCodeAt(at) - right.charCodeAt(at);
-        if (!(order === 0)) return order;
-        at = at + 1;
-    }
-    return left.length - right.length;
-}
-
 function filesSelect(current: i32, count: i32, delta: i32): i32 {
     const next = current + delta;
     const last = Math.max(0, count - 1);
@@ -55,8 +43,8 @@ function filesPromptAction(key: i32, once: bool): i32 {
     return 16; // append a printable character if one was sent
 }
 
-// Input key indices are defined by key_names in the reactor. Actions use the
-// same indices for simple keys; 14 deletes and 15 submits the active prompt.
+// Input key indices are filesKey's. Actions use the same indices for simple
+// keys; 14 deletes and 15 submits the active prompt.
 function filesAction(key: i32, once: bool, prompt: bool, item: i32, confirmed: bool): i32 {
     if (prompt) return filesPromptAction(key, once);
     if (key > 0 && key <= 4) return key;

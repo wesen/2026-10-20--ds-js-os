@@ -19,7 +19,6 @@ tests/apps/calc.test.mjs -- calc.js's tests; they go with calc.js
 
 # Files other tickets are splitting or replacing
 compiler/typed/typed-wasm.js -- generated from compiler/typed/frontend/*.js and wasm/*.js by compiler/typed/frontend/build.mjs
-apps/typed/agenda/wasm-world.c -- PICOCALC-AGENDA-TYPED-WORLD
 
 # A QuickJS world is one file when it loads (kernel.c add_world reads the manifest entry's one "file" and evaluates
 # it as one script). Splitting one needs a bundling step or a manifest entry with several files; that belongs with

@@ -1,0 +1,206 @@
+{
+  "health": {
+    "peripherals": "on",
+    "worlds": [
+      "agenda",
+      "chess",
+      "compositor",
+      "display",
+      "editor",
+      "files",
+      "keyboard",
+      "snake"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 5371195,
+      "relocate_us": 1352,
+      "native_us": 1428,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "i2c": {
+      "busyMs": 209080.45,
+      "transfers": 36312,
+      "bytes": 145605,
+      "errors": 0
+    },
+    "spi": {
+      "busyMs": 1604.73,
+      "transfers": 850,
+      "bytes": 6573115,
+      "errors": 0
+    },
+    "restartingAfterSettle": []
+  },
+  "tz": [
+    "tz: EST5EDT,M3.2.0,M11.1.0"
+  ],
+  "ring": "ring @2026-11-22 22:38",
+  "steps": [
+    {
+      "step": "agenda-open",
+      "file": "- [ ] alpha @2026-12-01 09:00\n- beta",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "8b38aa4e"
+      }
+    },
+    {
+      "step": "agenda-add",
+      "file": "- [ ] alpha @2026-12-01 09:00\n- beta",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "83365e76"
+      }
+    },
+    {
+      "step": "agenda-added",
+      "file": "- [ ] alpha @2026-12-01 09:00\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "d869880c"
+      }
+    },
+    {
+      "step": "agenda-edit",
+      "file": "- [ ] alpha @2026-12-01 09:00\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "9f541eac"
+      }
+    },
+    {
+      "step": "agenda-edited",
+      "file": "- [ ] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "99b436e0"
+      }
+    },
+    {
+      "step": "agenda-ticked",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "737eef4c"
+      }
+    },
+    {
+      "step": "agenda-f6-editor",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "52f86f5f"
+      }
+    },
+    {
+      "step": "agenda-back",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "737eef4c"
+      }
+    },
+    {
+      "step": "agenda-ring-prompt",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "16e3ce73"
+      }
+    },
+    {
+      "step": "agenda-ring-saved",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m\n- [ ] ring @2026-11-22 22:38",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "1224217f"
+      }
+    },
+    {
+      "step": "agenda-ring-banner",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m\n- [ ] ring @2026-11-22 22:38",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "1224217f"
+      }
+    },
+    {
+      "step": "files-open",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m\n- [ ] ring @2026-11-22 22:38",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "5df5c97b"
+      }
+    },
+    {
+      "step": "files-notes",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m\n- [ ] ring @2026-11-22 22:38",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "452a289e"
+      }
+    },
+    {
+      "step": "files-selected",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m\n- [ ] ring @2026-11-22 22:38",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "452a289e"
+      }
+    },
+    {
+      "step": "editor-open",
+      "file": "- [x] alpha @2026-12-01 11:30\n- beta\n- [ ] gamma @2026-12-02 10:00 !15m\n- [ ] ring @2026-11-22 22:38",
+      "shot": {
+        "width": 320,
+        "height": 320,
+        "crc32": "1adc5d17"
+      }
+    }
+  ],
+  "worlds": {
+    "agenda": {
+      "engine": "native",
+      "file": "agenda/compiled.bin",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    },
+    "files": {
+      "engine": "native",
+      "file": "files/compiled.bin",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    },
+    "editor": {
+      "engine": "native",
+      "file": "editor/compiled.bin",
+      "state": "idle",
+      "restarts": 0,
+      "last_error": ""
+    }
+  }
+}
