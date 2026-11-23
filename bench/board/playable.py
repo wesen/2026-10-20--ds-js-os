@@ -119,7 +119,7 @@ def main():
         build = stored(value["app"]["sha256"])
         device.check_build(build, value["app"]["sha256"])
         peripherals = args.peripherals or value.get("peripherals", "on")
-        after = device.install(build, args.out, peripherals, args.port, health_only=args.health_only)
+        after = device.install(build, args.out, peripherals, args.port, health_only=getattr(args, "health_only", False))
         print(json.dumps(after, indent=2))
         return 0
     if args.build is None:
