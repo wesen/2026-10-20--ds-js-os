@@ -1,7 +1,7 @@
 # The repository's entry points (PICOCALC-REPO-LAYOUT). Ticket scripts call these tools; they do not copy them.
 #
 #   make test                            every fast suite: Node, generated files, Go, the host binary's Python tests, cji,
-#                                        the RV32 conformance suite
+#                                        the RV32 conformance suite, the board library against a fake serial port
 #   make test-host [OPTIONS=JSON]        the compiler gates: ray frame, Chess oracle, 25 replays (OPTIONS='{"policy":"kernel"}')
 #   make firmware PROFILE=playable       build a firmware profile (firmware/port/esp32p4/profiles/*.env) into BUILD
 #   make playable                        build the playable profile at HEAD and store its image by digest
@@ -23,7 +23,7 @@ PERIPHERALS ?=
 STUDY       ?=
 STUDY_OUT   ?= /tmp/picocalc-study-$(basename $(notdir $(STUDY)))-$(COMMIT)
 
-test: test-node test-generated test-go test-native test-cji test-rv32
+test: test-node test-generated test-go test-native test-cji test-rv32 test-board
 
 # Node: the firmware's app tests and the Typed compiler's tests (firmware/Makefile test-apps runs tests/compiler too).
 test-node:
@@ -56,6 +56,10 @@ test-cji:
 test-rv32:
 	node --test tests/rv32/conformance.test.mjs tests/rv32/rv32emu.test.mjs
 
+# bench/board/device.py against a fake serial port on a virtual clock (tests/board/fakeboard.py); no board needed.
+test-board:
+	python3 -m unittest discover -s tests/board -p 'test_*.py'
+
 test-host:
 	bench/host/gates.sh $(if $(OPTIONS),--options '$(OPTIONS)')
 
@@ -87,5 +91,5 @@ bench-board:
 candela-sources:
 	node tools/gen/candela/regenerate.mjs
 
-.PHONY: test test-node test-generated test-go test-native test-cji test-rv32 test-host test-replays firmware playable \
+.PHONY: test test-node test-generated test-go test-native test-cji test-rv32 test-board test-host test-replays firmware playable \
         install-playable restore-playable bench-board candela-sources

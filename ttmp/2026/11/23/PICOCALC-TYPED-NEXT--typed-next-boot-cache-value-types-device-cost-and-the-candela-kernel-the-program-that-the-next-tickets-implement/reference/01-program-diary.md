@@ -78,3 +78,62 @@ PICOCALC-TYPED-FIRST finished with a list of follow-ups. This step turned the on
 ### What warrants a second pair of eyes
 
 - **The cache key must include every compiler bundle a compile may load,** including the lazily loaded pass groups. A key that misses one serves stale modules after a firmware update that changed only that group.
+
+## Step 2: Wave 1 launched
+
+Four tickets started in parallel, each on an Opus subagent at `xhigh` effort in its own worktree from `6e9c08c`: COMPILE-CACHE, TYPED-VALUES, COMPILER-DEVICE-COST and BOARD-HARNESS. CANDELA-KERNEL-CODEGEN waits for TYPED-VALUES.
+
+### What I did
+
+- **Wrote each brief to stand alone:** the ticket line; files to read in order; the design doc; the diary skill's investigation format; milestones; gates with their numbers (ray `430f0d501659`, Chess 6,981 words, 25/25); and the board rules.
+- **Added a rule from TYPED-FIRST's last step:** stop every background shell before the final report.
+- **Constrained BOARD-HARNESS's 30-minute compositor run** to the installed image, sampled in short lock acquisitions, so the three agents that flash experiment images are not locked out for half an hour.
+
+### What warrants a second pair of eyes
+
+- **Three agents share one board.** The lock serializes operations, but an agent may restore playable between another agent's two steps. Each agent re-installs its own image per session, so that is safe, but board timings may be noisier than in TYPED-FIRST.
+
+## Step 3: BOARD-HARNESS merged for its host part; the keyboard wedged again
+
+BOARD-HARNESS fixed and tested four harness defects and found a fifth. Its board gates could not run because the keyboard's I2C was NACKing every transfer. I merged its branch early because the fifth fix protects every other agent's installs, and paused board work for the program.
+
+### Prompt Context
+
+**User messages (verbatim):** "test"; "ng the agents to kick them off" (read as "ping"). I pinged all four agents to start their diaries and first milestones.
+
+### What I did
+
+- **Merged `worktree-agent-a54a6f95d4fecae9d`** (`15f41e4`, `ff2a33c`, `e00abcf`).
+  - `make test` exit 0, including the new `make test-board` (18 fake-board tests).
+  - Default gates pass: ray `430f0d501659`, Chess 6,981 words, 25/25.
+- **What changed in `bench/board`:**
+  - one painter wait for both modes;
+  - console deadlines checked before every buffered line;
+  - `#OK CMD` accepted at the end of a line;
+  - `health` reboots a board that has been up more than 120 s before judging it;
+  - the keyboard qualifies on a 5 s bus window (deltas);
+  - `install` holds the firmware before esptool's reset.
+- **Paused board work for COMPILE-CACHE, TYPED-VALUES and COMPILER-DEVICE-COST** until the user power-cycles the board. Each was told to merge main before its next board session.
+
+### What didn't work
+
+- **The install gate** (`playable.py install --stored ... --peripherals on`, image `507a7064`):
+
+  ```
+  physical keyboard I2C0 did not qualify over 5.26 s: {'transfers': 248, 'errors': 248, 'busyMs': 3178.91}
+  ```
+
+  The UART shows `I2C transaction unexpected nack detected` from the first keyboard transfer of the boot, and 7,522/7,522 errors two minutes later.
+
+### What I learned
+
+- **The likeliest cause of the repeated wedges is our own installs.** Every install and restore reset the ESP32 through esptool without the firmware's `hold`, which quiesces i2c0. A reset in the middle of a keyboard transfer leaves the STM32 holding the bus. It is not known whether this install or an earlier one caused today's wedge. From now on, restores from main hold first.
+
+### What should be done next
+
+- **The user power-cycles the board.** Then resume BOARD-HARNESS for:
+  1. the install gate;
+  2. the 30-minute compositor soak;
+  3. the `--health-only` gate.
+
+  Then release the other agents for board work.
