@@ -453,3 +453,62 @@ the device. The compile now parks freed arenas and reuses them.
 ### Technical details
 - QuickJS arena request: `sizeof(JSMallocArena)` (24 B on RV32) + n_blocks x block_size, n_blocks =
   (4096 - 24) / block_size, so 3608..4096 bytes for block sizes up to 512.
+
+## Step 7: Merging TYPED-VALUES, and the gates again
+
+Main gained PICOCALC-TYPED-VALUES (a large front-end and back-end change) while the board stayed paused. The merge
+conflicted only in a generated bundle; regenerating every bundle with the shared bundler reproduced main's
+`typed-wasm.js`, `typed-async.js` and `typed-rv32-inline.js` byte for byte, which also exercises the bundler on inputs
+it was not written against. All host gates pass on the merged tree, and the final playable image is built.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** keep the branch mergeable and gated while the board is unavailable.
+**Inferred user intent:** the coordinator merges in order; a stale branch costs them a conflict.
+**Commit (code):** 3905072 — "Merge main (PICOCALC-TYPED-VALUES) into PICOCALC-COMPILER-DEVICE-COST"; 1dc2b51 (main's
+program diary).
+
+### What I did
+- `git merge main` (514b8e8): `CONFLICT (content): Merge conflict in compiler/typed/typed-rv32-loops.js`. Resolved by
+  running the three builds; `frontend/build.mjs` auto-merged main's two new modules (`frontend/values.js`,
+  `frontend/arrays.js`) into my module list.
+- Swept the loaders again: main's new `tests/compiler/values-helpers.mjs` loaded the loops group but not the kernel
+  group; added it.
+- `make test`, the 84-digest harness against main 514b8e8, `make test-host` with both policies, and the final
+  playable build `firmware/port/esp32p4/build.sh playable /tmp/picocalc-device-cost-control` (3905072, app
+  `f40c4629…`, kept in `/tmp/picocalc-device-cost-arm-final`).
+
+### Why
+- The board arms of the study stay on the old base (adbe8ed4, 52c607c0, 5d90890a, cc6e0008): they differ from each
+  other only by this ticket's changes, which is what a paired study needs. The final image is what the gates judge.
+
+### What worked
+- `typed-wasm.js`, `typed-async.js`, `typed-rv32-inline.js`: identical to main's; `typed-rv32.js` differs only in the
+  registry's group names and `GROUPS`.
+- `make test`: exit 0. Digests: `IDENTICAL 84 of 84` against main 514b8e8.
+- `make test-host`: ray 4,888,369 instructions, 11964 B, `430f0d501659` (reference); Chess 6981 words, 128,152,624,
+  21716 B; 25/25. Kernel: 3,239,635, 11544 B, `430f0d501659`; 6981 words, 118,361,847, 19892 B; 25/25.
+
+### What didn't work
+- The conflict above; no other failure.
+
+### What I learned
+- A module list is the only thing a frontend change touches in a `build.mjs` now, so git merges it cleanly.
+
+### What was tricky to build
+- N/A.
+
+### What warrants a second pair of eyes
+- Any loader added on main after this merge must list `typed-rv32-kernel.js` too; the kernel-policy tests fail loudly
+  (`the RV32 pass conjunctions needs typed-rv32-kernel.js`) if one does not.
+
+### What should be done in the future
+- The board: the in-image session, the boot study, the final image's health and deadlines.
+
+### Code review instructions
+- `git show 3905072 --stat`; `bash scripts/07-compare-digests.sh BASE_TAR SCRATCH` with `git archive main compiler/typed`.
+
+### Technical details
+- Board images: control `adbe8ed4` (8c6a1ff), split `52c607c0` (529100a), strip `5d90890a` (cd08aea), strip-source
+  `d8071198` (3f883ef, dirty), park `cc6e0008` (7682d93), bench experiment `27d4a946` (e17d025 + experiment tree),
+  final `f40c4629` (3905072).
