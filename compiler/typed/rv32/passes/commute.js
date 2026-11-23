@@ -1,5 +1,5 @@
 // The commute pass.
-import {I32_ADD, I32_MUL, I32_EQ, I32_NE, CELLS, I32_GE_U, I32_SHR_U, I32_AND, I32_OR, I32_XOR, I32_CONST, LOCAL_GET, CHECKED_ADDRESS, I32_EQZ, I32_LOAD, I32_LOAD16_U, LOCAL_SET, DROP, BR_IF, I32_STORE, I32_STORE16, CALL, BLOCK, IF, I32, ELSE, END} from "../encoding/tape.js";
+import {I32_ADD, I32_MUL, I32_EQ, I32_NE, CELLS, I32_GE_U, I32_SHR_U, I32_AND, I32_OR, I32_XOR, I32_CONST, LOCAL_GET, CHECKED_ADDRESS, I32_EQZ, I32_LOAD, I32_LOAD16_U, LOCAL_SET, DROP, BR_IF, I32_STORE, I32_STORE16, CALL, BLOCK, IF, I32, VOID, ELSE, END, FLOATING, tapeRow} from "../encoding/tape.js";
 
 // the commute pass: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
 // eq, ne, and, or, xor), so the literal reaches selectConstant as a right operand. Moving a literal past
@@ -40,12 +40,16 @@ export function commuteConstants(code, arity) {
             stack.push({start: n ? args[0]?.start ?? NaN : start});
         } else if (op >= BLOCK && op <= IF) {
             if (op === IF) stack.pop();
-            blocks.push({value: a === I32, height: stack.length});
+            blocks.push({value: a !== VOID, height: stack.length});
         } else if (op === ELSE) stack.length = blocks.at(-1).height;
         else if (op === END && blocks.length) {
             const block = blocks.pop();
             stack.length = block.height;
             if (block.value) stack.push({start: NaN});
+        } else if (FLOATING[op]) {
+            // An f32 operation, by its row: it starts where its first operand does (or here, without operands).
+            const row = tapeRow(op), args = stack.splice(stack.length - row.pop.length, row.pop.length);
+            if (row.push.length) stack.push({start: row.pop.length ? args[0]?.start ?? NaN : start});
         }
     }
     return changed ? out : null;

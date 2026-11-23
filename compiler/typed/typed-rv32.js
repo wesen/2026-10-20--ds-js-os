@@ -9,7 +9,7 @@
 // 32 + n, so reg >> 5 is its class and integer code keeps its numbers. The formats below must not get an f register.
 const X = 0, F = 1;
 const ZERO = 0, RA = 1, SP = 2, A0 = 10, T5 = 30, T6 = 31;
-const F0 = 32, FA0 = 42;
+const F0 = 32, FA0 = 42, FT10 = 62, FT11 = 63;
 const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
 const classOf = reg => reg >> 5;
 
@@ -25,6 +25,11 @@ const REGISTER_CLASSES = [
 
 // f32 values live in f registers, every other Typed type in x registers.
 const typeClass = type => type === "f32" ? F : X;
+
+// The emitter's operand stack per class: depth d is x STACK_REGISTERS[d] (t0-t4) or f F_STACK[d] (ft0-ft4), and
+// both classes share the spill slot of depth d. An operand beyond the registers lives in its slot.
+const F_STACK = [32, 33, 34, 35, 36];
+const OPERAND_STACKS = [STACK_REGISTERS, F_STACK];
 
 // A callee-saved register (of either class) that the planner may claim as a home.
 const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27) || reg === 40 || reg === 41 || (reg >= 50 && reg <= 59);
@@ -172,8 +177,15 @@ const storeWord = (reg, offset, base) => reg < 32 ? instruction.s(2, base, reg, 
 const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, RETURN, CALL, DROP, LOCAL_GET, LOCAL_SET,
     I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
     I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR, I32_SHL, I32_SHR_S, I32_SHR_U,
-    CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, STORES,
-    cells: CELLS, effects: EFFECTS, next: opNext, close: opClose} = typedTape;
+    CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, F32, VOID, STORES,
+    F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG, F32_CEIL,
+    F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
+    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX,
+    cells: CELLS, effects: EFFECTS, next: opNext, close: opClose, row: tapeRow} = typedTape;
+// The f32 operations (a row that pops or pushes an f32): passes with an abstract operand stack take their pops and
+// pushes from the row (tapeRow(op).pop.length, .push.length).
+const FLOATING = new Uint8Array(256);
+for (const row of typedTape.rows) if (row.pop && [...row.pop, ...row.push].includes(F32)) FLOATING[row.code] = 1;
 
 // rv32/emit/addresses.js
 // FunctionCode's checked and unchecked buffer addresses.
@@ -512,9 +524,9 @@ class BranchMethods {
 
     begin(op, kind = 0, a, b = ZERO) {
         const type = this.cell();
-        if (type !== VOID && type !== I32) throw new SyntaxError("unsupported RV32 control result");
+        if (type !== VOID && type !== I32 && type !== F32) throw new SyntaxError("unsupported RV32 control result");
         const condition = op === IF ? a ?? this.pop(T5) : ZERO;
-        const block = {op, depth: this.depth, value: type === I32, start: {}, alternate: {}, end: {}};
+        const block = {op, depth: this.depth, value: type !== VOID, float: type === F32, start: {}, alternate: {}, end: {}};
         this.control.push(block);
         this.mark(block.start);
         if (op === IF) this.branch(kind, condition, b, block.alternate);
@@ -523,13 +535,17 @@ class BranchMethods {
     end() {
         const block = this.control.pop();
         if (!block) {
-            this.move(this.returnRegister, this.pop(A0));
+            this.move(this.returnRegister, this.pop(this.returnRegister));
             return true;
         }
         if (block.alternate.at === undefined) this.mark(block.alternate);
         this.mark(block.end);
         // Both arms put a result in the same home at the block's entry depth.
         this.depth = block.depth + Number(block.value);
+        if (block.value) {
+            this.direct[block.depth] = undefined;
+            this.classes[block.depth] = Number(block.float);
+        }
         return false;
     }
 
@@ -541,7 +557,7 @@ class BranchMethods {
 class CallMethods {
     call(index) {
         const callee = this.functions[index], count = callee.params.length;
-        // ilp32f; the operand stack is x registers, so an f32 argument or result crosses with fmv.
+        // ilp32f: integer arguments in a0-a7, f32 in fa0-fa7, each popped from its class's operand stack.
         const incoming = calleeRegisters(callee);
         for (let i = count - 1; i >= 0; i--) {
             const arg = incoming[i];
@@ -549,10 +565,10 @@ class CallMethods {
         }
         // Only the values below the arguments survive the call. A pending direct read stays in
         // its home: a function that calls keeps homes only in callee-saved registers.
-        const live = Math.min(this.depth, STACK_REGISTERS.length);
-        for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.spill(d, STACK_REGISTERS[d]);
+        const live = Math.min(this.depth, OPERAND_STACKS[0].length);
+        for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.spill(d, OPERAND_STACKS[this.classes[d]][d]);
         this.jump(this.starts[index], RA);
-        for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.load(STACK_REGISTERS[d], this.slot(d));
+        for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.load(OPERAND_STACKS[this.classes[d]][d], this.slot(d));
         this.push(callee.result === "f32" ? FA0 : A0);
     }
 
@@ -563,6 +579,120 @@ class CallMethods {
         return homes ? [...new Set(homes.values())].filter(isSavedRegister).sort((a, b) => a - b) : [];
     }
 
+}
+
+// rv32/emit/floats.js
+// FunctionCode's f32 operations (RV32F). Operands live on the f operand stack (ft0-ft4, encoding/registers.js
+// OPERAND_STACKS); ft10 and ft11 are the scratch registers of a spilled operand. Every rounding instruction names
+// round-to-nearest-even statically, so frm never matters; a product and a sum are never fused.
+
+const RNE = 0, RTZ = 1, RDN = 2, RUP = 3;
+// The tape's f32 operations, by opcode: 1 for those FunctionCode.float lowers.
+const FLOAT_OPERATIONS = new Uint8Array(256);
+for (const op of [F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG,
+    F32_CEIL, F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
+    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX]) FLOAT_OPERATIONS[op] = 1;
+// Two f32 operands, an f32 result: the encoder key and its rounding mode (undefined: sign injection, min, max).
+const FLOAT_BINARY = new Map([
+    [F32_ADD, ["fadd_s", RNE]], [F32_SUB, ["fsub_s", RNE]], [F32_MUL, ["fmul_s", RNE]], [F32_DIV, ["fdiv_s", RNE]],
+    [F32_MIN, ["fmin_s"]], [F32_MAX, ["fmax_s"]], [F32_COPYSIGN, ["fsgnj_s"]],
+]);
+// Comparisons: the encoder key and whether the operands are swapped (a > b is b < a); ne is not eq.
+const FLOAT_COMPARE = new Map([
+    [F32_EQ, ["feq_s", false]], [F32_NE, ["feq_s", false]], [F32_LT, ["flt_s", false]], [F32_GT, ["flt_s", true]],
+    [F32_LE, ["fle_s", false]], [F32_GE, ["fle_s", true]],
+]);
+const ROUNDING = new Map([[F32_FLOOR, RDN], [F32_CEIL, RUP], [F32_TRUNC, RTZ]]);
+
+class FloatMethods {
+    // The destination of a result of class cls: the home of the local it is stored to next (destination()), or the
+    // operand stack's register.
+    floatResult(cls) {
+        const stored = this.destination();
+        return [stored ?? this.resultRegister(cls), stored];
+    }
+
+    float(op) {
+        const binary = FLOAT_BINARY.get(op);
+        if (binary) {
+            const b = this.pop(FT11), a = this.pop(FT10);
+            const [out, stored] = this.floatResult(F);
+            this.emit(binary[1] === undefined ? encoder(binary[0])(out, a, b) : encoder(binary[0])(out, a, b, binary[1]));
+            return this.result(out, stored);
+        }
+        const compare = FLOAT_COMPARE.get(op);
+        if (compare) {
+            const b = this.pop(FT11), a = this.pop(FT10);
+            const [out, stored] = this.floatResult(0);
+            this.emit(compare[1] ? encoder(compare[0])(out, b, a) : encoder(compare[0])(out, a, b));
+            if (op === F32_NE) this.emit(instruction.i(0x13, out, 4, out, 1)); // xori out, out, 1
+            return this.result(out, stored);
+        }
+        const rounding = ROUNDING.get(op);
+        if (rounding !== undefined) return this.round(rounding);
+        switch (op) {
+        case F32_CONST: {
+            const bits = this.cell();
+            const [out, stored] = this.floatResult(F);
+            if (bits) this.constant(T6, bits);
+            this.emit(encoder("fmv_w_x")(out, bits ? T6 : ZERO));
+            return this.result(out, stored);
+        }
+        case F32_LOAD: {
+            this.cell(); // alignment hint
+            const offset = this.cell(), base = this.pop(T5);
+            const [out, stored] = this.floatResult(F);
+            this.load(out, offset, base);
+            return this.result(out, stored);
+        }
+        case F32_STORE: {
+            this.cell();
+            const offset = this.cell(), value = this.pop(FT11);
+            this.store(value, offset, this.pop(T5));
+            return;
+        }
+        case F32_ABS: case F32_NEG: case F32_SQRT: {
+            const a = this.pop(FT10);
+            const [out, stored] = this.floatResult(F);
+            if (op === F32_SQRT) this.emit(encoder("fsqrt_s")(out, a, RNE));
+            else this.emit(encoder(op === F32_ABS ? "fsgnjx_s" : "fsgnjn_s")(out, a, a));
+            return this.result(out, stored);
+        }
+        case F32_CONVERT_I32_S: case F32_REINTERPRET_I32: {
+            const a = this.pop(T5);
+            const [out, stored] = this.floatResult(F);
+            this.emit(op === F32_CONVERT_I32_S ? encoder("fcvt_s_w")(out, a, RNE) : encoder("fmv_w_x")(out, a));
+            return this.result(out, stored);
+        }
+        case I32_TRUNC_F32: case I32_REINTERPRET_F32: {
+            // fcvt.w.s rtz saturates, and gives 2^31 - 1 for NaN: Typed's rule (tape.js f32.to_i32).
+            const a = this.pop(FT10);
+            const [out, stored] = this.floatResult(0);
+            this.emit(op === I32_TRUNC_F32 ? encoder("fcvt_w_s")(out, a, RTZ) : encoder("fmv_x_w")(out, a));
+            return this.result(out, stored);
+        }
+        }
+        throw new SyntaxError("unsupported RV32 f32 operation " + op);
+    }
+
+    // floor, ceil, trunc: an |x| >= 2^23, an infinity or a NaN is its own result; any other x converts to an integer
+    // in the rounding mode and back, exactly, with x's sign (so -0.5 gives -0 under ceil and trunc, -0 gives -0).
+    //     mv out, x; fmv.x.w t6, x; slli t6, t6, 1; lui t5, 0x96000; bgeu t6, t5, done
+    //     fcvt.w.s t6, x, rm; fcvt.s.w ft11, t6, rm; fsgnj.s out, ft11, x; done:
+    round(rm) {
+        const a = this.pop(FT10);
+        // out is never ft11, which holds the converted value while x is still read.
+        const [out, stored] = this.floatResult(F);
+        this.move(out, a);
+        this.emit(encoder("fmv_x_w")(T6, a));
+        this.emit(instruction.i(0x13, T6, 1, T6, 1));
+        this.emit(((0x96000 << 12) | (T5 << 7) | 0x37) >>> 0);
+        this.emit(instruction.b(7, T6, T5, 16));
+        this.emit(encoder("fcvt_w_s")(T6, a, rm));
+        this.emit(encoder("fcvt_s_w")(FT11, T6, rm));
+        this.emit(encoder("fsgnj_s")(out, FT11, a));
+        this.result(out, stored);
+    }
 }
 
 // rv32/emit/homes.js
@@ -592,14 +722,21 @@ class HomeMethods {
             const h = this.direct[d];
             if (h === undefined || (home !== undefined && h !== home)) continue;
             this.direct[d] = undefined;
-            const reg = STACK_REGISTERS[d];
+            const reg = OPERAND_STACKS[h >> 5][d];
             if (reg === undefined) this.spill(d, h);
             else this.move(reg, h);
         }
     }
 
     pushHome(home) {
+        this.classes[this.depth] = home >> 5;
         this.direct[this.depth++] = home;
+    }
+
+    // The register class of a local: its type (fn.params, fn.localTypes).
+    localClass(local) {
+        const fn = this.program, params = fn.params.length;
+        return (local < params ? fn.params[local] : fn.localTypes?.[local - params]) === "f32" ? 1 : 0;
     }
 
     // p = r + 4 + 2(L + K0), or r + 4 + 2(L + M) when other holds M, for a pointer home
@@ -797,6 +934,7 @@ class StackMethods {
         this.spillDepth = Math.max(this.spillDepth, depth + 1);
     }
 
+    // The operand's class is the scratch register's: an f32 consumer pops with an f scratch (ft10, ft11).
     pop(scratch) {
         if (!this.depth) throw new SyntaxError("empty RV32 operand stack");
         const depth = --this.depth;
@@ -805,21 +943,24 @@ class StackMethods {
             this.direct[depth] = undefined;
             return home;
         }
-        const reg = STACK_REGISTERS[depth];
+        const reg = OPERAND_STACKS[scratch >> 5][depth];
         if (reg !== undefined) return reg;
         this.load(scratch, this.slot(depth));
         return scratch;
     }
 
+    // classes[d]: the register class of the operand at depth d (a call spills and reloads by it).
     push(reg) {
         const depth = this.depth++;
         this.direct[depth] = undefined;
-        const home = STACK_REGISTERS[depth];
+        this.classes[depth] = reg >> 5;
+        const home = OPERAND_STACKS[reg >> 5][depth];
         if (home === undefined) this.spill(depth, reg);
         else this.move(home, reg);
     }
 
-    resultRegister() { return STACK_REGISTERS[this.depth] ?? T5; }
+    // The register a result of class cls (0 integer, 1 float) is computed in.
+    resultRegister(cls = 0) { return OPERAND_STACKS[cls][this.depth] ?? (cls ? FT10 : T5); }
 
 }
 
@@ -839,6 +980,7 @@ class FunctionCode {
         // direct[d] names the home register of a local read that is still pending at operand
         // depth d. Its consumer reads the home itself, so no copy is emitted.
         this.direct = [];
+        this.classes = [];
         this.exit = {};
         // ilp32f: an f32 result returns in fa0, every other in a0.
         this.returnRegister = program.result === "f32" ? FA0 : A0;
@@ -917,7 +1059,7 @@ class FunctionCode {
             else this.jump(target);
             break;
         }
-        case RETURN: this.move(this.returnRegister, this.pop(A0)); this.jump(this.exit); break;
+        case RETURN: this.move(this.returnRegister, this.pop(this.returnRegister)); this.jump(this.exit); break;
         case CALL: this.call(this.cell()); break;
         case DROP: this.depth--; break;
         case LOCAL_GET: {
@@ -928,13 +1070,13 @@ class FunctionCode {
                 break;
             }
             const stored = this.destination();
-            const out = stored ?? this.resultRegister();
+            const out = stored ?? this.resultRegister(this.localClass(local));
             this.readLocal(out, local);
             this.result(out, stored);
             break;
         }
         case LOCAL_SET: {
-            const value = this.pop(T5), local = this.cell();
+            const value = this.pop(this.localClass(this.program.code[this.at]) ? FT10 : T5), local = this.cell();
             this.writeLocal(value, local);
             this.pointersAfterWrite(local, this.at - 2, value);
             break;
@@ -998,7 +1140,9 @@ class FunctionCode {
             }
             break;
         }
-        default: this.binary(op);
+        default:
+            if (FLOAT_OPERATIONS[op]) this.float(op);
+            else this.binary(op);
         }
         return false;
     }
@@ -1043,7 +1187,7 @@ class FunctionCode {
         return this;
     }
 }
-mixin(FunctionCode, StackMethods, HomeMethods, AddressMethods, BranchMethods, ArithmeticMethods, CallMethods);
+mixin(FunctionCode, StackMethods, HomeMethods, AddressMethods, BranchMethods, ArithmeticMethods, CallMethods, FloatMethods);
 
 // rv32/emit/guarded-return.js
 // Guarded scalar returns: a tiny unary helper's body, applied at the call site.
@@ -1098,9 +1242,11 @@ class GuardedReturnCode extends FunctionCode {
 
 // An allowlist keeps any new operation with a possible frame dependency on the
 // ordinary path until its frameless lowering is reviewed.
+// The f32 operations other than memory accesses need no frame either (they use t5, t6, ft10 and ft11 at most).
 const LEAF_OPERATIONS = new Set([
     BLOCK, IF, ELSE, END, BR, BR_IF, RETURN, DROP, LOCAL_GET, I32_CONST, I32_EQZ,
     I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, ...ALU.keys(),
+    ...[...FLOAT_OPERATIONS.keys()].filter(op => FLOAT_OPERATIONS[op] && op !== F32_LOAD && op !== F32_STORE),
 ]);
 const LEAF_SPILL = Symbol("frameless function needs an operand spill");
 
@@ -1111,9 +1257,10 @@ class LeafCode extends FunctionCode {
         if (op !== LOCAL_GET) return super.step(op);
         const local = this.cell();
         if (local >= this.program.params.length) throw LEAF_SPILL;
-        // select.leafParams: a frameless leaf never writes a parameter, so reads use it in place.
-        if (this.select?.leafParams) this.pushHome(A0 + local);
-        else this.push(A0 + local);
+        // select.leafParams: a frameless leaf never writes a parameter, so reads use it in place (a0-a7, fa0-fa7).
+        const incoming = calleeRegisters(this.program)[local];
+        if (this.select?.leafParams) this.pushHome(incoming);
+        else this.push(incoming);
         return false;
     }
 
@@ -1136,7 +1283,7 @@ function declineLeaf(fn, reason) {
 function lowerLeaf(fn, callables, targets, select, facts) {
     if (fn.nlocals) return declineLeaf(fn, "function declares frame locals");
     if (fn.code.length > 128) return declineLeaf(fn, "operation tape exceeds 128 cells");
-    if (fn.params.length > 8 || !fn.params.every(type => type === "i32" || type === "bool"))
+    if (fn.params.length > 8 || !fn.params.every(type => type === "i32" || type === "bool" || type === "f32"))
         return declineLeaf(fn, "argument list outside leaf convention");
     for (let at = 0; at < fn.code.length;) {
         const op = fn.code[at++];
@@ -1927,5 +2074,5 @@ globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES,
     passes: PASSES.map(({name, group, kind, needs}) => ({name, group, kind, needs: needs ?? [], file: GROUPS[group]}))};
 
 // The names the pass-group bundles import from this one.
-globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape};
+globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, F32, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape, tapeRow};
 })();

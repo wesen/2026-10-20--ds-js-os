@@ -2,7 +2,7 @@
 // 32 + n, so reg >> 5 is its class and integer code keeps its numbers. The formats below must not get an f register.
 export const X = 0, F = 1;
 export const ZERO = 0, RA = 1, SP = 2, A0 = 10, T5 = 30, T6 = 31;
-export const F0 = 32, FA0 = 42;
+export const F0 = 32, FA0 = 42, FT10 = 62, FT11 = 63;
 export const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
 export const classOf = reg => reg >> 5;
 
@@ -18,6 +18,11 @@ export const REGISTER_CLASSES = [
 
 // f32 values live in f registers, every other Typed type in x registers.
 export const typeClass = type => type === "f32" ? F : X;
+
+// The emitter's operand stack per class: depth d is x STACK_REGISTERS[d] (t0-t4) or f F_STACK[d] (ft0-ft4), and
+// both classes share the spill slot of depth d. An operand beyond the registers lives in its slot.
+export const F_STACK = [32, 33, 34, 35, 36];
+export const OPERAND_STACKS = [STACK_REGISTERS, F_STACK];
 
 // A callee-saved register (of either class) that the planner may claim as a home.
 export const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27) || reg === 40 || reg === 41 || (reg >= 50 && reg <= 59);

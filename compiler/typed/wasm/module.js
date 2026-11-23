@@ -8,8 +8,11 @@ function section(id, data) {
     return [id, ...unsigned(data.length), ...data];
 }
 
+// A Typed type as a Wasm value type: f32 is F32, every other type an i32.
+const valueType = type => type === "f32" ? F32 : I32;
+
 function signature(fn) {
-    return [0x60, ...vec(fn.params.map(() => I32)), 1, I32];
+    return [0x60, ...vec(fn.params.map(valueType)), 1, valueType(fn.result)];
 }
 
 function compile(source, options) {

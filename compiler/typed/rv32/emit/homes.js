@@ -1,5 +1,5 @@
 // FunctionCode's register homes: local reads and writes, direct reads, pointer homes.
-import {STACK_REGISTERS, instruction, T6} from "../encoding/registers.js";
+import {OPERAND_STACKS, instruction, T6} from "../encoding/registers.js";
 import {I32_CONST} from "../encoding/tape.js";
 
 export class HomeMethods {
@@ -26,14 +26,21 @@ export class HomeMethods {
             const h = this.direct[d];
             if (h === undefined || (home !== undefined && h !== home)) continue;
             this.direct[d] = undefined;
-            const reg = STACK_REGISTERS[d];
+            const reg = OPERAND_STACKS[h >> 5][d];
             if (reg === undefined) this.spill(d, h);
             else this.move(reg, h);
         }
     }
 
     pushHome(home) {
+        this.classes[this.depth] = home >> 5;
         this.direct[this.depth++] = home;
+    }
+
+    // The register class of a local: its type (fn.params, fn.localTypes).
+    localClass(local) {
+        const fn = this.program, params = fn.params.length;
+        return (local < params ? fn.params[local] : fn.localTypes?.[local - params]) === "f32" ? 1 : 0;
     }
 
     // p = r + 4 + 2(L + K0), or r + 4 + 2(L + M) when other holds M, for a pointer home

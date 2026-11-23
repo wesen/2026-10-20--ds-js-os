@@ -14,6 +14,15 @@ class FunctionEmitter extends ExpressionParser {
             this.bufferLiteral(receiver);
             return;
         }
+        if (lex.accept("setF32")) {
+            lex.expect("(");
+            this.floatAddress(receiver);
+            lex.expect(",");
+            this.want(this.expr(), "f32");
+            lex.expect(")");
+            this.code.push(F32_STORE, 2, 2);
+            return;
+        }
         { if (lex.token.value !== "setCharCodeAt") lex.fail("expected setCharCodeAt"); lex.next(); }
         { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         const position = this.nextLocal++;
@@ -134,7 +143,7 @@ class FunctionEmitter extends ExpressionParser {
                 const field = this.field(local.type, name);
                 { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
                 this.want(this.expr(), field.type);
-                this.emitMemory(I32_STORE, 2, field.offset);
+                this.emitMemory(field.type === "f32" ? F32_STORE : I32_STORE, 2, field.offset);
             }
         } else {
             if (!local.mutable) lex.fail("expected mutable local " + id);
@@ -283,6 +292,14 @@ class FunctionEmitter extends ExpressionParser {
 
     finish(fn) {
         if (this.literals) fn.literals = this.literals;
+        // fn.localTypes: the type class of each frame local ("f32" or "i32"), only when one is an f32; the RV32
+        // planner and the Wasm local declarations read it.
+        const params = fn.params.length;
+        const floats = this.floatLocals?.filter(index => index >= params);
+        if (floats?.length) {
+            fn.localTypes = Array(fn.nlocals).fill("i32");
+            for (const index of floats) fn.localTypes[index - params] = "f32";
+        }
         return fn;
     }
 }

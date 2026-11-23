@@ -67,8 +67,11 @@ function units(world) {
     }
 }
 
-// Walk one tape; returns the opcodes seen. `arity(index)` is a callee's parameter count.
+// Walk one tape; returns the opcodes seen. `arity(index)` is a callee's parameter count. A local's, callee's or
+// function's value has type T.ANY in the rows (local.get, local.set, call, drop, return): the walk accepts any type
+// where ANY is popped and pushes ANY, which every later pop accepts.
 function check(T, code, arity, where) {
+    const value = type => type === T.I32 || type === T.F32;
     const fail = (at, message) => assert.fail(where + " at cell " + at + ": " + message);
     const stack = [], frames = [{height: 0, result: T.I32, dead: false}], seen = new Set();
     let at = 0;
@@ -78,13 +81,14 @@ function check(T, code, arity, where) {
             if (frame.dead && stack.length === frame.height) continue;
             if (stack.length <= frame.height) fail(at, T.name(op) + " pops below its block");
             const got = stack.pop();
-            if (got !== types[i]) fail(at, T.name(op) + " pops " + got + ", expected " + types[i]);
+            if (got !== types[i] && got !== T.ANY && types[i] !== T.ANY) fail(at, T.name(op) + " pops " + got + ", expected " + types[i]);
         }
     };
     const leave = (frame, op) => {
-        if (!frame.dead && stack.length !== frame.height + (frame.result === T.I32 ? 1 : 0))
+        if (!frame.dead && stack.length !== frame.height + (value(frame.result) ? 1 : 0))
             fail(at, T.name(op) + " leaves " + (stack.length - frame.height) + " values in its block");
-        if (!frame.dead && frame.result === T.I32 && stack.at(-1) !== T.I32) fail(at, "block result is not i32");
+        if (!frame.dead && value(frame.result) && stack.at(-1) !== frame.result && stack.at(-1) !== T.ANY)
+            fail(at, "block result is not " + frame.result);
         stack.length = frame.height;
     };
     while (at < code.length) {
@@ -94,10 +98,10 @@ function check(T, code, arity, where) {
         seen.add(op);
         const a = code[at + 1];
         if (op === T.CALL && !(a >= 0)) fail(at, "call of " + a);
-        pop(row.pop ?? Array(arity(a)).fill(T.I32), op);
+        pop(row.pop ?? Array(arity(a)).fill(T.ANY), op);
         const frame = frames.at(-1);
         if (op === T.BLOCK || op === T.LOOP || op === T.IF) {
-            if (a !== T.I32 && a !== T.VOID) fail(at, "block type " + a);
+            if (!value(a) && a !== T.VOID) fail(at, "block type " + a);
             frames.push({height: stack.length, result: a, dead: frame.dead && stack.length === frame.height ? frame.dead : false, op});
         } else if (op === T.ELSE) {
             if (frame.op !== T.IF || frame.sawElse) fail(at, "else outside an if");
@@ -109,8 +113,8 @@ function check(T, code, arity, where) {
             frames.pop();
             if (!frames.length) {
                 if (at + 1 !== code.length) fail(at, "operations after the function's end");
-                stack.push(T.I32);
-            } else stack.push(...(frame.result === T.I32 ? [T.I32] : []));
+                stack.push(T.ANY);
+            } else stack.push(...(value(frame.result) ? [frame.result] : []));
         } else {
             if ((op === T.BR || op === T.BR_IF) && !(a >= 0 && a < frames.length - 1)) fail(at, row.name + " " + a + " leaves the function");
             stack.push(...row.push);
@@ -141,7 +145,7 @@ test("the tape table is consistent", () => {
     assert.equal(T.cells.filter(n => n >= 0).length, T.rows.length);
     // Effects the passes rely on: storeless() and the planner's purity test.
     const stores = plain(T.rows.filter(r => r.effects & T.STORES).map(r => r.name).sort());
-    assert.deepEqual(stores, ["i32.store", "i32.store16", "text.literal_stores"]);
+    assert.deepEqual(stores, ["f32.store", "i32.store", "i32.store16", "text.literal_stores"]);
     assert.deepEqual(plain(T.rows.filter(r => r.effects & T.CALLS).map(r => r.name)), ["call"]);
     const code = [T.BLOCK, T.VOID, T.LOCAL_GET, 0, T.CHECKED_ADDRESS, 0, 1, T.DROP, T.END, T.I32_CONST, -3, T.END];
     assert.equal(T.close(code, 0), 8);
@@ -149,6 +153,8 @@ test("the tape table is consistent", () => {
         ["text.checked_address", 0, 1], ["drop"], ["end"], ["i32.const", -3], ["end"]]);
     // In Wasm bytes the immediates are LEB128: i32.const -3 is 0x7d, a local index 200 two bytes.
     assert.deepEqual(plain(T.decode([T.I32_CONST, 0x7d, T.LOCAL_GET, 0xc8, 0x01], true).map(o => o.operands[0])), [-3, 200]);
+    // An f32.const cell holds the literal's bits; in Wasm bytes they are four little-endian bytes (-1.5: 0xbfc00000).
+    assert.deepEqual(plain(T.decode([T.F32_CONST, 0, 0, 0xc0, 0xbf], true).map(o => o.operands[0])), [0xbfc00000 | 0]);
     assert(Number.isNaN(T.next([0xff], 0)));
     assert.throws(() => T.decode([0xff]), /unknown tape opcode 255/);
 });
@@ -183,11 +189,14 @@ test("every tape the compiler produces from apps/typed matches the tape table", 
     assert(tapes > 2000, "checked " + tapes + " tapes");
     t.diagnostic(tapes + " tapes checked");
     assert.deepEqual([...phases].sort(), ["commute", "conjunctions", "inline", "rotate", "sets", "split", "version"]);
-    // Every row is exercised, so none is dead weight: the tape has every row but the bitwise operations, which no
-    // app uses yet (typed-bitwise.test.mjs exercises them), and the Wasm backend's bytes never hold a pseudo-op.
-    // i32.shl is also the Wasm backend's own (its expansion of text.checked_address computes the UTF-16 address).
+    // Every row is exercised, so none is dead weight: the tape has every row but the bitwise operations and the f32
+    // rows, which no app uses yet (typed-bitwise.test.mjs and typed-f32.test.mjs exercise them), and the Wasm
+    // backend's bytes never hold a pseudo-op. i32.shl is also the Wasm backend's own (its expansion of
+    // text.checked_address computes the UTF-16 address).
     const missing = codes => plain(T.rows.filter(row => !codes.has(row.code)).map(row => row.name));
-    assert.deepEqual(missing(all), ["i32.and", "i32.or", "i32.xor", "i32.shl", "i32.shr_u"]);
+    const floats = plain(T.rows.filter(row => row.pop && [...row.pop, ...row.push].includes(T.F32)).map(row => row.name));
+    assert.deepEqual(missing(all), ["i32.and", "i32.or", "i32.xor", "i32.shl", "i32.shr_u", ...floats].sort((a, b) =>
+        T[T.rows.find(r => r.name === a).constant] - T[T.rows.find(r => r.name === b).constant]));
     assert(wasm.has(T.I32_SHL));
     assert.deepEqual([T.CHECKED_ADDRESS, T.LITERAL_STORES, T.UNCHECKED_ADDRESS].filter(op => wasm.has(op)), []);
 });

@@ -134,7 +134,7 @@ function entrySets(code, arity, wanted) {
         if (op >= BLOCK && op <= IF) {
             if (!dead && wanted.has(at)) found.set(at, state.get(wanted.get(at)) ?? null);
             if (op === IF && !dead) pop();
-            frames.push({op, height: stack.length, value: a === I32, deadEntry: dead, breaks: [], entry: state, thenEnd: null, sawElse: false});
+            frames.push({op, height: stack.length, value: a !== VOID, deadEntry: dead, breaks: [], entry: state, thenEnd: null, sawElse: false});
             if (!dead && op === LOOP && loopWrites.get(at).size) {
                 state = new Map(state);
                 for (const w of loopWrites.get(at)) state.delete(w);

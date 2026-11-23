@@ -1,5 +1,5 @@
 // FunctionCode's operand stack: loads, stores, constants, result destinations, spills.
-import {SP, instruction, ZERO, STACK_REGISTERS, T5} from "../encoding/registers.js";
+import {SP, instruction, ZERO, OPERAND_STACKS, T5, FT10} from "../encoding/registers.js";
 import {loadWord, moveWord, storeWord} from "../encoding/instructions.js";
 import {LOCAL_SET} from "../encoding/tape.js";
 
@@ -57,6 +57,7 @@ export class StackMethods {
         this.spillDepth = Math.max(this.spillDepth, depth + 1);
     }
 
+    // The operand's class is the scratch register's: an f32 consumer pops with an f scratch (ft10, ft11).
     pop(scratch) {
         if (!this.depth) throw new SyntaxError("empty RV32 operand stack");
         const depth = --this.depth;
@@ -65,20 +66,23 @@ export class StackMethods {
             this.direct[depth] = undefined;
             return home;
         }
-        const reg = STACK_REGISTERS[depth];
+        const reg = OPERAND_STACKS[scratch >> 5][depth];
         if (reg !== undefined) return reg;
         this.load(scratch, this.slot(depth));
         return scratch;
     }
 
+    // classes[d]: the register class of the operand at depth d (a call spills and reloads by it).
     push(reg) {
         const depth = this.depth++;
         this.direct[depth] = undefined;
-        const home = STACK_REGISTERS[depth];
+        this.classes[depth] = reg >> 5;
+        const home = OPERAND_STACKS[reg >> 5][depth];
         if (home === undefined) this.spill(depth, reg);
         else this.move(home, reg);
     }
 
-    resultRegister() { return STACK_REGISTERS[this.depth] ?? T5; }
+    // The register a result of class cls (0 integer, 1 float) is computed in.
+    resultRegister(cls = 0) { return OPERAND_STACKS[cls][this.depth] ?? (cls ? FT10 : T5); }
 
 }

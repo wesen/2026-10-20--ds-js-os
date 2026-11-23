@@ -1,16 +1,16 @@
 // The front end's lexer: the token regexp, the reserved words, and the lexical index a host may provide (the P4's C
 // scanner) so that the lexer reads precomputed token rows instead of running the regexp.
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~]))/y;
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+\.\d+(?:[eE][+-]?\d+)?)|(?:\d+[eE][+-]?\d+)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
-const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
+const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32", "f32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer",
     "else", "for", "break", "enum", "match", "type", "distinct",
     "async", "await"]);
 
 // An index belongs to one exact source string in one compilation.
 let lexicalScope = null;
-const indexKinds = ["", "id", "int", "str", "op"];
+const indexKinds = ["", "id", "int", "str", "op", "float"];
 
 function withLexIndices(compile) {
     const provide = globalThis.__typedLexIndex;
@@ -35,6 +35,16 @@ function indexFor(source) {
     };
     sources.set(source, index);
     return index;
+}
+
+// A number token is "float" when it has a fraction or an exponent (1.5, 2e-3, 1.0), else "int" (decimal or hex).
+function numberKind(value) {
+    if (value.length > 1 && (value[1] === "x" || value[1] === "X")) return "int";
+    for (let i = 1; i < value.length; i++) {
+        const c = value.charCodeAt(i);
+        if (c === 46 || c === 101 || c === 69) return "float";
+    }
+    return "int";
 }
 
 class Lexer {
@@ -147,7 +157,7 @@ class Lexer {
             const value = match[1];
             const first = value.charCodeAt(0);
             const id = first === 95 || (first >= 65 && first <= 90) || (first >= 97 && first <= 122);
-            const kind = id ? "id" : first >= 48 && first <= 57 ? "int" : first === 34 ? "str" : "op";
+            const kind = id ? "id" : first >= 48 && first <= 57 ? numberKind(value) : first === 34 ? "str" : "op";
             const at = TOKEN.lastIndex - value.length;
             const current = this.borrowCurrent ? this.token : null;
             if (current) {
@@ -181,6 +191,13 @@ class Lexer {
         return Number(value) | 0;
     }
 
+    // The value of the current "float" token, rounded to f32; a literal that rounds to infinity is an error.
+    floatValue() {
+        const value = Math.fround(Number(this.token.value));
+        if (!Number.isFinite(value)) this.fail("f32 literal out of range " + this.token.value);
+        return value;
+    }
+
     accept(value) {
         if (this.token.value !== value) return false;
         this.next();
@@ -201,7 +218,7 @@ class Lexer {
 
     type(records, enums, distinct) {
         const { value } = this.token;
-        if (value !== "i32" && value !== "bool" && value !== "string" && value !== "buffer" &&
+        if (value !== "i32" && value !== "f32" && value !== "bool" && value !== "string" && value !== "buffer" &&
             !records.has(value) && !enums?.has(value) && !distinct?.has(value))
             this.fail("unknown type " + value);
         this.next();

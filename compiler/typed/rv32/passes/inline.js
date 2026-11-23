@@ -1,5 +1,5 @@
 // The inline pass and the inliner's library candidates.
-import {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP, BR_IF, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, I32, ELSE, RETURN, BR, LITERAL_STORES} from "../encoding/tape.js";
+import {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP, BR_IF, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, I32, F32, VOID, ELSE, RETURN, BR, LITERAL_STORES, FLOATING, tapeRow} from "../encoding/tape.js";
 
 // inline: replace calls to small internal functions lowered earlier with their tapes.
 // A call `args…; call f` becomes `local.set p_{n-1} … local.set p_0; block (result i32)
@@ -63,7 +63,7 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
     // and whether it is a plain local.get (kind 1) or i32.const (kind 2) of `value`; kind 0 is
     // any other value.
     const bases = new Map(), out = [], blocks = [], stackAt = [], stackKind = [], stackValue = [];
-    let locals = fn.params.length + fn.nlocals, loops = 0, changed = false, sp = 0;
+    let locals = fn.params.length + fn.nlocals, loops = 0, changed = false, sp = 0, types;
     const push = (at, kind, value) => { stackAt[sp] = at; stackKind[sp] = kind; stackValue[sp] = value; sp++; };
     const pop = n => { sp = Math.max(0, sp - n); };
     for (let at = 0; at < tape.length;) {
@@ -89,7 +89,7 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
             else if (opcode === CALL) { pop(arity(a)); push(0, 0, 0); }
             else if (opcode >= BLOCK && opcode <= IF) {
                 if (opcode === IF) pop(1);
-                blocks.push({op: opcode, value: a === I32, height: sp});
+                blocks.push({op: opcode, value: a !== VOID, height: sp});
                 if (opcode === LOOP) loops++;
             } else if (opcode === ELSE) sp = blocks.at(-1).height;
             else if (opcode === END && blocks.length) {
@@ -97,6 +97,11 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
                 if (block.op === LOOP) loops--;
                 sp = block.height;
                 if (block.value) push(0, 0, 0);
+            } else if (FLOATING[opcode]) {
+                // An f32 operation: its pops and pushes from tape.js; its result is never a plain local or literal.
+                const row = tapeRow(opcode);
+                pop(row.pop.length);
+                if (row.push.length) push(0, 0, 0);
             }
             continue;
         }
@@ -106,6 +111,11 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
             base = locals;
             bases.set(callee, base);
             locals += callee.params + callee.nlocals;
+            // The callee's local types join the caller's (fn.localTypes, undefined entries are i32).
+            if (callee.types) {
+                const own = types ??= (fn.localTypes ?? []).slice();
+                for (let i = 0; i < callee.types.length; i++) own[base - fn.params.length + i] = callee.types[i];
+            }
         }
         // The arguments are the top callee.params entries (Array.prototype.slice semantics when
         // the abstract stack is shorter).
@@ -125,7 +135,7 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
         for (const arg of subst.filter(Boolean).sort((x, y) => y.at - x.at)) out.splice(arg.at, 2);
         pop(callee.params);
         for (let i = callee.params - 1; i >= 0; i--) if (!subst[i]) out.push(LOCAL_SET, base + i);
-        out.push(BLOCK, I32);
+        out.push(BLOCK, callee.result === "f32" ? F32 : I32);
         const local = v => v < callee.params && subst[v] ? subst[v].local : base + v;
         let depth = 0;
         const body = callee.code;
@@ -144,7 +154,8 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
         push(0, 0, 0);
         changed = true;
     }
-    return changed ? {code: out, nlocals: locals - fn.params.length} : null;
+    if (types) for (let i = 0; i < locals - fn.params.length; i++) types[i] ??= "i32";
+    return changed ? {code: out, nlocals: locals - fn.params.length, localTypes: types ?? fn.localTypes} : null;
 }
 
 // A function the inliner may copy: short, no literal stores (their table is per function),
@@ -160,6 +171,15 @@ export function inlineCandidate(fn, code, limits, guarded) {
         if (op === CHECKED_ADDRESS) for (const v of [code[at + 1], code[at + 2]]) if (v < fn.params.length) addressed[v] = true;
         at += 1 + n;
     }
-    return {params: fn.params.length, written, addressed};
+    return {params: fn.params.length, written, addressed, result: fn.result};
+}
+
+// The types of a library copy's parameters and frame locals, when one is an f32 (inlineCalls copies them into
+// the caller's fn.localTypes); undefined for an integer-only copy.
+export function inlineTypes(fn, copy) {
+    if (!fn.params.includes("f32") && !copy.localTypes) return undefined;
+    const types = fn.params.map(type => type === "f32" ? type : "i32");
+    for (let i = 0; i < copy.nlocals; i++) types.push(copy.localTypes?.[i] ?? "i32");
+    return types;
 }
 

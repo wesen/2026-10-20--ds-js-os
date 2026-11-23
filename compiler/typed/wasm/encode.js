@@ -51,18 +51,59 @@ function pushLiteralStores(out, address, text) {
     }
 }
 
+// f32.to_i32 (RV32F's fcvt.w.s rtz): i32.trunc_sat_f32_s, but 2^31 - 1 for NaN. `scratch` is an f32 local.
+function pushTruncate(out, scratch) {
+    out.push(LOCAL_SET);
+    pushUnsigned(out, scratch);
+    out.push(I32_CONST, 0xff, 0xff, 0xff, 0xff, 0x07, LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(0xfc, 0x00, LOCAL_GET); // i32.trunc_sat_f32_s
+    pushUnsigned(out, scratch);
+    out.push(LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(F32_NE, 0x1b); // NaN: select 2^31 - 1
+}
+
+// f32.min_num and f32.max_num (RV32F's fmin.s, fmax.s): the other operand when one is NaN, else f32.min or f32.max,
+// which order -0 below +0 as fmin.s does. a and b are f32 scratch locals:
+//   select(select(min(a, b), a, b === b), b, a === a)
+function pushMinMax(out, op, a, b) {
+    const get = local => { out.push(LOCAL_GET); pushUnsigned(out, local); };
+    out.push(LOCAL_SET);
+    pushUnsigned(out, b);
+    out.push(LOCAL_SET);
+    pushUnsigned(out, a);
+    get(a); get(b); out.push(op === F32_MIN ? 0x96 : 0x97);
+    get(a); get(b); get(b); out.push(F32_EQ, 0x1b);
+    get(b); get(a); get(a); out.push(F32_EQ, 0x1b);
+}
+
+// The local declarations of a body: runs of one value type.
+function localGroups(types) {
+    const groups = [];
+    for (const type of types) {
+        const last = groups.at(-1);
+        if (last && last[1] === type) last[0]++;
+        else groups.push([1, type]);
+    }
+    return [...unsigned(groups.length), ...groups.flatMap(([count, type]) => [...unsigned(count), type])];
+}
+
 // fn.body: the framed body (size, locals, instructions) of fn's tape. `marks`, when given, receives the byte offset
 // of each tape operation within the instructions, by ordinal. Returns the instructions' length.
 function encodeFunction(fn, marks) {
     const tape = fn.code, out = [];
+    // The expansions of f32.to_i32, f32.min_num and f32.max_num use two f32 scratch locals after the function's own.
+    const first = fn.params.length + fn.nlocals;
+    let scratch = false;
     for (let at = 0; at < tape.length;) {
         const op = tape[at];
         const n = CELLS[op];
         if (marks) marks.push(out.length);
         // Most operands fit one LEB128 byte; those take the short paths.
-        if (n === 1 && op !== I32_CONST && tape[at + 1] < 128) {
+        if (n === 1 && op !== I32_CONST && op !== F32_CONST && tape[at + 1] < 128) {
             out.push(op, tape[at + 1]);
-        } else if (n === 0) {
+        } else if (n === 0 && op < I32_TRUNC_F32) {
             out.push(op);
         } else if (op === I32_CONST) {
             const value = tape[at + 1];
@@ -75,6 +116,15 @@ function encodeFunction(fn, marks) {
             pushCheckedAddress(out, tape[at + 1], tape[at + 2]);
         } else if (op === LITERAL_STORES) {
             pushLiteralStores(out, tape[at + 1], fn.literals[tape[at + 2]]);
+        } else if (op === F32_CONST) {
+            const bits = tape[at + 1];
+            out.push(op, bits & 255, (bits >>> 8) & 255, (bits >>> 16) & 255, bits >>> 24);
+        } else if (op === I32_TRUNC_F32) {
+            scratch = true;
+            pushTruncate(out, first);
+        } else if (op === F32_MIN || op === F32_MAX) {
+            scratch = true;
+            pushMinMax(out, op, first, first + 1);
         } else if (n < 0 || op === UNCHECKED_ADDRESS) {
             throw new Error("no Wasm encoding for tape opcode " + op + " at " + at);
         } else {
@@ -83,7 +133,9 @@ function encodeFunction(fn, marks) {
         }
         at += 1 + n;
     }
-    const locals = fn.nlocals ? [1, ...unsigned(fn.nlocals), I32] : [0];
+    const types = fn.localTypes ? fn.localTypes.map(type => type === "f32" ? F32 : I32) : Array(fn.nlocals).fill(I32);
+    if (scratch) types.push(F32, F32);
+    const locals = !types.length ? [0] : !fn.localTypes && !scratch ? [1, ...unsigned(fn.nlocals), I32] : localGroups(types);
     fn.body = unsigned(locals.length + out.length).concat(locals, out);
     return out.length;
 }

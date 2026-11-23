@@ -3,11 +3,12 @@ import {AddressMethods} from "./addresses.js";
 import {ArithmeticMethods} from "./arithmetic.js";
 import {BranchMethods} from "./branches.js";
 import {CallMethods} from "./calls.js";
+import {FloatMethods, FLOAT_OPERATIONS} from "./floats.js";
 import {HomeMethods} from "./homes.js";
 import {observeSteps} from "./inspection.js";
 import {mixin} from "./mixin.js";
 import {StackMethods} from "./stack.js";
-import {instruction, T5, A0, FA0, ZERO, T6, SP, RA, calleeRegisters} from "../encoding/registers.js";
+import {instruction, T5, A0, FA0, FT10, ZERO, T6, SP, RA, calleeRegisters} from "../encoding/registers.js";
 import {storeWord} from "../encoding/instructions.js";
 import {BLOCK, RETURN, I32_CONST, UNCHECKED_ADDRESS, I32_LOAD16_U, LOCAL_GET, I32_LOAD, I32_EQZ, I32_GE_U, UNREACHABLE, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_SET, I32_STORE, I32_STORE16, CHECKED_ADDRESS, LITERAL_STORES} from "../encoding/tape.js";
 
@@ -24,6 +25,7 @@ export class FunctionCode {
         // direct[d] names the home register of a local read that is still pending at operand
         // depth d. Its consumer reads the home itself, so no copy is emitted.
         this.direct = [];
+        this.classes = [];
         this.exit = {};
         // ilp32f: an f32 result returns in fa0, every other in a0.
         this.returnRegister = program.result === "f32" ? FA0 : A0;
@@ -102,7 +104,7 @@ export class FunctionCode {
             else this.jump(target);
             break;
         }
-        case RETURN: this.move(this.returnRegister, this.pop(A0)); this.jump(this.exit); break;
+        case RETURN: this.move(this.returnRegister, this.pop(this.returnRegister)); this.jump(this.exit); break;
         case CALL: this.call(this.cell()); break;
         case DROP: this.depth--; break;
         case LOCAL_GET: {
@@ -113,13 +115,13 @@ export class FunctionCode {
                 break;
             }
             const stored = this.destination();
-            const out = stored ?? this.resultRegister();
+            const out = stored ?? this.resultRegister(this.localClass(local));
             this.readLocal(out, local);
             this.result(out, stored);
             break;
         }
         case LOCAL_SET: {
-            const value = this.pop(T5), local = this.cell();
+            const value = this.pop(this.localClass(this.program.code[this.at]) ? FT10 : T5), local = this.cell();
             this.writeLocal(value, local);
             this.pointersAfterWrite(local, this.at - 2, value);
             break;
@@ -183,7 +185,9 @@ export class FunctionCode {
             }
             break;
         }
-        default: this.binary(op);
+        default:
+            if (FLOAT_OPERATIONS[op]) this.float(op);
+            else this.binary(op);
         }
         return false;
     }
@@ -228,4 +232,4 @@ export class FunctionCode {
         return this;
     }
 }
-mixin(FunctionCode, StackMethods, HomeMethods, AddressMethods, BranchMethods, ArithmeticMethods, CallMethods);
+mixin(FunctionCode, StackMethods, HomeMethods, AddressMethods, BranchMethods, ArithmeticMethods, CallMethods, FloatMethods);
