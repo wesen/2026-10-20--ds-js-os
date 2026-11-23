@@ -153,3 +153,37 @@ The playable build at `bf30d31` is installed and recorded. SPLIT-FILES is merged
 
 - **Long files left alone:** the two `compositor.js` files and `agent.js` (a QuickJS world loads one file), and `sdk/typed/world.c` and `agent_p4.c` (compiled from APP-MANIFEST's lists). They have tasks in its ticket.
 - **PaperS3 links fail before and after.** `native.c` was never in its CMake list, and the host build is missing `port_net_*` and `port_tz_set`.
+
+## Step 5: APP-MANIFEST and FRONTEND merged; the board and its record disagreed; wave 3
+
+Wave 1 is now fully merged (TAPE, CONFORMANCE, SPLIT-FILES, APP-MANIFEST), and so is the first wave-2 ticket (FRONTEND). APP-MANIFEST's merge had six conflicts. ASYNC-TAPE and AGENDA-TYPED-WORLD are unblocked and started. A probe showed that the board was not running the image `PLAYABLE.json` recorded.
+
+### What I did
+
+- **APP-MANIFEST merge** (`c8b5846`). Six conflicts:
+  - `firmware/nucleus/kernel.c`. SPLIT-FILES had moved the boot section (`kernel_init`, `add_world`, `kernel_boot`) to `kernel_supervision.c`. I kept that layout and carried APP-MANIFEST's manifest fallback (a world whose compiled file is missing runs its `"fallback"` JS) into `kernel_supervision.c`'s `add_world`. APP-MANIFEST's removal of the Agenda boot hooks merged cleanly; `grep` finds no `p4_agenda_` left in the nucleus.
+  - `firmware/port/esp32p4/main/CMakeLists.txt`. I took APP-MANIFEST's structure (the `cmake/*.cmake` includes, 96 lines) and kept SPLIT-FILES' split nucleus sources, minus the benchmarks APP-MANIFEST moved out (`raybench_p4.c`, `perf_p4.c`). `typed/tape.js` joined `TYPED_COMPILER` in `cmake/typed-apps.cmake`.
+  - `firmware/port/esp32p4/main/typed_p4.c`. Took APP-MANIFEST's rewritten eval chain; `typed/tape.js` is evaluated before `typed/wasm.js`. TAPE's 12-entry bytecode cache survived.
+  - `firmware/Makefile`. SPLIT-FILES' `../tests/native/` paths plus APP-MANIFEST's new fallback test, which I moved to `tests/native/` with `git mv`. It imports its harness from `test_fs_native.py` next to it.
+  - `firmware/README.md` and `tools/trace-repl/README.md`. Kept both sides' edits.
+  - Also removed the `main/CMakeLists.txt` entry from the file-length exceptions.
+- **A test broken by the merge.**
+
+  ```
+  Error: ENOENT: no such file or directory, open '…/apps/typed/editor/source.list'
+  ```
+
+  TAPE's tape-coverage test assembled units from `source.list`, which APP-MANIFEST replaced with `app.json`'s `sources`. The test now reads `app.json`. After the fix, `make test` exit 0, and the gates pass (both policies; digests and counts as before; 24/24).
+- **FRONTEND merge.** Clean. `make test` exit 0; gates pass.
+- **Wave 3.**
+  - Started ASYNC-TAPE (needs TAPE and FRONTEND) and AGENDA-TYPED-WORLD (needs APP-MANIFEST).
+  - Sent PIPELINE the new bundle wiring (`TYPED_COMPILER`, the `app.json` compiler modules, FRONTEND's kept fifth parameter).
+  - BITWISE waits for PIPELINE, because it edits the RV32 emitters PIPELINE is restructuring.
+- **Firmware.** Started a build of the playable profile at the FRONTEND merge, its install with `--peripherals off-by-user`, and the gallery's digest check.
+
+### What didn't work
+
+- **The probe.** `python3 bench/board/run.py --probe` failed at `esptool.py … verify_flash 0x10000 …/1f99bf38…/picocalc-os-p4.bin` (exit status 2). APP-MANIFEST's last step was `make restore-playable` in its worktree, whose `PLAYABLE.json` still named `f8f36bd1`. So it overwrote the `1f99bf38` I had installed and recorded in Step 4.
+  - **Lesson:** "restore the playable image" in a worktree restores that branch's record, not `main`'s.
+  - **Fix for the remaining briefs:** pass the restore target explicitly, or tell agents to merge `main` first. The current briefs say "restore the playable image"; ASYNC-TAPE and AGENDA-TYPED-WORLD start from a `main` whose record is replaced by this step's install, so theirs will also be stale. I'll check the board after each ticket with `--probe`.
+- **The keyboard.** APP-MANIFEST saw it work with peripherals on at the start of its board session, then fail on every transfer, on the old image as well. That fits the keyboard controller wedging after resets of only the ESP32, a failure noted in earlier tickets. Not debugged. The handheld needs a power cycle by a person.
