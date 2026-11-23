@@ -10,7 +10,7 @@ for each run "gallery digest ID PASSES psram ARM". The frame-0, accumulation and
 reference: for the C++ kernel (cpp), bench/reference/candela-gallery/rv32-4-passes.jsonl, which
 PICOCALC-CANDELA-GALLERY's 04-build-ref.py wrote from the same kernel compiled for rv32emu; for the Typed kernel
 (typed), typed-4-passes.jsonl, which PICOCALC-CANDELA-TYPED's 03-typed-ref.py wrote from the generated program's
-WebAssembly build (bit-identical to its RV32 build) through the gallery's renderer core. Writes OUT/{uart.log,cgal.jsonl,gallery.json,boot.png}.
+WebAssembly build (bit-identical to its RV32 build) through the gallery's renderer core built for RV32 with newlib. Writes OUT/{uart.log,cgal.jsonl,gallery.json,boot.png}.
 Promoted from PICOCALC-CANDELA-GALLERY scripts/06-run-device.py (digests and the screen capture only).
 """
 import argparse

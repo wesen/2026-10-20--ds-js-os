@@ -1,18 +1,18 @@
-{"target": "typed", "id": "B-01", "passes": 4, "frame0": "952a91d9", "acc": "03389cb1", "disp": "23d7885f", "ev100": 15.3618046}
-{"target": "typed", "id": "R-01", "passes": 4, "frame0": "e8421c97", "acc": "2ac5b8e1", "disp": "1d7de02e", "ev100": 8.34674494}
-{"target": "typed", "id": "L-03", "passes": 4, "frame0": "ef2d5682", "acc": "c0519f24", "disp": "e95af902", "ev100": 16.1636437}
-{"target": "typed", "id": "G-01", "passes": 4, "frame0": "a45f84f4", "acc": "4f2687d5", "disp": "7e548c18", "ev100": 16.3263756}
-{"target": "typed", "id": "E-02", "passes": 4, "frame0": "de9e22b5", "acc": "6edba2ef", "disp": "74c3f85c", "ev100": 1.33111636}
-{"target": "typed", "id": "W-02", "passes": 4, "frame0": "34a669ff", "acc": "865eba2b", "disp": "dd654b4c", "ev100": 4.3477875}
-{"target": "typed", "id": "F-01", "passes": 4, "frame0": "e8da867b", "acc": "89ae4615", "disp": "cd329f1d", "ev100": 15.6120594}
-{"target": "typed", "id": "V-02", "passes": 4, "frame0": "323f1585", "acc": "3f4c9748", "disp": "1b6b5329", "ev100": 9.52518496}
-{"target": "typed", "id": "G-02", "passes": 4, "frame0": "7834364c", "acc": "81a65012", "disp": "d44b337a", "ev100": 8.39601048}
-{"target": "typed", "id": "X-04", "passes": 4, "frame0": "2b9af109", "acc": "a0aafa50", "disp": "450d2ead", "ev100": 12.9090618}
-{"target": "typed", "id": "S-02", "passes": 4, "frame0": "e32b0f6b", "acc": "a4d9bc0b", "disp": "4785e5ad", "ev100": 4.61396072}
-{"target": "typed", "id": "R-05", "passes": 4, "frame0": "b788ad87", "acc": "cae0fb77", "disp": "658822ca", "ev100": 3.13992084}
-{"target": "typed", "id": "V-03", "passes": 4, "frame0": "e88f0e5b", "acc": "2716306a", "disp": "b995fd34", "ev100": 12.0962195}
-{"target": "typed", "id": "V-04", "passes": 4, "frame0": "a46f068e", "acc": "09e15ac2", "disp": "38566376", "ev100": 16.3997007}
-{"target": "typed", "id": "R-08", "passes": 4, "frame0": "ded85666", "acc": "12245ce3", "disp": "280382f5", "ev100": 15.0614069}
-{"target": "typed", "id": "X-03", "passes": 4, "frame0": "390c87ec", "acc": "4f975e1b", "disp": "74f26c85", "ev100": 14.5}
-{"target": "typed", "id": "R-04", "passes": 4, "frame0": "ba5a82a2", "acc": "7d26976a", "disp": "60762acb", "ev100": 14.4608127}
-{"target": "typed", "id": "G-03", "passes": 4, "frame0": "99eb690e", "acc": "74757b03", "disp": "591fba79", "ev100": 15.3375476}
+{"target": "typed-rv32", "id": "B-01", "passes": 4, "frame0": "952a91d9", "acc": "03389cb1", "disp": "23d7885f"}
+{"target": "typed-rv32", "id": "R-01", "passes": 4, "frame0": "e8421c97", "acc": "2ac5b8e1", "disp": "1d7de02e"}
+{"target": "typed-rv32", "id": "L-03", "passes": 4, "frame0": "ef2d5682", "acc": "c0519f24", "disp": "e95af902"}
+{"target": "typed-rv32", "id": "G-01", "passes": 4, "frame0": "a45f84f4", "acc": "4f2687d5", "disp": "7e548c18"}
+{"target": "typed-rv32", "id": "E-02", "passes": 4, "frame0": "de9e22b5", "acc": "6edba2ef", "disp": "74c3f85c"}
+{"target": "typed-rv32", "id": "W-02", "passes": 4, "frame0": "34a669ff", "acc": "865eba2b", "disp": "dd654b4c"}
+{"target": "typed-rv32", "id": "F-01", "passes": 4, "frame0": "e8da867b", "acc": "89ae4615", "disp": "f8c78640"}
+{"target": "typed-rv32", "id": "V-02", "passes": 4, "frame0": "323f1585", "acc": "3f4c9748", "disp": "1b6b5329"}
+{"target": "typed-rv32", "id": "G-02", "passes": 4, "frame0": "7834364c", "acc": "81a65012", "disp": "ada1739a"}
+{"target": "typed-rv32", "id": "X-04", "passes": 4, "frame0": "2b9af109", "acc": "a0aafa50", "disp": "450d2ead"}
+{"target": "typed-rv32", "id": "S-02", "passes": 4, "frame0": "e32b0f6b", "acc": "a4d9bc0b", "disp": "4785e5ad"}
+{"target": "typed-rv32", "id": "R-05", "passes": 4, "frame0": "b788ad87", "acc": "cae0fb77", "disp": "658822ca"}
+{"target": "typed-rv32", "id": "V-03", "passes": 4, "frame0": "e88f0e5b", "acc": "2716306a", "disp": "b995fd34"}
+{"target": "typed-rv32", "id": "V-04", "passes": 4, "frame0": "a46f068e", "acc": "09e15ac2", "disp": "38566376"}
+{"target": "typed-rv32", "id": "R-08", "passes": 4, "frame0": "ded85666", "acc": "12245ce3", "disp": "280382f5"}
+{"target": "typed-rv32", "id": "X-03", "passes": 4, "frame0": "390c87ec", "acc": "4f975e1b", "disp": "74f26c85"}
+{"target": "typed-rv32", "id": "R-04", "passes": 4, "frame0": "ba5a82a2", "acc": "7d26976a", "disp": "60762acb"}
+{"target": "typed-rv32", "id": "G-03", "passes": 4, "frame0": "99eb690e", "acc": "74757b03", "disp": "591fba79"}

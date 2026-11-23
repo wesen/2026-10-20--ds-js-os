@@ -11,6 +11,7 @@
 #include "candela_gallery.h"
 #include "esp_elf.h"
 #include "esp_heap_caps.h"
+#include "esp_task_wdt.h"
 #include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -19,6 +20,20 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
+
+// The task watchdog's configuration as sdkconfig sets it, restored after the compile.
+#if CONFIG_ESP_TASK_WDT_PANIC
+#define WDT_PANIC true
+#else
+#define WDT_PANIC false
+#endif
+#ifndef CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0
+#define CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0 0
+#endif
+#ifndef CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1
+#define CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1 0
+#endif
+#define WDT_IDLE (CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU0 | CONFIG_ESP_TASK_WDT_CHECK_IDLE_TASK_CPU1 << 1)
 
 typedef int (*layout_fn)(uint32_t *out);
 typedef int (*k_fn)(uint32_t *k);
@@ -41,8 +56,9 @@ static uint32_t *typed_buffer(uint32_t units) {
   return b;
 }
 
-// The compile runs on a task with a QuickJS-sized stack in PSRAM (the gallery's tasks have 24 KB), on core 0 at the
-// idle priority, while the caller waits. The relocation disables the caches, which a task may do only from an internal
+// The compile runs on a task with a QuickJS-sized stack in PSRAM (the gallery's tasks have 24 KB), on core 0 at
+// priority 1, while the caller waits. It keeps IDLE0 from running for the whole compile, so core 0's idle task leaves
+// the task watchdog meanwhile (at priority 0 it shared the core with IDLE0 and took twice as long: 172 s against 86 s). The relocation disables the caches, which a task may do only from an internal
 // stack (cache_utils.c asserts it), so it runs on a second, small task with an internal-RAM stack.
 typedef struct { char *image; size_t length; uintptr_t entries[4]; int relocated; TaskHandle_t waiter; } load_job;
 static void compile_task(void *arg) {
@@ -62,9 +78,9 @@ static void relocate_task(void *arg) {
   xTaskNotifyGive(j->waiter);
   vTaskSuspend(NULL);
 }
-static bool on_task(TaskFunction_t f, const char *name, uint32_t stack, int core, UBaseType_t caps, load_job *j) {
+static bool on_task(TaskFunction_t f, const char *name, uint32_t stack, UBaseType_t prio, int core, UBaseType_t caps, load_job *j) {
   TaskHandle_t h = NULL;
-  if (xTaskCreatePinnedToCoreWithCaps(f, name, stack, j, 0, &h, core, caps) != pdPASS) return false;
+  if (xTaskCreatePinnedToCoreWithCaps(f, name, stack, j, prio, &h, core, caps) != pdPASS) return false;
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
   vTaskDeleteWithCaps(h);
   return true;
@@ -76,12 +92,17 @@ static bool load(char *err, size_t n) {
   failed = true;
   const int64_t t0 = esp_timer_get_time();
   load_job j = {.waiter = xTaskGetCurrentTaskHandle()};
-  if (!on_task(compile_task, "cgt-compile", COMPILE_STACK, 0, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT, &j)) {
+  const esp_task_wdt_config_t wdt = {CONFIG_ESP_TASK_WDT_TIMEOUT_S * 1000, 0, WDT_PANIC};
+  esp_task_wdt_reconfigure(&wdt);
+  const bool compiled = on_task(compile_task, "cgt-compile", COMPILE_STACK, 1, 0, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT, &j);
+  const esp_task_wdt_config_t wdt0 = {CONFIG_ESP_TASK_WDT_TIMEOUT_S * 1000, WDT_IDLE, WDT_PANIC};
+  esp_task_wdt_reconfigure(&wdt0);
+  if (!compiled) {
     snprintf(err, n, "no stack for the Typed kernel's compile");
     return false;
   }
   const int64_t t1 = esp_timer_get_time();
-  const bool ran = j.image && on_task(relocate_task, "cgt-reloc", RELOCATE_STACK, 1, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT, &j);
+  const bool ran = j.image && on_task(relocate_task, "cgt-reloc", RELOCATE_STACK, 1, 1, MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT, &j);
   free(j.image);
   if (!ran || !j.relocated) {
     snprintf(err, n, j.image ? "the Typed kernel did not relocate" : "the Typed kernel did not compile");

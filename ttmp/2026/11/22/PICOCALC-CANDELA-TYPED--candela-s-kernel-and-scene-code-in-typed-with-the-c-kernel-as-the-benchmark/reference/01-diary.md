@@ -281,3 +281,109 @@ answering, which fails every install's health check, playable's included.
 ### Technical details
 - Host Typed digests (frame0/acc/disp): `bench/reference/candela-gallery/typed-4-passes.jsonl`, e.g. B-01
   952a91d9 / 03389cb1 / 23d7885f.
+
+## Step 4: The Typed arm on the device, 18/18 on both arms, and the paired study
+
+After the user power-cycled the board, the relocation fix worked: the handheld compiles the 372 KB Typed program in
+85 s, relocates it in 59 ms and draws all 18 scenes. Their frame0, accumulation and display digests equal the host
+reference, once that reference's display pass was built the same way as the C++ one: RV32 with newlib, not x86-64.
+In a 4-block paired study the Typed kernel takes 1.76 times the C++ kernel's cycles per sample (geometric mean over
+18 scenes). Per scene that ranges from 0.81x (faster than C++) to 2.79x.
+
+### Prompt Context
+**User prompt (verbatim, coordinator):** "The user power-cycled the PicoCalc; the keyboard answers again ... Please
+continue PICOCALC-CANDELA-TYPED from "What's left": 1. Build the candela-typed profile, run scripts/04-device.py with
+the relocation-on-internal-stack fix ... 2. `bench/board/gallery.py OUT --arm typed` and `--arm cpp`: 18/18 each ...
+3. Finish the 18-scene Wasm-vs-RV32 host run ... 4. If time allows, milestone 4: a paired board study ... Do NOT make
+Typed the playable default (milestone 5) — an 86 s compile needs a cache first; record it as a task. ... if the
+keyboard wedges again (I2C NACKs after a panic), stop board work and report — do not retry."
+**Assistant interpretation:** Finish milestones 3 and 4 on the board under the same rules; leave the default arm C++.
+**Inferred user intent:** Decide with device numbers how far the Typed kernel is from the C++ yardstick.
+**Commit (code):** a21a3bd — "fix(gallery): the Typed arm compiles at priority 1, and its display digests come from an RV32 newlib replay"
+
+### What I did
+- Merged main (f755865) into the branch (fast-forward).
+- `firmware/port/esp32p4/build.sh candela-typed /tmp/candela-typed-fw3` (clean tree, app 2647c67b, the same digest as
+  the earlier dirty build: reproducible). `scripts/04-device.py /tmp/candela-typed-dev4 --install ...
+  "gallery digest B-01 4 psram typed" "... cpp"`.
+- Compile priority back to 1, with core 0's idle task out of the task watchdog during the compile
+  (`esp_task_wdt_reconfigure`). Rebuilt (6c7e2ca0, `/tmp/candela-typed-fw4`); `/tmp/candela-typed-dev5`; then
+  `bench/board/gallery.py /tmp/candela-typed-gal-typed --arm typed` and `/tmp/candela-typed-gal-cpp --arm cpp`.
+- `scripts/03-typed-ref.py` now builds the replay for rv32imafc with ESP-IDF's toolchain and newlib (the dump linked
+  in with `.incbin`) and runs it in PICOCALC-CANDELA-SECTIONS' counting interpreter; `--host` keeps the x86 replay.
+- `scripts/05-paired.py /tmp/candela-typed-paired --blocks 4`: 18 scenes x 2 arms x 4 blocks, with the order
+  alternating by block. Results in `various/device-6c7e2ca0/`.
+- `cd <main checkout> && make restore-playable`: 2be7f2af, health passed with peripherals on.
+
+### What worked
+- Image 2647c67b (compile at idle priority): `"typed-load","compileMs":172019.7,"relocateMs":81.2`, B-01 typed
+  `frame0 952a91d9 acc 03389cb1 disp 23d7885f`, equal to the host.
+- Image 6c7e2ca0 (priority 1): `candela-gallery compile source=bundle status=ok us=84807015 peak_js_bytes=16273328
+  module_bytes=787712`, `relocateMs 59.3`, arena 13,557 words; no watchdog messages.
+- Boot compiles on 6c7e2ca0: Chess 4,190,563 us (69.8% of 6,000 ms), Chess painter 5,750,067 us (71.9% of 8,000),
+  Editor 3.42 s, Agenda 2.65 s, Files 1.45 s, Candela 2.54 s.
+- gallery.py `--arm cpp`: 18/18 agree with rv32-4-passes.jsonl. `--arm typed`: 16/18 against the x86 reference;
+  18/18 against the RV32 newlib reference (rescored from its cgal.jsonl; the paired study's 144 digests all equal
+  the new reference too).
+- Paired study, medians over 4 blocks, 4 passes at 160x160 (tight per-block ranges, e.g. B-01 2.49-2.51):
+
+  | scene | Typed cyc/sample | C++ cyc/sample | ratio | Typed s/pass | C++ s/pass |
+  |---|---:|---:|---:|---:|---:|
+  | B-01 | 32,434 | 13,022 | 2.49 | 2.31 | 0.93 |
+  | R-01 | 54,131 | 20,089 | 2.70 | 3.85 | 1.43 |
+  | L-03 | 26,240 | 10,455 | 2.51 | 1.87 | 0.74 |
+  | G-01 | 50,466 | 20,709 | 2.44 | 3.59 | 1.47 |
+  | E-02 | 19,711 | 10,207 | 1.93 | 1.40 | 0.73 |
+  | W-02 | 75,778 | 30,458 | 2.49 | 5.39 | 2.17 |
+  | F-01 | 37,382 | 15,178 | 2.46 | 2.66 | 1.08 |
+  | V-02 | 76,564 | 27,480 | 2.79 | 5.45 | 1.95 |
+  | G-02 | 61,534 | 37,042 | 1.66 | 4.38 | 2.63 |
+  | X-04 | 62,459 | 73,300 | 0.85 | 1.11 | 1.30 |
+  | S-02 | 90,837 | 50,122 | 1.81 | 1.62 | 0.89 |
+  | R-05 | 80,239 | 35,664 | 2.24 | 1.43 | 0.63 |
+  | V-03 | 145,830 | 92,807 | 1.57 | 2.59 | 1.65 |
+  | R-04 | 1,472,683 | 1,127,424 | 1.30 | 26.18 | 20.04 |
+  | V-04 | 267,695 | 177,161 | 1.51 | 4.76 | 3.15 |
+  | G-03 | 1,866,066 | 1,329,444 | 1.40 | 33.18 | 23.64 |
+  | R-08 | 180,198 | 221,465 | 0.81 | 3.20 | 3.94 |
+  | X-03 | 744,668 | 750,979 | 0.99 | 13.24 | 13.35 |
+
+  Geometric mean of the cycle ratios: 1.764.
+- Host Wasm vs RV32 (`kernel`, reference interpreter): 18/18 scenes bit-identical on every float of 4 passes (G-03 last, about 2 h on the interpreter).
+
+### What didn't work
+- At the idle priority the compile shared core 0 with IDLE0 round-robin: 172 s instead of 85 s.
+- gallery.py `--arm typed` against the first reference: `F-01: DIFFERS frame0 e8da867b acc 89ae4615`, `G-02:
+  DIFFERS frame0 7834364c acc 81a65012` (the frame0 and acc digests equal; `disp` device f8c78640 / ada1739a, x86
+  reference cd329f1d / d44b337a). G-02's arms are bit-identical in accumulation, and the device's typed disp
+  equals the C++ arm's rv32 disp (ada1739a), so the x86 replay was wrong, not the device: the display pass's tone
+  map calls libm (glibc vs newlib). The RV32 newlib replay gives f8c78640 and ada1739a.
+
+### What I learned
+- Where the Typed arm wins (R-08 0.81, X-04 0.85, X-03 0.99) the C++ arm runs scene code in its section
+  interpreter (cdl_vm), and the Typed arm runs it as native code. Where the C++ arm wins by 2.5x (B-01, R-01, L-03,
+  V-02) the time is in the fixed kernel, which GCC compiles better than Typed. So the compiler's gap is in the
+  kernel's f32 code: frames in memory (static frame records instead of registers), vector components through K's
+  r1..r3, the inline pass's huge frames.
+- An 85 s compile and a 16.3 MB QuickJS heap for 372 KB of Typed: the arm is usable on demand, not at boot.
+
+### What was tricky to build
+- Reproducing the device's display digest off the device: the reference must use the device's libm, so the replay
+  had to become a bare-metal RV32 program with a 4.9 MB dump linked into its ELF.
+
+### What warrants a second pair of eyes
+- `esp_task_wdt_reconfigure` around the compile: other tasks' subscriptions stay, only the idle mask changes, and
+  the restore uses sdkconfig's values (CPU0 idle checked, no panic).
+
+### What should be done in the future
+- Milestone 5 (not done, per the coordinator): a cache for the compiled image, then the Typed arm as default.
+- Compiler work aimed at the fixed kernel (see "What I learned"); this study is its baseline.
+
+### Code review instructions
+- `firmware/port/esp32p4/main/candela_typed_p4.c` (`load`, `on_task`), `scripts/03-typed-ref.{c,py}`, `scripts/05-paired.py`.
+- Reproduce: `build.sh candela-typed DIR`; `04-device.py OUT --install DIR "gallery digest B-01 4 psram typed"`;
+  `bench/board/gallery.py OUT --arm typed|cpp`; `05-paired.py OUT --blocks 4`; then `make restore-playable` from main.
+
+### Technical details
+- Data: `various/device-6c7e2ca0/` (paired-summary.json, paired-rows.jsonl, gallery-typed.json (scored against the
+  old x86 reference), gallery-cpp.json, dev5-cgal.jsonl, dev5-compiles.txt, dev5-boot-compiles.txt).
