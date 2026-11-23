@@ -47,3 +47,28 @@ The backend treats registers as integers 0–31 everywhere: `00-encoding.js` (re
 - **Moves and deletes** go through checked Python scripts in the ticket's `scripts/` (dry run, asserted counts), never shell one-liners.
 - **Diary.** Each ticket keeps `reference/01-diary.md` in the investigation format (Prompt Context, What I did, Why, What worked, What didn't work with exact errors, What I learned, What was tricky, What warrants a second pair of eyes, Future work, Code review instructions, Technical details), one step per milestone, with commit hashes.
 - **Commits** are focused, at validated boundaries, with the trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+
+## Refinements (2026-11-22)
+
+- **Where the code is.** The design names `00-encoding.js`; after PICOCALC-TYPED-PIPELINE the encoders live in
+  `rv32/encoding/registers.js` (the six integer formats `instruction.{r,i,s,b,j}`), the planner in `rv32/plan/` and the
+  emitter in `rv32/emit/`. The table is a new module, `rv32/encoding/instructions.js`.
+- **Register representation: an integer with a class bit.** `x_n` is `n`, `f_n` is `32 + n`; `reg >> 5` is the class.
+  Integer code keeps its numbers, so every integer encoder and every comparison in the emitters is unchanged, and the
+  only added work on the integer path is one `reg < 32` test in `load`, `store` and `move`. `{cls, n}` objects would
+  have allocated per operand and touched every emitter line.
+- **The table and the formats.** The emitters keep calling the integer formats (`instruction.*`): rewriting their ~70
+  call sites to mnemonics would have collided with PICOCALC-TYPED-BITWISE in `emit/arithmetic.js` for no output change.
+  A test instead checks that the formats agree with the table on random operands, and that every `ALU` and
+  `IMMEDIATE_FORMS` entry of `selection.js` (including BITWISE's and/or/xor/srl and andi/ori/xori/srli) is a table row.
+- **Encoders made on first use.** `encoder(key)` makes and keeps a row's encoder; making all 85 closures at load cost
+  the bare QuickJS realm 35 KB. The assembler text writer (`encoding/assembly.js`) is in no bundle.
+- **Classes in the planner.** A key's class comes from `fn.params` and `fn.localTypes` (frame locals; the front end
+  does not write it yet: PICOCALC-TYPED-F32 adds it). `planSavedHomes` keeps one free list per class with the same
+  rules; the float class takes part only when the function has an `f32` parameter or local, so integer-only functions
+  plan exactly as before (including the early stop at the first unaffordable key).
+- **ABI.** `argumentRegisters(params)` assigns `a0`-`a7` and `fa0`-`fa7` independently (ilp32f); an `f32` result
+  returns in `fa0`. The operand stack stays in `t0`-`t4`: a float crosses into and out of it with `fmv.x.w`/`fmv.w.x`.
+  F32 decides whether floats get their own operand stack (`REGISTER_CLASSES[F].stack` is reserved as `ft0`-`ft4`).
+- **The synthetic fragment.** The tape has no float operations, and the planner returns no plan for an unknown opcode,
+  so the test's float additions are calls to an intrinsic import that its emitter subclass lowers to `fadd.s`.
