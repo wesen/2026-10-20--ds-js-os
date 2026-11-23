@@ -1,7 +1,7 @@
 // RV32 registers, their classes and the six integer instruction formats. A register is a number: x_n is n, f_n is
 // 32 + n, so reg >> 5 is its class and integer code keeps its numbers. The formats below must not get an f register.
 export const X = 0, F = 1;
-export const ZERO = 0, RA = 1, SP = 2, A0 = 10, T5 = 30, T6 = 31;
+export const ZERO = 0, RA = 1, SP = 2, S0 = 8, A0 = 10, T5 = 30, T6 = 31;
 export const F0 = 32, FA0 = 42, FT10 = 62, FT11 = 63;
 export const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
 export const classOf = reg => reg >> 5;

@@ -1,5 +1,8 @@
 // FunctionCode's operand stack: loads, stores, constants, result destinations, spills.
-import {SP, instruction, ZERO, OPERAND_STACKS, T5, FT10} from "../encoding/registers.js";
+import {SP, S0, instruction, ZERO, OPERAND_STACKS, T5, FT10} from "../encoding/registers.js";
+
+// A large frame's second base: s0 = sp + LARGE_BASE reaches the slots at LARGE_BASE and above (function-code.js).
+export const LARGE_BASE = 2032;
 import {loadWord, moveWord, storeWord} from "../encoding/instructions.js";
 import {LOCAL_SET} from "../encoding/tape.js";
 
@@ -7,11 +10,13 @@ export class StackMethods {
     // A float register (32-63) loads and stores a word (flw, fsw); kind is the integer width (lw, lhu, sh...).
     load(reg, offset, base = SP, kind = 2) {
         if (base === SP) this.usesFrame = true;
+        if (base === SP && offset >= LARGE_BASE && this.large) { base = S0; offset -= LARGE_BASE; }
         this.emit(reg < 32 ? instruction.i(0x03, reg, kind, base, offset) : loadWord(reg, offset, base));
     }
 
     store(reg, offset, base = SP, kind = 2) {
         if (base === SP) this.usesFrame = true;
+        if (base === SP && offset >= LARGE_BASE && this.large) { base = S0; offset -= LARGE_BASE; }
         this.emit(reg < 32 ? instruction.s(kind, base, reg, offset) : storeWord(reg, offset, base));
     }
 
@@ -52,7 +57,7 @@ export class StackMethods {
     }
 
 
-    slot(depth) { return 4 * (this.locals + depth); }
+    slot(depth) { return (this.slotBase ?? 0) + 4 * (this.locals + depth); }
 
     spill(depth, reg) {
         this.store(reg, this.slot(depth));

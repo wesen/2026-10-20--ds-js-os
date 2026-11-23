@@ -15,9 +15,12 @@ function signature(fn) {
     return [0x60, ...vec(fn.params.map(valueType)), 1, valueType(fn.result)];
 }
 
+// options.maxSourceLength (default 64 KiB) and options.memoryPages (the exported memory's fixed size in 64 KiB pages,
+// default 1) serve large programs such as the Candela kernel (PICOCALC-CANDELA-TYPED); the defaults keep every module.
 function compile(source, options) {
     const {functions, records, enums, distinct, asyncLayout, asyncSource} =
-        compileWasmFunctions(source, 0, [], undefined, options);
+        compileWasmFunctions(source, 0, [], options?.maxSourceLength, options);
+    const pages = options?.memoryPages ?? 1;
     const headers = functions.map(signature);
     const names = functions.map((fn, i) => [
         ...vec(Array.from(fn.name, char => char.charCodeAt(0))), 0, ...unsigned(i),
@@ -26,7 +29,7 @@ function compile(source, options) {
         0, 0x61, 0x73, 0x6d, 1, 0, 0, 0,
         ...section(1, vec(headers)),
         ...section(3, vec(functions.map((_, i) => unsigned(i)))),
-        ...section(5, [1, 1, 1, 1]),
+        ...section(5, [1, 1, ...unsigned(pages), ...unsigned(pages)]),
         ...section(7, vec([...names, [...vec([109,101,109,111,114,121]), 2, 0]])),
         ...section(10, vec(functions.map(fn => fn.body))),
     ]);

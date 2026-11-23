@@ -8,8 +8,12 @@ import {HomeMethods} from "./homes.js";
 import {observeSteps} from "./inspection.js";
 import {mixin} from "./mixin.js";
 import {StackMethods} from "./stack.js";
-import {instruction, T5, A0, FA0, FT10, ZERO, T6, SP, RA, calleeRegisters} from "../encoding/registers.js";
-import {storeWord} from "../encoding/instructions.js";
+import {instruction, T5, A0, FA0, FT10, ZERO, T6, SP, RA, S0, calleeRegisters} from "../encoding/registers.js";
+import {LARGE_BASE} from "./stack.js";
+
+// Above this many bytes of locals and saved registers a function takes the large-frame form (see lower()).
+const LARGE_FRAME_LOCALS = 1900;
+import {loadWord, storeWord} from "../encoding/instructions.js";
 import {BLOCK, RETURN, I32_CONST, UNCHECKED_ADDRESS, I32_LOAD16_U, LOCAL_GET, I32_LOAD, I32_EQZ, I32_GE_U, UNREACHABLE, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_SET, I32_STORE, I32_STORE16, CHECKED_ADDRESS, LITERAL_STORES} from "../encoding/tape.js";
 
 export class FunctionCode {
@@ -212,13 +216,26 @@ export class FunctionCode {
         const count = this.program.params.length;
         const incoming = calleeRegisters(this.program);
         const saved = this.frameless ? [] : this.savedRegisters();
-        // The frame size depends on the deepest spill, known only after the body, so the
-        // prologue is emitted as placeholders and patched below.
-        if (!this.frameless) {
+        // A large frame (more locals than sp's 12-bit offsets reach, PICOCALC-CANDELA-TYPED): ra, s0 and the saved
+        // registers at the bottom, the locals and spills above them, and s0 = sp + 2032 as the base of every slot at
+        // 2032 or more (load/store pick the base). Only functions with that many locals take this form.
+        this.large = !this.frameless && 4 * (this.locals + saved.length + 2) > LARGE_FRAME_LOCALS;
+        if (this.large) {
+            this.slotBase = 8 + 4 * saved.length;
+            this.emit(0);
+            this.emit(0);
+            this.emit(instruction.r(0x33, SP, 0, SP, T5, 0x20));
+            this.emit(instruction.s(2, SP, RA, 0));
+            this.emit(instruction.s(2, SP, S0, 4));
+            for (let k = 0; k < saved.length; k++) this.emit(storeWord(saved[k], 8 + 4 * k, SP));
+            this.emit(instruction.i(0x13, S0, 0, SP, LARGE_BASE));
+        } else if (!this.frameless) {
+            // The frame size depends on the deepest spill, known only after the body, so the
+            // prologue is emitted as placeholders and patched below.
             this.emit(0);
             this.emit(0);
         }
-        for (let k = 0; k < saved.length; k++) this.emit(0);
+        if (!this.large) for (let k = 0; k < saved.length; k++) this.emit(0);
         for (let i = 0; i < count; i++) this.writeLocal(incoming[i], i);
         // Capacity homes belong to unwritten parameters, still in their argument registers here.
         for (const [id, reg] of this.locations?.homes ?? []) {
@@ -237,6 +254,23 @@ export class FunctionCode {
         this.bodyUsesFrame = Boolean(this.usesFrame); // before the epilogue reloads ra
         if (this.frameless) {
             this.mark(this.exit);
+            this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
+            this.patchBranches();
+            return this;
+        }
+        if (this.large) {
+            const frame = (this.slotBase + 4 * (this.locals + this.spillDepth) + 15) & -16;
+            if (frame > LARGE_BASE + 2047) throw new SyntaxError("RV32 function frame exceeds the instruction range");
+            const lo = (frame << 20) >> 20;
+            this.words[0] = (((frame - lo) & 0xfffff000) | (T5 << 7) | 0x37) >>> 0;
+            this.words[1] = instruction.i(0x13, T5, 0, T5, lo) >>> 0;
+            this.mark(this.exit);
+            for (let k = 0; k < saved.length; k++) this.emit(loadWord(saved[k], 8 + 4 * k, SP));
+            this.emit(instruction.i(0x03, RA, 2, SP, 0));
+            this.emit(instruction.i(0x03, S0, 2, SP, 4));
+            this.emit(((frame - lo) & 0xfffff000) | (T5 << 7) | 0x37);
+            this.emit(instruction.i(0x13, T5, 0, T5, lo));
+            this.emit(instruction.r(0x33, SP, 0, SP, T5));
             this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
             this.patchBranches();
             return this;
