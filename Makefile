@@ -32,6 +32,7 @@ test-node:
 # Generated files that are tracked must equal what their generator writes now.
 test-generated:
 	node compiler/typed/rv32/build.mjs --check
+	node compiler/typed/frontend/build.mjs --check
 	node tools/gen/candela/regenerate.mjs --check
 	node bench/rv32/vectors.mjs --check
 

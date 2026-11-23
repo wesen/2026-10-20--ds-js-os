@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
 import test from "node:test";
 import "../../compiler/typed/tape.js";
 import "../../compiler/typed/typed-wasm.js";
@@ -146,4 +147,10 @@ test("observer data can be edited without changing bytes or final placement", ()
     const absent = capture("missing");
     assert.deepEqual(typedWasm.compile(source, {inspect:absent.inspect}), baseline);
     assert.deepEqual(absent.events, []);
+});
+
+test("typed-wasm.js is the build of compiler/typed/frontend/ and compiler/typed/wasm/", async () => {
+    const {bundle} = await import(new URL("../../compiler/typed/frontend/build.mjs", import.meta.url));
+    assert(readFileSync(new URL("../../compiler/typed/typed-wasm.js", import.meta.url), "utf8") === bundle(),
+        "edit compiler/typed/frontend/ or wasm/, never typed-wasm.js, then run node compiler/typed/frontend/build.mjs");
 });
