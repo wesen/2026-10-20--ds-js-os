@@ -452,7 +452,7 @@ The program is complete. All twelve tickets are merged and gated, the four vault
   - **Host:** Wasm and RV32 are bit-identical on all 18 scenes.
 - **Vault report 3:** "PROJECT REPORT - PicoCalc Candela - The Path Tracer in Typed - Generated from WGSL, Compiled on the ESP32-P4, 1.76x the C++ Kernel - A Technical Deep Dive", go-go-parc `57224e3`. Before committing, I replaced an unverified claim about the I2C bus with what was observed.
 - **Playable rebuilt** at `46f57c0`. The app changed (`507a7064…`), so I installed it: health passed with peripherals on, gallery 18/18 (C++ arm).
-- **Agents.** Six had finished but kept holding background shells: Candela front end, APP-MANIFEST, PIPELINE, AGENDA-TYPED-WORLD, CANDELA-TYPED, and the PIPELINE resume.
+- **Agents.** Five had finished but kept holding background shells: Candela front end, APP-MANIFEST, PIPELINE, AGENDA-TYPED-WORLD and CANDELA-TYPED.
   - The user saw them as "waiting"; two of them the user had resumed from the transcript view.
   - None had a process or uncommitted work, and their last commits were hours old. I stopped all of them with TaskStop.
 - **Worktrees.** All 19 agent worktrees have their work on `main`.
