@@ -22,8 +22,13 @@ Every loader lists them: `bench/lib/compiler.mjs` (all bench scripts), the tests
 `compiler/typed/tools/typed-inspect.mjs`, `bench/board/stage.mjs` (the board app's cold compiles), the trace REPL's
 module table (`tools/trace-repl/pkg/tracecompiler/compiler.go`) and the firmware, which bundles them as `typed/tape.js`, `typed/wasm.js`
 and so on (`firmware/port/esp32p4/main/CMakeLists.txt`, `BUNDLE_EXTRA`) and evaluates them in `typed_p4.c`, keeping each
-file's QuickJS bytecode so that later compiles skip the parse. The firmware evaluates a pass group only when a
-compile's policy needs it: `interactive` (Agenda, Editor) loads neither, `balanced` (Chess) the inline group.
+file's QuickJS bytecode so that later compiles skip the parse. The bytecode keeps no debug information
+(`JS_STRIP_DEBUG`: no source text, no line tables), so a stack trace through the compiler on the device names functions
+but not lines; the compile errors' messages carry their Typed positions themselves. The firmware evaluates a pass
+group only when a compile's policy needs it: `interactive` (Agenda, Editor, Files) loads none, `balanced` (Chess) the
+inline group, `default` (Candela's scene) inline and loops, `kernel` all three. After every compile the device prints
+a `TYPEDCOMPILE {...}` line: each evaluated compiler source (cached or parsed, load and run time, the heap after it),
+the linker call and the teardown.
 
 ## The pipeline
 
