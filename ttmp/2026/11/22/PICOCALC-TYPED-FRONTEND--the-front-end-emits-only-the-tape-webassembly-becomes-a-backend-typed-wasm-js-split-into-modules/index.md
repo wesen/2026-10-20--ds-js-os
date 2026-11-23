@@ -1,0 +1,52 @@
+---
+Title: The front end emits only the tape; WebAssembly becomes a backend; typed-wasm.js split into modules
+Ticket: PICOCALC-TYPED-FRONTEND
+Status: active
+Topics:
+    - compiler
+DocType: index
+Intent: long-term
+Owners: []
+RelatedFiles: []
+ExternalSources: []
+Summary: ""
+LastUpdated: 2026-11-22T19:29:53.911333123-05:00
+WhatFor: ""
+WhenToUse: ""
+---
+
+# The front end emits only the tape; WebAssembly becomes a backend; typed-wasm.js split into modules
+
+## Overview
+
+<!-- Provide a brief overview of the ticket, its goals, and current status -->
+
+## Key Links
+
+- **Related Files**: See frontmatter RelatedFiles field
+- **External Sources**: See frontmatter ExternalSources field
+
+## Status
+
+Current status: **active**
+
+## Topics
+
+- compiler
+
+## Tasks
+
+See [tasks.md](./tasks.md) for the current task list.
+
+## Changelog
+
+See [changelog.md](./changelog.md) for recent changes and decisions.
+
+## Structure
+
+- design/ - Architecture and design documents
+- reference/ - Prompt packs, API contracts, context summaries
+- playbooks/ - Command sequences and test procedures
+- scripts/ - Temporary code and tooling
+- various/ - Working notes and research
+- archive/ - Deprecated or reference-only artifacts
