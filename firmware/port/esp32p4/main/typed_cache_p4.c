@@ -59,8 +59,8 @@ static const uint8_t *digest(const struct js_file *f) {
   xSemaphoreTake(memo_lock, portMAX_DELAY);
   if (!digests) {
     while (js_bundle[n_bundle].path) n_bundle++;
-    digests = calloc(n_bundle, 32);
-    known = calloc(n_bundle, 1);
+    digests = port_big_calloc(n_bundle * 32);   // PSRAM: internal RAM is scarce (about 70 KB free)
+    known = port_big_calloc(n_bundle);
   }
   const size_t i = (size_t)(f - js_bundle);
   const uint8_t *d = NULL;
