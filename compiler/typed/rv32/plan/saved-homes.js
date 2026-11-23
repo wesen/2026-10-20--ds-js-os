@@ -1,10 +1,11 @@
 // Callee-saved homes, per register class.
-import {A0, FA0, F, X, REGISTER_CLASSES, calleeRegisters, typeClass} from "../encoding/registers.js";
+import {A0, FA0, F, X, REGISTER_CLASSES, calleeRegisters, inOwnRegister, typeClass} from "../encoding/registers.js";
 import {CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, I32_DIV_S, I32_REM_S, BLOCK, IF, ELSE, END, CALL, VOID, opNext, tapeRow} from "../encoding/tape.js";
 
 // A function with an f32 parameter, local or result. Its leaves get more free registers than an integer function's
 // (planSavedHomes); integer functions keep the plans their pinned images record.
-export const floatingFunction = fn => fn.result === "f32" || fn.params.includes("f32") || Boolean(fn.localTypes);
+export const floatingFunction = fn => fn.result === "f32" || fn.params.includes("f32") || Boolean(fn.localTypes) ||
+    Boolean(fn.results?.includes("f32"));
 
 // The deepest operand stack of a leaf's tape (a leaf's only calls are guarded returns, which take and give one
 // value): f operand-stack registers from there on are never used, so they are free homes.
@@ -74,8 +75,9 @@ export function planSavedHomes(fn, scores, homes, leaf, capacityCached, interval
         // An incoming register the leaf may keep: not a0 (the emitter's scratch), not a7 while it caches a capacity.
         // fa0 is only ever written by a return, so an f32 parameter may stay there, the first one included.
         const floating = floatingFunction(fn), a0 = floating && a0Free(fn.code);
-        const keeps = reg => (reg !== A0 || a0) && !(capacityCached && reg === A0 + 7);
-        for (let p = 0; p < fn.params.length; p++) if (keeps(incoming[p]) && (scores.get(p) ?? 0) >= 2) {
+        // A parameter on the stack, or an f32 in an x register, has no incoming register to keep.
+        const keeps = p => inOwnRegister(fn, p) && (incoming[p] !== A0 || a0) && !(capacityCached && incoming[p] === A0 + 7);
+        for (let p = 0; p < fn.params.length; p++) if (keeps(p) && (scores.get(p) ?? 0) >= 2) {
             homes.set(p, incoming[p]);
             opened.push({reg: incoming[p], cls: keyClass(fn, p), spans: [span(p)]});
         }
@@ -91,7 +93,7 @@ export function planSavedHomes(fn, scores, homes, leaf, capacityCached, interval
         // written in the body, may take it: parameter, capacity and pointer homes are filled in
         // the prologue, from the incoming registers (RAY-PARITY Step 21).
         if (reuseArgs) for (let p = 1; p < fn.params.length; p++)
-            if (!homes.has(p) && keeps(incoming[p])) free.push({reg: incoming[p], cls: keyClass(fn, p), cost: 0, localsOnly: true});
+            if (!homes.has(p) && keeps(p)) free.push({reg: incoming[p], cls: keyClass(fn, p), cost: 0, localsOnly: true});
     }
     for (const {id, homes: saved} of REGISTER_CLASSES) if (!closed[id]) for (const reg of saved) free.push({reg, cls: id, cost: 2});
     for (const [id, score] of [...scores].sort((a, b) => b[1] - a[1])) {

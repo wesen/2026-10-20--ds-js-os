@@ -52,7 +52,7 @@ function originalError(error, lex, lowered, base) {
 
 function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignatures, inspect) {
     const {original, declarations, fields, bodies, generated} = lowered.plan;
-    const {enums, distinct, aliases} = declarations;
+    const {enums, distinct, aliases, values} = declarations;
     const records = new Map(declarations.records);
     if (fields.length) {
         const state = new Map(records.get("WorldState"));
@@ -73,7 +73,8 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
     const ordinaryCount = functions.length;
     let generatedSignatures;
     try {
-        generatedSignatures = scanSignatures(generatedLex, records, declared, functionBase + ordinaryCount, enums, distinct);
+        generatedSignatures = scanSignatures(generatedLex, records, declared, functionBase + ordinaryCount, enums, distinct,
+            false, values);
     } catch (error) {
         throw originalError(error, generatedLex, lowered, lowered.generatedAt);
     }
@@ -101,7 +102,7 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
             fn.bodyAt = body.at;
         }
         try {
-            const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+            const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases, values);
             if (inspect) finishFunction(emitter, fn, inspect,
                 lex === originalLex ? undefined : lex === generatedLex ? "synthetic-source" : "rewritten-body");
             else emitter.function(fn);
@@ -118,15 +119,15 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
 function emitFunctions(source, functionBase, imported, onFunction, onSignatures, inspect) {
     const lex = new Lexer(source, 0, source.length, true);
     const declared = new Map(imported.map(fn => [fn.name, fn]));
-    const {records, enums, distinct, aliases} = parseDeclarations(lex);
+    const {records, enums, distinct, aliases, values} = parseDeclarations(lex);
     for (const name of distinct) if (declared.has(name)) lex.fail("duplicate imported function " + name);
-    const functions = scanSignatures(lex, records, declared, functionBase, enums, distinct);
+    const functions = scanSignatures(lex, records, declared, functionBase, enums, distinct, false, values);
     if (!functions.length) lex.fail("expected a function");
     checkMembers(lex, aliases, declared, records);
     if (onSignatures) onSignatures(functions);
     const edges = functions.map(() => []);
     for (const [i, fn] of functions.entries()) {
-        const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+        const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases, values);
         if (inspect) finishFunction(emitter, fn, inspect);
         else emitter.function(fn);
         if (onFunction) onFunction(fn);
