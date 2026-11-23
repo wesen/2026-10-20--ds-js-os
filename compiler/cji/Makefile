@@ -38,9 +38,10 @@ slas-rv32: Makefile runtime/slas.c runtime/rv32.c runtime/rv32_obj.c runtime/rv3
 	$(CC) -std=gnu11 -O2 -g -Iruntime -c runtime/runtime.c -o $(RV32)/runtime-host.o
 	$(CC) -o $@ $(RV32)/slas.o $(RV32)/sljitLir.o $(RV32)/runtime-host.o -lm
 
-$(RV32)/rv32emu: ../../bench/emu/emu.c
+$(RV32)/rv32emu: $(wildcard ../../bench/emu/*.c ../../bench/emu/*.h)
 	mkdir -p $(RV32)
-	$(CC) -std=gnu11 -O2 -Wall -o $@ $< -lm
+	$(MAKE) -s -C ../../bench/emu build/rv32emu
+	cp ../../bench/emu/build/rv32emu $@
 
 # CJI-4 part 2: every test firmware runs the soft-float and 64-bit integer helpers (and floor, ceil, trunc, round,
 # fabs) as code, tools/rv32/fw/softfloat.c, as the board's libgcc does; hostcalls.S's stubs for them are weak, so a

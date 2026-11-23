@@ -1,4 +1,4 @@
-/* Chapter 29: the library calls of the rv32 test firmware that the machine answers (bench/emu/emu.c,
+/* Chapter 29: the library calls of the rv32 test firmware that the machine answers (bench/emu/host.c,
    hostcall): a7 is the call's number, the arguments and results are where the calling convention
    puts them. On the board these are the firmware's own: newlib, libgcc's soft-float helpers. */
 	.text

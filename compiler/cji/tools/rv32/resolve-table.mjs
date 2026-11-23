@@ -12,7 +12,7 @@
 //
 //   - for the board (--name cji_resolve): the --cji symbols only, the table resolve() would search
 //     after its own SYMS;
-//   - for the rv32 test firmware (the default, fw_resolve, which bench/emu/emu.c's loader searches):
+//   - for the rv32 test firmware (the default, fw_resolve, which bench/emu/elf.c's loader searches):
 //     the board's own names as well, each as the --lib objects define it (a name the test firmware
 //     does not define is not offered), or as --map NAME=SYMBOL says (the fake kernel's charging
 //     allocator for malloc, as native_elf_p4.c maps malloc to m_malloc).

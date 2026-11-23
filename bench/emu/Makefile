@@ -12,9 +12,11 @@ OBJECTS := build/libc.o build/hostcalls.o build/softfloat.o
 
 all: build/rv32emu $(OBJECTS)
 
-build/rv32emu: emu.c Makefile
+SOURCES := main.c machine.c host.c profile.c decode.c execute.c elf.c
+
+build/rv32emu: $(SOURCES) machine.h Makefile
 	mkdir -p build
-	$(CC) -std=gnu11 -O2 -Wall -o $@ emu.c -lm
+	$(CC) -std=gnu11 -O2 -Wall -o $@ $(SOURCES) -lm
 
 build/%.o: $(FW)/%.c Makefile $(wildcard $(FW)/include/*.h $(FW)/include/sys/*.h)
 	mkdir -p build
