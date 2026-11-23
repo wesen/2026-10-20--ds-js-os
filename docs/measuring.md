@@ -129,10 +129,14 @@ restoring them.
 ## Firmware profiles
 
 `firmware/port/esp32p4/build.sh PROFILE BUILD` builds `firmware/port/esp32p4/profiles/PROFILE.env`: `playable`,
-`candela-world`, `offline`, `agent` and `agent-elf`. Every profile builds reproducibly: ESP-IDF's reproducible-build
+`bench`, `candela-world`, `offline`, `agent` and `agent-elf`. A profile lists its Typed apps (`APPS`, each described
+by `apps/typed/NAME/app.json`: sources, linker, policy, heap cap and deadline) and a few platform options. `bench` is
+the playable firmware plus the console benchmarks of `bench/board/firmware` (`raybench`, `cachestat`, `typedray`,
+`typedmat`, `candela bench`), which the playable image does not carry; a study that times them flashes a bench
+build and restores the playable image afterwards. Every profile builds reproducibly: ESP-IDF's reproducible-build
 option removes dates and times, and prefix maps remove the checkout's path from the firmware and from the
 device-compiler tool, so one commit gives one app digest wherever it is built. `build.sh` writes
-`BUILD/picocalc-build.json` with the profile, commit, options and digests.
+`BUILD/picocalc-build.json` with the profile, commit, apps, options and digests.
 
 ## See also
 
