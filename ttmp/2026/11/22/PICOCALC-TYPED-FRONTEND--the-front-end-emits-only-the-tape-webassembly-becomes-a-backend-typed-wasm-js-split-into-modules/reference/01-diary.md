@@ -340,3 +340,74 @@ by 0.5 %. With the phase swept, the new compiler is 0.998x on peak and 0.99x on 
 
 ### Technical details
 - Peak = max over the compile of the runtime's requested bytes, minus the bytes after loading and one `JS_RunGC`.
+
+## Step 5: Gates, docs, and the merge of main at 9be534a
+
+The full gates passed before and after merging main (PICOCALC-SPLIT-FILES moved the trace REPL to `tools/trace-repl/`,
+the firmware tests to `tests/apps/` and `tests/native/`, and added a file-length check). The merge had no conflicts;
+the only follow-up was the file-length entry of `typed-wasm.js`, which is now a generated bundle.
+
+### Prompt Context
+**User prompt (verbatim, a coordinator note during the work):** "Coordinator note: main is now at 9be534a.
+PICOCALC-SPLIT-FILES landed and moved things you touch: cmd/trace-repl and pkg/trace* → tools/trace-repl/ and
+tools/trace-repl/pkg/ (pkg/tracecompiler's module table is now tools/trace-repl/pkg/tracecompiler/compiler.go);
+firmware/tests Node tests → tests/apps/, Python tests → tests/native/ (firmware/Makefile paths changed); a file-length
+check (tools/check-file-length.mjs in make test-generated, exceptions in tools/file-length-exceptions.txt). It fails on
+files over 500 lines not listed AND on listed entries that are no longer needed: when you split typed-wasm.js, remove
+its entry; any new file over 500 lines needs an entry with a reason (or split it). Before your final report: `git merge
+main` into your branch, resolve, rerun make test and both make test-host runs, and report against the merged state."
+**Assistant interpretation:** Merge, fix the file-length list, rerun the gates on the merged tree.
+**Inferred user intent:** The report must describe what the coordinator will merge.
+**Commit (code):** `883d133` (docs), merge `4971394`, `77ba9d9` — "build(file-length): typed-wasm.js is generated from frontend/ and wasm/"
+
+### What I did
+- Docs: `docs/typed-compiler.md` (file table, pipeline, a module table, the serializer's expansions, the backends,
+  "Adding an operation"), `docs/typed-compiler-and-the-ray-tracer.md`, `tape.js`'s header, the tape test's comments,
+  AGENTS.md's `compiler/typed` row; design refinements.
+- `typed-inspect.mjs`: every function of `apps/typed/chess/painter.typed` listed with `--function F --jsonl` by the
+  base and the new CLI: 6 identical, 4 failing identically, 0 different. (Whole-program listings without `--function`
+  fail in both with `no frontend operation for native tape offset 5`, before and after; not this ticket's.)
+- Playable build (pre-merge tree, `bb46eb3` + uncommitted docs): `Project build complete`, `picocalc-os-p4.bin binary
+  size 0x4b2fc0 bytes`, 41 % of the app partition free, `playable bb46eb3 dirty=true app b5bdbd23…`; `js_bundle.c`
+  contains `typed/wasm.js`.
+- `git merge main` (clean). `typed-wasm.js` stays over 500 lines because it is the bundle; its entry in
+  `tools/file-length-exceptions.txt` now says it is generated, as `typed-rv32.js`'s does. Every module is under 500
+  lines (the longest, `frontend/expressions.js`, 409).
+
+### Why
+- The file-length check exists to keep hand-edited files short; the bundle is not edited by hand.
+
+### What worked
+- After the merge: digests `IDENTICAL` (123/123 against `bf30d31`); `make test` exit 0 (Node 102 pass, 0 fail;
+  test-generated: rv32, frontend, candela, vectors 15,664, file length 847 files, 97 over 500, all listed; `go test`
+  11 packages ok, including `tools/trace-repl/pkg/tracecompiler` and `traceapi`, which load `typed-wasm.js` through the
+  revision-aware module table; Python 4, 20, 6, 9 OK and 34 OK with 1 expected failure; cji ok).
+- `make test-host`: ray 4,888,369 instructions, 11964 B, `430f0d501659` (reference); Chess 6981 words, engine
+  128,152,624 instructions, 21716 B; replays 24/24.
+- `make test-host OPTIONS='{"policy":"kernel"}'`: ray 3,239,635 instructions, 11544 B, `430f0d501659`; Chess 6981
+  words, 118,361,847 instructions, 19892 B; replays 24/24. Both identical to the numbers before the merge and to TAPE's.
+
+### What didn't work
+- A compound `git add … && git commit … && …; sed … > go.mod` was refused by the worktree guard; the commit alone went
+  through. The Go tests ran with `GOFLAGS=-modfile=<scratch>/go.mod` (the `replace` made absolute), not committed.
+
+### What I learned
+- N/A beyond Step 4.
+
+### What was tricky to build
+- Ordering: the playable build reads the worktree, so the merge waited for it to finish.
+
+### What warrants a second pair of eyes
+- The playable build ran on the pre-merge tree; the merge touched no compiler file (`git diff --stat 883d133 4971394
+  -- compiler go.mod` is empty).
+
+### What should be done in the future
+- Unify `compiler/typed/frontend/build.mjs` with PIPELINE's `rv32/build.mjs`; drop `compileFunctions`'s unused fifth
+  parameter with PIPELINE's `70-compile.js`; PICOCALC-TYPED-ASYNC-TAPE replaces `typed-async.js`'s `TypeChecker`.
+
+### Code review instructions
+- `node compiler/typed/frontend/build.mjs --check`; `make test`; the two `make test-host` runs; the digest harness.
+
+### Technical details
+- Commits: `ba30978` harness, `380140d` tape-only front end and serializer, `427a7de` split and bundle, `bb46eb3`
+  fast paths and heap method, `883d133` docs, `4971394` merge of main, `77ba9d9` file-length entry.
