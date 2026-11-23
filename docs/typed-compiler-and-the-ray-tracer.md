@@ -60,7 +60,7 @@ function sumCells(work: buffer, n: i32): i32 {
 
 ## 3. From source to a numeric operation tape
 
-The frontend lives in `compiler/typed/typed-wasm.js`. Its entry `typedWasm.compileFunctions(source, functionBase, imports, maxLength, numericOperands, onFunction, onSignatures, options)` parses and type-checks the source. For each function it emits a **tape**: an array of integer cells encoding WebAssembly-like stack operations. With `numericOperands = true`, every operand occupies exactly one cell. The RV32 backend consumes this form.
+The frontend lives in `compiler/typed/frontend/` (bundled into `compiler/typed/typed-wasm.js`). Its entry `typedWasm.compileFunctions(source, functionBase, imports, maxLength, unused, onFunction, onSignatures, options)` parses and type-checks the source. For each function it emits a **tape**: an array of integer cells encoding WebAssembly-like stack operations, every operand in exactly one cell. The RV32 backend consumes it, and the WebAssembly backend serializes it.
 
 The tape for `sumCells` has 52 cells and 29 operations. `typedTape.decode(fn.code)` prints it as follows. The offset is the cell index.
 
@@ -472,7 +472,7 @@ Signed 16-bit and 32-bit indexed arrays would let source state what it stores. T
 | Path | Contents |
 |---|---|
 | `compiler/typed/tape.js` | The tape definition: opcodes, operand cells, types, effects, `decode` |
-| `compiler/typed/typed-wasm.js` | Lexer, parser, type checker, tape emitter, `compileFunctions`, Wasm encoder |
+| `compiler/typed/typed-wasm.js` | Built from `frontend/` (lexer, parser, type checker, tape writer, `compileFunctions`) and `wasm/` (tape serializer, module writer, linker) |
 | `compiler/typed/typed-async.js` | Rewrites `async` functions before emission (needed for Editor) |
 | `compiler/typed/rv32/` | The RV32 backend's sources, 13 files joined in name order: encoders, `FunctionCode` (the emitter), leaf code, inlining, loop versioning with hoisting and induction, live-range splitting, ranges, value sets, conjunctions and rotation, `planLocations`, `POLICIES`, `compile`. See its README |
 | `compiler/typed/typed-rv32.js` | The generated bundle every loader reads (`node compiler/rv32/build.mjs`); never edit it directly |

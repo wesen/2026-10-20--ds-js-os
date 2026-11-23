@@ -63,3 +63,37 @@ The two targets are two emission modes of one class: `FunctionEmitter` writes Wa
 - **Moves and deletes** go through checked Python scripts in the ticket's `scripts/` (dry run, asserted counts), never shell one-liners.
 - **Diary.** Each ticket keeps `reference/01-diary.md` in the investigation format (Prompt Context, What I did, Why, What worked, What didn't work with exact errors, What I learned, What was tricky, What warrants a second pair of eyes, Future work, Code review instructions, Technical details), one step per milestone, with commit hashes.
 - **Commits** are focused, at validated boundaries, with the trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+
+## Refinements (2026-11-22)
+
+Checked against the code at `bf30d31` (typed-wasm.js was 1,632 lines, not 1,667) and implemented as follows.
+
+1. **The serializer.** The front end's only differences between the two modes were `emitConst`, `emitIndex`,
+   `emitMemory`, `codeUnitAddress`, `emitLiteralStores` and `finish`. They are now the tape writer in
+   `ExpressionParser`, and `encodeFunction` (`wasm/encode.js`) writes every operand cell as unsigned LEB128 except
+   `i32.const`'s (signed); a block type cell (0x40, 0x7f) is its own one-byte encoding, so no format table is needed.
+   `text.checked_address` and `text.literal_stores` expand to the old sequences; `text.unchecked_address` throws, since
+   only loop versioning writes it. The Wasm compile streams: each tape is serialized in `onFunction` and released.
+2. **`compileFunctions` keeps its arity.** The fifth parameter (`numericOperands`) is unused instead of removed, so that
+   `rv32/70-compile.js`, which PICOCALC-TYPED-PIPELINE is rewriting in parallel, needs no edit. Drop it when the two
+   tickets are merged.
+3. **Inspection.** The front end's `frontend` event now says `target: "tape"` (it said `"rv32"` in the numeric mode).
+   The Wasm backend intercepts it (`compileWasmFunctions`) and emits the event it emitted before, `target: "wasm"`
+   with the Wasm operations decoded from the serialized bytes, each carrying the source span of the tape operation it
+   encodes. The spans are the same as before because a pseudo-op's expansion was written at one token. The `emission`
+   event is unchanged.
+4. **Modules.** As designed, except that the inspection code is split by owner, `frontend/inspect.js` and
+   `wasm/inspect.js`, instead of one `compiler/typed/inspect.js` (a file next to `tape.js` would look like another
+   script the loaders read). `FunctionEmitter` is two classes: `ExpressionParser` (expressions.js: constructor, tape
+   writer, expressions) and `FunctionEmitter extends ExpressionParser` (statements.js). The prototype chain has the
+   same depth as the old `NumericFunctionEmitter extends FunctionEmitter`: the emit methods are one level further
+   from an instance, the statement methods one level closer (the QuickJS compile time did not move).
+5. **The bundle.** `compiler/typed/frontend/build.mjs` is a sibling of `rv32/build.mjs`: it concatenates the modules
+   in a fixed list into one IIFE; `--check` runs in `make test-generated` and in `typed-wasm-inspect.test.mjs`. No
+   loader changed: the bundle is still `typed-wasm.js`, publishing the same `typedWasm` names.
+6. **Gates as run.** Byte identity: the ticket's `scripts/01-digests.mjs`, 123 digests (TAPE's 78 RV32 image + tape
+   pairs over 13 units x 6 policies plus the Agenda reminder unit, Wasm modules, the five linked Wasm worlds, and the
+   Wasm and tape inspection event streams). Compile time and heap: QuickJS on the host (`scripts/02-qjs-measure.c`,
+   `04-compare-qjs.py`), because the device runs QuickJS; Node's heap is not the device's. No playable boot path
+   compiles to Wasm (`profiles/playable.env` sets `PICOCALC_RV32_{CHESS,AGENDA,EDITOR,FILES}=ON`), so no board
+   measurement was needed.
