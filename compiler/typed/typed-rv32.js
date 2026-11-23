@@ -2742,12 +2742,24 @@ function compile(source, imports = [], maxSourceLength, requested) {
     const inlineLibrary = new Map();
     if (policy !== undefined && typeof policy !== "boolean" && typeof policy !== "function")
         throw new TypeError("expected a boolean or caller selector for inlineGuardedReturns");
+    // timing: an array that receives {fn, pass, ms, cells} for every pass a function runs (cells: the
+    // tape's length after it), plus one {fn: null, pass: "compile", ms} row for the whole call. The
+    // clock is options.clock, performance.now or Date.now; it is read only when timing is given.
+    const timing = options?.timing;
+    const clock = options?.clock ?? (globalThis.performance ? () => performance.now() : Date.now);
+    function time(fn, pass, run) {
+        if (!timing) return run();
+        const start = clock();
+        const result = run();
+        timing.push({fn: fn.name, pass, ms: clock() - start, cells: fn.code ? fn.code.length : 0});
+        return result;
+    }
     function lower(fn) {
-        if (options?.select?.hoist) storeless(imported.length + code.length);
+        if (options?.select?.hoist) time(fn, "storeless", () => storeless(imported.length + code.length));
         if (inspect && (inspect.function === undefined || inspect.function === fn.name))
             fn.nativeInspection = {leafDecision: "eligible for frameless lowering"};
         let libraryCopy;
-        if (inlining) {
+        if (inlining) time(fn, "inline", () => {
             const arity = index => callables[index].params.length;
             // The library copy inlines every candidate call; the function's own code only those
             // in its loops.
@@ -2760,12 +2772,12 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 fn.code = loops.code;
                 fn.nlocals = loops.nlocals;
             }
-        }
+        });
         let Emitter = FunctionCode;
         if (policy) {
             // Only our internal definition targets can acquire summaries. A forward call
             // uses the ordinary ABI in both streaming and buffered compilation.
-            const summary = guardedReturnSummary(fn);
+            const summary = time(fn, "guarded", () => guardedReturnSummary(fn));
             if (summary) targets[imported.length + code.length].guardedReturn = summary;
             if (policy === true || policy(fn.name)) Emitter = GuardedReturnCode;
         }
@@ -2773,7 +2785,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
         if (mode !== undefined) {
             if (mode !== "scalar" && mode !== "pie" && mode !== "pie-empty" && typeof mode !== "function") throw new TypeError("unknown PIE loop compilation mode");
             if (!globalThis.typedPieLoops) throw new Error("load typed-pie-loops.js for PIE loop compilation");
-            const selected = typedPieLoops.lower(fn, callables, targets, mode, Emitter, instruction);
+            const selected = time(fn, "pie", () => typedPieLoops.lower(fn, callables, targets, mode, Emitter, instruction));
             if (selected) {
                 code.push(selected);
                 if (fn.literals) fn.literals = null;
@@ -2785,39 +2797,49 @@ function compile(source, imports = [], maxSourceLength, requested) {
         const observe = phase => options?.observeTape?.(fn.name, phase, fn.code.slice(), fn.nlocals);
         observe("inline");
         if (options?.select?.commute) {
-            const commuted = commuteConstants(fn.code, index => callables[index].params.length);
-            if (commuted) fn.code = commuted;
+            time(fn, "commute", () => {
+                const commuted = commuteConstants(fn.code, index => callables[index].params.length);
+                if (commuted) fn.code = commuted;
+            });
             observe("commute");
         }
         const arity = index => callables[index].params.length;
         if (options?.select?.conjunctions) {
-            const fused = fuseConjunctions(fn.code);
-            if (fused) fn.code = fused;
+            time(fn, "conjunctions", () => {
+                const fused = fuseConjunctions(fn.code);
+                if (fused) fn.code = fused;
+            });
             observe("conjunctions");
         }
         if (options?.select?.sets) {
-            const folded = foldValueSets(fn.code, arity);
-            if (folded) fn.code = folded;
+            time(fn, "sets", () => {
+                const folded = foldValueSets(fn.code, arity);
+                if (folded) fn.code = folded;
+            });
             observe("sets");
         }
         let ranges;
         if (options?.select?.rotate) {
-            const rotated = rotateLoops(fn.code);
-            if (rotated) fn.code = rotated;
+            time(fn, "rotate", () => {
+                const rotated = rotateLoops(fn.code);
+                if (rotated) fn.code = rotated;
+            });
             observe("rotate");
-            if (options.select.facts) ranges = localRanges(fn.code, fn.params.length, arity);
+            if (options.select.facts) ranges = time(fn, "ranges", () => localRanges(fn.code, fn.params.length, arity));
             if (options.select.version) {
                 const hoist = options.select.hoist ? {storeless, arity, fresh: () => fn.params.length + fn.nlocals++} : undefined;
-                const versioned = versionLoops(fn.code, fn.params.length, hoist, options.select.induction);
-                if (versioned) fn.code = versioned;
+                time(fn, "version", () => {
+                    const versioned = versionLoops(fn.code, fn.params.length, hoist, options.select.induction);
+                    if (versioned) fn.code = versioned;
+                });
                 observe("version");
             }
         }
-        if (options?.select?.facts && !options.select.rotate) ranges = localRanges(fn.code, fn.params.length, arity);
+        if (options?.select?.facts && !options.select.rotate) ranges = time(fn, "ranges", () => localRanges(fn.code, fn.params.length, arity));
         let origin = local => local;
         if (options?.operandLocations?.split) {
             const before = fn.params.length + fn.nlocals;
-            const split = splitLocals(fn.code, fn.params.length, fn.nlocals);
+            const split = time(fn, "split", () => splitLocals(fn.code, fn.params.length, fn.nlocals));
             if (split) {
                 fn.code = split.code;
                 fn.nlocals = split.nlocals;
@@ -2825,11 +2847,11 @@ function compile(source, imports = [], maxSourceLength, requested) {
             }
             observe("split");
         }
-        const facts = ranges ? divisionFacts(fn.code, fn.params.length, arity, ranges, origin) ?? undefined : undefined;
-        let compiled = lowerLeaf(fn, callables, targets, options?.select, facts);
+        const facts = ranges ? time(fn, "facts", () => divisionFacts(fn.code, fn.params.length, arity, ranges, origin)) ?? undefined : undefined;
+        let compiled = time(fn, "leaf", () => lowerLeaf(fn, callables, targets, options?.select, facts));
         if (!compiled) {
-            const plan = options?.operandLocations ? planLocations(fn, {...options.operandLocations, select: options.select},
-                index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn) : undefined;
+            const plan = options?.operandLocations ? time(fn, "plan", () => planLocations(fn, {...options.operandLocations, select: options.select},
+                index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn)) : undefined;
             // observePlan(name, plan): a read-only view of the operand-location plan, for tools.
             if (plan) options?.observePlan?.(fn.name, plan);
             const emit = longBranches => {
@@ -2840,15 +2862,17 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 if (plan !== undefined) emitter.locations = plan;
                 return emitter.lower();
             };
-            try {
-                compiled = emit(false);
-            } catch (error) {
-                if (error !== SHORT_BRANCH_RANGE) throw error;
-                compiled = emit(true);
-            }
+            compiled = time(fn, "emit", () => {
+                try {
+                    return emit(false);
+                } catch (error) {
+                    if (error !== SHORT_BRANCH_RANGE) throw error;
+                    return emit(true);
+                }
+            });
         }
         const index = imported.length + code.length;
-        const candidate = inlining && inlineCandidate(fn, libraryCopy.code, inlining, targets[index]?.guardedReturn);
+        const candidate = inlining && time(fn, "candidate", () => inlineCandidate(fn, libraryCopy.code, inlining, targets[index]?.guardedReturn));
         if (candidate) inlineLibrary.set(index, {...candidate, nlocals: libraryCopy.nlocals, code: libraryCopy.code.slice(),
             loops: loopDepth(libraryCopy.code)});
         inlining?.report?.push({name: fn.name, cells: fn.code.length, locals: fn.params.length + fn.nlocals,
@@ -2868,6 +2892,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
         fn.code = null;
     }
 
+    const started = timing ? clock() : 0;
     const stream = options?.streamFunctions ?? true;
     const {functions, records, enums, distinct, asyncLayout, asyncSource} = typedWasm.compileFunctions(source,
         imported.length, imported, maxSourceLength, true, stream ? consume : undefined, declare, options);
@@ -2901,6 +2926,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
         for (let j = 0; j < fn.words.length; j++) view.setUint32(4 * (start + j), fn.words[j], true);
         if (fn.program.nativeInspection) nativeEmission(fn, start * 4, inspect);
     }
+    if (timing) timing.push({fn: null, pass: "compile", ms: clock() - started, cells: 0});
     return {image, entries, records: typedWasm.recordLayouts(records), enums: typedWasm.enumLayouts(enums),
         distinct: [...distinct], relocations, importCount: imports.length,
         signatures: functions.map(({name, params, result}) => ({name, params, result})),
