@@ -90,6 +90,11 @@ typedef struct {
 // Bind a scene: copy its buffers, bind the kernel (and rebuild the sky table when the sun differs), verify and bind
 // the bytecode, clear the accumulation. 0 on success; otherwise err says why and nothing is kept.
 int cg_begin(cg_state *s, const cg_scene_desc *d, const cg_instance *inst, const cg_alloc *a, char *err, size_t n);
+// The P4's Typed arm (candela_typed_p4.c, PICOCALC_CANDELA_TYPED): its program loads in the background.
+enum { CGT_IDLE, CGT_LOADING, CGT_READY, CGT_FAILED };
+int cgt_state(void);
+double cgt_loading_s(void);   // seconds since the load started, while it runs
+void cgt_prepare(void);       // start loading it on a task of its own, unless it is loading, loaded or failed
 void cg_end(cg_state *s);          // free the scene's memory (the sky workspace stays)
 void cg_free_all(cg_state *s);     // and the sky workspace
 

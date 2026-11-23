@@ -14,7 +14,10 @@
 //
 // Two kernel arms render the same scenes (PICOCALC-CANDELA-TYPED): "cpp", the generated C++ kernel with the section
 // interpreter (cg, cgs), and, with PICOCALC_CANDELA_TYPED, "typed", the kernel and sections in Typed compiled to RV32
-// on the handheld (candela_typed_p4.c: cgt, cgts). The gallery draws with ARM_DEFAULT unless the console chooses.
+// on the handheld (candela_typed_p4.c: cgt, cgts). The gallery draws with ARM_DEFAULT, Typed where the firmware has
+// it, unless the console chooses. Typed's program is compiled on its first use after a firmware update (85 s) and read
+// from the compiled-module cache afterwards; while it loads, the gallery draws with C++ and the caption says so, and
+// the next scene after it is ready draws with Typed. "scene" records name the arm that drew the scene.
 //
 // UART records, one JSON object per line after "CGAL ": scene (when a scene ends), first (its first image), pass,
 // digest (console: gallery digest ID PASSES [psram|internal|quiet] [typed|cpp]), status, error. Console: gallery
@@ -42,7 +45,7 @@ static const char *const ARM[] = {"cpp", "typed"};
 extern const cg_instance cgt_gallery, cgts_gallery;
 #define ARMS 2
 #ifndef ARM_DEFAULT
-#define ARM_DEFAULT ARM_CPP
+#define ARM_DEFAULT ARM_TYPED
 #endif
 #else
 #define ARMS 1
@@ -74,6 +77,7 @@ static void *fast(size_t n) {
 }
 static const cg_alloc ALLOC = {big, fast, heap_caps_free};
 static int arm = ARM_DEFAULT;     // the gallery's arm (the worker's; a digest names its own)
+static int drawing = ARM_CPP;     // the arm of the scene on screen: C++ while Typed's program loads
 static const cg_instance *instance_of(const cg_scene_desc *d, int a) {
 #if PICOCALC_CANDELA_TYPED
   if (a == ARM_TYPED) return d->spectral ? &cgts_gallery : &cgt_gallery;
@@ -81,11 +85,34 @@ static const cg_instance *instance_of(const cg_scene_desc *d, int a) {
   (void)a;
   return d->spectral ? &cgs_gallery : &cg_gallery;
 }
-static const cg_instance *instance_for(const cg_scene_desc *d) { return instance_of(d, arm); }
+// The worker's arm for a new scene: Typed once its program is loaded; until then C++, with the load started.
+static int arm_now(void) {
+#if PICOCALC_CANDELA_TYPED
+  if (arm == ARM_TYPED && cgt_state() != CGT_READY) {
+    cgt_prepare();
+    return ARM_CPP;
+  }
+#endif
+  return arm;
+}
 
 static void publish(void) {
   writer = (int)(atomic_exchange(&mid, (unsigned)writer | 4u) & 3u);
   published = 1;
+}
+
+// What the caption says about the kernel: "Typed", "C++", or "C++, Typed compiling 12 s" during the load.
+static char caption[32];
+static const char *arm_caption(void) {
+#if PICOCALC_CANDELA_TYPED
+  if (arm == ARM_TYPED && drawing == ARM_CPP) {
+    const int state = cgt_state();
+    if (state == CGT_LOADING) snprintf(caption, sizeof caption, "C++, Typed compiling %d s", (int)cgt_loading_s());
+    else snprintf(caption, sizeof caption, state == CGT_FAILED ? "C++ (Typed failed)" : "C++");
+    return caption;
+  }
+#endif
+  return drawing == ARM_TYPED ? "Typed" : "C++";
 }
 
 // ---- the kernel task's side (nucleus/gfx.c) ----
@@ -102,7 +129,7 @@ const uint16_t *p4_gallery_take(int skip, char *left, size_t nl, char *right, si
   if (k >= 0 && k < (int)cg_nscenes) {
     snprintf(left, nl, "%s  %s", cg_scenes[k].id, cg_scenes[k].title);
     if (st_paused) snprintf(right, nr, "paused");
-    else snprintf(right, nr, "%d spp%s  %.2f s/pass", st_pass, st_done ? " done" : "", (double)st_spp_s);
+    else snprintf(right, nr, "%d spp%s  %.2f s/pass  %s", st_pass, st_done ? " done" : "", (double)st_spp_s, arm_caption());
   } else {
     snprintf(left, nl, "Candela gallery");
     snprintf(right, nr, "starting");
@@ -149,7 +176,7 @@ static void end_scene(const char *reason) {
          "\"secPerPass\":%.4f,\"samplesPerSec\":%.1f,\"cyclesPerSample\":%.1f,\"displays\":%u,\"displayMs\":%.1f,"
          "\"displayCyclesMean\":%.0f,\"skyRebuilt\":%u,\"ev100\":%.4f,\"metered\":%u,\"meanLum\":%.6g,"
          "\"internalFree0\":%u,\"internalMinFree\":%u,\"psramFree0\":%u,\"psramMinFree\":%u,\"internalPeakUse\":%d,\"psramPeakUse\":%d}\n",
-         d->id, ARM[arm], d->w, d->h, reason, passes, st.samples,
+         d->id, ARM[drawing], d->w, d->h, reason, passes, st.samples,
          sc.first_us ? (sc.first_us - sc.start_us) / 1e3 : -1.0, sc.coarse_us ? (sc.coarse_us - sc.start_us) / 1e3 : -1.0,
          sc.half_us ? (sc.half_us - sc.start_us) / 1e3 : -1.0, sc.pass1_us ? (sc.pass1_us - sc.start_us) / 1e3 : -1.0,
          sc.render_us / 1e3, sc.shown_us / 1e3, passes ? render_s / (samples / (d->w * d->h)) : 0.0,
@@ -170,7 +197,8 @@ static bool begin_scene(int k) {
   sc.start_us = sc.last_visible_us = now_us();
   current = k; done = false; st_done = 0; st_pass = 0; st_spp_s = 0;
   const cg_scene_desc *d = &cg_scenes[k];
-  if (cg_begin(&st, d, instance_for(d), &ALLOC, err, sizeof err)) {
+  drawing = arm_now();
+  if (cg_begin(&st, d, instance_of(d, drawing), &ALLOC, err, sizeof err)) {
     if (sc.monitored) heap_caps_monitor_local_minimum_free_size_stop();
     record_error("begin");
     return false;
@@ -205,10 +233,20 @@ static void show(int64_t t) {
   }
 }
 
+static const char *typed_state(void) {
+#if PICOCALC_CANDELA_TYPED
+  static const char *const STATE[] = {"idle", "loading", "ready", "failed"};
+  return STATE[cgt_state()];
+#else
+  return "absent";
+#endif
+}
+
 static void status(void) {
-  printf("CGAL {\"ev\":\"status\",\"arm\":\"%s\",\"scene\":\"%s\",\"index\":%d,\"scenes\":%u,\"pass\":%u,\"sub\":%u,\"samples\":%" PRIu64
+  printf("CGAL {\"ev\":\"status\",\"arm\":\"%s\",\"drawing\":\"%s\",\"typed\":\"%s\",\"scene\":\"%s\",\"index\":%d,\"scenes\":%u,\"pass\":%u,\"sub\":%u,\"samples\":%" PRIu64
          ",\"renderMs\":%.1f,\"displays\":%u,\"paused\":%d,\"done\":%d,\"visible\":%d,\"kernel\":\"%s\",\"internalFree\":%u,\"psramFree\":%u}\n",
-         ARM[arm], current >= 0 ? cg_scenes[current].id : "", current, cg_nscenes, st.pass, st.sub, st.samples, sc.render_us / 1e3,
+         ARM[arm], ARM[drawing], typed_state(), current >= 0 ? cg_scenes[current].id : "", current, cg_nscenes, st.pass, st.sub,
+         st.samples, sc.render_us / 1e3,
          sc.displays, paused, done, now_us() - atomic_load(&last_paint_us) < VISIBLE_MS * 1000LL, cg_kernel_fixed_sha256,
          (unsigned)heap_caps_get_free_size(MALLOC_CAP_INTERNAL), (unsigned)heap_caps_get_free_size(MALLOC_CAP_SPIRAM));
 }
@@ -435,7 +473,11 @@ void p4_gallery_console(const char *args) {
   else if (!strcmp(a, "pause")) c.op = C_PAUSE;
   else if (!strcmp(a, "resume")) c.op = C_RESUME;
   else if (!strcmp(a, "arm") && got >= 2 && arm_named(b) >= 0) { c.op = C_ARM; c.a = arm_named(b); }
-  else if (!strcmp(a, "arm")) { printf("CGAL {\"ev\":\"arm\",\"arm\":\"%s\",\"arms\":%d}\n", ARM[arm], ARMS); return; }
+  else if (!strcmp(a, "arm")) {
+    printf("CGAL {\"ev\":\"arm\",\"arm\":\"%s\",\"drawing\":\"%s\",\"typed\":\"%s\",\"arms\":%d}\n", ARM[arm], ARM[drawing],
+           typed_state(), ARMS);
+    return;
+  }
   else if (!strcmp(a, "probe") && got >= 2 && atoi(b) >= 100 && atoi(b) <= 60000) { c.op = C_PROBE; c.a = atoi(b); }
   else if (!strcmp(a, "list")) {
     for (unsigned k = 0; k < cg_nscenes; k++)

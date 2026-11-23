@@ -47,7 +47,7 @@ need the hardware checks in the guide.
 
 ### Typed apps
 
-A profile lists its Typed apps (`APPS=(chess agenda editor files candela raytrace)` in `profiles/playable.env`;
+A profile lists its Typed apps (`APPS=(chess agenda editor files candela raytrace candela-gallery)` in `profiles/playable.env`;
 CMake's `PICOCALC_APPS`). Each is described by `apps/typed/NAME/app.json`, and the port compiles every one of them to
 RV32 on the handheld through one path, `p4_typed_app_compile` in `main/typed_p4.c`. A profile with apps runs them as
 ELF modules, so it also turns on `PICOCALC_NATIVE_ELF`; a Typed app replaces the CJI-compiled world of the same name.
@@ -72,6 +72,22 @@ sources, `typed_apps.c` (the table `typed_p4.c` compiles from, declared in `main
 
 The console's `typed` lists the apps and their limits; `typed WORLD baseline` compiles a running world again from the
 bundle and restarts it, `typed WORLD build` from its editable file (`notes/agenda.typed` for Agenda).
+
+#### The compiled-module cache
+
+Every compile first asks a cache of compiled modules in `/files/.cache/typed` (PICOCALC-COMPILE-CACHE;
+`main/typed_cache.{h,c}` is the format, `main/typed_cache_p4.c` the device side). Its key is a SHA-256 over every input
+of the compile: the source, the reactor, every bundle under `typed/` (so any pass group a policy may load), the
+linker, the entry, the policy, and a digest of the compiler's C side (`typed_lex_index`, `typed_p4.c`, QuickJS) that
+CMake takes at configure time. A new firmware therefore misses only where the compiler or the app changed. A hit
+prints `NAME cache hit us=... read_us=... sha=...`; a miss compiles as before, under the deadline and heap limits, and
+a writer task stores the module after the boot (priority 1 on core 1: below the kernel and the painter's compile).
+An entry is written as `.tmp` and renamed; a read checks its header, key and SHA-256, and deletes a corrupt one.
+At most two entries per app and source stay, in at most 4 MB, leaving 1 MB of the partition free. `hold` stops the
+writer between entries. Console: `typed cache` lists entries, `typed cache clear` deletes them, `typed cache verify
+[APP]` compiles every cached source again and compares the modules byte for byte, `typed cache corrupt APP
+[flip|cut]` damages an app's entries (the corrupt-entry test). `/files/.cache` is invisible to worlds: their paths
+cannot name a hidden directory.
 
 In Chess, press **H** from the launcher to play White. Use the arrows and **Enter** to select and move, **Q/R/B/N** to
 choose a promotion, **F2** to restart, **F3/F4** to turn the camera, and **Esc** to cancel or leave.
