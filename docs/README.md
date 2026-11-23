@@ -7,6 +7,7 @@ ticket's copy of a guide is the record of what was known when it was written.
 |---|---|
 | [measuring.md](measuring.md) | Host gates, paired board studies, the device library, `PLAYABLE.json` and firmware profiles |
 | [typed-compiler-and-the-ray-tracer.md](typed-compiler-and-the-ray-tracer.md) | How the Typed compiler's RV32 backend closed the ray tracer's gap to C, one board-gated step at a time |
+| [rv32-executors.md](rv32-executors.md) | The three RV32 executors (reference interpreter, Go machine, rv32emu), their roles, and the conformance suite with RV32F captured on the P4 |
 | [candela-on-the-p4.md](candela-on-the-p4.md) | Candela's presets path-traced by the firmware and shown on the screen (the playable gallery) |
 | [agent/picocalc-agent-implementation.md](agent/picocalc-agent-implementation.md) | The LLM agent over the onboard ESP32-C6 (hardware, transport, build and provisioning) |
 | `compiler/typed/rv32/README.md` | The RV32 backend's modules, policies and option switches |
