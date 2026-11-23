@@ -67,13 +67,15 @@ function units(world) {
     }
 }
 
-// Walk one tape; returns the opcodes seen. `arity(index)` is a callee's parameter count. A local's, callee's or
+// Walk one tape; returns the opcodes seen. `arity(index)` is a callee's parameter count, `arity.results(index)` its
+// result count (a record result's leaves; 1 without it), `own` the function's result count and `type` its type
+// (T.ANY for a record result). A local's, callee's or
 // function's value has type T.ANY in the rows (local.get, local.set, call, drop, return): the walk accepts any type
 // where ANY is popped and pushes ANY, which every later pop accepts.
-function check(T, code, arity, where) {
+function check(T, code, arity, where, own = 1, type = T.I32) {
     const value = type => type === T.I32 || type === T.F32;
     const fail = (at, message) => assert.fail(where + " at cell " + at + ": " + message);
-    const stack = [], frames = [{height: 0, result: T.I32, dead: false}], seen = new Set();
+    const stack = [], frames = [{height: 0, result: type, dead: false, count: own}], seen = new Set();
     let at = 0;
     const pop = (types, op) => {
         const frame = frames.at(-1);
@@ -85,7 +87,7 @@ function check(T, code, arity, where) {
         }
     };
     const leave = (frame, op) => {
-        if (!frame.dead && stack.length !== frame.height + (value(frame.result) ? 1 : 0))
+        if (!frame.dead && stack.length !== frame.height + (frame.count ?? (value(frame.result) ? 1 : 0)))
             fail(at, T.name(op) + " leaves " + (stack.length - frame.height) + " values in its block");
         if (!frame.dead && value(frame.result) && stack.at(-1) !== frame.result && stack.at(-1) !== T.ANY)
             fail(at, "block result is not " + frame.result);
@@ -113,11 +115,12 @@ function check(T, code, arity, where) {
             frames.pop();
             if (!frames.length) {
                 if (at + 1 !== code.length) fail(at, "operations after the function's end");
-                stack.push(T.ANY);
+                for (let n = own; n > 0; n--) stack.push(T.ANY);
             } else stack.push(...(value(frame.result) ? [frame.result] : []));
         } else {
             if ((op === T.BR || op === T.BR_IF) && !(a >= 0 && a < frames.length - 1)) fail(at, row.name + " " + a + " leaves the function");
-            stack.push(...row.push);
+            if (op === T.CALL) for (let n = arity.results?.(a) ?? 1; n > 0; n--) stack.push(T.ANY);
+            else stack.push(...row.push);
             if (op === T.BR || op === T.RETURN || op === T.UNREACHABLE) frame.dead = true;
         }
         if (frame.dead && op !== T.END && op !== T.ELSE) stack.length = Math.min(stack.length, frame.height);
@@ -218,4 +221,27 @@ test("the walk fails on a wrong cell count", () => {
         assert.throws(() => { for (const code of tapes) check(wrong, code, index => params[index], T.name(op)); },
             undefined, T.name(op) + " with " + cells + " cells");
     }
+});
+
+// The Candela gallery (generated, f32, value records and record results) under "kernel": every pass that rewrites f32
+// functions only (fields, rows, coalesce) leaves tapes the table accepts.
+test("the Candela gallery's kernel tapes match the tape table", t => {
+    const ctx = compiler();
+    const T = ctx.typedTape;
+    const dir = "apps/typed/candela-gallery/";
+    const source = JSON.parse(read(dir + "app.json")).sources.map(name => read(new URL(name, new URL(dir, root)).pathname.slice(new URL(root).pathname.length))).join("\n");
+    const observed = [], phases = new Set();
+    const program = ctx.typedRv32.compile(source, [], 1 << 22, {policy: "kernel",
+        observeTape: (name, phase, code) => observed.push([name, phase, code])});
+    const arity = index => program.signatures[index].params.length;
+    arity.results = index => program.signatures[index].results?.length ?? 1;
+    const own = new Map(program.signatures.map(fn => [fn.name, fn]));
+    for (const [name, phase, code] of observed) {
+        const fn = own.get(name);
+        check(T, code, arity, "candela-gallery " + name + " after " + phase, fn.results?.length ?? 1,
+            fn.results ? T.ANY : fn.result === "f32" ? T.F32 : T.I32);
+        phases.add(phase);
+    }
+    t.diagnostic(observed.length + " tapes checked");
+    for (const phase of ["inline", "rows", "coalesce"]) assert(phases.has(phase), phase);
 });

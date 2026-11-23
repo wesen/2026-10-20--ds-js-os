@@ -4,7 +4,8 @@
 //
 //   name     the pass's name in a policy, in timing rows and, for a transform, in observeTape
 //   group    the bundle that holds its code (GROUPS)
-//   kind     "transform" rewrites fn.code and is observed after it runs; "analysis" leaves a result in the
+//   kind     "transform" rewrites fn.code and is observed after it runs (observe: false, never; "changed", when its
+//            run returns "changed"); "analysis" leaves a result in the
 //            function's context; "option" has no stage of its own and changes the pass it needs
 //   needs    passes that must precede it in the same list
 //
@@ -31,6 +32,10 @@ export const PASSES = [
     {name: "hoist", group: "loops", kind: "option", needs: ["version"]},
     {name: "induction", group: "loops", kind: "option", needs: ["version"]},
     {name: "split", group: "loops", kind: "transform"},
+    // rows and coalesce rewrite only f32 functions and is observed only when it changes a tape, so integer programs' observed
+    // tapes stay what they were.
+    {name: "rows", group: "loops", kind: "transform", observe: "changed"},
+    {name: "coalesce", group: "loops", kind: "transform", observe: "changed"},
     {name: "facts", group: "loops", kind: "analysis", needs: ["ranges"]},
 ];
 PASSES.forEach((pass, order) => pass.order = order);

@@ -1985,7 +1985,8 @@ function storelessAnalysis(callables, importCount) {
 //
 //   name     the pass's name in a policy, in timing rows and, for a transform, in observeTape
 //   group    the bundle that holds its code (GROUPS)
-//   kind     "transform" rewrites fn.code and is observed after it runs; "analysis" leaves a result in the
+//   kind     "transform" rewrites fn.code and is observed after it runs (observe: false, never; "changed", when its
+//            run returns "changed"); "analysis" leaves a result in the
 //            function's context; "option" has no stage of its own and changes the pass it needs
 //   needs    passes that must precede it in the same list
 //
@@ -2012,6 +2013,10 @@ const PASSES = [
     {name: "hoist", group: "loops", kind: "option", needs: ["version"]},
     {name: "induction", group: "loops", kind: "option", needs: ["version"]},
     {name: "split", group: "loops", kind: "transform"},
+    // rows and coalesce rewrite only f32 functions and is observed only when it changes a tape, so integer programs' observed
+    // tapes stay what they were.
+    {name: "rows", group: "loops", kind: "transform", observe: "changed"},
+    {name: "coalesce", group: "loops", kind: "transform", observe: "changed"},
     {name: "facts", group: "loops", kind: "analysis", needs: ["ranges"]},
 ];
 PASSES.forEach((pass, order) => pass.order = order);
@@ -2099,7 +2104,7 @@ const POLICIES = Object.freeze({
     kernel: Object.freeze({
         ...DEFAULT_POLICY,
         passes: Object.freeze(["inline", "fields", "commute", "conjunctions", "sets", "rotate", "ranges", "version", "hoist",
-            "induction", "split", "facts"]),
+            "induction", "split", "rows", "coalesce", "facts"]),
         operandLocations: Object.freeze({...DEFAULT_LOCATIONS, pointerOnly: true, reuseArgs: true}),
         select: Object.freeze({...DEFAULT_SELECT, loadHomes: true}),
     }),
@@ -2229,7 +2234,8 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 if (fn.literals) fn.literals = null;
                 return;
             }
-            if (stage.kind === "transform" && stage.observe !== false) observe(stage.name);
+            if (stage.kind === "transform" && (stage.observe === "changed" ? lowered === "changed" : stage.observe !== false))
+                observe(stage.name);
         }
         const {Emitter, facts} = ctx;
         let compiled = time(fn, "leaf", () => lowerLeaf(fn, callables, targets, options?.select, facts));

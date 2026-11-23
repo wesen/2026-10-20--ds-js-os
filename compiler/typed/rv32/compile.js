@@ -96,7 +96,8 @@ export function compile(source, imports = [], maxSourceLength, requested) {
                 if (fn.literals) fn.literals = null;
                 return;
             }
-            if (stage.kind === "transform" && stage.observe !== false) observe(stage.name);
+            if (stage.kind === "transform" && (stage.observe === "changed" ? lowered === "changed" : stage.observe !== false))
+                observe(stage.name);
         }
         const {Emitter, facts} = ctx;
         let compiled = time(fn, "leaf", () => lowerLeaf(fn, callables, targets, options?.select, facts));

@@ -4,7 +4,7 @@
 (() => {
 "use strict";
 if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-loops.js");
-const {ARRAY_ADDRESS, ARRAY_ZERO, BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape} = globalThis.typedRv32Modules;
+const {ARRAY_ADDRESS, ARRAY_ZERO, BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32_LOAD, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, floatingFunction, installPasses, opClose, opNext, replaceTape, tapeRow} = globalThis.typedRv32Modules;
 
 // rv32/passes/conjunctions.js
 // The conjunctions pass.
@@ -1012,6 +1012,238 @@ function splitLocals(code, params, nlocals) {
     return fresh === params + nlocals ? null : {code: out, nlocals: fresh - params, origin};
 }
 
+// rv32/passes/coalesce.js
+// The coalesce pass.
+
+// coalesce (PICOCALC-CANDELA-KERNEL-CODEGEN): an f32 copy `b = a` whose source dies at the copy and whose
+// destination is born there makes b and a one local, and a copy of a local into itself disappears. Value records
+// copy every leaf where a value moves (a declaration from a call's record result, an inlined callee's result locals,
+// a parameter copied into a mutable local), and each copy of a local the planner left in a slot is a load and a
+// store; one local per chain needs none.
+//
+// Liveness is the planner's (planLocations' share): a local lives from its first to its last occurrence in tape
+// order, a parameter from the entry, and an interval that reaches into a loop from before it covers the whole loop
+// (innermost loops first); a local whose first occurrence is a read lives everywhere and is left alone. A copy is
+// a `local.set b` whose value is a `local.get a` on the abstract operand stack (the leaves of a value record are
+// pushed together and stored last first). It coalesces when both are f32 locals, b is not a parameter, a's
+// interval (merged with earlier coalesced locals) ends at the get and b's starts at the set: a is dead after the get
+// and b holds no value before the set, so one local holds both values in turn. Chains coalesce in tape order.
+// After renaming, a `local.set x` of a `local.get x` that no write of x separates is deleted with the get (the
+// operations between them never reach below the value). The locals no occurrence names any more are removed and the
+// rest renumbered; `origin` (the split pass's map to the analysed locals) is composed with the renumbering.
+// Only f32 locals take part: an integer local can feed division facts and buffer addresses, and integer programs
+// keep their pinned images.
+function coalesceCopies(fn, arity, origin) {
+    const code = fn.code, params = fn.params.length, total = params + fn.nlocals;
+    const isFloat = local => (local < params ? fn.params[local] : fn.localTypes?.[local - params]) === "f32";
+    // Intervals.
+    const first = new Int32Array(total).fill(-1), last = new Int32Array(total).fill(-1), readFirst = new Uint8Array(total);
+    const loopSpans = [], loopStarts = [], opened = [];
+    for (let at = 0; at < code.length; at = opNext(code, at)) {
+        const op = code[at];
+        if (!(CELLS[op] >= 0)) return null;
+        const occur = (local, read) => {
+            if (first[local] < 0) { first[local] = at; if (read) readFirst[local] = 1; }
+            last[local] = at;
+        };
+        if (op === LOCAL_GET || op === LITERAL_STORES) occur(code[at + 1], true);
+        else if (op === LOCAL_SET) occur(code[at + 1], false);
+        else if (op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS) { occur(code[at + 1], true); occur(code[at + 2], true); }
+        if (op >= BLOCK && op <= IF) { opened.push(op); if (op === LOOP) loopStarts.push(at); }
+        else if (op === END && opened.length && opened.pop() === LOOP) loopSpans.push([loopStarts.pop(), at]);
+    }
+    const start = local => local < params ? -1 : first[local];
+    const end = Int32Array.from(last);
+    loopSpans.sort((x, y) => (x[1] - x[0]) - (y[1] - y[0]));
+    for (const [ls, le] of loopSpans)
+        for (let i = 0; i < total; i++) if (last[i] >= 0 && start(i) < ls && end[i] >= ls && end[i] < le) end[i] = le;
+
+    // Copies, with an abstract operand stack: an entry is the local a plain local.get pushed, or -1.
+    const rep = Int32Array.from({length: total}, (_, i) => i);
+    const find = x => { while (rep[x] !== x) x = rep[x] = rep[rep[x]]; return x; };
+    let merged = 0;
+    walkCopies(code, arity, (a, g, b, s) => {
+        const ra = find(a);
+        if (b < params || ra === b || !isFloat(a) || !isFloat(b) || readFirst[b] || (ra >= params && readFirst[ra])) return;
+        if (first[b] !== s || end[ra] !== g) return;
+        rep[b] = ra;
+        end[ra] = end[b];
+        merged++;
+    });
+    if (!merged) return null;
+
+    // Rename, then delete the copies of a local into itself.
+    const out = code.slice();
+    for (let at = 0; at < out.length; at = opNext(out, at))
+        if (out[at] === LOCAL_GET || out[at] === LOCAL_SET) out[at + 1] = find(out[at + 1]);
+    const dead = new Set();
+    walkCopies(out, arity, (a, g, b, s) => { if (a === b) { dead.add(g); dead.add(s); } });
+    // Renumber the locals still named.
+    const used = new Uint8Array(total);
+    for (let i = 0; i < params; i++) used[i] = 1;
+    for (let at = 0; at < out.length; at = opNext(out, at)) {
+        if (dead.has(at)) continue;
+        const op = out[at];
+        if (op === LOCAL_GET || op === LOCAL_SET || op === LITERAL_STORES) used[out[at + 1]] = 1;
+        else if (op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS) used[out[at + 1]] = used[out[at + 2]] = 1;
+    }
+    const index = new Int32Array(total).fill(-1), from = [];
+    for (let i = 0; i < total; i++) if (used[i]) { index[i] = from.length; from.push(i); }
+    const result = [];
+    for (let at = 0; at < out.length; at = opNext(out, at)) {
+        if (dead.has(at)) continue;
+        const op = out[at], next = opNext(out, at), operand = result.length + 1;
+        for (let k = at; k < next; k++) result.push(out[k]);
+        if (op === LOCAL_GET || op === LOCAL_SET || op === LITERAL_STORES) result[operand] = index[out[at + 1]];
+        else if (op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS) {
+            result[operand] = index[out[at + 1]];
+            result[operand + 1] = index[out[at + 2]];
+        }
+    }
+    const nlocals = from.length - params;
+    const localTypes = fn.localTypes ? from.slice(params).map(i => fn.localTypes[i - params]) : undefined;
+    return {code: result, nlocals, localTypes, origin: local => origin(from[local])};
+}
+
+// Calls onCopy(a, getAt, b, setAt) for each local.set b whose value is the value a plain local.get a pushed, with no
+// write of a between them. Blocks restore the stack height at else and end; code after br, return and unreachable
+// is skipped to the end of its block.
+function walkCopies(code, arity, onCopy) {
+    const local = [], getAt = [], blocks = [];
+    let sp = 0, dead = 0;
+    const push = (l, at) => { local[sp] = l; getAt[sp] = at; sp++; };
+    const pop = n => { sp = Math.max(0, sp - n); };
+    for (let at = 0; at < code.length; at = opNext(code, at)) {
+        const op = code[at];
+        if (dead) {
+            if (op >= BLOCK && op <= IF) dead++;
+            else if (op === END && --dead === 0) { const b = blocks.pop(); if (b) sp = b.height + Number(b.value); }
+            else if (op === ELSE && dead === 1) { dead = 0; sp = blocks.at(-1).height; }
+            continue;
+        }
+        if (op === LOCAL_GET) push(code[at + 1], at);
+        else if (op === LOCAL_SET) {
+            const b = code[at + 1];
+            if (sp > 0) {
+                const a = local[sp - 1];
+                sp--;
+                if (a >= 0) onCopy(a, getAt[sp], b, at);
+            }
+            for (let i = 0; i < sp; i++) if (local[i] === b) local[i] = -1;
+        } else if (op >= BLOCK && op <= IF) {
+            if (op === IF) pop(1);
+            blocks.push({height: sp, value: code[at + 1] !== VOID});
+        } else if (op === ELSE) sp = blocks.at(-1).height;
+        else if (op === END) {
+            if (blocks.length) { const b = blocks.pop(); sp = b.height; if (b.value) push(-1, at); }
+        } else if (op === BR || op === RETURN || op === UNREACHABLE) dead = 1;
+        else if (op === CALL) {
+            pop(arity(code[at + 1]));
+            for (let n = arity.results?.(code[at + 1]) ?? 1; n > 0; n--) push(-1, at);
+        } else {
+            const row = tapeRow(op);
+            pop(row.pop.length);
+            for (let n = row.push.length; n > 0; n--) push(-1, at);
+        }
+    }
+}
+
+// rv32/passes/rows.js
+// The rows pass.
+
+// rows (PICOCALC-CANDELA-KERNEL-CODEGEN): f32 reads of one buffer at constant distances from one index, as a kernel
+// reads a row of vectors (`b.getF32(a)`, `b.getF32(a + 1)` ... ), share one range check and one address. Each
+// `b.getF32(E)` is written `E; const 1; shl; const 1; add; set p; checked_address b p; f32.load 2 2` (unit 2E + 1 is
+// checked, the load reads at b + 4 + 4E), with E a local L, `L + k` or a literal k. Reads of the same b and L inside
+// one straight stretch of tape (no block, branch, call or store between them, and no write of b or L) form a group;
+// a group of three or more becomes, where its first read's index began:
+//     P = 2(L + kmin) + 1; trap unless P <u capacity(b); trap unless P + 2(kmax - kmin) <u capacity(b);
+//     Q = b + 2P
+// and each read k a load from Q at 2 + 4(k - kmin): one instruction for a homed Q. The two checks together are
+// exact: P is below a capacity under 2^31, so P + 2d does not wrap and every unit from P to P + 2d is in range
+// exactly when both are. A group of literal indices needs only the check of its largest and loads from b itself
+// at 4 + 4k. A read that would trap traps at the group's start instead of at itself; nothing between them stores
+// to memory, calls or branches, so the memory a trap leaves is the same.
+// The pass runs only on f32 functions (integer programs keep their pinned images).
+const MIN_GROUP = 3;
+const BOUNDARY = new Set([BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, RETURN, UNREACHABLE, CALL]);
+
+// The read whose index expression starts at `at`: {end, L, k, r} (L -1 for a literal index), or null.
+function readAt(code, at) {
+    let x = at, L = -1, k = 0;
+    if (code[x] === LOCAL_GET) {
+        L = code[x + 1]; x += 2;
+        if (code[x] === I32_CONST && code[x + 2] === I32_ADD) { k = code[x + 1]; x += 3; }
+    } else if (code[x] === I32_CONST) { k = code[x + 1]; x += 2; }
+    else return null;
+    if (!(code[x] === I32_CONST && code[x + 1] === 1 && code[x + 2] === I32_SHL && code[x + 3] === I32_CONST &&
+        code[x + 4] === 1 && code[x + 5] === I32_ADD && code[x + 6] === LOCAL_SET && code[x + 8] === CHECKED_ADDRESS &&
+        code[x + 10] === code[x + 7] && code[x + 11] === F32_LOAD && code[x + 12] === 2 && code[x + 13] === 2)) return null;
+    if (k < 0 || k > 500) return null;
+    return {start: at, end: x + 14, L, k, r: code[x + 9]};
+}
+
+function groupRowReads(fn) {
+    const code = fn.code;
+    const groups = [], open = new Map();
+    const close = key => { const g = open.get(key); if (g) { open.delete(key); if (g.reads.length >= MIN_GROUP) groups.push(g); } };
+    const closeAll = () => { for (const key of [...open.keys()]) close(key); };
+    for (let at = 0; at < code.length;) {
+        const op = code[at];
+        if (!(CELLS[op] >= 0)) return null;
+        const read = readAt(code, at);
+        if (read) {
+            const key = read.r + ":" + read.L;
+            if (!open.has(key)) open.set(key, {r: read.r, L: read.L, reads: []});
+            open.get(key).reads.push(read);
+            at = read.end;
+            continue;
+        }
+        if (BOUNDARY.has(op) || (EFFECTS[op] & STORES)) closeAll();
+        else if (op === LOCAL_SET) for (const [key, g] of open) if (g.r === code[at + 1] || g.L === code[at + 1]) close(key);
+        at = opNext(code, at);
+    }
+    closeAll();
+    const usable = groups.filter(g => {
+        const ks = g.reads.map(x => x.k);
+        return Math.max(...ks) - Math.min(...ks) <= 500;
+    });
+    if (!usable.length) return null;
+    // Rewrite: a header before each group's first read, a load from the group's base for each read.
+    let locals = fn.params.length + fn.nlocals;
+    const header = new Map(), replace = new Map();
+    for (const g of usable) {
+        const ks = g.reads.map(x => x.k), kmin = Math.min(...ks), kmax = Math.max(...ks);
+        const check = position => [...position, LOCAL_GET, g.r, I32_LOAD, 2, 0, I32_GE_U, IF, VOID, UNREACHABLE, END];
+        if (g.L < 0) {
+            header.set(g.reads[0].start, check([I32_CONST, 2 * kmax + 1]));
+            for (const x of g.reads) replace.set(x.start, {end: x.end, cells: [LOCAL_GET, g.r, F32_LOAD, 2, 4 + 4 * x.k]});
+            continue;
+        }
+        const P = locals++, Q = locals++;
+        const cells = [LOCAL_GET, g.L, ...(kmin ? [I32_CONST, kmin, I32_ADD] : []), I32_CONST, 1, I32_SHL, I32_CONST, 1, I32_ADD,
+            LOCAL_SET, P, ...check([LOCAL_GET, P])];
+        if (kmax > kmin) cells.push(...check([LOCAL_GET, P, I32_CONST, 2 * (kmax - kmin), I32_ADD]));
+        cells.push(LOCAL_GET, g.r, LOCAL_GET, P, I32_CONST, 1, I32_SHL, I32_ADD, LOCAL_SET, Q);
+        header.set(g.reads[0].start, cells);
+        for (const x of g.reads) replace.set(x.start, {end: x.end, cells: [LOCAL_GET, Q, F32_LOAD, 2, 2 + 4 * (x.k - kmin)]});
+    }
+    const out = [];
+    for (let at = 0; at < code.length;) {
+        const h = header.get(at);
+        if (h) out.push(...h);
+        const r = replace.get(at);
+        if (r) { out.push(...r.cells); at = r.end; continue; }
+        const next = opNext(code, at);
+        for (let k = at; k < next; k++) out.push(code[k]);
+        at = next;
+    }
+    const added = locals - fn.params.length - fn.nlocals;
+    const localTypes = fn.localTypes ? [...fn.localTypes] : [];
+    for (let i = localTypes.length; i < locals - fn.params.length; i++) localTypes[i] ??= "i32";
+    return {code: out, nlocals: fn.nlocals + added, localTypes: fn.localTypes || added ? localTypes : undefined, groups: usable.length};
+}
+
 // rv32/analysis/ranges.js
 // Local value ranges and division facts (the ranges and facts passes).
 
@@ -1191,7 +1423,7 @@ function divisionFacts(code, params, arity, ranges, origin) {
 
 // rv32/passes/loops-group.js
 // The "loops" group (typed-rv32-loops.js): version with hoist and induction, split, and the passes only
-// "kernel" runs (conjunctions, sets, ranges, facts). Loading this module installs them in the registry.
+// "kernel" runs (conjunctions, sets, ranges, rows, coalesce, facts). Loading this module installs them in the registry.
 
 installPasses("loops", {
     conjunctions: {run: fn => replaceTape(fn, fuseConjunctions(fn.code))},
@@ -1220,6 +1452,25 @@ installPasses("loops", {
             }
             ctx.origin = local => local >= before ? split.origin[local - before] : local;
         }
+    }},
+    rows: {run(fn) {
+        if (!floatingFunction(fn)) return undefined;
+        const grouped = groupRowReads(fn);
+        if (!grouped) return undefined;
+        fn.code = grouped.code;
+        fn.nlocals = grouped.nlocals;
+        if (grouped.localTypes) fn.localTypes = grouped.localTypes;
+        return "changed";
+    }},
+    coalesce: {run(fn, ctx) {
+        if (!floatingFunction(fn)) return undefined;
+        const coalesced = coalesceCopies(fn, ctx.arity, ctx.origin);
+        if (!coalesced) return undefined;
+        fn.code = coalesced.code;
+        fn.nlocals = coalesced.nlocals;
+        if (coalesced.localTypes) fn.localTypes = coalesced.localTypes;
+        ctx.origin = coalesced.origin;
+        return "changed";
     }},
     facts: {run(fn, ctx) {
         if (ctx.ranges) ctx.facts = divisionFacts(fn.code, fn.params.length, ctx.arity, ctx.ranges, ctx.origin) ?? undefined;
