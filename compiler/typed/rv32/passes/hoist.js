@@ -1,5 +1,5 @@
 // The hoist option of the version pass: loop invariants and subexpressions into the guard block.
-import {opNext, LOCAL_SET, LOCAL_GET, LITERAL_STORES, CHECKED_ADDRESS, UNCHECKED_ADDRESS, BLOCK, IF, I32, ELSE, END, I32_CONST, DROP, BR_IF, BR, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_EQZ, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_DIV_S, I32_REM_S} from "../encoding/tape.js";
+import {opNext, LOCAL_SET, LOCAL_GET, LITERAL_STORES, CHECKED_ADDRESS, UNCHECKED_ADDRESS, BLOCK, IF, I32, ELSE, END, I32_CONST, DROP, BR_IF, BR, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_EQZ, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_DIV_S, I32_REM_S} from "../encoding/tape.js";
 
 // the hoist pass: a statement of a versioned loop's fast copy that computes the same value in
 // every iteration moves into the guard block, after the guard's terms and before the loop.
@@ -74,7 +74,7 @@ export function hoistInvariants(body, unchecked, k, readOutside, storeless, arit
         case LITERAL_STORES: stored.add(a); break;
         case I32_EQZ: break;
         default:
-            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return null;
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
             tags.pop(); tags.pop(); tags.push(null);
         }
         if (!dead && tags.length === frames.at(-1).base) start = i + 1;
@@ -111,7 +111,7 @@ export function hoistInvariants(body, unchecked, k, readOutside, storeless, arit
                 } else if (op === I32_LOAD16_U) ok = prev >= 0 && body[prev] === UNCHECKED_ADDRESS;
                 else if (op === I32_LOAD) ok = body[p + 2] === 0 && prev >= 0 && body[prev] === LOCAL_GET && invariant(body[prev + 1]);
                 else if (op === I32_DIV_S || op === I32_REM_S) ok = prev >= 0 && body[prev] === I32_CONST && body[prev + 1] !== 0 && body[prev + 1] !== -1;
-                else ok = op === I32_EQZ || (op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S);
+                else ok = op === I32_EQZ || (op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U);
             }
             if (!ok) continue;
             hoisted.add(n);
@@ -220,7 +220,7 @@ export function hoistSubexpressions(body, k, arity, fresh) {
         case LITERAL_STORES: break;
         case I32_EQZ: combine(i, 1, true); break;
         default: {
-            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return null;
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
             if (op === I32_DIV_S || op === I32_REM_S) {
                 const d = slots.at(-1);
                 const constant = d?.inv && d.start === d.end && body[ops[d.start]] === I32_CONST ? body[ops[d.start] + 1] : undefined;

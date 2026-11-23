@@ -254,3 +254,56 @@ The user reported a black display. The cause was the screen's on/off state, not 
   - `compiler/typed/async/` modules, bundled back into one file.
   - Errors mapped to source positions without a second compile.
   - A real async test with 18 diagnostics checked on both targets.
+
+## Step 8: PIPELINE merged; REGISTERS and BITWISE started
+
+PIPELINE came back with byte-identical output. Two lazily loaded pass groups cut the compiler's peak heap by 122–157 KB for the boot apps that use them, and cost 15–96 ms of boot compile on the P4, for a reason not yet found. I merged it and started REGISTERS and BITWISE.
+
+### What I did
+
+- **Merged PIPELINE.** Clean merge; all three generated bundles check current. `make test` exit 0. `gates.sh` default and `kernel`: ray `430f0d501659`, Chess 6,981 words, 24/24 replays.
+- **Started REGISTERS and BITWISE in parallel.** Both touch `rv32/emit` and `rv32/encoding`. REGISTERS keeps its table additive, and BITWISE keeps its emitter cases local.
+- **Started a playable build, install and gallery check** at the PIPELINE merge.
+
+### Why I accepted the slowdown
+
+PIPELINE's paired board study (3 blocks):
+
+| App | Compile, control → candidate | Peak heap |
+|---|---|---|
+| Agenda | 0.700 → 0.715 s | −149 KB |
+| Editor | 3.219 → 3.237 s | −157 KB |
+| Files | 0.447 → 0.471 s | +34 KB |
+| Chess | 3.920 → 4.016 s | −122 KB |
+
+- Every app stays within 75 % of its deadline. Chess is closest, at 4.016 s against 4.50 s.
+- Memory is the scarcer resource for boot apps (a 768 KiB world allowance; Editor's compile peak is near its cap), so the heap saving is worth the time.
+- The slowdown happens only on the device: callgrind counts are equal on the host. It is recorded as an open question in PIPELINE's ticket, with suspects: memory placement, evaluating the group inside the compile, the emitter's prototype mixins.
+
+### What warrants a second pair of eyes
+
+- **Chess's deadline margin is 0.48 s.** Any later compile-time growth for Chess must be measured against it.
+- **Files loads both pass groups.** Moving `split` into the core would save its 34 KB.
+
+### Milestone 1 status
+
+Vault report 1 (the compiler's new architecture) waits for REGISTERS and BITWISE. TAPE, FRONTEND, PIPELINE and ASYNC-TAPE are merged.
+
+## Step 9: The playable image at f4fc56c, and a gallery check that no longer needs the gallery in front
+
+The playable image `0a0d5d8f…` (built at `f4fc56c`, the PIPELINE merge) is installed and recorded. Health passes with the peripherals on, and the 18 scenes agree with the RV32 reference.
+
+### What didn't work
+
+- **The first gallery check.**
+
+  ```
+  AssertionError: no CGAL scene record within 120 s: the gallery is not drawing
+  ```
+
+  The healthy-input check presses keys, and the gallery draws only while it is on screen, so the gallery was not in front. APP-MANIFEST hit the same.
+
+### What I did
+
+- **`bench/board/gallery.py` waits at most `--wait` seconds (default 60)** for a scene, records `drawing` (null when not drawing), and runs the digests anyway; `gallery digest` does not need the gallery in front. Rerun into `various/09-gallery-f4fc56c`: 18/18 agree.
+- **Committed** `PLAYABLE.json`, the evidence and the script change.

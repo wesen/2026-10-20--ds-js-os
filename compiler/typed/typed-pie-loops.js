@@ -3,7 +3,7 @@
 "use strict";
 
 const {BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, DROP, LOCAL_GET, LOCAL_SET, I32_LOAD, I32_LOAD16_U, I32_STORE16, I32_CONST,
-    I32_EQZ, I32_EQ, I32_LT_S, I32_GE_S, I32_ADD, I32_SUB, I32_SHR_S, CHECKED_ADDRESS, LITERAL_STORES, I32, VOID} = typedTape;
+    I32_EQZ, I32_EQ, I32_LT_S, I32_GE_S, I32_ADD, I32_SUB, I32_SHR_U, CHECKED_ADDRESS, LITERAL_STORES, I32, VOID} = typedTape;
 const get = LOCAL_GET, set = LOCAL_SET, literal = I32_CONST, add = I32_ADD, address = CHECKED_ADDRESS;
 const is = (op, code, arg) => op?.opcode === code && (arg === undefined || op.operands[0] === arg);
 function value(op) {
@@ -49,7 +49,7 @@ function memoryEffects(ops, begin, end, iv) {
             break;
         }
         default:
-            if (op.opcode<I32_EQ || op.opcode>I32_SHR_S) return {reason:"continuation has an unsupported control transfer, call or memory effect"};
+            if (op.opcode<I32_EQ || op.opcode>I32_SHR_U) return {reason:"continuation has an unsupported control transfer, call or memory effect"};
             stack.pop(); stack.pop(); stack.push(null);
         }
     }

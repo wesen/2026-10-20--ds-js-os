@@ -113,6 +113,7 @@ def main():
     ap.add_argument("out", type=Path)
     ap.add_argument("--passes", type=int, default=4)
     ap.add_argument("--port", default=device.PORT)
+    ap.add_argument("--wait", type=int, default=60, help="seconds to wait for the gallery to report a scene")
     a = ap.parse_args()
     assert a.passes == 4, "the reference holds 4-pass digests"
     reference = {r["id"]: r for r in map(json.loads, REFERENCE.read_text().splitlines())}
@@ -122,9 +123,12 @@ def main():
     with device.acquire(), (a.out / "uart.log").open("wb", buffering=0) as log:
         console = device.Console(a.port, log)
         try:
-            drawing = wait_for(console, rec, lambda r: r.get("ev") in ("scene", "pass", "first"), 120)
-            assert drawing, "no CGAL scene record within 120 s: the gallery is not drawing"
+            # The gallery draws only while it is on screen; a key press (the health check's input probe, a person)
+            # takes it away. The digests below do not need it in front, so record whether it was drawing.
+            drawing = wait_for(console, rec, lambda r: r.get("ev") in ("scene", "pass", "first"), a.wait)
             result["drawing"] = drawing
+            if drawing is None:
+                print(f"the gallery is not drawing (no CGAL scene record within {a.wait} s); checking digests anyway")
             result["shot"] = shot(console, rec, a.out)
             rec.step = "list"
             command(console, rec, "gallery list")

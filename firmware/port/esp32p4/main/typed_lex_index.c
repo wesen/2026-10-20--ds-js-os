@@ -59,7 +59,9 @@ static enum token_kind scan_token(scan_state *s) {
     if (ident_start(*p) || digit(*p)) {
         enum token_kind kind = digit(*p) ? INTEGER : IDENTIFIER;
         size_t end = 1;
-        while (end < remain && (digit(p[end]) || (kind == IDENTIFIER && ident_start(p[end])))) end++;
+        /* A hex literal is 0x and word characters, as the reference's 0[xX]\w*; the parser checks the digits. */
+        int word = kind == IDENTIFIER || (*p == '0' && remain >= 2 && (p[1] == 'x' || p[1] == 'X'));
+        while (end < remain && (digit(p[end]) || (word && ident_start(p[end])))) end++;
         advance_ascii(s, (unsigned)end);
         return kind;
     }
@@ -85,10 +87,11 @@ static enum token_kind scan_token(scan_state *s) {
         return 0;
     }
     unsigned width = 0;
-    if (remain >= 3 && (*p == '=' || *p == '!') && p[1] == '=' && p[2] == '=') width = 3;
+    if (remain >= 3 && (((*p == '=' || *p == '!') && p[1] == '=' && p[2] == '=') ||
+                        (*p == '>' && p[1] == '>' && p[2] == '>'))) width = 3;
     else if (remain >= 2 && (((*p == '<' || *p == '>') && p[1] == '=') ||
-             ((*p == '>' || *p == '&' || *p == '|') && p[1] == *p))) width = 2;
-    else if (*p && *p < 128 && strchr("{}():;,.=-+*/%!<>", *p)) width = 1;
+             ((*p == '<' || *p == '>' || *p == '&' || *p == '|') && p[1] == *p))) width = 2;
+    else if (*p && *p < 128 && strchr("{}():;,.=-+*/%!<>&|^~", *p)) width = 1;
     if (!width) return 0;
     advance_ascii(s, width);
     return OPERATOR;
