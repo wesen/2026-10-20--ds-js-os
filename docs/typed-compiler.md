@@ -28,7 +28,9 @@ but not lines; the compile errors' messages carry their Typed positions themselv
 group only when a compile's policy needs it: `interactive` (Agenda, Editor, Files) loads none, `balanced` (Chess) the
 inline group, `default` (Candela's scene) inline and loops, `kernel` all three. After every compile the device prints
 a `TYPEDCOMPILE {...}` line: each evaluated compiler source (cached or parsed, load and run time, the heap after it),
-the linker call and the teardown.
+the linker call, the teardown, and the compile's calls to the PSRAM heap with the time spent in them. QuickJS takes
+its small objects' 4 KB arenas from that heap and returns each the moment it empties; a compile parks the freed ones
+and reuses them instead of handing them back to the heap thousands of times.
 
 ## The pipeline
 
