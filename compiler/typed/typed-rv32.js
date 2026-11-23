@@ -5,9 +5,62 @@
 "use strict";
 
 // rv32/encoding/registers.js
-// RV32 registers and the instruction encoders.
+// RV32 registers, their classes and the six base instruction formats.
+//
+// A register is a number: 0-31 are the integer registers x0-x31, 32-63 the float registers f0-f31 (f_n is
+// 32 + n). The class is reg >> 5 (X or F) and the field value reg & 31. Integer code is therefore unchanged:
+// every integer register keeps its plain number, and only the float encoders mask (encoding/instructions.js).
+// The integer formats below take field values as they are, so they must never see a float register.
+const X = 0, F = 1;
 const ZERO = 0, RA = 1, SP = 2, A0 = 10, T5 = 30, T6 = 31;
+const F0 = 32, FA0 = 42;
 const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
+const classOf = reg => reg >> 5;
+
+// The register names GNU as accepts (ABI names), by register number.
+const REGISTER_NAMES = ["zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1",
+    "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11",
+    "t3", "t4", "t5", "t6",
+    "ft0", "ft1", "ft2", "ft3", "ft4", "ft5", "ft6", "ft7", "fs0", "fs1",
+    "fa0", "fa1", "fa2", "fa3", "fa4", "fa5", "fa6", "fa7", "fs2", "fs3", "fs4", "fs5", "fs6", "fs7", "fs8", "fs9",
+    "fs10", "fs11", "ft8", "ft9", "ft10", "ft11"];
+
+// The ilp32f calling convention, one table per class. arguments: in order (the first also returns the
+// result); saved: callee-saved; homes: the callee-saved registers the planner may claim (s0 stays free as a
+// possible frame pointer; every fs register may be claimed); stack: the emitter's operand-stack registers;
+// scratch: registers the emitter clobbers freely.
+const range = (from, to) => Array.from({length: to - from + 1}, (_, i) => from + i);
+const REGISTER_CLASSES = [
+    {id: X, name: "x", arguments: range(10, 17), saved: [8, 9, ...range(18, 27)], homes: [9, ...range(18, 27)],
+        temporaries: [5, 6, 7, 28, 29, 30, 31], stack: STACK_REGISTERS, scratch: [T5, T6]},
+    {id: F, name: "f", arguments: range(42, 49), saved: [40, 41, ...range(50, 59)], homes: [40, 41, ...range(50, 59)],
+        temporaries: [...range(32, 39), ...range(60, 63)], stack: range(32, 36), scratch: [62, 63]},
+];
+
+// A Typed value type's register class: f32 lives in float registers, everything else (i32, bool, enums,
+// records and buffers as addresses) in integer registers.
+const typeClass = type => type === "f32" ? F : X;
+
+// A callee-saved register (of either class) that the planner may claim as a home.
+const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27) || reg === 40 || reg === 41 || (reg >= 50 && reg <= 59);
+
+// The incoming register of each parameter under ilp32f: the integer parameters take a0-a7 in order and the
+// f32 parameters fa0-fa7, independently. More than eight of one class is outside the register convention.
+function argumentRegisters(types) {
+    const out = new Array(types.length);
+    let x = 0, f = 0;
+    for (let i = 0; i < types.length; i++) {
+        if (types[i] === "f32") out[i] = FA0 + f++;
+        else out[i] = A0 + x++;
+    }
+    if (x > 8 || f > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
+    return out;
+}
+
+// argumentRegisters of a function descriptor's parameters, kept on the descriptor (fn.registers): a call site
+// asks for its callee's on every call.
+const calleeRegisters = fn => fn.registers ??= argumentRegisters(fn.params);
+
 const instruction = {
     r: (op, rd, f3, a, b, f7 = 0) => (f7 << 25) | (b << 20) | (a << 15) | (f3 << 12) | (rd << 7) | op,
     i: (op, rd, f3, a, imm) => (imm << 20) | (a << 15) | (f3 << 12) | (rd << 7) | op,
@@ -17,6 +70,131 @@ const instruction = {
     j: (rd, imm) => ((imm & 0x100000) << 11) | ((imm & 0x7fe) << 20) | ((imm & 0x800) << 9) |
         (imm & 0xff000) | (rd << 7) | 0x6f,
 };
+
+// rv32/encoding/instructions.js
+// The instruction table: every instruction the RV32 backend may emit, as one row each, and ENCODE, an encoder
+// per row. RV32IM, the Zicsr instructions (the backend touches only fflags, frm and fcsr), all of RV32F and the
+// Espressif PIE instructions of typed-pie-loops.js. tests/compiler/typed-rv32-encoding.test.mjs assembles every
+// row with GNU as from the ESP toolchain and compares the words.
+//
+// A row is [mnemonic, match, operands]: match holds the fixed bits, and operands is the instruction's assembler
+// syntax, whose fields (below) give both the bits and the encoder's arguments, in the order they appear:
+// ENCODE.lw(rd, offset, base) for "xd, i12(x1)", ENCODE.fadd_s(rd, a, b, rm) for "fd, f1, f2, rm". The key is
+// the mnemonic with "." replaced by "_". A register argument is a register number of encoding/registers.js
+// (f_n is 32 + n); an encoder throws when it gets a register of the other class. rm, the rounding mode, may be
+// omitted: it is then 7 (dynamic, frm), as GNU as assembles it.
+
+const ROUNDING = ["rne", "rtz", "rdn", "rup", "rmm", , , "dyn"];
+const CSR = {fflags: 1, frm: 2, fcsr: 3};
+
+function wrongClass(field, r) { return new TypeError("RV32 " + field + " operand is not " + (field[0] === "f" ? "a float" : "an integer") + " register: " + r); }
+const xField = (field, shift) => r => { if (r >>> 5) throw wrongClass(field, r); return r << shift; };
+const fField = (field, shift) => r => { if (r >> 5 !== 1) throw wrongClass(field, r); return (r & 31) << shift; };
+// PIE address registers: a 4-bit index of x8-x15 (0-7) and x24-x31 (8-15).
+const espField = (field, shift) => r => {
+    if (!(r & 8) || r >>> 5) throw new TypeError("RV32 " + field + " operand is not a PIE address register: " + r);
+    return ((r & 7) | ((r >> 1) & 8)) << shift;
+};
+// A PIE post-increment: imm / scale as a signed 8-bit value, bit 0 at 9, bits 1-4 at 20-23, bits 5-7 at 28-30.
+const espStep = scale => imm => { const k = imm / scale; return ((k & 1) << 9) | (((k >> 1) & 15) << 20) | (((k >> 5) & 7) << 28); };
+
+// The fields an operand string may name. Register fields: x/f for the class, d (rd, bit 7), 1 (rs1, bit 15),
+// 2 (rs2, bit 20), 3 (rs3, bit 27). The PIE fields: qu/qv/qx/qy/qm the vector registers q0-q7 of the
+// respective instruction forms, er/ed a PIE address register at bit 15/7, e2/e16 a post-increment.
+const INSTRUCTION_FIELDS = {
+    xd: xField("xd", 7), x1: xField("x1", 15), x2: xField("x2", 20),
+    fd: fField("fd", 7), f1: fField("f1", 15), f2: fField("f2", 20), f3: fField("f3", 27),
+    rm: rm => (rm === undefined ? 7 : rm) << 12,
+    i12: imm => imm << 20,
+    sh: n => (n & 31) << 20,
+    s12: imm => ((imm >> 5) << 25) | ((imm & 31) << 7),
+    b13: imm => ((imm & 0x1000) << 19) | ((imm & 0x7e0) << 20) | ((imm & 0x1e) << 7) | ((imm & 0x800) >> 4),
+    u20: imm => imm << 12,
+    j21: imm => ((imm & 0x100000) << 11) | ((imm & 0x7fe) << 20) | ((imm & 0x800) << 9) | (imm & 0xff000),
+    csr: n => n << 20,
+    z5: n => (n & 31) << 15,
+    qu: q => q << 10, qv: q => q << 20, qx: q => q << 29, qy: q => q << 26,
+    qm: q => ((q & 1) << 24) | (((q >> 1) & 1) << 25) | (((q >> 2) & 1) << 19),
+    er: espField("er", 15), ed: espField("ed", 7),
+    e2: espStep(2), e16: espStep(16),
+};
+
+const R = "xd, x1, x2", I = "xd, x1, i12", LOAD = "xd, i12(x1)", STORE = "x2, s12(x1)", BRANCH = "x1, x2, b13";
+const INSTRUCTION_ROWS = [
+    // RV32I
+    ["lui", 0x37, "xd, u20"], ["auipc", 0x17, "xd, u20"], ["jal", 0x6f, "xd, j21"], ["jalr", 0x67, LOAD],
+    ["beq", 0x63, BRANCH], ["bne", 0x1063, BRANCH], ["blt", 0x4063, BRANCH], ["bge", 0x5063, BRANCH],
+    ["bltu", 0x6063, BRANCH], ["bgeu", 0x7063, BRANCH],
+    ["lb", 0x03, LOAD], ["lh", 0x1003, LOAD], ["lw", 0x2003, LOAD], ["lbu", 0x4003, LOAD], ["lhu", 0x5003, LOAD],
+    ["sb", 0x23, STORE], ["sh", 0x1023, STORE], ["sw", 0x2023, STORE],
+    ["addi", 0x13, I], ["slti", 0x2013, I], ["sltiu", 0x3013, I], ["xori", 0x4013, I], ["ori", 0x6013, I],
+    ["andi", 0x7013, I],
+    ["slli", 0x1013, "xd, x1, sh"], ["srli", 0x5013, "xd, x1, sh"], ["srai", 0x40005013, "xd, x1, sh"],
+    ["add", 0x33, R], ["sub", 0x40000033, R], ["sll", 0x1033, R], ["slt", 0x2033, R], ["sltu", 0x3033, R],
+    ["xor", 0x4033, R], ["srl", 0x5033, R], ["sra", 0x40005033, R], ["or", 0x6033, R], ["and", 0x7033, R],
+    ["fence", 0x0ff0000f, ""], ["ecall", 0x73, ""], ["ebreak", 0x00100073, ""],
+    // RV32M
+    ["mul", 0x02000033, R], ["mulh", 0x02001033, R], ["mulhsu", 0x02002033, R], ["mulhu", 0x02003033, R],
+    ["div", 0x02004033, R], ["divu", 0x02005033, R], ["rem", 0x02006033, R], ["remu", 0x02007033, R],
+    // Zicsr
+    ["csrrw", 0x1073, "xd, csr, x1"], ["csrrs", 0x2073, "xd, csr, x1"], ["csrrc", 0x3073, "xd, csr, x1"],
+    ["csrrwi", 0x5073, "xd, csr, z5"], ["csrrsi", 0x6073, "xd, csr, z5"], ["csrrci", 0x7073, "xd, csr, z5"],
+    // RV32F
+    ["flw", 0x2007, "fd, i12(x1)"], ["fsw", 0x2027, "f2, s12(x1)"],
+    ["fmadd.s", 0x43, "fd, f1, f2, f3, rm"], ["fmsub.s", 0x47, "fd, f1, f2, f3, rm"],
+    ["fnmsub.s", 0x4b, "fd, f1, f2, f3, rm"], ["fnmadd.s", 0x4f, "fd, f1, f2, f3, rm"],
+    ["fadd.s", 0x53, "fd, f1, f2, rm"], ["fsub.s", 0x08000053, "fd, f1, f2, rm"],
+    ["fmul.s", 0x10000053, "fd, f1, f2, rm"], ["fdiv.s", 0x18000053, "fd, f1, f2, rm"],
+    ["fsqrt.s", 0x58000053, "fd, f1, rm"],
+    ["fsgnj.s", 0x20000053, "fd, f1, f2"], ["fsgnjn.s", 0x20001053, "fd, f1, f2"], ["fsgnjx.s", 0x20002053, "fd, f1, f2"],
+    ["fmin.s", 0x28000053, "fd, f1, f2"], ["fmax.s", 0x28001053, "fd, f1, f2"],
+    ["fcvt.w.s", 0xc0000053, "xd, f1, rm"], ["fcvt.wu.s", 0xc0100053, "xd, f1, rm"], ["fmv.x.w", 0xe0000053, "xd, f1"],
+    ["feq.s", 0xa0002053, "xd, f1, f2"], ["flt.s", 0xa0001053, "xd, f1, f2"], ["fle.s", 0xa0000053, "xd, f1, f2"],
+    ["fclass.s", 0xe0001053, "xd, f1"],
+    ["fcvt.s.w", 0xd0000053, "fd, x1, rm"], ["fcvt.s.wu", 0xd0100053, "fd, x1, rm"], ["fmv.w.x", 0xf0000053, "fd, x1"],
+    // Espressif PIE (the ESP32-P4's vector extension), the forms the PIE loop pass emits
+    ["esp.vldbc.16.ip", 0x8600203b, "qu, er, e2"], ["esp.vld.128.ip", 0x0200203b, "qu, er, e16"],
+    ["esp.vst.128.ip", 0x8200203b, "qu, er, e16"], ["esp.vsub.s16", 0x028406df, "qv, qx, qy"],
+    ["esp.min.u16.a", 0x9090505b, "qm, ed"],
+].map(([mnemonic, match, operands]) => ({mnemonic, key: mnemonic.replaceAll(".", "_"), match, operands,
+    fields: operands.match(/[a-z]+\d*/g) ?? []}));
+
+function encoder({match, fields}) {
+    const [a, b, c, d, e] = fields.map(name => INSTRUCTION_FIELDS[name]);
+    switch (fields.length) {
+    case 0: return () => match >>> 0;
+    case 1: return p => (match | a(p)) >>> 0;
+    case 2: return (p, q) => (match | a(p) | b(q)) >>> 0;
+    case 3: return (p, q, r) => (match | a(p) | b(q) | c(r)) >>> 0;
+    case 4: return (p, q, r, s) => (match | a(p) | b(q) | c(r) | d(s)) >>> 0;
+    default: return (p, q, r, s, t) => (match | a(p) | b(q) | c(r) | d(s) | e(t)) >>> 0;
+    }
+}
+const ENCODE = Object.create(null);
+for (const row of INSTRUCTION_ROWS) ENCODE[row.key] = encoder(row);
+
+// Class-aware moves, loads and stores of one 32-bit value (the emitters' load, store and move use these).
+function moveWord(to, from) {
+    if (to < 32) return from < 32 ? ENCODE.addi(to, from, 0) : ENCODE.fmv_x_w(to, from);
+    return from < 32 ? ENCODE.fmv_w_x(to, from) : ENCODE.fsgnj_s(to, from, from);
+}
+const loadWord = (reg, offset, base) => reg < 32 ? ENCODE.lw(reg, offset, base) : ENCODE.flw(reg, offset, base);
+const storeWord = (reg, offset, base) => reg < 32 ? ENCODE.sw(reg, offset, base) : ENCODE.fsw(reg, offset, base);
+
+// The GNU as text of a row with the given encoder arguments (registers by number, q registers as 0-7, rm by
+// number or undefined for the default; a branch or jump offset relative to the instruction): for tests and tools.
+function assembly(row, args) {
+    let k = 0;
+    const text = row.operands.replace(/[a-z]+\d*/g, field => {
+        const v = args[k++];
+        if (field === "rm") return v === undefined ? "" : ROUNDING[v];
+        if (/^[xf][d123]$|^e[rd]$/.test(field)) return REGISTER_NAMES[v];
+        if (field[0] === "q") return "q" + v;
+        if (field === "b13" || field === "j21") return (v < 0 ? ".-" : ".+") + Math.abs(v);
+        return String(v);
+    });
+    return (row.mnemonic + " " + text.replace(/, $/, "")).trim();
+}
 
 // rv32/encoding/tape.js
 // The tape's opcodes, block types, effects and walkers (compiler/typed/tape.js, loaded first).
@@ -370,7 +548,7 @@ class BranchMethods {
     end() {
         const block = this.control.pop();
         if (!block) {
-            this.move(A0, this.pop(A0));
+            this.move(this.returnRegister, this.pop(A0));
             return true;
         }
         if (block.alternate.at === undefined) this.mark(block.alternate);
@@ -382,76 +560,18 @@ class BranchMethods {
 
 }
 
-// rv32/plan/saved-homes.js
-// Callee-saved homes.
-
-// Callee-saved registers a function may claim as homes. Each claimed register costs a
-// save in the prologue and a restore in the epilogue, but survives calls. s0 stays free.
-const SAVED_REGISTERS = [9, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]; // s1, s2..s11
-const isSavedRegister = reg => reg === 9 || (reg >= 18 && reg <= 27);
-
-// Homes for every framed function. A leaf first keeps parameter i >= 1 in its incoming
-// register a_i and uses the spare argument registers, which cost nothing; a0 is the
-// emitter's scratch (capacity loads, division checks, results) and a7 holds a cached
-// capacity. Any function may then claim s1..s11 for a local whose estimated accesses per
-// call exceed twice the two instructions of save and restore. The factor of two absorbs
-// the static estimate's optimism about branches; on the opening ray frame it gave the
-// fewest instructions of the factors 1-4 (diary, PICOCALC-RAY-PARITY Step 4). Scores fall
-// in sorted order and costs rise along the free list, so the first unaffordable local
-// ends the assignment.
-const SAVED_MARGIN = 2;
-function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reuseArgs) {
-    const free = [], opened = [];
-    // share: a register already holding homes takes another local whose live interval
-    // overlaps none of theirs, at no further cost. Keys without an interval (capacities,
-    // constants, slots live everywhere) occupy their register for the whole function.
-    const span = id => intervals?.get(id) ?? [-Infinity, Infinity];
-    const disjoint = (r, [s, e]) => r.spans.every(([s2, e2]) => e < s2 || s > e2);
-    if (leaf) {
-        const lastIncoming = capacityCached ? Math.min(fn.params.length, 7) : fn.params.length;
-        for (let p = 1; p < lastIncoming; p++) if ((scores.get(p) ?? 0) >= 2) {
-            homes.set(p, A0 + p);
-            opened.push({reg: A0 + p, spans: [span(p)]});
-        }
-        for (let reg = A0 + Math.max(1, fn.params.length); reg < A0 + (capacityCached ? 7 : 8); reg++)
-            free.push({reg, cost: 0});
-        // reuseArgs: the argument register of a parameter without its own home there is free once
-        // the prologue has written the parameter to its slot or home. Only a plain local, first
-        // written in the body, may take it: parameter, capacity and pointer homes are filled in
-        // the prologue, from the incoming registers (RAY-PARITY Step 21).
-        if (reuseArgs) for (let p = 1; p < lastIncoming; p++) if (!homes.has(p)) free.push({reg: A0 + p, cost: 0, localsOnly: true});
-    }
-    for (const reg of SAVED_REGISTERS) free.push({reg, cost: 2});
-    for (const [id, score] of [...scores].sort((a, b) => b[1] - a[1])) {
-        if (homes.has(id)) continue;
-        const own = span(id);
-        const plain = typeof id === "number" && id >= fn.params.length;
-        const shared = intervals && score >= 1 ? opened.find(r => (plain || !r.localsOnly) && disjoint(r, own)) : undefined;
-        if (shared) {
-            homes.set(id, shared.reg);
-            shared.spans.push(own);
-            continue;
-        }
-        const at = free.findIndex(f => plain || !f.localsOnly);
-        if (at < 0 || score <= (free[at].cost ? SAVED_MARGIN * free[at].cost : 1)) {
-            if (intervals) continue;
-            break;
-        }
-        const [{reg, localsOnly}] = free.splice(at, 1);
-        homes.set(id, reg);
-        opened.push({reg, spans: [own], localsOnly});
-    }
-}
-
 // rv32/emit/calls.js
 // FunctionCode's calls and the callee-saved registers its prologue saves.
 
 class CallMethods {
     call(index) {
-        const count = this.functions[index].params.length;
-        if (count > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
+        const callee = this.functions[index], count = callee.params.length;
+        // ilp32f: integer arguments in a0-a7, f32 arguments in fa0-fa7. The operand stack holds every value in
+        // an integer register (PICOCALC-TYPED-F32 decides otherwise), so an f32 argument moves across (fmv.w.x)
+        // and an f32 result back (fmv.x.w). The registers are computed once per callee (registers.js).
+        const incoming = calleeRegisters(callee);
         for (let i = count - 1; i >= 0; i--) {
-            const arg = A0 + i;
+            const arg = incoming[i];
             this.move(arg, this.pop(arg));
         }
         // Only the values below the arguments survive the call. A pending direct read stays in
@@ -460,7 +580,7 @@ class CallMethods {
         for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.spill(d, STACK_REGISTERS[d]);
         this.jump(this.starts[index], RA);
         for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.load(STACK_REGISTERS[d], this.slot(d));
-        this.push(A0);
+        this.push(callee.result === "f32" ? FA0 : A0);
     }
 
 
@@ -651,12 +771,13 @@ function mixin(target, ...groups) {
 // FunctionCode's operand stack: loads, stores, constants, result destinations, spills.
 
 class StackMethods {
+    // A float register (32-63) loads and stores a word (flw, fsw); kind is the integer width (lw, lhu, sh...).
     load(reg, offset, base = SP, kind = 2) {
-        this.emit(instruction.i(0x03, reg, kind, base, offset));
+        this.emit(reg < 32 ? instruction.i(0x03, reg, kind, base, offset) : loadWord(reg, offset, base));
     }
 
     store(reg, offset, base = SP, kind = 2) {
-        this.emit(instruction.s(kind, base, reg, offset));
+        this.emit(reg < 32 ? instruction.s(kind, base, reg, offset) : storeWord(reg, offset, base));
     }
 
     constant(reg, n) {
@@ -690,8 +811,9 @@ class StackMethods {
         }
     }
 
+    // Within a class mv or fmv.s; across classes fmv.x.w or fmv.w.x (the bits unchanged).
     move(to, from) {
-        if (to !== from) this.emit(instruction.i(0x13, to, 0, from, 0));
+        if (to !== from) this.emit((to | from) < 32 ? instruction.i(0x13, to, 0, from, 0) : moveWord(to, from));
     }
 
 
@@ -745,6 +867,8 @@ class FunctionCode {
         // depth d. Its consumer reads the home itself, so no copy is emitted.
         this.direct = [];
         this.exit = {};
+        // ilp32f: an f32 result returns in fa0, every other in a0.
+        this.returnRegister = program.result === "f32" ? FA0 : A0;
         if (program.nativeInspection) observeSteps(this);
     }
 
@@ -820,7 +944,7 @@ class FunctionCode {
             else this.jump(target);
             break;
         }
-        case RETURN: this.move(A0, this.pop(A0)); this.jump(this.exit); break;
+        case RETURN: this.move(this.returnRegister, this.pop(A0)); this.jump(this.exit); break;
         case CALL: this.call(this.cell()); break;
         case DROP: this.depth--; break;
         case LOCAL_GET: {
@@ -909,25 +1033,25 @@ class FunctionCode {
 
     lower() {
         const count = this.program.params.length;
-        if (count > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
+        const incoming = calleeRegisters(this.program);
         const saved = this.savedRegisters();
         // The frame size depends on the deepest spill, known only after the body, so the
         // prologue is emitted as placeholders and patched below.
         this.emit(0);
         this.emit(0);
         for (let k = 0; k < saved.length; k++) this.emit(0);
-        for (let i = 0; i < count; i++) this.writeLocal(A0 + i, i);
+        for (let i = 0; i < count; i++) this.writeLocal(incoming[i], i);
         // Capacity homes belong to unwritten parameters, still in their argument registers here.
         for (const [id, reg] of this.locations?.homes ?? []) {
             if (typeof id === "string") {
                 if (id[0] === "c") this.constant(reg, Number(id.slice(1)));
-            } else if (id < 0) this.load(reg, 0, A0 - 1 - id);
+            } else if (id < 0) this.load(reg, 0, incoming[-1 - id]);
         }
         // Pointer homes of parameters, from the incoming argument registers.
         for (const [local, list] of this.locations?.pointerWrites ?? [])
             if (local < count) for (const {reg, r, K0, other} of list) {
-                if (other === undefined) this.pointerFrom(reg, A0 + local, A0 + r, K0);
-                else if (other < count && local < other) this.pointerFrom(reg, A0 + local, A0 + r, K0, A0 + other);
+                if (other === undefined) this.pointerFrom(reg, incoming[local], incoming[r], K0);
+                else if (other < count && local < other) this.pointerFrom(reg, incoming[local], incoming[r], K0, incoming[other]);
             }
         while (this.at < this.program.code.length && !this.step(this.cell())) {}
         const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
@@ -935,7 +1059,7 @@ class FunctionCode {
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
         this.words[1] = instruction.s(2, SP, RA, frame - 4) >>> 0;
         for (let k = 0; k < saved.length; k++)
-            this.words[2 + k] = instruction.s(2, SP, saved[k], frame - 8 - 4 * k) >>> 0;
+            this.words[2 + k] = storeWord(saved[k], frame - 8 - 4 * k, SP);
         // Every return jumps here, so one restore sequence covers all exits.
         this.mark(this.exit);
         for (let k = 0; k < saved.length; k++) this.load(saved[k], frame - 8 - 4 * k);
@@ -1055,6 +1179,85 @@ function lowerLeaf(fn, callables, targets, select, facts) {
     } catch (error) {
         if (error !== LEAF_SPILL) throw error;
         return declineLeaf(fn, "leaf requires frame storage");
+    }
+}
+
+// rv32/plan/saved-homes.js
+// Callee-saved homes, per register class.
+
+// The register class of a planner key: a parameter or frame local by its type (fn.params, and fn.localTypes for
+// the frame locals when the front end gives them; a local without a type is an integer), every other key
+// (capacities -1 - b, constants "c<n>", pointer homes "p...") by the integer class.
+function keyClass(fn, id) {
+    if (typeof id !== "number" || id < 0) return X;
+    const params = fn.params.length;
+    return typeClass(id < params ? fn.params[id] : fn.localTypes?.[id - params]);
+}
+
+// Homes for every framed function. A leaf first keeps parameter i >= 1 in its incoming
+// register a_i and uses the spare argument registers, which cost nothing; a0 is the
+// emitter's scratch (capacity loads, division checks, results) and a7 holds a cached
+// capacity. Any function may then claim s1..s11 for a local whose estimated accesses per
+// call exceed twice the two instructions of save and restore. The factor of two absorbs
+// the static estimate's optimism about branches; on the opening ray frame it gave the
+// fewest instructions of the factors 1-4 (diary, PICOCALC-RAY-PARITY Step 4). Scores fall
+// in sorted order and costs rise along the free list, so the first unaffordable local
+// ends the assignment of its class.
+// Each class has its own registers (encoding/registers.js REGISTER_CLASSES): an f32 local takes fa_i, a spare
+// fa register or fs0..fs11 (ilp32f), by the same rules; fa0 stays free like a0.
+const SAVED_MARGIN = 2;
+function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reuseArgs) {
+    // A class without a key takes no part: an integer-only function plans exactly as before register classes.
+    const floats = fn.params.includes("f32") || Boolean(fn.localTypes?.includes("f32"));
+    const free = [], opened = [], closed = [false, !floats];
+    // share: a register already holding homes takes another local whose live interval
+    // overlaps none of theirs, at no further cost. Keys without an interval (capacities,
+    // constants, slots live everywhere) occupy their register for the whole function.
+    const span = id => intervals?.get(id) ?? [-Infinity, Infinity];
+    const disjoint = (r, [s, e]) => r.spans.every(([s2, e2]) => e < s2 || s > e2);
+    if (leaf) {
+        const incoming = calleeRegisters(fn);
+        // An incoming register the leaf may keep: not the first of its class, not a7 while it caches a capacity.
+        const keeps = reg => reg !== A0 && reg !== FA0 && !(capacityCached && reg === A0 + 7);
+        for (let p = 1; p < fn.params.length; p++) if (keeps(incoming[p]) && (scores.get(p) ?? 0) >= 2) {
+            homes.set(p, incoming[p]);
+            opened.push({reg: incoming[p], cls: keyClass(fn, p), spans: [span(p)]});
+        }
+        for (const {id, arguments: args} of REGISTER_CLASSES) {
+            if (closed[id]) continue;
+            const used = incoming.filter(reg => reg >> 5 === id).length;
+            for (let k = Math.max(1, used); k < (capacityCached && id === X ? 7 : 8); k++) free.push({reg: args[k], cls: id, cost: 0});
+        }
+        // reuseArgs: the argument register of a parameter without its own home there is free once
+        // the prologue has written the parameter to its slot or home. Only a plain local, first
+        // written in the body, may take it: parameter, capacity and pointer homes are filled in
+        // the prologue, from the incoming registers (RAY-PARITY Step 21).
+        if (reuseArgs) for (let p = 1; p < fn.params.length; p++)
+            if (!homes.has(p) && keeps(incoming[p])) free.push({reg: incoming[p], cls: keyClass(fn, p), cost: 0, localsOnly: true});
+    }
+    for (const {id, homes: saved} of REGISTER_CLASSES) if (!closed[id]) for (const reg of saved) free.push({reg, cls: id, cost: 2});
+    for (const [id, score] of [...scores].sort((a, b) => b[1] - a[1])) {
+        if (homes.has(id)) continue;
+        const cls = keyClass(fn, id);
+        if (closed[cls]) continue;
+        const own = span(id);
+        const plain = typeof id === "number" && id >= fn.params.length;
+        const shared = intervals && score >= 1 ? opened.find(r => r.cls === cls && (plain || !r.localsOnly) && disjoint(r, own)) : undefined;
+        if (shared) {
+            homes.set(id, shared.reg);
+            shared.spans.push(own);
+            continue;
+        }
+        const at = free.findIndex(f => f.cls === cls && (plain || !f.localsOnly));
+        if (at < 0 || score <= (free[at].cost ? SAVED_MARGIN * free[at].cost : 1)) {
+            if (intervals) continue;
+            closed[cls] = true;
+            if (closed[X] && closed[F]) break;
+            continue;
+        }
+        const [{reg, localsOnly}] = free.splice(at, 1);
+        homes.set(id, reg);
+        opened.push({reg, cls, spans: [own], localsOnly});
     }
 }
 
@@ -1269,6 +1472,7 @@ function planLocations(fn, options, inlineCall) {
         let reg = A0 + Math.max(1, fn.params.length);
         const end = A0 + (receiver === undefined ? 8 : 7);
         for (const [id,score] of [...scores].sort((a,b)=>b[1]-a[1])) {
+            if (keyClass(fn, id) !== X) continue; // homes without saved: integer argument registers only
             if (reg >= end || score < 2) break;
             homes.set(id, reg++);
         }
@@ -1555,7 +1759,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
         if (guarded === true || guarded(fn.name)) ctx.Emitter = GuardedReturnCode;
     }});
     if (mode !== undefined) inlined.push({name: "pie", terminal: true,
-        run: (fn, ctx) => typedPieLoops.lower(fn, callables, targets, mode, ctx.Emitter, instruction)});
+        run: (fn, ctx) => typedPieLoops.lower(fn, callables, targets, mode, ctx.Emitter, ENCODE)});
     stages.unshift(...inlined, {name: "inline", checkpoint: true});
 
     // timing: an array that receives {fn, pass, ms, cells} for every stage a function runs (cells: the

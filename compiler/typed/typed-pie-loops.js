@@ -118,10 +118,8 @@ function analyze(fn) {
     return ops.flatMap((o,i)=>is(o,LOOP)?[analyzeLoop(ops,i,matching)]:[]);
 }
 
-// The ESP words use fixed operands. scripts/01-reference-words.S is the
-// independent assembly source; host qualification decodes the final image.
-const minInputU16=0x919057db; // esp.min.u16.a q1,t6
-const broadcast=0x8607203b, packetLoad=0x0203a63b, subtract=0x06a406df, packetStore=0x82072a3b;
+// The PIE words use fixed operands; lower() encodes them through the backend's instruction table
+// (rv32/encoding/instructions.js, cross-checked against GNU as).
 const zero=0, sp=2, a0=10, x=12, lanes=13, uniform=14, input=15, lanePtr=16, limit=17, t5=30,t6=31;
 
 // Every admitted producer contains this exact opcode/immediate suffix. A raw
@@ -137,6 +135,7 @@ function mayContainProducer(tape) {
     return false;
 }
 
+// ins: the backend's encoders (ENCODE of rv32/encoding/instructions.js).
 function lower(fn,callables,targets,mode,FunctionCode,ins) {
     // An explicitly observed function still reports the reason for each rejection.
     if (!fn.nativeInspection && !mayContainProducer(fn.code)) return null;
@@ -157,6 +156,11 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
         plans.set(p.loop,p);
     }
     if (!plans.size) return null;
+    const minInputU16=ins.esp_min_u16_a(1,t6);        // esp.min.u16.a q1,t6
+    const broadcast=ins.esp_vldbc_16_ip(0,t5,0);      // esp.vldbc.16.ip q0,t5,0
+    const packetLoad=ins.esp_vld_128_ip(1,input,16);  // esp.vld.128.ip q1,a5,16
+    const subtract=ins.esp_vsub_s16(2,0,1);           // esp.vsub.s16 q2,q0,q1
+    const packetStore=ins.esp_vst_128_ip(2,t5,16);    // esp.vst.128.ip q2,t5,16
     class PackedFunction extends FunctionCode {
         constructor() {
             super(fn,callables,targets);
@@ -172,10 +176,10 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             if(v.local!==undefined) this.readLocal(reg,v.local);
             else this.constant(reg,v.constant);
         }
-        immediate(to,from,n) {this.emit(ins.i(0x13,to,0,from,n));}
-        plus(to,a,b) {this.emit(ins.r(0x33,to,0,a,b));}
-        minus(to,a,b) {this.emit(ins.r(0x33,to,0,a,b,32));}
-        twice(to,from) {this.emit(ins.i(0x13,to,1,from,1));}
+        immediate(to,from,n) {this.emit(ins.addi(to,from,n));}
+        plus(to,a,b) {this.emit(ins.add(to,a,b));}
+        minus(to,a,b) {this.emit(ins.sub(to,a,b));}
+        twice(to,from) {this.emit(ins.slli(to,from,1));}
 
         grouped(p) {
             const selectedMode=p.selectedMode ?? mode;
@@ -227,7 +231,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             this.mark(group);
             this.minus(t5,limit,x); this.constant(t6,8);
             this.branch(6,t5,t6,ordinary); // ordinary loop handles short tail
-            this.emit(ins.i(0x13,t5,7,input,15)); this.branch(1,t5,zero,single);
+            this.emit(ins.andi(t5,input,15)); this.branch(1,t5,zero,single);
             note("admission and packet control",p.loop,p.loop+2);
             this.immediate(t5,sp,this.packet);
             if(vectorProducer) {

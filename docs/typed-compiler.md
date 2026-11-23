@@ -208,11 +208,33 @@ receives `{fn, pass, ms, cells}` for every stage each function runs and one `{fn
   stack in `t0`–`t4`, homes from the plan, checked addresses and fused compare-and-branch. `compile` lays the functions
   out, patches calls and returns `{image, entries, relocations, signatures, ...}`; `linkSlot` copies the image into a
   reactor ELF's reserved slot.
+  Registers and instructions come from `rv32/encoding/` (below).
 - **PIE loops** (`typed-pie-loops.js`, `pieLoops`). Recognizes one loop shape in the decoded tape and emits ESP32-P4 PIE
-  vector words for it; opt-in.
+  vector words for it, encoded through the instruction table; opt-in.
 - **WebAssembly** (`wasm/*.js` in `typed-wasm.js`, `typedWasm.compile` and `linkWorld`). Serializes each tape as the
   front end hands it over (`compileWasmFunctions`), then writes a module or links a world into a Wasm reactor. Its
   inspection events describe Wasm operations, each with the source span of the tape operation it encodes.
+
+### Registers and the instruction table
+
+A register is a number: `0`-`31` are `x0`-`x31`, `32`-`63` are `f0`-`f31`, so `reg >> 5` is its class and integer code
+keeps the plain numbers it always had (`rv32/encoding/registers.js`). `REGISTER_CLASSES` holds, per class, the ilp32f
+tables: argument registers (`a0`-`a7`, `fa0`-`fa7`), callee-saved registers, the homes the planner may claim (`s1`-`s11`;
+`fs0`-`fs11`), the operand-stack and scratch registers. `argumentRegisters(params)` assigns integer and `f32` parameters
+to their classes independently. The planner gives each key the class of its type (`fn.params`, `fn.localTypes` for frame
+locals) and plans each class with its own free list and the same rules; the emitter's `load`, `store` and `move` pick
+`flw`, `fsw`, `fmv.s`, `fmv.x.w` or `fmv.w.x` for a float register, the prologue saves claimed `fs` registers, a call
+passes `f32` arguments in `fa` registers and an `f32` result returns in `fa0`. The operand stack still holds every value
+in `t0`-`t4`; nothing emits float arithmetic until PICOCALC-TYPED-F32 adds the tape's float operations.
+
+`rv32/encoding/instructions.js` is one table of every instruction the backend may emit: RV32IM, the Zicsr instructions
+(on `fflags`, `frm`, `fcsr`), all of RV32F and the five PIE instructions of `typed-pie-loops.js`. A row is its mnemonic,
+its fixed bits and its assembler operand syntax (`"fd, f1, f2, rm"`), and `ENCODE.fadd_s(rd, a, b, rm)` its encoder; an
+encoder rejects a register of the wrong class. `tests/compiler/typed-rv32-encoding.test.mjs` assembles every row with
+GNU `as` from the ESP toolchain (the newest `riscv32-esp-elf`, as `bench/lib/toolchain.sh` finds it) over edge and random
+operands and compares the words; it also checks that the six integer formats the emitters call (`instruction.r` ...)
+agree with the table. `tests/compiler/typed-rv32-registers.test.mjs` plans and emits a fragment with `f32` parameters
+and locals and runs it on the reference interpreter.
 
 ## The oracles and the gates
 

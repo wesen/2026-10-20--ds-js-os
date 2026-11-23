@@ -7,7 +7,8 @@ import {HomeMethods} from "./homes.js";
 import {observeSteps} from "./inspection.js";
 import {mixin} from "./mixin.js";
 import {StackMethods} from "./stack.js";
-import {instruction, T5, A0, ZERO, T6, SP, RA} from "../encoding/registers.js";
+import {instruction, T5, A0, FA0, ZERO, T6, SP, RA, calleeRegisters} from "../encoding/registers.js";
+import {storeWord} from "../encoding/instructions.js";
 import {BLOCK, RETURN, I32_CONST, UNCHECKED_ADDRESS, I32_LOAD16_U, LOCAL_GET, I32_LOAD, I32_EQZ, I32_GE_U, UNREACHABLE, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_SET, I32_STORE, I32_STORE16, CHECKED_ADDRESS, LITERAL_STORES} from "../encoding/tape.js";
 
 export class FunctionCode {
@@ -24,6 +25,8 @@ export class FunctionCode {
         // depth d. Its consumer reads the home itself, so no copy is emitted.
         this.direct = [];
         this.exit = {};
+        // ilp32f: an f32 result returns in fa0, every other in a0.
+        this.returnRegister = program.result === "f32" ? FA0 : A0;
         if (program.nativeInspection) observeSteps(this);
     }
 
@@ -99,7 +102,7 @@ export class FunctionCode {
             else this.jump(target);
             break;
         }
-        case RETURN: this.move(A0, this.pop(A0)); this.jump(this.exit); break;
+        case RETURN: this.move(this.returnRegister, this.pop(A0)); this.jump(this.exit); break;
         case CALL: this.call(this.cell()); break;
         case DROP: this.depth--; break;
         case LOCAL_GET: {
@@ -188,25 +191,25 @@ export class FunctionCode {
 
     lower() {
         const count = this.program.params.length;
-        if (count > 8) throw new SyntaxError("RV32 supports up to eight register arguments");
+        const incoming = calleeRegisters(this.program);
         const saved = this.savedRegisters();
         // The frame size depends on the deepest spill, known only after the body, so the
         // prologue is emitted as placeholders and patched below.
         this.emit(0);
         this.emit(0);
         for (let k = 0; k < saved.length; k++) this.emit(0);
-        for (let i = 0; i < count; i++) this.writeLocal(A0 + i, i);
+        for (let i = 0; i < count; i++) this.writeLocal(incoming[i], i);
         // Capacity homes belong to unwritten parameters, still in their argument registers here.
         for (const [id, reg] of this.locations?.homes ?? []) {
             if (typeof id === "string") {
                 if (id[0] === "c") this.constant(reg, Number(id.slice(1)));
-            } else if (id < 0) this.load(reg, 0, A0 - 1 - id);
+            } else if (id < 0) this.load(reg, 0, incoming[-1 - id]);
         }
         // Pointer homes of parameters, from the incoming argument registers.
         for (const [local, list] of this.locations?.pointerWrites ?? [])
             if (local < count) for (const {reg, r, K0, other} of list) {
-                if (other === undefined) this.pointerFrom(reg, A0 + local, A0 + r, K0);
-                else if (other < count && local < other) this.pointerFrom(reg, A0 + local, A0 + r, K0, A0 + other);
+                if (other === undefined) this.pointerFrom(reg, incoming[local], incoming[r], K0);
+                else if (other < count && local < other) this.pointerFrom(reg, incoming[local], incoming[r], K0, incoming[other]);
             }
         while (this.at < this.program.code.length && !this.step(this.cell())) {}
         const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
@@ -214,7 +217,7 @@ export class FunctionCode {
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
         this.words[1] = instruction.s(2, SP, RA, frame - 4) >>> 0;
         for (let k = 0; k < saved.length; k++)
-            this.words[2 + k] = instruction.s(2, SP, saved[k], frame - 8 - 4 * k) >>> 0;
+            this.words[2 + k] = storeWord(saved[k], frame - 8 - 4 * k, SP);
         // Every return jumps here, so one restore sequence covers all exits.
         this.mark(this.exit);
         for (let k = 0; k < saved.length; k++) this.load(saved[k], frame - 8 - 4 * k);
