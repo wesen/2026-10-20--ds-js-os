@@ -37,4 +37,3 @@ apps/js/picocalc/system/compositor.js -- PICOCALC-SPLIT-FILES
 firmware/nucleus/nucleus.h -- PICOCALC-SPLIT-FILES
 apps/js/picocalc/system/agent.js -- PICOCALC-SPLIT-FILES
 firmware/sdk/typed/world.c -- PICOCALC-SPLIT-FILES
-pkg/tracearchive/archive.go -- PICOCALC-SPLIT-FILES
