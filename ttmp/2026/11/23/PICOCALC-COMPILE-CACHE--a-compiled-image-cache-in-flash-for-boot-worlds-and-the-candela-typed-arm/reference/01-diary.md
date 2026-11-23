@@ -105,3 +105,74 @@ gallery's everyday arm, so the handheld runs Typed by default and C stays the be
 - Partition `files`: offset 0x830000, size 0x7D0000 (8,192,000 B). App slot 8 MiB.
 - Boot compiles on 6c7e2ca0 (CANDELA-TYPED dev5): Chess 4.19 s / 6 s, painter 5.75 s / 8 s, Editor 3.42 s / 6 s,
   Agenda 2.65 s / 4 s, Files 1.45 s / 3 s, Candela 2.54 s / 8 s.
+
+## Step 2: Milestone 1, the portable core and its host test
+
+The cache's key, entry format, store and eviction are one portable C file, `typed_cache.c`, that the P4 build and a
+host driver both compile. A Python test drives it on the host and checks the key against an independent model, so
+the format is pinned before any board time is spent. 20 tests pass, also under AddressSanitizer and UBSan.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Milestone 1: a host test of the key function and the file format, torn and corrupt files.
+**Inferred user intent:** Prove the cache cannot serve a wrong module before it runs on the device.
+**Commit (code):** a3cbffc — "feat(compile-cache): the cache's portable core and its host test"
+
+### What I did
+- `firmware/port/esp32p4/main/typed_cache.{h,c}`: SHA-256 (mbedTLS on the P4, a portable implementation on the host),
+  `tc_key` over framed items, the 160-byte header (`tc_header_encode/decode`), `tc_read`, the three-step store
+  (`tc_prepare`, `tc_write_tmp`, `tc_commit`), `tc_exists`, `tc_list`, `tc_clear`.
+- `tests/native/typed_cache_host.c` (a command-line driver: `sha256`, `key`, `store`, `tmp`, `read`, `list`,
+  `clear`) and `tests/native/test_typed_cache.py`; `firmware/Makefile test-typed-cache`, run by `make test-native`.
+- `make -s -C firmware test-typed-cache`; then the same test against a build with
+  `-fsanitize=address,undefined` (`ASAN_OPTIONS=detect_leaks=0`: the driver itself does not free its inputs).
+
+### Why
+- One implementation for host and device: a Python model of the format alone would not test the code that runs.
+- The key is a hash of framed items (tag, NUL, length, bytes), so no two input lists can produce the same preimage
+  (`test_framing_keeps_adjacent_items_apart`).
+
+### What worked
+- 20 tests: the driver's SHA-256 equals hashlib's at block boundaries; the key equals the Python model; each of 17
+  input changes (source, reactor, linker, front end, tape, a lazily loaded pass group, another pass group, a compiler
+  module, a new bundle under `typed/`, the module list, the back end, an outside back end's bytes, the entry, the
+  policy, no policy, an empty policy name, the native compiler code) gives a distinct key; renamed or unrelated files
+  do not; round trip; absent entry; a flipped module byte, flipped header bytes (magic, format, header check), a
+  file cut at 0, 10, 159, 160 and 5159 bytes, and a valid entry under another key's name are each a corrupt miss
+  that deletes the file; a store cut before its rename leaves no entry and the next store removes the `.tmp`; a store
+  replaces an entry of the same key; two entries per app and label; another label or app does not evict; the budget
+  evicts oldest first; the free-space reserve; a store that cannot fit is refused before anything is deleted.
+
+### What didn't work
+- `make -s -C firmware test-typed-cache` first failed `test_the_reserve_keeps_free_space_for_the_user`:
+  `AssertionError: False is not true : stored 3`. My test expected a refusal with an evictable entry present; the
+  code evicted it and stored. The real defect it exposed: a store that could never fit evicted entries before
+  refusing. `tc_prepare` now checks first whether the entry fits in an empty cache (budget, free space plus every
+  evictable entry) and refuses without deleting anything; the test now covers both refusals.
+- The first sanitizer run reported `LeakSanitizer: detected memory leaks ... in slurp ../tests/native/typed_cache_host.c:24`
+  (the driver's own buffers, freed at exit); with leak detection off the core is clean.
+- `gcc -m32` is not installed here (`bits/libc-header-start.h: No such file`), so there is no 32-bit host run; the P4
+  build compiles the same file for RV32.
+
+### What I learned
+- FAT allocates whole 4 KB sectors, so the budget counts entries rounded up to 4 KB.
+
+### What was tricky to build
+- Eviction order: invalid files are garbage and always removed; the per-label limit comes next; the byte budget and
+  the free-space reserve last, oldest sequence number first, never the entry being replaced (whose old file stays
+  until the rename, so its space is not counted as freed).
+
+### What warrants a second pair of eyes
+- `tc_prepare` in `typed_cache.c`: the accounting of `freed`, `total` and `need` across the three eviction passes.
+
+### What should be done in the future
+- N/A
+
+### Code review instructions
+- `firmware/port/esp32p4/main/typed_cache.h` (format comment), `typed_cache.c`, `tests/native/test_typed_cache.py`.
+- `make -s -C firmware test-typed-cache`.
+
+### Technical details
+- Key preimage: `"PCTC-key\0"`, u32 format, then items `native`, (`bundle`, `digest`) per `typed/` bundle in path
+  order, `module`..., `backend`, [`backend-digest`], `linker`, `entry`, `reactor`, `source`, `policy` or
+  `default-policy`.
