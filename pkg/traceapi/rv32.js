@@ -14,8 +14,8 @@
 
   class Rv32Fault extends Error {}
 
-  // run(program, entry, args, memoryBytes, options): options as the reference's,
-  // {stackBytes = 65536, limit = 50e6, imports = [], handlers = {}, counts = true}.
+  // run(program, entry, args, memoryBytes, options): options as the reference's, {stackBytes = 65536,
+  // limit = 50e6, imports = [], handlers = {}, counts = true, checks = true, registers, fregisters, fcsr = 0}.
   function run(program, entry, args, memoryBytes, options = {}) {
     // The reference's setup, statement for statement.
     const image = program.image;
@@ -28,11 +28,19 @@
     bytes.set(memoryBytes);
     const counts = options.counts === false ? null : new Uint32Array(words);
     const relocations = new Map((program.relocations ?? []).map(r => [r.offset, r.index]));
+    const checks = options.checks !== false;
     const x = new Int32Array(32);
-    for (const reg of CALLEE_SAVED) x[reg] = 0x12340000 + reg;
-    x[2] = size;
-    x[1] = RETURN_TO_HOST;
-    for (let i = 0; i < args.length; i++) x[10 + i] = args[i];
+    if (options.registers) x.set(options.registers);
+    else {
+      for (const reg of CALLEE_SAVED) x[reg] = 0x12340000 + reg;
+      x[2] = size;
+      x[1] = RETURN_TO_HOST;
+      for (let i = 0; i < args.length; i++) x[10 + i] = args[i];
+    }
+    x[0] = 0;
+    const f = new Uint32Array(32);
+    if (options.fregisters) f.set(options.fregisters);
+    const fcsr = (options.fcsr ?? 0) & 0xff;
     const at = program.entries[entry];
     if (at === undefined) throw new Error("unknown RV32 entry " + entry);
     // typedRv32.compile produces integer offsets; the reference's behaviour for other values
@@ -54,15 +62,16 @@
       return handler ? [fn, handler] : "no handler for import " + index;
     };
     const invoke = (fn, handler, regs) => handler(...regs.slice(10, 10 + fn.params.length)) | 0;
-    const outcome = bridge.run(image, at, x, bytes, counts, offsets, Number(limit), String(limit), lookup, invoke);
+    const outcome = bridge.run(image, at, x, bytes, counts, offsets, Number(limit), String(limit), lookup, invoke, f, fcsr, checks);
     if (outcome.fault !== undefined) {
       const error = new Rv32Fault(outcome.fault);
       error.at = outcome.at;
       error.steps = outcome.steps;
       throw error;
     }
-    if (outcome.trap) return {trap: true, at: outcome.at, steps: outcome.steps, counts, bytes: bytes.subarray(0, memoryBytes.length), registers: x};
-    return {trap: false, result: x[10], steps: outcome.steps, counts, bytes: bytes.subarray(0, memoryBytes.length), registers: x};
+    const state = {bytes: bytes.subarray(0, memoryBytes.length), registers: x, fregisters: f, fcsr: outcome.fcsr};
+    if (outcome.trap) return {trap: true, at: outcome.at, steps: outcome.steps, counts, ...state};
+    return {trap: false, result: x[10], steps: outcome.steps, counts, ...state};
   }
 
   // profile(program, counts): rows {name, start, bytes, steps, spLoad, …, div, entries} per function.
@@ -79,8 +88,8 @@
 
   const HELP = [
     'rv32 — the RV32 reference interpreter (bench/host/rv32-interp.js), run natively in Go.',
-    '  rv32.run(program, entry, args, memoryBytes, {stackBytes, limit, imports, handlers, counts})',
-    '      → {trap: false, result, steps, counts, bytes, registers} or {trap: true, at, steps, counts, bytes, registers}',
+    '  rv32.run(program, entry, args, memoryBytes, {stackBytes, limit, imports, handlers, counts, checks, registers, fregisters, fcsr})',
+    '      → {trap: false, result, steps, counts, bytes, registers, fregisters, fcsr} or {trap: true, at, steps, …}',
     '      faults throw rv32.Rv32Fault with the reference\'s message, plus err.at and err.steps',
     '  rv32.profile(program, counts)   rv32.classify(word, nextWord, afterWord)   the reference\'s helpers',
     '  compiler.at(rev).native.rayBench   that revision\'s tools/typed-ray-bench.js running on rv32',

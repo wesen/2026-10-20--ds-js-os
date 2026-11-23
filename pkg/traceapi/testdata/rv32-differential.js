@@ -4,7 +4,9 @@
 // are shaped like typed-rv32.js output (a prologue saving ra, a body, an epilogue, one internal
 // function, import call sites) and then perturbed: arbitrary words, writes to x0, sp and
 // callee-saved registers, out-of-range addresses, loops that hit small step limits, missing
-// handlers, throwing handlers and malformed imports.
+// handlers, throwing handlers and malformed imports. RV32F instructions (arithmetic in every rounding mode,
+// fused, conversions, compares, moves, flw/fsw, the fcsr CSRs) run on special and random bit patterns, and some
+// cases set the initial registers, f registers, fcsr, or turn the calling-convention checks off.
 (function (root) {
   'use strict';
   function rng(seed) { // mulberry32
@@ -26,6 +28,11 @@
   const jType = (off, rd) => U(((off >>> 20) & 1) << 31 | ((off >>> 1) & 0x3ff) << 21 | ((off >>> 11) & 1) << 20 | ((off >>> 12) & 0xff) << 12 | rd << 7 | 0x6f);
   const EBREAK = 0x00100073, RET = 0x00008067, SP = 2, RA = 1, BASE = 31;
   const POOL = [10, 11, 12, 13, 14, 15, 5, 6, 7, 28, 29];
+  const FBITS = [0, 0x80000000, 1, 0x80000001, 0x7fffff, 0x800000, 0x3f800000, 0xbf800000, 0x3f800001, 0x7f7fffff,
+    0xff7fffff, 0x7f800000, 0xff800000, 0x7fc00000, 0x7f800001, 0xffc12345, 0x4f000000, 0xcf000000, 0x3effffff, 0x40200000];
+  // funct7 values of OP-FP (valid and some invalid), with their rs2 field when it is fixed.
+  const OPFP = [[0x00], [0x04], [0x08], [0x0c], [0x2c, 0], [0x10], [0x14], [0x60, 0], [0x60, 1], [0x68, 0], [0x68, 1],
+    [0x70, 0], [0x50], [0x78, 0], [0x01], [0x2c, 3], [0x7f]];
 
   function generate(seed) {
     const r = rng(seed);
@@ -40,7 +47,19 @@
       const k = r();
       const rd = chance(0.04) ? pick([0, 8, 9, 2, 3]) : pick(POOL);
       const rs1 = pick(POOL), rs2 = pick(POOL);
-      if (k < 0.25) {
+      if (chance(0.15)) {
+        const fd = int(0, 31), fs1 = int(0, 31), fs2 = int(0, 31), rm = chance(0.8) ? int(0, 4) : int(0, 7), j = r();
+        if (j < 0.6) {
+          const [f7, fixed] = pick(OPFP);
+          words.push(rType(f7, fixed ?? fs2, chance(0.3) ? rs1 : fs1, f7 === 0x10 || f7 === 0x14 || f7 === 0x50 || f7 === 0x70 ? int(0, 3) : rm, chance(0.3) ? rd : fd, 0x53));
+        } else if (j < 0.75) {
+          words.push(U(int(0, 31) << 27 | (chance(0.95) ? 0 : 1) << 25 | fs2 << 20 | fs1 << 15 | rm << 12 | fd << 7 | pick([0x43, 0x47, 0x4b, 0x4f])));
+        } else if (j < 0.85) {
+          words.push(chance(0.5) ? iType(int(-8, 300), BASE, chance(0.95) ? 2 : 3, fd, 0x07) : U(sType(int(-8, 300), fs2, BASE, 2) ^ 0x23 ^ 0x27));
+        } else {
+          words.push(U(pick([1, 2, 3, 1, 0x300]) << 20 | int(0, 31) << 15 | pick([1, 2, 3, 5, 6, 7, 0, 4]) << 12 | rd << 7 | 0x73));
+        }
+      } else if (k < 0.25) {
         const f3 = int(0, 7);
         const imm = f3 === 1 || f3 === 5 ? int(0, 31) | (chance(0.5) ? pick([0x400, 0x7e0, 0x020]) : 0) : int(-2048, 2047);
         words.push(iType(imm, rs1, f3, rd, 0x13));
@@ -102,6 +121,10 @@
     // default limit is used only where every executed path is straight-line or forward.
     if (looping || chance(0.9)) options.limit = pick([1, 10, 100, 1000, 5000]);
     if (chance(0.2)) options.counts = false;
+    if (chance(0.3)) options.fregisters = Array.from({length: 32}, () => chance(0.6) ? pick(FBITS) : int(0, 0xffffffff));
+    if (chance(0.3)) options.fcsr = int(0, 255);
+    if (chance(0.1)) options.checks = false;
+    if (chance(0.05)) options.registers = Array.from({length: 32}, () => int(-2147483648, 2147483647));
     if (relocations.length) {
       options.imports = [{name: 'sum', params: ['i32', 'i32']}, {name: 'neg', params: ['i32']}, {name: 'boom', params: []}];
       if (chance(0.85)) options.handlers = {sum: (a, b) => a + b, neg: a => -a, boom: () => { throw new Error('boom'); }};
@@ -136,8 +159,8 @@
     } else {
       const x = a.value, y = b.value;
       if (Object.keys(x).join() !== Object.keys(y).join()) problems.push('keys: ' + Object.keys(x) + ' vs ' + Object.keys(y));
-      for (const k of ['trap', 'result', 'at', 'steps']) if (x[k] !== y[k]) problems.push(k + ': ' + x[k] + ' vs ' + y[k]);
-      for (const k of ['counts', 'bytes', 'registers']) if (!sameArray(x[k], y[k])) problems.push(k + ' differ');
+      for (const k of ['trap', 'result', 'at', 'steps', 'fcsr']) if (x[k] !== y[k]) problems.push(k + ': ' + x[k] + ' vs ' + y[k]);
+      for (const k of ['counts', 'bytes', 'registers', 'fregisters']) if (!sameArray(x[k], y[k])) problems.push(k + ' differ');
     }
     return {problems, outcome: a};
   }
@@ -148,5 +171,38 @@
     return (o.fault ? 'fault: ' : o.type + ': ') + o.message.replace(/ at 0x[0-9a-f]+$/, '').replace(/0x[0-9a-f]+/g, '0xH').replace(/\bx\d+\b/g, 'xN').replace(/\b-?\d+\b/g, 'N');
   }
 
-  root.differential = {generate, compare, category};
+  // floatCase: one RV32F instruction on special or random operands, every rounding mode (static and dynamic) and
+  // a random fcsr, with the checks off; its ebreak traps right after. The F state and x registers must agree.
+  const FLOAT_OPS = [0x00, 0x04, 0x08, 0x0c, 0x2c, 0x10, 0x14, 0x60, 0x68, 0x70, 0x50, 0x78];
+  function floatCase(seed) {
+    const r = rng(seed);
+    const int = (lo, hi) => lo + Math.floor(r() * (hi - lo + 1));
+    const pick = xs => xs[Math.floor(r() * xs.length)];
+    const bits = () => {
+      const k = r();
+      if (k < 0.3) return pick(FBITS);
+      if (k < 0.5) return U((int(0, 1) << 31) | (int(0, 30) << 23) | int(0, 0x7fffff)); // tiny and subnormal
+      if (k < 0.6) return U((int(0, 1) << 31) | (int(225, 254) << 23) | int(0, 0x7fffff)); // huge
+      return int(0, 0xffffffff);
+    };
+    const rm = pick([0, 1, 2, 3, 4, 7, 7, 5]);
+    let word;
+    if (r() < 0.25) word = U(13 << 27 | 12 << 20 | 11 << 15 | rm << 12 | 10 << 7 | pick([0x43, 0x47, 0x4b, 0x4f]));
+    else {
+      const f7 = pick(FLOAT_OPS), rs2 = f7 === 0x2c || f7 === 0x70 || f7 === 0x78 ? 0 : f7 === 0x60 || f7 === 0x68 ? int(0, 1) : 12;
+      const f3 = f7 === 0x10 || f7 === 0x50 ? int(0, 2) : f7 === 0x14 || f7 === 0x70 ? int(0, 1) : f7 === 0x78 ? 0 : rm;
+      word = rType(f7, rs2, 11, f3, 10, 0x53);
+    }
+    const image = new Uint8Array(8), view = new DataView(image.buffer);
+    view.setUint32(0, word, true);
+    view.setUint32(4, EBREAK, true);
+    const registers = new Int32Array(32), fregisters = new Uint32Array(32);
+    registers[11] = r() < 0.5 ? int(-2147483648, 2147483647) : pick([0, 1, -1, 0x7fffffff, -2147483648, 0x1000001, 3]);
+    for (const k of [10, 11, 12, 13]) fregisters[k] = bits();
+    if (r() < 0.2) fregisters[12] = U(fregisters[11] ^ 0x80000000) + int(-3, 3); // cancellation
+    const options = {checks: false, counts: false, stackBytes: 0, registers, fregisters, fcsr: int(0, 255), limit: 2};
+    return {seed, program: {image, entries: {f: 0}, relocations: []}, entry: 'f', args: [], memory: new Uint8Array(0), options};
+  }
+
+  root.differential = {generate, floatCase, compare, category};
 })(globalThis);

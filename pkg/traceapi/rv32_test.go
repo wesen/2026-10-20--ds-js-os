@@ -96,8 +96,8 @@ func TestRV32MatchesReferenceOnRandomPrograms(t *testing.T) {
 	}
 	// The generator must reach every outcome the reference can produce, or the agreement says little.
 	for _, want := range []string{"return", "trap", "fault: instruction limit N reached", "fault: instruction address outside program",
-		"fault: memory access outside guest memory: N", "fault: unsupported load", "fault: unsupported store", "fault: unsupported M instruction",
-		"fault: unsupported branch", "fault: unsupported jal link register", "fault: unsupported RV32 opcode 0xH", "fault: unaligned sp at internal call", "fault: unaligned sp at import call",
+		"fault: memory access outside guest memory: N", "fault: unsupported load", "fault: unsupported store", "fault: unsupported F instruction",
+		"fault: unsupported branch", "fault: unsupported system instruction", "fault: unsupported RV32 opcode 0xH", "fault: unaligned sp at internal call", "fault: unaligned sp at import call",
 		"fault: callee-saved xN changed across a call", "fault: return address does not match the call",
 		"fault: no handler for import N", "Error: unknown RV32 entry missing", "Error: boom"} {
 		if got.Categories[want] == 0 {
@@ -105,6 +105,42 @@ func TestRV32MatchesReferenceOnRandomPrograms(t *testing.T) {
 		}
 	}
 	t.Logf("%d cases: %v", cases, got.Categories)
+}
+
+// Single RV32F instructions on random operands: the native machine and the
+// reference agree on the f registers, x registers and fcsr, beyond the
+// conformance vectors' inputs.
+func TestRV32FloatMatchesReference(t *testing.T) {
+	vm := rv32VM(t)
+	cases := 20000
+	if raceDetector || testing.Short() {
+		cases = 2000
+	}
+	var got struct {
+		Failures []map[string]any
+		Traps    int
+		Changed  int
+	}
+	jsJSON(t, vm, `(() => {
+	  const failures = []; let traps = 0, changed = 0;
+	  for (let seed = 1; seed <= `+itoa(cases)+`; seed++) {
+	    const c = differential.floatCase(seed);
+	    const {problems, outcome} = differential.compare(ref, rv32, c);
+	    if (!outcome.threw && outcome.value.trap) {
+	      traps++;
+	      if (outcome.value.fcsr !== (c.options.fcsr & 0xff)) changed++;
+	    }
+	    if (problems.length && failures.length < 5) failures.push({seed, problems});
+	  }
+	  return {failures, traps, changed};
+	})()`, &got)
+	if len(got.Failures) > 0 {
+		t.Fatalf("native and reference differ: %v", got.Failures)
+	}
+	if got.Traps < cases*3/4 || got.Changed < cases/5 {
+		t.Fatalf("too few cases executed (%d) or raised flags (%d)", got.Traps, got.Changed)
+	}
+	t.Logf("%d cases, %d executed, %d raised new flags", cases, got.Traps, got.Changed)
 }
 
 // The ray tracer's opening frame at a pinned commit, against digests recorded
@@ -227,7 +263,7 @@ func TestRV32Interface(t *testing.T) {
 	  try { rv32.run(p, 'f', [], new Uint8Array(0), {limit: 1}); } catch (e) { fault = {cls: e instanceof rv32.Rv32Fault, message: e.message, at: e.at, steps: e.steps}; }
 	  let bad;
 	  try { rv32.run({image: p.image, entries: {f: '0'}}, 'f', [], []); } catch (e) { bad = e instanceof TypeError; }
-	  return {keys: Object.keys(r), result: r.result, types: [r.counts, r.bytes, r.registers].map(a => a.constructor.name),
+	  return {keys: Object.keys(r), result: r.result, types: [r.counts, r.bytes, r.registers, r.fregisters].map(a => a.constructor.name),
 	    bytes: r.bytes.length, size: r.bytes.buffer.byteLength, fault, bad, frozen: Object.isFrozen(rv32), help: rv32.help().slice(0, 4),
 	    nativeIsRv32: compiler.at('2712684').native.interp === rv32, noBench: compiler.at('25cd108').native.rayBench,
 	    partial: [ref, rv32].map(interp => { // a 6-byte image: the trailing half word is read past the end
@@ -235,7 +271,7 @@ func TestRV32Interface(t *testing.T) {
 	      catch (e) { return e.constructor.name + ': ' + e.message; } })};
 	})()`, &got)
 	raw, _ := json.Marshal(got)
-	want := `{"bad":true,"bytes":3,"fault":{"at":4,"cls":true,"message":"instruction limit 1 reached at 0x4","steps":2},"frozen":true,"help":"rv32","keys":["trap","result","steps","counts","bytes","registers"],"nativeIsRv32":true,"noBench":null,"partial":["RangeError: Index 4 is out of bounds","RangeError: Index 4 is out of bounds"],"result":42,"size":65552,"types":["Uint32Array","Uint8Array","Int32Array"]}`
+	want := `{"bad":true,"bytes":3,"fault":{"at":4,"cls":true,"message":"instruction limit 1 reached at 0x4","steps":2},"frozen":true,"help":"rv32","keys":["trap","result","steps","counts","bytes","registers","fregisters","fcsr"],"nativeIsRv32":true,"noBench":null,"partial":["RangeError: Index 4 is out of bounds","RangeError: Index 4 is out of bounds"],"result":42,"size":65552,"types":["Uint32Array","Uint8Array","Int32Array","Uint32Array"]}`
 	if string(raw) != want {
 		t.Fatalf("got  %s\nwant %s", raw, want)
 	}
