@@ -67,3 +67,56 @@ Small defects in `bench/board/`, each seen during PICOCALC-TYPED-FIRST:
 - `make test` (the board library's Python tests run there; add tests for 1, 2 and 5).
 - One real `playable.py install` with peripherals on, passing.
 - One `--health-only` run that shows the new reset or uptime behaviour.
+
+## Refinements (2026-11-23)
+
+Decisions taken while implementing, after reading `bench/board/device.py` at `6e9c08c` and the firmware's console
+(`firmware/port/esp32p4/main/main_p4.c`, `firmware/nucleus/kernel_reports.c`).
+
+1. **Painter wait.** One function, `wait_painter(console, calls)`, serves both modes with the same deadline loop
+   (`PAINTER_S` = 30 s after the settle; the `on` path had 20 s). With the peripherals on it waits until the painter
+   is installed, has been called and has no rejects. With the peripherals off it waits until the painter is installed
+   without rejects, and does not ask for calls: with the display off nothing draws Chess, so `calls` may stay 0.
+   Both then require `compiles == 1`.
+2. **Console deadline.** The design's premise does not hold for the code as it is. A fake port that streams CGAL
+   lines at 200 and 2,000 lines per second made `command("hold", timeout=1)` raise `TimeoutError` after 1.00 s
+   (diary step 1). `Console.line` returned an already buffered line without checking the deadline, but it reads only
+   when no complete line is buffered, and every read was preceded by a check. So the deadline was effectively
+   absolute already. The changes harden two real gaps:
+   - `line` checks the deadline before every line, buffered or not;
+   - `command` accepts `#OK CMD` at the end of a line, so a line that another task's partial output began does not
+     hide the answer (the text before it is returned as a line).
+   `Console` also takes a port object (the tests' fake) and has `drain(seconds)`, which the constructor uses
+   (`drain_s`, default 13 s as before).
+3. **Health after a long uptime: reboot, not uptime-based judging.** `health` starts with `fresh_boot`: it reads the
+   kernel clock (`stats` prints `t = X ms` first). If the board has been up for more than `FRESH_S` = 120 s, it
+   reboots the firmware with the console's `reboot` command, drains the boot, and checks that the clock restarted.
+   Every health record carries `"boot": {"uptimeMs", "rebooted", "uptimeBeforeMs"}`. The reasons:
+   - The `worlds` report has no time for an error, and `restarts`, `last_error` and the bus counters run from boot.
+     Judging by uptime could only refuse every error older than the settle, or diff two snapshots. Both leave the
+     boot path unjudged: the boot compiles, the painter's single compile, and restarts during boot are what an install
+     checks and what fails in practice.
+   - After a reboot, `--health-only` judges exactly what an install judges: a fresh boot of the image on the board.
+   - The firmware's `reboot` holds i2c0 between transactions before `esp_restart()`. An EN pulse through DTR/RTS (what
+     esptool does) resets at an arbitrary point, possibly in the middle of a keyboard transfer, which is the suspected
+     cause of the keyboard controller wedging after ESP32-only resets. The CH343 is not reset, so the port stays open.
+   - The cost is one boot (about 20–30 s), only for a board that has been up for more than two minutes.
+
+   The rule applies to every health check, not only to `--health-only`: `run_app`'s check of the board before a study
+   also judged a board of unknown age. A board that does not answer `reboot` fails health. `playable.py install
+   --stored OUT --health-only` now checks the recorded image without flashing and without writing `PLAYABLE.json`.
+   The `install BUILD OUT --health-only` form still records.
+5. **Bus window.** `Console.bus_window()` reads `stats` twice, `BUS_WINDOW_S` = 5 s apart. It returns `{"seconds",
+   "deltas": {bus: {transfers, bytes, errors, busyMs}}, "totals": {...}}`, and every health record keeps it as
+   `"buses"`. With the peripherals on, the keyboard qualifies on the window: i2c0 transfers > 0 and errors == 0. This
+   replaces `input_ready`'s 0.4 s probe. With the peripherals off, the window is recorded but not judged.
+   `PLAYABLE.json`'s health summary gains `i2c0Window`.
+6. **Tests.** There were no tests of the board library. `tests/board/fakeboard.py` is a fake console on a virtual
+   clock: wire time at 115200 baud, `worlds`, `stats`, `painter`, `hold`, `reboot`, a CGAL stream, stale errors,
+   errors on every boot, and NACKing keyboards. `tests/board/test_device.py` has 16 tests. `make test-board` runs
+   them and is part of `make test`. Each fix was also checked by mutation: undoing it in a copy of `device.py` makes
+   at least one test fail.
+7. **Hold before an install's reset** (found while running the install gate). `install` flashed through esptool,
+   whose reset into download mode can land in the middle of a keyboard transfer. Unlike `run_app`, it did not ask the
+   firmware to `hold` first. `device.quiesce` now holds i2c0 between transactions before `write_app`. This is best
+   effort: an image without the console is still flashed. The record says `heldBeforeFlash`.

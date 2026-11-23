@@ -6,7 +6,12 @@
     playable.py install BUILD OUT [--peripherals P]     store, flash, settle, health-check, then record it in PLAYABLE.json
     playable.py install --stored OUT [--peripherals P]  reinstall the recorded image from the store
     playable.py install BUILD OUT --health-only          BUILD is already on the board: check and record it
+    playable.py install --stored OUT --health-only       check the recorded image on the board; PLAYABLE.json unchanged
     playable.py restore OUT [--peripherals P]           the same as install --stored (after an experiment image)
+
+A health check judges a fresh boot: on a board up for more than device.FRESH_S seconds (--health-only after hours,
+a "power cycle" that USB kept powered), it reboots the firmware from its console first (device.fresh_boot). Every
+health record carries the uptime it judged from and each bus's transfers and errors over device.BUS_WINDOW_S.
 
 PLAYABLE.json (firmware/PLAYABLE.json) names the profile, the commit, and the digests of the app and partition
 table. The store (~/.cache/picocalc/firmware/<app sha256>/, or $PICOCALC_FIRMWARE_STORE) holds the files, so a restore
@@ -71,7 +76,9 @@ def record(build, digest, peripherals, after, overrides=None):
         "store": str(stored(digest)).replace(str(Path.home()), "~"),
         "peripherals": peripherals,
         "health": {"judged": after["health"].get("judged", after["health"].get("worlds")),
-                   "restartingAfterSettle": after["health"].get("restartingAfterSettle")},
+                   "restartingAfterSettle": after["health"].get("restartingAfterSettle"),
+                   "i2c0Window": {"seconds": after["health"]["buses"]["seconds"],
+                                  **after["health"]["buses"]["deltas"].get("i2c0", {})}},
     }
     RECORD.write_text(json.dumps(value, indent=2) + "\n")
     return value
@@ -112,7 +119,7 @@ def main():
         build = stored(value["app"]["sha256"])
         device.check_build(build, value["app"]["sha256"])
         peripherals = args.peripherals or value.get("peripherals", "on")
-        after = device.install(build, args.out, peripherals, args.port)
+        after = device.install(build, args.out, peripherals, args.port, health_only=args.health_only)
         print(json.dumps(after, indent=2))
         return 0
     if args.build is None:
