@@ -37,6 +37,7 @@ def revert(source, parts, edits):
     tracked = subprocess.run(["git", "ls-tree", "--name-only", "HEAD", "--", *new], cwd=REPO, capture_output=True,
                              text=True, check=True).stdout.split()
     assert not tracked, f"parts already committed, not reverting: {tracked}"
+    edits = [e for e in edits if e not in new]   # edits of the new parts go with them
     subprocess.run(["git", "reset", "-q", "--", source, *new, *edits], cwd=REPO, check=True)
     subprocess.run(["git", "checkout", "HEAD", "--", source, *edits], cwd=REPO, check=True)
     for path in new:
