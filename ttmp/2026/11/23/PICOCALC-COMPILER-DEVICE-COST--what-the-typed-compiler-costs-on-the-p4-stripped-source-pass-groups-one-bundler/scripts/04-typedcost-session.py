@@ -4,17 +4,19 @@
 usage: 04-typedcost-session.py --build DIR --out OUT [--install] PLAN
        04-typedcost-session.py --summarize OUT
 
-PLAN is a JSON file: a list of console commands ("typedcost agenda 2 strip=1", ...), run in order. --install first
-installs DIR with bench/board/device.install (serial lock, settle, health with peripherals on). The session then
-holds the serial lock, checks that the running firmware answers typedcost (the experiment image), runs every
-command and keeps OUT/uart.log and OUT/rows.json: one row per compile, the TYPEDCOMPILE record with the TYPEDCOST
-record of the same compile and the command it came from. It never touches firmware/PLAYABLE.json; restore the
+PLAN is a JSON file: a list of blocks {"name", "commands"} (05-session-plan.py), or one list of console commands,
+run in order. --install first installs DIR with bench/board/device.install (serial lock, settle, health with
+peripherals on). The session holds the serial lock per block: it checks that the running firmware answers typedcost
+(the experiment image; else it installs DIR again), runs the block's commands and keeps OUT/uart.log and
+OUT/rows.json: one row per compile, the TYPEDCOMPILE record with the TYPEDCOST record of the same compile, the
+command and the block it came from. It never touches firmware/PLAYABLE.json; restore the
 playable image from the main checkout afterwards (make restore-playable).
 """
 import argparse
 import json
 import statistics
 import sys
+import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[6]
@@ -74,24 +76,42 @@ def main():
         return summarize(a.out)
     import device
     plan = json.loads(a.plan.read_text())
+    # A plan is a list of blocks {"name", "commands"} (or one list of commands: one block).
+    blocks = plan if plan and isinstance(plan[0], dict) else [{"name": "all", "commands": plan}]
     a.out.mkdir(parents=True, exist_ok=False)
     if a.install:
         record = device.install(a.build, a.out / "install", "on")
         print("installed", record["sha256"][:12], flush=True)
-    with device.acquire(), (a.out / "uart.log").open("wb", buffering=0) as log:
-        console = device.Console(device.PORT, log)
-        try:
-            usage = console.command("typedcost", timeout=5)
-            assert any(line.startswith("typedcost APP N") for line in usage), f"not the experiment image: {usage}"
-            done = []
-            for command in plan:
-                print(command, flush=True)
-                lines = console.command(command, timeout=a.timeout)
-                for row in rows_of(lines):
-                    done.append({**row, "command": command})
-                (a.out / "rows.json").write_text(json.dumps(done, indent=1) + "\n")
-        finally:
-            console.close()
+    done, installs = [], 0
+    for index, block in enumerate(blocks):
+        # The lock is held per block; between blocks other agents may use the board. A block whose board no longer
+        # runs the experiment image (someone installed theirs) installs it again first.
+        while True:
+            with device.acquire(), (a.out / "uart.log").open("ab", buffering=0) as log:
+                console = device.Console(device.PORT, log)
+                try:
+                    try:
+                        usage = console.command("typedcost", timeout=5)
+                    except TimeoutError:
+                        usage = []
+                    if any(line.startswith("typedcost APP N") for line in usage):
+                        uptime = console.uptime_ms()
+                        print(f"block {block['name']} ({len(block['commands'])} commands), uptime {uptime / 1000:.0f} s",
+                              flush=True)
+                        for command in block["commands"]:
+                            print(command, flush=True)
+                            lines = console.command(command, timeout=a.timeout)
+                            for row in rows_of(lines):
+                                done.append({**row, "command": command, "block": block["name"], "blockUptimeMs": uptime})
+                            (a.out / "rows.json").write_text(json.dumps(done, indent=1) + "\n")
+                        break
+                finally:
+                    console.close()
+            installs += 1
+            assert installs <= 3, "the experiment image keeps disappearing"
+            print(f"block {block['name']}: not the experiment image ({usage[-1:]}); installing again", flush=True)
+            device.install(a.build, a.out / f"install-{index:02d}-{installs}", "on")
+        time.sleep(5)  # let a waiting agent take the lock
     summarize(a.out)
 
 
