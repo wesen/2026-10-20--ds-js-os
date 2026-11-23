@@ -160,8 +160,8 @@ static void load_task(void *arg) {
     printf("CGAL {\"ev\":\"error\",\"what\":\"typed-load\",\"error\":\"%s\"}\n", err);
   vTaskDeleteWithCaps(NULL);
 }
-bool cgt_cached(void) { return p4_typed_app_cached(p4_typed_app_find("candela-gallery"), 0); }
-bool cgt_load_now(void) {
+int cgt_cached(void) { return p4_typed_app_cached(p4_typed_app_find("candela-gallery"), 0); }
+int cgt_load_now(void) {
   char err[96];
   if (load(err, sizeof err)) return true;
   printf("CGAL {\"ev\":\"error\",\"what\":\"typed-load\",\"error\":\"%s\"}\n", err);
