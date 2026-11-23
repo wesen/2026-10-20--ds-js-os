@@ -297,6 +297,14 @@ static int add_world(void *arg, const manifest_world_t *mw) {
   char path[512];
   snprintf(path, sizeof path, "%s/%s", K.js_root, W->file);
   W->source = port_read_file(path, &W->source_len);   // JavaScript text, or a binary's bytes
+  if (!W->source && mw->fallback[0]) {
+    // A compiled world whose compile failed (the P4's Typed apps): its JavaScript version runs instead.
+    klog("%s: %s is unavailable; running %s", W->name, W->file, mw->fallback);
+    snprintf(W->file, sizeof W->file, "%s", mw->fallback);
+    W->engine = ENG_JS;
+    snprintf(path, sizeof path, "%s/%s", K.js_root, W->file);
+    W->source = port_read_file(path, &W->source_len);
+  }
   if (!W->source) { fprintf(stderr, "cannot read %s\n", path); free(W); return -1; }
   snprintf(W->kind, sizeof W->kind, "world");
   snprintf(W->title, sizeof W->title, "%s", W->name);

@@ -12,9 +12,8 @@
   // tools are found among the files the revision loaded.
   const RAY = 'raytrace/raytrace.typed';
   const BENCH = 'typed-ray-bench.js';
-  // Worlds without a source.list, assembled as the P4 firmware reads them:
-  // files_p4.c compiles files/files.typed alone; agenda_p4.c (read_source) appends
-  // a newline and agenda/entry.typed to the reminder source.
+  // Worlds without an app.json or a source.list (before PICOCALC-TYPED-APP-MANIFEST), assembled as the P4
+  // firmware read them then: files/files.typed alone; the reminder source, a newline and agenda/entry.typed.
   const WORLD_LAYOUTS = Object.freeze({ files: ['files.typed'], agenda: ['reminder.typed', 'entry.typed'] });
   // The native interpreter, when the session has one (installed before this script).
   const RV32 = root.rv32 || null;
@@ -50,28 +49,35 @@
     };
     Object.defineProperties(b, {
       read: { value: read },
-      // A world assembled the way the firmware build does: the files named in
-      // apps/typed/NAME/source.list, joined with newlines.
-      // A world assembled the way the firmware build does: the files named in
-      // apps/typed/NAME/source.list, joined with newlines, or for a world
-      // without one, the files of its built-in layout (WORLD_LAYOUTS).
+      // A world assembled the way the firmware build does. From PICOCALC-TYPED-APP-MANIFEST on, the sources
+      // that apps/typed/NAME/app.json names, each followed by a newline (as typed_apps.py assembles them; Chess
+      // without its embedded painter). Earlier revisions: the files of apps/typed/NAME/source.list joined with
+      // newlines, or for a world without one, its built-in layout (WORLD_LAYOUTS).
       world: {
         value: name => {
           const dir = raw.worlds + '/' + String(name) + '/';
-          let names, layout;
+          const missing = err => String(err && err.message).includes('does not exist');
+          const assemble = (names, layout, join) => {
+            const parts = names.map(p => read(dir + p));
+            const text = join ? parts.map(p => p.text).join('\n') : parts.map(p => p.text + '\n').join('');
+            return { name: String(name), layout, text, files: parts.map(p => ({ path: p.path, sha256: p.sha256 })) };
+          };
           try {
-            names = read(dir + 'source.list').text.split('\n').map(s => s.trim()).filter(Boolean);
-            layout = 'source.list';
+            const manifest = read(dir + 'app.json').json();
+            if (Array.isArray(manifest.sources)) return assemble(manifest.sources, 'app.json', false);
+            throw new Error('[compiler] ' + dir + 'app.json has no sources (an app with variants); assemble it with .read(path)');
           } catch (err) {
-            if (!String(err && err.message).includes('does not exist')) throw err;
-            if (!Object.prototype.hasOwnProperty.call(WORLD_LAYOUTS, name))
-              throw new Error('[compiler] ' + dir + 'source.list does not exist at ' + rev.slice(0, 12) + ', and ' + String(name) +
-                ' has no built-in layout (' + Object.keys(WORLD_LAYOUTS).join(', ') + '); assemble it with .read(path)');
-            names = WORLD_LAYOUTS[name];
-            layout = 'builtin';
+            if (!missing(err)) throw err;
           }
-          const parts = names.map(p => read(dir + p));
-          return { name: String(name), layout, text: parts.map(p => p.text).join('\n'), files: parts.map(p => ({ path: p.path, sha256: p.sha256 })) };
+          try {
+            return assemble(read(dir + 'source.list').text.split('\n').map(s => s.trim()).filter(Boolean), 'source.list', true);
+          } catch (err) {
+            if (!missing(err)) throw err;
+            if (!Object.prototype.hasOwnProperty.call(WORLD_LAYOUTS, name))
+              throw new Error('[compiler] ' + dir + 'app.json and source.list do not exist at ' + rev.slice(0, 12) + ', and ' +
+                String(name) + ' has no built-in layout (' + Object.keys(WORLD_LAYOUTS).join(', ') + '); assemble it with .read(path)');
+            return assemble(WORLD_LAYOUTS[name], 'builtin', true);
+          }
         },
       },
       typedSources: { value: () => bridge.typedSources(rev) },
@@ -101,7 +107,7 @@
     '  work.native.interp (=== rv32)   work.native.rayBench   the same bench on the native interpreter',
     '  work.globals.compileTypedWorldRv32   every name the files published',
     '  work.ray   work.world("chess")   work.read(path)   work.typedSources()   sources at the same revision',
-    '  work.world(name) → {name, layout, text, files}: worlds/NAME/source.list, or the built-in layout of "files" and "agenda"',
+    '  work.world(name) → {name, layout, text, files}: the sources of apps/typed/NAME/app.json (earlier: source.list or a built-in layout)',
     '  work.files [{path, sha256, bytes, line}]   work.missing (optional files absent at that revision)',
     '  work.where(line) maps a "compiler@REV:LINE" stack position to {path, line}',
     'A commit is evaluated once per session and the same object is returned; "worktree" re-reads the files on every call.',

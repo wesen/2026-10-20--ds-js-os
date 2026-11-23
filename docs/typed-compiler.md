@@ -2,7 +2,7 @@
 
 The Typed compiler turns Typed source (JavaScript with type annotations) into RV32 machine code on the PicoCalc
 itself, at boot, inside a QuickJS runtime with a few megabytes of heap. It also writes WebAssembly, which serves as an
-independent oracle. This guide describes its parts as they are: the pipeline, the tape that connects the front end to
+independent oracle, from the same tape. This guide describes its parts as they are: the pipeline, the tape that connects the front end to
 the backends, the passes, the backends and the checks that keep them honest. Later tickets keep it current.
 
 The sources are in `compiler/typed/`. The loaders read classic scripts: each file is an IIFE that publishes one
@@ -11,7 +11,7 @@ object on `globalThis` (the RV32 backend's three are bundled from the ES modules
 | File | Publishes | Contents |
 |---|---|---|
 | `tape.js` | `typedTape` | The tape's definition: opcodes, operand cells, operand and result types, effects, walkers |
-| `typed-wasm.js` | `typedWasm` | Lexer, signature pass, `FunctionEmitter` (parser, type checker and emitter in one), the Wasm writer and linker |
+| `typed-wasm.js` | `typedWasm` | The front end (lexer, signature pass, parser and type checker writing the tape) and the WebAssembly backend, built from `frontend/*.js` and `wasm/*.js` by `node compiler/typed/frontend/build.mjs` |
 | `typed-async.js` | `typedAsync` | Rewrites `async` functions into ordinary Typed source before emission (worlds only) |
 | `typed-rv32.js` | `typedRv32` | The RV32 backend's core, bundled from `rv32/` by `node compiler/typed/rv32/build.mjs` ([README](../compiler/typed/rv32/README.md)) |
 | `typed-rv32-inline.js`, `typed-rv32-loops.js` | (installs passes) | The two pass groups; after `typed-rv32.js`, loaded up front or on demand through `typedRv32Load` |
@@ -31,14 +31,32 @@ compile's policy needs it: `interactive` (Agenda, Editor) loads neither, `balanc
 Typed source
   │  typed-async.js (worlds with async functions): rewritten into ordinary Typed source
   ▼
-typed-wasm.js   Lexer → signature pass (records, enums, distinct types, acyclic calls) → FunctionEmitter,
-  │             one function at a time, no syntax tree
-  ├─ Wasm mode:     WebAssembly bytes → encodeModule → linkWorld (a Wasm reactor)
-  └─ numeric mode:  the tape (NumericFunctionEmitter), handed to the backend function by function
-  ▼
-typed-rv32.js   per function: tape → tape passes → analyses → LeafCode (frameless leaves) or
-                planLocations + FunctionCode → RV32 words; then layout, call patching, linkSlot
+front end       Lexer → signature pass (records, enums, distinct types, acyclic calls) → FunctionEmitter,
+  │             one function at a time, no syntax tree → the function's tape
+  ├─ typed-rv32.js  per function: tape → tape passes → analyses → LeafCode (frameless leaves) or
+  │                 planLocations + FunctionCode → RV32 words; then layout, call patching, linkSlot
+  └─ Wasm backend   per function: tape → encodeFunction (LEB128, pseudo-ops expanded) → a Wasm body;
+                    then compile (a module) or linkWorld (a Wasm reactor)
 ```
+
+### The front end's modules
+
+`typed-wasm.js` is generated: `node compiler/typed/frontend/build.mjs` concatenates these modules, in this order,
+into one IIFE (one scope, so they are not ES modules), and `--check`, run by `make test-generated` and by
+`tests/compiler/typed-wasm-inspect.test.mjs`, fails when the bundle is stale. Edit the modules, never the bundle.
+
+| Module | Contents |
+|---|---|
+| `frontend/lexer.js` | `TOKEN`, `RESERVED`, the host-provided lexical index (`withLexIndices`, `indexFor`), `Lexer` |
+| `frontend/declarations.js` | records, enums, distinct types, member aliases (`parseDeclarations`), `scanSignatures`, `checkAcyclic`, `recordLayouts` |
+| `frontend/expressions.js` | the tape's constants for the bundle; `ExpressionParser`: the tape writer (`emitConst`, `emitIndex`, `emitMemory`, `codeUnitAddress`, `emitLiteralStores`) and the expressions |
+| `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`typed-async.js` subclasses it) |
+| `frontend/inspect.js` | the front end's `frontend` inspection event (`target: "tape"`) |
+| `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async rewrite |
+| `wasm/encode.js` | `encodeFunction` (tape → Wasm body), `compileWasmFunctions` (the front end driven for the Wasm backend) |
+| `wasm/module.js` | `compile` (a module of Typed functions), `WasmReader`, section reading and writing |
+| `wasm/inspect.js` | the Wasm backend's `frontend` and `emission` events, in Wasm operations and module byte ranges |
+| `wasm/link.js` | `linkWorld`, `invoke`, and what the bundle publishes |
 
 Two properties are deliberate. The compiler streams: `typedRv32.compile` asks the front end for one function at a
 time (`compileFunctions(..., onFunction)`) and lowers it before the next is parsed, so peak memory is one function's
@@ -86,9 +104,12 @@ and `decode(tape, wasm)` (operation records, for tools; with `wasm` it reads LEB
 destructure the constants once at load time (`rv32/encoding/tape.js`), and the passes walk raw cells with `CELLS` and
 compare opcodes with the names: decoding every tape into objects cost a bare QuickJS realm about a quarter of a compile.
 
-In the Wasm mode, the front end writes the same opcodes into a WebAssembly code section with LEB128 immediates, and
-never a pseudo-op: where the numeric tape has `text.checked_address`, the Wasm bytes compute the address with
-`i32.load`, `i32.ge_u`, `if`/`unreachable`, `i32.shl` and `i32.add`.
+The Wasm backend (`encodeFunction`) serializes a tape operation by operation: the opcode is the Wasm opcode and each
+operand cell becomes a LEB128 immediate (signed for `i32.const`). The pseudo-ops expand: `text.checked_address
+receiver position` becomes `local.get position; local.get receiver; i32.load 2 0; i32.ge_u; if; unreachable; end;
+local.get receiver; local.get position; i32.const 1; i32.shl; i32.add`, and `text.literal_stores address literal`
+one `local.get address; i32.const unit; i32.store16 1 (4 + 2i)` per UTF-16 unit. `text.unchecked_address` has no Wasm
+encoding: only loop versioning writes it. So the WebAssembly oracle runs exactly the tape the RV32 backend receives.
 
 ### An example
 
@@ -167,7 +188,9 @@ receives `{fn, pass, ms, cells}` for every stage each function runs and one `{fn
   reactor ELF's reserved slot.
 - **PIE loops** (`typed-pie-loops.js`, `pieLoops`). Recognizes one loop shape in the decoded tape and emits ESP32-P4 PIE
   vector words for it; opt-in.
-- **WebAssembly** (`typed-wasm.js`, `typedWasm.compile` and `linkWorld`). The same front end in its Wasm mode.
+- **WebAssembly** (`wasm/*.js` in `typed-wasm.js`, `typedWasm.compile` and `linkWorld`). Serializes each tape as the
+  front end hands it over (`compileWasmFunctions`), then writes a module or links a world into a Wasm reactor. Its
+  inspection events describe Wasm operations, each with the source span of the tape operation it encodes.
 
 ## The oracles and the gates
 
@@ -186,7 +209,9 @@ receives `{fn, pass, ms, cells}` for every stage each function runs and one `{fn
 ## Adding an operation
 
 1. Add a row to `ROWS` in `tape.js`: opcode, constant name, operation name, operand formats, pops, pushes, effects.
-2. Emit it in `typed-wasm.js` (the same opcode serves both modes unless the operation is a pseudo-op).
+2. Write it in the front end (`frontend/expressions.js` or `statements.js`) and, unless the Wasm opcode is the
+   same with LEB128 operands, give it an expansion in `encodeFunction` (`wasm/encode.js`); run
+   `node compiler/typed/frontend/build.mjs`.
 3. Teach every pass that interprets operations rather than copying them: the abstract stacks in
    `passes/` (inline, commute, version-loops, hoist, value-sets), `analysis/ranges.js` and `plan/` reject unknown
    opcodes or treat them conservatively; grep for a neighbouring opcode's name to find them.

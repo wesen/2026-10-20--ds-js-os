@@ -141,8 +141,8 @@ void console_exec(char *line) {
   char *rest = p + n;
   while (isspace((unsigned char)*rest)) rest++;
   vtime_t now = port_clock();
-#if PICOCALC_TYPED_AGENDA
-  if (!strcmp(cmd, "agenda")) { p4_agenda_console(rest); return; }
+#if PICOCALC_BENCH
+  if (p4_bench_console(cmd, rest)) { printf("#OK %s\n", cmd); fflush(stdout); return; }
 #endif
   if (!strcmp(cmd, "stats")) kernel_stats_print();
   else if (!strcmp(cmd, "worlds") || !strcmp(cmd, "handles")) {
@@ -166,15 +166,8 @@ void console_exec(char *line) {
 #if PICOCALC_MOBILE_PAINTER
   else if (!strcmp(cmd, "painter")) p4_painter_status();
 #endif
-#if PICOCALC_TYPED_RAY
-  else if (!strcmp(cmd, "typedmat")) {
-    extern void p4_typed_ray_material_console(const char *);
-    p4_typed_ray_material_console(rest);
-  }
-  else if (!strcmp(cmd, "typedray")) {
-    extern void p4_typed_ray_console(const char *);
-    p4_typed_ray_console(rest);
-  }
+#if PICOCALC_TYPED_APPS
+  else if (!strcmp(cmd, "typed")) p4_typed_console(rest);
 #endif
 #if PICOCALC_CANDELA_WORLD
   else if (!strcmp(cmd, "send")) {   // send WORLD TYPE [JSON]: a message from outside, as picocalc-host's scripts can
@@ -185,7 +178,7 @@ void console_exec(char *line) {
     else defer_deliver(W, new_msg(M_ON, type, m && rest[m] ? rest + m : NULL, -1));
   }
 #endif
-  else if (!strcmp(cmd, "raybench")) p4_raybench(rest); P4_GALLERY_CONSOLE(cmd, rest)
+  P4_GALLERY_CONSOLE(cmd, rest)
 #if PICOCALC_CANDELA
   else if (!strcmp(cmd, "candela")) p4_candela_console(rest);
 #endif
@@ -201,9 +194,8 @@ void console_exec(char *line) {
   }
   else if (!strcmp(cmd, "tz")) p4_tz_console(rest);
   else if (!strcmp(cmd, "bench")) vm_calibrate();
-  else if (!strcmp(cmd, "cachestat")) p4_cachestat(rest);
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("raybench [0..17] | stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | cachestat loop|fib [default|internal|psram] / start / show | trace on|off | net help | ls [PATH] | cat PATH | df | put PATH [BASE64] | hold | reboot | tz [POSIX TZ]\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | typed [WORLD baseline|build] | trace on|off | net help | ls [PATH] | cat PATH | df | put PATH [BASE64] | hold | reboot | tz [POSIX TZ]\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);
@@ -237,19 +229,12 @@ static void kernel_task(void *arg) {
 #if PICOCALC_CANDELA
   p4_candela_init();
 #endif
-#if PICOCALC_TYPED_FILES
-  const char *manifest = "js/system.typed-files.json";
-#elif PICOCALC_TYPED_EDITOR
-  const char *manifest = "js/system.typed-editor.json";
-#elif PICOCALC_TYPED_CHESS
-  const char *manifest = "js/system.typed-chess.json";
+#if PICOCALC_TYPED_APPS
+  const char *manifest = "js/system.typed.json";   // the Typed boot worlds compile while it loads (typed_p4.c)
 #elif PICOCALC_NATIVE_ELF
   const char *manifest = "js/system.cji.json";
 #else
   const char *manifest = "js/system.json";
-#endif
-#if PICOCALC_TYPED_AGENDA
-  if (p4_agenda_prepare()) manifest = "js/system.typed-agenda.json";
 #endif
   if (kernel_boot(manifest)) { ESP_LOGE(TAG, "the manifest did not load"); vTaskDelete(NULL); }
 #if PICOCALC_NATIVE_ELF
@@ -257,13 +242,7 @@ static void kernel_task(void *arg) {
   if (kernel_boot("js/system.elf.json")) ESP_LOGE(TAG, "the ELF manifest did not load");
 #endif
 #if PICOCALC_DEVICE_COMPILER
-#if PICOCALC_TYPED_AGENDA
-  p4_agenda_stage(NULL, "before-cji-restore");
-#endif
   compiler_restore();
-#endif
-#if PICOCALC_TYPED_AGENDA
-  p4_agenda_stage(NULL, "before-dispatch");
 #endif
   for (;;) {
     kmsg_t m;
@@ -279,17 +258,8 @@ static void kernel_task(void *arg) {
 #if PICOCALC_TYPED_RAY
     p4_typed_ray_poll();
 #endif
-#if PICOCALC_TYPED_AGENDA
-    p4_agenda_report_boot();
-#endif
 #if PICOCALC_DEVICE_COMPILER
-    // Relocating the installed development compiler holds the dispatch lane.
-    // Give the built-in app its first frame or let the deadline expire.
-#if PICOCALC_TYPED_AGENDA
-    compiler_tick(p4_agenda_boot_frame_pending());
-#else
-    compiler_tick(false);
-#endif
+    compiler_tick();
 #endif
     vtime_t wait = kernel_next_wake() - port_clock();
     if (wait <= 0) continue;

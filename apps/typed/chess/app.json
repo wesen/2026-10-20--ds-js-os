@@ -1,0 +1,45 @@
+{
+  "name": "chess",
+  "kind": "world",
+  "sources": ["state.typed", "position.typed", "moves.typed", "search.typed", "chess.typed", "view.typed"],
+  "link": "compiler/typed/typed-world.js",
+  "entry": "compileTypedWorldRv32",
+  "compiler": ["typed/async.js"],
+  "reactor": {
+    "sources": ["firmware/sdk/typed/world.c", "firmware/sdk/typed/chess-psix.c", "firmware/sdk/typed/rv32-slot.S",
+                "firmware/third_party/quickjs/libunicode.c", "firmware/sdk/nw_elf.c"],
+    "defines": ["TYPED_WORLD_NATIVE_SLOT_BYTES=262144"]
+  },
+  "policy": "balanced",
+  "heapBytes": 4194304,
+  "deadlineMs": 6000,
+  "world": {"append": {"name": "chess", "budget_ms": 200, "mem_kb": 768}},
+  "fallback": false,
+  "painter": {
+    "source": "painter-3d.typed",
+    "link": "apps/typed/chess/link-painter.js",
+    "entry": "linkMobilePainter",
+    "reactor": {
+      "sources": ["firmware/port/esp32p4/main/mobile_painter_slot.c", "firmware/port/esp32p4/main/mobile_painter_slot.S"],
+      "defines": ["MOBILE_PAINTER_NATIVE_SLOT_BYTES=32768"]
+    },
+    "heapBytes": 2097152,
+    "deadlineMs": 8000,
+    "embed": {
+      "replace": [["view.typed", "function chessRender(", "function chessRenderTree("]],
+      "tool": "firmware/tools/embed-chess-painter.py",
+      "append": ["mobile-view.typed"]
+    },
+    "host": {
+      "sources": ["firmware/port/esp32p4/main/mobile_painter_p4.c", "firmware/port/esp32p4/main/painter_service.c",
+                  "firmware/nucleus/painter_commands.c", "firmware/sdk/typed/chess-psix.c"],
+      "includes": ["firmware/sdk/typed"],
+      "defines": ["PICOCALC_MOBILE_PAINTER=1", "PICOCALC_CHESS_3D=1"]
+    }
+  },
+  "notes": [
+    "With the 3D painter, default compiles Chess in 4.66 s on the P4, balanced in 3.79 s (PICOCALC-COMPILE-BUDGET Step 6).",
+    "The game embeds the 3D painter as Typed literal writes, so its reactor has a 256 KB native slot.",
+    "There is no JavaScript Chess, so a failed compile leaves Chess out of the boot."
+  ]
+}

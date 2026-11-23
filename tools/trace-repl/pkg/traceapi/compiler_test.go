@@ -186,9 +186,10 @@ func TestWorktreeCompilerReportsFileDigests(t *testing.T) {
 	}
 }
 
-// I2b: Files and Agenda have no source.list; world() assembles them the way
-// the P4 firmware reads them, and they compile with the world imports.
-func TestWorldLayoutsWithoutSourceList(t *testing.T) {
+// I2b: world() assembles every app from its app.json the way the P4 firmware build
+// does (each source followed by a newline), they compile with the world imports, and
+// an older commit without app.json falls back to the built-in layouts.
+func TestWorldLayoutsFromAppManifests(t *testing.T) {
 	vm, _ := compilerVM(t)
 	v, err := vm.RunString(`(() => {
 	  const w = compiler.at('worktree'), base = compiler.at('eaf0872');
@@ -197,8 +198,8 @@ func TestWorldLayoutsWithoutSourceList(t *testing.T) {
 	  const size = world => w.typedRv32.compile(world.text, w.typedWorld.imports, 96 * 1024).image.length;
 	  return JSON.stringify({
 	    layouts: [files.layout, agenda.layout, chess.layout],
-	    files: files.text === w.read(dir + 'files/files.typed').text && files.files.length === 1,
-	    agenda: agenda.text === w.read(dir + 'agenda/reminder.typed').text + '\n' + w.read(dir + 'agenda/entry.typed').text &&
+	    files: files.text === w.read(dir + 'files/files.typed').text + '\n' && files.files.length === 1,
+	    agenda: agenda.text === w.read(dir + 'agenda/reminder.typed').text + '\n' + w.read(dir + 'agenda/entry.typed').text + '\n' &&
 	      agenda.files.map(f => f.path.slice(dir.length)).join() === 'agenda/reminder.typed,agenda/entry.typed',
 	    compiles: size(files) > 0 && size(agenda) > 0,
 	    atCommit: base.world('agenda').layout,
@@ -208,7 +209,7 @@ func TestWorldLayoutsWithoutSourceList(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := `{"layouts":["builtin","builtin","source.list"],"files":true,"agenda":true,"compiles":true,"atCommit":"builtin",` +
+	want := `{"layouts":["app.json","app.json","app.json"],"files":true,"agenda":true,"compiles":true,"atCommit":"builtin",` +
 		`"loaded":[["worktree",8,64,true],["eaf0872",40,64,true]]}`
 	if v.String() != want {
 		t.Fatalf("got  %s\nwant %s", v, want)

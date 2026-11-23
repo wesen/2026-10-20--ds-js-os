@@ -1,0 +1,10 @@
+playable: playable d4453e8 dirty=false app ddcf66e6d38d5fc7c12ecf90b9bb88282ee98edfa43c0ebf966a24e471054a11
+playable-again: playable d4453e8 dirty=false app ddcf66e6d38d5fc7c12ecf90b9bb88282ee98edfa43c0ebf966a24e471054a11
+bench: FAILED (see /tmp/picocalc-typed-app-manifest-bench-d4453e8.log)
+FAILED: esp-idf/main/CMakeFiles/__idf_main.dir/home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-abe26346322c771eb/bench/board/firmware/candela_bench.c.obj 
+/home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-abe26346322c771eb/bench/board/firmware/candela_bench.c:53:65: error: passing argument 2 of 'esp_rom_crc32_le' from incompatible pointer type [-Wincompatible-pointer-types]
+/home/manuel/code/wesen/2026-10-20--ds-js-os/.claude/worktrees/agent-abe26346322c771eb/bench/board/firmware/candela_bench.c:53:117: error: passing argument 2 of 'esp_rom_crc32_le' from incompatible pointer type [-Wincompatible-pointer-types]
+candela-world: candela-world d4453e8 dirty=false app 017c7cd513457b75c30b94ce5da8e33c583c4995b25adf500f6cd8949b1627ab
+offline: offline d4453e8 dirty=false app 4d2a61ae22079a4e148a155c1b4236025aa1c4c601de8a10c26eec901ad21fb2
+agent: agent d4453e8 dirty=false app fe50bc04733cd3861e6e15333e894b554fb64accb55f486262f2ad27f243a1a3
+agent-elf: agent-elf d4453e8 dirty=false app d9a49c40fbad881db8b39327d5c4db8f0d79f31c8ca3d4d56c5bb0a7f7c5f3f4

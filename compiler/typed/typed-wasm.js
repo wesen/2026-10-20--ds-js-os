@@ -1,23 +1,13 @@
-// Direct Wasm emitter for PicoCalc world sources. Runs in a bare QuickJS realm.
+// Generated from compiler/typed/frontend/ and compiler/typed/wasm/ by compiler/typed/frontend/build.mjs.
+// Edit those files, not this one.
+// The Typed front end (lexer, signature pass, parser and type checker writing the tape) and the WebAssembly
+// backend (tape serializer, module writer, world linker). Runs in a bare QuickJS realm; publishes typedWasm.
 (() => {
 "use strict";
-// The tape's opcodes and block types (tape.js, loaded first). The Wasm mode writes the same opcodes.
-const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET, LOCAL_SET,
-    I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
-    I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S,
-    RETURN, CHECKED_ADDRESS, LITERAL_STORES, I32, VOID} = typedTape;
-const LITERAL = Symbol("integer literal");
-const scalarType = type => type === LITERAL ? "i32" : type;
-const BINARY = Object.assign(Object.create(null), Object.fromEntries([
-    ["||", [1, "bool", "bool"]], ["&&", [2, "bool", "bool"]],
-    ["===", [3, null, "bool", I32_EQ]], ["!==", [3, null, "bool", I32_NE]],
-    ["<", [4, "i32", "bool", I32_LT_S]],
-    ["<=", [4, "i32", "bool", I32_LE_S]], [">", [4, "i32", "bool", I32_GT_S]],
-    [">=", [4, "i32", "bool", I32_GE_S]], [">>", [5, "i32", "i32", I32_SHR_S]],
-    ["+", [6, "i32", "i32", I32_ADD]], ["-", [6, "i32", "i32", I32_SUB]],
-    ["*", [7, "i32", "i32", I32_MUL]], ["/", [7, "i32", "i32", I32_DIV_S]],
-    ["%", [7, "i32", "i32", I32_REM_S]],
-]));
+
+// ---- frontend/lexer.js
+// The front end's lexer: the token regexp, the reserved words, and the lexical index a host may provide (the P4's C
+// scanner) so that the lexer reads precomputed token rows instead of running the regexp.
 const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
@@ -25,35 +15,6 @@ const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer",
     "else", "for", "break", "enum", "match", "type", "distinct",
     "async", "await"]);
-
-function unsigned(value) {
-    const bytes = [];
-    do {
-        const part = value & 127;
-        value >>>= 7;
-        bytes.push(part | (value ? 128 : 0));
-    } while (value);
-    return bytes;
-}
-
-function signed(value) {
-    const bytes = [];
-    while (true) {
-        const part = value & 127;
-        value >>= 7;
-        const done = (value === 0 && !(part & 64)) || (value === -1 && !!(part & 64));
-        bytes.push(part | (done ? 0 : 128));
-        if (done) return bytes;
-    }
-}
-
-function vec(elements) {
-    return [...unsigned(elements.length), ...elements.flat()];
-}
-
-function section(id, data) {
-    return [id, ...unsigned(data.length), ...data];
-}
 
 // An index belongs to one exact source string in one compilation.
 let lexicalScope = null;
@@ -277,7 +238,233 @@ class Lexer {
     }
 }
 
-class FunctionEmitter {
+// ---- frontend/declarations.js
+// The signature pass: records, enums, distinct types, member aliases, function signatures, and the call graph's
+// acyclicity check; and the layouts the backends publish.
+function scanSignatures(lex, records, declared, functionBase, enums, distinct, asyncSpans = false) {
+    const functions = [];
+    while (lex.token.kind !== "eof") {
+        const start = lex.token.at;
+        const async = asyncSpans && (lex.token.value === "async" && (lex.next(), true));
+        { if (lex.token.value !== "function") lex.fail("expected function"); lex.next(); }
+        const name = lex.ident();
+        if (name === "memory") lex.fail("reserved memory export");
+        if (declared.has(name) || distinct.has(name)) lex.fail("duplicate function " + name);
+        const params = [], paramNames = [];
+        const paramAts = asyncSpans ? [] : null;
+        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
+        if (!(lex.token.value === ")" && (lex.next(), true))) {
+            do {
+                paramAts?.push(lex.token.at);
+                const id = lex.ident();
+                { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
+                params.push(lex.type(records, enums, distinct));
+                if (paramNames.includes(id)) lex.fail("duplicate local " + id);
+                paramNames.push(id);
+            } while ((lex.token.value === "," && (lex.next(), true)));
+            { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+        }
+        { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
+        const result = lex.type(records, enums, distinct);
+        if (lex.token.value !== "{") lex.fail("expected {");
+        const fn = {name, index: functionBase + functions.length, params, paramNames, result, bodyAt: lex.token.at};
+        declared.set(name, fn);
+        functions.push(fn);
+        const end = lex.skipBody();
+        if (asyncSpans) {
+            if (end === undefined) lex.fail("unterminated function body");
+            Object.assign(fn, {start, end, async, paramAts});
+        }
+    }
+    return functions;
+}
+
+function checkAcyclic(functions, edges) {
+    const colors = new Uint8Array(functions.length);
+    const order = [], path = [], positions = [];
+    for (let root = 0; root < functions.length; root++) {
+        if (colors[root]) continue;
+        path.push(root);
+        positions.push(0);
+        colors[root] = 1;
+        while (path.length) {
+            const at = path.length - 1;
+            const fn = path[at];
+            const to = edges[fn][positions[at]++];
+            if (to === undefined) {
+                path.pop();
+                positions.pop();
+                colors[fn] = 2;
+                order.push(fn);
+            } else if (colors[to] === 1) {
+                const cycle = path.slice(path.indexOf(to)).concat(to);
+                throw new SyntaxError("recursive call cycle: " + cycle.map(i => functions[i].name).join(" -> "));
+            } else if (!colors[to]) {
+                colors[to] = 1;
+                path.push(to);
+                positions.push(0);
+            }
+        }
+    }
+    return order;
+}
+
+function parseEnum(lex, name) {
+    { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
+    const members = new Map();
+    const values = new Set();
+    let next = 0;
+    while (!(lex.token.value === "}" && (lex.next(), true))) {
+        const member = lex.ident();
+        if (members.has(member)) lex.fail("duplicate member " + member + " in " + name);
+        if ((lex.token.value === "=" && (lex.next(), true))) {
+            const negative = (lex.token.value === "-" && (lex.next(), true));
+            if (lex.token.kind !== "int") lex.fail("expected integer enum value");
+            next = Number(lex.token.value) * (negative ? -1 : 1);
+            lex.next();
+        }
+        if (next < -2147483648 || next > 2147483647) lex.fail("i32 enum value out of range");
+        if (values.has(next)) lex.fail("duplicate enum value " + next + " in " + name);
+        members.set(member, next | 0);
+        values.add(next++);
+        if (!(lex.token.value === "," && (lex.next(), true))) {
+            { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
+            break;
+        }
+    }
+    if (!members.size) lex.fail("empty enum " + name);
+    return members;
+}
+
+// Aliases live only in compiler metadata. Receiver and options signatures
+// are checked once the normal forward-signature pass has seen every target.
+function parseMembers(lex, members, owner, records) {
+    if (members.has(owner)) lex.fail("duplicate member group " + owner);
+    const entries = new Map();
+    members.set(owner, entries);
+    lex.expect("{");
+    while (!lex.accept("}")) {
+        const name = lex.ident();
+        if (entries.has(name)) lex.fail("duplicate member " + owner + "." + name);
+        let options = null;
+        if (lex.accept("(")) {
+            options = lex.ident();
+            if (!records.get(options)?.size) lex.fail("expected a nonempty options record " + options);
+            lex.expect(")");
+        }
+        lex.expect("=");
+        const target = lex.ident();
+        entries.set(name, {target, options, at: lex.token.at});
+        lex.expect(";");
+    }
+}
+
+function checkMembers(lex, aliases, declared, records) {
+    if (!aliases) return;
+    for (const groups of [aliases.namespaces, aliases.methods]) {
+        const receiver = groups === aliases.methods;
+        for (const [owner, members] of groups) for (const [name, member] of members) {
+            const fail = message => { lex.token.at = member.at; lex.fail(owner + "." + name + ": " + message); };
+            const fn = declared.get(member.target);
+            if (!fn) fail("unknown target " + member.target);
+            if (receiver && fn.params[0] !== owner) fail("target must take " + owner + " as its first parameter");
+            if (member.options) {
+                const fields = records.get(member.options);
+                const first = fn.params.length - fields.size;
+                if (first < (receiver ? 1 : 0)) fail("too few parameters for " + member.options);
+                let i = first;
+                for (const [field, layout] of fields) {
+                    if (fn.params[i++] !== layout.type) fail("wrong target type for option " + field);
+                }
+            }
+        }
+    }
+}
+
+function parseDeclarations(lex, recordEnds) {
+    const records = new Map();
+    const enums = new Map();
+    const distinct = new Set();
+    let aliases;
+    while (lex.token.value === "record" || lex.token.value === "enum" || lex.token.value === "type" ||
+           lex.token.value === "namespace" || lex.token.value === "methods") {
+        const kind = lex.token.value;
+        lex.next();
+        const name = lex.ident();
+        if (kind === "methods" || kind === "namespace") {
+            aliases ??= {namespaces: new Map(), methods: new Map()};
+            if (kind === "methods") {
+                if (!records.has(name) && !distinct.has(name) && !enums.has(name)) lex.fail("unknown receiver type " + name);
+                parseMembers(lex, aliases.methods, name, records);
+            } else {
+                if (records.has(name) || enums.has(name) || distinct.has(name)) lex.fail("namespace collides with type " + name);
+                parseMembers(lex, aliases.namespaces, name, records);
+            }
+            continue;
+        }
+        if (records.has(name) || enums.has(name) || distinct.has(name) || aliases?.namespaces.has(name))
+            lex.fail("duplicate " + kind + " " + name);
+        if (kind === "enum") {
+            enums.set(name, parseEnum(lex, name));
+            continue;
+        }
+        if (kind === "type") {
+            { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
+            { if (lex.token.value !== "distinct") lex.fail("expected distinct"); lex.next(); }
+            { if (lex.token.value !== "i32") lex.fail("expected i32"); lex.next(); }
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
+            distinct.add(name);
+            continue;
+        }
+        const fields = new Map();
+        { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
+        while (lex.token.value !== "}") {
+            const field = lex.ident();
+            if (fields.has(field)) lex.fail("duplicate field " + field + " in " + name);
+            { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
+            const type = lex.type(records, enums, distinct);
+            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
+            fields.set(field, {type, offset: fields.size * 4});
+        }
+        recordEnds?.set(name, lex.token.at);
+        { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
+        records.set(name, fields);
+    }
+    return {records, enums, distinct, aliases};
+}
+
+function recordLayouts(records) {
+    return Object.fromEntries(Array.from(records, ([name, fields]) => [name, Object.fromEntries(fields)]));
+}
+
+function enumLayouts(enums) {
+    return Object.fromEntries(Array.from(enums, ([name, members]) => [name, Object.fromEntries(members)]));
+}
+
+// ---- frontend/expressions.js
+// The front end's parser and type checker, part one: the tape writer and the expressions (prefix, postfix and
+// binary operators, calls, members, buffer literals). There is no syntax tree: each construct is checked and its
+// tape written as it is parsed.
+//
+// The tape's opcodes, block types and cell counts (tape.js, loaded first), shared by every later module of the bundle.
+const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET, LOCAL_SET,
+    I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
+    I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S,
+    RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS} = typedTape;
+const LITERAL = Symbol("integer literal");
+const scalarType = type => type === LITERAL ? "i32" : type;
+const BINARY = Object.assign(Object.create(null), Object.fromEntries([
+    ["||", [1, "bool", "bool"]], ["&&", [2, "bool", "bool"]],
+    ["===", [3, null, "bool", I32_EQ]], ["!==", [3, null, "bool", I32_NE]],
+    ["<", [4, "i32", "bool", I32_LT_S]],
+    ["<=", [4, "i32", "bool", I32_LE_S]], [">", [4, "i32", "bool", I32_GT_S]],
+    [">=", [4, "i32", "bool", I32_GE_S]], [">>", [5, "i32", "i32", I32_SHR_S]],
+    ["+", [6, "i32", "i32", I32_ADD]], ["-", [6, "i32", "i32", I32_SUB]],
+    ["*", [7, "i32", "i32", I32_MUL]], ["/", [7, "i32", "i32", I32_DIV_S]],
+    ["%", [7, "i32", "i32", I32_REM_S]],
+]));
+
+class ExpressionParser {
     constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases) {
         this.aliases = aliases;
         this.records = records;
@@ -309,19 +496,21 @@ class FunctionEmitter {
         this.lex.fail("expected " + expected + ", got " + scalarType(type));
     }
 
-    emitConst(value) {
-        if (value >= -64 && value < 64) this.code.push(I32_CONST, value & 127);
-        else this.code.push(I32_CONST, ...signed(value));
+    // The tape writer: one cell per opcode and per operand (tape.js). The backends read the tape; the Wasm
+    // backend serializes it (encodeFunction).
+    emitConst(value) { this.code.push(I32_CONST, value); }
+    emitIndex(op, index) { this.code.push(op, index); }
+    emitMemory(op, alignment, offset) { this.code.push(op, alignment, offset); }
+
+    // The checked address of receiver[position] (a UTF-16 unit after the capacity word).
+    codeUnitAddress(receiver, position) {
+        this.code.push(CHECKED_ADDRESS, receiver, position);
     }
 
-    emitIndex(op, index) {
-        if (index < 128) this.code.push(op, index);
-        else this.code.push(op, ...unsigned(index));
-    }
-
-    emitMemory(op, alignment, offset) {
-        if (offset < 128) this.code.push(op, alignment, offset);
-        else this.code.push(op, alignment, ...unsigned(offset));
+    // The checked stores of a literal's UTF-16 units from address + 4; fn.literals holds the text.
+    emitLiteralStores(address, value) {
+        this.literals ??= [];
+        this.code.push(LITERAL_STORES, address, this.literals.push(value) - 1);
     }
 
     minmax() {
@@ -507,41 +696,6 @@ class FunctionEmitter {
         return type;
     }
 
-    result(type, branch) {
-        { if (this.lex.token.value !== "return") this.lex.fail("expected return"); this.lex.next(); }
-        this.want(this.expr(), type);
-        { if (this.lex.token.value !== ";") this.lex.fail("expected ;"); this.lex.next(); }
-        if (branch) this.code.push(RETURN);
-    }
-
-    codeUnitAddress(receiver, position) {
-        this.emitIndex(LOCAL_GET, position);
-        this.emitIndex(LOCAL_GET, receiver);
-        this.code.push(I32_LOAD, 2, 0, I32_GE_U, IF, VOID, UNREACHABLE, END);
-        this.emitIndex(LOCAL_GET, receiver);
-        this.emitIndex(LOCAL_GET, position);
-        this.emitConst(1);
-        this.code.push(I32_SHL, I32_ADD);
-    }
-
-    bufferWrite(receiver) {
-        const lex = this.lex;
-        if ((lex.token.value === "writeLiteral" && (lex.next(), true))) {
-            this.bufferLiteral(receiver);
-            return;
-        }
-        { if (lex.token.value !== "setCharCodeAt") lex.fail("expected setCharCodeAt"); lex.next(); }
-        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
-        const position = this.nextLocal++;
-        this.want(this.expr(), "i32");
-        this.emitIndex(LOCAL_SET, position);
-        { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
-        this.codeUnitAddress(receiver, position);
-        this.want(this.expr(), "i32");
-        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
-        this.code.push(I32_STORE16, 1, 4); // i32.store16 into the buffer's data after its capacity
-    }
-
     bufferLiteral(receiver) {
         const lex = this.lex;
         { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
@@ -566,14 +720,6 @@ class FunctionEmitter {
         this.code.push(I32_LOAD, 2, 0, I32_GE_U, IF, VOID, UNREACHABLE, END);
         this.emitLiteralStores(address, value);
         return value.length;
-    }
-
-    emitLiteralStores(address, value) {
-        for (let i = 0; i < value.length; i++) {
-            this.emitIndex(LOCAL_GET, address);
-            this.emitConst(value.charCodeAt(i));
-            this.emitMemory(I32_STORE16, 1, 4 + 2 * i);
-        }
     }
 
     patternBody() {
@@ -704,6 +850,36 @@ class FunctionEmitter {
         const field = this.records.get(type)?.get(name);
         if (!field) this.lex.fail("unknown field " + scalarType(type) + "." + name);
         return field;
+    }
+}
+
+// ---- frontend/statements.js
+// The front end's parser and type checker, part two: blocks, conditionals, loops, match, declarations and
+// assignments, and one function's body. typed-async.js subclasses FunctionEmitter as its TypeChecker.
+class FunctionEmitter extends ExpressionParser {
+    result(type, branch) {
+        { if (this.lex.token.value !== "return") this.lex.fail("expected return"); this.lex.next(); }
+        this.want(this.expr(), type);
+        { if (this.lex.token.value !== ";") this.lex.fail("expected ;"); this.lex.next(); }
+        if (branch) this.code.push(RETURN);
+    }
+
+    bufferWrite(receiver) {
+        const lex = this.lex;
+        if ((lex.token.value === "writeLiteral" && (lex.next(), true))) {
+            this.bufferLiteral(receiver);
+            return;
+        }
+        { if (lex.token.value !== "setCharCodeAt") lex.fail("expected setCharCodeAt"); lex.next(); }
+        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
+        const position = this.nextLocal++;
+        this.want(this.expr(), "i32");
+        this.emitIndex(LOCAL_SET, position);
+        { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
+        this.codeUnitAddress(receiver, position);
+        this.want(this.expr(), "i32");
+        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+        this.code.push(I32_STORE16, 1, 4); // i32.store16 into the buffer's data after its capacity
     }
 
     block(result) {
@@ -962,36 +1138,13 @@ class FunctionEmitter {
     }
 
     finish(fn) {
-        const locals = fn.nlocals ? [1, ...unsigned(fn.nlocals), I32] : [0];
-        fn.body = unsigned(locals.length + fn.code.length).concat(locals, fn.code);
-        return fn;
-    }
-}
-
-// The RV32 backend consumes one number per opcode and immediate. Only the
-// Wasm writer needs variable-length integers and framed function bodies.
-class NumericFunctionEmitter extends FunctionEmitter {
-    emitConst(value) { this.code.push(I32_CONST, value); }
-    emitIndex(op, index) { this.code.push(op, index); }
-    emitMemory(op, alignment, offset) { this.code.push(op, alignment, offset); }
-
-    codeUnitAddress(receiver, position) {
-        this.code.push(CHECKED_ADDRESS, receiver, position); // checked UTF-16 address
-    }
-
-    emitLiteralStores(address, value) {
-        this.literals ??= [];
-        this.code.push(LITERAL_STORES, address, this.literals.push(value) - 1); // checked literal stores
-    }
-
-    finish(fn) {
         if (this.literals) fn.literals = this.literals;
         return fn;
     }
 }
 
-const inspectedWasmRanges = Symbol("Wasm inspection ranges");
-
+// ---- frontend/inspect.js
+// The front end's inspection events: the tape's operations of each inspected function, with source spans.
 class InspectionCallbackError extends Error {
     constructor(cause) { super("Typed inspection callback failed", {cause}); }
 }
@@ -1026,14 +1179,16 @@ class InspectionTape extends Array {
     }
 }
 
-// Inspection decodes the tape with tape.js; the Wasm mode's bytes carry LEB128 immediates.
-function inspectOperations(tape, numeric) {
-    const operations = typedTape.decode(tape, !numeric);
-    for (const operation of operations) operation.source = tape.spans ? {...tape.spans[operation.offset]} : undefined;
+// The tape's operations (tape.js), each with the source span of the token at which its opcode was written.
+function inspectOperations(tape) {
+    const operations = typedTape.decode(tape);
+    for (const operation of operations) operation.source = {...tape.spans[operation.offset]};
     return operations;
 }
 
-function inspectFunction(emitter, fn, numeric, inspect, origin) {
+// The front end's event for one function: its tape's operations, locals and source. A backend that writes another
+// encoding of the same operations (the Wasm backend) describes them in its own terms (describeWasmFunction).
+function inspectFunction(emitter, fn, inspect, origin) {
     const lex = emitter.lex;
     const unit = origin ? "generated" : "original";
     const source = () => {
@@ -1053,219 +1208,28 @@ function inspectFunction(emitter, fn, numeric, inspect, origin) {
     emitter.inspection = {tape: () => new InspectionTape(source)};
     emitter.code = emitter.inspection.tape();
     emitter.function(fn);
-    const operations = inspectOperations(fn.code, numeric);
-    if (!numeric) {
-        // Do not let the callback mutate the internal placement information.
-        fn[inspectedWasmRanges] = operations.map(({ordinal, offset, length}) => ({ordinal, offset, length}));
-    }
+    const operations = inspectOperations(fn.code);
     fn.code = Array.from(fn.code);
     emitInspection(inspect, {
-        kind: "frontend", target: numeric ? "rv32" : "wasm", function: fn.name, index: fn.index,
+        kind: "frontend", target: "tape", function: fn.name, index: fn.index,
         params: fn.params.slice(), result: fn.result, locals, localCount: emitter.nextLocal, operations,
         ...(origin && {sourceText: lex.source}),
     });
 }
 
-function finishFunction(emitter, fn, numeric, inspect, origin) {
+function finishFunction(emitter, fn, inspect, origin) {
     if (inspect && (inspect.function === undefined || inspect.function === fn.name))
-        inspectFunction(emitter, fn, numeric, inspect, origin);
+        inspectFunction(emitter, fn, inspect, origin);
     else
         emitter.function(fn);
 }
 
-function scanSignatures(lex, records, declared, functionBase, enums, distinct, asyncSpans = false) {
-    const functions = [];
-    while (lex.token.kind !== "eof") {
-        const start = lex.token.at;
-        const async = asyncSpans && (lex.token.value === "async" && (lex.next(), true));
-        { if (lex.token.value !== "function") lex.fail("expected function"); lex.next(); }
-        const name = lex.ident();
-        if (name === "memory") lex.fail("reserved memory export");
-        if (declared.has(name) || distinct.has(name)) lex.fail("duplicate function " + name);
-        const params = [], paramNames = [];
-        const paramAts = asyncSpans ? [] : null;
-        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
-        if (!(lex.token.value === ")" && (lex.next(), true))) {
-            do {
-                paramAts?.push(lex.token.at);
-                const id = lex.ident();
-                { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
-                params.push(lex.type(records, enums, distinct));
-                if (paramNames.includes(id)) lex.fail("duplicate local " + id);
-                paramNames.push(id);
-            } while ((lex.token.value === "," && (lex.next(), true)));
-            { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
-        }
-        { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
-        const result = lex.type(records, enums, distinct);
-        if (lex.token.value !== "{") lex.fail("expected {");
-        const fn = {name, index: functionBase + functions.length, params, paramNames, result, bodyAt: lex.token.at};
-        declared.set(name, fn);
-        functions.push(fn);
-        const end = lex.skipBody();
-        if (asyncSpans) {
-            if (end === undefined) lex.fail("unterminated function body");
-            Object.assign(fn, {start, end, async, paramAts});
-        }
-    }
-    return functions;
-}
-
-function checkAcyclic(functions, edges) {
-    const colors = new Uint8Array(functions.length);
-    const order = [], path = [], positions = [];
-    for (let root = 0; root < functions.length; root++) {
-        if (colors[root]) continue;
-        path.push(root);
-        positions.push(0);
-        colors[root] = 1;
-        while (path.length) {
-            const at = path.length - 1;
-            const fn = path[at];
-            const to = edges[fn][positions[at]++];
-            if (to === undefined) {
-                path.pop();
-                positions.pop();
-                colors[fn] = 2;
-                order.push(fn);
-            } else if (colors[to] === 1) {
-                const cycle = path.slice(path.indexOf(to)).concat(to);
-                throw new SyntaxError("recursive call cycle: " + cycle.map(i => functions[i].name).join(" -> "));
-            } else if (!colors[to]) {
-                colors[to] = 1;
-                path.push(to);
-                positions.push(0);
-            }
-        }
-    }
-    return order;
-}
-
-function parseEnum(lex, name) {
-    { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
-    const members = new Map();
-    const values = new Set();
-    let next = 0;
-    while (!(lex.token.value === "}" && (lex.next(), true))) {
-        const member = lex.ident();
-        if (members.has(member)) lex.fail("duplicate member " + member + " in " + name);
-        if ((lex.token.value === "=" && (lex.next(), true))) {
-            const negative = (lex.token.value === "-" && (lex.next(), true));
-            if (lex.token.kind !== "int") lex.fail("expected integer enum value");
-            next = Number(lex.token.value) * (negative ? -1 : 1);
-            lex.next();
-        }
-        if (next < -2147483648 || next > 2147483647) lex.fail("i32 enum value out of range");
-        if (values.has(next)) lex.fail("duplicate enum value " + next + " in " + name);
-        members.set(member, next | 0);
-        values.add(next++);
-        if (!(lex.token.value === "," && (lex.next(), true))) {
-            { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
-            break;
-        }
-    }
-    if (!members.size) lex.fail("empty enum " + name);
-    return members;
-}
-
-// Aliases live only in compiler metadata. Receiver and options signatures
-// are checked once the normal forward-signature pass has seen every target.
-function parseMembers(lex, members, owner, records) {
-    if (members.has(owner)) lex.fail("duplicate member group " + owner);
-    const entries = new Map();
-    members.set(owner, entries);
-    lex.expect("{");
-    while (!lex.accept("}")) {
-        const name = lex.ident();
-        if (entries.has(name)) lex.fail("duplicate member " + owner + "." + name);
-        let options = null;
-        if (lex.accept("(")) {
-            options = lex.ident();
-            if (!records.get(options)?.size) lex.fail("expected a nonempty options record " + options);
-            lex.expect(")");
-        }
-        lex.expect("=");
-        const target = lex.ident();
-        entries.set(name, {target, options, at: lex.token.at});
-        lex.expect(";");
-    }
-}
-
-function checkMembers(lex, aliases, declared, records) {
-    if (!aliases) return;
-    for (const groups of [aliases.namespaces, aliases.methods]) {
-        const receiver = groups === aliases.methods;
-        for (const [owner, members] of groups) for (const [name, member] of members) {
-            const fail = message => { lex.token.at = member.at; lex.fail(owner + "." + name + ": " + message); };
-            const fn = declared.get(member.target);
-            if (!fn) fail("unknown target " + member.target);
-            if (receiver && fn.params[0] !== owner) fail("target must take " + owner + " as its first parameter");
-            if (member.options) {
-                const fields = records.get(member.options);
-                const first = fn.params.length - fields.size;
-                if (first < (receiver ? 1 : 0)) fail("too few parameters for " + member.options);
-                let i = first;
-                for (const [field, layout] of fields) {
-                    if (fn.params[i++] !== layout.type) fail("wrong target type for option " + field);
-                }
-            }
-        }
-    }
-}
-
-function parseDeclarations(lex, recordEnds) {
-    const records = new Map();
-    const enums = new Map();
-    const distinct = new Set();
-    let aliases;
-    while (lex.token.value === "record" || lex.token.value === "enum" || lex.token.value === "type" ||
-           lex.token.value === "namespace" || lex.token.value === "methods") {
-        const kind = lex.token.value;
-        lex.next();
-        const name = lex.ident();
-        if (kind === "methods" || kind === "namespace") {
-            aliases ??= {namespaces: new Map(), methods: new Map()};
-            if (kind === "methods") {
-                if (!records.has(name) && !distinct.has(name) && !enums.has(name)) lex.fail("unknown receiver type " + name);
-                parseMembers(lex, aliases.methods, name, records);
-            } else {
-                if (records.has(name) || enums.has(name) || distinct.has(name)) lex.fail("namespace collides with type " + name);
-                parseMembers(lex, aliases.namespaces, name, records);
-            }
-            continue;
-        }
-        if (records.has(name) || enums.has(name) || distinct.has(name) || aliases?.namespaces.has(name))
-            lex.fail("duplicate " + kind + " " + name);
-        if (kind === "enum") {
-            enums.set(name, parseEnum(lex, name));
-            continue;
-        }
-        if (kind === "type") {
-            { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
-            { if (lex.token.value !== "distinct") lex.fail("expected distinct"); lex.next(); }
-            { if (lex.token.value !== "i32") lex.fail("expected i32"); lex.next(); }
-            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
-            distinct.add(name);
-            continue;
-        }
-        const fields = new Map();
-        { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
-        while (lex.token.value !== "}") {
-            const field = lex.ident();
-            if (fields.has(field)) lex.fail("duplicate field " + field + " in " + name);
-            { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
-            const type = lex.type(records, enums, distinct);
-            { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
-            fields.set(field, {type, offset: fields.size * 4});
-        }
-        recordEnds?.set(name, lex.token.at);
-        { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
-        records.set(name, fields);
-    }
-    return {records, enums, distinct, aliases};
-}
-
-function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, numericOperands = false, onFunction, onSignatures, options) {
+// ---- frontend/compile.js
+// The front end's entry: compileFunctions parses a program and hands each function's tape to the backend
+// before parsing the next (streaming), with the async rewrite (typed-async.js) when the source needs it.
+// Parse and check `source`, writing each function's tape (fn.code, fn.nlocals, fn.literals) and handing it to
+// onFunction before the next function is parsed. The fifth parameter is unused: the front end has one output.
+function compileFunctions(source, functionBase, imported = [], maxSourceLength = 64 * 1024, unused, onFunction, onSignatures, options) {
     if (source.length > maxSourceLength) throw new SyntaxError("input limit exceeded");
     const inspect = options?.inspect;
     if (inspect && typeof inspect.emit !== "function") throw new TypeError("Typed inspection needs an emit callback");
@@ -1273,8 +1237,8 @@ function compileFunctions(source, functionBase, imported = [], maxSourceLength =
         const lowered = globalThis.typedAsync?.rewrite(source, imported);
         try {
             const program = lowered
-                ? emitSpanFunctions(lowered, functionBase, imported, numericOperands, onFunction, onSignatures, inspect)
-                : emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures, undefined, inspect);
+                ? emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignatures, inspect)
+                : emitFunctions(source, functionBase, imported, onFunction, onSignatures, undefined, inspect);
             if (lowered) {
                 program.asyncLayout = lowered.layout;
                 if (options?.asyncSource) program.asyncSource = lowered.source;
@@ -1285,7 +1249,7 @@ function compileFunctions(source, functionBase, imported = [], maxSourceLength =
             if (!lowered || !(error instanceof SyntaxError)) throw error;
             lexicalScope?.sources.clear();
             try {
-                emitFunctions(lowered.source, functionBase, imported, numericOperands, undefined, undefined, lowered);
+                emitFunctions(lowered.source, functionBase, imported, undefined, undefined, lowered);
             } catch (canonical) {
                 throw lowered.remap(canonical);
             }
@@ -1303,8 +1267,7 @@ function configureGeneratedLexer(lex, lowered) {
     return lex;
 }
 
-function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onFunction, onSignatures, inspect) {
-    const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
+function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignatures, inspect) {
     const {original, declarations, fields, bodies, generated} = lowered.plan;
     const {enums, distinct, aliases} = declarations;
     const records = new Map(declarations.records);
@@ -1345,8 +1308,8 @@ function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onF
             fn.bodyAt = body.at;
         }
         try {
-            const emitter = new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
-            if (inspect) finishFunction(emitter, fn, numericOperands, inspect,
+            const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+            if (inspect) finishFunction(emitter, fn, inspect,
                 lex === originalLex ? undefined : lex === generatedLex ? "synthetic-source" : "rewritten-body");
             else emitter.function(fn);
         } finally {
@@ -1357,8 +1320,7 @@ function emitSpanFunctions(lowered, functionBase, imported, numericOperands, onF
     return {functions, records, enums, distinct, edges, order: checkAcyclic(functions, edges)};
 }
 
-function emitFunctions(source, functionBase, imported, numericOperands, onFunction, onSignatures, lowered, inspect) {
-    const Emitter = numericOperands ? NumericFunctionEmitter : FunctionEmitter;
+function emitFunctions(source, functionBase, imported, onFunction, onSignatures, lowered, inspect) {
     const lex = new Lexer(source, 0, source.length, true);
     if (lowered) {
         const generatedPrefix = lowered.prefix;
@@ -1376,8 +1338,8 @@ function emitFunctions(source, functionBase, imported, numericOperands, onFuncti
     if (onSignatures) onSignatures(functions);
     const edges = functions.map(() => []);
     for (const [i, fn] of functions.entries()) {
-        const emitter = new Emitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
-        if (inspect) finishFunction(emitter, fn, numericOperands, inspect);
+        const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+        if (inspect) finishFunction(emitter, fn, inspect);
         else emitter.function(fn);
         if (onFunction) onFunction(fn);
     }
@@ -1386,21 +1348,135 @@ function emitFunctions(source, functionBase, imported, numericOperands, onFuncti
     return { functions, records, enums, distinct, edges, order };
 }
 
+// ---- wasm/encode.js
+// The WebAssembly backend, part one: a tape serialized as a Wasm function body. An operation's opcode is its Wasm
+// opcode and its operand cells become LEB128 immediates (signed for i32.const; a block type cell, 0x40 or 0x7f, is its
+// own one-byte encoding). The text pseudo-ops expand to the Wasm sequences they stand for.
+function pushUnsigned(out, value) {
+    do {
+        const part = value & 127;
+        value >>>= 7;
+        out.push(part | (value ? 128 : 0));
+    } while (value);
+}
+
+function unsigned(value) {
+    const bytes = [];
+    pushUnsigned(bytes, value);
+    return bytes;
+}
+
+function pushSigned(out, value) {
+    while (true) {
+        const part = value & 127;
+        value >>= 7;
+        const done = (value === 0 && !(part & 64)) || (value === -1 && !!(part & 64));
+        out.push(part | (done ? 0 : 128));
+        if (done) return;
+    }
+}
+
+// text.checked_address receiver position: trap unless position < capacity (unsigned), then receiver + 2 * position.
+function pushCheckedAddress(out, receiver, position) {
+    out.push(LOCAL_GET);
+    pushUnsigned(out, position);
+    out.push(LOCAL_GET);
+    pushUnsigned(out, receiver);
+    out.push(I32_LOAD, 2, 0, I32_GE_U, IF, VOID, UNREACHABLE, END, LOCAL_GET);
+    pushUnsigned(out, receiver);
+    out.push(LOCAL_GET);
+    pushUnsigned(out, position);
+    out.push(I32_CONST, 1, I32_SHL, I32_ADD);
+}
+
+// text.literal_stores address literal: one i32.store16 per UTF-16 unit, from address + 4. The tape's check of the
+// whole range precedes it.
+function pushLiteralStores(out, address, text) {
+    for (let i = 0; i < text.length; i++) {
+        out.push(LOCAL_GET);
+        pushUnsigned(out, address);
+        out.push(I32_CONST);
+        pushSigned(out, text.charCodeAt(i));
+        out.push(I32_STORE16, 1);
+        pushUnsigned(out, 4 + 2 * i);
+    }
+}
+
+// fn.body: the framed body (size, locals, instructions) of fn's tape. `marks`, when given, receives the byte offset
+// of each tape operation within the instructions, by ordinal. Returns the instructions' length.
+function encodeFunction(fn, marks) {
+    const tape = fn.code, out = [];
+    for (let at = 0; at < tape.length;) {
+        const op = tape[at];
+        const n = CELLS[op];
+        if (marks) marks.push(out.length);
+        // Most operands fit one LEB128 byte; those take the short paths.
+        if (n === 1 && op !== I32_CONST && tape[at + 1] < 128) {
+            out.push(op, tape[at + 1]);
+        } else if (n === 0) {
+            out.push(op);
+        } else if (op === I32_CONST) {
+            const value = tape[at + 1];
+            if (value >= -64 && value < 64) out.push(op, value & 127);
+            else {
+                out.push(op);
+                pushSigned(out, value);
+            }
+        } else if (op === CHECKED_ADDRESS) {
+            pushCheckedAddress(out, tape[at + 1], tape[at + 2]);
+        } else if (op === LITERAL_STORES) {
+            pushLiteralStores(out, tape[at + 1], fn.literals[tape[at + 2]]);
+        } else if (n < 0 || op === UNCHECKED_ADDRESS) {
+            throw new Error("no Wasm encoding for tape opcode " + op + " at " + at);
+        } else {
+            out.push(op);
+            for (let k = 1; k <= n; k++) pushUnsigned(out, tape[at + k]);
+        }
+        at += 1 + n;
+    }
+    const locals = fn.nlocals ? [1, ...unsigned(fn.nlocals), I32] : [0];
+    fn.body = unsigned(locals.length + out.length).concat(locals, out);
+    return out.length;
+}
+
+// Compile source's functions with the front end and serialize each tape as it arrives; the tapes are released.
+// Inspection: the front end's event for a function describes its tape; this backend reports the same function's
+// Wasm operations instead, each with the source of the tape operation it encodes, and keeps their byte ranges
+// for the emission event (inspectWasmEmission).
+function compileWasmFunctions(source, functionBase, imported, maxSourceLength, options) {
+    const inspect = options?.inspect;
+    let tapeEvent = null;
+    const frontOptions = inspect && typeof inspect.emit === "function"
+        ? {...options, inspect: {function: inspect.function, emit(event) { tapeEvent = event; }}} : options;
+    return compileFunctions(source, functionBase, imported, maxSourceLength, undefined, fn => {
+        const event = tapeEvent;
+        tapeEvent = null;
+        const marks = event ? [] : undefined;
+        const length = encodeFunction(fn, marks);
+        if (event) describeWasmFunction(fn, event, marks, length, inspect);
+        fn.code = null;
+        fn.literals = null;
+    }, undefined, frontOptions);
+}
+
+// ---- wasm/module.js
+// The WebAssembly backend, part two: a module of Typed functions (compile), and the reader and writer of
+// module sections that linkWorld uses.
+function vec(elements) {
+    return [...unsigned(elements.length), ...elements.flat()];
+}
+
+function section(id, data) {
+    return [id, ...unsigned(data.length), ...data];
+}
+
 function signature(fn) {
     return [0x60, ...vec(fn.params.map(() => I32)), 1, I32];
 }
 
-function recordLayouts(records) {
-    return Object.fromEntries(Array.from(records, ([name, fields]) => [name, Object.fromEntries(fields)]));
-}
-
-function enumLayouts(enums) {
-    return Object.fromEntries(Array.from(enums, ([name, members]) => [name, Object.fromEntries(members)]));
-}
-
 function compile(source, options) {
     const {functions, records, enums, distinct, asyncLayout, asyncSource} =
-        compileFunctions(source, 0, [], undefined, false, undefined, undefined, options);
+        compileWasmFunctions(source, 0, [], undefined, options);
     const headers = functions.map(signature);
     const names = functions.map((fn, i) => [
         ...vec(Array.from(fn.name, char => char.charCodeAt(0))), 0, ...unsigned(i),
@@ -1413,7 +1489,7 @@ function compile(source, options) {
         ...section(7, vec([...names, [...vec([109,101,109,111,114,121]), 2, 0]])),
         ...section(10, vec(functions.map(fn => fn.body))),
     ]);
-    if (options?.inspect && functions.some(fn => fn[inspectedWasmRanges])) {
+    if (options?.inspect && functions.some(fn => fn[inspectedWasm])) {
         try {
             inspectWasmEmission(bytes, functions, options.inspect);
         } catch (error) {
@@ -1469,41 +1545,6 @@ class WasmReader {
     end() { return this.offset === this.bytes.length; }
 }
 
-function inspectWasmEmission(bytes, functions, inspect) {
-    const reader = new WasmReader(bytes);
-    reader.take(8);
-    while (!reader.end()) {
-        const id = reader.byte();
-        const size = reader.uint();
-        if (id !== 10) {
-            reader.take(size);
-            continue;
-        }
-        const sectionEnd = reader.offset + size;
-        if (reader.uint() !== functions.length) throw new Error("unexpected Wasm code section count");
-        for (const fn of functions) {
-            const bodySize = reader.uint();
-            const start = reader.offset;
-            const end = start + bodySize;
-            const instructionsStart = end - fn.code.length;
-            const operations = fn[inspectedWasmRanges];
-            if (operations) {
-                const ranges = operations.map(({ordinal, offset, length}) => {
-                    const from = instructionsStart + offset;
-                    const to = from + length;
-                    return {ordinal, start: from, end: to, bytes: Array.from(bytes.subarray(from, to))};
-                });
-                emitInspection(inspect, {kind: "emission", target: "wasm", function: fn.name, index: fn.index,
-                    start, end, instructionsStart, ranges});
-            }
-            reader.take(bodySize);
-        }
-        if (reader.offset !== sectionEnd) throw new Error("unexpected Wasm code section size");
-        return;
-    }
-    throw new Error("missing Wasm code section for Typed inspection");
-}
-
 function readSection(sections, id, read) {
     const section = sections.find(part => part.id === id);
     if (!section) throw new SyntaxError("missing Wasm runtime section " + id);
@@ -1540,6 +1581,62 @@ function encodeByteVector(elements) {
     return result;
 }
 
+// ---- wasm/inspect.js
+// The WebAssembly backend's inspection events: each inspected function's Wasm operations and their byte ranges in
+// the final module.
+const inspectedWasm = Symbol("Wasm inspection ranges");
+
+function describeWasmFunction(fn, event, marks, length, inspect) {
+    const tapeOperations = event.operations;
+    const operations = typedTape.decode(fn.body.slice(fn.body.length - length), true);
+    let j = 0;
+    for (const operation of operations) {
+        while (j + 1 < marks.length && marks[j + 1] <= operation.offset) j++;
+        operation.source = {...tapeOperations[j].source};
+    }
+    // Do not let the callback mutate the internal placement information.
+    fn[inspectedWasm] = {length, ranges: operations.map(({ordinal, offset, length}) => ({ordinal, offset, length}))};
+    emitInspection(inspect, {...event, target: "wasm", operations});
+}
+
+function inspectWasmEmission(bytes, functions, inspect) {
+    const reader = new WasmReader(bytes);
+    reader.take(8);
+    while (!reader.end()) {
+        const id = reader.byte();
+        const size = reader.uint();
+        if (id !== 10) {
+            reader.take(size);
+            continue;
+        }
+        const sectionEnd = reader.offset + size;
+        if (reader.uint() !== functions.length) throw new Error("unexpected Wasm code section count");
+        for (const fn of functions) {
+            const bodySize = reader.uint();
+            const start = reader.offset;
+            const end = start + bodySize;
+            const inspected = fn[inspectedWasm];
+            if (inspected) {
+                const instructionsStart = end - inspected.length;
+                const ranges = inspected.ranges.map(({ordinal, offset, length}) => {
+                    const from = instructionsStart + offset;
+                    const to = from + length;
+                    return {ordinal, start: from, end: to, bytes: Array.from(bytes.subarray(from, to))};
+                });
+                emitInspection(inspect, {kind: "emission", target: "wasm", function: fn.name, index: fn.index,
+                    start, end, instructionsStart, ranges});
+            }
+            reader.take(bodySize);
+        }
+        if (reader.offset !== sectionEnd) throw new Error("unexpected Wasm code section size");
+        return;
+    }
+    throw new Error("missing Wasm code section for Typed inspection");
+}
+
+// ---- wasm/link.js
+// The WebAssembly backend, part three: a Typed world linked into a trusted Wasm reactor; and what the bundle
+// publishes.
 // The trusted runtime owns memory, host imports, and world exports. Its
 // direct calls to the exported slot keep their original function index.
 function linkWorld(source, runtime, entries, imports = [], maxSourceLength, options) {
@@ -1583,7 +1680,7 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength, opti
         return {...fn, index};
     });
     const {functions, records, enums, distinct, asyncLayout, asyncSource} =
-        compileFunctions(source, base, imported, maxSourceLength, false, undefined, undefined, options);
+        compileWasmFunctions(source, base, imported, maxSourceLength, options);
     for (const entry of entries) {
         const bytesName = Array.from(entry, ch => ch.charCodeAt(0)).join(",");
         const slot = exports.find(item => item.name === bytesName && item.kind === 0)?.index - importCount;
@@ -1621,6 +1718,8 @@ function invoke(exports, signature, args) {
     return signature.result === "bool" ? value !== 0 : value;
 }
 
+// What the bundle publishes. typed-async.js uses the front end's pieces; typed-rv32.js uses compileFunctions and the
+// layouts.
 globalThis.compileTyped = (source, options) => {
     const {bytes, asyncLayout, asyncSource} = compile(source, options);
     if (asyncLayout) bytes.asyncLayout = asyncLayout;

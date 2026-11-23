@@ -1,0 +1,19 @@
+{
+  "name": "editor",
+  "kind": "world",
+  "sources": ["state.typed", "layout.typed", "empty.typed", "markdown.typed", "view.typed", "find.typed",
+              "preview.typed", "document-view.typed", "positions.typed", "edit.typed", "editor.typed"],
+  "link": "compiler/typed/typed-world.js",
+  "entry": "compileTypedWorldRv32",
+  "compiler": ["typed/async.js"],
+  "reactor": {
+    "sources": ["firmware/sdk/typed/world.c", "firmware/sdk/typed/chess-psix.c", "firmware/sdk/typed/rv32-slot.S",
+                "firmware/third_party/quickjs/libunicode.c", "firmware/sdk/nw_elf.c"]
+  },
+  "policy": "interactive",
+  "heapBytes": 4194304,
+  "deadlineMs": 6000,
+  "world": {"replaces": "editor", "budget_ms": 200, "mem_kb": 768},
+  "fallback": true,
+  "notes": ["default compiles Editor in 7.90 s on the P4, interactive in 3.04 s (PICOCALC-COMPILE-BUDGET)."]
+}

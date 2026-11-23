@@ -12,7 +12,7 @@ const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass P4 GCC and CJI rv32emu');
 const os = resolve('firmware');
 const editorDir = join(os, '../apps/typed/editor');
-const sources = readFileSync(join(editorDir, 'source.list'), 'utf8').trim().split('\n');
+const {sources} = JSON.parse(readFileSync(join(editorDir, 'app.json'), 'utf8'));
 const source = sources.map(name => readFileSync(join(editorDir, name), 'utf8') + '\n').join('');
 const wasmReactor = readFileSync(join(os, 'build/typed-world-reactor.wasm'));
 const wasm = compileTypedWorld(source, wasmReactor);

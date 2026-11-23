@@ -1,0 +1,24 @@
+{
+  "name": "candela",
+  "kind": "module",
+  "variants": {
+    "hand": ["assemble.py", "--stage", "hand"],
+    "fluent": ["assemble.py", "--stage", "fluent"],
+    "callback": ["assemble.py", "--stage", "callback"]
+  },
+  "link": "apps/typed/candela/link.js",
+  "entry": "linkCandela",
+  "reactor": {
+    "sources": ["firmware/port/esp32p4/main/candela_slot.c", "firmware/port/esp32p4/main/candela_slot.S"]
+  },
+  "heapBytes": 4194304,
+  "deadlineMs": 8000,
+  "host": {
+    "sources": ["firmware/port/esp32p4/main/candela_p4.c", "firmware/nucleus/candela_scene.c"],
+    "defines": ["PICOCALC_CANDELA=1"]
+  },
+  "notes": [
+    "The scene sections are Typed; candela_scene.c (the renderer) is C until PICOCALC-CANDELA-TYPED.",
+    "candela_p4.c installs the callback variant at boot; the console's candela stage N switches."
+  ]
+}

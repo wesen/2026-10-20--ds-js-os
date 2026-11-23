@@ -1,15 +1,16 @@
+// The Typed compiler on the handheld, and the one path every Typed app (typed_apps.h, generated from
+// apps/typed/NAME/app.json) is compiled through: p4_typed_app_compile with the limits, policy, linker and entry of
+// its manifest. A boot world's module is served to the kernel as NAME/compiled.bin (p4_typed_world_read).
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "p4.h"
+#include "typed_apps.h"
 #include "typed_lex_index.h"
 #include "quickjs.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
-
-#define COMPILER_LIMIT (2 * 1024 * 1024)
-#define COMPILER_US 1700000
 
 typedef struct {
   size_t live, peak, limit;
@@ -160,13 +161,10 @@ static bool install_rv32_load(JSContext *ctx) {
 }
 
 char *p4_typed_compile(const char *app, const char *source_kind, const char *source,
-                       size_t source_length, const char *linker, const char *entry, int engine,
-                       const char *reactor, size_t reactor_length, size_t *length, vtime_t started,
-                       const p4_compile_limits *limits) {
-  compile_heap heap = {
-    .limit = limits && limits->heap_bytes ? limits->heap_bytes : COMPILER_LIMIT,
-    .deadline = started + (limits && limits->duration_us ? limits->duration_us : COMPILER_US),
-  };
+                       size_t source_length, const char *linker, const char *entry,
+                       const char *const *compiler, const char *reactor, size_t reactor_length,
+                       size_t *length, vtime_t started, const p4_compile_limits *limits) {
+  compile_heap heap = {.limit = limits->heap_bytes, .deadline = started + limits->duration_us};
   JSRuntime *rt = JS_NewRuntime2(&compiler_allocator, &heap);
   JSContext *ctx = NULL;
   char *module = NULL;
@@ -176,9 +174,11 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   ctx = JS_NewContext(rt);
   if (!ctx) goto done;
   if (!typed_lex_index_install(ctx) || !install_rv32_load(ctx)) goto rejected;
-  if (!eval_file(ctx, "typed/tape.js") || !eval_file(ctx, "typed/wasm.js") ||
-      (!strcmp(linker, "typed/world.js") && !eval_file(ctx, "typed/async.js")) ||
-      (engine == ENG_NATIVE && !eval_file(ctx, limits && limits->rv32_backend ? limits->rv32_backend : "typed/rv32.js")) ||
+  // The tape definition, the front end, the compiler modules the app names (typed/async.js), the RV32 back end, then the linker.
+  if (!eval_file(ctx, "typed/tape.js") || !eval_file(ctx, "typed/wasm.js")) goto rejected;
+  for (const char *const *m = compiler; m && *m; m++)
+    if (!eval_file(ctx, *m)) goto rejected;
+  if (!eval_file(ctx, limits->rv32_backend ? limits->rv32_backend : "typed/rv32.js") ||
       !eval_file(ctx, linker)) goto rejected;
   JSValue global = JS_GetGlobalObject(ctx);
   JSValue function = JS_GetPropertyStr(ctx, global, entry);
@@ -192,24 +192,15 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   int argc = 2;
   JSValue result = JS_EXCEPTION;
   bool ready = !JS_IsException(args[0]) && !JS_IsException(args[1]);
-  if (ready && engine == ENG_NATIVE) {
-#ifdef PICOCALC_RV32_BUFFER_FUNCTIONS
-    args[2] = JS_NewObject(ctx);
-    ready = !JS_IsException(args[2]) && JS_SetPropertyStr(ctx, args[2], "streamFunctions", JS_FALSE) >= 0;
-    argc = 3;
-    if (ready) printf("%s native compiler functions=buffered\n", app);
-#else
+  if (ready) {
     printf("%s native compiler functions=streamed\n", app);
-#endif
     // A named policy selects how much the compiler optimizes this world: interactive worlds
     // trade generated-code speed for a boot compile inside their deadline (COMPILE-BUDGET).
-    if (ready && limits && limits->policy) {
-      if (argc < 3) {
-        args[2] = JS_NewObject(ctx);
-        ready = !JS_IsException(args[2]);
-        argc = 3;
-      }
-      ready = ready && JS_SetPropertyStr(ctx, args[2], "policy", JS_NewString(ctx, limits->policy)) >= 0;
+    if (limits->policy) {
+      args[2] = JS_NewObject(ctx);
+      ready = !JS_IsException(args[2]) &&
+              JS_SetPropertyStr(ctx, args[2], "policy", JS_NewString(ctx, limits->policy)) >= 0;
+      argc = 3;
       if (ready) printf("%s native compiler policy=%s\n", app, limits->policy);
     }
   }
@@ -255,4 +246,127 @@ done:
          app, source_kind, module ? "ok" : "failed",
          (long long)(port_clock() - started), heap.peak, module ? *length : 0);
   return module;
+}
+
+const p4_typed_app *p4_typed_app_find(const char *name) {
+  for (size_t i = 0; i < p4_typed_app_count; i++)
+    if (!strcmp(p4_typed_apps[i].name, name)) return &p4_typed_apps[i];
+  return NULL;
+}
+
+p4_compile_limits p4_typed_app_limits(const p4_typed_app *app) {
+  return (p4_compile_limits){.heap_bytes = app->heap_bytes, .duration_us = app->deadline_us, .policy = app->policy};
+}
+
+// The app's first source replaced by its editable file under the store (Agenda: notes/agenda.typed), then the rest.
+static char *read_edited(const p4_typed_app *app, size_t *length) {
+  const char *root = port_fs_root();
+  char path[160];
+  if (!app->edit_file || !root || snprintf(path, sizeof path, "%s/%s", root, app->edit_file) >= (int)sizeof path)
+    return NULL;
+  FILE *file = fopen(path, "rb");
+  if (!file) return NULL;
+  size_t tail_length = 0;
+  char *tail = p4_bundle_read(app->edit_tail, &tail_length, NULL, 0);
+  char *text = tail ? malloc(app->edit_limit + 1 + tail_length + 1) : NULL;
+  size_t n = text ? fread(text, 1, app->edit_limit + 1, file) : 0;
+  bool ok = text && !ferror(file) && n <= app->edit_limit && !memchr(text, 0, n) &&
+            utf8_valid((const unsigned char *)text, n);
+  fclose(file);
+  if (ok) {
+    text[n++] = '\n';
+    memcpy(text + n, tail, tail_length);
+    n += tail_length;
+    text[n] = 0;
+    *length = n;
+  } else {
+    free(text);
+    text = NULL;
+  }
+  free(tail);
+  return text;
+}
+
+char *p4_typed_app_compile(const p4_typed_app *app, int variant, const char *text, size_t text_length,
+                           const char *kind, size_t *length) {
+  vtime_t started = port_clock();
+  if (variant < 0 || (app->n_variants ? variant >= app->n_variants : variant != 0)) return NULL;
+  const char *bundled = app->n_variants ? app->variants[variant].source : app->source;
+  size_t source_length = text_length, reactor_length = 0;
+  char *source = text ? NULL : p4_bundle_read(bundled, &source_length, NULL, 0);
+  char *reactor = p4_bundle_read(app->reactor, &reactor_length, NULL, 0);
+  char *module = NULL;
+  if ((text || source) && reactor) {
+    const p4_compile_limits limits = p4_typed_app_limits(app);
+    module = p4_typed_compile(app->name, kind ? kind : bundled, text ? text : source, source_length, app->link,
+                              app->entry, app->compiler, reactor, reactor_length, length, started, &limits);
+  } else {
+    printf("%s compile: source or reactor unavailable\n", app->name);
+  }
+  free(reactor);
+  free(source);
+  return module;
+}
+
+// The kernel reads a boot world's file while it boots (kernel.c add_world): NAME/compiled.bin is the app compiled
+// now. NULL when the compile fails or misses its deadline; the manifest's fallback then runs the JavaScript world.
+char *p4_typed_world_read(const char *path, size_t *length, bool *served) {
+  *served = false;
+  const char *slash = strchr(path, '/');
+  if (!slash || strcmp(slash, "/compiled.bin")) return NULL;
+  for (size_t i = 0; i < p4_typed_app_count; i++) {
+    const p4_typed_app *app = &p4_typed_apps[i];
+    if (!app->world || strlen(app->name) != (size_t)(slash - path) || strncmp(app->name, path, slash - path)) continue;
+    *served = true;
+    return p4_typed_app_compile(app, 0, NULL, 0, "bundle", length);
+  }
+  return NULL;
+}
+
+// typed: the apps and their limits; typed NAME baseline|build: compile a running world again, from the bundle or
+// with its editable file, and restart it on the new module (the candidate is compiled before the world is touched).
+void p4_typed_console(const char *args) {
+  char name[32] = "", verb[16] = "";
+  int n = sscanf(args, "%31s %15s", name, verb);
+  if (n <= 0) {
+    for (size_t i = 0; i < p4_typed_app_count; i++) {
+      const p4_typed_app *a = &p4_typed_apps[i];
+      printf("TYPEDAPP {\"name\":\"%s\",\"world\":%d,\"policy\":\"%s\",\"heapBytes\":%u,\"deadlineUs\":%lld,"
+             "\"variants\":%d,\"editable\":%d}\n", a->name, a->world, a->policy ? a->policy : "default",
+             (unsigned)a->heap_bytes, (long long)a->deadline_us, a->n_variants, a->edit_file != NULL);
+    }
+    return;
+  }
+  const p4_typed_app *app = p4_typed_app_find(name);
+  bool edit = !strcmp(verb, "build");
+  if (!app || !app->world || (!edit && strcmp(verb, "baseline")) || (edit && !app->edit_file)) {
+    puts("typed | typed WORLD baseline | typed WORLD build (an editable world, from its file under the store)");
+    return;
+  }
+  world_t *world = world_by_name(app->name);
+  char file[96];
+  snprintf(file, sizeof file, "%s/compiled.bin", app->name);
+  if (!world || world->engine != ENG_NATIVE || strcmp(world->file, file)) {
+    printf("typed: %s is not running as its compiled world\n", app->name);
+    return;
+  }
+  size_t length = 0;
+  char *module = NULL;
+  if (edit) {
+    size_t text_length = 0;
+    char *text = read_edited(app, &text_length);
+    if (!text) {
+      printf("typed: cannot read %s\n", app->edit_file);
+      return;
+    }
+    module = p4_typed_app_compile(app, 0, text, text_length, "edit", &length);
+    free(text);
+  } else {
+    module = p4_typed_app_compile(app, 0, NULL, 0, "bundle", &length);
+  }
+  if (!module) return;
+  free(world->source);
+  world->source = module;
+  world->source_len = length;
+  kernel_restart_world(world);
 }

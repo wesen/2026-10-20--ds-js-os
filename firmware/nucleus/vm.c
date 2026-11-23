@@ -175,7 +175,7 @@ static int read_meta(world_t *W, JSValue meta) {
   return 0;
 }
 
-#if PICOCALC_TYPED_AGENDA
+#if PICOCALC_PRELUDE_CACHE
 static uint8_t *prelude_bytecode;
 static size_t prelude_bytecode_len;
 static bool prelude_cache_tried;
@@ -213,7 +213,7 @@ static void build_prelude_cache(void) {
 #endif
 
 static JSValue eval_prelude(JSContext *ctx) {
-#if PICOCALC_TYPED_AGENDA
+#if PICOCALC_PRELUDE_CACHE
   if (!prelude_cache_tried) build_prelude_cache();
   if (prelude_bytecode) {
     // This is a copy of a firmware script compiled by this same QuickJS build.
@@ -227,10 +227,6 @@ static JSValue eval_prelude(JSContext *ctx) {
 }
 
 int vm_create(world_t *W) {
-#if PICOCALC_TYPED_AGENDA
-  extern void p4_agenda_js_boot(const world_t *, const vtime_t *);
-  vtime_t stages[5] = {port_clock()};
-#endif
   W->oom = false; W->interrupts = 0; W->mem_used = 0;
 #if PICOCALC_CANDELA_WORLD
   W->mem_peak = 0;
@@ -255,9 +251,6 @@ int vm_create(world_t *W) {
   JS_SetPropertyStr(ctx, g, "__ka", JS_NewCFunction(ctx, host_ka, "__ka", 1));
   W->vm->fn_dispatch = JS_UNDEFINED; W->vm->fn_render = JS_UNDEFINED;
   int rc = 0;
-#if PICOCALC_TYPED_AGENDA
-  stages[1] = port_clock();
-#endif
   JSValue r = eval_prelude(ctx);
   if (JS_IsException(r)) { set_error(W); rc = -1; }
   JS_FreeValue(ctx, r);
@@ -265,17 +258,11 @@ int vm_create(world_t *W) {
   // the Candela world (claim "candela"): its bytecode module loader and host object, after the prelude
   if (!rc && world_claims(W, "candela") && candela_world_install(W, ctx)) { set_error(W); rc = -1; }
 #endif
-#if PICOCALC_TYPED_AGENDA
-  stages[2] = port_clock();
-#endif
   if (!rc) {
     r = JS_Eval(ctx, W->source, strlen(W->source), W->file, JS_EVAL_TYPE_GLOBAL);
     if (JS_IsException(r)) { set_error(W); rc = -1; }
     JS_FreeValue(ctx, r);
   }
-#if PICOCALC_TYPED_AGENDA
-  stages[3] = port_clock();
-#endif
   if (!rc) {
     JSValue init = JS_GetPropertyStr(ctx, g, "__init");
     JSValue meta = JS_Call(ctx, init, JS_UNDEFINED, 0, NULL);
@@ -289,10 +276,6 @@ int vm_create(world_t *W) {
     rc = run_jobs(W);
   }
   JS_FreeValue(ctx, g);
-#if PICOCALC_TYPED_AGENDA
-  stages[4] = port_clock();
-  p4_agenda_js_boot(W, stages);
-#endif
   if (rc && W->oom) snprintf(W->last_error, sizeof W->last_error, "ran out of memory while starting (its limit is %zu KB)", W->mem_limit / 1024);
   return rc;
 }
@@ -396,6 +379,7 @@ int vm_read_manifest(const char *json, size_t n, const char *path, int (*add)(vo
     f = JS_GetPropertyStr(ctx, o, "name"); s = JS_ToCString(ctx, f); snprintf(mw.name, sizeof mw.name, "%s", s ? s : "?"); JS_FreeCString(ctx, s); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "file"); s = JS_ToCString(ctx, f); snprintf(mw.file, sizeof mw.file, "%s", s ? s : "?"); JS_FreeCString(ctx, s); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "engine"); if (!JS_IsUndefined(f)) { s = JS_ToCString(ctx, f); snprintf(mw.engine, sizeof mw.engine, "%s", s ? s : "?"); JS_FreeCString(ctx, s); } JS_FreeValue(ctx, f);
+    f = JS_GetPropertyStr(ctx, o, "fallback"); if (!JS_IsUndefined(f)) { s = JS_ToCString(ctx, f); snprintf(mw.fallback, sizeof mw.fallback, "%s", s ? s : ""); JS_FreeCString(ctx, s); } JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "budget_ms"); if ((mw.has_budget = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.budget_ms, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "mem_kb"); if ((mw.has_mem = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.mem_kb, f); JS_FreeValue(ctx, f);
     f = JS_GetPropertyStr(ctx, o, "priority"); if ((mw.has_prio = !JS_IsUndefined(f))) JS_ToFloat64(ctx, &mw.priority, f); JS_FreeValue(ctx, f);
@@ -440,7 +424,7 @@ static int64_t count_steps(const char *src, double *real_ms) {
 }
 double vm_fib20_ms;
 void vm_reset(void) {
-#if PICOCALC_TYPED_AGENDA
+#if PICOCALC_PRELUDE_CACHE
   port_heap_free(prelude_bytecode);
   prelude_bytecode = NULL;
   prelude_bytecode_len = 0;

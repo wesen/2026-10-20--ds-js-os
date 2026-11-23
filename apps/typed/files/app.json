@@ -1,0 +1,18 @@
+{
+  "name": "files",
+  "kind": "world",
+  "sources": ["files.typed"],
+  "link": "apps/typed/files/compile.js",
+  "entry": "compileFilesRv32",
+  "reactor": {
+    "sources": ["apps/typed/files/world.c", "apps/typed/files/rv32-slot.S", "firmware/sdk/nw_elf.c"]
+  },
+  "heapBytes": 2097152,
+  "deadlineMs": 1700,
+  "world": {"replaces": "files"},
+  "fallback": true,
+  "notes": [
+    "The default policy compiles Files in 0.41 s on the P4 (PICOCALC-COMPILE-BUDGET).",
+    "The reactor is C (world.c holds the app's policy); PICOCALC-AGENDA-TYPED-WORLD moves it to Typed."
+  ]
+}
