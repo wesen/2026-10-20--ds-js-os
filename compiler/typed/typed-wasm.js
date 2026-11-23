@@ -1410,9 +1410,18 @@ function encodeFunction(fn, marks) {
         const op = tape[at];
         const n = CELLS[op];
         if (marks) marks.push(out.length);
-        if (op === I32_CONST) {
+        // Most operands fit one LEB128 byte; those take the short paths.
+        if (n === 1 && op !== I32_CONST && tape[at + 1] < 128) {
+            out.push(op, tape[at + 1]);
+        } else if (n === 0) {
             out.push(op);
-            pushSigned(out, tape[at + 1]);
+        } else if (op === I32_CONST) {
+            const value = tape[at + 1];
+            if (value >= -64 && value < 64) out.push(op, value & 127);
+            else {
+                out.push(op);
+                pushSigned(out, value);
+            }
         } else if (op === CHECKED_ADDRESS) {
             pushCheckedAddress(out, tape[at + 1], tape[at + 2]);
         } else if (op === LITERAL_STORES) {

@@ -9,8 +9,11 @@
 // MODE wasm:  compileTypedWorld(SOURCE, <bytes of the reactor file ARG>).length
 // Each round creates a fresh runtime, evaluates the compiler FILEs (parsing each time) and compiles once. It prints,
 // per round, the microseconds spent loading and compiling, the peak QuickJS heap during the compile above the heap
-// after loading (bytes from malloc_usable_size, as QuickJS accounts them) and the output length.
-#include <malloc.h>
+// after loading (requested bytes, see measure_malloc) and the output length.
+// QJS_GC_PHASE=K (0..15) sets the cycle collector's first trigger during the compile to base * (1 + K/32), where
+// base is the heap after loading. QuickJS collects when the heap passes 1.5 times its size after the previous
+// collection, so where collections fall in a compile depends on everything allocated before it: one comment line
+// added to typed-wasm.js moved the Editor's peak by 0.5 %. Sweeping K spreads that phase over its range.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,34 +22,42 @@
 
 static size_t peak;
 
+// Each block carries its requested size in a 16-byte header, and QuickJS sees that size as the usable size. With
+// malloc_usable_size the count (and QuickJS's array growth, which uses the slack) depended on glibc's heap layout:
+// one comment line added to typed-wasm.js moved the Editor's peak by 0.5 %.
+#define HEADER 16
+static size_t size_of(const void *p) { return *(const size_t *)((const char *)p - HEADER); }
+
 static void *measure_malloc(JSMallocState *s, size_t size) {
-    void *p = malloc(size);
-    if (!p) return NULL;
+    char *block = malloc(size + HEADER);
+    if (!block) return NULL;
+    *(size_t *)block = size;
     s->malloc_count++;
-    s->malloc_size += malloc_usable_size(p);
+    s->malloc_size += size;
     if (s->malloc_size > peak) peak = s->malloc_size;
-    return p;
+    return block + HEADER;
 }
 
 static void measure_free(JSMallocState *s, void *p) {
     if (!p) return;
     s->malloc_count--;
-    s->malloc_size -= malloc_usable_size(p);
-    free(p);
+    s->malloc_size -= size_of(p);
+    free((char *)p - HEADER);
 }
 
 static void *measure_realloc(JSMallocState *s, void *p, size_t size) {
     if (!p) return size ? measure_malloc(s, size) : NULL;
-    size_t old = malloc_usable_size(p);
     if (!size) { measure_free(s, p); return NULL; }
-    void *q = realloc(p, size);
-    if (!q) return NULL;
-    s->malloc_size += malloc_usable_size(q) - old;
+    size_t old = size_of(p);
+    char *block = realloc((char *)p - HEADER, size + HEADER);
+    if (!block) return NULL;
+    *(size_t *)block = size;
+    s->malloc_size += size - old;
     if (s->malloc_size > peak) peak = s->malloc_size;
-    return q;
+    return block + HEADER;
 }
 
-static size_t measure_usable(const void *p) { return malloc_usable_size((void *)p); }
+static size_t measure_usable(const void *p) { return size_of(p); }
 
 static const JSMallocFunctions functions = {measure_malloc, measure_free, measure_realloc, measure_usable};
 
@@ -111,6 +122,7 @@ int main(int argc, char **argv) {
         JS_ComputeMemoryUsage(rt, &usage);
         size_t base = usage.malloc_size;
         peak = base;
+        if (getenv("QJS_GC_PHASE")) JS_SetGCThreshold(rt, base + base * atoi(getenv("QJS_GC_PHASE")) / 32);
         const char *run = wasm
             ? "compileTypedWorld(SOURCE, new Uint8Array(REACTOR)).length"
             : "typedRv32.compile(SOURCE, typedWorld.imports, 1 << 20, {policy: POLICY}).image.length";
