@@ -6,6 +6,10 @@ import {CALL, CELLS} from "../encoding/tape.js";
 export class CallMethods {
     call(index) {
         const callee = this.functions[index], count = callee.params.length;
+        // A pending read of a call-free home (operandLocations.callFree) moves to the operand stack first: the argument
+        // moves and the call write those registers.
+        const unsaved = this.locations?.callFree;
+        if (unsaved) for (let d = 0; d < this.depth; d++) if (unsaved.has(this.direct[d])) this.materializeAt(d);
         // ilp32f: integer arguments in a0-a7, f32 in fa0-fa7, each popped from its class's operand stack; an f32
         // beyond fa7 in the next integer register; the rest in the stack words at sp + 4k (outgoingWords).
         const incoming = calleeRegisters(callee);

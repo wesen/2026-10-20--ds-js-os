@@ -126,3 +126,53 @@ test("coalesce: value-record copies agree with WebAssembly, and the kernel image
     assert(phases.includes("use:coalesce"), phases.join(" "));
     assert(kernel.image.length < without.image.length, kernel.image.length + " < " + without.image.length);
 });
+
+// A callee with a local array stays a call (inline keeps it), so pick() calls it: locals that live between the calls
+// take fa1-fa7, ft8 and ft9 without a save, and a pending read of one across a call is moved to the operand stack
+// (k in k + spread(...), whose arguments fill fa0-fa7).
+const CALLS = `
+function bump(x: f32): f32 {
+    const t = new Float32Array(2);
+    t[0] = x; t[1] = x * 0.5;
+    return t[0] + t[1];
+}
+function spread(a: f32, b: f32, c: f32, d: f32, e: f32, f: f32, g: f32, h: f32): f32 {
+    const t = new Float32Array(1);
+    t[0] = a - b * c + d * e - f + g * h;
+    return t[0];
+}
+function pick(a: f32, b: f32, c: f32): f32 {
+    const p: f32 = a * b;
+    const q: f32 = p + c;
+    const r: f32 = q + bump(a);
+    const s: f32 = r * 2.0 - p;
+    const u: f32 = s + bump(s) * q;
+    const v: f32 = u - s;
+    const w: f32 = v * v + u;
+    const k: f32 = a - c * 0.25;
+    const z: f32 = k + spread(b, c, a, b, c, a, b, c);
+    return w + bump(w) + v + z;
+}
+`;
+
+test("call-free homes: a calling f32 function keeps locals between its calls in unsaved registers", async () => {
+    const wasm = (await WebAssembly.instantiate(typedWasm.compile(CALLS).bytes)).instance.exports;
+    const images = POLICIES.map(policy => [policy, typedRv32.compile(CALLS, [], 1 << 20, {policy})]);
+    const r = random(9);
+    for (let n = 0; n < 60; n++) {
+        const args = [0, 1, 2].map(() => (r.below(2001) - 1000) / 29);
+        const expected = wasm.pick(...args);
+        for (const [policy, program] of images) {
+            const run = runF32(program, "pick", [], args, new Uint8Array(64));
+            assert(!run.trap, policy);
+            assert.equal(bits(fromBits(run.fregisters[10])), bits(expected), policy + " pick(" + args + ")");
+        }
+    }
+    let plan;
+    typedRv32.compile(CALLS, [], 1 << 20, {policy: "kernel", observePlan(name, p) { if (name === "pick") plan = p; }});
+    assert(plan.callFree?.size > 0, "pick uses call-free homes");
+    const without = typedRv32.compile(CALLS, [], 1 << 20, {policy: "kernel",
+        operandLocations: {...typedRv32.policies.kernel.operandLocations, callFree: false}});
+    const kernel = images.find(([p]) => p === "kernel")[1];
+    assert(kernel.image.length < without.image.length, kernel.image.length + " < " + without.image.length);
+});

@@ -47,7 +47,7 @@ export const POLICIES = Object.freeze({
         ...DEFAULT_POLICY,
         passes: Object.freeze(["inline", "fields", "commute", "conjunctions", "sets", "rotate", "ranges", "version", "hoist",
             "induction", "split", "rows", "coalesce", "facts"]),
-        operandLocations: Object.freeze({...DEFAULT_LOCATIONS, pointerOnly: true, reuseArgs: true}),
+        operandLocations: Object.freeze({...DEFAULT_LOCATIONS, pointerOnly: true, reuseArgs: true, callFree: true}),
         select: Object.freeze({...DEFAULT_SELECT, loadHomes: true}),
     }),
     stock: Object.freeze({passes: Object.freeze([])}),
