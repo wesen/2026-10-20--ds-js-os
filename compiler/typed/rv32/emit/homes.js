@@ -37,8 +37,9 @@ export class HomeMethods {
         this.direct[this.depth++] = home;
     }
 
-    // The register class of a local: its type (fn.params, fn.localTypes).
+    // The register class of a local: its type (fn.params, fn.localTypes); 0 throughout an integer function.
     localClass(local) {
+        if (!this.floating) return 0;
         const fn = this.program, params = fn.params.length;
         return (local < params ? fn.params[local] : fn.localTypes?.[local - params]) === "f32" ? 1 : 0;
     }

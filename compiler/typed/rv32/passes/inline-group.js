@@ -4,6 +4,8 @@ import {INLINE_DEFAULTS, inlineCalls, inlineCandidate, inlineTypes, loopDepth} f
 import {commuteConstants} from "./commute.js";
 import {rotateLoops} from "./rotate.js";
 import {reuseFloatFields} from "./fields.js";
+import {F32_LOAD} from "../encoding/tape.js";
+import {floatingFunction} from "../plan/saved-homes.js";
 import {installPasses, replaceTape} from "./registry.js";
 
 installPasses("inline", {
@@ -38,8 +40,9 @@ installPasses("inline", {
                 libraryCells: candidate ? libraryCopy.code.length : undefined});
         },
     },
-    // A function's storeless answer is computed from its tape before any pass rewrites it (as for hoist).
-    fields: {startName: "storeless", start: (fn, ctx) => ctx.storeless(ctx.index), run(fn, ctx) {
+    // A function's storeless answer is computed from its tape before any pass rewrites it (as for hoist), here only for
+    // the functions the pass may rewrite or call: those with f32 values (an integer program pays nothing).
+    fields: {startName: "storeless", start(fn, ctx) { if (fn.code.includes(F32_LOAD) || floatingFunction(fn)) ctx.storeless(ctx.index); }, run(fn, ctx) {
         const reused = reuseFloatFields(fn, ctx.storeless);
         if (reused) Object.assign(fn, reused);
     }},

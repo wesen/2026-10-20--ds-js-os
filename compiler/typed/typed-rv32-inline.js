@@ -4,7 +4,7 @@
 (() => {
 "use strict";
 if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-inline.js");
-const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_EQ, I32_EQZ, I32_GE_U, I32_LOAD, I32_LOAD16_U, I32_MUL, I32_NE, I32_OR, I32_SHR_U, I32_STORE, I32_STORE16, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNREACHABLE, VOID, installPasses, opNext, replaceTape, tapeRow} = globalThis.typedRv32Modules;
+const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_EQ, I32_EQZ, I32_GE_U, I32_LOAD, I32_LOAD16_U, I32_MUL, I32_NE, I32_OR, I32_SHR_U, I32_STORE, I32_STORE16, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNREACHABLE, VOID, floatingFunction, installPasses, opNext, replaceTape, tapeRow} = globalThis.typedRv32Modules;
 
 // rv32/passes/inline.js
 // The inline pass and the inliner's library candidates.
@@ -404,8 +404,9 @@ installPasses("inline", {
                 libraryCells: candidate ? libraryCopy.code.length : undefined});
         },
     },
-    // A function's storeless answer is computed from its tape before any pass rewrites it (as for hoist).
-    fields: {startName: "storeless", start: (fn, ctx) => ctx.storeless(ctx.index), run(fn, ctx) {
+    // A function's storeless answer is computed from its tape before any pass rewrites it (as for hoist), here only for
+    // the functions the pass may rewrite or call: those with f32 values (an integer program pays nothing).
+    fields: {startName: "storeless", start(fn, ctx) { if (fn.code.includes(F32_LOAD) || floatingFunction(fn)) ctx.storeless(ctx.index); }, run(fn, ctx) {
         const reused = reuseFloatFields(fn, ctx.storeless);
         if (reused) Object.assign(fn, reused);
     }},

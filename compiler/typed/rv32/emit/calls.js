@@ -13,11 +13,17 @@ export class CallMethods {
         // Only the values below the arguments survive the call. A pending direct read stays in
         // its home: a function that calls keeps homes only in callee-saved registers.
         // An operand deeper than its class's stack registers is in its slot already.
-        const live = this.depth, held = d => this.direct[d] === undefined ? OPERAND_STACKS[this.classes[d]][d] : undefined;
-        for (let d = 0; d < live; d++) { const reg = held(d); if (reg !== undefined) this.spill(d, reg); }
+        const live = this.depth, direct = this.direct, classes = this.classes;
+        for (let d = 0; d < live; d++) {
+            const reg = direct[d] === undefined ? OPERAND_STACKS[classes[d]][d] : undefined;
+            if (reg !== undefined) this.spill(d, reg);
+        }
         this.usesFrame = true; // the return address
         this.jump(this.starts[index], RA);
-        for (let d = 0; d < live; d++) { const reg = held(d); if (reg !== undefined) this.load(reg, this.slot(d)); }
+        for (let d = 0; d < live; d++) {
+            const reg = direct[d] === undefined ? OPERAND_STACKS[classes[d]][d] : undefined;
+            if (reg !== undefined) this.load(reg, this.slot(d));
+        }
         this.push(callee.result === "f32" ? FA0 : A0);
     }
 

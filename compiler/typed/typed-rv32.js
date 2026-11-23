@@ -567,11 +567,17 @@ class CallMethods {
         // Only the values below the arguments survive the call. A pending direct read stays in
         // its home: a function that calls keeps homes only in callee-saved registers.
         // An operand deeper than its class's stack registers is in its slot already.
-        const live = this.depth, held = d => this.direct[d] === undefined ? OPERAND_STACKS[this.classes[d]][d] : undefined;
-        for (let d = 0; d < live; d++) { const reg = held(d); if (reg !== undefined) this.spill(d, reg); }
+        const live = this.depth, direct = this.direct, classes = this.classes;
+        for (let d = 0; d < live; d++) {
+            const reg = direct[d] === undefined ? OPERAND_STACKS[classes[d]][d] : undefined;
+            if (reg !== undefined) this.spill(d, reg);
+        }
         this.usesFrame = true; // the return address
         this.jump(this.starts[index], RA);
-        for (let d = 0; d < live; d++) { const reg = held(d); if (reg !== undefined) this.load(reg, this.slot(d)); }
+        for (let d = 0; d < live; d++) {
+            const reg = direct[d] === undefined ? OPERAND_STACKS[classes[d]][d] : undefined;
+            if (reg !== undefined) this.load(reg, this.slot(d));
+        }
         this.push(callee.result === "f32" ? FA0 : A0);
     }
 
@@ -752,8 +758,9 @@ class HomeMethods {
         this.direct[this.depth++] = home;
     }
 
-    // The register class of a local: its type (fn.params, fn.localTypes).
+    // The register class of a local: its type (fn.params, fn.localTypes); 0 throughout an integer function.
     localClass(local) {
+        if (!this.floating) return 0;
         const fn = this.program, params = fn.params.length;
         return (local < params ? fn.params[local] : fn.localTypes?.[local - params]) === "f32" ? 1 : 0;
     }
@@ -2176,5 +2183,5 @@ globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES,
     passes: PASSES.map(({name, group, kind, needs}) => ({name, group, kind, needs: needs ?? [], file: GROUPS[group]}))};
 
 // The names the pass-group bundles import from this one.
-globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape, tapeRow};
+globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, floatingFunction, installPasses, opClose, opNext, replaceTape, tapeRow};
 })();
