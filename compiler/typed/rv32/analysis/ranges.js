@@ -1,3 +1,6 @@
+// Local value ranges and division facts (the ranges and facts passes).
+import {opNext, ELSE, END, BLOCK, IF, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, BR_IF, BR, RETURN, UNREACHABLE, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, CALL, LOOP, I32, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, CELLS, VOID, I32_LT_S, opClose} from "../encoding/tape.js";
+
 // the facts pass: division and remainder by a positive constant whose dividend is never
 // negative, so the emitter can drop the rounding bias and the sign correction. Two steps:
 // localRanges gives every local one interval, the join of every value written to it anywhere,
@@ -83,7 +86,7 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
 // matches: the test k < N enters the loop, its only write of k is a final k = k + s, and N is a
 // constant or a local the loop does not write) is bounded by max(N) - 1 + s instead of growing
 // pass by pass, since the increment only runs after k < N held.
-function localRanges(code, params, arity) {
+export function localRanges(code, params, arity) {
     // Most functions divide by no constant: one scan, and no intervals to compute.
     let divides = false;
     for (let at = 0; at < code.length; at = opNext(code, at)) {
@@ -158,7 +161,7 @@ function localRanges(code, params, arity) {
 
 // Offsets of the division and remainder operations of the final tape whose dividend is known
 // non-negative. origin maps a local of the final tape to the local of localRanges' tape.
-function divisionFacts(code, params, arity, ranges, origin) {
+export function divisionFacts(code, params, arity, ranges, origin) {
     const facts = new Set();
     const rangeOf = local => local < params ? RANGE_TOP : ranges.get(origin(local)) ?? RANGE_TOP;
     return rangePass(code, arity, rangeOf, () => {}, (at, x) => { if (x && x[0] >= 0) facts.add(at); }) ? facts : null;

@@ -2,11 +2,11 @@ import assert from "node:assert/strict";
 import {createHash} from "node:crypto";
 import {readFileSync} from "node:fs";
 import test from "node:test";
-import {createContext, runInContext} from "node:vm";
+import {createContext, runInContext, runInThisContext} from "node:vm";
 
 function compiler() {
     const ctx = createContext({});
-    for (const file of ["tape.js", "typed-wasm.js", "typed-rv32.js"]) {
+    for (const file of ["tape.js", "typed-wasm.js", "typed-rv32.js", "typed-rv32-inline.js", "typed-rv32-loops.js"]) {
         runInContext(readFileSync(new URL("../../compiler/typed/" + file, import.meta.url), "utf8"), ctx,
             {filename: file});
     }
@@ -257,7 +257,7 @@ test("the default policy applies the qualified options and stock reproduces the 
 
 test("saved homes and direct reads keep the ABI and reproduce stock results", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js", "bench/host/typed-ray-bench.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js", "bench/host/typed-ray-bench.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp, typedRayBench} = ctx;
     // Inlining would turn mix into a leaf without callee-saved homes; this test keeps the calls.
@@ -298,7 +298,7 @@ function mix(n: i32): i32 {
 
 test("instruction selection matches stock code on constant division, immediates and fused branches", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     const all = {select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true}};
@@ -345,7 +345,7 @@ function leaf(a: i32, b: i32): i32 { return (a - b) * 4 + a / 8 - b % 4 + a / 3;
 
 test("inlining, capacity and constant homes, commutation and loop rotation match stock code", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     const src = `function clamp(v: i32, lo: i32, hi: i32): i32 {
@@ -406,7 +406,7 @@ function fill(out: buffer, buf: buffer, n: i32): i32 {
 
 test("short forward branches fall back to the long form beyond the conditional-branch range", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // The if-arm in `far` is longer than 4 KiB of code, so its exit branch cannot be short.
@@ -440,7 +440,7 @@ ${body}
 
 test("pointer homes keep checked accesses, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // r[x + k] with an increment, r[i + k] with a recomputed index, r[b + k] from a
@@ -506,7 +506,7 @@ function fill(work: buffer, n: i32): i32 {
 
 test("division facts change code only for dividends proven non-negative, and keep results identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // proven: a counter from 0, a local whose writes are 117, 177 and level / 3, a buffer read.
@@ -570,7 +570,7 @@ test("division facts change code only for dividends proven non-negative, and kee
 
 test("versioned loops and split locals keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp, typedTape} = ctx;
     // Every index form select.version proves: k + c, c + k, k, a*k + b with offsets, an
@@ -652,7 +652,7 @@ function fill(work: buffer, n: i32): i32 {
 
 test("value sets fold pure inlined blocks only over proven constant sets, and keep results and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp, typedTape} = ctx;
     // folded: level is one of 117, 177, 39, 59 (the ray tracer's floor), right after the if that
@@ -772,7 +772,7 @@ function hundred(d: i32): i32 { return 100 / d; }
 
 test("hoisted loop invariants keep results, stores and traps identical, including aliased buffers", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // moved: invariant loads (with the out == work guard), an invariant pure statement, y / 16
@@ -871,7 +871,7 @@ test("hoisted loop invariants keep results, stores and traps identical, includin
 
 test("fused conjunctions and loads into homes keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // band: && in two ifs, one body with an early return. pick: an inlined callee whose return
@@ -934,7 +934,7 @@ function flag(work: buffer, n: i32): i32 {
 
 test("induction variables and pointer-only sources keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // [induction, pointer-only]: rows and nested (InShadow's shape) both; mixed reads its affine
@@ -1012,7 +1012,7 @@ test("induction variables and pointer-only sources keep results, stores and trap
 
 test("locals in the argument registers of unhomed parameters keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // Each function reads some parameters once, outside its loop (no home), and keeps more
@@ -1131,8 +1131,52 @@ test("policies are pass lists that options edit by name, and every stage reports
     assert.deepEqual([...new Set(interactive.map(row => row.pass))].sort(), ["compile", "emit", "guarded", "leaf", "plan"]);
 });
 
-test("compiler/typed-rv32.js is the current build of compiler/rv32/", async () => {
-    const {bundle} = await import(new URL("../../compiler/typed/rv32/build.mjs", import.meta.url));
-    assert(readFileSync(new URL("../../compiler/typed/typed-rv32.js", import.meta.url), "utf8") === bundle(),
-        "compiler/typed-rv32.js differs from the build of compiler/rv32/: edit the files there, never the bundle, then run node compiler/rv32/build.mjs");
+test("the core bundle compiles interactive alone and loads a pass group through typedRv32Load", () => {
+    const read = file => readFileSync(new URL("../../compiler/typed/" + file, import.meta.url), "utf8");
+    const src = read("../../apps/typed/raytrace/raytrace.typed");
+    const core = () => {
+        const ctx = createContext({});
+        for (const file of ["tape.js", "typed-wasm.js", "typed-rv32.js"]) runInContext(read(file), ctx, {filename: file});
+        return ctx;
+    };
+    const all = compiler().typedRv32;
+    const sha = program => createHash("sha256").update(program.image).digest("hex");
+    const alone = core();
+    assert.equal(sha(alone.typedRv32.compile(src, [], 65536, {policy: "interactive"})),
+        "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
+    assert.throws(() => alone.typedRv32.compile(src, [], 65536, {policy: "balanced"}), /needs typed-rv32-inline.js/);
+    // A host that loads files on demand defines typedRv32Load(file); the compile asks for each group once.
+    const lazy = core(), asked = [];
+    lazy.typedRv32Load = file => { asked.push(file); runInContext(read(file), lazy, {filename: file}); };
+    assert.equal(sha(lazy.typedRv32.compile(src, [], 65536, {policy: "balanced"})), sha(all.compile(src, [], 65536, {policy: "balanced"})));
+    assert.deepEqual(asked, ["typed-rv32-inline.js"]);
+    assert.equal(sha(lazy.typedRv32.compile(src, [], 65536, {policy: "kernel"})),
+        "4323938e38a4ef2a44c80103bf43680b506195762d6faa0f5834b41c86e9d2a5");
+    assert.deepEqual(asked, ["typed-rv32-inline.js", "typed-rv32-loops.js"]);
+    assert.deepEqual(Object.fromEntries(all.passes.map(pass => [pass.name, pass.file])).version, "typed-rv32-loops.js");
+});
+
+test("the rv32/ modules run as ES modules and compile what the bundles compile", async () => {
+    // tape.js and typed-wasm.js are scripts that publish globals; the modules read them when they load.
+    const read = file => readFileSync(new URL("../../compiler/typed/" + file, import.meta.url), "utf8");
+    for (const file of ["tape.js", "typed-wasm.js"]) runInThisContext(read(file), {filename: file});
+    const bundled = compiler().typedRv32;
+    const saved = globalThis.typedRv32;
+    await import(new URL("../../compiler/typed/rv32/index.js", import.meta.url));
+    await import(new URL("../../compiler/typed/rv32/passes/inline-group.js", import.meta.url));
+    await import(new URL("../../compiler/typed/rv32/passes/loops-group.js", import.meta.url));
+    const modular = globalThis.typedRv32;
+    globalThis.typedRv32 = saved;
+    const src = read("../../apps/typed/raytrace/raytrace.typed");
+    for (const policy of Object.keys(bundled.policies))
+        assert.equal(Buffer.compare(Buffer.from(modular.compile(src, [], 65536, {policy}).image),
+            Buffer.from(bundled.compile(src, [], 65536, {policy}).image)), 0, policy);
+});
+
+test("compiler/typed/typed-rv32*.js are the current build of compiler/typed/rv32/", async () => {
+    const {bundles} = await import(new URL("../../compiler/typed/rv32/build.mjs", import.meta.url));
+    for (const [file, text] of Object.entries(bundles()))
+        assert(readFileSync(new URL("../../compiler/typed/" + file, import.meta.url), "utf8") === text,
+            "compiler/typed/" + file + " differs from the build of compiler/typed/rv32/: edit the modules there, never a " +
+            "bundle, then run node compiler/typed/rv32/build.mjs");
 });

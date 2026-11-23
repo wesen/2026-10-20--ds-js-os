@@ -1,4 +1,4 @@
-// Named code-generation policies. A policy is a list of tape passes (PASSES, in their pipeline order) and
+// Named code-generation policies. A policy is a list of tape passes (passes/registry.js, in pipeline order) and
 // the parameters of the stages that are not tape passes: guarded-return inlining, the operand-location
 // planner (operandLocations) and the emitter's instruction selection (select).
 //
@@ -7,6 +7,8 @@
 // 2026-11-21 before those became defaults, kept as the control arm for experiments.
 // PIE loop lowering stays opt-in (pieLoops): it needs typed-pie-loops.js and saved under 1% of a ray frame
 // for about 70 ms of cold compile on the P4.
+import {PASSES, passByName} from "./passes/registry.js";
+
 const DEFAULT_SELECT = Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
     shortBranches: true});
 const DEFAULT_LOCATIONS = Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
@@ -17,7 +19,7 @@ const DEFAULT_POLICY = Object.freeze({
     operandLocations: DEFAULT_LOCATIONS,
     select: DEFAULT_SELECT,
 });
-const POLICIES = Object.freeze({
+export const POLICIES = Object.freeze({
     // "interactive" is for worlds that the device compiles while a person waits (the boot worlds):
     // RAY-PARITY's Step 6 set, operand locations and instruction selection without a tape pass. On the
     // P4 it compiles Agenda in 0.98 s and Editor in 3.35 s against 2.75 s and 7.90 s for "default"
@@ -54,7 +56,7 @@ const POLICIES = Object.freeze({
 // Options select a policy (default "default"); any other field given replaces the policy's field, and an
 // undefined one leaves it. `enable` and `disable` add passes to and remove passes from the resulting list
 // (an added pass takes its place in pipeline order), so a study can toggle one pass by name.
-function resolveOptions(options) {
+export function resolveOptions(options) {
     const name = options?.policy ?? "default";
     if (!Object.hasOwn(POLICIES, name)) throw new TypeError("unknown RV32 code-generation policy " + name);
     const resolved = {...POLICIES[name]};

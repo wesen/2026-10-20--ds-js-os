@@ -1,27 +1,28 @@
-function compile(source, imports = [], maxSourceLength, requested) {
+// compile: the front end's functions, one at a time, through the policy's pipeline to RV32 words, then the
+// image's layout and relocations.
+import {instruction} from "./encoding/registers.js";
+import {FunctionCode} from "./emit/function-code.js";
+import {GuardedReturnCode, guardedReturnSummary} from "./emit/guarded-return.js";
+import {lowerLeaf} from "./emit/leaf-code.js";
+import {SHORT_BRANCH_RANGE} from "./emit/branches.js";
+import {nativeEmission} from "./emit/inspection.js";
+import {planLocations} from "./plan/locations.js";
+import {storelessAnalysis} from "./analysis/storeless.js";
+import {PASSES, loadPasses} from "./passes/registry.js";
+import {resolveOptions} from "./policy.js";
+
+// Per function, the stages before the emitter run in this order: the policy's passes in registry order, with
+// three stages that are not tape passes after inline: the guarded-return summary (inlineGuardedReturns), the
+// PIE lowering (pieLoops, which may take the whole function) and the "inline" checkpoint, where observeTape
+// sees the tape that enters the other passes. Then lowerLeaf, or planLocations and FunctionCode; then each
+// pass's finish.
+export function compile(source, imports = [], maxSourceLength, requested) {
     const options = resolveOptions(requested);
+    loadPasses(options.passes);
     const imported = imports.map((fn, index) => ({...fn, index}));
     const targets = imported.map(fn => ({importIndex: fn.index}));
     const callables = imported.slice();
     const code = [];
-    // A function stores nothing when its tape has no operation with the STORES effect and calls
-    // only such functions.
-    // Imports and functions not yet declared are assumed to store. A lowered function's tape is
-    // released (consume), so lower() records the answer for each function first.
-    const storelessMemo = new Map();
-    function storeless(index) {
-        if (storelessMemo.has(index)) return storelessMemo.get(index);
-        storelessMemo.set(index, false);
-        const tape = index >= imported.length ? callables[index]?.code : undefined;
-        let result = Boolean(tape);
-        for (let at = 0; result && at < tape.length; at = opNext(tape, at)) {
-            const op = tape[at];
-            if (!(CELLS[op] >= 0) || EFFECTS[op] & STORES) result = false;
-            else if (op === CALL) result = storeless(tape[at + 1]);
-        }
-        storelessMemo.set(index, result);
-        return result;
-    }
     function declare(functions) {
         for (const fn of functions) {
             targets.push({global: true});
@@ -39,27 +40,24 @@ function compile(source, imports = [], maxSourceLength, requested) {
         if (!globalThis.typedPieLoops) throw new Error("load typed-pie-loops.js for PIE loop compilation");
     }
     const passes = new Set(options.passes);
-    const inlining = passes.has("inline") ? {...INLINE_DEFAULTS, ...options.inline} : null;
-    const inlineLibrary = new Map();
-    const arity = index => callables[index].params.length;
-    // The stages before the emitter, in order: the passes the policy names, with the guarded-return
-    // summary, the PIE lowering (which may take the whole function) and the "inline" checkpoint after
-    // inlining. Options that start before any stage (hoist's storeless answer) run first.
     const chosen = PASSES.filter(pass => passes.has(pass.name));
+    const unit = {options, callables, targets, arity: index => callables[index].params.length,
+        storeless: storelessAnalysis(callables, imported.length)};
+    for (const pass of chosen) pass.setup?.(unit);
     const starts = chosen.filter(pass => pass.start);
-    const stages = [];
-    if (inlining) stages.push(passByName("inline"));
-    if (guarded) stages.push({name: "guarded", run(fn, ctx) {
+    const finishes = chosen.filter(pass => pass.finish);
+    const stages = chosen.filter(pass => pass.run);
+    const inlined = stages[0]?.name === "inline" ? [stages.shift()] : [];
+    if (guarded) inlined.push({name: "guarded", run(fn, ctx) {
         // Only our internal definition targets can acquire summaries. A forward call
         // uses the ordinary ABI in both streaming and buffered compilation.
         const summary = guardedReturnSummary(fn);
         if (summary) targets[ctx.index].guardedReturn = summary;
         if (guarded === true || guarded(fn.name)) ctx.Emitter = GuardedReturnCode;
     }});
-    if (mode !== undefined) stages.push({name: "pie", terminal: true,
+    if (mode !== undefined) inlined.push({name: "pie", terminal: true,
         run: (fn, ctx) => typedPieLoops.lower(fn, callables, targets, mode, ctx.Emitter, instruction)});
-    stages.push({name: "inline", checkpoint: true});
-    for (const pass of chosen) if (pass.run && pass.name !== "inline") stages.push(pass);
+    stages.unshift(...inlined, {name: "inline", checkpoint: true});
 
     // timing: an array that receives {fn, pass, ms, cells} for every stage a function runs (cells: the
     // tape's length after it), plus one {fn: null, pass: "compile", ms} row for the whole call. The
@@ -75,9 +73,8 @@ function compile(source, imports = [], maxSourceLength, requested) {
     }
     function lower(fn) {
         const index = imported.length + code.length;
-        const ctx = {passes, arity, storeless, index, inlining, inlineLibrary, Emitter: FunctionCode,
-            libraryCopy: undefined, ranges: undefined, origin: local => local, facts: undefined};
-        for (const pass of starts) time(fn, pass.name === "hoist" ? "storeless" : pass.name, () => pass.start(fn, ctx));
+        const ctx = Object.assign(Object.create(unit), {passes, index, Emitter: FunctionCode, origin: local => local});
+        for (const pass of starts) time(fn, pass.startName ?? pass.name, () => pass.start(fn, ctx));
         if (inspect && (inspect.function === undefined || inspect.function === fn.name))
             fn.nativeInspection = {leafDecision: "eligible for frameless lowering"};
         // observeTape(name, phase, code, nlocals): a read-only view of the tape after each transform, for
@@ -121,12 +118,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 }
             });
         }
-        const {libraryCopy} = ctx;
-        const candidate = inlining && time(fn, "candidate", () => inlineCandidate(fn, libraryCopy.code, inlining, targets[index]?.guardedReturn));
-        if (candidate) inlineLibrary.set(index, {...candidate, nlocals: libraryCopy.nlocals, code: libraryCopy.code.slice(),
-            loops: loopDepth(libraryCopy.code)});
-        inlining?.report?.push({name: fn.name, cells: fn.code.length, locals: fn.params.length + fn.nlocals,
-            libraryCells: candidate ? libraryCopy.code.length : undefined});
+        for (const pass of finishes) time(fn, pass.finishName ?? pass.name, () => pass.finish(fn, ctx));
         code.push(compiled);
         // The lowered code retains the descriptor, so release the function-local literal table.
         if (fn.literals) fn.literals = null;
@@ -182,70 +174,3 @@ function compile(source, imports = [], maxSourceLength, requested) {
         signatures: functions.map(({name, params, result}) => ({name, params, result})),
         ...(asyncLayout && {asyncLayout}), ...(asyncSource && {asyncSource})};
 }
-
-// The bundled, already linked SDK reactor reserves this area in executable
-// text. The native world loader still validates and relocates the completed ELF.
-function linkSlot(program, runtime, entries) {
-    const magic = [0x4147454e, 0x44415256, 0x3332534c];
-    const headerBytes = 20;
-    const importOffset = headerBytes + 4 * entries.length;
-    const codeOffset = importOffset + 4 * program.importCount;
-    const view = new DataView(runtime.buffer, runtime.byteOffset, runtime.byteLength);
-    if (runtime.length < 52 || view.getUint32(0, true) !== 0x464c457f ||
-        view.getUint8(4) !== 1 || view.getUint8(5) !== 1 ||
-        view.getUint16(16, true) !== 3 || view.getUint16(18, true) !== 243 ||
-        (view.getUint32(36, true) & 6) !== 2)
-        throw new SyntaxError("expected an ELF32 RISC-V ilp32f reactor");
-    const count = view.getUint16(44, true);
-    const stride = view.getUint16(42, true);
-    const segments = view.getUint32(28, true);
-    if (stride !== 32 || segments + stride * count > runtime.length)
-        throw new SyntaxError("invalid RV32 reactor program headers");
-
-    let slot = -1, capacity = 0;
-    for (let i = 0; i < count; i++) {
-        const header = segments + i * stride;
-        if (view.getUint32(header, true) !== 1 || !(view.getUint32(header + 24, true) & 1)) continue;
-        const start = view.getUint32(header + 4, true);
-        const end = start + view.getUint32(header + 16, true);
-        if (end > runtime.length) throw new SyntaxError("truncated RV32 reactor code segment");
-        for (let at = (start + 3) & -4; at + codeOffset <= end; at += 4) {
-            if (view.getUint32(at, true) !== magic[0] || view.getUint32(at + 4, true) !== magic[1] ||
-                view.getUint32(at + 8, true) !== magic[2]) continue;
-            if (slot >= 0) throw new SyntaxError("ambiguous RV32 reactor slot");
-            capacity = view.getUint32(at + 12, true);
-            if (view.getUint32(at + 16, true) !== entries.length + 65536 * program.importCount || capacity < codeOffset ||
-                capacity > end - at || capacity > 1048576 || capacity % 4)
-                throw new SyntaxError("invalid RV32 reactor slot header");
-            for (let entry = at + headerBytes; entry < at + importOffset; entry += 4) {
-                if (view.getUint32(entry, true) !== 0x00100073)
-                    throw new SyntaxError("invalid RV32 reactor entry stub");
-            }
-            for (let entry = at + importOffset; entry < at + codeOffset; entry += 4) {
-                if ((view.getUint32(entry, true) & 0xfff) !== 0x6f)
-                    throw new SyntaxError("invalid RV32 runtime import trampoline");
-            }
-            slot = at;
-            at += capacity - 4;
-        }
-    }
-    if (slot < 0) throw new SyntaxError("missing RV32 reactor slot");
-    if (program.image.length > capacity - codeOffset) throw new SyntaxError("RV32 program does not fit the reactor slot");
-    const bytes = new Uint8Array(runtime);
-    const patched = new DataView(bytes.buffer);
-    for (let i = 0; i < entries.length; i++) {
-        const offset = program.entries[entries[i]];
-        if (!Number.isInteger(offset) || offset < 0 || offset + 4 > program.image.length || offset % 4)
-            throw new SyntaxError("invalid RV32 entry " + entries[i]);
-        const stub = headerBytes + 4 * i;
-        patched.setUint32(slot + stub, instruction.j(ZERO, codeOffset + offset - stub), true);
-    }
-    bytes.set(program.image, slot + codeOffset);
-    for (const {offset, index} of program.relocations) {
-        const call = codeOffset + offset;
-        patched.setUint32(slot + call, instruction.j(RA, importOffset + 4 * index - call), true);
-    }
-    return bytes;
-}
-
-globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES};
