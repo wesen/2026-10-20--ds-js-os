@@ -1,4 +1,4 @@
-// select.conjunctions: the frontend lowers `a && b` to a value if, `a; if (result i32) b else
+// the conjunctions pass: the frontend lowers `a && b` to a value if, `a; if (result i32) b else
 // const 0 end`, whose 0/1 result a following `if` or `br_if` tests again. Fused, the value is
 // never materialized:
 //   a; if (result i32) b else const 0 end; if BODY end   ->   a; if b; if BODY end end

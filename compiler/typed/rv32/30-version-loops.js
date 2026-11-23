@@ -1,4 +1,4 @@
-// select.rotate: the frontend emits every loop as
+// the rotate pass: the frontend emits every loop as
 //     block; loop; C; eqz; br_if 1; B; br 0; end; end
 // which runs C, a taken skip over the exit jump, B and a taken jump back per iteration.
 // Rotated, the loop is
@@ -6,7 +6,7 @@
 // and each iteration ends in one backward conditional branch. C is evaluated at the same
 // points as before (once before every iteration and once to exit). Labels inside B keep
 // their meaning; C is copied only if every branch in it targets a block inside C.
-// select.version: a rotated counted loop (rotateLoops)
+// the version pass: a rotated counted loop (rotateLoops)
 //   block  get k (const n | get N) lt_s eqz br_if 0  loop  B  get k (n | N) lt_s br_if 0  end  end
 // whose body B ends in k = k + s (1 <= s <= 64), with no other write of k or N in the loop, is
 // emitted twice. Checked accesses r[i] in B whose index is a*k + b, M + a*k + b with M unwritten
@@ -21,7 +21,7 @@
 const VERSION_LIMITS = Object.freeze({coefficient: 1024, offset: 1 << 20, bound: 1 << 20, bodyCells: 2000});
 function versionLoops(code, params, hoist, induction) {
     for (let at = 0; at < code.length; at = opNext(code, at)) if (!(CELLS[code[at]] >= 0)) return null;
-    // select.hoist: where each local is read, so a moved statement's local can be checked for
+    // the hoist pass: where each local is read, so a moved statement's local can be checked for
     // reads outside its loop (hoistInvariants).
     const readsAt = new Map();
     if (hoist || induction) for (let at = 0; at < code.length; at = opNext(code, at)) {
@@ -175,7 +175,7 @@ function versionLoops(code, params, hoist, induction) {
         }
         // The fast body: unchecked accesses, and branches that leave the loop one level further
         // out (the loop now sits inside the guard block).
-        // select.induction: an affine local i = a*k + b whose definition multiplies, runs on every
+        // the induction pass: an affine local i = a*k + b whose definition multiplies, runs on every
         // iteration and is not absorbed into an access, in a loop whose counter starts at a known
         // constant k0, becomes an induction variable: set to a*k0 + b before the loop, stepped
         // by a*s beside k = k + s, its definition removed. Every read of i follows its one write
@@ -221,7 +221,7 @@ function versionLoops(code, params, hoist, induction) {
             else if (op === END) depth--;
             for (let j = p; j < opNext(src, p); j++) fast.push(src[j]);
         }
-        // select.hoist, for loops at the function's top level (whose reads outside the loop are
+        // the hoist pass, for loops at the function's top level (whose reads outside the loop are
         // all in code): invariant statements of the fast copy run once, after the guard.
         let moved = {pre: [], aliasTerms: []};
         if (hoist && src === code) {
@@ -247,7 +247,7 @@ function versionLoops(code, params, hoist, induction) {
     }
 }
 
-// select.hoist: a statement of a versioned loop's fast copy that computes the same value in
+// the hoist pass: a statement of a versioned loop's fast copy that computes the same value in
 // every iteration moves into the guard block, after the guard's terms and before the loop.
 // A statement `E; set X` moves when:
 //  - E reads only constants, locals the loop does not write (or that a moved statement writes),
@@ -405,7 +405,7 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
     return {pre, body: out, aliasTerms};
 }
 
-// select.hoist, second step: a maximal subexpression of the fast copy that is pure, cannot trap
+// the hoist pass, second step: a maximal subexpression of the fast copy that is pure, cannot trap
 // and reads only constants, locals the loop does not write and capacities moves into a fresh
 // local computed after the guard, when it does at least two operations' work (a division counts
 // twice). Loads stay where they are: only hoistInvariants proves them unaliased. Consecutive

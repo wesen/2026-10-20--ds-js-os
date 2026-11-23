@@ -320,8 +320,10 @@ A revision object, `const c = compiler.at(rev)`:
 | Member | Description |
 | --- | --- |
 | `compile(source, imports, memoryBytes, options?)` | Compiles Typed source. Returns `{image: Uint8Array, entries: {name: byteOffset}, records, enums, distinct, relocations, importCount, signatures}`. |
-| `options.policy` | A named policy: `stock`, `interactive`, `balanced`, `default` or `kernel`. Other top-level option keys replace the policy's key wholesale. |
-| `options.operandLocations`, `options.select` | Individual backend switches; the module table in `compiler/typed/rv32/README.md` names the pass behind each one. |
+| `options.policy` | A named policy: `stock`, `interactive`, `balanced`, `default` or `kernel` (`typedRv32.policies`). Other top-level option keys replace the policy's key wholesale. |
+| `options.passes`, `options.enable`, `options.disable` | The tape passes a compile runs, in pipeline order (`inline`, `commute`, `conjunctions`, `sets`, `rotate`, `ranges`, `version`, `hoist`, `induction`, `split`, `facts`); `enable` and `disable` edit the policy's list by name. `docs/typed-compiler.md` describes each pass. |
+| `options.operandLocations`, `options.select` | The operand-location planner's and the emitter's switches. |
+| `options.timing` | An array that receives `{fn, pass, ms, cells}` for every stage each function runs, and one `{fn: null, pass: "compile"}` row for the call. |
 | `options.observeTape(name, phase, code, nlocals)` | Called with a copy of each function's tape after each transform. |
 | `options.observePlan(name, plan)` | Called with each function's operand-location plan: `homes`, `scores` and, under pointer-only sources, `skips`. |
 | `policies` | The named policies as frozen objects. |

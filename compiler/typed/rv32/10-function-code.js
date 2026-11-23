@@ -153,7 +153,7 @@ class FunctionCode {
     }
 
     // The address of receiver[index + j]: checked against the capacity, or unchecked (UNCHECKED_ADDRESS, in a
-    // copy of a loop that select.version proved in range), and read at once when a UTF-16 load
+    // copy of a loop that the version pass proved in range), and read at once when a UTF-16 load
     // follows.
     checkedAddress(receiver, index, constant, pointer, unchecked = false, j = 0) {
         const capacity = this.locations?.homes.get(-1 - receiver);
@@ -334,7 +334,7 @@ class FunctionCode {
 
     // Signed truncating division or remainder by a positive constant, without a divide.
     // T6 is the scratch register; pop(T5) never returns it.
-    // nonNegative (select.facts): the dividend is known >= 0, so no rounding bias or sign
+    // nonNegative (the facts pass): the dividend is known >= 0, so no rounding bias or sign
     // correction is needed: a shift, a mask, or the multiply-high and its shift alone.
     divideByConstant(remainder, d, nonNegative = false) {
         const a = this.pop(T5);
@@ -491,7 +491,7 @@ class FunctionCode {
             return false;
         }
         // The capacity header of a buffer with a capacity home: the home itself.
-        if (op === LOCAL_GET && plan && this.select?.version && this.program.code[this.at + 1] === I32_LOAD && this.program.code[this.at + 3] === 0) {
+        if (op === LOCAL_GET && plan && this.versioned && this.program.code[this.at + 1] === I32_LOAD && this.program.code[this.at + 3] === 0) {
             const home = plan.homes.get(-1 - this.program.code[this.at]);
             if (home !== undefined) {
                 this.at += 4;
@@ -590,7 +590,7 @@ class FunctionCode {
             this.checkedAddress(receiver, T5);
             break;
         }
-        case UNCHECKED_ADDRESS: { // unchecked UTF-16 address of receiver[position + j] (select.version)
+        case UNCHECKED_ADDRESS: { // unchecked UTF-16 address of receiver[position + j] (the version pass)
             const receiver = this.cell(), position = this.cell(), j = this.cell();
             this.readLocal(T5, position);
             this.checkedAddress(receiver, T5, undefined, undefined, true, j);

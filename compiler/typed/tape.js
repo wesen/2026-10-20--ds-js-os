@@ -71,7 +71,7 @@ const ROWS = [
     // address + 4, after a check that covers the whole range.
     [0xf2, "LITERAL_STORES", "text.literal_stores", ["u", "u"], [], [], STORES],
     // receiver position j (j a number): the address of receiver[position + j] without a check;
-    // written by loop versioning (select.version) inside a loop whose range it has proved.
+    // written by loop versioning (the version pass) inside a loop whose range it has proved.
     [0xf3, "UNCHECKED_ADDRESS", "text.unchecked_address", ["u", "u", "u"], [], [I32], 0],
 ];
 

@@ -144,7 +144,7 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
     return changed ? {code: out, nlocals: locals - fn.params.length} : null;
 }
 
-// select.commute: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
+// the commute pass: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
 // eq, ne), so the literal reaches selectConstant as a right operand. Moving a literal past
 // e cannot change e's effects. Each abstract stack entry records where its cells start in
 // the output; an expression whose start is not certain (a value block) is NaN and is never

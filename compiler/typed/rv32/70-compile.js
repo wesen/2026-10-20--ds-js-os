@@ -30,12 +30,38 @@ function compile(source, imports = [], maxSourceLength, requested) {
     }
 
     const inspect = options?.inspect;
-    const policy = options?.inlineGuardedReturns;
-    const inlining = options?.inline ? {...INLINE_DEFAULTS, ...(options.inline === true ? {} : options.inline)} : null;
-    const inlineLibrary = new Map();
-    if (policy !== undefined && typeof policy !== "boolean" && typeof policy !== "function")
+    const guarded = options?.inlineGuardedReturns;
+    if (guarded !== undefined && typeof guarded !== "boolean" && typeof guarded !== "function")
         throw new TypeError("expected a boolean or caller selector for inlineGuardedReturns");
-    // timing: an array that receives {fn, pass, ms, cells} for every pass a function runs (cells: the
+    const mode = options?.pieLoops;
+    if (mode !== undefined) {
+        if (mode !== "scalar" && mode !== "pie" && mode !== "pie-empty" && typeof mode !== "function") throw new TypeError("unknown PIE loop compilation mode");
+        if (!globalThis.typedPieLoops) throw new Error("load typed-pie-loops.js for PIE loop compilation");
+    }
+    const passes = new Set(options.passes);
+    const inlining = passes.has("inline") ? {...INLINE_DEFAULTS, ...options.inline} : null;
+    const inlineLibrary = new Map();
+    const arity = index => callables[index].params.length;
+    // The stages before the emitter, in order: the passes the policy names, with the guarded-return
+    // summary, the PIE lowering (which may take the whole function) and the "inline" checkpoint after
+    // inlining. Options that start before any stage (hoist's storeless answer) run first.
+    const chosen = PASSES.filter(pass => passes.has(pass.name));
+    const starts = chosen.filter(pass => pass.start);
+    const stages = [];
+    if (inlining) stages.push(passByName("inline"));
+    if (guarded) stages.push({name: "guarded", run(fn, ctx) {
+        // Only our internal definition targets can acquire summaries. A forward call
+        // uses the ordinary ABI in both streaming and buffered compilation.
+        const summary = guardedReturnSummary(fn);
+        if (summary) targets[ctx.index].guardedReturn = summary;
+        if (guarded === true || guarded(fn.name)) ctx.Emitter = GuardedReturnCode;
+    }});
+    if (mode !== undefined) stages.push({name: "pie", terminal: true,
+        run: (fn, ctx) => typedPieLoops.lower(fn, callables, targets, mode, ctx.Emitter, instruction)});
+    stages.push({name: "inline", checkpoint: true});
+    for (const pass of chosen) if (pass.run && pass.name !== "inline") stages.push(pass);
+
+    // timing: an array that receives {fn, pass, ms, cells} for every stage a function runs (cells: the
     // tape's length after it), plus one {fn: null, pass: "compile", ms} row for the whole call. The
     // clock is options.clock, performance.now or Date.now; it is read only when timing is given.
     const timing = options?.timing;
@@ -48,99 +74,29 @@ function compile(source, imports = [], maxSourceLength, requested) {
         return result;
     }
     function lower(fn) {
-        if (options?.select?.hoist) time(fn, "storeless", () => storeless(imported.length + code.length));
+        const index = imported.length + code.length;
+        const ctx = {passes, arity, storeless, index, inlining, inlineLibrary, Emitter: FunctionCode,
+            libraryCopy: undefined, ranges: undefined, origin: local => local, facts: undefined};
+        for (const pass of starts) time(fn, pass.name === "hoist" ? "storeless" : pass.name, () => pass.start(fn, ctx));
         if (inspect && (inspect.function === undefined || inspect.function === fn.name))
             fn.nativeInspection = {leafDecision: "eligible for frameless lowering"};
-        let libraryCopy;
-        if (inlining) time(fn, "inline", () => {
-            const arity = index => callables[index].params.length;
-            // The library copy inlines every candidate call; the function's own code only those
-            // in its loops.
-            // Expansion only grows a tape, so a function already over the callee limit is
-            // never a library candidate and needs no fully expanded copy.
-            const all = fn.code.length <= inlining.calleeCells ? inlineCalls(fn, inlineLibrary, inlining, arity, true) : null;
-            libraryCopy = all ?? {code: fn.code, nlocals: fn.nlocals};
-            const loops = inlineCalls(fn, inlineLibrary, inlining, arity, false);
-            if (loops) {
-                fn.code = loops.code;
-                fn.nlocals = loops.nlocals;
+        // observeTape(name, phase, code, nlocals): a read-only view of the tape after each transform, for
+        // tools (the trace-REPL workbench). It sees a copy and cannot change the output.
+        const observe = phase => options?.observeTape?.(fn.name, phase, fn.code.slice(), fn.nlocals);
+        for (const stage of stages) {
+            if (stage.checkpoint) {
+                observe(stage.name);
+                continue;
             }
-        });
-        let Emitter = FunctionCode;
-        if (policy) {
-            // Only our internal definition targets can acquire summaries. A forward call
-            // uses the ordinary ABI in both streaming and buffered compilation.
-            const summary = time(fn, "guarded", () => guardedReturnSummary(fn));
-            if (summary) targets[imported.length + code.length].guardedReturn = summary;
-            if (policy === true || policy(fn.name)) Emitter = GuardedReturnCode;
-        }
-        const mode = options?.pieLoops;
-        if (mode !== undefined) {
-            if (mode !== "scalar" && mode !== "pie" && mode !== "pie-empty" && typeof mode !== "function") throw new TypeError("unknown PIE loop compilation mode");
-            if (!globalThis.typedPieLoops) throw new Error("load typed-pie-loops.js for PIE loop compilation");
-            const selected = time(fn, "pie", () => typedPieLoops.lower(fn, callables, targets, mode, Emitter, instruction));
-            if (selected) {
-                code.push(selected);
+            const lowered = time(fn, stage.name, () => stage.run(fn, ctx));
+            if (stage.terminal && lowered) {
+                code.push(lowered);
                 if (fn.literals) fn.literals = null;
                 return;
             }
+            if (stage.kind === "transform" && stage.observe !== false) observe(stage.name);
         }
-        // observeTape(name, phase, code, nlocals): a read-only view of each tape transform, for
-        // tools (the trace-REPL workbench). It sees a copy and cannot change the output.
-        const observe = phase => options?.observeTape?.(fn.name, phase, fn.code.slice(), fn.nlocals);
-        observe("inline");
-        if (options?.select?.commute) {
-            time(fn, "commute", () => {
-                const commuted = commuteConstants(fn.code, index => callables[index].params.length);
-                if (commuted) fn.code = commuted;
-            });
-            observe("commute");
-        }
-        const arity = index => callables[index].params.length;
-        if (options?.select?.conjunctions) {
-            time(fn, "conjunctions", () => {
-                const fused = fuseConjunctions(fn.code);
-                if (fused) fn.code = fused;
-            });
-            observe("conjunctions");
-        }
-        if (options?.select?.sets) {
-            time(fn, "sets", () => {
-                const folded = foldValueSets(fn.code, arity);
-                if (folded) fn.code = folded;
-            });
-            observe("sets");
-        }
-        let ranges;
-        if (options?.select?.rotate) {
-            time(fn, "rotate", () => {
-                const rotated = rotateLoops(fn.code);
-                if (rotated) fn.code = rotated;
-            });
-            observe("rotate");
-            if (options.select.facts) ranges = time(fn, "ranges", () => localRanges(fn.code, fn.params.length, arity));
-            if (options.select.version) {
-                const hoist = options.select.hoist ? {storeless, arity, fresh: () => fn.params.length + fn.nlocals++} : undefined;
-                time(fn, "version", () => {
-                    const versioned = versionLoops(fn.code, fn.params.length, hoist, options.select.induction);
-                    if (versioned) fn.code = versioned;
-                });
-                observe("version");
-            }
-        }
-        if (options?.select?.facts && !options.select.rotate) ranges = time(fn, "ranges", () => localRanges(fn.code, fn.params.length, arity));
-        let origin = local => local;
-        if (options?.operandLocations?.split) {
-            const before = fn.params.length + fn.nlocals;
-            const split = time(fn, "split", () => splitLocals(fn.code, fn.params.length, fn.nlocals));
-            if (split) {
-                fn.code = split.code;
-                fn.nlocals = split.nlocals;
-                origin = local => local >= before ? split.origin[local - before] : local;
-            }
-            observe("split");
-        }
-        const facts = ranges ? time(fn, "facts", () => divisionFacts(fn.code, fn.params.length, arity, ranges, origin)) ?? undefined : undefined;
+        const {Emitter, facts} = ctx;
         let compiled = time(fn, "leaf", () => lowerLeaf(fn, callables, targets, options?.select, facts));
         if (!compiled) {
             const plan = options?.operandLocations ? time(fn, "plan", () => planLocations(fn, {...options.operandLocations, select: options.select},
@@ -150,6 +106,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
             const emit = longBranches => {
                 const emitter = new Emitter(fn, callables, targets);
                 emitter.select = options?.select;
+                emitter.versioned = passes.has("version");
                 emitter.facts = facts;
                 emitter.longBranches = longBranches;
                 if (plan !== undefined) emitter.locations = plan;
@@ -164,7 +121,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 }
             });
         }
-        const index = imported.length + code.length;
+        const {libraryCopy} = ctx;
         const candidate = inlining && time(fn, "candidate", () => inlineCandidate(fn, libraryCopy.code, inlining, targets[index]?.guardedReturn));
         if (candidate) inlineLibrary.set(index, {...candidate, nlocals: libraryCopy.nlocals, code: libraryCopy.code.slice(),
             loops: loopDepth(libraryCopy.code)});

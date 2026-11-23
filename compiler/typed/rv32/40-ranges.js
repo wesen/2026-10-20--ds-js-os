@@ -1,4 +1,4 @@
-// select.facts: division and remainder by a positive constant whose dividend is never
+// the facts pass: division and remainder by a positive constant whose dividend is never
 // negative, so the emitter can drop the rounding bias and the sign correction. Two steps:
 // localRanges gives every local one interval, the join of every value written to it anywhere,
 // on the tape after rotation and before versioning; divisionFacts then evaluates the final tape

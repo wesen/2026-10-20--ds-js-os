@@ -1,4 +1,4 @@
-// select.sets: precompute a pure value block over a local that holds one of a few constants.
+// the sets pass: precompute a pure value block over a local that holds one of a few constants.
 // A value block (`block (result i32)`) whose body is straight-line arithmetic over constants and
 // at most one local L (read before the body writes it), and whose own writes are dead after the
 // block, computes one result per value of L. When the forward analysis below proves that L holds

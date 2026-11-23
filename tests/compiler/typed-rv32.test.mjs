@@ -165,7 +165,7 @@ test("guarded scalar returns are proved from an earlier body and applied to sele
     const events = [];
     const control = typedRv32.compile(source, [], undefined, {policy: "stock"});
     // select changes every function, including normalize; this test isolates the guarded inliner.
-    const options = {inlineGuardedReturns: name => name === "selected" || name === "early", select: false,
+    const options = {inlineGuardedReturns: name => name === "selected" || name === "early", select: false, passes: ["inline", "split"],
         inspect:{function:"selected",emit:e => events.push(e)}};
     const candidate = typedRv32.compile(source, [], undefined, options);
     const calls = (p, fn) => words(p, fn).filter(w => opcode(w) === 0x6f && destination(w) === 1).length;
@@ -177,7 +177,7 @@ test("guarded scalar returns are proved from an earlier body and applied to sele
     const emission = events.find(e => e.target === "rv32" && e.kind === "emission");
     assert(emission.ranges.some(r => r.decisions?.some(d => d.includes("guarded return"))));
     assert.deepEqual(candidate.image, typedRv32.compile(source, [], undefined, {...options, streamFunctions:false}).image);
-    assert.deepEqual(control.image, typedRv32.compile(source, [], undefined, {inlineGuardedReturns:false, select:false}).image);
+    assert.deepEqual(control.image, typedRv32.compile(source, [], undefined, {inlineGuardedReturns:false, select:false, passes: ["inline", "split"]}).image);
     // The default policy inlines every proved helper; the explicit selector narrows it.
     assert.equal(calls(typedRv32.compile(source), "ordinary"), 0);
 });
@@ -199,21 +199,20 @@ test("a checked constant read can use a halfword displacement and a dominating c
 test("the default policy applies the qualified options and stock reproduces the earlier default", () => {
     const {typedRv32} = compiler();
     const src = readFileSync(new URL("../../apps/typed/raytrace/raytrace.typed", import.meta.url), "utf8");
-    const qualified = {inlineGuardedReturns: true, inline: true,
+    const qualified = {inlineGuardedReturns: true, passes: ["inline", "commute", "rotate", "version", "split"],
         operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
-            constants: true, share: true, pointers: true, split: true},
-        select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true, rotate: true,
-            shortBranches: true, version: true}};
+            constants: true, share: true, pointers: true},
+        select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true, shortBranches: true}};
     const image = options => typedRv32.compile(src, [], 65536, options).image;
-    // The default with some qualified fields switched off.
-    const without = (select, locations, rest = {}) => ({...rest,
+    // The default with some qualified passes, selections and locations switched off.
+    const without = (passes, select, locations) => ({disable: passes,
         select: {...qualified.select, ...Object.fromEntries(select.map(k => [k, false]))},
         operandLocations: {...qualified.operandLocations, ...Object.fromEntries(locations.map(k => [k, false]))}});
     assert.deepEqual(image(), image({policy: "stock", ...qualified}));
     assert.deepEqual(image({policy: "default"}), image());
     assert.notDeepEqual(image({policy: "stock"}), image());
     // Explicit fields override the policy, and an explicit undefined leaves it unchanged.
-    assert.deepEqual(image({operandLocations: false, inlineGuardedReturns: false, select: false, inline: false}), image({policy: "stock"}));
+    assert.deepEqual(image({operandLocations: false, inlineGuardedReturns: false, select: false, passes: []}), image({policy: "stock"}));
     assert.deepEqual(image({operandLocations: undefined}), image());
     assert.equal(image({policy: "stock"}).length, 9564);
     const sha = options => createHash("sha256").update(image(options)).digest("hex");
@@ -221,33 +220,33 @@ test("the default policy applies the qualified options and stock reproduces the 
     assert.equal(sha(), "d9c25ef928d70c4ca46f065a18396c6f3df6fafaaf021bd2e840318be844b8f3");
     // Step 11's image (19.31 ms): without versioned loops and split locals. The named "balanced"
     // policy, which Chess compiles with on the device, is exactly this set.
-    assert.equal(sha(without(["version"], ["split"])), "4fa61ed11a0c1f940b8a4e8ff74c27e443d432184ec3eac8e3dac4831ce2d984");
+    assert.equal(sha(without(["version", "split"], [], [])), "4fa61ed11a0c1f940b8a4e8ff74c27e443d432184ec3eac8e3dac4831ce2d984");
     assert.equal(sha({policy: "balanced"}), "4fa61ed11a0c1f940b8a4e8ff74c27e443d432184ec3eac8e3dac4831ce2d984");
     // Step 10's image (20.20 ms): also without pointer homes.
-    assert.equal(sha(without(["version"], ["split", "pointers"])), "e7e33cd0c2cb8fcea41c7a2143a031b62dc8ba827814c83cdf503479e799d1e7");
+    assert.equal(sha(without(["version", "split"], [], ["pointers"])), "e7e33cd0c2cb8fcea41c7a2143a031b62dc8ba827814c83cdf503479e799d1e7");
     // Step 8's image (22.43 ms): also without shared homes and short forward branches.
-    assert.equal(sha(without(["version", "shortBranches"], ["split", "pointers", "share"])),
+    assert.equal(sha(without(["version", "split"], ["shortBranches"], ["pointers", "share"])),
         "7c660e876a8c1211b853e9c8b7aff4b2fd400b2431500fce753fa7e55d5ab201");
     // Step 7's image (24.18 ms): also without loop rotation and constant homes.
-    assert.equal(sha(without(["version", "shortBranches", "rotate"], ["split", "pointers", "share", "constants"])),
+    assert.equal(sha(without(["version", "split", "rotate"], ["shortBranches"], ["pointers", "share", "constants"])),
         "4e7eb52aee07cf8fd5e6a3a96733d100241b10fe445030793a73513229fb676c");
     // Step 6's image (31.51 ms): also without inlining and the Step 7 options. The named
     // "interactive" policy, which the device's boot worlds compile with, is exactly this set.
-    assert.equal(sha(without(["version", "shortBranches", "rotate", "commute"],
-        ["split", "pointers", "share", "constants", "capacities", "nested"], {inline: false})),
+    assert.equal(sha(without(["version", "split", "rotate", "commute", "inline"], ["shortBranches"],
+        ["pointers", "share", "constants", "capacities", "nested"])),
         "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     assert.equal(sha({policy: "interactive"}), "6b8545125fa8d2d004a57135125ebe0bf77bb6a2763e8de97336d17b2350451f");
     // The "kernel" policy adds division facts (board run 10 timed that image at 15.27 ms, Step 15),
     // value sets (board run 11: 13.84 ms, Step 17), hoisted loop invariants (board run 12:
     // 12.45 ms, Step 18), and fused conjunctions with loads into homes (below).
     const kernel = typedRv32.policies.kernel, before = {...kernel.operandLocations, pointerOnly: false, reuseArgs: false};
-    const step19 = {...kernel.select, induction: false}, step18 = {...step19, conjunctions: false, loadHomes: false};
-    const old = select => sha({policy: "kernel", select, operandLocations: before});
-    assert.equal(old({...step18, sets: false, hoist: false}), "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
-    assert.equal(old({...step18, hoist: false}), "a5eb06b25026ea4f3fa85f8941fd062718b6fed3665ca38ba70944b73b122dc3");
-    assert.equal(old(step18), "3e18e5099c990fb168e24f8637ddf7110f931edf980b92b4f7383dda6adbf6d7");
+    const step18 = {...kernel.select, loadHomes: false};
+    const old = (disable, select = kernel.select) => sha({policy: "kernel", disable, select, operandLocations: before});
+    assert.equal(old(["induction", "conjunctions", "sets", "hoist"], step18), "22c20887acf2f0c8931e58978aee9399fb45b9e1558eeacd59bb98095feafebc");
+    assert.equal(old(["induction", "conjunctions", "hoist"], step18), "a5eb06b25026ea4f3fa85f8941fd062718b6fed3665ca38ba70944b73b122dc3");
+    assert.equal(old(["induction", "conjunctions"], step18), "3e18e5099c990fb168e24f8637ddf7110f931edf980b92b4f7383dda6adbf6d7");
     // Fused conjunctions and loads into homes (board run 13: 11.43 ms, Step 19).
-    assert.equal(old(step19), "245edbc1333519b3d78baa792e2317a6ba407f36fff682b078dd653bc5f097a0");
+    assert.equal(old(["induction"]), "245edbc1333519b3d78baa792e2317a6ba407f36fff682b078dd653bc5f097a0");
     // Induction variables and pointer-only sources (board run 14: 11.17 ms, Step 20).
     assert.equal(sha({policy: "kernel", operandLocations: {...kernel.operandLocations, reuseArgs: false}}),
         "8eaa40605e4bca96872b309aa87a39bfaf6312079822f9c1e4a134a63398fcdc");
@@ -262,7 +261,7 @@ test("saved homes and direct reads keep the ABI and reproduce stock results", ()
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp, typedRayBench} = ctx;
     // Inlining would turn mix into a leaf without callee-saved homes; this test keeps the calls.
-    const candidate = {inline: false, operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}};
+    const candidate = {disable: ["inline", "split"], operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true}};
     // A framed caller keeps four hot locals across calls; the interpreter faults if any
     // callee-saved register differs at a return, or if sp or ra is wrong.
     const src = `function step(x: i32, k: i32): i32 { return (x * 5 + k) % 9973; }
@@ -291,7 +290,7 @@ function mix(n: i32): i32 {
     const frame = options => typedRayBench.openingFrame(typedRv32.compile(
         readFileSync(new URL("../../apps/typed/raytrace/raytrace.typed", import.meta.url), "utf8"), [], 65536, options));
     const stock = frame({policy: "stock"}), saved = frame(candidate);
-    const leafHomes = frame({inline: false, operandLocations: {forward: true, capacity: true, homes: true}});
+    const leafHomes = frame({disable: ["inline", "split"], operandLocations: {forward: true, capacity: true, homes: true}});
     assert.equal(sha(saved.bytes), sha(stock.bytes));
     assert.equal(sha(leafHomes.bytes), sha(stock.bytes));
     assert(saved.steps < leafHomes.steps, "saved homes and direct reads reduce the frame's instructions");
@@ -375,8 +374,8 @@ function fill(out: buffer, buf: buffer, n: i32): i32 {
     }
     return total;
 }`;
-    const all = {inline: true, select: {immediates: true, divisions: true, branches: true, results: true,
-        leafParams: true, commute: true, rotate: true},
+    const all = {passes: ["inline", "commute", "rotate"], select: {immediates: true, divisions: true, branches: true, results: true,
+        leafParams: true},
         operandLocations: {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true,
             nested: true, constants: true, share: true}};
     const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
@@ -424,8 +423,8 @@ ${body}
     }
     return s;
 }`;
-    const options = {select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true,
-        commute: true, rotate: true, shortBranches: true}};
+    const options = {passes: ["inline", "commute", "rotate", "split"], select: {immediates: true, divisions: true, branches: true,
+        results: true, leafParams: true, shortBranches: true}};
     const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
     const short = typedRv32.compile(src, [], undefined, options);
     const long = typedRv32.compile(src, [], undefined, {...options, select: {...options.select, shortBranches: false}});
@@ -483,10 +482,10 @@ function fill(work: buffer, n: i32): i32 {
     const L = {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
         constants: true, share: true};
     // Without versioned loops: in their fast copies these small loops need no pointer homes.
-    const select = {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true,
-        rotate: true, shortBranches: true};
-    const plain = typedRv32.compile(src, [], undefined, {operandLocations: L, select});
-    const pointed = typedRv32.compile(src, [], undefined, {operandLocations: {...L, pointers: true}, select});
+    const select = {immediates: true, divisions: true, branches: true, results: true, leafParams: true, shortBranches: true};
+    const passes = ["inline", "commute", "rotate"];
+    const plain = typedRv32.compile(src, [], undefined, {operandLocations: L, select, passes});
+    const pointed = typedRv32.compile(src, [], undefined, {operandLocations: {...L, pointers: true}, select, passes});
     assert.notDeepEqual(pointed.image, plain.image);
     const cells = 40;
     function run(p, f, n) {
@@ -549,9 +548,7 @@ test("division facts change code only for dividends proven non-negative, and kee
     return s;
 }`],
     };
-    const select = {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true,
-        rotate: true, shortBranches: true, version: true};
-    const withFacts = {select: {...select, facts: true}};
+    const withFacts = {enable: ["ranges", "facts"]};
     for (const [name, [proven, src]] of Object.entries(fns)) {
         const a = typedRv32.compile(src, [], undefined, {}), b = typedRv32.compile(src, [], undefined, withFacts);
         assert.equal(Buffer.compare(Buffer.from(a.image), Buffer.from(b.image)) !== 0, proven, name);
@@ -622,13 +619,12 @@ function fill(work: buffer, n: i32): i32 {
     for (let x = 0; x < n; x = x + 1) { work.setCharCodeAt(10 + x, work.charCodeAt(x) + 1); }
     return work.charCodeAt(10);
 }`;
-    const select = {immediates: true, divisions: true, branches: true, results: true, leafParams: true, commute: true,
-        rotate: true, shortBranches: true};
+    const select = {immediates: true, divisions: true, branches: true, results: true, leafParams: true, shortBranches: true};
     const locations = {forward: true, capacity: true, homes: true, saved: true, direct: true, capacities: true, nested: true,
         constants: true, share: true, pointers: true};
     const unchecked = {};
-    const candidate = typedRv32.compile(src, [], undefined, {select: {...select, version: true},
-        operandLocations: {...locations, split: true},
+    const candidate = typedRv32.compile(src, [], undefined, {select, passes: ["inline", "commute", "rotate", "version", "split"],
+        operandLocations: locations,
         observeTape: (name, phase, code) => { if (phase === "split") unchecked[name] = typedTape.decode(code).some(o => o.opcode === typedTape.UNCHECKED_ADDRESS); }});
     const plain = typedRv32.compile(src, [], undefined, {});
     const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
@@ -736,9 +732,8 @@ test("value sets fold pure inlined blocks only over proven constant sets, and ke
 }
 function hundred(d: i32): i32 { return 100 / d; }
 `;
-    const kernel = typedRv32.policies.kernel;
-    const withSets = {policy: "kernel", select: {...kernel.select, sets: true}};
-    const without = {policy: "kernel", select: {...kernel.select, sets: false}};
+    const withSets = {policy: "kernel"};
+    const without = {policy: "kernel", disable: ["sets"]};
     const opcodes = code => typedTape.decode(code).map(o => o.opcode);
     const {I32_MUL, I32_DIV_S} = typedTape;
     for (const [name, [folded, src]] of Object.entries(fns)) {
@@ -844,9 +839,8 @@ test("hoisted loop invariants keep results, stores and traps identical, includin
     };
     const helpers = `function poke(b: buffer, i: i32): i32 { b.setCharCodeAt(30, i); return 0; }
 `;
-    const kernel = typedRv32.policies.kernel;
-    const withHoist = {policy: "kernel", select: {...kernel.select, hoist: true}};
-    const without = {policy: "kernel", select: {...kernel.select, hoist: false}};
+    const withHoist = {policy: "kernel"};
+    const without = {policy: "kernel", disable: ["hoist"]};
     for (const [name, [moved, src]] of Object.entries(fns)) {
         const tapes = {};
         const options = observe => ({observeTape: (fn, phase, code) => { if (fn === name && phase === "version") tapes[observe] = code; }});
@@ -917,7 +911,7 @@ function flag(work: buffer, n: i32): i32 {
         observeTape: (fn, phase, code) => { if (phase === "commute" || phase === "conjunctions") (tapes[fn] ??= {})[phase] = code; }});
     const fused = name => tapes[name].conjunctions.length !== tapes[name].commute.length ||
         tapes[name].conjunctions.some((c, i) => c !== tapes[name].commute[i]);
-    assert(kernel.select.conjunctions && kernel.select.loadHomes, "kernel fuses conjunctions and loads into homes");
+    assert(kernel.passes.includes("conjunctions") && kernel.select.loadHomes, "kernel fuses conjunctions and loads into homes");
     assert(fused("band") && fused("inline"), "band and inline fuse");
     assert(!fused("flag"), "a conjunction kept as a value is not fused");
     const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
@@ -987,13 +981,13 @@ test("induction variables and pointer-only sources keep results, stores and trap
 }`],
     };
     const kernel = typedRv32.policies.kernel;
-    assert(kernel.select.induction && kernel.operandLocations.pointerOnly, "kernel uses induction and pointer-only sources");
+    assert(kernel.passes.includes("induction") && kernel.operandLocations.pointerOnly, "kernel uses induction and pointer-only sources");
     for (const [name, [reduced, pointerOnly, src]] of Object.entries(fns)) {
         const tapes = {}, skips = [];
         const observe = key => ({observeTape: (fn, phase, code) => { if (fn === name && phase === "version") tapes[key] = code; },
             observePlan: (fn, plan) => { if (fn === name && key === "on") skips.push(plan.skips?.size ?? 0); }});
         typedRv32.compile(src, [], undefined, {policy: "kernel", ...observe("on")});
-        typedRv32.compile(src, [], undefined, {policy: "kernel", select: {...kernel.select, induction: false}, ...observe("off")});
+        typedRv32.compile(src, [], undefined, {policy: "kernel", disable: ["induction"], ...observe("off")});
         assert.equal(tapes.on.length !== tapes.off.length || tapes.on.some((c, i) => c !== tapes.off[i]), reduced, name + " induction");
         assert.equal(skips.some(n => n > 0), pointerOnly, name + " pointer-only");
     }
@@ -1099,6 +1093,42 @@ function stored(w: buffer, n: i32, b: i32, c: i32): i32 {
             traps += expected.trap;
         }
     assert(traps >= 6, "short buffers reach the bounds");
+});
+
+test("policies are pass lists that options edit by name, and every stage reports its time", () => {
+    const {typedRv32} = compiler();
+    const src = readFileSync(new URL("../../apps/typed/raytrace/raytrace.typed", import.meta.url), "utf8");
+    const image = options => typedRv32.compile(src, [], 65536, options).image;
+    const {policies} = typedRv32;
+    assert.deepEqual([...policies.default.passes], ["inline", "commute", "rotate", "version", "split"]);
+    assert.deepEqual([...policies.interactive.passes], []);
+    // enable and disable edit the policy's list; an added pass takes its place in pipeline order.
+    assert.deepEqual(image({policy: "balanced", enable: ["split", "version"]}), image());
+    assert.deepEqual(image({disable: ["version", "split"]}), image({policy: "balanced"}));
+    assert.deepEqual(image({policy: "kernel", passes: [...policies.default.passes]}),
+        image({policy: "kernel", disable: ["conjunctions", "sets", "ranges", "hoist", "induction", "facts"]}));
+    assert.throws(() => image({passes: ["fold"]}), /unknown RV32 pass fold/);
+    assert.throws(() => image({passes: ["rotate", "commute"]}), /pipeline order/);
+    assert.throws(() => image({passes: ["version"]}), /version needs rotate/);
+    assert.throws(() => image({policy: "kernel", disable: ["ranges"]}), /facts needs ranges/);
+    assert.throws(() => image({select: {rotate: true}}), /select.rotate is the RV32 pass/);
+    assert.throws(() => image({operandLocations: {homes: true, split: true}}), /operandLocations.split/);
+    assert.throws(() => image({inline: true}), /inliner's limits/);
+    // Timing: one row per stage a function runs, and one for the whole call; the image is unchanged.
+    let tick = 0;
+    const timing = [];
+    assert.deepEqual(image({policy: "kernel", timing, clock: () => tick++}), image({policy: "kernel"}));
+    const compile = timing.filter(row => row.fn === null);
+    assert.equal(compile.length, 1);
+    assert.equal(compile[0].pass, "compile");
+    const stages = new Set(timing.filter(row => row.fn !== null).map(row => row.pass));
+    for (const pass of ["storeless", "inline", "guarded", "commute", "conjunctions", "sets", "rotate", "ranges", "version",
+        "split", "facts", "leaf", "plan", "emit", "candidate"]) assert(stages.has(pass), pass);
+    for (const row of timing) if (row.fn !== null) assert.equal(row.ms, 1, row.pass);
+    assert.equal(compile[0].ms, 2 * (timing.length - 1) + 1);
+    const interactive = [];
+    typedRv32.compile(src, [], 65536, {policy: "interactive", timing: interactive});
+    assert.deepEqual([...new Set(interactive.map(row => row.pass))].sort(), ["compile", "emit", "guarded", "leaf", "plan"]);
 });
 
 test("compiler/typed-rv32.js is the current build of compiler/rv32/", async () => {

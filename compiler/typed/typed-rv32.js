@@ -250,7 +250,7 @@ class FunctionCode {
     }
 
     // The address of receiver[index + j]: checked against the capacity, or unchecked (UNCHECKED_ADDRESS, in a
-    // copy of a loop that select.version proved in range), and read at once when a UTF-16 load
+    // copy of a loop that the version pass proved in range), and read at once when a UTF-16 load
     // follows.
     checkedAddress(receiver, index, constant, pointer, unchecked = false, j = 0) {
         const capacity = this.locations?.homes.get(-1 - receiver);
@@ -431,7 +431,7 @@ class FunctionCode {
 
     // Signed truncating division or remainder by a positive constant, without a divide.
     // T6 is the scratch register; pop(T5) never returns it.
-    // nonNegative (select.facts): the dividend is known >= 0, so no rounding bias or sign
+    // nonNegative (the facts pass): the dividend is known >= 0, so no rounding bias or sign
     // correction is needed: a shift, a mask, or the multiply-high and its shift alone.
     divideByConstant(remainder, d, nonNegative = false) {
         const a = this.pop(T5);
@@ -588,7 +588,7 @@ class FunctionCode {
             return false;
         }
         // The capacity header of a buffer with a capacity home: the home itself.
-        if (op === LOCAL_GET && plan && this.select?.version && this.program.code[this.at + 1] === I32_LOAD && this.program.code[this.at + 3] === 0) {
+        if (op === LOCAL_GET && plan && this.versioned && this.program.code[this.at + 1] === I32_LOAD && this.program.code[this.at + 3] === 0) {
             const home = plan.homes.get(-1 - this.program.code[this.at]);
             if (home !== undefined) {
                 this.at += 4;
@@ -687,7 +687,7 @@ class FunctionCode {
             this.checkedAddress(receiver, T5);
             break;
         }
-        case UNCHECKED_ADDRESS: { // unchecked UTF-16 address of receiver[position + j] (select.version)
+        case UNCHECKED_ADDRESS: { // unchecked UTF-16 address of receiver[position + j] (the version pass)
             const receiver = this.cell(), position = this.cell(), j = this.cell();
             this.readLocal(T5, position);
             this.checkedAddress(receiver, T5, undefined, undefined, true, j);
@@ -1065,7 +1065,7 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
     return changed ? {code: out, nlocals: locals - fn.params.length} : null;
 }
 
-// select.commute: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
+// the commute pass: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
 // eq, ne), so the literal reaches selectConstant as a right operand. Moving a literal past
 // e cannot change e's effects. Each abstract stack entry records where its cells start in
 // the output; an expression whose start is not certain (a value block) is NaN and is never
@@ -1115,7 +1115,7 @@ function commuteConstants(code, arity) {
     return changed ? out : null;
 }
 
-// select.rotate: the frontend emits every loop as
+// the rotate pass: the frontend emits every loop as
 //     block; loop; C; eqz; br_if 1; B; br 0; end; end
 // which runs C, a taken skip over the exit jump, B and a taken jump back per iteration.
 // Rotated, the loop is
@@ -1123,7 +1123,7 @@ function commuteConstants(code, arity) {
 // and each iteration ends in one backward conditional branch. C is evaluated at the same
 // points as before (once before every iteration and once to exit). Labels inside B keep
 // their meaning; C is copied only if every branch in it targets a block inside C.
-// select.version: a rotated counted loop (rotateLoops)
+// the version pass: a rotated counted loop (rotateLoops)
 //   block  get k (const n | get N) lt_s eqz br_if 0  loop  B  get k (n | N) lt_s br_if 0  end  end
 // whose body B ends in k = k + s (1 <= s <= 64), with no other write of k or N in the loop, is
 // emitted twice. Checked accesses r[i] in B whose index is a*k + b, M + a*k + b with M unwritten
@@ -1138,7 +1138,7 @@ function commuteConstants(code, arity) {
 const VERSION_LIMITS = Object.freeze({coefficient: 1024, offset: 1 << 20, bound: 1 << 20, bodyCells: 2000});
 function versionLoops(code, params, hoist, induction) {
     for (let at = 0; at < code.length; at = opNext(code, at)) if (!(CELLS[code[at]] >= 0)) return null;
-    // select.hoist: where each local is read, so a moved statement's local can be checked for
+    // the hoist pass: where each local is read, so a moved statement's local can be checked for
     // reads outside its loop (hoistInvariants).
     const readsAt = new Map();
     if (hoist || induction) for (let at = 0; at < code.length; at = opNext(code, at)) {
@@ -1292,7 +1292,7 @@ function versionLoops(code, params, hoist, induction) {
         }
         // The fast body: unchecked accesses, and branches that leave the loop one level further
         // out (the loop now sits inside the guard block).
-        // select.induction: an affine local i = a*k + b whose definition multiplies, runs on every
+        // the induction pass: an affine local i = a*k + b whose definition multiplies, runs on every
         // iteration and is not absorbed into an access, in a loop whose counter starts at a known
         // constant k0, becomes an induction variable: set to a*k0 + b before the loop, stepped
         // by a*s beside k = k + s, its definition removed. Every read of i follows its one write
@@ -1338,7 +1338,7 @@ function versionLoops(code, params, hoist, induction) {
             else if (op === END) depth--;
             for (let j = p; j < opNext(src, p); j++) fast.push(src[j]);
         }
-        // select.hoist, for loops at the function's top level (whose reads outside the loop are
+        // the hoist pass, for loops at the function's top level (whose reads outside the loop are
         // all in code): invariant statements of the fast copy run once, after the guard.
         let moved = {pre: [], aliasTerms: []};
         if (hoist && src === code) {
@@ -1364,7 +1364,7 @@ function versionLoops(code, params, hoist, induction) {
     }
 }
 
-// select.hoist: a statement of a versioned loop's fast copy that computes the same value in
+// the hoist pass: a statement of a versioned loop's fast copy that computes the same value in
 // every iteration moves into the guard block, after the guard's terms and before the loop.
 // A statement `E; set X` moves when:
 //  - E reads only constants, locals the loop does not write (or that a moved statement writes),
@@ -1522,7 +1522,7 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
     return {pre, body: out, aliasTerms};
 }
 
-// select.hoist, second step: a maximal subexpression of the fast copy that is pure, cannot trap
+// the hoist pass, second step: a maximal subexpression of the fast copy that is pure, cannot trap
 // and reads only constants, locals the loop does not write and capacities moves into a fresh
 // local computed after the guard, when it does at least two operations' work (a division counts
 // twice). Loads stay where they are: only hoistInvariants proves them unaliased. Consecutive
@@ -1675,7 +1675,7 @@ function splitLocals(code, params, nlocals) {
     return fresh === params + nlocals ? null : {code: out, nlocals: fresh - params, origin};
 }
 
-// select.facts: division and remainder by a positive constant whose dividend is never
+// the facts pass: division and remainder by a positive constant whose dividend is never
 // negative, so the emitter can drop the rounding bias and the sign correction. Two steps:
 // localRanges gives every local one interval, the join of every value written to it anywhere,
 // on the tape after rotation and before versioning; divisionFacts then evaluates the final tape
@@ -1841,7 +1841,7 @@ function divisionFacts(code, params, arity, ranges, origin) {
     return rangePass(code, arity, rangeOf, () => {}, (at, x) => { if (x && x[0] >= 0) facts.add(at); }) ? facts : null;
 }
 
-// select.sets: precompute a pure value block over a local that holds one of a few constants.
+// the sets pass: precompute a pure value block over a local that holds one of a few constants.
 // A value block (`block (result i32)`) whose body is straight-line arithmetic over constants and
 // at most one local L (read before the body writes it), and whose own writes are dead after the
 // block, computes one result per value of L. When the forward analysis below proves that L holds
@@ -2208,7 +2208,7 @@ function foldValueSets(code, arity, sink = true) {
     return out;
 }
 
-// select.conjunctions: the frontend lowers `a && b` to a value if, `a; if (result i32) b else
+// the conjunctions pass: the frontend lowers `a && b` to a value if, `a; if (result i32) b else
 // const 0 end`, whose 0/1 result a following `if` or `br_if` tests again. Fused, the value is
 // never materialized:
 //   a; if (result i32) b else const 0 end; if BODY end   ->   a; if b; if BODY end end
@@ -2644,67 +2644,152 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reus
     }
 }
 
-// Named code-generation policies. "default" applies every native optimization that has
-// passed the host differential, the historical replays and a paired P4 trial; a caller
-// that passes no options gets it. "stock" is the code generation of 2026-11-21 before
-// those became defaults, kept as the control arm for experiments. Fields given in the
-// options object override the selected policy; false or null switches one off.
-// PIE loop lowering stays opt-in: it needs typed-pie-loops.js and saved under 1% of a
-// ray frame for about 70 ms of cold compile on the P4.
-// "interactive" is for worlds that the device compiles while a person waits (the boot worlds):
-// RAY-PARITY's Step 6 set, operand locations and instruction selection without inlining or
-// loop transforms. On the P4 it compiles Agenda in 0.98 s and Editor in 3.35 s against 2.75 s
-// and 7.90 s for "default" (PICOCALC-COMPILE-BUDGET Step 2), inside their 1.7 s and 6 s deadlines.
+// Named code-generation policies. A policy is a list of tape passes (PASSES, in their pipeline order) and
+// the parameters of the stages that are not tape passes: guarded-return inlining, the operand-location
+// planner (operandLocations) and the emitter's instruction selection (select).
+//
+// "default" applies every native optimization that has passed the host differential, the historical
+// replays and a paired P4 trial; a caller that passes no options gets it. "stock" is the code generation of
+// 2026-11-21 before those became defaults, kept as the control arm for experiments.
+// PIE loop lowering stays opt-in (pieLoops): it needs typed-pie-loops.js and saved under 1% of a ray frame
+// for about 70 ms of cold compile on the P4.
+const DEFAULT_SELECT = Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
+    shortBranches: true});
+const DEFAULT_LOCATIONS = Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
+    capacities: true, nested: true, constants: true, share: true, pointers: true});
 const DEFAULT_POLICY = Object.freeze({
+    passes: Object.freeze(["inline", "commute", "rotate", "version", "split"]),
     inlineGuardedReturns: true,
-    operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
-        capacities: true, nested: true, constants: true, share: true, pointers: true, split: true}),
-    select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
-        commute: true, rotate: true, shortBranches: true, version: true}),
-    inline: true,
+    operandLocations: DEFAULT_LOCATIONS,
+    select: DEFAULT_SELECT,
 });
 const POLICIES = Object.freeze({
+    // "interactive" is for worlds that the device compiles while a person waits (the boot worlds):
+    // RAY-PARITY's Step 6 set, operand locations and instruction selection without a tape pass. On the
+    // P4 it compiles Agenda in 0.98 s and Editor in 3.35 s against 2.75 s and 7.90 s for "default"
+    // (PICOCALC-COMPILE-BUDGET Step 2), inside their 1.7 s and 6 s deadlines.
     interactive: Object.freeze({
+        passes: Object.freeze([]),
         inlineGuardedReturns: true,
         operandLocations: Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true}),
         select: Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true}),
-        inline: false,
     }),
-    // "balanced" is "default" without loop versioning and split locals (RAY-PARITY's Step 11 set),
-    // for worlds with a long boot compile whose loops gain little from versioning: Chess with the
-    // 3D painter compiles in 3.76 s instead of 4.66 s on the P4 (6 s deadline), and versioning saves
-    // its engine 0.45% of instructions (PICOCALC-COMPILE-BUDGET Step 6).
-    balanced: Object.freeze({
-        ...DEFAULT_POLICY,
-        operandLocations: Object.freeze({...DEFAULT_POLICY.operandLocations, split: false}),
-        select: Object.freeze({...DEFAULT_POLICY.select, version: false}),
-    }),
+    // "balanced" is "default" without loop versioning and split locals (RAY-PARITY's Step 11 set), for
+    // worlds with a long boot compile whose loops gain little from versioning: Chess with the 3D painter
+    // compiles in 3.76 s instead of 4.66 s on the P4 (6 s deadline), and versioning saves its engine 0.45%
+    // of instructions (PICOCALC-COMPILE-BUDGET Step 6).
+    balanced: Object.freeze({...DEFAULT_POLICY, passes: Object.freeze(["inline", "commute", "rotate"])}),
     default: DEFAULT_POLICY,
-    // "kernel" is "default" plus what only a compute kernel can afford to compile: the division
-    // facts cost Chess's boot compile about a quarter more, past its budget, but take the ray
-    // frame from 16.25 to 15.27 ms on the P4 (RAY-PARITY Step 15); value sets take it to 13.84 ms
-    // for 6% more compile time (Step 17), hoisted loop invariants to 12.45 ms for 11% more
-    // (Step 18), fused conjunctions and loads into homes to 11.43 ms for 1% more (Step 19).
-    // Induction variables with pointer-only sources take it to 11.17 ms for 1.5% more (Step 20).
-    // Locals in the argument registers of unhomed parameters take it to 10.99 ms at no compile
-    // cost (Step 21). The ray tracer uses it.
+    // "kernel" is "default" plus what only a compute kernel can afford to compile: the division facts
+    // (ranges, facts) cost Chess's boot compile about a quarter more, past its budget, but take the ray
+    // frame from 16.25 to 15.27 ms on the P4 (RAY-PARITY Step 15); value sets take it to 13.84 ms for 6%
+    // more compile time (Step 17), hoisted loop invariants to 12.45 ms for 11% more (Step 18), fused
+    // conjunctions and loads into homes to 11.43 ms for 1% more (Step 19). Induction variables with
+    // pointer-only sources take it to 11.17 ms for 1.5% more (Step 20). Locals in the argument registers
+    // of unhomed parameters take it to 10.99 ms at no compile cost (Step 21). The ray tracer uses it.
     kernel: Object.freeze({
         ...DEFAULT_POLICY,
-        operandLocations: Object.freeze({...DEFAULT_POLICY.operandLocations, pointerOnly: true, reuseArgs: true}),
-        select: Object.freeze({...DEFAULT_POLICY.select, facts: true, sets: true, hoist: true,
-            conjunctions: true, loadHomes: true, induction: true}),
+        passes: Object.freeze(["inline", "commute", "conjunctions", "sets", "rotate", "ranges", "version", "hoist",
+            "induction", "split", "facts"]),
+        operandLocations: Object.freeze({...DEFAULT_LOCATIONS, pointerOnly: true, reuseArgs: true}),
+        select: Object.freeze({...DEFAULT_SELECT, loadHomes: true}),
     }),
-    stock: Object.freeze({}),
+    stock: Object.freeze({passes: Object.freeze([])}),
 });
 
+// Options select a policy (default "default"); any other field given replaces the policy's field, and an
+// undefined one leaves it. `enable` and `disable` add passes to and remove passes from the resulting list
+// (an added pass takes its place in pipeline order), so a study can toggle one pass by name.
 function resolveOptions(options) {
     const name = options?.policy ?? "default";
     if (!Object.hasOwn(POLICIES, name)) throw new TypeError("unknown RV32 code-generation policy " + name);
     const resolved = {...POLICIES[name]};
     for (const key in options ?? {}) if (options[key] !== undefined) resolved[key] = options[key];
+    let passes = resolved.passes ?? [];
+    if (!Array.isArray(passes)) throw new TypeError("RV32 passes must be a list of pass names");
+    if (resolved.enable || resolved.disable) {
+        const chosen = new Set(passes);
+        for (const pass of resolved.enable ?? []) chosen.add(pass);
+        for (const pass of resolved.disable ?? []) chosen.delete(pass);
+        for (const pass of chosen) passByName(pass);
+        passes = PASSES.filter(pass => chosen.has(pass.name)).map(pass => pass.name);
+    }
+    let last = -1;
+    for (const name of passes) {
+        const pass = passByName(name);
+        if (pass.order <= last) throw new TypeError("RV32 passes run in pipeline order: " + PASSES.map(p => p.name).join(", "));
+        last = pass.order;
+        for (const need of pass.needs ?? []) if (!passes.includes(need))
+            throw new TypeError("RV32 pass " + name + " needs " + need);
+    }
+    for (const key in resolved.select || {}) if (PASSES.some(pass => pass.name === key))
+        throw new TypeError("select." + key + " is the RV32 pass \"" + key + "\"; name it in passes or enable");
+    if (resolved.operandLocations?.split !== undefined)
+        throw new TypeError("operandLocations.split is the RV32 pass \"split\"; name it in passes or enable");
+    if (resolved.inline !== undefined && (typeof resolved.inline !== "object" || resolved.inline === null))
+        throw new TypeError("inline holds the inliner's limits; the RV32 pass \"inline\" is named in passes or enable");
+    resolved.passes = passes;
     return resolved;
 }
-
+// The tape passes, in the one order the pipeline runs them. A policy names a subset (60-policies.js).
+//
+//   name     the pass's name in a policy, in timing rows and, for a transform, in observeTape
+//   kind     "transform" rewrites fn.code and is observed after it runs; "analysis" leaves a result in the
+//            function's context; "option" has no stage of its own and changes the pass it needs
+//   needs    passes that must precede it in the same list
+//   start    (fn, ctx) before any stage, on the tape as the front end wrote it
+//   run      (fn, ctx) the stage
+//
+// ctx (see lower() in 70-compile.js): passes (a Set of names), arity(index), storeless(index), index (this
+// function's), inlining and inlineLibrary, and the results ranges, origin and facts.
+const replaceTape = (fn, code) => { if (code) fn.code = code; };
+const PASSES = [
+    // inlineCalls: the function's own code inlines the candidate calls in its loops; the library copy, kept
+    // for later callers, inlines every candidate call. Expansion only grows a tape, so a function already
+    // over the callee limit is never a library candidate and needs no fully expanded copy. Observed as the
+    // "inline" checkpoint after the guarded-return and PIE stages (70-compile.js).
+    {name: "inline", kind: "transform", observe: false, run(fn, ctx) {
+        const {inlining, inlineLibrary, arity} = ctx;
+        const all = fn.code.length <= inlining.calleeCells ? inlineCalls(fn, inlineLibrary, inlining, arity, true) : null;
+        ctx.libraryCopy = all ?? {code: fn.code, nlocals: fn.nlocals};
+        const loops = inlineCalls(fn, inlineLibrary, inlining, arity, false);
+        if (loops) {
+            fn.code = loops.code;
+            fn.nlocals = loops.nlocals;
+        }
+    }},
+    {name: "commute", kind: "transform", run: (fn, ctx) => replaceTape(fn, commuteConstants(fn.code, ctx.arity))},
+    {name: "conjunctions", kind: "transform", run: fn => replaceTape(fn, fuseConjunctions(fn.code))},
+    {name: "sets", kind: "transform", run: (fn, ctx) => replaceTape(fn, foldValueSets(fn.code, ctx.arity))},
+    {name: "rotate", kind: "transform", run: fn => replaceTape(fn, rotateLoops(fn.code))},
+    {name: "ranges", kind: "analysis", run(fn, ctx) { ctx.ranges = localRanges(fn.code, fn.params.length, ctx.arity); }},
+    {name: "version", kind: "transform", needs: ["rotate"], run(fn, ctx) {
+        const hoist = ctx.passes.has("hoist") ?
+            {storeless: ctx.storeless, arity: ctx.arity, fresh: () => fn.params.length + fn.nlocals++} : undefined;
+        replaceTape(fn, versionLoops(fn.code, fn.params.length, hoist, ctx.passes.has("induction")));
+    }},
+    // A function's storeless answer is computed from its tape before any pass rewrites it.
+    {name: "hoist", kind: "option", needs: ["version"], start: (fn, ctx) => ctx.storeless(ctx.index)},
+    {name: "induction", kind: "option", needs: ["version"]},
+    {name: "split", kind: "transform", run(fn, ctx) {
+        const before = fn.params.length + fn.nlocals;
+        const split = splitLocals(fn.code, fn.params.length, fn.nlocals);
+        if (split) {
+            fn.code = split.code;
+            fn.nlocals = split.nlocals;
+            ctx.origin = local => local >= before ? split.origin[local - before] : local;
+        }
+    }},
+    {name: "facts", kind: "analysis", needs: ["ranges"], run(fn, ctx) {
+        if (ctx.ranges) ctx.facts = divisionFacts(fn.code, fn.params.length, ctx.arity, ctx.ranges, ctx.origin) ?? undefined;
+    }},
+];
+PASSES.forEach((pass, order) => pass.order = order);
+function passByName(name) {
+    const pass = PASSES.find(pass => pass.name === name);
+    if (!pass) throw new TypeError("unknown RV32 pass " + name);
+    return pass;
+}
 function compile(source, imports = [], maxSourceLength, requested) {
     const options = resolveOptions(requested);
     const imported = imports.map((fn, index) => ({...fn, index}));
@@ -2737,12 +2822,38 @@ function compile(source, imports = [], maxSourceLength, requested) {
     }
 
     const inspect = options?.inspect;
-    const policy = options?.inlineGuardedReturns;
-    const inlining = options?.inline ? {...INLINE_DEFAULTS, ...(options.inline === true ? {} : options.inline)} : null;
-    const inlineLibrary = new Map();
-    if (policy !== undefined && typeof policy !== "boolean" && typeof policy !== "function")
+    const guarded = options?.inlineGuardedReturns;
+    if (guarded !== undefined && typeof guarded !== "boolean" && typeof guarded !== "function")
         throw new TypeError("expected a boolean or caller selector for inlineGuardedReturns");
-    // timing: an array that receives {fn, pass, ms, cells} for every pass a function runs (cells: the
+    const mode = options?.pieLoops;
+    if (mode !== undefined) {
+        if (mode !== "scalar" && mode !== "pie" && mode !== "pie-empty" && typeof mode !== "function") throw new TypeError("unknown PIE loop compilation mode");
+        if (!globalThis.typedPieLoops) throw new Error("load typed-pie-loops.js for PIE loop compilation");
+    }
+    const passes = new Set(options.passes);
+    const inlining = passes.has("inline") ? {...INLINE_DEFAULTS, ...options.inline} : null;
+    const inlineLibrary = new Map();
+    const arity = index => callables[index].params.length;
+    // The stages before the emitter, in order: the passes the policy names, with the guarded-return
+    // summary, the PIE lowering (which may take the whole function) and the "inline" checkpoint after
+    // inlining. Options that start before any stage (hoist's storeless answer) run first.
+    const chosen = PASSES.filter(pass => passes.has(pass.name));
+    const starts = chosen.filter(pass => pass.start);
+    const stages = [];
+    if (inlining) stages.push(passByName("inline"));
+    if (guarded) stages.push({name: "guarded", run(fn, ctx) {
+        // Only our internal definition targets can acquire summaries. A forward call
+        // uses the ordinary ABI in both streaming and buffered compilation.
+        const summary = guardedReturnSummary(fn);
+        if (summary) targets[ctx.index].guardedReturn = summary;
+        if (guarded === true || guarded(fn.name)) ctx.Emitter = GuardedReturnCode;
+    }});
+    if (mode !== undefined) stages.push({name: "pie", terminal: true,
+        run: (fn, ctx) => typedPieLoops.lower(fn, callables, targets, mode, ctx.Emitter, instruction)});
+    stages.push({name: "inline", checkpoint: true});
+    for (const pass of chosen) if (pass.run && pass.name !== "inline") stages.push(pass);
+
+    // timing: an array that receives {fn, pass, ms, cells} for every stage a function runs (cells: the
     // tape's length after it), plus one {fn: null, pass: "compile", ms} row for the whole call. The
     // clock is options.clock, performance.now or Date.now; it is read only when timing is given.
     const timing = options?.timing;
@@ -2755,99 +2866,29 @@ function compile(source, imports = [], maxSourceLength, requested) {
         return result;
     }
     function lower(fn) {
-        if (options?.select?.hoist) time(fn, "storeless", () => storeless(imported.length + code.length));
+        const index = imported.length + code.length;
+        const ctx = {passes, arity, storeless, index, inlining, inlineLibrary, Emitter: FunctionCode,
+            libraryCopy: undefined, ranges: undefined, origin: local => local, facts: undefined};
+        for (const pass of starts) time(fn, pass.name === "hoist" ? "storeless" : pass.name, () => pass.start(fn, ctx));
         if (inspect && (inspect.function === undefined || inspect.function === fn.name))
             fn.nativeInspection = {leafDecision: "eligible for frameless lowering"};
-        let libraryCopy;
-        if (inlining) time(fn, "inline", () => {
-            const arity = index => callables[index].params.length;
-            // The library copy inlines every candidate call; the function's own code only those
-            // in its loops.
-            // Expansion only grows a tape, so a function already over the callee limit is
-            // never a library candidate and needs no fully expanded copy.
-            const all = fn.code.length <= inlining.calleeCells ? inlineCalls(fn, inlineLibrary, inlining, arity, true) : null;
-            libraryCopy = all ?? {code: fn.code, nlocals: fn.nlocals};
-            const loops = inlineCalls(fn, inlineLibrary, inlining, arity, false);
-            if (loops) {
-                fn.code = loops.code;
-                fn.nlocals = loops.nlocals;
+        // observeTape(name, phase, code, nlocals): a read-only view of the tape after each transform, for
+        // tools (the trace-REPL workbench). It sees a copy and cannot change the output.
+        const observe = phase => options?.observeTape?.(fn.name, phase, fn.code.slice(), fn.nlocals);
+        for (const stage of stages) {
+            if (stage.checkpoint) {
+                observe(stage.name);
+                continue;
             }
-        });
-        let Emitter = FunctionCode;
-        if (policy) {
-            // Only our internal definition targets can acquire summaries. A forward call
-            // uses the ordinary ABI in both streaming and buffered compilation.
-            const summary = time(fn, "guarded", () => guardedReturnSummary(fn));
-            if (summary) targets[imported.length + code.length].guardedReturn = summary;
-            if (policy === true || policy(fn.name)) Emitter = GuardedReturnCode;
-        }
-        const mode = options?.pieLoops;
-        if (mode !== undefined) {
-            if (mode !== "scalar" && mode !== "pie" && mode !== "pie-empty" && typeof mode !== "function") throw new TypeError("unknown PIE loop compilation mode");
-            if (!globalThis.typedPieLoops) throw new Error("load typed-pie-loops.js for PIE loop compilation");
-            const selected = time(fn, "pie", () => typedPieLoops.lower(fn, callables, targets, mode, Emitter, instruction));
-            if (selected) {
-                code.push(selected);
+            const lowered = time(fn, stage.name, () => stage.run(fn, ctx));
+            if (stage.terminal && lowered) {
+                code.push(lowered);
                 if (fn.literals) fn.literals = null;
                 return;
             }
+            if (stage.kind === "transform" && stage.observe !== false) observe(stage.name);
         }
-        // observeTape(name, phase, code, nlocals): a read-only view of each tape transform, for
-        // tools (the trace-REPL workbench). It sees a copy and cannot change the output.
-        const observe = phase => options?.observeTape?.(fn.name, phase, fn.code.slice(), fn.nlocals);
-        observe("inline");
-        if (options?.select?.commute) {
-            time(fn, "commute", () => {
-                const commuted = commuteConstants(fn.code, index => callables[index].params.length);
-                if (commuted) fn.code = commuted;
-            });
-            observe("commute");
-        }
-        const arity = index => callables[index].params.length;
-        if (options?.select?.conjunctions) {
-            time(fn, "conjunctions", () => {
-                const fused = fuseConjunctions(fn.code);
-                if (fused) fn.code = fused;
-            });
-            observe("conjunctions");
-        }
-        if (options?.select?.sets) {
-            time(fn, "sets", () => {
-                const folded = foldValueSets(fn.code, arity);
-                if (folded) fn.code = folded;
-            });
-            observe("sets");
-        }
-        let ranges;
-        if (options?.select?.rotate) {
-            time(fn, "rotate", () => {
-                const rotated = rotateLoops(fn.code);
-                if (rotated) fn.code = rotated;
-            });
-            observe("rotate");
-            if (options.select.facts) ranges = time(fn, "ranges", () => localRanges(fn.code, fn.params.length, arity));
-            if (options.select.version) {
-                const hoist = options.select.hoist ? {storeless, arity, fresh: () => fn.params.length + fn.nlocals++} : undefined;
-                time(fn, "version", () => {
-                    const versioned = versionLoops(fn.code, fn.params.length, hoist, options.select.induction);
-                    if (versioned) fn.code = versioned;
-                });
-                observe("version");
-            }
-        }
-        if (options?.select?.facts && !options.select.rotate) ranges = time(fn, "ranges", () => localRanges(fn.code, fn.params.length, arity));
-        let origin = local => local;
-        if (options?.operandLocations?.split) {
-            const before = fn.params.length + fn.nlocals;
-            const split = time(fn, "split", () => splitLocals(fn.code, fn.params.length, fn.nlocals));
-            if (split) {
-                fn.code = split.code;
-                fn.nlocals = split.nlocals;
-                origin = local => local >= before ? split.origin[local - before] : local;
-            }
-            observe("split");
-        }
-        const facts = ranges ? time(fn, "facts", () => divisionFacts(fn.code, fn.params.length, arity, ranges, origin)) ?? undefined : undefined;
+        const {Emitter, facts} = ctx;
         let compiled = time(fn, "leaf", () => lowerLeaf(fn, callables, targets, options?.select, facts));
         if (!compiled) {
             const plan = options?.operandLocations ? time(fn, "plan", () => planLocations(fn, {...options.operandLocations, select: options.select},
@@ -2857,6 +2898,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
             const emit = longBranches => {
                 const emitter = new Emitter(fn, callables, targets);
                 emitter.select = options?.select;
+                emitter.versioned = passes.has("version");
                 emitter.facts = facts;
                 emitter.longBranches = longBranches;
                 if (plan !== undefined) emitter.locations = plan;
@@ -2871,7 +2913,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 }
             });
         }
-        const index = imported.length + code.length;
+        const {libraryCopy} = ctx;
         const candidate = inlining && time(fn, "candidate", () => inlineCandidate(fn, libraryCopy.code, inlining, targets[index]?.guardedReturn));
         if (candidate) inlineLibrary.set(index, {...candidate, nlocals: libraryCopy.nlocals, code: libraryCopy.code.slice(),
             loops: loopDepth(libraryCopy.code)});
