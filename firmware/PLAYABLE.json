@@ -1,10 +1,10 @@
 {
   "profile": "playable",
-  "commit": "06fac5f",
+  "commit": "06e8d55",
   "dirty": false,
   "app": {
     "file": "picocalc-os-p4.bin",
-    "sha256": "a5420d946215843916c5318b28f2a7b94c60ee8b33f8723ad098dd96101acb43"
+    "sha256": "4b0d54992343068f93b02a66e83f7984b943cb31ccfccb2c772f1e8572269434"
   },
   "partitionTable": {
     "sha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
@@ -12,7 +12,7 @@
   "bootloader": {
     "sha256": "8fddc159afedd2b5e83bb529ff872a35520d2a574fa51b4840e03bcd6f3b86a1"
   },
-  "store": "~/.cache/picocalc/firmware/a5420d946215843916c5318b28f2a7b94c60ee8b33f8723ad098dd96101acb43",
+  "store": "~/.cache/picocalc/firmware/4b0d54992343068f93b02a66e83f7984b943cb31ccfccb2c772f1e8572269434",
   "peripherals": "on",
   "health": {
     "judged": [
