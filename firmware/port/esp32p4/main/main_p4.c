@@ -267,6 +267,7 @@ static void kernel_task(void *arg) {
     vtime_t wait = kernel_next_wake() - port_clock();
     if (wait <= 0) continue;
     if (wait > MS(50)) wait = MS(50);
+    P4_TYPED_IDLE(wait);   // nothing due for 50 ms: the compiled-module cache's writer may write a piece
     if (xQueueReceive(p4_kq, &m, pdMS_TO_TICKS((wait + 999) / 1000)) == pdTRUE) {
       if (m.line) { size_t n = strlen(m.line); console_exec(m.line); console_wipe(m.line, n); free(m.line); }
       else if (m.fs) p4_fs_done(m.fs);

@@ -68,7 +68,7 @@ def capture(port, path, least=40, most=120, trace=True):
     log = path.open("wb")
     s = serial.Serial(port, 115200, timeout=.02)
     t0 = time.monotonic()
-    pending, last_trace, done_at = b"", -1.0, None
+    pending, last_trace, done_at, traced_off = b"", -1.0, None, False
     try:
         while True:
             now = time.monotonic() - t0
@@ -105,11 +105,14 @@ def capture(port, path, least=40, most=120, trace=True):
                         pass
                 if "Guru Meditation" in text or "assert failed" in text or "abort()" in text:
                     rec["panic"] = text
-            if trace and now < 15 and now - last_trace > .5:
+            # the console runs only after the boot compiles: keep asking until every first frame is seen (or 40 s)
+            framed = len(rec["firstFrames"]) == len(WATCH)
+            if trace and not framed and now < 40 and now - last_trace > .5:
                 s.write(b"\ntrace on\n")
                 last_trace = now
-            elif trace and 15 <= now and last_trace < 15:
+            elif trace and (framed or now >= 40) and last_trace >= 0 and not traced_off:
                 s.write(b"\ntrace off\n")
+                traced_off = True
                 last_trace = now
             compiled = [c for c in rec["compiles"] if c["status"] == "ok"]
             settled = len(rec["stored"]) + len(rec["notStored"]) >= len(compiled)
@@ -165,24 +168,32 @@ def main():
     ap.add_argument("out", type=Path)
     ap.add_argument("--build", type=Path, required=True)
     ap.add_argument("--port", default=device.PORT)
+    ap.add_argument("--in-bootloader", action="store_true", help="the chip waits in its bootloader after a write")
     ap.add_argument("steps", nargs="+")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     digest = device.check_build(a.build)
     records = a.out / "steps.jsonl"
+    running = not a.in_bootloader   # a firmware runs (and can hold) until a write leaves the chip in its bootloader
     with device.acquire():
         for i, step in enumerate(a.steps):
             kind, _, arg = step.partition(":")
             tag = f"{i:02d}-{kind}-{arg.replace('/', '_').replace(' ', '_').replace(':', '-')}"[:60]
             t = time.time()
             if kind == "flash":
-                hold(a.port, a.out / f"{tag}-hold.log")
+                try:   # best effort, as device.quiesce: a study image or a waiting bootloader cannot hold
+                    hold(a.port, a.out / f"{tag}-hold.log", timeout=30)
+                    held = True
+                except TimeoutError:
+                    held = False
                 device.esp("write_flash", a.build, a.out, tag, a.port)
-                rec = {"sha256": digest}
+                rec = {"sha256": digest, "heldBeforeWrite": held}
+                running = False
             elif kind == "boot":
                 _, _, seconds = arg.partition(":")
-                hold(a.port, a.out / f"{tag}-hold.log")
+                if running: hold(a.port, a.out / f"{tag}-hold.log")   # after a write the chip waits in its bootloader
                 device.esp("verify_flash", a.build, a.out, tag + "-reset", a.port)   # verifies, then hard-resets
+                running = True
                 least = float(seconds) if seconds else 40
                 rec = capture(a.port, a.out / f"{tag}.log", least=least, most=max(120, least + 5))
             elif kind == "watch":
@@ -195,8 +206,9 @@ def main():
                 rec = {"lines": lines,
                        "records": [{"kind": m[1], **json.loads(m[2])} for m in map(RECORD.match, lines) if m]}
             elif kind == "health":
-                hold(a.port, a.out / f"{tag}-hold.log")
+                if running: hold(a.port, a.out / f"{tag}-hold.log")
                 device.esp("verify_flash", a.build, a.out, tag + "-reset", a.port)
+                running = True
                 with (a.out / f"{tag}.log").open("wb", buffering=0) as log:
                     console = device.Console(a.port, log)
                     try:

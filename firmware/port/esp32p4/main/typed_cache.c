@@ -361,17 +361,30 @@ bool tc_prepare(const char *dir, tc_header *h, uint64_t free_bytes, const tc_pol
   return true;
 }
 
-bool tc_write_tmp(const char *dir, const tc_header *h, const char *module, char *why, size_t why_n) {
+// Written in TC_CHUNK pieces that end on 4 KB boundaries of the file (the first holds the header), unbuffered, so
+// each fwrite is one sector's flash work; pace, when given, is asked before each piece and before the close.
+bool tc_write_tmp(const char *dir, const tc_header *h, const char *module, tc_pace pace, void *arg, char *why,
+                  size_t why_n) {
   char path[160];
-  uint8_t raw[TC_HEADER];
-  if (!path_of(path, sizeof path, dir, h->key, ".tmp")) return false;
-  tc_header_encode(h, raw);
-  FILE *f = fopen(path, "wb");
+  uint8_t *first = NULL;
+  if (!path_of(path, sizeof path, dir, h->key, ".tmp") || !(first = malloc(TC_CHUNK))) return false;
+  tc_header_encode(h, first);
+  const size_t head = h->length < TC_CHUNK - TC_HEADER ? h->length : TC_CHUNK - TC_HEADER;
+  memcpy(first + TC_HEADER, module, head);
+  FILE *f = (!pace || pace(arg)) ? fopen(path, "wb") : NULL;
   if (!f) {
+    free(first);
     say(why, why_n, "cannot create %s (errno %ld)", path, errno);
     return false;
   }
-  bool ok = fwrite(raw, 1, TC_HEADER, f) == TC_HEADER && fwrite(module, 1, h->length, f) == h->length;
+  setvbuf(f, NULL, _IONBF, 0);
+  bool ok = (!pace || pace(arg)) && fwrite(first, 1, TC_HEADER + head, f) == TC_HEADER + head;   // the open was one piece
+  free(first);
+  for (size_t at = head; ok && at < h->length; at += TC_CHUNK) {
+    const size_t n = h->length - at < TC_CHUNK ? h->length - at : TC_CHUNK;
+    ok = (!pace || pace(arg)) && fwrite(module + at, 1, n, f) == n;
+  }
+  ok = (!pace || pace(arg)) && ok;
   ok = !fclose(f) && ok;
   if (!ok) {
     remove(path);

@@ -195,6 +195,19 @@ class EntryTests(unittest.TestCase):
         rows = [line.split() for line in run("list", self.dir).splitlines()]
         return {r[0]: r[1:] for r in rows}
 
+    def test_a_write_is_paced_in_sector_pieces(self):
+        # the open, a first piece (the header and 3,936 module bytes), 4 KB pieces after it, the close
+        for size, pieces in ((100, 3), (3936, 3), (3937, 4), (70001, 20)):
+            with self.subTest(size=size):
+                k = self.key(f"p{size}")
+                m = self.module(size)
+                out = subprocess.run([DRIVER, *map(str, ("store", self.dir, k, "chess", f"p{size}", m, BIG, 2, BIG, 0))],
+                                     capture_output=True, text=True, env={**os.environ, "TC_CHUNKS": "1"})
+                self.assertEqual(out.stdout.split()[2:], ["chunks", str(pieces)])
+                result, read = self.read(k)
+                self.assertTrue(result.startswith("hit"), result)
+                self.assertEqual(read.read_bytes(), m.read_bytes())
+
     def test_a_store_then_a_read_round_trips(self):
         k, m = self.key("a"), self.module(70001)
         self.assertEqual(self.store(k, module=m), "stored 1")

@@ -92,6 +92,10 @@ static void header_for(tc_header *h, const char *key_hex, const char *app, const
   tc_sha256(module, n, h->sha);
 }
 
+// Counts the pieces of a write (each is one sector's flash work on the P4).
+static unsigned chunks;
+static bool paced(void *arg) { (*(unsigned *)arg)++; return true; }
+
 static bool show(void *arg, const char *file, const tc_header *h, bool valid, long size) {
   printf("%s %s %u %s %s %ld\n", file, valid ? "valid" : "invalid", (unsigned)h->seq, valid ? h->app : "-",
          valid ? h->label : "-", size);
@@ -116,13 +120,14 @@ int main(int argc, char **argv) {
     header_for(&h, argv[3], argv[4], argv[5], module, n);
     if (!strcmp(cmd, "tmp")) {
       h.seq = 999;
-      return tc_write_tmp(argv[2], &h, module, why, sizeof why) ? 0 : 1;
+      return tc_write_tmp(argv[2], &h, module, paced, &chunks, why, sizeof why) ? 0 : 1;
     }
     tc_policy p = {(unsigned)atoi(argv[8]), strtoull(argv[9], NULL, 10), strtoull(argv[10], NULL, 10)};
     bool ok = tc_prepare(argv[2], &h, strtoull(argv[7], NULL, 10), &p, why, sizeof why) &&
-              tc_write_tmp(argv[2], &h, module, why, sizeof why) && tc_commit(argv[2], h.key, why, sizeof why);
-    if (ok) printf("stored %u\n", (unsigned)h.seq);
-    else printf("refused %s\n", why);
+              tc_write_tmp(argv[2], &h, module, paced, &chunks, why, sizeof why) && tc_commit(argv[2], h.key, why, sizeof why);
+    if (!ok) printf("refused %s\n", why);
+    else if (getenv("TC_CHUNKS")) printf("stored %u chunks %u\n", (unsigned)h.seq, chunks);
+    else printf("stored %u\n", (unsigned)h.seq);
     return 0;
   }
   if (!strcmp(cmd, "read") && argc == 5) {

@@ -11,12 +11,14 @@
 #include "typed_cache.h"
 #include "typed_lex_index.h"
 #include "quickjs.h"
+#include "esp_heap_caps.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
 typedef struct {
   size_t live, peak, limit;
   vtime_t deadline;
+  unsigned over_limit, no_psram;   // refused allocations: past the heap cap, or PSRAM had no block
 } compile_heap;
 
 static void account(compile_heap *heap, size_t old, size_t current) {
@@ -26,9 +28,10 @@ static void account(compile_heap *heap, size_t old, size_t current) {
 
 static void *compile_malloc(JSMallocState *state, size_t size) {
   compile_heap *heap = state->opaque;
-  if (heap->live >= heap->limit || size > heap->limit - heap->live) return NULL;
+  if (heap->live >= heap->limit || size > heap->limit - heap->live) { heap->over_limit++; return NULL; }
   void *ptr = port_heap_malloc(size);
   if (ptr) account(heap, 0, port_heap_usable(ptr));
+  else heap->no_psram++;
   return ptr;
 }
 
@@ -44,9 +47,10 @@ static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
   compile_heap *heap = state->opaque;
   size_t old = port_heap_usable(ptr);
   size_t retained = heap->live - old;
-  if (retained >= heap->limit || size > heap->limit - retained) return NULL;
+  if (retained >= heap->limit || size > heap->limit - retained) { heap->over_limit++; return NULL; }
   void *next = port_heap_realloc(ptr, size);
   if (next) account(heap, old, port_heap_usable(next));
+  else heap->no_psram++;
   return next;
 }
 
@@ -250,6 +254,10 @@ done:
   printf("%s compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu sha=%02x%02x%02x%02x%02x%02x%02x%02x\n",
          app, source_kind, module ? "ok" : "failed", (long long)elapsed, heap.peak, module ? *length : 0,
          sha[0], sha[1], sha[2], sha[3], sha[4], sha[5], sha[6], sha[7]);
+  if (!module)   // why: the heap cap, PSRAM, or neither (a compile error, the deadline)
+    printf("%s compile refused_over_limit=%u refused_no_psram=%u heap_limit=%zu psram_free=%zu psram_largest=%zu\n", app,
+           heap.over_limit, heap.no_psram, heap.limit, heap_caps_get_free_size(MALLOC_CAP_SPIRAM),
+           heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
   return module;
 }
 

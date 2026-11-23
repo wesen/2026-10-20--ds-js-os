@@ -70,7 +70,10 @@ typedef struct { unsigned per_label; uint64_t budget, reserve; } tc_policy;
 // (create DIR, remove torn .tmp files and invalid entries, evict for h, choose h->seq; false if it cannot fit),
 // write the .tmp, commit (rename it over the entry). free_bytes: the volume's free space before prepare.
 bool tc_prepare(const char *dir, tc_header *h, uint64_t free_bytes, const tc_policy *p, char *why, size_t why_n);
-bool tc_write_tmp(const char *dir, const tc_header *h, const char *module, char *why, size_t why_n);
+#define TC_CHUNK 4096u
+typedef bool (*tc_pace)(void *arg);   // false: stop the write
+bool tc_write_tmp(const char *dir, const tc_header *h, const char *module, tc_pace pace, void *arg, char *why,
+                  size_t why_n);
 bool tc_commit(const char *dir, const uint8_t key[32], char *why, size_t why_n);
 bool tc_exists(const char *dir, const uint8_t key[32]);   // a valid entry's header is there (the module is not read)
 

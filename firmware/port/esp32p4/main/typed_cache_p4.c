@@ -7,8 +7,11 @@
 // - The stacks. A FAT call ends in a flash operation that disables the caches, which ESP-IDF allows only from a task
 //   whose stack is in internal RAM. The kernel task's is; the painter's build worker and the gallery's compile task
 //   have PSRAM stacks. A read from such a task runs on a helper task with an internal stack, at the caller's priority.
-// - The writes. A compile's module goes to a writer task (core 1, priority 1: below the kernel and the painter's
-//   build worker), so a cold boot does not wait for flash writes. "hold" stops it between entries.
+// - The writes. A compile's module goes to a writer task, so a boot does not wait for flash writes. A flash write or
+//   erase stops both cores' caches for tens of ms; one that lands inside a world's turn (a turn that waits for the
+//   flash lock or the SPI queue) can push it past its budget (the first device run lost Agent, Files and the
+//   compositor that way). So the writer runs on the kernel's core, writes only while no compile runs, and writes one
+//   4 KB piece per idle gap the kernel announces (p4_typed_cache_idle: nothing due for 50 ms). "hold" stops it.
 // - One lock around every file operation on the cache except the .tmp write: FATFS here cannot delete an open file
 //   safely (CONFIG_FATFS_FS_LOCK=0).
 #include <inttypes.h>
@@ -99,8 +102,9 @@ bool p4_typed_cache_key(const p4_typed_app *app, const char *bundled, const char
 }
 
 // ---- reads ----
-// fn(arg) on a task with an internal stack, at the caller's priority and on its core, unless the caller's stack is
-// internal already (the kernel task's is).
+// fn(arg) on a task with an internal stack, at the caller's priority on the kernel's core (core 1: from there a flash
+// read can delay a kernel turn but not stop one that is running), unless the caller's stack is internal already
+// (the kernel task's is).
 typedef struct { void (*fn)(void *); void *arg; TaskHandle_t waiter; } io_call;
 static void io_task(void *arg) {
   io_call *c = arg;
@@ -112,7 +116,7 @@ static bool on_internal_stack(void (*fn)(void *), void *arg) {
   io_call c = {fn, arg, xTaskGetCurrentTaskHandle()};
   if (esp_ptr_internal(&c)) { fn(arg); return true; }
   TaskHandle_t h = NULL;
-  if (xTaskCreatePinnedToCoreWithCaps(io_task, "tcache-io", 8 * 1024, &c, uxTaskPriorityGet(NULL), &h, xPortGetCoreID(),
+  if (xTaskCreatePinnedToCoreWithCaps(io_task, "tcache-io", 8 * 1024, &c, uxTaskPriorityGet(NULL), &h, 1,
                                       MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) != pdPASS)
     return false;
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -166,26 +170,41 @@ char *p4_typed_cache_read(const char *name, const uint8_t key[32], size_t *lengt
 // ---- writes ----
 typedef struct { tc_header h; char *module; } write_job;
 static QueueHandle_t writes;
+static SemaphoreHandle_t gap;   // given by the kernel task when it has nothing due for 50 ms
 static volatile bool held, writing;
+
+void p4_typed_cache_idle(int64_t wait_us) {
+  if (gap && wait_us >= 50000 && (writing || uxQueueMessagesWaiting(writes))) xSemaphoreGive(gap);
+}
+
+// One piece of flash work: wait until no compile has run for 2 s and the kernel announces an idle gap.
+static bool paced(void *arg) {
+  (void)arg;
+  while (!held && !p4_typed_compiles_quiet(2000000)) vTaskDelay(pdMS_TO_TICKS(200));
+  while (!held && xSemaphoreTake(gap, pdMS_TO_TICKS(200)) != pdTRUE) {}
+  return !held;
+}
 
 static void writer(void *arg) {
   for (;;) {
     write_job *j;
     xQueueReceive(writes, &j, portMAX_DELAY);
-    while (held) vTaskDelay(pdMS_TO_TICKS(200));   // a reboot or a flash follows
     writing = true;
     char why[160] = "";
     uint64_t total = 0, free_bytes = 0;
     port_fs_info(&total, &free_bytes);
     const int64_t t0 = now();
-    xSemaphoreTake(lock, portMAX_DELAY);
-    const bool exists = tc_exists(DIR, j->h.key);
-    bool ok = !exists && tc_prepare(DIR, &j->h, free_bytes, &POLICY, why, sizeof why);
-    xSemaphoreGive(lock);
-    const int64_t t1 = now();
-    if (ok) ok = tc_write_tmp(DIR, &j->h, j->module, why, sizeof why);
-    const int64_t t2 = now();
+    bool exists = false, ok = paced(NULL);
     if (ok) {
+      xSemaphoreTake(lock, portMAX_DELAY);
+      exists = tc_exists(DIR, j->h.key);
+      ok = !exists && tc_prepare(DIR, &j->h, free_bytes, &POLICY, why, sizeof why);
+      xSemaphoreGive(lock);
+    }
+    const int64_t t1 = now();
+    if (ok) ok = tc_write_tmp(DIR, &j->h, j->module, paced, NULL, why, sizeof why);
+    const int64_t t2 = now();
+    if (ok && (ok = paced(NULL))) {
       xSemaphoreTake(lock, portMAX_DELAY);
       ok = tc_commit(DIR, j->h.key, why, sizeof why);
       xSemaphoreGive(lock);
@@ -196,7 +215,7 @@ static void writer(void *arg) {
              " write_us=%" PRId64 " commit_us=%" PRId64 " free_kb=%" PRIu64 "\n", j->h.app, j->h.seq, j->h.length,
              t3 - t0, t1 - t0, t2 - t1, t3 - t2, free_bytes / 1024);
     else
-      printf("%s cache not stored: %s\n", j->h.app, exists ? "an entry with this key is there" : why);
+      printf("%s cache not stored: %s\n", j->h.app, held ? "held" : exists ? "an entry with this key is there" : why);
     fflush(stdout);
     writing = false;
     free(j->module);
@@ -215,8 +234,10 @@ void p4_typed_cache_store(const char *name, const char *label, const uint8_t key
   taskEXIT_CRITICAL(&init_mux);
   if (start) {
     QueueHandle_t q = xQueueCreate(16, sizeof(write_job *));
-    if (q && xTaskCreatePinnedToCoreWithCaps(writer, "tcache-w", 8 * 1024, NULL, 1, NULL, 1,
-                                             MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) == pdPASS)
+    gap = xSemaphoreCreateBinary();
+    // priority 3: above the gallery's worker and the painter's build, so a granted gap is used at once
+    if (q && gap && xTaskCreatePinnedToCoreWithCaps(writer, "tcache-w", 8 * 1024, NULL, 3, NULL, 1,
+                                                    MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) == pdPASS)
       writes = q;
   }
   write_job *j = writes ? calloc(1, sizeof *j) : NULL;
