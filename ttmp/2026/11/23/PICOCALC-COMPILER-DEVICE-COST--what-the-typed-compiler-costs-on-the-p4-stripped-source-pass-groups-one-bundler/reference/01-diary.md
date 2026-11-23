@@ -569,3 +569,79 @@ image, not the playable one, until someone restores it.
 ### Technical details
 - Arm digests: control `adbe8ed4`, split `52c607c0`, strip `5d90890a`, strip-source `d8071198`, park `cc6e0008`,
   final `f40c4629`; bench `27d4a946`.
+
+## Step 9: The CANDELA-KERNEL-CODEGEN merge, and every board image rebuilt on the merged base
+
+The coordinator reported the power cycle (the board back on playable `54cfa09b`, main 209af25) and asked for main to
+be merged first: CANDELA-KERNEL-CODEGEN added two kernel-only passes, `rows` and `coalesce`, to the loops group.
+They belong in the kernel group. Because main's compiler changed under every arm, all board images were rebuilt
+from the merge, so the study measures this ticket's changes on what will actually be merged.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1. Coordinator: "the user power-cycled the PicoCalc; the board is back on
+playable 54cfa09b (main 209af25, health passed). Before your board work, merge main into your branch: it now has
+PICOCALC-CANDELA-KERNEL-CODEGEN, which adds kernel-only passes `rows` and `coalesce` (compiler/typed/rv32/passes/)
+— they belong in your typed-rv32-kernel.js group; regenerate bundles, rerun make test, the 84-digest harness and
+both host gates. Rebuild your arms if their base matters for the study (state which base you used). Then run your
+three board steps (in-image session, paired boot study, final image gate) and restore from the main checkout.
+Other agents share the board through the lock — hold it per measurement block, not for the whole study."
+**Assistant interpretation:** merge, move rows and coalesce to the kernel group, regate, rebuild the images on the
+merge, and restructure the in-image session so the lock is held per block.
+**Inferred user intent:** device numbers that describe the branch as it will merge, without monopolizing the board.
+**Commit (code):** 54dfe3b — "Merge main (PICOCALC-CANDELA-KERNEL-CODEGEN) into PICOCALC-COMPILER-DEVICE-COST";
+dcd9d3b — "docs(device-cost): arms on the merged base, a session in blocks with the lock per block"
+
+### What I did
+- `git merge main` (4e35068): conflicts in `loops-group.js`, `registry.js` and the two generated RV32 bundles. Kept
+  this branch's loops group; `rows` and `coalesce` (with `floatingFunction`, `groupRowReads`, `coalesceCopies`)
+  moved into `kernel-group.js`; registry groups `kernel`; regenerated the bundles; README group table updated.
+- `scripts/16-gallery-digest.mjs`: the Candela gallery (which the 84-digest harness predates) under interactive,
+  balanced, default and kernel, image + observed tapes + entries, main's bundles against this tree's.
+- Rebuilt the bench image on the merge (`02-experiment-tree.py apply`, bench profile, revert): `b648cf40`.
+- `scripts/17-boot-arms.py build-all`: the boot study's ladder from 54dfe3b, each arm one change more:
+  control (main 4e35068's `typed-rv32.js` and `typed-rv32-loops.js`, a stub kernel bundle nothing loads, no strip,
+  no parking) `51394227`; group (this tree's bundles) `96880a94`; strip (+`JS_STRIP_DEBUG`) `7d44fbf5`; final
+  (+arena parking, the commit as is) `5fec9195`.
+- `05-session-plan.py` now writes blocks (`05-session-2-plan.json`, 7 blocks, 155 commands), each setting its own
+  strip and park knobs and filling the cache first; `04-typedcost-session.py` holds the lock per block and installs
+  the experiment image again if another agent replaced it. E2 (lazy against all) runs without parking, as
+  TYPED-PIPELINE measured it, and again with parking (E2p).
+
+### Why
+- The old arms were on the pre-TYPED-VALUES base; the compiler bundles have grown since (value records, rows,
+  coalesce), and the slowdown hypothesis depends on what the realm holds, so the old base would measure a
+  different realm.
+
+### What worked
+- Gallery: identical image, tapes and entries under all four policies (kernel: 434,996 bytes, 2,519 observed tapes).
+- `make test`: exit 0 (154 node tests, test-generated, go, native, cji). Digests: `IDENTICAL 84 of 84` against main
+  4e35068.
+- `make test-host`: ray 4,888,369, 11964 B, `430f0d501659`; Chess 6981 words, 128,152,624, 21716 B; 25/25.
+  Kernel: 3,239,635, 11544 B, `430f0d501659`; 6981 words, 118,361,847, 19892 B; 25/25.
+
+### What didn't work
+- The worktree guard refuses shell loops and `source`; the builds run through `17-boot-arms.py build-all` and a
+  scratch `idf-build.sh`.
+
+### What I learned
+- The first in-image session waited behind CANDELA-KERNEL-CODEGEN's device run for the lock, as intended.
+
+### What was tricky to build
+- E3 (heap padding) and E2 used to inherit their strip mode and cache from the block before; as independent
+  blocks they now set strip and park on their first command and warm the groups they measure.
+
+### What warrants a second pair of eyes
+- The control arm takes main's generated bundles verbatim rather than regenerating them; `typed-rv32.js` differs
+  from this tree's only in the registry's group names and `GROUPS` (21 lines).
+
+### What should be done in the future
+- N/A (the board work follows in the next step).
+
+### Code review instructions
+- `git show 54dfe3b -- compiler/typed/rv32/passes`; `node scripts/16-gallery-digest.mjs FILES...` with each tree.
+- `python3 scripts/17-boot-arms.py apply control` then `revert`.
+
+### Technical details
+- Arms: `/tmp/picocalc-device-cost-arm2-{control,group,strip,final}`; bench `/tmp/picocalc-device-cost-bench`
+  (`b648cf40`). All built at 54dfe3b (recorded dirty: the ticket's scripts were uncommitted at the time; the
+  control, group and strip arms are dirty by construction).
