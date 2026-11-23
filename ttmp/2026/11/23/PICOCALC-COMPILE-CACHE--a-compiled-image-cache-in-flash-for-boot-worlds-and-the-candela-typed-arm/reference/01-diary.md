@@ -400,3 +400,69 @@ lock per operation, restore from the main checkout after each session."
 
 ### Technical details
 - Data: `/tmp/picocalc-compile-cache-board1c/` (steps.jsonl, logs, two screenshots), copied to `various/board1c/`.
+
+## Step 6: Session A2: the turns held, the writer never wrote, and a compile ran the system out of memory
+
+The paced writer (436961b, image df3514d2) removed the boot's overruns: no world crashed during the cold boot. But it
+also stored nothing in 190 s, and the gallery's Typed compile ran PSRAM empty and took four worlds with it. Three
+changes followed (e98b705, d8520cd); the last one is a bug in the compile runtime that predates this ticket: the
+compile allocator never told QuickJS how much it had allocated, so no compile ever ran the cycle collector.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1 and Step 5.
+**Assistant interpretation:** Re-run the cold boot with the paced writer and the Typed first use; restore afterwards.
+**Inferred user intent:** A cache whose writes and whose Typed compile do not disturb the running handheld.
+**Commit (code):** 436961b (image df3514d2), then e98b705, d8520cd (image 68f4b914).
+
+### What I did
+- `scripts/01-boots.py /tmp/picocalc-compile-cache-board2 --build /tmp/picocalc-compile-cache-dev2 flash
+  boot:cold1:60 watch:after-boot:130 shot:after cmd:typed_cache cmd:heap` (one lock), then
+  `make -C <main> restore-playable OUT=/tmp/picocalc-compile-cache-restore2` (queued behind another agent's lock).
+
+### What worked
+- The boot: no `crashed` line except nat-import's (which playable has too). Misses: keys 23–27 ms (first 40 ms),
+  reads 2.7 ms. Compiles: candela 2.78 s, Files 1.51 s, Editor 3.54 s, Agenda 2.79 s, Chess 4.31 s, the same SHA
+  prefixes as session A1 (the compiler's output did not change).
+
+### What didn't work
+- `typed cache` after 190 s listed only A1's six entries (native `c 4339ff19f757c3e7`); the image's native digest is
+  `c fb1f0a57393ac91a`, so every key was new, and no `cache stored` line appeared. The writer waited for a gap of
+  50 ms with nothing due; the keyboard polls every 20 ms, so there never was one.
+- The Chess painter's compile took 7.57 s (95 % of 8 s; 5.40 s in A1). The script kept `trace on` until every
+  watched world had a first frame, and Chess's first frame is `compositor <- painter.frame from chess`, which the
+  pattern did not match, so the trace (a UART line per message) ran through the painter's compile.
+- The gallery's Typed compile (started at 42.4 s, on core 0):
+  `keyboard: crashed: out of memory`, `compositor: crashed: out of memory`, `compositor crashed: natives/compositor.elf
+  could not be loaded (elf_loader error -12)` five times (it stays stopped), the same for snake and settings, then
+  `candela-gallery compile rejected: InternalError: out of memory` and
+  `candela-gallery compile refused_over_limit=0 refused_no_psram=1 heap_limit=20971520 psram_free=17927152
+  psram_largest=4849664`. PSRAM ran out, not the 20 MiB cap. `heap`: psram 18,951,164 free afterwards.
+
+### What I learned
+- QuickJS (this version) starts its collector in `js_trigger_gc` when `malloc_state.malloc_size` passes 1.5 times
+  what the last collection left. Only its default allocator updates `malloc_size`; the worlds' allocator
+  (`nucleus/vm.c`) does it by hand; `typed_p4.c`'s compile allocator did not. So every device compile ran without
+  cycle collection: its peak is everything it ever allocated in a cycle. CANDELA-TYPED's 16.3 MB for the old program
+  was that too.
+
+### What was tricky to build
+- e98b705: the gap is 10 ms; a piece runs at priority 6 (above the kernel's 5), so no turn begins inside it and
+  none is preempted by it; the writer rests as long as the last piece took, so the kernel keeps half of core 1; it
+  waits only for compiles on core 1 (`p4_typed_compiles_quiet(core, us)`), so a Typed compile on core 0 does not
+  hold the boot apps' entries back. Past 8 MB of live heap a compile allocation that would leave less than 3 MB of
+  PSRAM free is refused, so a compile that does not fit fails alone. The gallery's default arm went back to C++.
+- d8520cd: `account()` sets `state->malloc_size` and `malloc_count`, as `js_def_malloc` does.
+
+### What warrants a second pair of eyes
+- The collector now runs during every compile: boot compiles may get slower (more collections) or faster (less
+  memory traffic). The next session's cold boot answers it, and the cached SHA prefixes must not change.
+
+### What should be done in the future
+- If the Typed program still does not fit, its compile needs less memory (COMPILER-DEVICE-COST) or a moment with
+  fewer worlds running.
+
+### Code review instructions
+- `typed_p4.c` `account`, `psram_spare`, `p4_typed_compiles_quiet`; `typed_cache_p4.c` `paced`, `writer`.
+
+### Technical details
+- Data: `various/board2/` (steps.jsonl, boot and watch logs, a screenshot).
