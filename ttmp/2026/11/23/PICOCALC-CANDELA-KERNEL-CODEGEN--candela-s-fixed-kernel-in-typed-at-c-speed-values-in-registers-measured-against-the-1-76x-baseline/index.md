@@ -20,7 +20,13 @@ WhenToUse: ""
 
 ## Overview
 
-<!-- Provide a brief overview of the ticket, its goals, and current status -->
+The Typed Candela kernel is regenerated with value records, record results, `continue`, `?:`, `u32` and local arrays.
+It was profiled on B-01 and R-01, and six RV32 compiler changes for f32 functions under the kernel policy follow from
+that profile: `rows`, `coalesce`, call-free homes, open inlining of record results, record-result leaves straight into
+their locals, and affine `rows`. Integer programs keep their 84 digests. On the host, B-01 went from 1.79× to about
+1.43× the C++ arm's instructions per sample. The paired board study (design step 4) is still to run. See the
+[design doc](design-doc/01-candela-s-kernel-at-c-speed.md) (its Refinements section) and the
+[diary](reference/01-diary.md).
 
 ## Key Links
 
