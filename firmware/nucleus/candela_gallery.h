@@ -21,7 +21,7 @@
 extern "C" {
 #endif
 
-typedef struct {
+typedef struct cg_scene_desc_s {
   const char *id, *title;
   uint16_t w, h;
   uint8_t spectral, custom;        // needs a CDL_SPECTRAL instance; custom integrator
@@ -51,6 +51,9 @@ typedef struct {
   // verify the bytecode against the instance and bind it to U; regs: the interpreter's register file
   int (*vm_load)(const void *blob, size_t len, const float *U, unsigned nU, void *regs, size_t regs_bytes, char *err, size_t errlen);
   const void *sections_vm;
+  // An instance whose sections are its own code (the Typed arm, PICOCALC-CANDELA-TYPED): vm_load is NULL, and begin,
+  // when set, binds the scene (its buffers, its index in cg_scenes) before bind; non-zero fails cg_begin.
+  int (*begin)(const struct cg_scene_desc_s *d, const cdl_buffers *b, char *err, size_t errlen);
 } cg_instance;
 
 // Where the core gets memory: big (PSRAM on the device) and fast (internal RAM), both 16-byte aligned.

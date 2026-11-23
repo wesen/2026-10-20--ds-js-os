@@ -2,13 +2,15 @@
 """Check the Candela gallery on the installed playable firmware: it is drawing, and every scene's digests agree with
 the RV32 reference build.
 
-usage: python3 bench/board/gallery.py OUT [--passes 4] [--port PORT]
+usage: python3 bench/board/gallery.py OUT [--passes 4] [--arm cpp|typed] [--port PORT]
 
 Under the board lock, on the firmware already running (install it first with playable.py): read CGAL records until the
 gallery reports a scene (it draws on its own after boot, so it is in front), capture the screen, list the scenes, and
-for each run "gallery digest ID PASSES psram". The frame-0, accumulation and display digests must equal
-bench/reference/candela-gallery/rv32-4-passes.jsonl, which PICOCALC-CANDELA-GALLERY's 04-build-ref.py wrote from the
-same kernel compiled for rv32emu. Writes OUT/{uart.log,cgal.jsonl,gallery.json,boot.png}.
+for each run "gallery digest ID PASSES psram ARM". The frame-0, accumulation and display digests must equal the arm's
+reference: for the C++ kernel (cpp), bench/reference/candela-gallery/rv32-4-passes.jsonl, which
+PICOCALC-CANDELA-GALLERY's 04-build-ref.py wrote from the same kernel compiled for rv32emu; for the Typed kernel
+(typed), typed-4-passes.jsonl, which PICOCALC-CANDELA-TYPED's 03-typed-ref.py wrote from the generated program's
+WebAssembly build (bit-identical to its RV32 build) through the gallery's renderer core. Writes OUT/{uart.log,cgal.jsonl,gallery.json,boot.png}.
 Promoted from PICOCALC-CANDELA-GALLERY scripts/06-run-device.py (digests and the screen capture only).
 """
 import argparse
@@ -25,7 +27,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import device  # noqa: E402
 
-REFERENCE = HERE.parent / "reference/candela-gallery/rv32-4-passes.jsonl"
+REFERENCES = {"cpp": HERE.parent / "reference/candela-gallery/rv32-4-passes.jsonl",
+              "typed": HERE.parent / "reference/candela-gallery/typed-4-passes.jsonl"}
 RLE = re.compile(rb"[A-Za-z0-9+/=]+")
 
 
@@ -112,14 +115,16 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("out", type=Path)
     ap.add_argument("--passes", type=int, default=4)
+    ap.add_argument("--arm", choices=sorted(REFERENCES), default="cpp")
     ap.add_argument("--port", default=device.PORT)
     ap.add_argument("--wait", type=int, default=60, help="seconds to wait for the gallery to report a scene")
     a = ap.parse_args()
     assert a.passes == 4, "the reference holds 4-pass digests"
+    REFERENCE = REFERENCES[a.arm]
     reference = {r["id"]: r for r in map(json.loads, REFERENCE.read_text().splitlines())}
     a.out.mkdir(parents=True, exist_ok=False)
     rec = Records(a.out / "cgal.jsonl")
-    result = {"reference": str(REFERENCE.relative_to(HERE.parents[1])), "scenes": {}}
+    result = {"arm": a.arm, "reference": str(REFERENCE.relative_to(HERE.parents[1])), "scenes": {}}
     with device.acquire(), (a.out / "uart.log").open("wb", buffering=0) as log:
         console = device.Console(a.port, log)
         try:
@@ -137,17 +142,17 @@ def main():
             assert sorted(ids) == sorted(reference), (ids, sorted(reference))
             for sid in ids:
                 rec.step = f"digest-{sid}"
-                command(console, rec, f"gallery digest {sid} {a.passes} psram")
-                r = wait_for(console, rec, lambda r: r.get("ev") in ("digest", "error"), 600)
+                command(console, rec, f"gallery digest {sid} {a.passes} psram {a.arm}")
+                r = wait_for(console, rec, lambda r: r.get("ev") in ("digest", "error"), 900)
                 ref = reference[sid]
-                same = r is not None and r.get("ev") == "digest" and all(r[k] == ref[k] for k in ("frame0", "acc", "disp"))
-                result["scenes"][sid] = {"same": same, "device": r, "rv32": {k: ref[k] for k in ("frame0", "acc", "disp")}}
+                same = r is not None and r.get("ev") == "digest" and r.get("arm", "cpp") == a.arm and all(r[k] == ref[k] for k in ("frame0", "acc", "disp"))
+                result["scenes"][sid] = {"same": same, "device": r, "reference": {k: ref[k] for k in ("frame0", "acc", "disp")}}
                 print(f"{sid}: {'same' if same else 'DIFFERS'} frame0 {r and r.get('frame0')} acc {r and r.get('acc')}", flush=True)
         finally:
             console.close()
     result["allSame"] = all(s["same"] for s in result["scenes"].values()) and len(result["scenes"]) == len(reference)
     device.save(a.out / "gallery.json", result)
-    print(f"{sum(s['same'] for s in result['scenes'].values())}/{len(reference)} scenes agree with the RV32 reference")
+    print(f"{sum(s['same'] for s in result['scenes'].values())}/{len(reference)} scenes agree with the {a.arm} reference")
     return 0 if result["allSame"] else 1
 
 

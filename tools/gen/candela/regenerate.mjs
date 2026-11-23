@@ -8,6 +8,8 @@
 //   vm/       the section-bytecode interpreter: hand-written C, and its opcode table generated from
 //             translator/isa.js (isa.mjs)
 //   gallery/  the gallery's scene table: packed buffers and section bytecode per scene (scenes.mjs, gallery.json)
+// and, outside it, apps/typed/candela-gallery/{types,kernel,scenes,glue}.typed and layout.json: the same kernel and the
+// gallery's sections in Typed (kernel-typed.mjs, PICOCALC-CANDELA-TYPED), which --check compares too.
 // Every input is read from the repository: the vendored Candela (src/, content/presets/; every file checked
 // against PIN.json before anything is loaded) and the files of this directory. Nothing is read from a ticket.
 //
@@ -22,6 +24,7 @@ import { createHash } from 'node:crypto';
 import { generateKernel } from './kernel.mjs';
 import { generateIsa } from './isa.mjs';
 import { prepareScenes } from './scenes.mjs';
+import { generateTypedGallery } from './kernel-typed.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, '../../..');
@@ -88,6 +91,12 @@ const fixedC = '/* cdl_fixed_kernel.c: written by tools/gen/candela/regenerate.m
 outputs.set('kernel/cdl_fixed_kernel.c', { text: fixedC, generator: `${GEN}/regenerate.mjs`, inputs: [cdl('src/kernel.js'), gen('gallery.json')] });
 if (verbose) console.log(`${g.scenes.length} scenes; fixed kernel ${g.fixedKernelSha256}`);
 
+// ---- apps/typed/candela-gallery/: the same kernel and the gallery's sections in Typed (kernel-typed.mjs) ----
+const TYPED_APP = 'apps/typed/candela-gallery';
+const typedGallery = await generateTypedGallery(CDL, gallery);
+const typedOutputs = new Map(Object.entries(typedGallery.files).map(([name, text]) => [`${TYPED_APP}/${name}`, text]));
+if (verbose) console.log(`Typed: ${typedGallery.stats.functions} functions, ${typedGallery.stats.frames} frames, ${typedGallery.stats.arenaWords} arena words`);
+
 // ---- VENDOR.json ----
 const files = {};
 for (const rel of [...outputs.keys(), ...HAND_WRITTEN].sort()) {
@@ -121,12 +130,16 @@ for (const dir of ['kernel', 'vm', 'gallery']) {
     if (!statSync(join(CDL, rel)).isFile() || !(rel in files)) problems.push(`${rel}: not listed in VENDOR.json`);
   }
 }
+const typedDifferent = [...typedOutputs].filter(([rel, text]) => !existsSync(join(REPO, rel)) || readFileSync(join(REPO, rel), 'utf8') !== text).map(([rel]) => rel);
 if (check) {
+  if (typedDifferent.length) console.error(`${TYPED_APP}: differs from what ${GEN}/regenerate.mjs generates: ${typedDifferent.join(', ')}`);
   if (different.length) console.error(`${CDL_REL}: differs from what ${GEN}/regenerate.mjs generates: ${different.join(', ')}`);
   for (const p of problems) console.error(`${CDL_REL}/${p}`);
-  if (different.length || problems.length) process.exit(1);
-  console.log(`${CDL_REL}: ${outputs.size - 1} generated files and VENDOR.json current; ${HAND_WRITTEN.length} hand-written files listed`);
+  if (different.length || problems.length || typedDifferent.length) process.exit(1);
+  console.log(`${CDL_REL}: ${outputs.size - 1} generated files and VENDOR.json current; ${HAND_WRITTEN.length} hand-written files listed; ${TYPED_APP}: ${typedOutputs.size} generated files current`);
 } else {
+  for (const rel of typedDifferent) writeFileSync(join(REPO, rel), typedOutputs.get(rel));
+  if (typedDifferent.length) console.log(`${TYPED_APP}: ${typedDifferent.length} of ${typedOutputs.size} files written`);
   for (const rel of different) writeFileSync(join(CDL, rel), outputs.get(rel).text);
   for (const p of problems) console.error(`${CDL_REL}/${p}`);
   console.log(`${CDL_REL}: ${different.length} of ${outputs.size} files written${different.length ? ': ' + different.join(', ') : ' (all current)'}`);

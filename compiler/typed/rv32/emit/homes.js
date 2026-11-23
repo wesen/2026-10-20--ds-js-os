@@ -6,7 +6,7 @@ export class HomeMethods {
     readLocal(reg, local) {
         const home = this.locations?.homes.get(local);
         if (home !== undefined) this.move(reg, home);
-        else this.load(reg, 4 * local);
+        else this.load(reg, (this.slotBase ?? 0) + 4 * local);
     }
 
     writeLocal(reg, local) {
@@ -15,7 +15,7 @@ export class HomeMethods {
             // A pending read of this local must keep the value it had when it was pushed.
             this.materialize(home);
             this.move(home, reg);
-        } else this.store(reg, 4 * local);
+        } else this.store(reg, (this.slotBase ?? 0) + 4 * local);
     }
 
     // Copy pending direct reads into their ordinary operand locations: every one, or only

@@ -63,14 +63,17 @@ int cg_begin(cg_state *s, const cg_scene_desc *d, const cg_instance *inst, const
     if (!s->sky) { fail(err, n, "out of memory for the sky table"); cg_end(s); return 1; }
     memset(s->sky, 0, sky);   // tag 0: the first bind builds the table
   }
+  if (inst->begin && inst->begin(d, &s->b, err, n)) { cg_end(s); return 1; }
   s->bound = inst->bind(&s->b, inst->sections_vm, sky ? s->sky : NULL);
   if (!s->bound) { fail(err, n, "the kernel refused the buffers"); cg_end(s); return 1; }
+  if (!inst->vm_load) goto ready;   // the instance's sections are its own code
   if (d->prog_len < 16 || memcmp(d->prog, "CDVM", 4)) { fail(err, n, "no section bytecode"); cg_end(s); return 1; }
   const unsigned nregs = d->prog[8] | d->prog[9] << 8;
   s->regs_bytes = 4u * (nregs ? nregs : 1);
   s->regs = a->fast(s->regs_bytes);
   if (!s->regs) { fail(err, n, "out of memory for the interpreter's registers"); cg_end(s); return 1; }
   if (inst->vm_load(d->prog, d->prog_len, s->b.U, s->b.nU, s->regs, s->regs_bytes, err, n)) { cg_end(s); return 1; }
+ready:
   s->pass = 0; s->sub = 0; s->row = 0; s->samples = 0; s->metered = 0;
   s->ev = d->exposure ? d->ev : 12.0;   // src/viewport.js: this.ev = 12 until the meter has read the image
   return 0;
