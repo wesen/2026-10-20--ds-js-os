@@ -186,7 +186,7 @@ function stScreen(s) {
       ["API key", i && i.key ? "provisioned" : "missing", i && i.key ? "ink" : "accent"],
     ], { keyW: 70, lead: 4 }),
     ui.sep(),
-    ui.text("The key and the endpoint are set over USB with tools/provision_agent.py, so no app can read the key or send it elsewhere.", { font: "s", wrap: true }),
+    ui.text("The key and the endpoint are set over USB with tools/device/provision_agent.py, so no app can read the key or send it elsewhere.", { font: "s", wrap: true }),
     ui.text("Choose another model in Agent with /model.", { font: "s", wrap: true, color: "muted" }),
     ui.col({ grow: 1 }), status);
 }

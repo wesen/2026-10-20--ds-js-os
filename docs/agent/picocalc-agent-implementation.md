@@ -344,7 +344,7 @@ All commands in this section run from `firmware/`. The existing default build ne
 
 ```bash
 make -j4
-PICOCALC_AGENT_FIXTURES=tests/fixtures/agent \
+PICOCALC_AGENT_FIXTURES=../tests/native/fixtures/agent \
   ./build/picocalc-host -s out/agent-store scripts-agent/tour.txt
 ```
 
@@ -353,9 +353,9 @@ This types three prompts, executes a local calculation, displays and approves a 
 For an automatically checked run that uses a fresh store:
 
 ```bash
-python3 tests/agent-integration.py
+python3 ../tests/native/agent-integration.py
 # Or keep the screenshots and store in a fresh directory:
-python3 tests/agent-integration.py --output /tmp/picocalc-agent-check
+python3 ../tests/native/agent-integration.py --output /tmp/picocalc-agent-check
 ```
 
 The integration test verifies the actual stored record and absence of kernel fault frames, rather than relying only on screenshot appearance. Its cases cover the full tool flow, a new process restoring history, cancellation during a 40-second simulated request, and a large response near the native byte cap.
@@ -476,7 +476,7 @@ From `firmware/`, use the helper:
 
 ```bash
 python3 -m pip install pyserial
-python3 tools/provision_agent.py \
+python3 ../tools/device/provision_agent.py \
   --port /dev/serial/by-id/YOUR_P4_CH343_PORT
 ```
 
@@ -525,8 +525,8 @@ The main changes are deliberately easy to find:
 | `port/esp32p4/sdkconfig.c6-agent` | Matching C6 slave transport settings |
 | `port/esp32p4/optional/agent_wifi` | Optional managed dependencies |
 | `port/esp32p4/dependencies.agent.lock` | Resolved, pinned Wi-Fi dependency graph |
-| `tools/provision_agent.py` | Secret-safe interactive provisioning |
-| `tests` and `tests/fixtures/agent` | Behavioral, native, TLS, and simulator acceptance checks |
+| `../tools/device/provision_agent.py` | Secret-safe interactive provisioning |
+| `../tests/apps`, `../tests/native` and `../tests/native/fixtures/agent` | Behavioral, native, TLS, and simulator acceptance checks |
 | `scripts-agent/tour.txt` | Reproducible screenshot demonstration |
 
 ### Extending with another local tool

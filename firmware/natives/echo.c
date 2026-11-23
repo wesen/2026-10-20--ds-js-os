@@ -1,4 +1,4 @@
-// echo: a native world that exercises every system call, for tests/test_native_worlds.py. Each message type is one
+// echo: a native world that exercises every system call, for tests/native/test_native_worlds.py. Each message type is one
 // case; results are logged as "TEST <label> <result>" lines, as the JavaScript test worlds do.
 #include <stdint.h>
 #include <stdio.h>

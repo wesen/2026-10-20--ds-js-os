@@ -1,6 +1,6 @@
 // The RV32 conformance suite on rv32emu's processor (bench/emu): bench/emu/build/rv32emu-vectors executes each
 // vector of bench/reference/rv32/vectors.jsonl and prints the state after it; the comparison is the suite's own
-// (bench/rv32/vectors.mjs check), the same as for the reference interpreter and pkg/tracerv32.
+// (bench/rv32/vectors.mjs check), the same as for the reference interpreter and tools/trace-repl/pkg/tracerv32.
 import test from "node:test";
 import assert from "node:assert/strict";
 import {execFileSync} from "node:child_process";
