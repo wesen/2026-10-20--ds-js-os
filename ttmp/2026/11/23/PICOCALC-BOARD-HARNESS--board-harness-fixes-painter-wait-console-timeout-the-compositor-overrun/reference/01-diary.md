@@ -312,3 +312,104 @@ added the firmware hold before an install's esptool reset, which the install pat
 
 - The soak script is ready and was dry-run against the fake board on the virtual clock (5 virtual minutes, 3 rounds,
   summary written): `scripts/01-compositor-soak.py OUT --minutes 30 --round 120 --gap 6`.
+
+## Step 4: After the power cycle, the install gate passes; the first soak meets another agent's bootloader
+
+The user power-cycled the PicoCalc, and the coordinator merged this branch into main. The coordinator also fixed
+`playable.py restore`, whose parser lacks `--health-only`, and installed playable `54cfa09b`. I fast-forwarded to
+main `d66fb5f`. The install gate then passed with peripherals on, showing the hold, the fresh boot, the painter wait
+and the bus window. The first soak attempt found the board silent: another agent had left it in its ROM bootloader.
+I restored playable from the main checkout and made the soak tolerate the board changing hands between rounds.
+
+### Prompt Context
+
+**User prompt (verbatim):** see Step 1. Coordinator message (verbatim): "Coordinator: the user power-cycled the
+PicoCalc. Your branch is merged into main (plus my fix 2f…: `playable.py restore` crashed on args.health_only — the
+restore parser lacks the flag; main now uses getattr). main's restore-playable passed with your hold-before-flash
+and the 5 s bus window (253 transfers, 0 errors). main's PLAYABLE.json now records 54cfa09b (209af25). Merge main into
+your worktree, then run: (1) the install gate (`playable.py install --stored OUT --peripherals on`), (2) the
+30-minute compositor soak with short lock acquisitions, (3) the `--health-only` gate showing the reboot. Other agents
+share the board — hold the lock only per operation. Keep your diary, commit, restore from the main checkout at the
+end, stop all background shells, and report compactly."
+**Assistant interpretation:** The three board gates, in order.
+**Inferred user intent:** The fixes are proven on the real board, and fix 4 gets its answer.
+**Commit (code):** pending; the soak script change is committed with this step's documents.
+
+### What I did
+
+- `git merge --ff-only main` → `d66fb5f`.
+- Install gate: `python3 bench/board/playable.py install --stored …/various/03-install-stored-54cfa09b --peripherals
+  on`, 17:08:20–17:10:31 EST, exit 0.
+- Soak attempt 1 (`various/04-compositor-soak-54cfa09b`, 17:10): it waited about 3 minutes for the lock, then
+  `key f1` got no byte in 5 s (`TimeoutError: key f1: []`).
+- A read-only check at 17:13:51 (`stats`, 15 s deadline, asked twice): no byte either.
+- Looked for the cause. `/tmp/picocalc-compile-cache-board1/00-flash-.log` (COMPILE-CACHE) ends at 17:11:56 with
+  `Wrote 6747248 bytes … Hash of data verified. Leaving... Staying in bootloader.`, after flashing app `a85b0943…`.
+  Its next step's log (`01-boot-cold1-45-hold.log`) is empty, and no board process was running anymore. The board sat
+  in its ROM bootloader with no lock held.
+- `cd /home/manuel/code/wesen/2026-10-20--ds-js-os && make restore-playable`, 17:15:04–17:17:30: healthy, i2c0 window
+  +577 transfers, 0 errors.
+- The soak script now starts a round only on a board that answers and has not been reset since the last round.
+  Otherwise it holds the board (`device.quiesce`) and runs `verify_flash` against the playable image main's
+  `PLAYABLE.json` records, which resets it, then settles.
+  - If the verify fails (another agent's image), it resets the board back into that image, waits a minute and tries
+    again, giving up after ten tries.
+  - The summary splits samples into boots.
+  - Dry run on the fake board: OK.
+- Soak attempt 2 started at 17:19:17 (`various/05-compositor-soak-54cfa09b`). It was still waiting for the lock at
+  17:23, behind three other board sessions (`lsof` on the lock: CANDELA-KERNEL-CODEGEN `08-device.py`,
+  COMPILER-DEVICE-COST `04-typedcost-session.py` holding it, COMPILE-CACHE `01-boots.py`).
+  - Its first round would have trusted whatever image was on the board, so I stopped it with TaskStop.
+  - I removed its empty directory with `scripts/02-remove-empty-soak-dir.py` (dry run, then `--apply`; it asserts
+    the only file is an empty `samples.jsonl`).
+- The script now checks the image (hold, `verify_flash`, settle) on the first round and after any reset or silence,
+  but only when no other process has the lock file open (`others_active`, a scan of `/proc/*/fd`). An agent between
+  two operations of its session may have its own image on the board. Otherwise it waits 30 s. Attempt 3
+  (`various/06-compositor-soak-54cfa09b`) started at about 17:27.
+
+### What worked
+
+- The install gate record (`various/03-install-stored-54cfa09b/after.json`):
+  - `heldBeforeFlash: true` (`i2c0 held between transactions; reboot or flash now`)
+  - `boot {'uptimeMs': 0.0, 'rebooted': False}`, `restartingAfterSettle []`
+  - painter `compiles 1, installed, calls 1, rejects 0, compile_us 5650602` after 39 polls
+  - window 5.24 s: i2c0 +253 transfers, 0 errors, busy 1,533.92 ms; spi2 +44 transfers, 0 errors.
+
+### What didn't work
+
+- Soak attempt 1, exactly:
+
+  ```
+  File ".../bench/board/device.py", line 96, in line
+    raise TimeoutError(self.pending[-100:])
+  TimeoutError: b''
+  ...
+  TimeoutError: key f1: []
+  ```
+
+  - The cause was outside this ticket. A board left in the bootloader (`--after no_reset`) between another agent's
+    lock acquisitions answers nothing.
+
+### What I learned
+
+- The lock serializes operations but not sessions. A board can change images or be left in the bootloader between
+  two of another agent's operations. A long observation on "the installed image" has to check, at every round, that
+  it is still the same boot of the same image.
+
+### What warrants a second pair of eyes
+
+- `verify_playable` resets a board running another agent's image when nobody holds the lock. The script then
+  restarts that image, so the board is not left in the bootloader. An agent that keeps a board state across lock
+  releases would still see a reset.
+
+### What should be done in the future
+
+- Agents that flash with `--after no_reset` should hold the lock until their image runs (or until they restore).
+
+### Code review instructions
+
+- `scripts/01-compositor-soak.py`: `board_ready`, `verify_playable`, `segments`.
+
+### Technical details
+
+- `various/04-compositor-soak-54cfa09b/` holds attempt 1's empty `uart-00.log` and `samples.jsonl` as its evidence.
