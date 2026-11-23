@@ -83,3 +83,36 @@ Four subagents started at `56cd256`, each in its own git worktree, on the ticket
 ### What warrants a second pair of eyes
 
 - **Three tickets may want the board at once.** CONFORMANCE (capture), APP-MANIFEST (qualification) and SPLIT-FILES (a probe boot) may all want it. `bench/board/device.py`'s lock serializes them. Each brief requires restoring the playable image, but an agent that dies mid-experiment could leave an experiment image installed. After each wave I check with `python3 bench/board/run.py --probe`.
+
+## Step 3: TAPE and CONFORMANCE merged, wave 2 launched
+
+The first two tickets came back with every gate passing. TAPE fast-forwarded onto `main`, ending at `0e375c2`. CONFORMANCE needed a merge commit (`bf30d31`), because its branch was fast-forwarded to `4b9a80b`, not to TAPE. Both pass on `main`, and wave 2 (FRONTEND, PIPELINE) started from `bf30d31`.
+
+### What I did
+
+- Merged both branches and reran the gates on `main`:
+  - `make test`: exit 0. It now includes `test-rv32` and the tape-coverage test.
+  - `gates.sh` with the default policy: ray 4,888,369 instructions, digest `430f0d501659`; Chess 6,981 words, 128,152,624 instructions; 24/24 replays.
+  - `gates.sh` with `kernel`: ray 3,239,635 instructions, same digest; Chess 118,361,847 instructions; 24/24 replays.
+- Reran `firmware/tools/wasm-toolchain.sh` in the main checkout. Both agents reported that `firmware/build/wasm-toolchain/res/lib/wasi` still pointed into `picocalc-os/`, which was left over from the rename in Phase D.
+- Started FRONTEND and PIPELINE. BITWISE waits for both, because it edits the tokenizer in `typed-wasm.js` and the RV32 emitters.
+- Started building and installing the playable firmware at `bf30d31`. TAPE adds `typed/tape.js` to the compiler bundle, so the image changes.
+
+### What the agents found (from their reports; details in their diaries)
+
+- **TAPE.**
+  - With the design's singular effect names, `CALL = 4` (an effect bit) overwrote the opcode constant `CALL = 0x10`, and every call compiled as an `if`. `tape.js` now refuses a name defined twice.
+  - The compiler bytecode cache on the device held 8 entries for 8 sources. A ninth source would never have been cached, so the cache now holds 12.
+  - Output stayed byte-identical over 84 digests.
+- **CONFORMANCE.**
+  - The suite has 15,664 vectors, 15,454 of them run on the P4 (chip revision 1.3, `misa` 0x40901125).
+  - The P4's FPU follows the RISC-V F specification in every captured case: canonical NaN `0x7fc00000`, subnormals kept, tininess detected after rounding, `fcvt` saturating.
+  - All three executors now run RV32IMF. rv32emu turned out to have been RV32IMC, not what its Makefile claimed. It is kept rather than replaced by the Go machine.
+
+### What didn't work
+
+- **Go in worktrees.** `go test` fails there, because `go.mod`'s `replace ../go-go-golems/go-go-goja` is relative. Both agents worked around it with a GOWORK or `-modfile` file outside the tree. Wave 2's briefs say so.
+
+### What warrants a second pair of eyes
+
+- **Wave 2 has two bundlers.** FRONTEND bundles `typed-wasm.js` from its modules with its own generator, while PIPELINE writes the bundler for `rv32/`. I allowed both and will unify them after merging, if that is simpler.
