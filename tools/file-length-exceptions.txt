@@ -16,7 +16,7 @@ apps/js/picocalc/apps/calc.js -- ported to Typed, not split
 tests/apps/calc.test.mjs -- calc.js's tests; they go with calc.js
 
 # Files other tickets are splitting or replacing
-compiler/typed/typed-wasm.js -- PICOCALC-TYPED-FRONTEND
+compiler/typed/typed-wasm.js -- generated from compiler/typed/frontend/*.js and wasm/*.js by compiler/typed/frontend/build.mjs
 compiler/typed/typed-async.js -- PICOCALC-TYPED-ASYNC-TAPE
 compiler/typed/rv32/10-function-code.js -- PICOCALC-TYPED-PIPELINE
 compiler/typed/rv32/30-version-loops.js -- PICOCALC-TYPED-PIPELINE
