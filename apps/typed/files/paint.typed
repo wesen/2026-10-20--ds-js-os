@@ -1,0 +1,137 @@
+// The screen: the path and free space, a 25-row window of the directory, the prompt and the note.
+function fiDigits(out: buffer, at: i32, value: i32): i32 {
+    let scale = 1;
+    while (value / scale >= 10) { scale = scale * 10; }
+    let pos = at;
+    while (scale > 0) {
+        out.setCharCodeAt(pos, 48 + value / scale % 10);
+        pos = pos + 1;
+        scale = scale / 10;
+    }
+    return pos;
+}
+
+// A size given as MiB and bytes below a MiB, as files.js's fiSize writes it (one decimal, rounded half up).
+function fiSize(out: buffer, at: i32, high: i32, low: i32): i32 {
+    if (high === 0 && low < 1024) {
+        const end = fiDigits(out, at, low);
+        return end + out.writeLiteral(end, " B");
+    }
+    let tenths = 0;
+    if (high === 0) {
+        tenths = (low * 10 + 512) / 1024;
+    } else if (high < 1024) {
+        tenths = high * 10 + (low * 10 + 524288) / 1048576;
+    } else {
+        tenths = high / 1024 * 10 + (high % 1024 * 10 + (low * 10 + 536870912) / 1048576) / 1024;
+    }
+    let end = fiDigits(out, at, tenths / 10);
+    end = end + out.writeLiteral(end, ".");
+    end = fiDigits(out, end, tenths % 10);
+    if (high === 0) return end + out.writeLiteral(end, " KB");
+    if (high < 1024) return end + out.writeLiteral(end, " MB");
+    return end + out.writeLiteral(end, " GB");
+}
+
+function fiHexDigit(digit: i32): i32 {
+    if (digit < 10) return 48 + digit;
+    return 87 + digit;
+}
+
+// JSON string content as nw_json_quote writes it.
+function fiQuoted(out: buffer, offset: i32, text: string, first: i32, end: i32): i32 {
+    let at = offset;
+    for (let i = first; i < end; i = i + 1) {
+        const unit = text.charCodeAt(i);
+        if (unit < 32) {
+            at = at + out.writeLiteral(at, "\\u00");
+            out.setCharCodeAt(at, fiHexDigit(unit / 16));
+            out.setCharCodeAt(at + 1, fiHexDigit(unit % 16));
+            at = at + 2;
+        }
+        if (unit >= 32) {
+            if (unit === 34 || unit === 92) { at = at + out.writeLiteral(at, "\\"); }
+            out.setCharCodeAt(at, unit);
+            at = at + 1;
+        }
+    }
+    return at;
+}
+
+function fiQuotedBuffer(out: buffer, at: i32, text: buffer, length: i32): i32 {
+    return fiQuoted(out, at, typedSdkView(text, length), 0, length);
+}
+
+function fiRows(state: WorldState, out: buffer, offset: i32): i32 {
+    let first = state.selected - 12;
+    const last = state.count - 25;
+    if (first > last) { first = last; }
+    if (first < 0) { first = 0; }
+    let at = offset + out.writeLiteral(offset, "{\"t\":\"list\",\"font\":\"s\",\"lead\":6,\"grow\":1,\"sel\":");
+    if (state.selected - first < 0) {
+        at = at + out.writeLiteral(at, "-");
+        at = fiDigits(out, at, first - state.selected);
+    } else {
+        at = fiDigits(out, at, state.selected - first);
+    }
+    at = at + out.writeLiteral(at, ",\"windowStart\":");
+    at = fiDigits(out, at, first);
+    at = at + out.writeLiteral(at, ",\"totalItems\":");
+    at = fiDigits(out, at, state.count);
+    at = at + out.writeLiteral(at, ",\"items\":[");
+    for (let i = first; i < state.count && i < first + 25; i = i + 1) {
+        if (i !== first) { at = at + out.writeLiteral(at, ","); }
+        const entries = typedSdkBuffer(0);
+        const length = fiEntryLength(entries, i);
+        const dir = fiEntryDir(entries, i);
+        at = at + out.writeLiteral(at, "{\"label\":\"");
+        at = fiQuoted(out, at, typedSdkView(entries, i * 104 + 8 + length), i * 104 + 8, i * 104 + 8 + length);
+        if (dir) { at = at + out.writeLiteral(at, "/"); }
+        at = at + out.writeLiteral(at, "\",\"right\":\"");
+        if (!dir) { at = fiSize(out, at, fiEntryHigh(typedSdkBuffer(0), i), fiEntryLow(typedSdkBuffer(0), i)); }
+        if (dir) {
+            at = at + out.writeLiteral(at, "\",\"color\":\"blue\"}");
+        } else {
+            at = at + out.writeLiteral(at, "\",\"color\":\"\"}");
+        }
+    }
+    return at + out.writeLiteral(at, "]}");
+}
+
+function fiPaint(state: WorldState, output: buffer, hints: buffer): i32 {
+    let at = output.writeLiteral(0, "{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\":\"row\",\"gap\":6,\"kids\":[{\"t\":\"text\",\"s\":\"/");
+    at = fiQuotedBuffer(output, at, typedSdkBuffer(5), state.pathLength);
+    at = at + output.writeLiteral(at, "\",\"font\":\"s\",\"color\":\"ink\",\"grow\":1},{\"t\":\"text\",\"s\":\"");
+    if (state.freeKnown) {
+        at = fiSize(output, at, state.freeHigh, state.freeLow);
+        at = at + output.writeLiteral(at, " free");
+    }
+    at = at + output.writeLiteral(at, "\",\"font\":\"s\",\"color\":\"muted\",\"align\":\"right\"}]},");
+    if (state.count > 0) {
+        at = fiRows(state, output, at);
+    } else if (state.pathLength > 0) {
+        at = at + output.writeLiteral(at, "{\"t\":\"text\",\"s\":\"Empty folder. Backspace goes up.\",\"font\":\"s\",\"color\":\"muted\",\"grow\":1}");
+    } else {
+        at = at + output.writeLiteral(at, "{\"t\":\"text\",\"s\":\"No files yet. F2 makes one.\",\"font\":\"s\",\"color\":\"muted\",\"grow\":1}");
+    }
+    if (state.prompt > 0) {
+        at = at + output.writeLiteral(at, ",{\"t\":\"input\",\"font\":\"s\",\"prompt\":\"");
+        if (state.prompt === 1) { at = at + output.writeLiteral(at, "New file: "); }
+        if (state.prompt === 2) { at = at + output.writeLiteral(at, "New folder: "); }
+        if (state.prompt === 3) { at = at + output.writeLiteral(at, "Rename to: "); }
+        at = at + output.writeLiteral(at, "\",\"value\":\"");
+        at = fiQuotedBuffer(output, at, typedSdkBuffer(4), state.inputLength);
+        at = at + output.writeLiteral(at, "\"}");
+    } else {
+        at = at + output.writeLiteral(at, ",{\"t\":\"gap\",\"h\":0}");
+    }
+    at = at + output.writeLiteral(at, ",{\"t\":\"text\",\"s\":\"");
+    if (state.noteLength > 0) {
+        at = fiQuotedBuffer(output, at, typedSdkBuffer(9), state.noteLength);
+    } else if (state.more) {
+        at = at + output.writeLiteral(at, "Only the first 256 entries are shown.");
+    }
+    at = at + output.writeLiteral(at, "\",\"font\":\"s\",\"color\":\"accent\",\"wrap\":true}]}");
+    if (state.prompt > 0) return typedSdkScreen(output, at, hints, hints.writeLiteral(0, "Enter ok  Esc cancel"));
+    return typedSdkScreen(output, at, hints, hints.writeLiteral(0, "⏎ open F2 new F3 dir F4 rename F5 del"));
+}

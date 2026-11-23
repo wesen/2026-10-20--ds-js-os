@@ -1,0 +1,384 @@
+// Files: the filesystem, browsed. The world holds the claim fs:/; to open a file it narrows its root handle to that
+// file and offers it to the editor, and once the editor has taken it, revokes the handle it gave before. The
+// behavior follows apps/js/picocalc/apps/files.js. Pending operations: 1 list, 2 info, 3 mkdir, 4 rename,
+// 5 remove, 6 editor; prompts: 1 new file, 2 new folder, 3 rename.
+function typedWorldMeta(field: i32, output: buffer): i32 {
+    if (field === 0) return output.writeLiteral(0, "app");
+    if (field === 1) return output.writeLiteral(0, "Files");
+    if (field === 2) return output.writeLiteral(0, "d");
+    if (field === 3) return output.writeLiteral(0, "Browse the files on the device. Opening one hands the editor that file and nothing else.");
+    if (field === 4) return output.writeLiteral(0, "[[\"fill\",2,3,14,4],[\"rect\",2,6,36,22],[\"fill\",2,6,36,3]]");
+    return 0;
+}
+
+function fiCopy(from: buffer, length: i32, to: buffer, offset: i32): i32 {
+    return typedSdkCopySpan(typedSdkView(from, length), 0, length, to, offset);
+}
+
+// Buffer 8 := path "/" name, where the name is the units [at, at + length) of `name`.
+function fiJoin(state: WorldState, target: buffer, name: buffer, at: i32, length: i32): i32 {
+    let end = fiCopy(typedSdkBuffer(5), state.pathLength, target, 0);
+    if (state.pathLength > 0) {
+        target.setCharCodeAt(end, 47);
+        end = end + 1;
+    }
+    return typedSdkCopySpan(typedSdkView(name, at + length), at, at + length, target, end);
+}
+
+function fiJoinEntry(state: WorldState, target: buffer, e: i32): i32 {
+    return fiJoin(state, target, typedSdkBuffer(0), e * 104 + 8, fiEntryLength(typedSdkBuffer(0), e));
+}
+
+function fiErrorNote(state: WorldState): i32 {
+    state.noteLength = Math.max(0, typedSdkError(typedSdkBuffer(9)));
+    return state.noteLength;
+}
+
+// Start a filesystem operation on `path` (buffer and length); arg is the rename target in buffer 7, or none.
+function fiIssue(state: WorldState, operation: i32, path: buffer, pathLength: i32, argLength: i32): i32 {
+    const verb = typedSdkBuffer(6);
+    let verbLength = 0;
+    if (operation === 1) { verbLength = verb.writeLiteral(0, "list"); }
+    if (operation === 2) { verbLength = verb.writeLiteral(0, "info"); }
+    if (operation === 3) { verbLength = verb.writeLiteral(0, "mkdir"); }
+    if (operation === 4) { verbLength = verb.writeLiteral(0, "rename"); }
+    if (operation === 5) { verbLength = verb.writeLiteral(0, "remove"); }
+    const next = typedSdkFsOp(state.root, verb, verbLength, path, pathLength, typedSdkBuffer(7), argLength);
+    if (next < 0) {
+        if (operation === 2) {
+            state.freeKnown = false;
+        } else {
+            fiErrorNote(state);
+        }
+        if (operation === 1) { state.count = 0; }
+        return 0;
+    }
+    state.pending = operation;
+    state.token = next;
+    return next;
+}
+
+function fiInfo(state: WorldState): i32 {
+    return fiIssue(state, 2, typedSdkBuffer(8), 0, -1);
+}
+
+function fiRelist(state: WorldState): i32 {
+    fiIssue(state, 1, typedSdkBuffer(5), state.pathLength, -1);
+    if (state.token === 0) { fiInfo(state); }
+    return 0;
+}
+
+// List the current directory, keeping `name` (buffer and length) selected.
+function fiList(state: WorldState, name: buffer, at: i32, length: i32): i32 {
+    state.keepLength = typedSdkCopySpan(typedSdkView(name, at + length), at, at + length, typedSdkBuffer(1), 0);
+    return fiRelist(state);
+}
+
+function fiListNone(state: WorldState): i32 {
+    return fiList(state, typedSdkBuffer(6), 0, 0);
+}
+
+function fiRetire(handle: i32): i32 {
+    if (handle <= 0) return 0;
+    typedSdkRevoke(handle);
+    return typedSdkRelease(handle);
+}
+
+// "Editor: " and the text in buffer 10.
+function fiEditorNote(state: WorldState, length: i32): i32 {
+    const note = typedSdkBuffer(9);
+    let at = note.writeLiteral(0, "Editor: ");
+    if (length > 0) {
+        at = fiCopy(typedSdkBuffer(10), Math.min(length, 300), typedSdkBuffer(9), at);
+    } else {
+        at = at + note.writeLiteral(at, "no answer");
+    }
+    state.noteLength = at;
+    return at;
+}
+
+// Offer the file at buffer 8 [0, length) to the editor.
+function fiOpen(state: WorldState, length: i32, reselect: bool, hints: buffer): i32 {
+    state.offered = typedSdkFsAt(state.root, typedSdkBuffer(8), length, 3);
+    let next = -1;
+    if (state.offered > 0) {
+        const to = typedSdkBuffer(6);
+        next = typedSdkAskFile(to, to.writeLiteral(0, "editor"), hints, hints.writeLiteral(0, "open"), state.offered,
+            typedSdkBuffer(8), length, 3000);
+    }
+    if (next > 0) {
+        state.refreshAfterOpen = reselect;
+        state.token = next;
+        state.pending = 6;
+        return 0;
+    }
+    fiEditorNote(state, typedSdkError(typedSdkBuffer(10)));
+    fiRetire(state.offered);
+    state.offered = 0;
+    return 0;
+}
+
+function fiAccept(state: WorldState, hints: buffer): i32 {
+    const operation = state.prompt;
+    state.prompt = 0;
+    const length = filesName(typedSdkView(typedSdkBuffer(4), state.inputLength), typedSdkBuffer(6));
+    if (length < 1 || length > 64) {
+        const note = typedSdkBuffer(9);
+        state.noteLength = note.writeLiteral(0, "Names: letters, digits, space . _ - (64 at most), not ending in a space or dot.");
+        return 0;
+    }
+    const name = typedSdkBuffer(6);
+    const full = fiJoin(state, typedSdkBuffer(8), name, 0, length);
+    state.keepLength = fiCopy(typedSdkBuffer(6), length, typedSdkBuffer(1), 0);
+    if (operation === 1) {
+        fiOpen(state, full, true, hints);
+        if (state.token === 0) { fiRelist(state); }
+        return 0;
+    }
+    if (operation === 2) return fiIssue(state, 3, typedSdkBuffer(8), full, -1);
+    // Rename: the target is buffer 7, the joined original name buffer 8.
+    fiCopy(typedSdkBuffer(8), full, typedSdkBuffer(7), 0);
+    const old = fiJoin(state, typedSdkBuffer(8), typedSdkBuffer(7), 8192, state.renameLength);
+    return fiIssue(state, 4, typedSdkBuffer(8), old, full);
+}
+
+// 1 up, 2 down, 3 pgup, 4 pgdn, 5 enter, 6 right, 7 backspace, 8 left, 9 f2, 10 f3, 11 f4, 12 f5, 13 esc.
+function fiKeyCode(name: buffer, length: i32): i32 {
+    const known = typedSdkBuffer(6);
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "up"))) return 1;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "down"))) return 2;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "pgup"))) return 3;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "pgdn"))) return 4;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "enter"))) return 5;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "right"))) return 6;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "backspace"))) return 7;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "left"))) return 8;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "f2"))) return 9;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "f3"))) return 10;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "f4"))) return 11;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "f5"))) return 12;
+    if (fiSameWord(name, length, known, known.writeLiteral(0, "esc"))) return 13;
+    return 0;
+}
+
+function fiPress(state: WorldState, hints: buffer): i32 {
+    const field = typedSdkBuffer(6);
+    const value = typedSdkBuffer(10);
+    const keyLength = typedSdkEventText(3, field, field.writeLiteral(0, "key"), value);
+    if (keyLength < 0) return 0;
+    const k = fiKeyCode(typedSdkBuffer(10), keyLength);
+    const stateLength = typedSdkEventText(3, field, field.writeLiteral(0, "state"), value);
+    if (stateLength < 0) return 0;
+    const word = typedSdkBuffer(6);
+    if (fiSameWord(value, stateLength, word, word.writeLiteral(0, "up"))) return 0;
+    const once = !fiSameWord(value, stateLength, word, word.writeLiteral(0, "hold"));
+    const entries = typedSdkBuffer(0);
+    const item = state.selected < state.count;
+    const e = state.selected;
+    let kind = 0;
+    let confirmed = false;
+    if (item) {
+        kind = 1;
+        if (fiEntryDir(entries, e)) { kind = 2; }
+        confirmed = fiNameIs(entries, e, typedSdkBuffer(2), state.confirmLength) && state.confirmLength > 0;
+    }
+    if (state.prompt === 0 && (k !== 12 || !once)) {
+        state.confirmLength = 0;
+        state.noteLength = 0;
+    }
+    const action = filesAction(k, once, state.prompt !== 0, kind, confirmed);
+    if (action > 0 && action <= 4) {
+        let delta = 0 - 1;
+        if (action === 2) { delta = 1; }
+        if (action === 3) { delta = 0 - 10; }
+        if (action === 4) { delta = 10; }
+        state.selected = filesSelect(state.selected, state.count, delta);
+        return 0;
+    }
+    if (action === 5) return fiOpen(state, fiJoinEntry(state, typedSdkBuffer(8), e), false, hints);
+    if (action === 6) {
+        state.pathLength = fiCopy(typedSdkBuffer(8), fiJoinEntry(state, typedSdkBuffer(8), e), typedSdkBuffer(5), 0);
+        state.selected = 0;
+        return fiListNone(state);
+    }
+    if (action === 7) {
+        if (state.inputLength > 0) {
+            const input = typedSdkView(typedSdkBuffer(4), state.inputLength);
+            state.inputLength = typedSdkPointIndex(input, 0, state.inputLength,
+                typedSdkCodePoints(input, 0, state.inputLength) - 1);
+        }
+        return 0;
+    }
+    if (action === 8) {
+        if (state.pathLength === 0) return 0;
+        const path = typedSdkView(typedSdkBuffer(5), state.pathLength);
+        let leaf = typedSdkLastIndex(path, 0, state.pathLength, 47);
+        let parent = leaf;
+        if (leaf === state.pathLength) {
+            leaf = 0;
+            parent = 0;
+        } else {
+            leaf = leaf + 1;
+        }
+        const length = state.pathLength - leaf;
+        fiCopy(typedSdkBuffer(5), state.pathLength, typedSdkBuffer(8), 0);
+        state.pathLength = parent;
+        return fiList(state, typedSdkBuffer(8), leaf, length);
+    }
+    if (action === 9 || action === 10) {
+        state.prompt = 1;
+        if (action === 10) { state.prompt = 2; }
+        state.inputLength = 0;
+        return 0;
+    }
+    if (action === 11) {
+        state.prompt = 3;
+        const length = fiEntryLength(entries, e);
+        state.inputLength = typedSdkCopySpan(typedSdkView(entries, e * 104 + 8 + length), e * 104 + 8, e * 104 + 8 + length,
+            typedSdkBuffer(4), 0);
+        typedSdkCopySpan(typedSdkView(typedSdkBuffer(0), e * 104 + 8 + length), e * 104 + 8, e * 104 + 8 + length,
+            typedSdkBuffer(7), 8192);
+        state.renameLength = length;
+        return 0;
+    }
+    if (action === 12) {
+        const length = fiEntryLength(entries, e);
+        state.confirmLength = typedSdkCopySpan(typedSdkView(entries, e * 104 + 8 + length), e * 104 + 8,
+            e * 104 + 8 + length, typedSdkBuffer(2), 0);
+        const note = typedSdkBuffer(9);
+        let at = note.writeLiteral(0, "F5 again deletes ");
+        at = typedSdkCopySpan(typedSdkView(typedSdkBuffer(0), e * 104 + 8 + length), e * 104 + 8, e * 104 + 8 + length,
+            typedSdkBuffer(9), at);
+        if (fiEntryDir(typedSdkBuffer(0), e)) { at = at + note.writeLiteral(at, " (it must be empty)"); }
+        state.noteLength = at;
+        return 0;
+    }
+    if (action === 13) {
+        state.prompt = 0;
+        return 0;
+    }
+    if (action === 14) {
+        state.confirmLength = 0;
+        const length = fiEntryLength(entries, e);
+        state.removedLength = typedSdkCopySpan(typedSdkView(entries, e * 104 + 8 + length), e * 104 + 8,
+            e * 104 + 8 + length, typedSdkBuffer(3), 0);
+        return fiIssue(state, 5, typedSdkBuffer(8), fiJoinEntry(state, typedSdkBuffer(8), e), -1);
+    }
+    if (action === 15) return fiAccept(state, hints);
+    if (action === 16) {
+        const name = typedSdkBuffer(6);
+        const ch = typedSdkBuffer(10);
+        const length = typedSdkEventText(3, name, name.writeLiteral(0, "ch"), ch);
+        if (state.inputLength < 64 && length === 1 && ch.charCodeAt(0) >= 32 && ch.charCodeAt(0) <= 126) {
+            const input = typedSdkBuffer(4);
+            input.setCharCodeAt(state.inputLength, ch.charCodeAt(0));
+            state.inputLength = state.inputLength + 1;
+        }
+    }
+    return 0;
+}
+
+function fiSettle(event: WorldEvent, state: WorldState, hints: buffer, output: buffer): i32 {
+    const operation = state.pending;
+    state.pending = 0;
+    state.token = 0;
+    if (operation === 6) {
+        let accepted = false;
+        const key = typedSdkBuffer(6);
+        if (event.ok) { accepted = typedSdkEventInt(key, key.writeLiteral(0, "ok")) === 1; }
+        if (accepted) {
+            fiRetire(state.given);
+            state.given = state.offered;
+            const to = typedSdkBuffer(6);
+            typedSdkSend(to, to.writeLiteral(0, "compositor"), hints, hints.writeLiteral(0, "open"),
+                output, output.writeLiteral(0, "{\"app\":\"editor\"}"));
+        } else {
+            const why = typedSdkBuffer(10);
+            let length = -1;
+            if (event.ok) {
+                const name = typedSdkBuffer(6);
+                length = typedSdkEventText(3, name, name.writeLiteral(0, "why"), why);
+            } else {
+                length = typedSdkEventText(2, why, 0, why);
+            }
+            fiEditorNote(state, length);
+            fiRetire(state.offered);
+        }
+        state.offered = 0;
+        if (state.refreshAfterOpen) { fiRelist(state); }
+        return 0;
+    }
+    if (operation === 1) {
+        let length = -1;
+        if (event.ok) { length = typedSdkEventText(4, typedSdkBuffer(6), 0, typedSdkBuffer(10)); }
+        if (length < 0 || !fiLoadEntries(state, length)) {
+            state.count = 0;
+            state.selected = 0;
+            let why = -1;
+            if (!event.ok) { why = typedSdkEventText(2, typedSdkBuffer(9), 0, typedSdkBuffer(9)); }
+            state.noteLength = why;
+            if (why < 0) {
+                const note = typedSdkBuffer(9);
+                state.noteLength = note.writeLiteral(0, "Invalid directory listing");
+            }
+        }
+        return fiInfo(state);
+    }
+    if (operation === 2) {
+        state.freeKnown = false;
+        if (event.ok) {
+            const length = typedSdkEventText(4, typedSdkBuffer(6), 0, typedSdkBuffer(10));
+            if (length >= 0) { fiLoadFree(state, length); }
+        }
+        return 0;
+    }
+    if (!event.ok) {
+        const why = typedSdkEventText(2, typedSdkBuffer(9), 0, typedSdkBuffer(9));
+        if (why >= 0) { state.noteLength = why; }
+        return 0;
+    }
+    if (operation === 5) {
+        const note = typedSdkBuffer(9);
+        let at = note.writeLiteral(0, "Deleted ");
+        at = fiCopy(typedSdkBuffer(3), state.removedLength, typedSdkBuffer(9), at);
+        state.noteLength = at;
+        return fiListNone(state);
+    }
+    return fiRelist(state);
+}
+
+// The message's type and sender: 1 key from the compositor, 2 focus from the compositor, 0 anything else.
+function fiMessage(): i32 {
+    const text = typedSdkBuffer(10);
+    const word = typedSdkBuffer(6);
+    const from = typedSdkEventText(1, text, 0, text);
+    if (!fiSameWord(text, from, word, word.writeLiteral(0, "compositor"))) return 0;
+    const kind = typedSdkEventText(0, text, 0, text);
+    if (fiSameWord(text, kind, word, word.writeLiteral(0, "key"))) return 1;
+    if (fiSameWord(text, kind, word, word.writeLiteral(0, "focus"))) return 2;
+    return 0;
+}
+
+function typedWorldEvent(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    if (event.kind === 4 && state.token > 0 && event.token === state.token) { fiSettle(event, state, hints, output); }
+    if (event.kind === 2) {
+        const claim = typedSdkBuffer(6);
+        state.root = typedSdkFsOpen(claim, claim.writeLiteral(0, "fs:/"));
+        if (state.root < 0) { fiErrorNote(state); }
+        if (state.root >= 0) { fiListNone(state); }
+    }
+    if (event.kind === 0 && state.root >= 0) {
+        const message = fiMessage();
+        if (message === 1) { fiPress(state, hints); }
+        if (message === 2) {
+            if (state.selected < state.count) {
+                fiList(state, typedSdkBuffer(0), state.selected * 104 + 8, fiEntryLength(typedSdkBuffer(0), state.selected));
+            } else {
+                fiListNone(state);
+            }
+        }
+    }
+    if (state.token > 0) return 1;
+    fiPaint(state, output, hints);
+    return 0;
+}

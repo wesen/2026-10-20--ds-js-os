@@ -1,0 +1,321 @@
+// Buffers (typedSdkBuffer): 0 the directory's entries, 1 the name to keep selected, 2 the name a second F5 deletes,
+// 3 the deleted name, 4 the prompt, 5 the current path, 6 short literals, 7 the rename target [0, 4096) and the
+// renamed entry's name at 8192, 8 a joined path, 9 the note line, 10 a settlement's JSON text and event text.
+//
+// An entry is 104 units at 104 * i: 0 the name's length, 1 dir, 2 and 3 the size in MiB, 4 and 5 the bytes below
+// a MiB, 8 the name (at most 96 units). Entry 256 is room for sorting.
+function fiEntryLength(entries: buffer, i: i32): i32 {
+    return entries.charCodeAt(i * 104);
+}
+
+function fiEntryDir(entries: buffer, i: i32): bool {
+    return entries.charCodeAt(i * 104 + 1) === 1;
+}
+
+function fiEntryHigh(entries: buffer, i: i32): i32 {
+    return entries.charCodeAt(i * 104 + 2) + entries.charCodeAt(i * 104 + 3) * 65536;
+}
+
+function fiEntryLow(entries: buffer, i: i32): i32 {
+    return entries.charCodeAt(i * 104 + 4) + entries.charCodeAt(i * 104 + 5) * 65536;
+}
+
+// Directories first, then names by UTF-16 code unit.
+function fiBefore(entries: buffer, a: i32, b: i32): bool {
+    const aDir = fiEntryDir(entries, a);
+    const bDir = fiEntryDir(entries, b);
+    if (aDir !== bDir) return aDir;
+    const aLength = fiEntryLength(entries, a);
+    const bLength = fiEntryLength(entries, b);
+    let at = 0;
+    while (at < aLength && at < bLength) {
+        const order = entries.charCodeAt(a * 104 + 8 + at) - entries.charCodeAt(b * 104 + 8 + at);
+        if (order !== 0) return order < 0;
+        at = at + 1;
+    }
+    return aLength < bLength;
+}
+
+// Insert entry `count` among the sorted entries before it.
+function fiSortLast(count: i32): i32 {
+    const entries = typedSdkBuffer(0);
+    let low = 0;
+    let high = count;
+    while (low < high) {
+        const middle = (low + high) / 2;
+        if (fiBefore(entries, count, middle)) { high = middle; } else { low = middle + 1; }
+    }
+    if (low === count) return count + 1;
+    typedSdkMove(entries, 256 * 104, count * 104, 104);
+    typedSdkMove(entries, low * 104 + 104, low * 104, (count - low) * 104);
+    typedSdkMove(entries, low * 104, 256 * 104, 104);
+    return count + 1;
+}
+
+function fiSpace(json: string, at: i32): i32 {
+    let i = at;
+    while (i < json.length) {
+        const c = json.charCodeAt(i);
+        if (!(c === 32 || c === 9 || c === 10 || c === 13)) return i;
+        i = i + 1;
+    }
+    return i;
+}
+
+function fiHex(c: i32): i32 {
+    if (c >= 48 && c <= 57) return c - 48;
+    if (c >= 97 && c <= 102) return c - 87;
+    if (c >= 65 && c <= 70) return c - 55;
+    return -1;
+}
+
+// Decode the JSON string at `at` into out[offset, offset + limit) when out is given (limit >= 0). Returns the
+// decoded length (or -1 when it is malformed or too long) and leaves the end of the literal in state.scanEnd.
+function fiString(state: WorldState, json: string, at: i32, out: buffer, offset: i32, limit: i32): i32 {
+    if (at >= json.length || json.charCodeAt(at) !== 34) return -1;
+    let i = at + 1;
+    let length = 0;
+    while (i < json.length) {
+        let c = json.charCodeAt(i);
+        if (c === 34) {
+            state.scanEnd = i + 1;
+            return length;
+        }
+        if (c === 92) {
+            if (i + 1 >= json.length) return -1;
+            const e = json.charCodeAt(i + 1);
+            i = i + 2;
+            c = e;
+            if (e === 110) { c = 10; }
+            if (e === 114) { c = 13; }
+            if (e === 116) { c = 9; }
+            if (e === 98) { c = 8; }
+            if (e === 102) { c = 12; }
+            if (e === 117) {
+                if (i + 4 > json.length) return -1;
+                const a = fiHex(json.charCodeAt(i));
+                const b = fiHex(json.charCodeAt(i + 1));
+                const d = fiHex(json.charCodeAt(i + 2));
+                const f = fiHex(json.charCodeAt(i + 3));
+                if (a < 0 || b < 0 || d < 0 || f < 0) return -1;
+                c = ((a * 16 + b) * 16 + d) * 16 + f;
+                i = i + 4;
+            }
+        } else {
+            i = i + 1;
+        }
+        if (limit >= 0) {
+            if (length >= limit) return -1;
+            out.setCharCodeAt(offset + length, c);
+        }
+        length = length + 1;
+    }
+    return -1;
+}
+
+// A non-negative JSON integer as MiB (state.numberHigh) and bytes below a MiB (state.numberLow); false if it is not.
+function fiNumber(state: WorldState, json: string, at: i32): bool {
+    let high = 0;
+    let low = 0;
+    let i = at;
+    while (i < json.length && json.charCodeAt(i) >= 48 && json.charCodeAt(i) <= 57) {
+        low = low * 10 + json.charCodeAt(i) - 48;
+        high = high * 10 + low / 1048576;
+        low = low % 1048576;
+        i = i + 1;
+    }
+    if (i === at) return false;
+    // A fraction or exponent is not a byte count.
+    if (i < json.length && (json.charCodeAt(i) === 46 || json.charCodeAt(i) === 101 || json.charCodeAt(i) === 69))
+        return false;
+    state.numberHigh = high;
+    state.numberLow = low;
+    state.scanEnd = i;
+    return true;
+}
+
+// Skip a scalar value: true, false, null, a number or a string. Nested values are not part of these replies.
+function fiSkip(state: WorldState, json: string, at: i32): bool {
+    if (at >= json.length) return false;
+    const c = json.charCodeAt(at);
+    if (c === 34) return fiString(state, json, at, typedSdkBuffer(6), 0, -1) >= 0;
+    if (c === 116 || c === 110) {
+        state.scanEnd = at + 4;
+        return at + 4 <= json.length;
+    }
+    if (c === 102) {
+        state.scanEnd = at + 5;
+        return at + 5 <= json.length;
+    }
+    if (c === 45) return fiNumber(state, json, at + 1);
+    return fiNumber(state, json, at);
+}
+
+// A member key: 1 name, 2 dir, 3 size, 4 more, 5 free, 0 another; -1 when malformed.
+function fiKey(state: WorldState, json: string, at: i32): i32 {
+    const key = typedSdkBuffer(6);
+    const length = fiString(state, json, at, key, 0, 8);
+    if (length < 0) {
+        if (fiString(state, json, at, key, 0, -1) < 0) return -1;
+        return 0;
+    }
+    const word = typedSdkBuffer(8);
+    if (fiSameWord(key, length, word, word.writeLiteral(0, "name"))) return 1;
+    if (fiSameWord(key, length, word, word.writeLiteral(0, "dir"))) return 2;
+    if (fiSameWord(key, length, word, word.writeLiteral(0, "size"))) return 3;
+    if (fiSameWord(key, length, word, word.writeLiteral(0, "more"))) return 4;
+    if (fiSameWord(key, length, word, word.writeLiteral(0, "free"))) return 5;
+    return 0;
+}
+
+function fiSameWord(left: buffer, leftLength: i32, right: buffer, rightLength: i32): bool {
+    if (leftLength !== rightLength) return false;
+    for (let i = 0; i < leftLength; i = i + 1) {
+        if (left.charCodeAt(i) !== right.charCodeAt(i)) return false;
+    }
+    return true;
+}
+
+function fiTrue(json: string, at: i32): bool {
+    return at + 4 <= json.length && json.charCodeAt(at) === 116;
+}
+
+// Read one listing object at `at` into entry `slot` (when slot >= 0). Returns 1 for an entry, 2 for the
+// {"more":true} marker, 0 when it is malformed; state.scanEnd is the end of the object.
+function fiObject(state: WorldState, json: string, at: i32, slot: i32): i32 {
+    if (at >= json.length || json.charCodeAt(at) !== 123) return 0;
+    let i = fiSpace(json, at + 1);
+    let named = false;
+    let sized = false;
+    let more = false;
+    let dir = false;
+    let high = 0;
+    let low = 0;
+    let first = true;
+    while (i < json.length && json.charCodeAt(i) !== 125) {
+        if (!first) {
+            if (json.charCodeAt(i) !== 44) return 0;
+            i = fiSpace(json, i + 1);
+        }
+        first = false;
+        const key = fiKey(state, json, i);
+        if (key < 0) return 0;
+        i = fiSpace(json, state.scanEnd);
+        if (i >= json.length || json.charCodeAt(i) !== 58) return 0;
+        i = fiSpace(json, i + 1);
+        if (key === 1) {
+            if (slot >= 0) {
+                const length = fiString(state, json, i, typedSdkBuffer(0), slot * 104 + 8, 95);
+                if (length < 0) return 0;
+                const entries = typedSdkBuffer(0);
+                entries.setCharCodeAt(slot * 104, length);
+            } else if (!fiSkip(state, json, i)) {
+                return 0;
+            }
+            named = true;
+        } else if (key === 2 || key === 4) {
+            if (key === 2) { dir = fiTrue(json, i); }
+            if (key === 4) { more = fiTrue(json, i); }
+            if (!fiSkip(state, json, i)) return 0;
+        } else if (key === 3) {
+            if (!fiNumber(state, json, i)) return 0;
+            high = state.numberHigh;
+            low = state.numberLow;
+            sized = true;
+        } else if (!fiSkip(state, json, i)) {
+            return 0;
+        }
+        i = fiSpace(json, state.scanEnd);
+    }
+    if (i >= json.length) return 0;
+    state.scanEnd = i + 1;
+    if (more) return 2;
+    if (!named || !sized) return 0;
+    if (slot >= 0) {
+        const entries = typedSdkBuffer(0);
+        entries.setCharCodeAt(slot * 104 + 1, 0);
+        if (dir) { entries.setCharCodeAt(slot * 104 + 1, 1); }
+        entries.setCharCodeAt(slot * 104 + 2, high % 65536);
+        entries.setCharCodeAt(slot * 104 + 3, high / 65536);
+        entries.setCharCodeAt(slot * 104 + 4, low % 65536);
+        entries.setCharCodeAt(slot * 104 + 5, low / 65536);
+    }
+    return 1;
+}
+
+// Load a directory listing ([{name, dir, size}, ..., {more: true}]) from buffer 10; false when it is invalid.
+function fiLoadEntries(state: WorldState, length: i32): bool {
+    state.more = false;
+    state.count = 0;
+    const json = typedSdkView(typedSdkBuffer(10), length);
+    let i = fiSpace(json, 0);
+    if (i >= length || json.charCodeAt(i) !== 91) return false;
+    i = fiSpace(json, i + 1);
+    let first = true;
+    while (i < length && json.charCodeAt(i) !== 93) {
+        if (!first) {
+            if (json.charCodeAt(i) !== 44) return false;
+            i = fiSpace(json, i + 1);
+        }
+        first = false;
+        let slot = -1;
+        if (state.count < 256) { slot = state.count; }
+        const kind = fiObject(state, json, i, slot);
+        if (kind === 0) return false;
+        if (kind === 2) { state.more = true; }
+        if (kind === 1 && slot >= 0) { state.count = fiSortLast(state.count); }
+        i = fiSpace(json, state.scanEnd);
+    }
+    if (i >= length) return false;
+    state.selected = filesSelect(state.selected, state.count, 0);
+    if (state.keepLength > 0) {
+        const entries = typedSdkBuffer(0);
+        const keep = typedSdkBuffer(1);
+        for (let e = 0; e < state.count; e = e + 1) {
+            if (fiEntryLength(entries, e) === state.keepLength && fiNameIs(entries, e, keep, state.keepLength)) {
+                state.selected = e;
+                break;
+            }
+        }
+    }
+    return true;
+}
+
+function fiNameIs(entries: buffer, e: i32, name: buffer, length: i32): bool {
+    if (fiEntryLength(entries, e) !== length) return false;
+    for (let i = 0; i < length; i = i + 1) {
+        if (entries.charCodeAt(e * 104 + 8 + i) !== name.charCodeAt(i)) return false;
+    }
+    return true;
+}
+
+// The "free" member of an info reply in buffer 10.
+function fiLoadFree(state: WorldState, length: i32): bool {
+    const json = typedSdkView(typedSdkBuffer(10), length);
+    let i = fiSpace(json, 0);
+    if (i >= length || json.charCodeAt(i) !== 123) return false;
+    i = fiSpace(json, i + 1);
+    let first = true;
+    while (i < length && json.charCodeAt(i) !== 125) {
+        if (!first) {
+            if (json.charCodeAt(i) !== 44) return false;
+            i = fiSpace(json, i + 1);
+        }
+        first = false;
+        const key = fiKey(state, json, i);
+        if (key < 0) return false;
+        i = fiSpace(json, state.scanEnd);
+        if (i >= length || json.charCodeAt(i) !== 58) return false;
+        i = fiSpace(json, i + 1);
+        if (key === 5) {
+            if (!fiNumber(state, json, i)) return false;
+            state.freeHigh = state.numberHigh;
+            state.freeLow = state.numberLow;
+            state.freeKnown = true;
+            return true;
+        }
+        if (!fiSkip(state, json, i)) return false;
+        i = fiSpace(json, state.scanEnd);
+    }
+    return false;
+}

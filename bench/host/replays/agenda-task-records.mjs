@@ -7,7 +7,7 @@ import '../../lib/compiler.mjs';
 
 const original = fs.readFileSync('apps/js/picocalc/apps/agenda.js', 'utf8');
 const parse = vm.runInNewContext(original.slice(0, original.indexOf('function agToggled')) + '\nagParse');
-const source = fs.readFileSync('apps/typed/agenda/reminder.typed', 'utf8');
+const source = fs.readFileSync('apps/typed/agenda/state.typed', 'utf8') + fs.readFileSync('apps/typed/agenda/reminder.typed', 'utf8');
 const { bytes, records } = typedWasm.compile(source);
 const { instance } = await WebAssembly.instantiate(bytes);
 const { memory, parseTask } = instance.exports;
@@ -20,8 +20,8 @@ function compiled(line) {
     for (let i = 0; i < line.length; i++) data.setUint16(4 + i * 2, line.charCodeAt(i), true);
     data.setUint32(title, line.length, true);
     if (!parseTask(0, title, record)) return null;
-    const task = Object.fromEntries(Object.entries(records.Task).map(([name, field]) =>
-        [name, data.getInt32(record + field.offset, true)]));
+    const task = Object.fromEntries(Object.entries(records.WorldState).filter(([name]) => name.startsWith('task')).map(([name, field]) =>
+        [name[4].toLowerCase() + name.slice(5), data.getInt32(record + field.offset, true)]));
     let text = '';
     for (let i = 0; i < task.titleLength; i++) text += String.fromCharCode(data.getUint16(title + 4 + i * 2, true));
     return {

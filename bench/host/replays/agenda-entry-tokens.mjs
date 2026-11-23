@@ -12,11 +12,13 @@ const [cc, emulator] = process.argv.slice(2);
 assert(cc && emulator, 'pass the RV32 GCC and repository rv32emu paths');
 const app = readFileSync('apps/js/picocalc/apps/agenda.js', 'utf8');
 const oracle = vm.runInNewContext(app.slice(0, app.indexOf('// ---- grouping')) + '\n({agDateWord, agTimeWord, agExpand})');
-const source = ['reminder', 'entry'].map(
+const source = ['state', 'reminder', 'entry'].map(
     name => readFileSync('apps/typed/agenda/' + name + '.typed', 'utf8')
 ).join('\n');
 const {instance: {exports}} = await WebAssembly.instantiate(compileTyped(source));
 const {image, entries} = typedRv32.compile(source);
+const errorOffset = typedWasm.compile(source).records.WorldState.errorStart.offset;
+assert.equal(errorOffset, 44, 'agenda-entry-runner.c places the span after the eleven task fields');
 const view = new DataView(exports.memory.buffer);
 const encode = date => date ? date.y * 10000 + date.m * 100 + date.d : -1;
 
@@ -101,7 +103,8 @@ function addPrompt(input, today, limit) {
     }
     const row = Buffer.alloc(stride * 2 + 20);
     const output = 4096;
-    const error = 8192;
+    // normalizeEntry writes the span into WorldState's errorStart and errorEnd.
+    const state = 8192, error = state + errorOffset;
     row.writeUInt32LE(input.length, 0);
     row.writeUInt32LE(expected.length, stride);
     view.setUint32(0, input.length, true);
@@ -119,7 +122,7 @@ function addPrompt(input, today, limit) {
     const label = JSON.stringify([input, today, limit]);
     view.setInt32(error, -1, true);
     view.setInt32(error + 4, -1, true);
-    assert.equal(exports.normalizeEntry(0, encode(today), output, error), result, label);
+    assert.equal(exports.normalizeEntry(0, encode(today), output, state), result, label);
     assert.deepEqual([view.getInt32(error, true), view.getInt32(error + 4, true)], [start, end], label);
     if (result >= 0) {
         let actual = '';

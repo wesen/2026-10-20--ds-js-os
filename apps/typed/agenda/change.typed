@@ -1,0 +1,218 @@
+// Changes to notes/todo.txt. Every change re-reads the file, finds the task's line by its text, edits that line in
+// buffer 0 and writes the file back. Kinds: 1 add, 2 edit, 3 toggle, 4 delete.
+function agNoteLiteral(state: WorldState, kind: i32): i32 {
+    const note = typedSdkBuffer(3);
+    if (kind === 0) { state.noteLength = note.writeLiteral(0, "Could not read notes/todo.txt"); }
+    if (kind === 1) { state.noteLength = note.writeLiteral(0, "Could not save notes/todo.txt"); }
+    if (kind === 2) { state.noteLength = note.writeLiteral(0, "todo.txt changed meanwhile; reloaded."); }
+    if (kind === 3) { state.noteLength = note.writeLiteral(0, "Added."); }
+    if (kind === 4) { state.noteLength = note.writeLiteral(0, "Deleted."); }
+    if (kind === 5) { state.noteLength = note.writeLiteral(0, "Could not allocate the file edit"); }
+    if (kind === 6) { state.noteLength = note.writeLiteral(0, "the normalized task is too long"); }
+    return state.noteLength;
+}
+
+// Read notes/todo.txt for display unless a change or a read is under way; ring reminds after it.
+function agRequestFile(state: WorldState, ring: bool): bool {
+    if (state.readToken > 0) {
+        state.remindAfterRead = state.remindAfterRead || ring;
+        return true;
+    }
+    if (state.editRead > 0 || state.editWrite > 0 || state.todo < 0) return false;
+    state.readToken = typedSdkFileRead(state.todo);
+    if (state.readToken < 0) {
+        state.readToken = 0;
+        return false;
+    }
+    state.remindAfterRead = ring;
+    return true;
+}
+
+function agRequestChange(state: WorldState, change: i32, output: buffer, hints: buffer): i32 {
+    state.editRead = -1;
+    if (state.todo >= 0) { state.editRead = typedSdkFileRead(state.todo); }
+    if (state.editRead < 0) {
+        state.editRead = 0;
+        agNoteLiteral(state, 0);
+        return agShow(state, output, hints);
+    }
+    state.pendingChange = change;
+    // An earlier refresh cannot publish a stale snapshot during this change.
+    state.readToken = 0;
+    state.remindAfterRead = false;
+    return 0;
+}
+
+// A failed read: true when the file does not exist yet.
+function agMissing(): bool {
+    const error = typedSdkBuffer(2);
+    const length = typedSdkEventText(2, error, 0, error);
+    const prefix = typedSdkBuffer(6);
+    return length >= 8 && agSame(error, 8, prefix, prefix.writeLiteral(0, "no file "));
+}
+
+// The line [start, end) of buffer 0 whose text is the original; start is -1 when there is none.
+function agFindOriginal(state: WorldState, length: i32): i32 {
+    const file = typedSdkView(typedSdkBuffer(0), length);
+    let start = 0;
+    while (start <= length) {
+        const end = agLineEnd(file, start);
+        if (agIsOriginal(state, file, start, end)) return start;
+        start = end + 1;
+    }
+    return -1;
+}
+
+function agMarker(file: buffer, at: i32, mark: i32): i32 {
+    file.writeLiteral(at, "- [ ] ");
+    file.setCharCodeAt(at + 3, mark);
+    return at + 6;
+}
+
+// Edit buffer 0 [0, length) as the pending change asks: the new length, -1 when it cannot be saved, -2 when the
+// task's line has gone.
+function agEdit(state: WorldState, length: i32): i32 {
+    const change = state.pendingChange;
+    const task = state.newTaskLength;
+    if (change === 1) {
+        let start = length;
+        const head = typedSdkView(typedSdkBuffer(0), Math.max(length, 1));
+        const separate = length > 0 && head.charCodeAt(length - 1) !== 10;
+        if (length + 8 + task > 65536) return -1;
+        const file = typedSdkBuffer(0);
+        if (separate) {
+            file.setCharCodeAt(length, 10);
+            start = length + 1;
+        }
+        const at = agMarker(file, start, 32);
+        typedSdkCopySpan(typedSdkView(typedSdkBuffer(8), 4096), 2048, 2048 + task, file, at);
+        file.setCharCodeAt(at + task, 10);
+        return at + task + 1;
+    }
+    const line = agFindOriginal(state, length);
+    if (line < 0) return -2;
+    let end = line + state.originalLength;
+    if (change === 4) {
+        let first = line;
+        if (end < length) {
+            end = end + 1;
+        } else if (line > 0) {
+            first = line - 1;
+        }
+        typedSdkMove(typedSdkBuffer(0), first, end, length - end);
+        return length - (end - first);
+    }
+    if (!agParseOriginal(state)) return -1;
+    const start = line + skipSpace(agLine(state), 0);
+    const wide = state.taskTextStart - skipSpace(agLine(state), 0) === 6;
+    const file = typedSdkBuffer(0);
+    if (change === 3) {
+        const mark = agendaMark(state.taskDone, true);
+        if (wide) {
+            file.setCharCodeAt(start + 3, mark);
+            return length;
+        }
+        if (length + 4 > 65536) return -1;
+        typedSdkMove(file, start + 6, start + 2, length - start - 2);
+        agMarker(file, start, mark);
+        return length + 4;
+    }
+    const grown = length - (end - start) + 6 + task;
+    if (grown > 65536) return -1;
+    typedSdkMove(file, start + 6 + task, end, length - end);
+    const at = agMarker(file, start, agendaMark(state.taskDone, false));
+    typedSdkCopySpan(typedSdkView(typedSdkBuffer(8), 4096), 2048, 2048 + task, typedSdkBuffer(0), at);
+    return grown;
+}
+
+// The edit read settled. Buffer 0 then holds the edited file, which is indexed (without publishing) so the list
+// stays consistent with it; the write's settlement re-reads the file and shows it.
+function agChangeFile(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    let length = -1;
+    if (event.ok) {
+        length = typedSdkEventText(2, typedSdkBuffer(6), 0, typedSdkBuffer(0));
+    } else if (agMissing()) {
+        length = 0;
+    } else {
+        agNoteLiteral(state, 0);
+        return agShow(state, output, hints);
+    }
+    let edited = -1;
+    if (length >= 0) { edited = agEdit(state, length); }
+    if (edited === -2) {
+        agNoteLiteral(state, 2);
+        state.snapshotLength = length;
+        agIndex(state, false, output);
+        return agShow(state, output, hints);
+    }
+    if (edited >= 0 && typedSdkCapture(0, typedSdkBuffer(0), edited) >= 0) {
+        state.editWrite = typedSdkWriteSnapshot(state.todo, 0);
+    }
+    if (edited < 0 || state.editWrite <= 0) {
+        state.editWrite = 0;
+        agNoteLiteral(state, 1);
+        agEmpty(state);
+        if (!agRequestFile(state, false)) return agShow(state, output, hints);
+        return 0;
+    }
+    state.snapshotLength = edited;
+    agIndex(state, false, output);
+    return 0;
+}
+
+function agWritten(event: WorldEvent, state: WorldState, output: buffer, hints: buffer): i32 {
+    state.editWrite = 0;
+    if (!event.ok) {
+        agNoteLiteral(state, 1);
+        if (!agRequestFile(state, false)) return agShow(state, output, hints);
+        return 0;
+    }
+    if (state.pendingChange === 1) { agNoteLiteral(state, 3); }
+    if (state.pendingChange === 4) { agNoteLiteral(state, 4); }
+    agRequestFile(state, false);
+    return 0;
+}
+
+// Normalize the prompt and start its change, or explain why it cannot be saved.
+function agSubmit(state: WorldState, output: buffer, hints: buffer): i32 {
+    const line = typedSdkBuffer(5);
+    typedSdkMove(line, 0, 2048, state.promptLength);
+    const input = typedSdkView(line, state.promptLength);
+    state.errorStart = -1;
+    state.errorEnd = -1;
+    const length = normalizeEntry(input, typedSdkClock(0), typedSdkBuffer(7), state);
+    const note = typedSdkBuffer(3);
+    if (length < 0) {
+        state.noteLength = 0;
+        if ((length === -3 || length === -4) && state.errorStart >= 0 && state.errorEnd > state.errorStart &&
+            state.errorEnd <= state.promptLength) {
+            const token = typedSdkView(typedSdkBuffer(5), state.promptLength);
+            const end = agClip(token, state.errorStart, state.errorEnd, 80);
+            let at = 0;
+            if (length === -3) { at = note.writeLiteral(0, "unknown date "); }
+            if (length === -4) { at = note.writeLiteral(0, "not a time: "); }
+            at = typedSdkCopySpan(token, state.errorStart, end, typedSdkBuffer(3), at);
+            if (length === -3) { at = at + note.writeLiteral(at, " (today, tomorrow, mon..sun, +3d, 11-15, 2026-11-15)"); }
+            state.noteLength = at;
+        }
+        if (length === -1) { state.noteLength = note.writeLiteral(0, "one date per task"); }
+        if (length === -2) { state.noteLength = note.writeLiteral(0, "the clock is not set: write the date as @YYYY-MM-DD"); }
+        if (length === -5) { state.noteLength = note.writeLiteral(0, "a reminder is like !15m, !2h or !1d"); }
+        if (length === -6) { state.noteLength = note.writeLiteral(0, "a task needs some words"); }
+        if (length === -7) { agNoteLiteral(state, 6); }
+        if (state.noteLength === 0 && length === -3) { state.noteLength = note.writeLiteral(0, "unknown date"); }
+        if (state.noteLength === 0 && length === -4) { state.noteLength = note.writeLiteral(0, "not a time"); }
+        if (state.noteLength === 0) return 0;
+        return agShow(state, output, hints);
+    }
+    if (length > 2048) {
+        agNoteLiteral(state, 6);
+        return agShow(state, output, hints);
+    }
+    typedSdkCopySpan(typedSdkView(typedSdkBuffer(7), length), 0, length, typedSdkBuffer(8), 2048);
+    state.newTaskLength = length;
+    const change = state.promptKind;
+    state.promptKind = 0;
+    state.noteLength = 0;
+    return agRequestChange(state, change, output, hints);
+}

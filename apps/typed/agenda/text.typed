@@ -1,0 +1,139 @@
+// Text helpers. The runtime's buffers (typedSdkBuffer) are Agenda's only memory:
+//   0 notes/todo.txt as last read, and the file being changed
+//   1 names passed to the SDK        2 event text            3 the note line      4 the error line
+//   5 the task line [0, 2048) and the prompt [2048, 4096)
+//   6 short literals and the time zone
+//   7 the reminder store while it is rewritten; normalizeEntry's output
+//   8 the task title [0, 2048) and the normalized new task [2048, 4096)
+//   10 the task index (five units per task, at most 12000 tasks) and the original line at [62000, 64048)
+function agDigits(out: buffer, at: i32, value: i32): i32 {
+    let scale = 1;
+    while (value / scale >= 10) { scale = scale * 10; }
+    let pos = at;
+    while (scale > 0) {
+        out.setCharCodeAt(pos, 48 + value / scale % 10);
+        pos = pos + 1;
+        scale = scale / 10;
+    }
+    return pos;
+}
+
+function agSigned(out: buffer, at: i32, value: i32): i32 {
+    if (value >= 0) return agDigits(out, at, value);
+    out.setCharCodeAt(at, 45);
+    return agDigits(out, at + 1, 0 - value);
+}
+
+function agTwo(out: buffer, at: i32, value: i32): i32 {
+    out.setCharCodeAt(at, 48 + value / 10 % 10);
+    out.setCharCodeAt(at + 1, 48 + value % 10);
+    return at + 2;
+}
+
+function agHex(digit: i32): i32 {
+    if (digit < 10) return 48 + digit;
+    return 87 + digit;
+}
+
+// JSON string content as nw_json_quote writes it: quote and backslash escaped, controls as \u00xx.
+function agQuoted(out: buffer, offset: i32, text: string, first: i32, end: i32): i32 {
+    let at = offset;
+    let i = first;
+    while (i < end) {
+        const unit = text.charCodeAt(i);
+        if (unit < 32) {
+            at = at + out.writeLiteral(at, "\\u00");
+            out.setCharCodeAt(at, agHex(unit / 16));
+            out.setCharCodeAt(at + 1, agHex(unit % 16));
+            at = at + 2;
+        }
+        if (unit >= 32) {
+            if (unit === 34 || unit === 92) { at = at + out.writeLiteral(at, "\\"); }
+            out.setCharCodeAt(at, unit);
+            at = at + 1;
+        }
+        i = i + 1;
+    }
+    return at;
+}
+
+function agQuote(out: buffer, offset: i32, text: string, first: i32, end: i32): i32 {
+    const at = agQuoted(out, offset + out.writeLiteral(offset, "\""), text, first, end);
+    return at + out.writeLiteral(at, "\"");
+}
+
+function agSame(left: buffer, leftLength: i32, right: buffer, rightLength: i32): bool {
+    if (leftLength !== rightLength) return false;
+    let i = 0;
+    while (i < leftLength) {
+        if (left.charCodeAt(i) !== right.charCodeAt(i)) return false;
+        i = i + 1;
+    }
+    return true;
+}
+
+// The first `count` code points of a span: the end of the clipped span.
+function agClip(text: string, first: i32, end: i32, count: i32): i32 {
+    return typedSdkPointIndex(text, first, end, count);
+}
+
+function agSnapshot(state: WorldState): string {
+    return typedSdkView(typedSdkBuffer(0), state.snapshotLength);
+}
+
+function agLine(state: WorldState): string {
+    return typedSdkView(typedSdkBuffer(5), state.lineLength);
+}
+
+function agTitle(state: WorldState): string {
+    return typedSdkView(typedSdkBuffer(8), state.taskTitleLength);
+}
+
+// Parse text[start, end) as a task line. Lines longer than 2048 units are not tasks.
+function agParseSpan(state: WorldState, text: string, start: i32, end: i32): bool {
+    if (end - start > 2048) return false;
+    const line = typedSdkBuffer(5);
+    if (typedSdkCopySpan(text, start, end, line, 0) < 0) return false;
+    state.lineLength = end - start;
+    return parseTask(typedSdkView(line, end - start), typedSdkBuffer(8), state);
+}
+
+// The original line of a change lives in the index buffer after the tasks.
+function agParseOriginal(state: WorldState): bool {
+    return agParseSpan(state, typedSdkView(typedSdkBuffer(10), 64048), 62000, 62000 + state.originalLength);
+}
+
+function agKeepOriginal(state: WorldState, text: string, start: i32, end: i32): bool {
+    if (end - start > 2048) return false;
+    typedSdkCopySpan(text, start, end, typedSdkBuffer(10), 62000);
+    state.originalLength = end - start;
+    return true;
+}
+
+function agIsOriginal(state: WorldState, text: string, start: i32, end: i32): bool {
+    if (end - start !== state.originalLength) return false;
+    const original = typedSdkBuffer(10);
+    let i = 0;
+    while (i < state.originalLength) {
+        if (text.charCodeAt(start + i) !== original.charCodeAt(62000 + i)) return false;
+        i = i + 1;
+    }
+    return true;
+}
+
+function agLineEnd(text: string, start: i32): i32 {
+    return typedSdkSeek(text, start, text.length, 10, 10, 10, 10);
+}
+
+function agTaskDate(state: WorldState): i32 {
+    if (!state.taskDateValid) return -1;
+    const line = agLine(state);
+    const at = state.taskDueStart;
+    return decimal(line, at + 1, 4) * 10000 + decimal(line, at + 6, 2) * 100 + decimal(line, at + 9, 2);
+}
+
+function agTaskMinute(state: WorldState): i32 {
+    if (!state.taskTimeValid) return -1;
+    const line = agLine(state);
+    return decimal(line, state.taskTimeStart, 2) * 60 + decimal(line, state.taskTimeStart + 3, 2);
+}

@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import '../../lib/compiler.mjs';
 
-const annotated = readFileSync('apps/typed/agenda/reminder.typed', 'utf8');
+// The parser writes WorldState's task fields, so it compiles after state.typed.
+const annotated = readFileSync('apps/typed/agenda/state.typed', 'utf8') + readFileSync('apps/typed/agenda/reminder.typed', 'utf8');
 const declarations = /\b(let|const) (\w+): (i32|bool) =/g;
 const inferred = annotated.replace(declarations, '$1 $2 =');
 assert(annotated !== inferred);

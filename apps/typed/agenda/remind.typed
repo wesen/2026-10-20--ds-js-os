@@ -1,0 +1,220 @@
+// Reminders. A task with a date, a time and an optional lead fires once, within two hours of its time, as a
+// compositor notice. The world's store keeps {"fired":{"<epoch ms>|<title>":<epoch ms>, ...}}, shared with the
+// JavaScript Agenda, so a restart does not ring again. Times are epoch minutes; wall time is seconds since 2000.
+function agLeap(year: i32): bool {
+    return year % 4 === 0 && (year % 100 > 0 || year % 400 === 0);
+}
+
+function agDaysBefore(year: i32): i32 {
+    const prior = year - 1;
+    return prior * 365 + prior / 4 - prior / 100 + prior / 400;
+}
+
+function agMonthDays(month: i32): i32 {
+    let days = 0;
+    let m = 1;
+    while (m < month) {
+        days = days + entryMonthLength(2001, m);
+        m = m + 1;
+    }
+    return days;
+}
+
+// The parsed task's due time as UTC epoch minutes, or -1. Agenda's Date constructor evaluates the zone at the
+// nominal UTC instant.
+function agDue(state: WorldState): i32 {
+    const line = agLine(state);
+    if (state.taskDueStart < 0 || state.taskDueStart + 11 > line.length ||
+        state.taskTimeStart < 0 || state.taskTimeStart + 5 > line.length) return -1;
+    let year = decimal(line, state.taskDueStart + 1, 4);
+    const month = decimal(line, state.taskDueStart + 6, 2);
+    const day = decimal(line, state.taskDueStart + 9, 2);
+    if (year < 100) { year = year + 1900; }
+    const hour = decimal(line, state.taskTimeStart, 2);
+    const minute = decimal(line, state.taskTimeStart + 3, 2);
+    if (month < 1 || month > 12 || day < 1 || day > 31 || hour < 0 || hour > 23 || minute < 0 || minute > 59)
+        return -1;
+    let days = agDaysBefore(year) - agDaysBefore(1970) + agMonthDays(month) + day - 1;
+    if (month > 2 && agLeap(year)) { days = days + 1; }
+    const nominal = days * 1440 + hour * 60 + minute;
+    const offset = typedSdkClockOffset(nominal);
+    if (offset === -100000) return -1;
+    return nominal - offset;
+}
+
+// "<fire ms>|<label>" as a JSON string at `at`; the end, or -1.
+function agReminderKey(state: WorldState, out: buffer, at: i32, fire: i32): i32 {
+    let end = at + out.writeLiteral(at, "\"");
+    end = agDigits(out, end, fire * 6);
+    end = end + out.writeLiteral(end, "0000|");
+    if (state.taskTitleLength > 0) {
+        end = agQuoted(out, end, agTitle(state), 0, state.taskTitleLength);
+    } else {
+        end = end + out.writeLiteral(end, "(untitled)");
+    }
+    return end + out.writeLiteral(end, "\"");
+}
+
+function agStoreString(store: string, at: i32, end: i32): i32 {
+    if (at >= end || store.charCodeAt(at) !== 34) return -1;
+    let i = at + 1;
+    while (i < end) {
+        const unit = store.charCodeAt(i);
+        if (unit === 34) return i + 1;
+        if (unit === 92) { i = i + 1; }
+        i = i + 1;
+    }
+    return -1;
+}
+
+function agStoreFired(store: string, end: i32): i32 {
+    let at = 0;
+    while (at + 9 <= end) {
+        if (store.charCodeAt(at) === 34 && store.charCodeAt(at + 1) === 102 && store.charCodeAt(at + 2) === 105 &&
+            store.charCodeAt(at + 3) === 114 && store.charCodeAt(at + 4) === 101 && store.charCodeAt(at + 5) === 100 &&
+            store.charCodeAt(at + 6) === 34 && store.charCodeAt(at + 7) === 58 && store.charCodeAt(at + 8) === 123)
+            return at + 9;
+        at = at + 1;
+    }
+    return -1;
+}
+
+function agSpanIs(store: string, at: i32, end: i32, key: i32, keyEnd: i32): bool {
+    if (end - at !== keyEnd - key) return false;
+    let i = 0;
+    while (at + i < end) {
+        if (store.charCodeAt(at + i) !== store.charCodeAt(key + i)) return false;
+        i = i + 1;
+    }
+    return true;
+}
+
+// The seconds since 2000 of a decimal epoch-ms value at [at, end), or -1.
+function agFiredAt(store: string, at: i32, end: i32): i32 {
+    if (at >= end) return -1;
+    let minutes = 0;
+    let rest = 0;
+    let i = at;
+    while (i < end) {
+        const digit = store.charCodeAt(i) - 48;
+        if (digit < 0 || digit > 9) return -1;
+        rest = rest * 10 + digit;
+        minutes = minutes * 10 + rest / 60000;
+        rest = rest % 60000;
+        i = i + 1;
+    }
+    return (minutes - 15778080) * 60 + rest / 1000;
+}
+
+// Record the reminder unless the store has it: false when it has fired already or cannot be recorded. The new
+// store is built in place in buffer 7: the key and timestamp at 10240, the old store shifted behind the new head,
+// then the recent old entries compacted after it.
+function agRemember(state: WorldState, fire: i32, wall: i32): bool {
+    const room = 10240;
+    let store = typedSdkBuffer(7);
+    let old = typedSdkStoreLoad(store);
+    if (old < 0 || old > room) { old = 0; }
+    store = typedSdkBuffer(7);
+    const keyEnd = agReminderKey(state, store, room, fire);
+    if (keyEnd > 12260) return false;
+    const stamp = typedSdkTimestamp(store, keyEnd);
+    if (stamp < 0) return false;
+    let view = typedSdkView(store, 12288);
+    const fired = agStoreFired(view, old);
+    let entry = fired;
+    while (fired >= 0 && entry >= 0 && entry < old) {
+        const close = agStoreString(view, entry, old);
+        if (close < 0) { entry = -1; }
+        if (close >= 0) {
+            if (agSpanIs(view, entry, close, room, keyEnd)) return false;
+            entry = typedSdkSeek(view, close, old, 44, 125, 125, 125);
+            if (entry < old && view.charCodeAt(entry) === 44) { entry = entry + 1; } else { entry = -1; }
+        }
+    }
+    const head = 10 + (keyEnd - room) + 1 + (stamp - keyEnd);
+    let moved = 0;
+    if (fired >= 0) { moved = Math.max(0, Math.min(old, room - head)); }
+    store = typedSdkBuffer(7);
+    typedSdkMove(store, head, 0, moved);
+    let at = store.writeLiteral(0, "{\"fired\":{");
+    typedSdkMove(store, at, room, keyEnd - room);
+    at = at + keyEnd - room;
+    at = at + store.writeLiteral(at, ":");
+    typedSdkMove(store, at, keyEnd, stamp - keyEnd);
+    at = at + stamp - keyEnd;
+    view = typedSdkView(store, 12288);
+    let read = head + fired;
+    const last = head + moved;
+    let count = 1;
+    while (fired >= 0 && count < 200 && read < last && view.charCodeAt(read) === 34) {
+        const colon = agStoreString(view, read, last);
+        if (colon < 0 || colon >= last || view.charCodeAt(colon) !== 58) { break; }
+        const stop = typedSdkSeek(view, colon + 1, last, 44, 125, 125, 125);
+        if (stop >= last) { break; }
+        const firedAt = agFiredAt(view, colon + 1, stop);
+        if (firedAt < 0) { break; }
+        if (firedAt >= wall - 172800) {
+            if (at + 1 + (stop - read) + 2 > room) { break; }
+            store = typedSdkBuffer(7);
+            store.setCharCodeAt(at, 44);
+            typedSdkMove(store, at + 1, read, stop - read);
+            at = at + 1 + stop - read;
+            count = count + 1;
+            view = typedSdkView(store, 12288);
+        }
+        if (view.charCodeAt(stop) !== 44) { break; }
+        read = stop + 1;
+    }
+    store = typedSdkBuffer(7);
+    at = at + store.writeLiteral(at, "}}");
+    typedSdkStoreSave(store, at);
+    return true;
+}
+
+// Ring the parsed task (buffers 5 and 8) if it is due; wall is seconds since 2000, or -1.
+function agRemind(state: WorldState, wall: i32, output: buffer): i32 {
+    if (wall < 0 || !state.taskTimeValid) return 0;
+    const due = agDue(state);
+    if (due < 0) return 0;
+    let fire = due;
+    if (state.taskLeadMinutes > 0) { fire = due - state.taskLeadMinutes; }
+    const now = wall / 60 + 15778080;
+    if (fire > now || now - fire > 121) return 0;
+    const elapsed = (now - fire) * 60 + wall % 60;
+    if (elapsed > 7200) return 0;
+    const late = elapsed > 120;
+    const line = agLine(state);
+    let at = output.writeLiteral(0, "{\"text\":\"");
+    if (state.taskTitleLength > 0) {
+        at = agQuoted(output, at, agTitle(state), 0, state.taskTitleLength);
+    } else {
+        at = at + output.writeLiteral(at, "(untitled)");
+    }
+    at = at + output.writeLiteral(at, " at ");
+    typedSdkCopySpan(line, state.taskTimeStart, state.taskTimeStart + 5, output, at);
+    at = at + 5;
+    at = at + output.writeLiteral(at, "\",\"sub\":\"");
+    const lead = state.taskLeadMinutes > 0 && state.taskLeadStart >= 0 && state.taskLeadEnd > state.taskLeadStart &&
+        state.taskLeadEnd - state.taskLeadStart <= 6 && state.taskLeadEnd <= line.length;
+    if (late) {
+        at = at + output.writeLiteral(at, "was due at ");
+        typedSdkCopySpan(line, state.taskTimeStart, state.taskTimeStart + 5, output, at);
+        at = at + 5;
+    } else if (!lead) {
+        at = at + output.writeLiteral(at, "now");
+    }
+    if (lead) {
+        if (late) { at = at + output.writeLiteral(at, " less "); } else { at = at + output.writeLiteral(at, "in "); }
+        for (let i = state.taskLeadStart + 1; i < state.taskLeadEnd; i = i + 1) {
+            const code = line.charCodeAt(i);
+            if ((code < 48 || code > 57) && code !== 109 && code !== 104 && code !== 100) return 0;
+            output.setCharCodeAt(at, code);
+            at = at + 1;
+        }
+    }
+    at = at + output.writeLiteral(at, "\"}");
+    if (!agRemember(state, fire, wall)) return 0;
+    const to = typedSdkBuffer(1);
+    const verb = typedSdkBuffer(2);
+    return typedSdkSend(to, to.writeLiteral(0, "compositor"), verb, verb.writeLiteral(0, "notify"), output, at);
+}

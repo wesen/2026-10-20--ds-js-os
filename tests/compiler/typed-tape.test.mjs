@@ -54,8 +54,8 @@ function units(world) {
             // The playable firmware's Chess: the 3D painter embedded as literal writes (CMakeLists.txt).
             playableChess: [list("chess").replace("function chessRender(", "function chessRenderTree(") + "\n" +
                 embedPainter("painter-3d.typed") + "\n" + app("chess", "mobile-view.typed") + "\n", world],
-            files: [app("files", "files.typed"), world],
-            agenda: [app("agenda", "reminder.typed") + "\n" + app("agenda", "entry.typed"), []],
+            files: [list("files"), world],
+            agenda: [list("agenda"), world],
             painter: [app("chess", "painter.typed"), []],
             painter3d: [app("chess", "painter-3d.typed"), []],
             candelaHand: [candela("hand"), []],

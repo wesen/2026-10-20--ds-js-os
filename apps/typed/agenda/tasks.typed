@@ -1,0 +1,134 @@
+// The task index: five units per task in buffer 10, sorted by day, time and file order.
+//   0, 1: the date key (YYYYMMDD; 100000000 undated; 100000001 done)  2: minute of day + 1 (0: no time)
+//   3: the line's offset in the file  4: the row in the list, headers included
+function agKey(items: buffer, i: i32): i32 {
+    return items.charCodeAt(i * 5) + items.charCodeAt(i * 5 + 1) * 65536;
+}
+
+function agMinute(items: buffer, i: i32): i32 {
+    return items.charCodeAt(i * 5 + 2) - 1;
+}
+
+function agOffset(items: buffer, i: i32): i32 {
+    return items.charCodeAt(i * 5 + 3);
+}
+
+function agRow(items: buffer, i: i32): i32 {
+    return items.charCodeAt(i * 5 + 4);
+}
+
+function agGroup(state: WorldState, key: i32): i32 {
+    if (key < state.today) return -1;
+    return key;
+}
+
+function agSelectedRow(state: WorldState): i32 {
+    if (state.selected >= 0) return agRow(typedSdkBuffer(10), state.selected);
+    if (state.hasSnapshot) return -1;
+    return 0;
+}
+
+// Insert after every task that sorts the same, which keeps file order among equals.
+function agInsert(state: WorldState, count: i32, key: i32, minute: i32, offset: i32): i32 {
+    const items = typedSdkBuffer(10);
+    let low = 0;
+    let high = count;
+    while (low < high) {
+        const middle = (low + high) / 2;
+        const other = agKey(items, middle);
+        if (other > key || (other === key && key < 100000000 && agMinute(items, middle) > minute)) {
+            high = middle;
+        } else {
+            low = middle + 1;
+        }
+    }
+    typedSdkMove(items, low * 5 + 5, low * 5, (count - low) * 5);
+    items.setCharCodeAt(low * 5, key % 65536);
+    items.setCharCodeAt(low * 5 + 1, key / 65536);
+    items.setCharCodeAt(low * 5 + 2, minute + 1);
+    items.setCharCodeAt(low * 5 + 3, offset);
+    items.setCharCodeAt(low * 5 + 4, 0);
+    return count + 1;
+}
+
+function agLayout(state: WorldState, oldRow: i32): i32 {
+    const date = typedSdkClock(0);
+    if (date !== state.today) {
+        state.today = date;
+        state.tomorrow = -1;
+        if (date >= 0) { state.tomorrow = entryAddDays(date, 1); }
+    }
+    state.visibleCount = state.openCount;
+    if (state.showDone) { state.visibleCount = state.itemCount; }
+    const items = typedSdkBuffer(10);
+    let group = 0;
+    let row = 0;
+    state.selected = -1;
+    for (let i = 0; i < state.visibleCount; i = i + 1) {
+        const next = agGroup(state, agKey(items, i));
+        if (i === 0 || next !== group) { row = row + 1; }
+        group = next;
+        items.setCharCodeAt(i * 5 + 4, row);
+        if (oldRow >= 0 && state.selected < 0 && row >= oldRow) { state.selected = i; }
+        row = row + 1;
+    }
+    if (oldRow >= 0 && state.selected < 0) { state.selected = state.visibleCount - 1; }
+    return 0;
+}
+
+// Index buffer 0 [0, snapshotLength) as the current file; ring raises the reminders that are due.
+function agIndex(state: WorldState, ring: bool, output: buffer): i32 {
+    const oldRow = agSelectedRow(state);
+    let wall = -1;
+    if (ring) { wall = typedSdkClock(1); }
+    const text = agSnapshot(state);
+    const length = text.length;
+    let count = 0;
+    let open = 0;
+    let start = 0;
+    while (start <= length) {
+        const end = agLineEnd(text, start);
+        if (count < 12000 && agParseSpan(state, text, start, end)) {
+            count = agInsert(state, count, agendaDateKey(agTaskDate(state), state.taskDone), agTaskMinute(state), start);
+            if (!state.taskDone) {
+                open = open + 1;
+                agRemind(state, wall, output);
+            }
+        }
+        start = end + 1;
+    }
+    state.hasSnapshot = true;
+    state.loadedAt = typedSdkClock(2);
+    state.itemCount = count;
+    state.openCount = open;
+    agLayout(state, oldRow);
+    state.errorLength = 0;
+    return count;
+}
+
+// Remind in file order, not display order.
+function agCheckReminders(state: WorldState, output: buffer): i32 {
+    const wall = typedSdkClock(1);
+    if (wall < 0 || !state.hasSnapshot) return 0;
+    const text = agSnapshot(state);
+    let start = 0;
+    while (start <= text.length) {
+        const end = agLineEnd(text, start);
+        if (typedSdkSeek(text, start, end, 64, 64, 64, 64) < end && agParseSpan(state, text, start, end) &&
+            !state.taskDone) {
+            agRemind(state, wall, output);
+        }
+        start = end + 1;
+    }
+    return 0;
+}
+
+function agEmpty(state: WorldState): i32 {
+    state.hasSnapshot = false;
+    state.snapshotLength = 0;
+    state.itemCount = 0;
+    state.openCount = 0;
+    state.visibleCount = 0;
+    state.selected = -1;
+    return 0;
+}

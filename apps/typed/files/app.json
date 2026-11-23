@@ -1,18 +1,19 @@
 {
   "name": "files",
   "kind": "world",
-  "sources": ["files.typed"],
-  "link": "apps/typed/files/compile.js",
-  "entry": "compileFilesRv32",
+  "sources": ["state.typed", "files.typed", "listing.typed", "paint.typed", "browse.typed"],
+  "link": "compiler/typed/typed-world.js",
+  "entry": "compileTypedWorldRv32",
   "reactor": {
-    "sources": ["apps/typed/files/world.c", "apps/typed/files/rv32-slot.S", "firmware/sdk/nw_elf.c"]
+    "sources": ["firmware/sdk/typed/world.c", "firmware/sdk/typed/chess-psix.c", "firmware/sdk/typed/rv32-slot.S",
+                "firmware/third_party/quickjs/libunicode.c", "firmware/sdk/nw_elf.c"]
   },
-  "heapBytes": 2097152,
-  "deadlineMs": 1700,
-  "world": {"replaces": "files"},
+  "policy": "interactive",
+  "heapBytes": 4194304,
+  "deadlineMs": 3000,
+  "world": {"replaces": "files", "mem_kb": 768},
   "fallback": true,
   "notes": [
-    "The default policy compiles Files in 0.41 s on the P4 (PICOCALC-COMPILE-BUDGET).",
-    "The reactor is C (world.c holds the app's policy); PICOCALC-AGENDA-TYPED-WORLD moves it to Typed."
+    "The whole app is Typed on the generic world reactor (PICOCALC-AGENDA-TYPED-WORLD)."
   ]
 }

@@ -13,7 +13,8 @@ const [cc, emu] = process.argv.slice(2);
 assert(cc && emu, 'pass riscv32-esp-elf-gcc and the repository rv32emu executable');
 const work = mkdtempSync(join(tmpdir(), 'agenda-rv32-'));
 const dir = fileURLToPath(new URL('.', import.meta.url));
-const source = readFileSync('apps/typed/agenda/reminder.typed', 'utf8');
+// The task fields lead WorldState (state.typed), so the runner reads them at the record's first eleven words.
+const source = readFileSync('apps/typed/agenda/state.typed', 'utf8') + readFileSync('apps/typed/agenda/reminder.typed', 'utf8');
 const {image, entries} = typedRv32.compile(source);
 const {instance} = await WebAssembly.instantiate(compileTyped(source));
 const wasm = new DataView(instance.exports.memory.buffer);

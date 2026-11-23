@@ -1,25 +1,6 @@
-// Offsets refer to the original task line in UTF-16 code units. A negative
-// offset (or leadMinutes) marks an absent field. Ends are exclusive.
-record Task {
-    done: bool;
-    textStart: i32;
-    dueStart: i32;
-    dueEnd: i32;
-    timeStart: i32;
-    dateValid: bool;
-    timeValid: bool;
-    leadStart: i32;
-    leadEnd: i32;
-    leadMinutes: i32;
-    titleLength: i32;
-}
-
-// normalizeEntry writes the offending token's UTF-16 offsets here.
-record EntryError {
-    start: i32;
-    end: i32;
-}
-
+// The task-line parser, the source `typed agenda build` replaces with notes/agenda.typed. It writes the task
+// fields of WorldState (state.typed). Offsets refer to the task line in UTF-16 code units; a negative offset (or
+// leadMinutes) marks an absent field, and ends are exclusive.
 // The stored task format has a four-digit year. The JS parser calls Date.UTC,
 // which interprets years 00 through 99 relative to 1900.
 function leap(year: i32): bool {
@@ -87,72 +68,72 @@ function boundary(line: string, at: i32): bool {
     return at === line.length || space(line.charCodeAt(at));
 }
 
-function readDue(line: string, at: i32, task: Task): bool {
+function readDue(line: string, at: i32, task: WorldState): bool {
     if (at + 11 > line.length) return false;
     if (!(line.charCodeAt(at + 5) === 45 && line.charCodeAt(at + 8) === 45)) return false;
     const year: i32 = decimal(line, at + 1, 4);
     const month: i32 = decimal(line, at + 6, 2);
     const day: i32 = decimal(line, at + 9, 2);
     if (year < 0 || month < 0 || day < 0 || !boundary(line, at + 11)) return false;
-    task.dueStart = at;
-    task.dueEnd = at + 11;
-    task.dateValid = validDate(year, month, day);
+    task.taskDueStart = at;
+    task.taskDueEnd = at + 11;
+    task.taskDateValid = validDate(year, month, day);
     const time: i32 = skipSpace(line, at + 11);
     if (time + 5 > line.length || !(line.charCodeAt(time + 2) === 58)) return true;
     const hour: i32 = decimal(line, time, 2);
     const minute: i32 = decimal(line, time + 3, 2);
     if (hour < 0 || minute < 0 || !boundary(line, time + 5)) return true;
-    task.dueEnd = time + 5;
-    task.timeStart = time;
-    task.timeValid = task.dateValid && hour < 24 && minute < 60;
+    task.taskDueEnd = time + 5;
+    task.taskTimeStart = time;
+    task.taskTimeValid = task.taskDateValid && hour < 24 && minute < 60;
     return true;
 }
 
-function readLead(line: string, at: i32, task: Task): bool {
+function readLead(line: string, at: i32, task: WorldState): bool {
     let end: i32 = at + 1;
     while (end < line.length && end - at <= 6 && !space(line.charCodeAt(end))) {
         end = end + 1;
     }
     const lead: i32 = leadValue(line, at, end);
     if (lead < 0) return false;
-    task.leadStart = at;
-    task.leadEnd = end;
-    task.leadMinutes = lead;
+    task.taskLeadStart = at;
+    task.taskLeadEnd = end;
+    task.taskLeadMinutes = lead;
     return true;
 }
 
-function scanTask(line: string, task: Task): bool {
+function scanTask(line: string, task: WorldState): bool {
     const start: i32 = skipSpace(line, 0);
     if (start + 2 > line.length) return false;
     if (!(line.charCodeAt(start) === 45 && line.charCodeAt(start + 1) === 32)) return false;
-    task.done = false;
-    task.textStart = start + 2;
-    task.dueStart = -1;
-    task.dueEnd = -1;
-    task.timeStart = -1;
-    task.dateValid = false;
-    task.timeValid = false;
-    task.leadStart = -1;
-    task.leadEnd = -1;
-    task.leadMinutes = -1;
+    task.taskDone = false;
+    task.taskTextStart = start + 2;
+    task.taskDueStart = -1;
+    task.taskDueEnd = -1;
+    task.taskTimeStart = -1;
+    task.taskDateValid = false;
+    task.taskTimeValid = false;
+    task.taskLeadStart = -1;
+    task.taskLeadEnd = -1;
+    task.taskLeadMinutes = -1;
     if (start + 6 <= line.length && line.charCodeAt(start + 2) === 91 &&
         line.charCodeAt(start + 4) === 93 && line.charCodeAt(start + 5) === 32) {
         const mark: i32 = line.charCodeAt(start + 3);
         if (mark === 32 || mark === 120 || mark === 88) {
-            task.textStart = start + 6;
-            task.done = mark === 120 || mark === 88;
+            task.taskTextStart = start + 6;
+            task.taskDone = mark === 120 || mark === 88;
         }
     }
-    let at: i32 = task.textStart;
+    let at: i32 = task.taskTextStart;
     let tokenStart: bool = true;
     while (at < line.length) {
         const code: i32 = line.charCodeAt(at);
         // Agenda's line matcher permits these characters only in indentation.
         if (code === 10 || code === 13 || code === 8232 || code === 8233) return false;
-        if (tokenStart && code === 64 && task.dueStart < 0) {
+        if (tokenStart && code === 64 && task.taskDueStart < 0) {
             readDue(line, at, task);
         }
-        if (tokenStart && code === 33 && task.leadStart < 0) {
+        if (tokenStart && code === 33 && task.taskLeadStart < 0) {
             readLead(line, at, task);
         }
         tokenStart = space(code);
@@ -161,17 +142,17 @@ function scanTask(line: string, task: Task): bool {
     return true;
 }
 
-function writeTitle(line: string, title: buffer, task: Task): i32 {
-    let at: i32 = task.textStart;
+function writeTitle(line: string, title: buffer, task: WorldState): i32 {
+    let at: i32 = task.taskTextStart;
     let written: i32 = 0;
     let gap: bool = false;
     while (at < line.length) {
-        if (at === task.dueStart) {
-            at = task.dueEnd;
+        if (at === task.taskDueStart) {
+            at = task.taskDueEnd;
             gap = true;
         }
-        if (at === task.leadStart) {
-            at = task.leadEnd;
+        if (at === task.taskLeadStart) {
+            at = task.taskLeadEnd;
             gap = true;
         }
         if (at < line.length) {
@@ -194,8 +175,8 @@ function writeTitle(line: string, title: buffer, task: Task): i32 {
     return written;
 }
 
-function parseTask(line: string, title: buffer, task: Task): bool {
+function parseTask(line: string, title: buffer, task: WorldState): bool {
     if (!scanTask(line, task)) return false;
-    task.titleLength = writeTitle(line, title, task);
+    task.taskTitleLength = writeTitle(line, title, task);
     return true;
 }
