@@ -466,3 +466,84 @@ compile allocator never told QuickJS how much it had allocated, so no compile ev
 
 ### Technical details
 - Data: `various/board2/` (steps.jsonl, boot and watch logs, a screenshot).
+
+## Step 7: Session A3: hits, byte identity, the Typed program compiles, and a writer above the kernel
+
+Image 68f4b914 (d8520cd) gave most of the evidence the ticket asks for: warm boots hit every entry in 29–89 ms and
+draw their first frames about 15 s earlier; `typed cache verify` found 6 of 6 cached modules byte-identical to a fresh
+compile; the corrupt gate passed health; and, with the collector running, the gallery's Typed program compiled in
+113.5 s at a 13.4 MB peak and loaded from the cache on the next boot in 0.30 s. It also showed that a writer above the
+kernel's priority breaks turns: keyboard, snake, settings and nat-dial overran while it wrote.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1 and Step 5.
+**Assistant interpretation:** Milestones 2–4 on the device: cold against warm, verify, health, corrupt, the Typed arm.
+**Inferred user intent:** Decide with device numbers whether the cache works and whether Typed can be the default.
+**Commit (code):** d8520cd (image 68f4b914); fixes 03d09de; default arm 063ba96.
+
+### What I did
+- `make -C <main> restore-playable OUT=/tmp/picocalc-compile-cache-restore2` (ran once CANDELA-KERNEL-CODEGEN's study
+  released the lock): 54cfa09b, health passed (i2c0 253 transfers, 0 errors).
+- `scripts/01-boots.py /tmp/picocalc-compile-cache-board3 --build /tmp/picocalc-compile-cache-dev2 flash boot:cold1:75
+  cmd:typed_cache boot:warm1:45 cmd:typed_cache_verify health:warm cmd:typed_cache_corrupt_chess_flip
+  cmd:typed_cache_corrupt_agenda_cut health:corrupt cmd:typed_cache cmd:gallery_arm_typed watch:typed-first:240
+  shot:typed-first cmd:typed_cache cmd:heap boot:warm-typed:40 cmd:gallery_arm_typed watch:typed-cached:40
+  shot:typed-cached cmd:gallery_status`, then `scripts/03-summary.py /tmp/picocalc-compile-cache-board3`.
+
+### What worked
+- `03-summary.py`:
+
+  | app | cold s | share of deadline | hit ms | key ms | read ms | write ms | bytes | same SHA |
+  |---|---|---|---|---|---|---|---|---|
+  | agenda | 2.81 | 0.703 | 80.8 | 25.8 | 55.0 | 5,981 | 243,644 | yes |
+  | candela | 2.82 | 0.353 | 59.1 | 40.3 | 18.8 | 9,368 | 66,816 | yes |
+  | chess | 4.40 | 0.734 | 88.8 | 27.1 | 61.7 | 5,811 | 276,412 | yes |
+  | chess/painter | 5.29 | 0.662 | 33.2 | 9.4 | 23.8 | 1,002 | 33,840 | yes |
+  | editor | 3.56 | 0.593 | 80.0 | 25.1 | 54.9 | 6,402 | 243,644 | yes |
+  | files | 1.52 | 0.508 | 78.3 | 23.2 | 55.1 | 6,531 | 243,644 | yes |
+
+  First frames (kernel ms since reset), cold against warm: Editor 18,666 / 3,697, Chess 19,153 / 4,191, Agenda
+  20,950 / 6,014, Files 21,284 / 6,467. Reset to the last boot compile or hit: 18.4 s cold, 3.4 s warm.
+- `typed cache verify`: `TCVERIFY {"checked":6,"same":6}` (Chess, its painter, Agenda, Editor, Files, Candela; each
+  `"same":true` with equal SHA-256 prefixes and byte counts).
+- `health:warm` and `health:corrupt` returned records (keyboard 253 and 182 transfers, 0 errors); the corrupt boot
+  printed `agenda cache corrupt ...: torn module (121982 bytes); deleted` and `chess cache corrupt ...: module checksum
+  (276572 bytes); deleted`, recompiled both and stored them again (seq 13, 14).
+- The Typed first use: `candela-gallery compile source=bundle status=ok us=113536048 peak_js_bytes=13410972
+  module_bytes=787712 sha=66c89cfe99cbd456`; `typed-load compileMs 113592.7 relocateMs 147.1`; stored in 18.6 s; the
+  next scene (L-03) drew with Typed (1.35 s per pass). The collector cut the peak from more than 17.8 MB to 13.4 MB.
+- The cached load on the next boot: `candela-gallery cache hit us=262261 key_us=868 read_us=261393`, `typed-load
+  compileMs 266.4 relocateMs 36.6`: 0.30 s instead of 113.6 s. The screenshot's caption ends in "Typed".
+- Warm boots: no `crashed` line except nat-import's.
+
+### What didn't work
+- After the cold boot, while the writer wrote: `keyboard crashed handling every 20 ms: ran past its turn budget of
+  20 ms` five times (`it stays stopped`); while it wrote the corrupt gate's two entries, keyboard (3) and snake; while
+  it wrote the 788 KB Typed module, nat-dial, settings (2) and snake. Health passed anyway: it judged at 10 s uptime,
+  before the writer began. The cause: an erase yields every 20 ms (`CONFIG_SPI_FLASH_YIELD_DURING_ERASE=1`,
+  `ERASE_YIELD_DURATION_MS 20`, `YIELD_TICKS 1`); the kernel started a turn in that tick and the writer, at priority
+  6, came back inside it. The gap token could also be stale (given before a wait the kernel had already left).
+
+### What I learned
+- A task above the kernel cannot be made safe by starting it in a gap: anything that blocks inside it (an erase's
+  yield) hands the core to the kernel, which starts a turn the task then preempts.
+- Chess's cold compile is 73 % of its deadline with the collector (71.5 % in A1 without it).
+
+### What was tricky to build
+- 03d09de: the writer stays at priority 3, so it runs only while the kernel is blocked; `kernel_idle` is set by
+  `P4_TYPED_IDLE(wait)` before the kernel's `xQueueReceive` and cleared after it, so a piece starts only while the
+  kernel waits between turns, never while it is blocked inside one.
+
+### What warrants a second pair of eyes
+- With the writer below the kernel, a turn that needs the FAT lock while a piece holds it waits for that piece
+  (priority inheritance); a piece is about 4 KB of data plus a FAT sector.
+
+### What should be done in the future
+- Health judges at 10 s uptime; a check that waits for the cache's writer to finish would have caught this run.
+
+### Code review instructions
+- `typed_cache_p4.c` `p4_typed_cache_idle`, `paced`; `main_p4.c` the kernel loop.
+
+### Technical details
+- Data: `various/board3/` (steps.jsonl, summary.json, logs of the cold, warm, verify, corrupt and Typed steps, two
+  screenshots).

@@ -1,0 +1,56 @@
+CGAL {"ev":"pass","id":"B-01","pass":38,"renderMs":33247.9,"cyclesPerSample":12282.3,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":39,"renderMs":34116.6,"cyclesPerSample":12280.1,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":40,"renderMs":34921.0,"cyclesPerSample":12255.5,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":41,"renderMs":35783.0,"cyclesPerSample":12251.7,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":42,"renderMs":36654.8,"cyclesPerSample":12251.5,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":43,"renderMs":37484.7,"cyclesPerSample":12237.5,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":44,"renderMs":38345.5,"cyclesPerSample":12234.0,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":45,"renderMs":39195.1,"cyclesPerSample":12227.3,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":46,"renderMs":40047.3,"cyclesPerSample":12221.1,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":47,"renderMs":40946.0,"cyclesPerSample":12229.5,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":48,"renderMs":41766.6,"cyclesPerSample":12214.8,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":49,"renderMs":42616.6,"cyclesPerSample":12209.1,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":50,"renderMs":43437.5,"cyclesPerSample":12195.4,"ev100":15.3723}
+CGAL {"ev":"pass","id":"B-01","pass":51,"renderMs":44313.8,"cyclesPerSample":12197.5,"ev100":15.3723}
+chess cache hit us=62827 key_us=0 read_us=62827 module_bytes=276412 sha=8bea147250cfe476 seq=11 saved_us=4408751
+typed compiler bytecode: typed/tape.js 21203 bytes
+typed compiler bytecode: typed/wasm.js 360923 bytes
+typed compiler bytecode: typed/async.js 166157 bytes
+typed compiler bytecode: typed/rv32.js 382191 bytes
+typed compiler bytecode: typed/world.js 10768 bytes
+chess native compiler functions=streamed
+chess native compiler policy=balanced
+typed compiler bytecode: typed/rv32-inline.js 65329 bytes
+chess compile source=verify status=ok us=5171925 peak_js_bytes=3064892 module_bytes=276412 sha=8bea147250cfe476
+TCVERIFY {"app":"chess","source":"chess/source.typed","same":true,"cachedBytes":276412,"freshBytes":276412,"cachedSha":"8bea147250cfe476","freshSha":"8bea147250cfe476"}
+chess/painter cache hit us=12495 key_us=0 read_us=12495 module_bytes=33840 sha=dd360ab6af975078 seq=12 saved_us=5297523
+typed compiler bytecode: chess/painter/link.js 1189 bytes
+chess/painter native compiler functions=streamed
+typed compiler bytecode: typed/rv32-loops.js 256148 bytes
+chess/painter compile source=verify status=ok us=3209475 peak_js_bytes=2018280 module_bytes=33840 sha=dd360ab6af975078
+TCVERIFY {"app":"chess/painter","source":"chess/painter/source.typed","same":true,"cachedBytes":33840,"freshBytes":33840,"cachedSha":"dd360ab6af975078","freshSha":"dd360ab6af975078"}
+agenda cache hit us=56507 key_us=0 read_us=56507 module_bytes=243644 sha=abf7dfc0dbc6d1ba seq=10 saved_us=2814879
+agenda native compiler functions=streamed
+agenda native compiler policy=interactive
+agenda compile source=verify status=ok us=2789791 peak_js_bytes=2436140 module_bytes=243644 sha=abf7dfc0dbc6d1ba
+TCVERIFY {"app":"agenda","source":"agenda/source.typed","same":true,"cachedBytes":243644,"freshBytes":243644,"cachedSha":"abf7dfc0dbc6d1ba","freshSha":"abf7dfc0dbc6d1ba"}
+editor cache hit us=56349 key_us=0 read_us=56349 module_bytes=243644 sha=0e05c09c4b917968 seq=9 saved_us=3561072
+editor native compiler functions=streamed
+editor native compiler policy=interactive
+editor compile source=verify status=ok us=3472343 peak_js_bytes=2958756 module_bytes=243644 sha=0e05c09c4b917968
+TCVERIFY {"app":"editor","source":"editor/source.typed","same":true,"cachedBytes":243644,"freshBytes":243644,"cachedSha":"0e05c09c4b917968","freshSha":"0e05c09c4b917968"}
+files cache hit us=56257 key_us=0 read_us=56257 module_bytes=243644 sha=dd82179e45662f4a seq=8 saved_us=1528239
+files native compiler functions=streamed
+files native compiler policy=interactive
+files compile source=verify status=ok us=1517642 peak_js_bytes=1798244 module_bytes=243644 sha=dd82179e45662f4a
+TCVERIFY {"app":"files","source":"files/source.typed","same":true,"cachedBytes":243644,"freshBytes":243644,"cachedSha":"dd82179e45662f4a","freshSha":"dd82179e45662f4a"}
+candela cache miss key_us=0 read_us=2799
+candela cache miss key_us=0 read_us=1912
+candela cache hit us=18836 key_us=0 read_us=18836 module_bytes=66816 sha=9744b19182c3fbfe seq=7 saved_us=2823645
+typed compiler bytecode: candela/link.js 1874 bytes
+candela native compiler functions=streamed
+candela compile source=verify status=ok us=1933289 peak_js_bytes=1881364 module_bytes=66816 sha=9744b19182c3fbfe
+TCVERIFY {"app":"candela","source":"candela/callback.typed","same":true,"cachedBytes":66816,"freshBytes":66816,"cachedSha":"9744b19182c3fbfe","freshSha":"9744b19182c3fbfe"}
+raytrace cache miss key_us=0 read_us=2837
+TCVERIFY {"checked":6,"same":6}
+#OK typed

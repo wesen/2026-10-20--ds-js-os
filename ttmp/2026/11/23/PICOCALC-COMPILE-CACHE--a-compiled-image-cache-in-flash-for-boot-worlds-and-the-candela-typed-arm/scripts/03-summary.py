@@ -5,7 +5,7 @@ usage: python3 ttmp/.../scripts/03-summary.py OUT [OUT...]   (writes OUT/summary
 
 Cold boots are boot steps whose tag starts with "cold", warm boots those starting with "warm". For each app: the
 compile time and its share of the deadline (cold), the hit's total, key and read time (warm), the SHA-256 prefixes of
-the compiled and the hit module, and the writer's time per entry; per boot: the first frames (kernel clock, trace on)
+the compiled and the hit module, and the writer's time per entry; per boot: the first frames (kernel clock in ms, trace on)
 and the time from reset to the last boot compile or hit (host clock). Medians over the boots of each kind.
 """
 import json
@@ -64,7 +64,8 @@ def main():
         same = bool(r["compiledSha"]) and r["compiledSha"] == r["hitSha"]
         print(f"{app:16} {r['coldCompileS'] or '-':>7} {r['deadlineShare'] or '-':>6} {r['warmHitMs'] or '-':>7} "
               f"{r['hitKeyMs'] or '-':>7} {r['hitReadMs'] or '-':>8} {r['writeMs'] or '-':>9} {r['moduleBytes'] or '-':>8}  {same}")
-    print("first frames (kernel s, trace on):", json.dumps(frames))
+    print("first frames (kernel clock, ms since reset; bootWorkS: host s from reset to the last boot compile or hit):",
+          json.dumps(frames))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,23 @@
+@0.161 CGAL {"ev":"scene","id":"B-01","arm":"cpp","w":160,"h":160,"reason":"arm","passes":46,"samples":1181280,"firstImageMs":397.7,"coarseMs":208.9,"halfMs":2448.9,"pass1Ms":3381.7,"renderMs":40035.4,"shownMs":45904.2,"secPerPass":0.8676,"samplesPerSec":29505.9,"cyclesPerSample":12180.6,"displays":31,"displayMs":3979.1,"displayCyclesMean":45917759,"skyRebuilt":1,"ev100":15.3723,"metered":4,"meanLum":8469.95,"internalFree0":72771,"internalMinFree":64799,"psramFree0":21411872,"psramMinFree":20738044,"internalPeakUse":7972,"psramPeakUse":673828}
+@0.546 candela-gallery cache hit us=262261 key_us=868 read_us=261393 module_bytes=787712 sha=66c89cfe99cbd456 seq=15 saved_us=113548718
+@0.586 CGAL {"ev":"typed-load","compileMs":266.4,"relocateMs":36.6,"moduleBytes":787712,"segmentBytes":786988,"arenaWords":12563}
+@0.955 CGAL {"ev":"first","id":"B-01","ms":797.7,"sub":1,"pass":0,"ev100":14.9748,"skyRebuilt":1}
+@2.883 CGAL {"ev":"pass","id":"B-01","pass":1,"renderMs":1952.2,"cyclesPerSample":27340.8,"ev100":14.9748}
+@5.143 CGAL {"ev":"pass","id":"B-01","pass":2,"renderMs":3974.6,"cyclesPerSample":27870.7,"ev100":15.3618}
+@7.203 CGAL {"ev":"pass","id":"B-01","pass":3,"renderMs":5791.7,"cyclesPerSample":27055.4,"ev100":15.3618}
+@9.269 CGAL {"ev":"pass","id":"B-01","pass":4,"renderMs":7598.1,"cyclesPerSample":26631.7,"ev100":15.3618}
+@11.355 CGAL {"ev":"pass","id":"B-01","pass":5,"renderMs":9406.6,"cyclesPerSample":26366.2,"ev100":15.3618}
+@13.333 CGAL {"ev":"pass","id":"B-01","pass":6,"renderMs":11263.8,"cyclesPerSample":26317.7,"ev100":15.3618}
+@15.297 CGAL {"ev":"pass","id":"B-01","pass":7,"renderMs":13102.4,"cyclesPerSample":26246.1,"ev100":15.3618}
+@17.443 CGAL {"ev":"pass","id":"B-01","pass":8,"renderMs":15110.3,"cyclesPerSample":26486.5,"ev100":15.3679}
+@19.560 CGAL {"ev":"pass","id":"B-01","pass":9,"renderMs":16975.0,"cyclesPerSample":26448.2,"ev100":15.3679}
+@21.526 CGAL {"ev":"pass","id":"B-01","pass":10,"renderMs":18825.4,"cyclesPerSample":26401.8,"ev100":15.3679}
+@23.491 CGAL {"ev":"pass","id":"B-01","pass":11,"renderMs":20654.5,"cyclesPerSample":26331.1,"ev100":15.3679}
+@25.435 CGAL {"ev":"pass","id":"B-01","pass":12,"renderMs":22468.8,"cyclesPerSample":26259.7,"ev100":15.3679}
+@27.542 CGAL {"ev":"pass","id":"B-01","pass":13,"renderMs":24313.0,"cyclesPerSample":26231.6,"ev100":15.3679}
+@29.502 CGAL {"ev":"pass","id":"B-01","pass":14,"renderMs":26159.1,"cyclesPerSample":26209.5,"ev100":15.3679}
+@31.479 CGAL {"ev":"pass","id":"B-01","pass":15,"renderMs":27979.7,"cyclesPerSample":26161.3,"ev100":15.3679}
+@33.429 CGAL {"ev":"pass","id":"B-01","pass":16,"renderMs":29794.2,"cyclesPerSample":26115.5,"ev100":15.3679}
+@35.520 CGAL {"ev":"pass","id":"B-01","pass":17,"renderMs":31629.5,"cyclesPerSample":26095.3,"ev100":15.3679}
+@37.492 CGAL {"ev":"pass","id":"B-01","pass":18,"renderMs":33486.6,"cyclesPerSample":26092.4,"ev100":15.3679}
+@39.437 CGAL {"ev":"pass","id":"B-01","pass":19,"renderMs":35286.5,"cyclesPerSample":26049.2,"ev100":15.3679}
