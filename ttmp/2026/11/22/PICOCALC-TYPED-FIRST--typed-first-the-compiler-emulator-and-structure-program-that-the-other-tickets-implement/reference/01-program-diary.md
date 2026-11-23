@@ -187,3 +187,31 @@ Wave 1 is now fully merged (TAPE, CONFORMANCE, SPLIT-FILES, APP-MANIFEST), and s
   - **Lesson:** "restore the playable image" in a worktree restores that branch's record, not `main`'s.
   - **Fix for the remaining briefs:** pass the restore target explicitly, or tell agents to merge `main` first. The current briefs say "restore the playable image"; ASYNC-TAPE and AGENDA-TYPED-WORLD start from a `main` whose record is replaced by this step's install, so theirs will also be stale. I'll check the board after each ticket with `--probe`.
 - **The keyboard.** APP-MANIFEST saw it work with peripherals on at the start of its board session, then fail on every transfer, on the old image as well. That fits the keyboard controller wedging after resets of only the ESP32, a failure noted in earlier tickets. Not debugged. The handheld needs a power cycle by a person.
+
+## Step 6: The playable image at 6195cab installed, the gallery checked, the keyboard back
+
+The playable image built at `6195cab` (`10695eee…`) is installed and recorded. The gallery agrees with the reference on all 18 scenes. Health passes with the peripherals on, because the user reset the keyboard.
+
+### Prompt Context
+
+**User messages (verbatim, mid-step):** "i reset the keyboard i think" and "feel free to always leave the latest firmware on there".
+
+### What I did
+
+- **Build, install and gallery check.** `make playable` at `6195cab` (the FRONTEND merge), then `playable.py install … --peripherals off-by-user`. The image was written and verified, but health failed on the painter:
+
+  ```
+  RuntimeError: painter {'sources': 0, 'compiles': 0, 'installed': False, …}
+  ```
+
+  With peripherals off, `device.health` checks the painter immediately, before Chess has delivered its source; APP-MANIFEST reported the same. `bench/board/gallery.py` on that boot: 18/18 scenes agree (`various/04-gallery-6195cab`).
+- **Health rerun with peripherals off.** `--health-only --peripherals off-by-user`, minutes later: passed (`various/05-…`).
+- **Health rerun with peripherals on.** After the user's keyboard reset, `--health-only --peripherals on`: passed, with every world healthy, the painter installed and the keyboard answering (`various/06-…`). `PLAYABLE.json` now records commit `6195cab`, dirty false, app `10695eee…`, peripherals on.
+
+### What I learned
+
+- **Keyboard state.** The keyboard's wedged I2C cleared with a reset by a person; it was not switched off. While wedged, every transfer errored with NACK.
+
+### What should be done in the future
+
+- **The painter check with peripherals off.** `device.health(…, "off-by-user")` should wait for the painter, as the peripherals-on branch does. It is a small fix in `bench/board/device.py`; I'll do it at the next idle point.
