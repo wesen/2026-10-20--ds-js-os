@@ -151,10 +151,10 @@ shots: $(BIN)
 
 # App logic and Typed compiler checks in Node (no host binary needed).
 test-apps:
-	$(NODE) tests/editor.test.mjs
-	$(NODE) tests/calc.test.mjs
-	$(NODE) tests/agenda.test.mjs
-	$(NODE) tests/sysapps.test.mjs
+	$(NODE) ../tests/apps/editor.test.mjs
+	$(NODE) ../tests/apps/calc.test.mjs
+	$(NODE) ../tests/apps/agenda.test.mjs
+	$(NODE) ../tests/apps/sysapps.test.mjs
 	$(NODE) ../tests/compiler/typed-rv32.test.mjs
 	$(NODE) ../tests/compiler/typed-wasm-inspect.test.mjs
 	$(NODE) ../tests/compiler/typed-inspect.test.mjs
@@ -162,33 +162,33 @@ test-apps:
 
 # The wall clock through the host binary: clock.wall/set/zone, Date, -w and -z.
 test-clock: $(BIN)
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_clock_native.py
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_clock_native.py
 
 # System services through the host binary: guarded channels, the log ring, the simulated network and time zone,
 # and apps from storage (sys.spawn, sys.stop).
 test-sys: $(BIN)
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_sys_native.py
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_loader_native.py
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_sys_native.py
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_loader_native.py
 
 # Files through the host binary: claims, paths, rights, narrowing, passing and revoking handles (no device needed).
 test-fs: $(BIN)
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_fs_native.py
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_fs_native.py
 
 # These tests make no provider API calls. The normal suite uses deterministic local fixtures.
 test-agent: $(BIN)
 	@test "$(BOARD)" = picocalc || { echo "The agent currently targets the PicoCalc QuickJS build"; exit 1; }
-	$(NODE) tests/agent.test.mjs
-	$(NODE) tests/chat-ui.test.mjs
-	$(NODE) tests/compositor-auth.test.mjs
-	$(PYTHON) tests/agent-integration.py --binary $(BIN)
-	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_agent_native.py
+	$(NODE) ../tests/apps/agent.test.mjs
+	$(NODE) ../tests/apps/chat-ui.test.mjs
+	$(NODE) ../tests/apps/compositor-auth.test.mjs
+	$(PYTHON) ../tests/native/agent-integration.py --binary $(BIN)
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_agent_native.py
 
 # Requires libcurl development headers, OpenSSL CLI, and permission to bind a localhost test socket.
 # All TLS requests stay on loopback, with an explicitly trusted test certificate and a dummy token.
 test-agent-live: $(BIN)
 	@test "$(BOARD)" = picocalc || { echo "The agent currently targets the PicoCalc QuickJS build"; exit 1; }
 	$(MAKE) AGENT_LIVE=1 all
-	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_TEST_LIVE_BINARY=$(if $(filter 1,$(AGENT_LIVE)),$(BUILD),$(BUILD)-agent)/picocalc-host $(PYTHON) tests/test_agent_native.py --live
+	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_TEST_LIVE_BINARY=$(if $(filter 1,$(AGENT_LIVE)),$(BUILD),$(BUILD)-agent)/picocalc-host $(PYTHON) ../tests/native/test_agent_native.py --live
 
 # Native worlds (PICOCALC-NATIVE): the example binaries, each linked statically with the process runtime, and the tests
 # that run them under the host's sandbox (a process with a seccomp filter; x86-64 only, so not with M32=1).
@@ -257,7 +257,7 @@ $(BUILD)/natives/%.wasm: natives/%.cc $(WASM_SDK)
 	$(WASM_ENV) clang++-18 $(WASM_FLAGS) $(WASM_LINK) -fno-exceptions -fno-rtti -o $@ $< $@-rt.o
 
 test-native: $(BIN) natives $(if $(filter 1,$(M32)),,wasm)
-	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_NATIVES=$(BUILD)/natives $(PYTHON) tests/test_native_worlds.py
+	PICOCALC_TEST_BINARY=$(BIN) PICOCALC_NATIVES=$(BUILD)/natives $(PYTHON) ../tests/native/test_native_worlds.py
 
 clean:
 	rm -rf build build32 build-san build32-san build-agent build32-agent build-san-agent build32-san-agent build-papers3*

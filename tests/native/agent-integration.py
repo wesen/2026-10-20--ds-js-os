@@ -7,7 +7,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2] / "firmware"   # the firmware tree
 
 
 def run(binary, work, name, script, fixture=None, store=None, env_extra=None, files=None):
@@ -46,7 +46,7 @@ def main():
     else:
         temporary = tempfile.TemporaryDirectory(prefix='picocalc-agent-')
         work = Path(temporary.name)
-    fixture = ROOT / 'tests/fixtures/agent'
+    fixture = ROOT / '../tests/native/fixtures/agent'
     state, files = work / 'store', work / 'files'
     out, log, stats = run(binary, work, 'tour', (ROOT / '../apps/tours/agent/tour.txt').read_text(), fixture, state, files=files)
     record = json.loads((state / 'w/agent').read_text())['session']
@@ -62,7 +62,7 @@ def main():
     chat_state, chat_files = work / 'chat-store', work / 'chat-files'
     chat_env = {'PICOCALC_AGENT_API': 'chat', 'PICOCALC_AGENT_MODEL': 'deepseek-4.1-flash'}
     out, log, _ = run(binary, work, 'chat-tour', (ROOT / '../apps/tours/agent/tour.txt').read_text(),
-                      ROOT / 'tests/fixtures/agent-chat', chat_state, chat_env, chat_files)
+                      ROOT / '../tests/native/fixtures/agent-chat', chat_state, chat_env, chat_files)
     record = json.loads((chat_state / 'w/agent').read_text())['session']
     assert (chat_files / 'notes/next').read_text() == 'study groups'
     assert record['notes'] == [], record

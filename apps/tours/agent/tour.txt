@@ -1,5 +1,5 @@
 # Deterministic UI + tool-loop demonstration. These are recorded test replies, not live inference.
-# PICOCALC_AGENT_FIXTURES=tests/fixtures/agent ./build/picocalc-host -s /tmp/agent-store scripts-agent/tour.txt
+# PICOCALC_AGENT_FIXTURES=../tests/native/fixtures/agent ./build/picocalc-host -s /tmp/agent-store scripts-agent/tour.txt
 wait 1600
 key c
 wait 400

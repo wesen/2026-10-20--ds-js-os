@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Exercise the real QuickJS/native boundary and optional verified HTTPS worker.
 
-  make && python3 tests/test_agent_native.py
-  make AGENT_LIVE=1 && python3 tests/test_agent_native.py --live
+  make && python3 ../tests/native/test_agent_native.py
+  make AGENT_LIVE=1 && python3 ../tests/native/test_agent_native.py --live
 
 Only the --live suite opens a network socket, on loopback with a generated CA-trusted certificate.
 It makes no provider requests and needs no API credential. Temporary files stay under build/.
@@ -20,7 +20,7 @@ import threading
 import time
 import unittest
 
-OS = Path(__file__).resolve().parents[1]
+OS = Path(__file__).resolve().parents[2] / "firmware"   # the firmware tree
 OPTIONS, REST = argparse.ArgumentParser().parse_known_args()
 LIVE = "--live" in REST
 if LIVE:

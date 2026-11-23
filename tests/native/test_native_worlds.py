@@ -17,7 +17,7 @@ import subprocess
 import tempfile
 import unittest
 
-OS = Path(__file__).resolve().parents[1]
+OS = Path(__file__).resolve().parents[2] / "firmware"   # the firmware tree
 BINARY = OS / os.environ.get("PICOCALC_TEST_BINARY", "build/picocalc-host")
 NATIVES = Path(os.environ.get("PICOCALC_NATIVES", OS / "build/natives"))
 if not NATIVES.is_absolute():

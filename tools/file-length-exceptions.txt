@@ -13,7 +13,7 @@ compiler/cji/** -- cji
 
 # Ported to Typed once floats exist (PICOCALC-TYPED-F32), not split
 apps/js/picocalc/apps/calc.js -- ported to Typed, not split
-firmware/tests/calc.test.mjs -- calc.js's tests; they go with calc.js
+tests/apps/calc.test.mjs -- calc.js's tests; they go with calc.js
 
 # Files other tickets are splitting or replacing
 compiler/typed/typed-wasm.js -- PICOCALC-TYPED-FRONTEND

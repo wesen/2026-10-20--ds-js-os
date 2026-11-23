@@ -11,7 +11,7 @@ firmware/build32-candela/
 firmware/build-san-candela/
 firmware/build32-san-candela/
 firmware/tools/__pycache__/
-firmware/tests/__pycache__/
+tests/native/__pycache__/
 firmware/cc*.s
 firmware/port/esp32p4/build/
 firmware/port/esp32p4/sdkconfig

@@ -37,7 +37,7 @@ approval. Native workers handle certificate-verified HTTPS and keep credentials 
 The default host build stays offline. Run the deterministic demonstration and tests with:
 
 ```bash
-PICOCALC_AGENT_FIXTURES=tests/fixtures/agent ./build/picocalc-host -s out/agent-store scripts-agent/tour.txt
+PICOCALC_AGENT_FIXTURES=../tests/native/fixtures/agent ./build/picocalc-host -s out/agent-store scripts-agent/tour.txt
 make test-agent
 make test-agent-live  # optional libcurl + local TLS tests; no provider API call
 ```
