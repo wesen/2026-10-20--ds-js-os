@@ -89,5 +89,18 @@
  "typedcost chess 1 pad=256",
  "typedcost chess 1 pad=64",
  "typedcost chess 1 pad=16",
- "typedcost chess 1 pad=0"
+ "typedcost chess 1 pad=0",
+ "typedcost agenda 1 strip=2 flush",
+ "typedcost agenda 1 backend=lazy",
+ "typedcost agenda 1 backend=all",
+ "typedcost agenda 2 backend=lazy",
+ "typedcost agenda 2 backend=all",
+ "typedcost agenda 2 backend=all",
+ "typedcost agenda 2 backend=lazy",
+ "typedcost chess 1 backend=lazy",
+ "typedcost chess 1 backend=all",
+ "typedcost chess 2 backend=lazy",
+ "typedcost chess 2 backend=all",
+ "typedcost chess 2 backend=all",
+ "typedcost chess 2 backend=lazy"
 ]

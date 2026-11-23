@@ -161,3 +161,133 @@ two premises of the ticket's design.
 ### Technical details
 - `TYPEDCOMPILE {"app","beforeUs","setupUs","callUs","freeUs","evals":[{"path","bytecode":"cached|parsed","inCall",
   "loadUs","runUs","liveBytes"}]}`.
+
+## Step 3: One bundler
+
+The three `build.mjs` scripts became module lists over one shared bundler, `compiler/typed/bundle.mjs`, and every
+generated bundle stayed byte-identical, headers included. The front end's and the async lowering's bundles are the
+same layout as the RV32 bundles once each module's label is a parameter: a header, `(() => { "use strict";`, then
+per module a blank line, `// LABEL` and the text.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** item (4): one shared bundler, the bundles unchanged.
+**Inferred user intent:** one place to change how the compiler is bundled.
+**Commit (code):** b2efc56 — "build(typed): one shared bundler for the three compiler builds"
+
+### What I did
+- `bundle.mjs`: `script({header, modules, head, tail})`, `concatenated(root, names, label)` (plain scripts in a given
+  order), `hoisted(root, entries, {label, registry})` (the RV32 scope hoisting moved verbatim: `skip`, `constNames`,
+  `parse`, `closure`, the crossing names), and `main(import.meta, outputs, sources)` (write, or `--check` with one
+  message form).
+- New `build.mjs` files written next to the old ones (`build.next.mjs`), compared on all five outputs, then moved by
+  `scripts/03-one-bundler.py`, which refuses unless all five are identical.
+- Docs: `compiler/typed/rv32/README.md`, `docs/typed-compiler.md`, and a stale path in
+  `docs/typed-compiler-and-the-ray-tracer.md` (`compiler/rv32/build.mjs` -> `compiler/typed/rv32/build.mjs`).
+
+### Why
+- Keeping the per-module labels (`---- frontend/lexer.js`, `rv32/encoding/tape.js`) and headers exact keeps the
+  bundles' line numbers, so the device's bytecode is unchanged too.
+
+### What worked
+- `typed-rv32.js`, `typed-rv32-inline.js`, `typed-rv32-loops.js`, `typed-wasm.js`, `typed-async.js`: identical.
+  The three `--check` commands pass.
+
+### What didn't work
+- No failures; the frontend and async module texts already start without blank lines and end with one newline, so the
+  hoisting bundler's normalization is a no-op for them (checked before relying on it).
+
+### What I learned
+- The README's claim that the bundler accepts `import {a, b as c}` was wrong; renamed imports are an error.
+
+### What was tricky to build
+- N/A.
+
+### What warrants a second pair of eyes
+- `main()` resolves the repository root from `bundle.mjs`'s own location for its messages.
+
+### What should be done in the future
+- The front end and the async lowering could become ES modules and use the hoisting path too; not needed now.
+
+### Code review instructions
+- `node compiler/typed/{rv32,frontend,async}/build.mjs --check`; `git show b2efc56`.
+
+### Technical details
+- Tests import `bundles()` (rv32) and `bundle()` (frontend, async) from the `build.mjs` files; both kept.
+
+## Step 4: A kernel pass group, the strip choice, and a wedged keyboard
+
+The loops group split in two, the production firmware strips all debug information from the compiler's bytecode,
+and the first board session ended at the install's health check because the keyboard bus was NACKing (the
+coordinator had found it wedged at about 13:10, before my install). The board was left on my bench image
+`fa144453`; per the coordinator, board work is paused until the user power-cycles it.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** items (1) and (3), plus the first board session.
+**Inferred user intent:** less compiler memory and time at boot.
+**Commit (code):** c7fca6b — "feat(rv32): a kernel pass group, so a default compile loads only what default needs";
+4239fde — "feat(p4): compile runtimes strip all debug information from the compiler's bytecode"; merge of main
+529100a (PICOCALC-BOARD-HARNESS, no firmware change).
+
+### What I did
+- `passes/kernel-group.js` (conjunctions, sets, ranges, facts), `passes/loops-group.js` (version, hoist, induction,
+  split), `registry.js` groups and `GROUPS.kernel`, `build.mjs` a fourth bundle. `scripts/06-kernel-group-loaders.py`
+  added `typed-rv32-kernel.js` next to every loader's `typed-rv32-loops.js` (18 files, counts checked per file),
+  including `typed-apps.cmake` (`typed/rv32-kernel.js`) and the trace REPL's module table (`typedRv32Kernel`).
+  `typed-rv32.test.mjs` now checks that a lazy `default` compile asks for inline and loops only.
+- `typed_p4.c`: `JS_SetStripInfo(rt, COMPILER_STRIP)` with `COMPILER_STRIP` = `JS_STRIP_DEBUG`.
+- `scripts/08-qjs-diagnostics.c` + `08-diagnostics-driver.js`: 33 rejected compiles (the tests' negative cases:
+  typed-f32, typed-bitwise, typed-rv32 option errors, async diagnostics) through bytecode written under each strip
+  mode and read back, as on the device.
+- Digests: `scripts/07-compare-digests.sh` with `scripts/digests/` (PICOCALC-RV32-REGISTERS's harness; its Files
+  and Agenda units failed with `SyntaxError: 71:47: unknown type WorldState` since both became Typed worlds, so the
+  copy uses their app lists).
+- Built arms (playable): control `adbe8ed4` (8c6a1ff), split `52c607c0` (529100a), strip `5d90890a` (cd08aea),
+  each kept under `/tmp/picocalc-device-cost-arm-*`.
+- Board session 1: `04-typedcost-session.py --install` with the bench image `fa144453` (b2efc56 plus the
+  experiment tree): written and verified at 13:16, then health failed.
+
+### Why
+- Strip mode: the host gives `JS_STRIP_DEBUG` another 73 KB less bytecode and about 105 KB less realm than
+  `JS_STRIP_SOURCE`; it costs only `file:line` in stack traces through the compiler. The in-image session measures
+  both on the device before the choice is final.
+
+### What worked
+- 84 of 84 digests identical to main (`IDENTICAL 84 of 84`).
+- Host rejected-compile check: `messages identical: True`; stacks naming a compiler line: 33 / 33 / 0 for strip
+  none / source / debug (first frame `at fail (typed-wasm.js:190:30)` against `at fail`).
+- New bundle sizes on the host (bytecode none / source / debug): loops 112,112 / 27,563 / 18,619, kernel 88,362 /
+  24,593 / 16,581 (the old loops group: 197,809 / 50,504 / 33,882).
+- The failed install's boot still logged every compile (unstripped, old groups, instrumented): Candela (cold) parses
+  tape 26 ms, wasm 212 ms, rv32 290 ms, inline 56 ms, loops 185 ms (780 ms of 2.54 s); Agenda loads in 72 ms and
+  calls for 2.50 s; Chess loads in 85 ms plus 6.8 ms for the inline group inside its 4.02 s call; teardown 16-41 ms.
+
+### What didn't work
+- `make test` first stopped in test-generated: `compiler/typed/typed-rv32-kernel.js: listed in
+  tools/file-length-exceptions.txt but not a tracked source file over 500 lines; remove the entry` (the new bundle
+  was not yet tracked); `git add` fixed it. All node suites before it passed.
+- Session 1: `ValueError: physical keyboard I2C0 did not qualify: {'busyMs': 4899.51, 'transfers': 284, 'bytes':
+  1139, 'errors': 284} -> {'busyMs': 5118.55, 'transfers': 304, 'bytes': 1220, 'errors': 304}` — every transfer an
+  error; no typedcost command ran.
+
+### What I learned
+- Chess's lazy group load is 6.8 ms on the device; TYPED-PIPELINE's +96 ms for Chess is not the group evaluation.
+
+### What was tricky to build
+- The experiment tree's strip knob must replace the production `JS_SetStripInfo` line, not precede it (updated in
+  `02-experiment-tree.py` after 4239fde; the knob defaults to `COMPILER_STRIP`).
+
+### What warrants a second pair of eyes
+- Loaders list the group files by hand (18 files); a fifth group would need the same sweep.
+
+### What should be done in the future
+- Restore the playable image after the power cycle (the board is on `fa144453`).
+
+### Code review instructions
+- `git show c7fca6b --stat`; `bash scripts/07-compare-digests.sh BASE_TAR SCRATCH`;
+  `qjs-diagnostics STRIP scripts/08-diagnostics-driver.js tape.js ...` from `compiler/typed/`.
+
+### Technical details
+- Board arms: `/tmp/picocalc-device-cost-arm-{control,split,strip}` (app, partition table, bootloader,
+  picocalc-build.json).

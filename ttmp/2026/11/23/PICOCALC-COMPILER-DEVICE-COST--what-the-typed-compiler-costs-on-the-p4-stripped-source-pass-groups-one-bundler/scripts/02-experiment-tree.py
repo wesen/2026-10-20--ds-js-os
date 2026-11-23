@@ -33,13 +33,14 @@ EDITS = {
          "file(READ ${REPO}/compiler/typed/typed-rv32.js rv32_core)\n"
          "file(READ ${REPO}/compiler/typed/typed-rv32-inline.js rv32_inline)\n"
          "file(READ ${REPO}/compiler/typed/typed-rv32-loops.js rv32_loops)\n"
-         "file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/typed-rv32-all.js \"${rv32_core}${rv32_inline}${rv32_loops}\")\n"
+         "file(READ ${REPO}/compiler/typed/typed-rv32-kernel.js rv32_kernel)\n"
+         "file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/typed-rv32-all.js \"${rv32_core}${rv32_inline}${rv32_loops}${rv32_kernel}\")\n"
          "list(APPEND BUNDLE_EXTRA \"typed/rv32-all.js=${CMAKE_CURRENT_BINARY_DIR}/typed-rv32-all.js\")\n"),
     ],
     "firmware/port/esp32p4/main/typed_p4.c": [
         ("static bool eval_file(JSContext *ctx, const char *path) {\n",
          "// Experiment knobs (PICOCALC-COMPILER-DEVICE-COST): the compile runtimes' strip flags, and emptying the cache.\n"
-         "int p4_typed_strip_flags = 0;\n"
+         "int p4_typed_strip_flags = COMPILER_STRIP;\n"
          "void p4_typed_bytecode_flush(void) {\n"
          "  compiled_find(\"\", false);\n"
          "  xSemaphoreTake(compiled_lock, portMAX_DELAY);\n"
@@ -50,8 +51,8 @@ EDITS = {
          "  xSemaphoreGive(compiled_lock);\n"
          "}\n\n"
          "static bool eval_file(JSContext *ctx, const char *path) {\n"),
-        ("  JS_SetInterruptHandler(rt, compile_interrupt, heap);\n",
-         "  JS_SetInterruptHandler(rt, compile_interrupt, heap);\n"
+        # The production flags (COMPILER_STRIP, 4239fde) become the knob's default.
+        ("  JS_SetStripInfo(rt, COMPILER_STRIP);\n",
          "  JS_SetStripInfo(rt, p4_typed_strip_flags);\n"),
     ],
 }
