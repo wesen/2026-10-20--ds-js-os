@@ -20,6 +20,28 @@ function rows(b: buffer, i: i32, s: f32): f32 {
 function three(b: buffer, a: i32): f32 {
     return b.getF32(a) * 3.0 + b.getF32(a + 1) * 5.0 + b.getF32(a + 2);
 }
+// Two index locals, one root: t1 = 6i + 2 and t2 = 6i + 4 make one group of four reads (units 6i + 2 .. 6i + 5).
+function affine(b: buffer, i: i32): f32 {
+    const t1: i32 = ((i * 3) + 1) * 2;
+    const x: f32 = b.getF32(t1) + b.getF32(t1 + 1);
+    const t2: i32 = ((i * 3) + 2) << 1;
+    const y: f32 = b.getF32(t2) * b.getF32(t2 + 1);
+    return x - y;
+}
+// j is rewritten between the reads; its form in terms of i follows it: one group of 2i .. 2i + 3.
+function rebased(b: buffer, i: i32): f32 {
+    let j: i32 = i * 2;
+    const x: f32 = b.getF32(j) + b.getF32(j + 1);
+    j = j + 1;
+    return x * b.getF32(j) + b.getF32(j + 1) - b.getF32(j + 2);
+}
+// k is its own root (a conversion); its write ends the first group and starts another.
+function moved(b: buffer, s: f32): f32 {
+    let k: i32 = i32(s);
+    const x: f32 = b.getF32(k) + b.getF32(k + 1) + b.getF32(k + 2);
+    k = k + 2;
+    return x * b.getF32(k) - b.getF32(k + 1) + b.getF32(k + 2);
+}
 function guarded(b: buffer, i: i32): f32 {
     const a: i32 = i * 4;
     let t: f32 = b.getF32(a);
@@ -90,6 +112,29 @@ test("rows: grouped f32 row reads agree with WebAssembly and trap at the buffer'
             if (expected !== null) assert.equal(bits(fromBits(run.fregisters[10])), bits(expected), policy + " three(" + a + ")");
         }
     }
+    // affine(i) and rebased(i) agree, and trap, for indices around both ends.
+    for (let i = -3; i <= 12; i++) for (const name of ["affine", "rebased"]) {
+        new Uint8Array(wasm.memory.buffer).set(bytes);
+        let expected;
+        try { expected = wasm[name](at, i); } catch { expected = null; }
+        assert.equal(expected === null, i < 0 || i > (name === "affine" ? 3 : 10), "Wasm " + name + "(" + i + ")");
+        for (const [policy, program] of images) {
+            const run = runF32(program, name, [at, i], [], bytes);
+            assert.equal(run.trap, expected === null, policy + " " + name + "(" + i + ") traps");
+            if (expected !== null) assert.equal(bits(fromBits(run.fregisters[10])), bits(expected), policy + " " + name + "(" + i + ")");
+        }
+    }
+    for (let k = -2; k <= 22; k++) {
+        new Uint8Array(wasm.memory.buffer).set(bytes);
+        let expected;
+        try { expected = wasm.moved(at, k); } catch { expected = null; }
+        assert.equal(expected === null, k < 0 || k > 19, "Wasm moved(" + k + ")");
+        for (const [policy, program] of images) {
+            const run = runF32(program, "moved", [at], [k], bytes);
+            assert.equal(run.trap, expected === null, policy + " moved(" + k + ") traps");
+            if (expected !== null) assert.equal(bits(fromBits(run.fregisters[10])), bits(expected), policy + " moved(" + k + ")");
+        }
+    }
     // A buffer one unit short of the last row's last f32 traps in both, on the group's second check in RV32.
     view.setInt32(at, units - 1, true);
     new Uint8Array(wasm.memory.buffer).set(bytes);
@@ -103,6 +148,13 @@ test("rows: a group's reads become loads from one address; a read under a branch
     const checked = code => typedTape.decode(code).filter(o => o.op === "text.checked_address").length;
     assert(tapes.has("rows:rows"), "rows rewrote rows()");
     assert(!tapes.has("guarded:rows"), "guarded() has three reads of one row in two stretches");
+    // One group each, whose index locals t1, t2 and j are no longer computed: no multiplication by 3 is left.
+    const ops = name => typedTape.decode(tapes.get(name + ":rows")).map(o => o.op + " " + (o.operands ?? []).join(" "));
+    for (const name of ["affine", "rebased"]) {
+        assert.equal(checked(tapes.get(name + ":rows")), 0, name);
+        assert.equal(ops(name).filter(o => o === "i32.load 2 0").length, 2, name + ": two capacity checks");
+    }
+    assert(!ops("affine").includes("i32.const 3"), ops("affine").join("; "));
     assert.equal(checked(tapes.get("rows:rows")), 0);
     assert.equal(checked(tapes.get("rows:split") ?? tapes.get("rows:inline")), 7);
 });
