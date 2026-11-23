@@ -62,7 +62,7 @@ function sumCells(work: buffer, n: i32): i32 {
 
 The frontend lives in `compiler/typed/typed-wasm.js`. Its entry `typedWasm.compileFunctions(source, functionBase, imports, maxLength, numericOperands, onFunction, onSignatures, options)` parses and type-checks the source. For each function it emits a **tape**: an array of integer cells encoding WebAssembly-like stack operations. With `numericOperands = true`, every operand occupies exactly one cell. The RV32 backend consumes this form.
 
-The tape for `sumCells` has 52 cells and 29 operations. `typedWasm.decodeNumericOperations(fn.code)` prints it as follows. The offset is the cell index.
+The tape for `sumCells` has 52 cells and 29 operations. `typedTape.decode(fn.code)` prints it as follows. The offset is the cell index.
 
 ```text
   0 i32.const              0          8 block 64              29 text.checked_address 0 4
@@ -85,7 +85,7 @@ Three details matter later:
 - A buffer read is `text.checked_address receiver index` (opcode `0xf1`) followed immediately by `i32.load16_u` with offset 4. The check and the address computation are one operation, and the load skips the 4-byte header. A write is `0xf1`, then the value expression, then `i32.store16` (`0x3b`).
 - The frontend streams by default. It hands each finished function to the backend through `onFunction` and then drops its tape, so peak memory stays bounded on the P4. `streamFunctions: false` buffers all functions first. Both modes must produce identical images, and tests check this.
 
-The full opcode table is `inspectOperations` in `typed-wasm.js`. The backend's operand-count table `OPERAND_CELLS` in `typed-rv32.js` must agree with it.
+The full opcode table, with operand cells, types and effects, is `compiler/typed/tape.js` ([the Typed compiler](typed-compiler.md)); the front end, the backend and the tools all read it.
 
 ## 4. The RV32 backend
 
@@ -471,7 +471,8 @@ Signed 16-bit and 32-bit indexed arrays would let source state what it stores. T
 
 | Path | Contents |
 |---|---|
-| `compiler/typed/typed-wasm.js` | Lexer, parser, type checker, tape emitter, `compileFunctions`, `decodeNumericOperations`, Wasm encoder |
+| `compiler/typed/tape.js` | The tape definition: opcodes, operand cells, types, effects, `decode` |
+| `compiler/typed/typed-wasm.js` | Lexer, parser, type checker, tape emitter, `compileFunctions`, Wasm encoder |
 | `compiler/typed/typed-async.js` | Rewrites `async` functions before emission (needed for Editor) |
 | `compiler/typed/rv32/` | The RV32 backend's sources, 13 files joined in name order: encoders, `FunctionCode` (the emitter), leaf code, inlining, loop versioning with hoisting and induction, live-range splitting, ranges, value sets, conjunctions and rotation, `planLocations`, `POLICIES`, `compile`. See its README |
 | `compiler/typed/typed-rv32.js` | The generated bundle every loader reads (`node compiler/rv32/build.mjs`); never edit it directly |

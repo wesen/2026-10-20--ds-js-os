@@ -27,7 +27,7 @@ migration target. Earlier designs that chose C for speed or convenience, such as
 | Path | What it holds |
 |---|---|
 | `firmware/` | Nucleus, native-world SDK, natives, host simulator, ESP32-P4 and PaperS3 ports, `third_party/`, `PLAYABLE.json` |
-| `compiler/typed/` | The Typed compiler the firmware runs at boot (`rv32/` holds the sources of `typed-rv32.js`) |
+| `compiler/typed/` | The Typed compiler the firmware runs at boot ([guide](docs/typed-compiler.md); `tape.js` defines its IR, `rv32/` holds the sources of `typed-rv32.js`) |
 | `compiler/cji/` | CJI, whole-program inference and numeric range analysis; start with its [pass list](compiler/cji/src/pipeline.js) |
 | `apps/typed/`, `apps/js/`, `apps/tours/` | Typed worlds with their link adapters; QuickJS roots and worlds; simulator tours |
 | `bench/` | Host gates, the board study harness, `rv32emu`, reference data ([guide](docs/measuring.md)) |

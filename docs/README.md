@@ -5,6 +5,7 @@ ticket's copy of a guide is the record of what was known when it was written.
 
 | Guide | What it explains |
 |---|---|
+| [typed-compiler.md](typed-compiler.md) | The Typed compiler: its pipeline, the tape (`compiler/typed/tape.js`), the passes, the backends and the oracles |
 | [measuring.md](measuring.md) | Host gates, paired board studies, the device library, `PLAYABLE.json` and firmware profiles |
 | [typed-compiler-and-the-ray-tracer.md](typed-compiler-and-the-ray-tracer.md) | How the Typed compiler's RV32 backend closed the ray tracer's gap to C, one board-gated step at a time |
 | [candela-on-the-p4.md](candela-on-the-p4.md) | Candela's presets path-traced by the firmware and shown on the screen (the playable gallery) |
