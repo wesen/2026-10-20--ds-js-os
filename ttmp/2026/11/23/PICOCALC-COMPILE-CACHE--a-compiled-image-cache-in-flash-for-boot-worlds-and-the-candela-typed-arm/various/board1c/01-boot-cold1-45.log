@@ -1,0 +1,190 @@
+@0.011 B’ºJ½½Ñé chip revision: v1.3
+@0.011 I (29) boot: efuse block revision: v0.3
+@0.011 I (32) boot.esp32p4: SPI Speed      : 80MHz
+@0.023 I (36) boot.esp32p4: SPI Mode       : DIO
+@0.023 I (40) boot.esp32p4: SPI Flash Size : 32MB
+@0.023 I (44) boot: Enabling RNG early entropy source...
+@0.034 I (48) boot: Partition Table:
+@0.034 I (51) boot: ## Label            Usage          Type ST Offset   Length
+@0.045 I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+@0.045 I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+@0.056 I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+@0.067 I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+@0.067 I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+@0.075 I (91) boot: End of partition table
+@0.075 I (93) esp_image: segment 0: paddr=00010020 vaddr=40190020 size=4c8c84h (5016708) map
+@0.906 I (932) esp_image: segment 1: paddr=004d8cac vaddr=30100000 size=00068h (   104) load
+@0.918 I (934) esp_image: segment 2: paddr=004d8d1c vaddr=4ff00000 size=072fch ( 29436) load
+@0.918 I (943) esp_image: segment 3: paddr=004e0020 vaddr=40000020 size=18d4e0h (1627360) map
+@1.186 I (1214) esp_image: segment 4: paddr=0066d508 vaddr=4ff072fc size=0cee8h ( 52968) load
+@1.197 I (1226) esp_image: segment 5: paddr=0067a3f8 vaddr=4ff14200 size=0504ch ( 20556) load
+@1.209 I (1236) boot: Loaded app from partition at offset 0x10000
+@1.209 I (1236) boot: Disabling RNG early entropy source...
+@1.222 I (1247) hex_psram: vendor id    : 0x0d (AP)
+@1.222 I (1247) hex_psram: Latency      : 0x01 (Fixed)
+@1.233 I (1248) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+@1.233 I (1249) hex_psram: dev id       : 0x03 (generation 4)
+@1.233 I (1253) hex_psram: density      : 0x07 (256 Mbit)
+@1.244 I (1258) hex_psram: good-die     : 0x06 (Pass)
+@1.244 I (1262) hex_psram: SRF          : 0x02 (Slow Refresh)
+@1.255 I (1267) hex_psram: BurstType    : 0x00 ( Wrap)
+@1.255 I (1271) hex_psram: BurstLen     : 0x03 (2048 Byte)
+@1.255 I (1276) hex_psram: BitMode      : 0x01 (X16 Mode)
+@1.266 I (1280) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+@1.266 I (1285) hex_psram: DriveStrength: 0x00 (1/1)
+@1.269 I (1290) MSPI DQS: tuning success, best phase id is 0
+@1.437 I (1462) MSPI DQS: tuning success, best delayline id is 17
+@1.437 I (1463) esp_psram: Found 32MB PSRAM device
+@1.445 I (1463) esp_psram: Speed: 200MHz
+@1.445 I (1464) hex_psram: psram CS IO is dedicated
+@1.445 I (1467) cpu_start: Multicore app
+@2.343 I (2376) esp_psram: SPI SRAM memory test OK
+@2.360 I (2386) cpu_start: Pro cpu start user code
+@2.360 I (2386) cpu_start: cpu freq: 360000000 Hz
+@2.371 I (2386) app_init: Application information:
+@2.371 I (2386) app_init: Project name:     picocalc-os-p4
+@2.371 I (2391) app_init: App version:      picocalc-p4-smooth-chess-202611
+@2.383 I (2397) app_init: ELF file SHA256:  42df5da5a...
+@2.383 I (2401) app_init: ESP-IDF:          v5.4.2
+@2.394 I (2405) efuse_init: Min chip rev:     v0.1
+@2.394 I (2409) efuse_init: Max chip rev:     v1.99 
+@2.394 I (2413) efuse_init: Chip rev:         v1.3
+@2.405 I (2417) heap_init: Initializing. RAM available for dynamic allocation:
+@2.405 I (2424) heap_init: At 4FF29750 len 00011870 (70 KiB): RAM
+@2.416 I (2429) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+@2.416 I (2434) heap_init: At 4FF55EF0 len 0004A110 (296 KiB): RAM
+@2.427 I (2439) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+@2.427 I (2445) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+@2.438 I (2452) spi_flash: detected chip: generic
+@2.449 W (2455) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+@2.449 I (2465) spi_flash: flash io: dio
+@2.449 I (2469) main_task: Started on CPU0
+@2.460 I (2472) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+@2.460 I (2480) main_task: Calling app_main()
+@2.472 I (2483) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+@2.472 heap: internal 385315 free (largest 294912), psram 33551748 free (largest 33030144)
+@2.517 I (2543) fs: /files: 7900 KB, 7892 KB free (mounted in 21 ms)
+@2.529 I (2544) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+@2.529 I (2546) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+@2.713 I (2740) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+@2.713 I (2742) main_task: Returned from app_main()
+@2.879 [   162.077] calibration on the real clock: the 100k loop took 116.0 ms (the model says 133), fib(20) 30.2 ms (the model says 29.1)
+@2.917 candela cache miss key_us=40812 read_us=1510
+@2.956 typed compiler bytecode: typed/tape.js 21203 bytes
+@3.241 typed compiler bytecode: typed/wasm.js 360923 bytes
+@3.576 typed compiler bytecode: typed/rv32.js 382191 bytes
+@3.605 typed compiler bytecode: candela/link.js 1874 bytes
+@3.605 candela native compiler functions=streamed
+@3.672 typed compiler bytecode: typed/rv32-inline.js 65329 bytes
+@3.919 typed compiler bytecode: typed/rv32-loops.js 256148 bytes
+@5.715 candela compile source=candela/callback.typed status=ok us=2778396 peak_js_bytes=2006628 module_bytes=66816 sha=9744b19182c3fbfe
+@5.715 I (5734) ELF: ELF loader version: 2.0.0
+@5.715 I (5737) ELF: elf->entry=0x4807d718
+@5.750 CANLOAD {"stage":2,"compileUs":2828661,"relocateUs":3037,"installTotalUs":2831898,"imageBytes":66816,"elfSegmentBytes":66092,"residentStructBytes":732,"sourceBytes":15942,"graphBytes":612,"psramMonitored":1,"psramPeakDeltaBytes":3225624}
+@6.292 files cache miss key_us=21087 read_us=442897
+@6.411 typed compiler bytecode: typed/world.js 10768 bytes
+@6.431 files native compiler functions=streamed
+@6.431 files native compiler policy=interactive
+@7.799 files compile source=bundle status=ok us=1497200 peak_js_bytes=1855988 module_bytes=243644 sha=dd82179e45662f4a
+@7.830 editor cache miss key_us=23220 read_us=2719
+@8.031 typed compiler bytecode: typed/async.js 166157 bytes
+@8.095 editor native compiler functions=streamed
+@8.095 editor native compiler policy=interactive
+@11.387 editor compile source=bundle status=ok us=3546452 peak_js_bytes=3177224 module_bytes=243644 sha=0e05c09c4b917968
+@11.425 agenda cache miss key_us=23464 read_us=2729
+@11.557 agenda native compiler functions=streamed
+@11.557 agenda native compiler policy=interactive
+@14.167 agenda compile source=bundle status=ok us=2731441 peak_js_bytes=2493920 module_bytes=243644 sha=abf7dfc0dbc6d1ba
+@14.218 chess cache miss key_us=25041 read_us=2729
+@14.364 chess native compiler functions=streamed
+@14.364 chess native compiler policy=balanced
+@18.517 chess compile source=bundle status=ok us=4288236 peak_js_bytes=3199896 module_bytes=276412 sha=8bea147250cfe476
+@18.526 [ 15815.481] booting 25 worlds from js/system.typed.json
+@18.544 [ 15827.928] booting 5 worlds from js/system.elf.json
+@18.544 unknown command ÿ (try help)
+@18.544 #OK ÿ
+@18.544 #OK trace
+@18.544 #OK trace
+@18.544 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.579 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.590 #OK trace
+@18.595 #OK trace
+@18.595 #OK trace
+@18.595 #OK trace
+@18.595 #OK trace
+@18.595 #OK trace
+@18.760 quickjs prelude cache bytes=44957 build_us=54849
+@19.487 [ 16774.379] toplog: hello from the top level
+@19.487 [ 16777.978] nat-echo: TEST kind ok 
+@19.524 [ 16778.746] nat-echo: TEST provide ok 
+@19.524 [ 16779.210] nat-echo: TEST every ok 
+@19.524 [ 16779.725] nat-echo: TEST title ok 
+@19.534 [ 16780.270] nat-echo: TEST icon ok 
+@19.534 [ 16807.942] nat-echo: TEST about ok 
+@19.568 [ 16808.499] nat-echo: TEST icon-object err an icon is a JSON array of drawing operations, at most 1024 bytes
+@19.579 [ 16818.334] nat-echo: TEST key-upper err a shortcut key is one of a-z and 0-9
+@19.579 [ 16852.639] nat-echo: TEST init done
+@19.579 E (19597) ELF: Can't find common path_open
+@19.589 [ 16855.567] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@19.627 #OCT1 {"ev":"fault","t":16855.567,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+@19.627 I (19649) bus: spi2: panel device at 40000000 Hz requested, 40000 kHz actual
+@20.372 [ 17659.456] agent crashed handling start: ran past its turn budget of 100 ms
+@20.416 #OCT1 {"ev":"fault","t":17659.456,"world":"agent","file":"natives/agent.elf","handling":"start","why":"ran past its turn budget of 100 ms","crashes":1,"mem_kb":770,"limit_kb":1536}
+@20.416 E (20435) ELF: Can't find common path_open
+@20.426 [ 17693.995] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@20.468 #OCT1 {"ev":"fault","t":17693.995,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+@20.468 [ 17746.196] nat-echo: TEST start self=nat-echo clock=running
+@20.479 [ 17747.333] nat-bench: BENCH loop n=1000 us=36 r=122468
+@20.479 [ 17751.650] nat-bench: BENCH loop n=4000 us=135 r=498743
+@20.481 [ 17752.826] nat-bench: BENCH loop n=16000 us=542 r=2028337
+@20.626 E (20651) ELF: Can't find common path_open
+@20.628 [ 17910.602] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@20.666 #OCT1 {"ev":"fault","t":17910.602,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":3,"mem_kb":0,"limit_kb":64}
+@20.666 [ 17945.907] nat-echo: TEST ticks 3 timer=0
+@20.733 [ 18016.776] files crashed handling start: ran past its turn budget of 50 ms
+@20.744 #OCT1 {"ev":"fault","t":18016.776,"world":"files","file":"files/compiled.bin","handling":"start","why":"ran past its turn budget of 50 ms","crashes":1,"mem_kb":714,"limit_kb":768}
+@21.033 E (21058) ELF: Can't find common path_open
+@21.044 [ 18317.897] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@21.053 #OCT1 {"ev":"fault","t":18317.897,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+@21.506 chess/painter cache miss key_us=465719 read_us=2913
+@21.665 typed compiler bytecode: chess/painter/link.js 1189 bytes
+@21.670 chess/painter native compiler functions=streamed
+@21.837 E (21862) ELF: Can't find common path_open
+@21.848 [ 19121.426] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@21.859 #OCT1 {"ev":"fault","t":19121.426,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+@21.863 [ 19121.426] nat-import crashed 5 times in ten seconds; it stays stopped
+@26.910 chess/painter compile source=screen-message status=ok us=5395709 peak_js_bytes=2081360 module_bytes=33840 sha=dd360ab6af975078
+@26.921 candela cache stored seq=1 module_bytes=66816 us=15022728 prepare_us=12835614 write_us=2081444 commit_us=105670 free_kb=7892
+@30.635 files cache stored seq=2 module_bytes=243644 us=3697850 prepare_us=24578 write_us=3614177 commit_us=59095 free_kb=7816
+@33.326 CGAL {"ev":"first","id":"B-01","ms":6295.3,"sub":1,"pass":0,"ev100":14.9748,"skyRebuilt":1}
+@34.789 editor cache stored seq=3 module_bytes=243644 us=4149885 prepare_us=38179 write_us=4017921 commit_us=93785 free_kb=7576
+@38.644 candela-gallery cache miss key_us=2145 read_us=743415
+@38.744 [ 36026.674] compositor crashed handling frames: ran past its turn budget of 80 ms
+@38.757 #OCT1 {"ev":"fault","t":36026.674,"world":"compositor","file":"natives/compositor.elf","handling":"frames","why":"ran past its turn budget of 80 ms","crashes":1,"mem_kb":427,"limit_kb":768}
+@39.012 typed compiler bytecode: candela-gallery/link.js 1778 bytes
+@39.074 candela-gallery native compiler functions=streamed
+@39.074 candela-gallery native compiler policy=kernel
+@39.665 agenda cache stored seq=4 module_bytes=243644 us=4869296 prepare_us=36469 write_us=4743164 commit_us=89663 free_kb=7336
+@44.453 chess cache stored seq=5 module_bytes=276412 us=4785450 prepare_us=98001 write_us=4612354 commit_us=75095 free_kb=7096
+@45.404 chess/painter cache stored seq=6 module_bytes=33840 us=947791 prepare_us=79581 write_us=796522 commit_us=71688 free_kb=6824

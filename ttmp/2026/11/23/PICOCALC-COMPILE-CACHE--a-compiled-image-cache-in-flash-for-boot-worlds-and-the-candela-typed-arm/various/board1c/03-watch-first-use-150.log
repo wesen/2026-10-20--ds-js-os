@@ -1,0 +1,16 @@
+@15.136 candela-gallery compile rejected: InternalError: out of memory
+@15.136     at planSavedHomes (typed/rv32.js:1718:47)
+@15.147     at planLocations (typed/rv32.js:1964:38)
+@15.147     at <anonymous> (typed/rv32.js:2309:90)
+@15.147     at time (typed/rv32.js:2277:22)
+@15.158     at lower (typed/rv32.js:2309:58)
+@15.158     at consume (typed/rv32.js:2349:24)
+@15.158     at emitFunctions (typed/wasm.js:2050:35)
+@15.170     at <anonymous> (typed/wasm.js:1931:32)
+@15.170     at withLexIndices (typed/wasm.js:28:23)
+@15.170     at compileFunctions (typed/wasm.js:1926:5)
+@15.177     at compile (typed/rv32.js:2357:103)
+@15.177     at linkCandelaGallery (candela-gallery/link.js:10:38)
+@15.177 
+@15.575 candela-gallery compile source=bundle status=failed us=113997940 peak_js_bytes=17827392 module_bytes=0 sha=0000000000000000
+@15.583 CGAL {"ev":"error","what":"typed-load","error":"the Typed kernel did not compile"}
