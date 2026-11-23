@@ -50,7 +50,7 @@ into one IIFE (one scope, so they are not ES modules), and `--check`, run by `ma
 | `frontend/expressions.js` | the tape's constants for the bundle; `ExpressionParser`: the tape writer (`emitConst`, `emitIndex`, `emitMemory`, `codeUnitAddress`, `emitLiteralStores`) and the expressions |
 | `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`async/body.js` subclasses it) |
 | `frontend/inspect.js` | the front end's `frontend` inspection event (`target: "tape"`) |
-| `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async lowering (`emitSpanFunctions`, whose lexers report original positions) |
+| `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async lowering (`emitSpanFunctions`; `originalError` maps lowered-code diagnostics to original positions) |
 | `wasm/encode.js` | `encodeFunction` (tape → Wasm body), `compileWasmFunctions` (the front end driven for the Wasm backend) |
 | `wasm/module.js` | `compile` (a module of Typed functions), `WasmReader`, section reading and writing |
 | `wasm/inspect.js` | the Wasm backend's `frontend` and `emission` events, in Wasm operations and module byte ranges |
@@ -75,7 +75,7 @@ frame in `WorldState` (PICOCALC-CONTINUATION-G, PICOCALC-EDITOR-ASYNC). `typed-a
 | `async/rewrite.js` | `prepare`, `rewrite` and `typedAsync` |
 
 The lowered program is text, but its unchanged bodies are read from the original source, and the lexers of the rewritten
-bodies and of the generated functions report diagnostics at original positions (`configureGeneratedLexer`), so an
+bodies and of the generated functions report diagnostics at original positions (`originalError` in `frontend/compile.js`), so an
 error never needs a second compile. Why this is text and not a pass over the tape: PICOCALC-TYPED-ASYNC-TAPE's study.
 
 Two properties are deliberate. The compiler streams: `typedRv32.compile` asks the front end for one function at a
