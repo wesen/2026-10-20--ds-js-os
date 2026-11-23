@@ -33,6 +33,7 @@ migration target. Earlier designs that chose C for speed or convenience, such as
 | `bench/` | Host gates, the board study harness, `rv32emu`, reference data ([guide](docs/measuring.md)) |
 | `tests/compiler/` | The Typed compiler's tests and pinned image digests |
 | `tools/gen/candela/` | Generators of `firmware/third_party/candela`'s generated files |
+| `tools/device/` | The boards' serial tools: console capture (`p4cap`, `s3cap`), file upload, agent provisioning |
 | `cmd/trace-repl`, `pkg/` | The compiler-evidence workbench (Go and goja) |
 | `docs/` | Current guides ([index](docs/README.md)) |
 

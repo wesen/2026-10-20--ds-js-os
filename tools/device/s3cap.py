@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Talk to picocalc-os on the M5Stack PaperS3 over its native USB Serial/JTAG, and decode screenshots.
 
-    tools/s3cap.py [-p PORT] [-s SECONDS] [--no-reset] [-c "AT_SECONDS COMMAND"]... [--shot-dir DIR] [-o LOG]
+    tools/device/s3cap.py [-p PORT] [-s SECONDS] [--no-reset] [-c "AT_SECONDS COMMAND"]... [--shot-dir DIR] [-o LOG]
 
 The PaperS3's console needs care (esp32-s3-m5 ESP-55): on this host every open of /dev/ttyACM0 asserts DTR
 and RTS, and the edges can leave the ESP32-S3 in its ROM downloader ("boot:0x0 (DOWNLOAD)", the console then

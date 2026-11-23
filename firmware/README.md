@@ -91,7 +91,7 @@ sdk/                the native world SDK: nw.h (the API), nw_ui.h and nw_json.h,
 natives/            example native worlds: echo, battery, bench, the probes, and dial (an app with a screen)
 scripts/            the scripts behind the captures
 tools/gen_font.py   makes nucleus/font_data.h from Terminus Font
-tools/p4cap.py      resets the device, sends console lines, decodes shots to PNG
+../tools/device/   p4cap.py resets the device, sends console lines, decodes shots to PNG; p4put, s3cap, provision_agent
 third_party/        QuickJS 2026-06-04 (MIT, three small patches: see PATCHES), font licence (OFL)
 ```
 
@@ -232,7 +232,7 @@ cd port/esp32p4
 source ~/esp/esp-idf-5.4.2/export.sh
 idf.py build
 idf.py -p /dev/serial/by-id/usb-1a86_USB_Single_Serial_5B61091051-if00 flash
-cd ../.. && python3 tools/p4cap.py -s 20 -c "5 stats" -c "6 shot" --shot-dir /tmp/shots
+cd ../../.. && python3 tools/device/p4cap.py -s 20 -c "5 stats" -c "6 shot" --shot-dir /tmp/shots
 ```
 
 What differs from the host, all of it behind the port API at the end of `nucleus/nucleus.h`:
@@ -247,7 +247,7 @@ What differs from the host, all of it behind the port API at the end of `nucleus
 
 The UART is a console as well as the log: `stats`, `worlds`, `handles`, `heap`, `key NAME`, `type TEXT`,
 `crash WORLD`, `restart WORLD`, `bench`, `cachestat`, `trace on|off`, and `shot`, which sends the compositor's
-framebuffer for `tools/p4cap.py` to turn into a PNG. `cachestat loop|fib [default|internal|psram]` runs one
+framebuffer for `tools/device/p4cap.py` to turn into a PNG. `cachestat loop|fib [default|internal|psram]` runs one
 calibration program on a chosen heap and prints the caches' own counters and where its memory landed;
 `cachestat mem` times memory. They found that LP SRAM, which ESP-IDF adds to the heap by default, costs about
 1 µs an access on the P4 (70 times internal SRAM): the firmware keeps it out of the heap (PICOCALC-SPEED).

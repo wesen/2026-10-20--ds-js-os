@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # Copy a file onto the ESP32-P4's FAT partition over the console, without resetting it: "put PATH" creates the file,
 # then each "put PATH <base64>" line appends up to 680 bytes; the console acknowledges every command with "#OK put"
-# before the next is sent. For WebAssembly apps: tools/p4put.py build/natives/echo.wasm apps/echo.wasm
-#   tools/p4put.py LOCAL REMOTE [-p PORT]
+# before the next is sent. For WebAssembly apps: tools/device/p4put.py firmware/build/natives/echo.wasm apps/echo.wasm
+#   tools/device/p4put.py LOCAL REMOTE [-p PORT]
 import argparse, base64, sys, time
 import serial
 

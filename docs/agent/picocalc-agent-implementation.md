@@ -476,7 +476,7 @@ From `firmware/`, use the helper:
 
 ```bash
 python3 -m pip install pyserial
-python3 tools/provision_agent.py \
+python3 ../tools/device/provision_agent.py \
   --port /dev/serial/by-id/YOUR_P4_CH343_PORT
 ```
 
@@ -525,7 +525,7 @@ The main changes are deliberately easy to find:
 | `port/esp32p4/sdkconfig.c6-agent` | Matching C6 slave transport settings |
 | `port/esp32p4/optional/agent_wifi` | Optional managed dependencies |
 | `port/esp32p4/dependencies.agent.lock` | Resolved, pinned Wi-Fi dependency graph |
-| `tools/provision_agent.py` | Secret-safe interactive provisioning |
+| `../tools/device/provision_agent.py` | Secret-safe interactive provisioning |
 | `../tests/apps`, `../tests/native` and `../tests/native/fixtures/agent` | Behavioral, native, TLS, and simulator acceptance checks |
 | `scripts-agent/tour.txt` | Reproducible screenshot demonstration |
 

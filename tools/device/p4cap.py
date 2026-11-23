@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Reset the ESP32-P4 through the CH343's DTR/RTS lines (DTR released: normal boot; RTS pulses EN) and print
 # what arrives on the console for a few seconds. One process may own the port at a time.
-#   tools/p4cap.py [-p PORT] [-s SECONDS] [--no-reset] [-c "AT_SECONDS COMMAND"]... [--shot-dir DIR]
+#   tools/device/p4cap.py [-p PORT] [-s SECONDS] [--no-reset] [-c "AT_SECONDS COMMAND"]... [--shot-dir DIR]
 # With --shot-dir, every "#SHOT w h" ... "#END crc runs" block the console's shot command prints is decoded
 # (base64 of little-endian (count, rgb565) pairs) and written there as shot-N.png at scale 2.
 import argparse, base64, os, re, struct, sys, time, zlib
