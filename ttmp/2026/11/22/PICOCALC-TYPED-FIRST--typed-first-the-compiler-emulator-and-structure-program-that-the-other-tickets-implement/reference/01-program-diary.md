@@ -116,3 +116,40 @@ The first two tickets came back with every gate passing. TAPE fast-forwarded ont
 ### What warrants a second pair of eyes
 
 - **Wave 2 has two bundlers.** FRONTEND bundles `typed-wasm.js` from its modules with its own generator, while PIPELINE writes the bundler for `rv32/`. I allowed both and will unify them after merging, if that is simpler.
+
+## Step 4: A playable install with the keyboard off, and SPLIT-FILES merged
+
+The playable build at `bf30d31` is installed and recorded. SPLIT-FILES is merged with three conflicts resolved by hand. The two wave-2 agents were told to merge the new `main` before reporting.
+
+### What I did
+
+- **Install, first attempt.** `make playable` built `1f99bf386f64a3dd…` (app digest prefix). `playable.py install` wrote and verified it, then failed health on the keyboard:
+
+  ```
+  ValueError: physical keyboard I2C0 did not qualify: {'busyMs': 4821.6, 'transfers': 260, 'bytes': 1043, 'errors': 260} -> {'busyMs': 4969.05, 'transfers': 266, 'bytes': 1068, 'errors': 266}
+  ```
+
+  Every transfer errored. That is the pattern of a keyboard the user has switched off. SPLIT-FILES saw the same on its probe boot.
+- **Install, second attempt.** Per the standing rule, I reran `install … --health-only --peripherals off-by-user`. It passed (every judged world up, nothing restarting) and rewrote `PLAYABLE.json`: commit `bf30d31`, dirty false, peripherals off-by-user. Committed with the evidence in `various/01-install-playable-bf30d31` and `various/02-health-bf30d31-off-by-user`.
+- **Merging SPLIT-FILES** (`9be534a`). Conflicts and what I did:
+  - Root `Makefile`, `test-generated`: CONFORMANCE's `vectors.mjs --check` and SPLIT-FILES' `check-file-length.mjs`. Kept both.
+  - CONFORMANCE's new `pkg/tracerv32/{conformance_test,fpexec,fpu}.go`: they followed the directory's move to `tools/trace-repl/pkg/tracerv32`. The conformance test's relative path to the vectors went from `../../` to `../../../../`.
+  - The `bench/emu/emu.c` entry in `tools/file-length-exceptions.txt` was removed. CONFORMANCE split that file, and the check fails on entries that are no longer needed.
+  - Repointed `pkg/trace*` references in the docs and code CONFORMANCE added (`docs/rv32-executors.md`, `docs/typed-compiler.md`, `bench/emu`, `bench/host/rv32-interp.js`, the root `Makefile`, `tests/rv32`).
+- **Gates on the merge.** `make test` exit 0. `gates.sh` default and `kernel`: digests and counts as in Step 3, with 24/24 replays both times.
+- **Messages to FRONTEND and PIPELINE.** They are told to merge `main` (new paths, the length check, removing their exception entries) and to report against the merged state.
+
+### What didn't work
+
+- **The first install's health check.** It failed as shown above. Not debugged, per the rule about switched-off peripherals.
+- **The restore in SPLIT-FILES' probe.** `make restore-playable PERIPHERALS=off-by-user` reported "painter sources=0" after restoring `f8f36bd1`. Chess never sends its painter sources while the display is off. The board was then on the recorded image, and it is superseded by this step's install.
+
+### What warrants a second pair of eyes
+
+- **Health with the display off.** "Off-by-user" health passes, but the painter check depends on the display being on. While the user keeps the peripherals off, health checks don't cover the painter path.
+- **The installed firmware lags `main`.** SPLIT-FILES changes the firmware (the nucleus split and the device-tools text in Settings). I install the next playable after APP-MANIFEST, which also changes the firmware, to avoid two installs back to back.
+
+### What SPLIT-FILES left
+
+- **Long files left alone:** the two `compositor.js` files and `agent.js` (a QuickJS world loads one file), and `sdk/typed/world.c` and `agent_p4.c` (compiled from APP-MANIFEST's lists). They have tasks in its ticket.
+- **PaperS3 links fail before and after.** `native.c` was never in its CMake list, and the host build is missing `port_net_*` and `port_tz_set`.
