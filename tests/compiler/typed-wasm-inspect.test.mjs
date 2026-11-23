@@ -91,7 +91,7 @@ test("numeric frontend observation preserves cells and private text operations",
     const result = typedRv32.compile(source, [], undefined, {inspect});
     assert.deepEqual(result, typedRv32.compile(source));
     const front = events.find(e => e.kind === "frontend");
-    assert.equal(front.target, "rv32");
+    assert.equal(front.target, "tape");
     for (const [i, op] of front.operations.entries()) {
         assert.equal(op.ordinal, i);
         assert.equal(op.offset, i === 0 ? 0 : front.operations[i-1].offset + front.operations[i-1].length);
