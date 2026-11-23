@@ -2337,7 +2337,10 @@ function compile(source, imports = [], maxSourceLength, requested) {
             });
         }
         for (const pass of finishes) time(fn, pass.finishName ?? pass.name, () => pass.finish(fn, ctx));
-        code.push(compiled);
+        // Assembly reads a function's words, calls and descriptor (and, when inspected, its inspection): keeping only
+        // those releases the emitter's plan and tables now instead of at the end of the compile. On the device the
+        // emitters of a whole program held most of the compile heap (PICOCALC-CANDELA-KERNEL-CODEGEN).
+        code.push(fn.nativeInspection ? compiled : {words: compiled.words, calls: compiled.calls, program: compiled.program});
         // The lowered code retains the descriptor, so release the function-local literal table.
         if (fn.literals) fn.literals = null;
     }
