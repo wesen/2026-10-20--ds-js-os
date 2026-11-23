@@ -187,15 +187,18 @@ void console_exec(char *line) {
 #endif
   else if (!strcmp(cmd, "net")) p4_agent_console(rest);
   else if (!strcmp(cmd, "ls") || !strcmp(cmd, "cat") || !strcmp(cmd, "df") || !strcmp(cmd, "put")) p4_fs_console(cmd, rest);
-  else if (!strcmp(cmd, "hold")) printf("i2c0 %s; reboot or flash now\n", bus_p4_hold(100) ? "held between transactions" : "still busy");
-  else if (!strcmp(cmd, "reboot")) {
+  else if (!strcmp(cmd, "hold")) {   // the compiled-module cache's writer first: a flash must not cut an entry's write
+    if (!P4_TYPED_HOLD()) puts("typed cache: a write is still running");
+    printf("i2c0 %s; reboot or flash now\n", bus_p4_hold(100) ? "held between transactions" : "still busy");
+  } else if (!strcmp(cmd, "reboot")) {
+    if (!P4_TYPED_HOLD()) puts("typed cache: a write is still running");
     printf("i2c0 %s; rebooting\n", bus_p4_hold(100) ? "held" : "still busy");
     fflush(stdout); vTaskDelay(pdMS_TO_TICKS(20)); esp_restart();
   }
   else if (!strcmp(cmd, "tz")) p4_tz_console(rest);
   else if (!strcmp(cmd, "bench")) vm_calibrate();
   else if (!strcmp(cmd, "trace")) K.trace = !strcmp(rest, "on");
-  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | typed [WORLD baseline|build] | trace on|off | net help | ls [PATH] | cat PATH | df | put PATH [BASE64] | hold | reboot | tz [POSIX TZ]\n");
+  else if (!strcmp(cmd, "help")) printf("stats worlds handles heap | key NAME [MS] | type TEXT | crash W | restart W | shot | bench | typed [WORLD baseline|build | cache [clear|verify]] | trace on|off | net help | ls [PATH] | cat PATH | df | put PATH [BASE64] | hold | reboot | tz [POSIX TZ]\n");
   else printf("unknown command %s (try help)\n", cmd);
   printf("#OK %s\n", cmd);
   fflush(stdout);

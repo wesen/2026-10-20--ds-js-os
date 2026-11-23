@@ -66,6 +66,17 @@ char *p4_typed_app_compile(const p4_typed_app *app, int variant, const char *tex
                            const char *kind, size_t *length);
 char *p4_typed_world_read(const char *path, size_t *length, bool *served);  // NAME/compiled.bin of a boot world
 void p4_typed_console(const char *args);
+// typed_cache_p4.c: compiled modules on /files/.cache/typed (PICOCALC-COMPILE-CACHE; typed_cache.h is the format).
+bool p4_typed_cache_key(const p4_typed_app *app, const char *bundled, const char *text, size_t text_length,
+                        const p4_compile_limits *limits, uint8_t key[32]);   // false: no filesystem, or an input missing
+char *p4_typed_cache_read(const char *name, const uint8_t key[32], size_t *length, int64_t key_us);   // NULL: a miss
+void p4_typed_cache_store(const char *name, const char *label, const uint8_t key[32], const char *module,
+                          size_t length, int64_t compile_us);   // queued for the writer task; the module is copied
+bool p4_typed_cache_hold(int timeout_ms);   // no further writes (a reboot or a flash follows); true when none is running
+void p4_typed_cache_console(const char *args);   // typed cache [clear | corrupt APP flip|cut]
+#define P4_TYPED_HOLD() p4_typed_cache_hold(12000)
+#else
+#define P4_TYPED_HOLD() true
 #endif
 
 #if PICOCALC_BENCH
