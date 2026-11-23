@@ -157,3 +157,22 @@ Checked against `typed_p4.c`, `port_p4.c`, `fs_p4.c`, `nucleus/fs.c`, `kernel_su
 10. **The Candela first use (milestone 4).** Recommended: the gallery draws with the C++ kernel while the Typed program
     compiles in the background, and switches at the next scene once it is loaded; the caption says which kernel
     draws. A "compiling" frame would leave the screen still for 85 s on the first use after every firmware update.
+
+## Refinements (2026-11-23, after the first device runs)
+
+The device runs (diary Steps 5 and 6) changed points 6, 7 and 10 above and added two rules for compiles.
+
+11. **Writes in pieces, in the kernel's gaps.** Point 7's priority was not enough. A flash erase or write stops both
+    cores' caches and holds the flash lock for tens of ms, and the writer, preempted inside a 243 KB `fwrite`, held the
+    FAT lock for seconds: Agent, Files and the compositor overran their turn budgets during the first cold boot. Now
+    the writer (core 1) writes 4 KB pieces, unbuffered and sector-aligned (`tc_write_tmp`'s pace callback). Before each
+    piece it rests as long as the last one took, waits until no compile has run on core 1 for 2 s, and waits for the
+    kernel to announce a gap (`P4_TYPED_IDLE`: nothing due for 10 ms; 50 ms never came, since the keyboard polls every
+    20 ms). The piece then runs at priority 6, above the kernel, so no turn starts inside it.
+12. **Reads on core 1.** Point 6's helper task runs on core 1 for every caller, so a read cannot stretch a kernel turn
+    that is running (core 0 callers: the gallery's Typed load).
+13. **A compile leaves PSRAM for the worlds.** Past 8 MB of live heap (no boot compile gets there), an allocation that
+    would leave less than 3 MB of PSRAM free is refused. A compile that does not fit then fails alone; before, the
+    gallery's Typed compile emptied PSRAM and the keyboard, compositor, snake and settings worlds failed.
+14. **The compile runtime collects cycles.** QuickJS starts its cycle collector from `malloc_state.malloc_size`, which
+    the compile allocator never updated, so no device compile ever collected a cycle. It does now (`account()`).
