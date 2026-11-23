@@ -12,7 +12,7 @@
 
 ## TODO
 
-- [ ] Milestone 2 (RV32): the last scene (G-03) of the Wasm-vs-RV32 bit-identity run on the reference interpreter (17/17 identical so far)
+- [x] Milestone 2 (RV32): Wasm vs RV32 bit-identical on all 18 scenes at 4 passes (reference interpreter, policy kernel)
 - [ ] Caching the compiled image (85 s first compile on the device; a flash cache keyed by the source and compiler digest), the prerequisite of milestone 5
 - [ ] Milestone 5: the Typed arm as the playable gallery's default (ARM_DEFAULT), after the cache (the coordinator: not before)
 - [ ] Kernel code quality: the fixed kernel is 2.5x C++ (B-01, R-01, L-03, V-02); static frame records, vector results through K, inline-pass frame growth are the suspects

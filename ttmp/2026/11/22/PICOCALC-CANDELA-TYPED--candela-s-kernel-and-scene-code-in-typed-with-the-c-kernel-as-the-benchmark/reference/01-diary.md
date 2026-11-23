@@ -349,7 +349,7 @@ keyboard wedges again (I2C NACKs after a panic), stop board work and report — 
   | X-03 | 744,668 | 750,979 | 0.99 | 13.24 | 13.35 |
 
   Geometric mean of the cycle ratios: 1.764.
-- Host Wasm vs RV32: 17/17 scenes bit-identical so far (G-03, the slowest, still running on the interpreter).
+- Host Wasm vs RV32 (`kernel`, reference interpreter): 18/18 scenes bit-identical on every float of 4 passes (G-03 last, about 2 h on the interpreter).
 
 ### What didn't work
 - At the idle priority the compile shared core 0 with IDLE0 round-robin: 172 s instead of 85 s.
