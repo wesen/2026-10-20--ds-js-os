@@ -512,3 +512,60 @@ program diary).
 - Board images: control `adbe8ed4` (8c6a1ff), split `52c607c0` (529100a), strip `5d90890a` (cd08aea), strip-source
   `d8071198` (3f883ef, dirty), park `cc6e0008` (7682d93), bench experiment `27d4a946` (e17d025 + experiment tree),
   final `f40c4629` (3905072).
+
+## Step 8: Waiting on the board, and what is ready for it
+
+From 13:20 to 16:10 the board stayed paused (the keyboard's I2C bus NACKing until the user power-cycles it; main's
+program diary at fd76795 still lists the power cycle as outstanding). Everything the board work needs is built and
+scripted, so the remaining work is three board sessions and a restore. The board is still on my bench image
+`fa144453` from session 1 (installed at 13:16, health failed on the keyboard): after the power cycle it boots that
+image, not the playable one, until someone restores it.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** hand back with the board work ready to run, rather than idle without end.
+**Inferred user intent:** the coordinator resumes this agent (its context intact) once the board is usable.
+**Commit (code):** none (bookkeeping only).
+
+### What I did
+- Polled main's ref every 2.5 minutes for a coordinator update; none came.
+
+### Why
+- Board work is paused by the coordinator; nothing else in the ticket needs the board's absence.
+
+### What worked
+- N/A.
+
+### What didn't work
+- No board access since 13:16.
+
+### What I learned
+- N/A.
+
+### What was tricky to build
+- N/A.
+
+### What warrants a second pair of eyes
+- The board's current image is `fa144453` (an experiment bench image), not the playable one.
+
+### What should be done in the future
+1. In-image session (one install, about 18 minutes of compiles):
+   `python3 scripts/04-typedcost-session.py --build /tmp/picocalc-device-cost-bench --out OUT1 --install
+   scripts/05-session-1-plan.json`, then `python3 scripts/10-analyze-session.py OUT1`.
+   The bench image in that build directory is `27d4a946` (e17d025 plus the experiment tree).
+2. Boot study (12 installs, about 35 minutes; each install takes the lock on its own):
+   `python3 scripts/09-boot-study.py --arm control=/tmp/picocalc-device-cost-arm-control --arm
+   split=/tmp/picocalc-device-cost-arm-split --arm strip=/tmp/picocalc-device-cost-arm-strip --arm
+   park=/tmp/picocalc-device-cost-arm-park --out OUT2 --blocks 3`.
+3. The final image's gate: `device.install('/tmp/picocalc-device-cost-arm-final', OUT3, 'on')` (health with
+   peripherals on), and the boot compiles' share of their deadlines from its log (`09-boot-study.py --summarize`
+   reads one).
+4. `cd /home/manuel/code/wesen/2026-10-20--ds-js-os && make restore-playable`, then confirm health.
+
+### Code review instructions
+- The arms: `/tmp/picocalc-device-cost-arm-{control,split,strip,stripsource,park,final}` (each with
+  `picocalc-build.json`).
+
+### Technical details
+- Arm digests: control `adbe8ed4`, split `52c607c0`, strip `5d90890a`, strip-source `d8071198`, park `cc6e0008`,
+  final `f40c4629`; bench `27d4a946`.

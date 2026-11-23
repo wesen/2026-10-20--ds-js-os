@@ -10,3 +10,4 @@
 - [ ] Paired boot study: control, split, strip (bench/board, rotating order) <!-- t:qk25 -->
 - [ ] Gates: make test, make test-host both policies, playable health with peripherals on, 75% of deadlines <!-- t:8xvh -->
 - [ ] Restore the playable image from the main checkout and confirm health <!-- t:ly5h -->
+- [ ] Arena parking (7682d93): measure on the device (E4 in-image, park arm in the boot study); keep or revert <!-- t:86kp -->
