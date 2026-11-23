@@ -28,13 +28,13 @@ expensive, so they run on the changes that pass.
 |---|---|---|
 | Opening ray frame | `bench/host/ray-profile.mjs` | The compiled ray tracer's opening frame has the C-verified digest `430f0d50…` (`bench/reference/ray-opening.json`); the instruction count is printed |
 | Chess engine oracle | `bench/host/chess-engine.mjs GCC EMU` | The compiled Chess engine agrees with chess 1.11.2 on 6,981 words over the reference positions (`bench/reference/chess/`) |
-| 24 workflows | `bench/host/replays/run.sh` | Files, Agenda and Editor compile to WASM and RV32, link against the native-world SDK, and replay their recorded sessions on `rv32emu` |
+| 25 workflows | `bench/host/replays/run.sh` | Files, Agenda and Editor compile to WASM and RV32, link against the native-world SDK, and replay their recorded sessions on `rv32emu` |
 
 ```sh
 bench/host/gates.sh --options '{"policy":"kernel"}'
 # == ray profile      custom: 3,239,635 instructions, 11544 B image, output 430f0d501659 (reference)
 # == Chess engine oracle   6981 words match; engine 118,361,847 instructions, 19892 B
-# == replays          24/24 workflows passed
+# == replays          25/25 workflows passed
 ```
 
 The options reach every compile through one mechanism. `--options` sets `TYPED_RV32_OPTIONS`, and

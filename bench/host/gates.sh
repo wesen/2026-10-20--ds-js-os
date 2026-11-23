@@ -2,7 +2,7 @@
 # The host gates every Typed compiler change runs, with one set of options:
 #   1. the opening ray frame (bench/host/ray-profile.mjs): output digest = bench/reference/ray-opening.json;
 #   2. the Chess engine oracle (bench/host/chess-engine.mjs): 6,981 words agree with chess 1.11.2;
-#   3. the 24 host workflows (bench/host/replays/run.sh).
+#   3. the 25 host workflows (bench/host/replays/run.sh).
 #
 #   bench/host/gates.sh                                  # the compiler's defaults
 #   bench/host/gates.sh --options '{"policy":"kernel"}'

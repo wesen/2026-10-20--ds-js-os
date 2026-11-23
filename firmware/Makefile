@@ -224,23 +224,7 @@ WASM_SDK   := sdk/nw.h sdk/nw_wire.h sdk/nw_json.h sdk/nw_ui.h sdk/nw_utf16.h sd
 WASMS      := $(addprefix $(BUILD)/natives/,echo.wasm battery.wasm wprobe.wasm wimport.wasm bench.wasm dial.wasm)
 wasm: $(WASMS)
 
-# Only the reactor is built here. The handheld compiles and links reminder.typed.
-AGENDA_SRC := ../apps/typed/agenda/wasm-world.c ../apps/typed/agenda/wasm-slot.c
-.PHONY: agenda-reactor
-agenda-reactor: $(BUILD)/agenda-reactor.wasm
-
-$(BUILD)/agenda-reactor.wasm: $(AGENDA_SRC) $(WASM_SDK)
-	@mkdir -p $(dir $@)
-	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(AGENDA_SRC) sdk/nw_wasm.c
-
-FILES_SRC := ../apps/typed/files/world.c ../apps/typed/files/wasm-slot.c
-.PHONY: files-reactor
-files-reactor: $(BUILD)/files-reactor.wasm
-
-$(BUILD)/files-reactor.wasm: $(FILES_SRC) ../apps/typed/files/slots.h $(WASM_SDK)
-	@mkdir -p $(dir $@)
-	$(WASM_ENV) clang-18 $(WASM_FLAGS) $(WASM_LINK) -o $@ $(FILES_SRC) sdk/nw_wasm.c
-
+# The generic Typed world reactor that Agenda, Files, Editor and Chess link against (the host replays).
 TYPED_WORLD_SRC := sdk/typed/world.c sdk/typed/wasm-slot.c sdk/typed/chess-psix.c third_party/quickjs/libunicode.c
 .PHONY: typed-world-reactor
 typed-world-reactor: $(BUILD)/typed-world-reactor.wasm

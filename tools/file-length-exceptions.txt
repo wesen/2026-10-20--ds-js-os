@@ -21,7 +21,6 @@ compiler/typed/typed-async.js -- PICOCALC-TYPED-ASYNC-TAPE
 compiler/typed/rv32/10-function-code.js -- PICOCALC-TYPED-PIPELINE
 compiler/typed/rv32/30-version-loops.js -- PICOCALC-TYPED-PIPELINE
 tests/compiler/typed-rv32.test.mjs -- PICOCALC-TYPED-PIPELINE (the tests of the rv32 sources it splits into modules)
-apps/typed/agenda/wasm-world.c -- PICOCALC-AGENDA-TYPED-WORLD
 
 # A QuickJS world is one file when it loads (kernel.c add_world reads the manifest entry's one "file" and evaluates
 # it as one script). Splitting one needs a bundling step or a manifest entry with several files; that belongs with

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# The 24 host workflows that gate every change to the Typed compiler's defaults: Files, Agenda and Editor compiled
+# The 25 host workflows that gate every change to the Typed compiler's defaults: Files, Agenda and Editor compiled
 # to WASM and RV32, linked against the native-world SDK and run on rv32emu.
 #
 #   bench/host/replays/run.sh                                   # the compiler's own defaults
@@ -24,7 +24,7 @@ done
 P4_GCC=${gcc:-${P4_GCC:-}} RV32EMU=${emu:-${RV32EMU:-}}
 source bench/lib/toolchain.sh
 gcc=$P4_GCC emu=$RV32EMU
-make -s -C firmware build/picocalc-host typed-world-reactor files-reactor agenda-reactor
+make -s -C firmware build/picocalc-host typed-world-reactor
 here=bench/host/replays
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT
@@ -51,6 +51,7 @@ run agenda-leads.mjs
 run agenda-task-records.mjs
 run agenda-wasm-world.mjs
 run agenda-rv32-parser.mjs "$gcc" "$emu"
+run agenda-rv32.mjs "$gcc" "$emu"
 run agenda-local-inference.mjs
 run agenda-entry-tokens.mjs "$gcc" "$emu"
 run editor-empty-view.mjs "$gcc" "$emu"
@@ -58,5 +59,5 @@ run editor-world.mjs "$gcc" "$emu"
 for option in --large --edit --positions --find --markdown --preview-large --preview-line --preview-inline --preview-dense-inline --dense-search --tail-search --late-navigation; do
     run editor-world.mjs "$gcc" "$emu" "$option"
 done
-echo "$((24 - failures))/24 workflows passed"
+echo "$((25 - failures))/25 workflows passed"
 exit "$failures"

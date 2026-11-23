@@ -41,7 +41,7 @@ migration target. Earlier designs that chose C for speed or convenience, such as
 
 ```sh
 make test                                   # Node, generated files, file lengths, Go, the host binary's Python tests, cji
-make test-host OPTIONS='{"policy":"kernel"}'  # ray frame, Chess oracle, 24 replays with one set of compile options
+make test-host OPTIONS='{"policy":"kernel"}'  # ray frame, Chess oracle, 25 replays with one set of compile options
 make -C firmware shots                      # host simulator tours -> firmware/out/
 make firmware PROFILE=playable              # ESP-IDF v5.4.2; profiles in firmware/port/esp32p4/profiles/
 make bench-board STUDY=bench/board/studies/NAME.json   # a paired study on the ESP32-P4, restoring the playable image

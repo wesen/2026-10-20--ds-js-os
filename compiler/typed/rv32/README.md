@@ -7,7 +7,7 @@ node compiler/typed/rv32/build.mjs          # rewrite compiler/typed/typed-rv32.
 node compiler/typed/rv32/build.mjs --check  # fail if it is stale (tests/compiler/typed-rv32.test.mjs runs this)
 ```
 
-Every loader still reads the single bundle: the unit tests, the 24 replays, the trace-REPL workbench, the tools and the firmware's compiler bundle. Splitting the source changed none of them. The files are not ES modules. They share one scope, the bundle's IIFE, and are joined in file-name order. Top-level `const` and `class` definitions run in that order, so a file may only use, at load time, what an earlier file defines. Functions can be used anywhere.
+Every loader still reads the single bundle: the unit tests, the 25 replays, the trace-REPL workbench, the tools and the firmware's compiler bundle. Splitting the source changed none of them. The files are not ES modules. They share one scope, the bundle's IIFE, and are joined in file-name order. Top-level `const` and `class` definitions run in that order, so a file may only use, at load time, what an earlier file defines. Functions can be used anywhere.
 
 | File | Contents |
 |---|---|
