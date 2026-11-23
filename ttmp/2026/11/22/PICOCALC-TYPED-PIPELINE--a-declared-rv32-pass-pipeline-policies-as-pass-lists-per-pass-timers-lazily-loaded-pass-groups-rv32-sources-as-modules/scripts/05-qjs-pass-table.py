@@ -27,7 +27,7 @@ def main():
     p.add_argument("--rounds", type=int, default=5)
     p.add_argument("--json", type=Path)
     p.add_argument("--rv32", nargs="*")
-    p.add_argument("--only", help="comma-separated workload names")
+    p.add_argument("--only", help="comma-separated workload names or NAME/POLICY pairs")
     p.add_argument("compiler", type=Path)
     a = p.parse_args()
     c = a.compiler
@@ -35,7 +35,7 @@ def main():
     files = [str(c / "tape.js"), str(c / "typed-wasm.js"), str(c / "typed-async.js"), *rv32, str(c / "typed-world.js")]
     table = []
     for name, policy, imports in WORKLOADS:
-        if a.only and name not in a.only.split(","):
+        if a.only and name not in a.only.split(",") and f"{name}/{policy}" not in a.only.split(","):
             continue
         out = subprocess.run([a.harness, str(a.rounds + 1), str(a.sources / (name + ".typed")), policy, imports,
                               str(HERE / "pass-totals.js"), "cache", *files], check=True, capture_output=True, text=True).stdout
