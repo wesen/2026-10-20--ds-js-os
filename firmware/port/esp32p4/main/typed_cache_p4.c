@@ -112,7 +112,7 @@ static bool on_internal_stack(void (*fn)(void *), void *arg) {
   io_call c = {fn, arg, xTaskGetCurrentTaskHandle()};
   if (esp_ptr_internal(&c)) { fn(arg); return true; }
   TaskHandle_t h = NULL;
-  if (xTaskCreatePinnedToCoreWithCaps(io_task, "tcache-io", 6 * 1024, &c, uxTaskPriorityGet(NULL), &h, xPortGetCoreID(),
+  if (xTaskCreatePinnedToCoreWithCaps(io_task, "tcache-io", 8 * 1024, &c, uxTaskPriorityGet(NULL), &h, xPortGetCoreID(),
                                       MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) != pdPASS)
     return false;
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
