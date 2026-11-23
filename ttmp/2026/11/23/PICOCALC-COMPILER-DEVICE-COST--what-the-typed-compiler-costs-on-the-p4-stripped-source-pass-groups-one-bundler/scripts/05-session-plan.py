@@ -7,6 +7,7 @@ E2  the lazy pass groups against every group evaluated before the call (typed/rv
     PICOCALC-TYPED-PIPELINE measured them, warm, alternating; one warm-up compile per arm parses its files.
 E3  the compile's heap moved by a PSRAM block held across it (pad KB), unstripped and lazy.
 E2b lazy against all with the production strip mode (2).
+E4  arena parking off and on, production strip mode, warm, alternating.
 """
 import json
 from pathlib import Path
@@ -17,7 +18,7 @@ for order in ([0, 1, 2], [2, 1, 0]):
     for app in APPS:
         plan += [f"typedcost {app} 2 strip={s} flush" for s in order]
 plan.append("typedcost agenda 1 strip=0 flush")
-for app in APPS:
+for app in ["agenda", "chess", "candela"]:
     plan += [f"typedcost {app} 1 backend=lazy", f"typedcost {app} 1 backend=all"]
     for rep in range(3):
         arms = ["lazy", "all"] if rep % 2 == 0 else ["all", "lazy"]
@@ -32,6 +33,13 @@ for app in ["agenda", "chess"]:
     for rep in range(2):
         arms = ["lazy", "all"] if rep % 2 == 0 else ["all", "lazy"]
         plan += [f"typedcost {app} 2 backend={arm}" for arm in arms]
+plan.append("typedcost agenda 1 park=1")
+for app in APPS:
+    plan.append(f"typedcost {app} 1 park=1")
+    for rep in range(2):
+        arms = [0, 1] if rep % 2 == 0 else [1, 0]
+        plan += [f"typedcost {app} 2 park={arm}" for arm in arms]
+plan.append("typedcost agenda 1 park=1")
 out = Path(__file__).with_name("05-session-1-plan.json")
 out.write_text(json.dumps(plan, indent=1) + "\n")
 print(len(plan), "commands ->", out.name)

@@ -73,6 +73,19 @@ def main():
                       f"{(med(lazy, 'load') - med(every, 'load')) / 1000:+.1f} | | "
                       f"{(med(lazy, 'call') - med(every, 'call')) / 1000:+.1f} | | | | "
                       f"{(med(lazy, 'l1d') - med(every, 'l1d')) / 1e3:+.0f} | {(med(lazy, 'l2d') - med(every, 'l2d')) / 1e3:+.0f} | | | |")
+    e4 = [r for r in rows if "park=" in r["command"] and r["command"].split()[2] == "2"]
+    if e4:
+        print("\n## E4: arena parking off (0) and on (1), production strip, warm\n\n" + HEAD)
+        for app in dict.fromkeys(r["app"] for r in e4):
+            for park in (0, 1):
+                sel = [r["p"] for r in e4 if r["app"] == app and r.get("park") == park and not r["p"]["cold"]]
+                if sel:
+                    calls = statistics.median(sum((r.get("compile") or {}).get("heap", {}).get(k, 0)
+                                                  for k in ("mallocs", "frees", "reallocs"))
+                                              for r in e4 if r["app"] == app and r.get("park") == park)
+                    heap_us = statistics.median((r.get("compile") or {}).get("heap", {}).get("us", 0)
+                                                for r in e4 if r["app"] == app and r.get("park") == park)
+                    print(line(f"{app} park={park} (heap calls {calls:.0f}, {heap_us / 1000:.1f} ms in them)", sel))
     e3 = [r for r in rows if "pad=" in r["command"]]
     if e3:
         print("\n## E3: the compile's heap moved by a held PSRAM block (strip=0, lazy)\n\n" + HEAD)

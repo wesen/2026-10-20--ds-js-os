@@ -1,11 +1,12 @@
 // Experiment (PICOCALC-COMPILER-DEVICE-COST, scripts/02-experiment-tree.py): compile a Typed app again and again in
 // one boot, with knobs, and print each compile's TYPEDCOMPILE line and the core-1 cache counters around it.
-//   typedcost APP N [strip=0|1|2] [backend=lazy|all] [pad=KB] [flush]
+//   typedcost APP N [strip=0|1|2] [backend=lazy|all] [pad=KB] [park=0|1] [flush]
 // strip: QuickJS strip flags for the compile runtimes (0 none, 1 JS_STRIP_SOURCE, 2 JS_STRIP_DEBUG); a change of
 //        strip, or flush, empties the bytecode cache first, and the first compile after it parses every source.
 // backend: lazy (typed/rv32.js and the pass groups on demand) or all (typed/rv32-all.js: the three RV32 bundles
 //        concatenated, every group installed before the call).
 // pad:   a PSRAM block of KB kilobytes held across each compile (moves the compile's heap).
+// park:  typed_p4.c's arena parking off or on (on by default; it stays as set).
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,6 +16,7 @@
 #include "p4.h"
 
 extern int p4_typed_strip_flags;           // typed_p4.c (experiment)
+extern int p4_typed_park;                  // typed_p4.c (experiment)
 void p4_typed_bytecode_flush(void);         // typed_p4.c (experiment)
 
 #define L1_ENA (CACHE_L1_IBUS1_CNT_ENA | CACHE_L1_DBUS1_CNT_ENA)
@@ -34,7 +36,7 @@ void p4_typed_cost_console(const char *args) {
   int n = 1, strip = p4_typed_strip_flags, pad = 0, consumed = 0;
   bool all = false, flush = false;
   if (sscanf(args, "%31s %d%n", name, &n, &consumed) < 2) {
-    puts("typedcost APP N [strip=0|1|2] [backend=lazy|all] [pad=KB] [flush]");
+    puts("typedcost APP N [strip=0|1|2] [backend=lazy|all] [pad=KB] [park=0|1] [flush]");
     return;
   }
   for (const char *p = args + consumed; *p;) {
@@ -43,6 +45,7 @@ void p4_typed_cost_console(const char *args) {
     else if (!strncmp(p, "backend=all", 11)) all = true;
     else if (!strncmp(p, "backend=lazy", 12)) all = false;
     else if (!strncmp(p, "pad=", 4)) pad = atoi(p + 4);
+    else if (!strncmp(p, "park=", 5)) p4_typed_park = atoi(p + 5);
     else if (!strncmp(p, "flush", 5)) flush = true;
     while (*p && *p != ' ') p++;
   }
@@ -73,10 +76,10 @@ void p4_typed_cost_console(const char *args) {
       REG_READ(CACHE_L2_DBUS1_ACS_HIT_CNT_REG), REG_READ(CACHE_L2_DBUS1_ACS_MISS_CNT_REG),
       REG_READ(CACHE_L2_DBUS1_ACS_NXTLVL_RD_CNT_REG), REG_READ(CACHE_L2_DBUS1_ACS_NXTLVL_WR_CNT_REG),
     };
-    printf("TYPEDCOST {\"app\":\"%s\",\"rep\":%d,\"strip\":%d,\"backend\":\"%s\",\"padKb\":%d,\"ok\":%s,\"moduleBytes\":%zu,"
+    printf("TYPEDCOST {\"app\":\"%s\",\"rep\":%d,\"strip\":%d,\"backend\":\"%s\",\"padKb\":%d,\"park\":%d,\"ok\":%s,\"moduleBytes\":%zu,"
            "\"moduleCrc\":%u,\"l1iHit\":%lu,\"l1iMiss\":%lu,\"l1dHit\":%lu,\"l1dMiss\":%lu,\"l1dNextRd\":%lu,\"l1dNextWr\":%lu,"
            "\"l2iHit\":%lu,\"l2iMiss\":%lu,\"l2dHit\":%lu,\"l2dMiss\":%lu,\"l2dNextRd\":%lu,\"l2dNextWr\":%lu}\n",
-           app->name, i, p4_typed_strip_flags, all ? "all" : "lazy", pad, module ? "true" : "false", module ? length : 0,
+           app->name, i, p4_typed_strip_flags, all ? "all" : "lazy", pad, p4_typed_park, module ? "true" : "false", module ? length : 0,
            module ? (unsigned)esp_rom_crc32_le(0, (const uint8_t *)module, length) : 0u,
            (unsigned long)v[0], (unsigned long)v[1], (unsigned long)v[2], (unsigned long)v[3], (unsigned long)v[4],
            (unsigned long)v[5], (unsigned long)v[6], (unsigned long)v[7], (unsigned long)v[8], (unsigned long)v[9],
