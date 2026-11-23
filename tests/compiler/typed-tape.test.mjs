@@ -145,7 +145,7 @@ test("the tape table is consistent", () => {
     assert.equal(T.cells.filter(n => n >= 0).length, T.rows.length);
     // Effects the passes rely on: storeless() and the planner's purity test.
     const stores = plain(T.rows.filter(r => r.effects & T.STORES).map(r => r.name).sort());
-    assert.deepEqual(stores, ["f32.store", "i32.store", "i32.store16", "text.literal_stores"]);
+    assert.deepEqual(stores, ["array.zero", "f32.store", "i32.store", "i32.store16", "text.literal_stores"]);
     assert.deepEqual(plain(T.rows.filter(r => r.effects & T.CALLS).map(r => r.name)), ["call"]);
     const code = [T.BLOCK, T.VOID, T.LOCAL_GET, 0, T.CHECKED_ADDRESS, 0, 1, T.DROP, T.END, T.I32_CONST, -3, T.END];
     assert.equal(T.close(code, 0), 8);
@@ -189,16 +189,20 @@ test("every tape the compiler produces from apps/typed matches the tape table", 
     assert(tapes > 2000, "checked " + tapes + " tapes");
     t.diagnostic(tapes + " tapes checked");
     assert.deepEqual([...phases].sort(), ["commute", "conjunctions", "inline", "rotate", "sets", "split", "version"]);
-    // Every row is exercised, so none is dead weight: the tape has every row but the bitwise operations and the f32
-    // rows, which no app uses yet (typed-bitwise.test.mjs and typed-f32.test.mjs exercise them), and the Wasm
+    // Every row is exercised, so none is dead weight: the tape has every row but the bitwise operations, the f32
+    // rows, the u32 rows and the local-array rows, which no app uses yet (typed-bitwise.test.mjs, typed-f32.test.mjs,
+    // typed-values.test.mjs and typed-values-arrays.test.mjs exercise them), and the Wasm
     // backend's bytes never hold a pseudo-op. i32.shl is also the Wasm backend's own (its expansion of
     // text.checked_address computes the UTF-16 address).
     const missing = codes => plain(T.rows.filter(row => !codes.has(row.code)).map(row => row.name));
     const floats = plain(T.rows.filter(row => row.pop && [...row.pop, ...row.push].includes(T.F32)).map(row => row.name));
-    assert.deepEqual(missing(all), ["i32.and", "i32.or", "i32.xor", "i32.shl", "i32.shr_u", ...floats].sort((a, b) =>
+    const unsigned = ["i32.lt_u", "i32.gt_u", "i32.le_u", "i32.div_u", "i32.rem_u"];
+    const arrays = ["array.address", "array.zero"];
+    assert.deepEqual(missing(all), ["i32.and", "i32.or", "i32.xor", "i32.shl", "i32.shr_u", ...unsigned, ...floats, ...arrays].sort((a, b) =>
         T[T.rows.find(r => r.name === a).constant] - T[T.rows.find(r => r.name === b).constant]));
     assert(wasm.has(T.I32_SHL));
-    assert.deepEqual([T.CHECKED_ADDRESS, T.LITERAL_STORES, T.UNCHECKED_ADDRESS].filter(op => wasm.has(op)), []);
+    assert.deepEqual([T.CHECKED_ADDRESS, T.LITERAL_STORES, T.UNCHECKED_ADDRESS, T.ARRAY_ADDRESS, T.ARRAY_ZERO]
+        .filter(op => wasm.has(op)), []);
 });
 
 test("the walk fails on a wrong cell count", () => {

@@ -1,12 +1,12 @@
 // The front end's lexer: the token regexp, the reserved words, and the lexical index a host may provide (the P4's C
 // scanner) so that the lexer reads precomputed token rows instead of running the regexp.
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~]))/y;
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~?\[\]]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
-const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32", "f32",
+const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32", "f32", "u32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer",
-    "else", "for", "break", "enum", "match", "type", "distinct",
-    "async", "await"]);
+    "else", "for", "break", "continue", "enum", "match", "type", "distinct",
+    "async", "await", "new"]);
 
 // An index belongs to one exact source string in one compilation.
 let lexicalScope = null;
@@ -216,10 +216,10 @@ class Lexer {
         return value;
     }
 
-    type(records, enums, distinct) {
+    type(records, enums, distinct, values) {
         const { value } = this.token;
-        if (value !== "i32" && value !== "f32" && value !== "bool" && value !== "string" && value !== "buffer" &&
-            !records.has(value) && !enums?.has(value) && !distinct?.has(value))
+        if (value !== "i32" && value !== "f32" && value !== "u32" && value !== "bool" && value !== "string" && value !== "buffer" &&
+            !records.has(value) && !enums?.has(value) && !distinct?.has(value) && !values?.has(value))
             this.fail("unknown type " + value);
         this.next();
         return value;

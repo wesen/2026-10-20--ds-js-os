@@ -5,7 +5,7 @@ import {encoder} from "../encoding/instructions.js";
 import {F, FA0, FT10, FT11, T5, T6, ZERO, instruction} from "../encoding/registers.js";
 import {F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG, F32_CEIL,
     F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
-    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX} from "../encoding/tape.js";
+    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX, F32_CONVERT_I32_U, U32_TRUNC_F32} from "../encoding/tape.js";
 
 const RNE = 0, RTZ = 1, RDN = 2, RUP = 3;
 const RETURNED = Symbol("computed in fa0 for the return that follows");
@@ -13,7 +13,7 @@ const RETURNED = Symbol("computed in fa0 for the return that follows");
 export const FLOAT_OPERATIONS = new Uint8Array(256);
 for (const op of [F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG,
     F32_CEIL, F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
-    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX]) FLOAT_OPERATIONS[op] = 1;
+    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX, F32_CONVERT_I32_U, U32_TRUNC_F32]) FLOAT_OPERATIONS[op] = 1;
 // Two f32 operands, an f32 result: the encoder key and its rounding mode (undefined: sign injection, min, max).
 const FLOAT_BINARY = new Map([
     [F32_ADD, ["fadd_s", RNE]], [F32_SUB, ["fsub_s", RNE]], [F32_MUL, ["fmul_s", RNE]], [F32_DIV, ["fdiv_s", RNE]],
@@ -95,17 +95,20 @@ export class FloatMethods {
             else this.emit(encoder(op === F32_ABS ? "fsgnjx_s" : "fsgnjn_s")(out, a, a));
             return this.floatDone(out, stored);
         }
-        case F32_CONVERT_I32_S: case F32_REINTERPRET_I32: {
+        case F32_CONVERT_I32_S: case F32_CONVERT_I32_U: case F32_REINTERPRET_I32: {
             const a = this.pop(T5);
             const [out, stored] = this.floatResult(F);
-            this.emit(op === F32_CONVERT_I32_S ? encoder("fcvt_s_w")(out, a, RNE) : encoder("fmv_w_x")(out, a));
+            this.emit(op === F32_REINTERPRET_I32 ? encoder("fmv_w_x")(out, a) :
+                encoder(op === F32_CONVERT_I32_S ? "fcvt_s_w" : "fcvt_s_wu")(out, a, RNE));
             return this.floatDone(out, stored);
         }
-        case I32_TRUNC_F32: case I32_REINTERPRET_F32: {
-            // fcvt.w.s rtz saturates, and gives 2^31 - 1 for NaN: Typed's rule (tape.js f32.to_i32).
+        case I32_TRUNC_F32: case U32_TRUNC_F32: case I32_REINTERPRET_F32: {
+            // fcvt.w.s and fcvt.wu.s rtz saturate, and give 2^31 - 1 and 2^32 - 1 for NaN: Typed's rules (tape.js
+            // f32.to_i32, f32.to_u32).
             const a = this.pop(FT10);
             const [out, stored] = this.floatResult(0);
-            this.emit(op === I32_TRUNC_F32 ? encoder("fcvt_w_s")(out, a, RTZ) : encoder("fmv_x_w")(out, a));
+            this.emit(op === I32_REINTERPRET_F32 ? encoder("fmv_x_w")(out, a) :
+                encoder(op === I32_TRUNC_F32 ? "fcvt_w_s" : "fcvt_wu_s")(out, a, RTZ));
             return this.floatDone(out, stored);
         }
         }

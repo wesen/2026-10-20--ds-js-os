@@ -42,7 +42,11 @@ export function compile(source, imports = [], maxSourceLength, requested) {
     }
     const passes = new Set(options.passes);
     const chosen = PASSES.filter(pass => passes.has(pass.name));
-    const unit = {options, callables, targets, arity: index => callables[index].params.length,
+    // arity(index): a callee's parameter count (a value record parameter counts its leaves); arity.results(index): the
+    // values its call pushes (a record result's leaves, else one). Passes with an abstract operand stack use both.
+    const arity = index => callables[index].params.length;
+    arity.results = index => callables[index].results?.length ?? 1;
+    const unit = {options, callables, targets, arity,
         storeless: storelessAnalysis(callables, imported.length)};
     for (const pass of chosen) pass.setup?.(unit);
     const starts = chosen.filter(pass => pass.start);
@@ -180,6 +184,6 @@ export function compile(source, imports = [], maxSourceLength, requested) {
     if (timing) timing.push({fn: null, pass: "compile", ms: clock() - started, cells: 0});
     return {image, entries, records: typedWasm.recordLayouts(records), enums: typedWasm.enumLayouts(enums),
         distinct: [...distinct], relocations, importCount: imports.length,
-        signatures: functions.map(({name, params, result}) => ({name, params, result})),
+        signatures: functions.map(typedWasm.publicSignature),
         ...(asyncLayout && {asyncLayout}), ...(asyncSource && {asyncSource})};
 }

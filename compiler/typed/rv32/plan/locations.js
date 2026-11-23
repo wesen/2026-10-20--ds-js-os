@@ -1,5 +1,5 @@
 // planLocations: operand homes, pointer groups and pointer-only skips.
-import {A0, X} from "../encoding/registers.js";
+import {A0, X, inOwnRegister} from "../encoding/registers.js";
 import {constantForm} from "../encoding/selection.js";
 import {CHECKED_ADDRESS, UNCHECKED_ADDRESS, CELLS, LOCAL_GET, LITERAL_STORES, LOCAL_SET, I32_ADD, I32_CONST, F32_CONST, CALL, EFFECTS, STORES, BLOCK, IF, LOOP, END, RETURN, opNext} from "../encoding/tape.js";
 import {keyClass, planSavedHomes} from "./saved-homes.js";
@@ -142,7 +142,7 @@ export function planLocations(fn, options, inlineCall) {
     if (options.capacities) {
         receiver = undefined;
         for (const [local, uses] of capacityUses)
-            if (local < fn.params.length && !writes.has(local) && uses > 1) scores.set(-1 - local, uses - 1);
+            if (local < fn.params.length && inOwnRegister(fn, local) && !writes.has(local) && uses > 1) scores.set(-1 - local, uses - 1);
     }
     const forward = new Set(), homes = new Map();
     if (options.forward) for (const {id, at} of candidates) {
@@ -178,6 +178,8 @@ export function planLocations(fn, options, inlineCall) {
         const params = fn.params.length;
         for (const access of pointerAccesses) {
             if (!forward.has(access.at) || access.r >= params || readEarly.has(access.L) || readEarly.has(access.M)) continue;
+            // The prologue makes a pointer home from the incoming registers: no parameter on the stack takes part.
+            if (!inOwnRegister(fn, access.r) || [access.L, access.M].some(x => x < params && !inOwnRegister(fn, x))) continue;
             const key = "p" + access.r + ":" + access.L + (access.M === undefined ? "" : "+" + access.M);
             if (!groups.has(key)) groups.set(key, {r: access.r, L: access.L, M: access.M, list: []});
             groups.get(key).list.push(access);

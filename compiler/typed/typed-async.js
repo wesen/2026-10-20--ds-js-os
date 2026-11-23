@@ -112,7 +112,7 @@ function readProgram(source, imported) {
     const types = typedWasm.parseDeclarations(lex, recordEnds);
     const imports = new Map(imported.map(fn => [fn.name, fn]));
     const signatures = typedWasm.scanSignatures(lex, types.records, new Map(imports), 0,
-        types.enums, types.distinct, true);
+        types.enums, types.distinct, true, types.values);
     const inspectBody = indexedBodies(source, lex, signatures);
     const functions = new Map();
     let foundOperation = false;
