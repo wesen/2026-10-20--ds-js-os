@@ -19,6 +19,9 @@
 export const PASSES = [
     // inline is observed at the "inline" checkpoint, after the guarded-return and PIE stages (compile.js).
     {name: "inline", group: "inline", kind: "transform", observe: false},
+    // fields rewrites only functions with f32 field loads, and is observed with the next transform, so the observed
+    // tapes of integer programs stay what they were.
+    {name: "fields", group: "inline", kind: "transform", observe: false},
     {name: "commute", group: "inline", kind: "transform"},
     {name: "conjunctions", group: "loops", kind: "transform"},
     {name: "sets", group: "loops", kind: "transform"},

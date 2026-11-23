@@ -14,7 +14,8 @@ import {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP
 // `i32.const c` cells are removed and the callee reads x or c directly. A literal is not
 // substituted for a parameter used as a checked-address operand, which must be a local.
 //
-// Only calls inside a caller's loop are inlined, unless `anywhere` is set; the library
+// Only calls inside a caller's loop are inlined, unless `anywhere` is set or the callee has an f32 parameter, local
+// or result (an f32 call costs its caller saved f registers and spills, and f32 helpers are small); the library
 // keeps each candidate fully expanded (`anywhere`), so a callee inlined into a loop brings
 // its own callees with it.
 // maxLoopDepth bounds the loop nesting a call site and the callee's own loops may form
@@ -36,9 +37,13 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
     const tape = fn.code;
     // Cheap rejections before the walk: no call to a library function, or (for the
     // function's own code) no loop. Operand cells can match too, which only costs a walk.
-    let candidate = false;
-    for (let i = tape.indexOf(CALL); i >= 0 && !candidate; i = tape.indexOf(CALL, i + 1)) candidate = library.has(tape[i + 1]);
-    if (!candidate || (!anywhere && !tape.includes(LOOP))) return null;
+    let candidate = false, float = false;
+    for (let i = tape.indexOf(CALL); i >= 0 && !float; i = tape.indexOf(CALL, i + 1)) {
+        const callee = library.get(tape[i + 1]);
+        candidate ||= callee !== undefined;
+        float ||= callee?.types !== undefined;
+    }
+    if (!candidate || (!anywhere && !float && !tape.includes(LOOP))) return null;
     // Until the first inlined call the output is a copy of the input, so the output length at
     // a call is its offset: a scan of the call sites decides exactly whether any is inlined.
     {
@@ -47,7 +52,7 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
         for (let at = 0; at < tape.length && !site;) {
             const opcode = tape[at], cells = CELLS[opcode];
             if (cells < 0) return null;
-            if (opcode === CALL && (anywhere || loops > 0)) {
+            if (opcode === CALL && (anywhere || loops > 0 || library.get(tape[at + 1])?.types)) {
                 const callee = library.get(tape[at + 1]);
                 site = callee !== undefined && at + callee.code.length <= limits.callerCells &&
                     loops + callee.loops <= limits.maxLoopDepth;
@@ -69,7 +74,8 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
     for (let at = 0; at < tape.length;) {
         const opcode = tape[at], cells = CELLS[opcode], a = tape[at + 1];
         if (cells < 0) return null;
-        let callee = opcode === CALL && (anywhere || loops > 0) ? library.get(a) : undefined;
+        let callee = opcode === CALL ? library.get(a) : undefined;
+        if (callee && !anywhere && loops === 0 && !callee.types) callee = undefined;
         if (callee && (out.length + callee.code.length > limits.callerCells || loops + callee.loops > limits.maxLoopDepth))
             callee = undefined;
         if (!callee) {

@@ -4,7 +4,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {words} from "./rv32-helpers.mjs";
-import {HAND, HAND_FUNCTIONS, POLICIES, bits, float, floatInput, generated, generatedInputs, intInput, random, realm, same} from "./f32-cases.mjs";
+import {FRAGMENTS, HAND, HAND_FUNCTIONS, MATH, MATH_FUNCTIONS, POLICIES, bits, float, floatInput, generated, generatedInputs, intInput, mathInputs,
+    random, realm, same} from "./f32-cases.mjs";
 
 const {typedWasm, typedRv32, typedRv32Interp} = realm();
 
@@ -96,6 +97,34 @@ test("hand-written f32 programs agree in WebAssembly and RV32 under every policy
     }
 });
 
+test("the math library agrees in WebAssembly and RV32 under every policy, with its documented edge results", async () => {
+    const compiled = typedWasm.compile(MATH);
+    const wasm = (await WebAssembly.instantiate(compiled.bytes)).instance.exports;
+    const signature = name => compiled.signatures.find(s => s.name === name);
+    const images = POLICIES.map(policy => [policy, typedRv32.compile(MATH, [], 1 << 20, {policy})]);
+    const r = random(2026);
+    let checked = 0;
+    for (const name of Object.keys(MATH_FUNCTIONS)) {
+        const {params, result} = signature(name);
+        for (const args of mathInputs(r, name, 150)) {
+            const w = wasmValue(result, wasm[name](...args));
+            for (const [policy, program] of images) {
+                const v = runRv32(program, name, params, result, args).value;
+                assert(same(result, v, w), policy + " " + name + "(" + args.join(", ") + "): " + show(result, v) + " vs " + show(result, w));
+                checked++;
+            }
+        }
+    }
+    assert(checked > 14000);
+    // The edges README.md documents.
+    const near = (x, y) => Object.is(x, y) || Math.abs(x - y) <= 2e-7 * Math.abs(y);
+    for (const [name, args, want] of [["sinf", [-0], -0], ["sinf", [8388608], 0], ["cosf", [8388608], 1], ["sinf", [Infinity], NaN],
+        ["expf", [-200], 0], ["expf", [100], Infinity], ["expf", [NaN], NaN], ["logf", [0], -Infinity], ["logf", [-1], NaN],
+        ["log2f", [8], 3], ["powf", [0, -1], Infinity], ["powf", [-2, 2], NaN], ["atan2f", [0, -0], Math.fround(Math.PI)],
+        ["atan2f", [-0, -1], -Math.fround(Math.PI)], ["acosf", [1.5], NaN], ["fract", [-0.25], 0.75], ["clamp", [NaN, 0, 1], 0]])
+        assert(near(wasm[name](...args.map(Math.fround)), want), name + "(" + args.join(", ") + ") = " + wasm[name](...args));
+});
+
 test("the f32 language rules", () => {
     const fails = (source, pattern) => assert.throws(() => typedWasm.compile(source), pattern, source);
     const body = expr => "function f(a: f32, b: f32, n: i32): f32 { return " + expr + "; }";
@@ -132,8 +161,8 @@ test("the f32 language rules", () => {
 test("RV32F code: frameless f32 leaves, no fused multiply-add, f32 arguments in fa registers", () => {
     const program = typedRv32.compile(HAND, [], 1 << 20, {policy: "kernel"});
     const lerp = words(program, "lerp");
-    // fsub.s, fmul.s, fadd.s, the move to fa0 and ret: no frame.
-    assert.equal(lerp.length, 5);
+    // fsub.s, fmul.s, fadd.s into fa0 and ret: no frame, no move.
+    assert.equal(lerp.length, 4);
     assert.deepEqual(lerp.slice(0, 3).map(w => w >>> 27), [1, 2, 0]);
     for (const policy of POLICIES) {
         const image = typedRv32.compile(HAND, [], 1 << 20, {policy}).image, view = new DataView(image.buffer);
@@ -143,4 +172,27 @@ test("RV32F code: frameless f32 leaves, no fused multiply-add, f32 arguments in 
             if ((w & 0x7f) === 0x53 && (w >>> 27) <= 3) assert.equal((w >>> 12) & 7, 0, policy + ": a dynamic or directed rounding mode");
         }
     }
+});
+
+// Instructions per call under "kernel" on inputs like 09-numeric-bench.c's, where GCC -O2 executes 25.45 (sphere),
+// 58 (ggx) and 23 (norm3): the ticket's target is 1.5 times those; these bounds keep the counts it reached.
+test("the Candela fragments stay within 1.5 times GCC -O2's instruction counts", () => {
+    const program = typedRv32.compile(FRAGMENTS, [], 1 << 20, {policy: "kernel"});
+    const r = random(9), bytes = new Uint8Array(512), view = new DataView(bytes.buffer);
+    const totals = {sphere: 0, ggx: 0, norm3: 0}, n = 64;
+    const u = () => r.next() / 2 ** 32;
+    for (let i = 0; i < n; i++) {
+        const unit = () => { const v = [u() - 0.5, u() - 0.5, u() - 0.5], l = Math.hypot(...v); return v.map(x => x / l); };
+        const [o, d, wo, wi] = [[16 * u() - 8, 16 * u() - 8, 16 * u() - 8], unit(), unit(), unit()];
+        wo[2] = Math.abs(wo[2]) + 0.05;
+        wi[2] = Math.abs(wi[2]) + 0.05;
+        [o, d, wo, wi].forEach((v, k) => v.forEach((x, c) => view.setFloat32(64 + 16 * k + 4 * c, x, true)));
+        for (const [name, x, f] of [["sphere", [64, 80], [0.3 + 1.7 * u()]], ["ggx", [96, 112], [0.05 + 0.9 * u()]], ["norm3", [64], []]]) {
+            const fregisters = new Uint32Array(32);
+            f.forEach((v, k) => { fregisters[10 + k] = bits(v); });
+            totals[name] += typedRv32Interp.run(program, name, x, bytes, {fregisters, counts: false}).steps;
+        }
+    }
+    for (const [name, gcc] of [["sphere", 25.45], ["ggx", 58], ["norm3", 23]])
+        assert(totals[name] / n <= 1.5 * gcc + 0.5, name + ": " + totals[name] / n + " per call");
 });

@@ -29,6 +29,10 @@ export class FunctionCode {
         this.exit = {};
         // ilp32f: an f32 result returns in fa0, every other in a0.
         this.returnRegister = program.result === "f32" ? FA0 : A0;
+        // A function with an f32 parameter, local or result: its frame is dropped when it uses none (dropsFrame), and
+        // its result is computed in fa0 where the next operation returns it (floatResult). Integer functions keep the
+        // code their pinned images record.
+        this.floating = program.result === "f32" || program.params.includes("f32") || Boolean(program.localTypes);
         if (program.nativeInspection) observeSteps(this);
     }
 
@@ -47,7 +51,8 @@ export class FunctionCode {
             this.currentOp = undefined;
             return false;
         }
-        if (op >= BLOCK && op <= RETURN) this.materialize();
+        // A return leaves every pending read behind, so an f32 function's return reads its value where it is.
+        if (op >= BLOCK && op <= RETURN && !(this.floating && this.returning(this.at - 1))) this.materialize();
         if (plan?.forward.has(this.at - 1)) {
             const site = this.at - 1, tape = this.program.code;
             const constant = op === I32_CONST ? this.cell() : undefined;
@@ -193,20 +198,33 @@ export class FunctionCode {
     }
 
 
+    // Whether the operation at `at` returns from the function: a return, or the function's last end.
+    returning(at) {
+        const op = this.program.code[at];
+        return op === RETURN || (op === END && this.control.length === 0);
+    }
+
+    // After lower(): this f32 function used no frame (no slot, spill, call or saved register), so it may be emitted
+    // again with frameless set, without the prologue and epilogue.
+    get dropsFrame() { return this.floating && !this.frameless && !this.bodyUsesFrame && this.savedRegisters().length === 0; }
+
     lower() {
         const count = this.program.params.length;
         const incoming = calleeRegisters(this.program);
-        const saved = this.savedRegisters();
+        const saved = this.frameless ? [] : this.savedRegisters();
         // The frame size depends on the deepest spill, known only after the body, so the
         // prologue is emitted as placeholders and patched below.
-        this.emit(0);
-        this.emit(0);
+        if (!this.frameless) {
+            this.emit(0);
+            this.emit(0);
+        }
         for (let k = 0; k < saved.length; k++) this.emit(0);
         for (let i = 0; i < count; i++) this.writeLocal(incoming[i], i);
         // Capacity homes belong to unwritten parameters, still in their argument registers here.
         for (const [id, reg] of this.locations?.homes ?? []) {
             if (typeof id === "string") {
                 if (id[0] === "c") this.constant(reg, Number(id.slice(1)));
+                else if (id[0] === "f") this.floatConstant(reg, Number(id.slice(1)));
             } else if (id < 0) this.load(reg, 0, incoming[-1 - id]);
         }
         // Pointer homes of parameters, from the incoming argument registers.
@@ -216,6 +234,13 @@ export class FunctionCode {
                 else if (other < count && local < other) this.pointerFrom(reg, incoming[local], incoming[r], K0, incoming[other]);
             }
         while (this.at < this.program.code.length && !this.step(this.cell())) {}
+        this.bodyUsesFrame = Boolean(this.usesFrame); // before the epilogue reloads ra
+        if (this.frameless) {
+            this.mark(this.exit);
+            this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
+            this.patchBranches();
+            return this;
+        }
         const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;

@@ -193,3 +193,62 @@ export const HAND_FUNCTIONS = {
     lerp: ["f32", "f32", "f32"], poly: ["f32", "i32"], spill: ["f32", "f32"], pick: ["f32", "f32", "i32"], conv: ["f32"],
     count: ["f32", "f32"], callMany: ["f32", "i32"], bits: ["f32"],
 };
+
+// The math library (compiler/typed/lib/math.typed): every public function, with inputs over its domain and edges.
+export const MATH = readFileSync(new URL("../../compiler/typed/lib/math.typed", import.meta.url), "utf8");
+export const MATH_FUNCTIONS = {
+    sinf: 1, cosf: 1, tanf: 1, expf: 1, exp2f: 1, logf: 1, log2f: 1, powf: 2, atanf: 1, atan2f: 2, asinf: 1, acosf: 1,
+    fract: 1, mix: 3, clamp: 3, saturate: 1, step: 2, sign: 1, smoothstep: 3, ldexpf: 1,
+};
+export function mathInputs(r, name, count) {
+    const scale = {sinf: 60, cosf: 60, tanf: 3, expf: 90, exp2f: 130, logf: 1e4, log2f: 1e4, powf: 8, asinf: 1.2, acosf: 1.2}[name] ?? 20;
+    return Array.from({length: count}, (_, k) => Array.from({length: MATH_FUNCTIONS[name]}, () =>
+        k % 5 === 0 ? floatInput(r) : fround((r.next() / 2 ** 32 * 2 - (name.startsWith("log") ? 0.1 : 1)) * scale)))
+        .map(args => name === "ldexpf" ? [args[0], (intInput(r) % 300)] : args);
+}
+
+// The three Candela fragments (PICOCALC-CANDELA-P4 scripts/09-numeric-bench.c, arm F32), as in the ticket's
+// scripts/fragments.typed: the instruction counts the RV32 build must keep (typed-f32.test.mjs).
+export const FRAGMENTS = `record V3 { x: f32; y: f32; z: f32; }
+
+function sphere(o: V3, d: V3, r: f32): f32 {
+    const a = d.x * d.x + d.y * d.y + d.z * d.z;
+    const b = o.x * d.x + o.y * d.y + o.z * d.z;
+    const c = o.x * o.x + o.y * o.y + o.z * o.z - r * r;
+    const disc = b * b - a * c;
+    if (disc < 0.0) { return 1e30; }
+    const s = Math.sqrt(disc);
+    let t = (-b - s) / a;
+    if (t < 0.0002) { t = (-b + s) / a; }
+    if (t < 0.0002) { return 1e30; }
+    return t;
+}
+
+function lambda(w: V3, al: f32): f32 {
+    const t = al * al * (w.x * w.x + w.y * w.y) / (w.z * w.z);
+    return (-1.0 + Math.sqrt(1.0 + t)) * 0.5;
+}
+
+function ggx(wo: V3, wi: V3, al: f32): f32 {
+    let hx = wo.x + wi.x;
+    let hy = wo.y + wi.y;
+    let hz = wo.z + wi.z;
+    const l = Math.sqrt(hx * hx + hy * hy + hz * hz);
+    hx = hx / l;
+    hy = hy / l;
+    hz = hz / l;
+    const x = hx / al;
+    const y = hy / al;
+    const k = x * x + y * y + hz * hz;
+    const D = 1.0 / (3.14159265 * al * al * k * k);
+    const G = 1.0 / (1.0 + lambda(wo, al) + lambda(wi, al));
+    return D * G / (4.0 * wo.z);
+}
+
+function norm3(v: V3): f32 {
+    const l = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    let k: f32 = 0.0;
+    if (l > 1e-20) { k = 1.0 / l; }
+    return v.x * k + 2.0 * v.y * k + 4.0 * v.z * k;
+}
+`;

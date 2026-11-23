@@ -3,6 +3,7 @@
 import {INLINE_DEFAULTS, inlineCalls, inlineCandidate, inlineTypes, loopDepth} from "./inline.js";
 import {commuteConstants} from "./commute.js";
 import {rotateLoops} from "./rotate.js";
+import {reuseFloatFields} from "./fields.js";
 import {installPasses, replaceTape} from "./registry.js";
 
 installPasses("inline", {
@@ -37,6 +38,11 @@ installPasses("inline", {
                 libraryCells: candidate ? libraryCopy.code.length : undefined});
         },
     },
+    // A function's storeless answer is computed from its tape before any pass rewrites it (as for hoist).
+    fields: {startName: "storeless", start: (fn, ctx) => ctx.storeless(ctx.index), run(fn, ctx) {
+        const reused = reuseFloatFields(fn, ctx.storeless);
+        if (reused) Object.assign(fn, reused);
+    }},
     commute: {run: (fn, ctx) => replaceTape(fn, commuteConstants(fn.code, ctx.arity))},
     rotate: {run: fn => replaceTape(fn, rotateLoops(fn.code))},
 });

@@ -70,7 +70,7 @@ test("policies are pass lists that options edit by name, and every stage reports
     const src = readFileSync(new URL("../../apps/typed/raytrace/raytrace.typed", import.meta.url), "utf8");
     const image = options => typedRv32.compile(src, [], 65536, options).image;
     const {policies} = typedRv32;
-    assert.deepEqual([...policies.default.passes], ["inline", "commute", "rotate", "version", "split"]);
+    assert.deepEqual([...policies.default.passes], ["inline", "fields", "commute", "rotate", "version", "split"]);
     assert.deepEqual([...policies.interactive.passes], []);
     // enable and disable edit the policy's list; an added pass takes its place in pipeline order.
     assert.deepEqual(image({policy: "balanced", enable: ["split", "version"]}), image());
@@ -92,7 +92,7 @@ test("policies are pass lists that options edit by name, and every stage reports
     assert.equal(compile.length, 1);
     assert.equal(compile[0].pass, "compile");
     const stages = new Set(timing.filter(row => row.fn !== null).map(row => row.pass));
-    for (const pass of ["storeless", "inline", "guarded", "commute", "conjunctions", "sets", "rotate", "ranges", "version",
+    for (const pass of ["storeless", "inline", "guarded", "fields", "commute", "conjunctions", "sets", "rotate", "ranges", "version",
         "split", "facts", "leaf", "plan", "emit", "candidate"]) assert(stages.has(pass), pass);
     for (const row of timing) if (row.fn !== null) assert.equal(row.ms, 1, row.pass);
     assert.equal(compile[0].ms, 2 * (timing.length - 1) + 1);

@@ -14,21 +14,22 @@ const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
 const classOf = reg => reg >> 5;
 
 // ilp32f per class: arguments (the first returns), callee-saved, homes the planner may claim (not s0), the
-// emitter's operand-stack and scratch registers.
+// emitter's operand-stack and scratch registers, and (f only) the temporaries a function that calls nothing may claim
+// as homes at no cost (ft8, ft9).
 const range = (from, to) => Array.from({length: to - from + 1}, (_, i) => from + i);
 const REGISTER_CLASSES = [
     {id: X, name: "x", arguments: range(10, 17), saved: [8, 9, ...range(18, 27)], homes: [9, ...range(18, 27)],
         temporaries: [5, 6, 7, 28, 29, 30, 31], stack: STACK_REGISTERS, scratch: [T5, T6]},
     {id: F, name: "f", arguments: range(42, 49), saved: [40, 41, ...range(50, 59)], homes: [40, 41, ...range(50, 59)],
-        temporaries: [...range(32, 39), ...range(60, 63)], stack: range(32, 36), scratch: [62, 63]},
+        temporaries: [...range(32, 39), ...range(60, 63)], stack: range(32, 39), scratch: [62, 63], leafHomes: [60, 61]},
 ];
 
 // f32 values live in f registers, every other Typed type in x registers.
 const typeClass = type => type === "f32" ? F : X;
 
-// The emitter's operand stack per class: depth d is x STACK_REGISTERS[d] (t0-t4) or f F_STACK[d] (ft0-ft4), and
-// both classes share the spill slot of depth d. An operand beyond the registers lives in its slot.
-const F_STACK = [32, 33, 34, 35, 36];
+// The emitter's operand stack per class: depth d is x STACK_REGISTERS[d] (t0-t4) or f F_STACK[d] (ft0-ft7), and
+// both classes share the spill slot of depth d. An operand beyond its class's registers lives in its slot.
+const F_STACK = REGISTER_CLASSES[F].stack;
 const OPERAND_STACKS = [STACK_REGISTERS, F_STACK];
 
 // A callee-saved register (of either class) that the planner may claim as a home.
@@ -565,10 +566,12 @@ class CallMethods {
         }
         // Only the values below the arguments survive the call. A pending direct read stays in
         // its home: a function that calls keeps homes only in callee-saved registers.
-        const live = Math.min(this.depth, OPERAND_STACKS[0].length);
-        for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.spill(d, OPERAND_STACKS[this.classes[d]][d]);
+        // An operand deeper than its class's stack registers is in its slot already.
+        const live = this.depth, held = d => this.direct[d] === undefined ? OPERAND_STACKS[this.classes[d]][d] : undefined;
+        for (let d = 0; d < live; d++) { const reg = held(d); if (reg !== undefined) this.spill(d, reg); }
+        this.usesFrame = true; // the return address
         this.jump(this.starts[index], RA);
-        for (let d = 0; d < live; d++) if (this.direct[d] === undefined) this.load(OPERAND_STACKS[this.classes[d]][d], this.slot(d));
+        for (let d = 0; d < live; d++) { const reg = held(d); if (reg !== undefined) this.load(reg, this.slot(d)); }
         this.push(callee.result === "f32" ? FA0 : A0);
     }
 
@@ -587,6 +590,7 @@ class CallMethods {
 // round-to-nearest-even statically, so frm never matters; a product and a sum are never fused.
 
 const RNE = 0, RTZ = 1, RDN = 2, RUP = 3;
+const RETURNED = Symbol("computed in fa0 for the return that follows");
 // The tape's f32 operations, by opcode: 1 for those FunctionCode.float lowers.
 const FLOAT_OPERATIONS = new Uint8Array(256);
 for (const op of [F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG,
@@ -605,11 +609,25 @@ const FLOAT_COMPARE = new Map([
 const ROUNDING = new Map([[F32_FLOOR, RDN], [F32_CEIL, RUP], [F32_TRUNC, RTZ]]);
 
 class FloatMethods {
+    // An f32 constant into reg: lui (and addi) into t6 and fmv.w.x, or fmv.w.x from x0 for +0.
+    floatConstant(reg, bits) {
+        if (bits) this.constant(T6, bits);
+        this.emit(encoder("fmv_w_x")(reg, bits ? T6 : ZERO));
+    }
+
     // The destination of a result of class cls: the home of the local it is stored to next (destination()), or the
     // operand stack's register.
+    // An f32 function's value that the next operation returns is computed in fa0 itself (a pending read of fa0).
     floatResult(cls) {
+        if (this.floating && cls === F && this.returnRegister === FA0 && this.returning(this.at)) return [FA0, RETURNED];
         const stored = this.destination();
         return [stored ?? this.resultRegister(cls), stored];
+    }
+
+    // result() for floatResult's destinations.
+    floatDone(out, stored) {
+        if (stored === RETURNED) this.pushHome(out);
+        else this.result(out, stored);
     }
 
     float(op) {
@@ -618,7 +636,7 @@ class FloatMethods {
             const b = this.pop(FT11), a = this.pop(FT10);
             const [out, stored] = this.floatResult(F);
             this.emit(binary[1] === undefined ? encoder(binary[0])(out, a, b) : encoder(binary[0])(out, a, b, binary[1]));
-            return this.result(out, stored);
+            return this.floatDone(out, stored);
         }
         const compare = FLOAT_COMPARE.get(op);
         if (compare) {
@@ -626,24 +644,25 @@ class FloatMethods {
             const [out, stored] = this.floatResult(0);
             this.emit(compare[1] ? encoder(compare[0])(out, b, a) : encoder(compare[0])(out, a, b));
             if (op === F32_NE) this.emit(instruction.i(0x13, out, 4, out, 1)); // xori out, out, 1
-            return this.result(out, stored);
+            return this.floatDone(out, stored);
         }
         const rounding = ROUNDING.get(op);
         if (rounding !== undefined) return this.round(rounding);
         switch (op) {
         case F32_CONST: {
             const bits = this.cell();
+            const home = this.locations?.homes.get("f" + bits);
+            if (home !== undefined) return this.pushHome(home);
             const [out, stored] = this.floatResult(F);
-            if (bits) this.constant(T6, bits);
-            this.emit(encoder("fmv_w_x")(out, bits ? T6 : ZERO));
-            return this.result(out, stored);
+            this.floatConstant(out, bits);
+            return this.floatDone(out, stored);
         }
         case F32_LOAD: {
             this.cell(); // alignment hint
             const offset = this.cell(), base = this.pop(T5);
             const [out, stored] = this.floatResult(F);
             this.load(out, offset, base);
-            return this.result(out, stored);
+            return this.floatDone(out, stored);
         }
         case F32_STORE: {
             this.cell();
@@ -656,20 +675,20 @@ class FloatMethods {
             const [out, stored] = this.floatResult(F);
             if (op === F32_SQRT) this.emit(encoder("fsqrt_s")(out, a, RNE));
             else this.emit(encoder(op === F32_ABS ? "fsgnjx_s" : "fsgnjn_s")(out, a, a));
-            return this.result(out, stored);
+            return this.floatDone(out, stored);
         }
         case F32_CONVERT_I32_S: case F32_REINTERPRET_I32: {
             const a = this.pop(T5);
             const [out, stored] = this.floatResult(F);
             this.emit(op === F32_CONVERT_I32_S ? encoder("fcvt_s_w")(out, a, RNE) : encoder("fmv_w_x")(out, a));
-            return this.result(out, stored);
+            return this.floatDone(out, stored);
         }
         case I32_TRUNC_F32: case I32_REINTERPRET_F32: {
             // fcvt.w.s rtz saturates, and gives 2^31 - 1 for NaN: Typed's rule (tape.js f32.to_i32).
             const a = this.pop(FT10);
             const [out, stored] = this.floatResult(0);
             this.emit(op === I32_TRUNC_F32 ? encoder("fcvt_w_s")(out, a, RTZ) : encoder("fmv_x_w")(out, a));
-            return this.result(out, stored);
+            return this.floatDone(out, stored);
         }
         }
         throw new SyntaxError("unsupported RV32 f32 operation " + op);
@@ -691,7 +710,7 @@ class FloatMethods {
         this.emit(encoder("fcvt_w_s")(T6, a, rm));
         this.emit(encoder("fcvt_s_w")(FT11, T6, rm));
         this.emit(encoder("fsgnj_s")(out, FT11, a));
-        this.result(out, stored);
+        this.floatDone(out, stored);
     }
 }
 
@@ -883,10 +902,12 @@ function mixin(target, ...groups) {
 class StackMethods {
     // A float register (32-63) loads and stores a word (flw, fsw); kind is the integer width (lw, lhu, sh...).
     load(reg, offset, base = SP, kind = 2) {
+        if (base === SP) this.usesFrame = true;
         this.emit(reg < 32 ? instruction.i(0x03, reg, kind, base, offset) : loadWord(reg, offset, base));
     }
 
     store(reg, offset, base = SP, kind = 2) {
+        if (base === SP) this.usesFrame = true;
         this.emit(reg < 32 ? instruction.s(kind, base, reg, offset) : storeWord(reg, offset, base));
     }
 
@@ -984,6 +1005,10 @@ class FunctionCode {
         this.exit = {};
         // ilp32f: an f32 result returns in fa0, every other in a0.
         this.returnRegister = program.result === "f32" ? FA0 : A0;
+        // A function with an f32 parameter, local or result: its frame is dropped when it uses none (dropsFrame), and
+        // its result is computed in fa0 where the next operation returns it (floatResult). Integer functions keep the
+        // code their pinned images record.
+        this.floating = program.result === "f32" || program.params.includes("f32") || Boolean(program.localTypes);
         if (program.nativeInspection) observeSteps(this);
     }
 
@@ -1002,7 +1027,8 @@ class FunctionCode {
             this.currentOp = undefined;
             return false;
         }
-        if (op >= BLOCK && op <= RETURN) this.materialize();
+        // A return leaves every pending read behind, so an f32 function's return reads its value where it is.
+        if (op >= BLOCK && op <= RETURN && !(this.floating && this.returning(this.at - 1))) this.materialize();
         if (plan?.forward.has(this.at - 1)) {
             const site = this.at - 1, tape = this.program.code;
             const constant = op === I32_CONST ? this.cell() : undefined;
@@ -1148,20 +1174,33 @@ class FunctionCode {
     }
 
 
+    // Whether the operation at `at` returns from the function: a return, or the function's last end.
+    returning(at) {
+        const op = this.program.code[at];
+        return op === RETURN || (op === END && this.control.length === 0);
+    }
+
+    // After lower(): this f32 function used no frame (no slot, spill, call or saved register), so it may be emitted
+    // again with frameless set, without the prologue and epilogue.
+    get dropsFrame() { return this.floating && !this.frameless && !this.bodyUsesFrame && this.savedRegisters().length === 0; }
+
     lower() {
         const count = this.program.params.length;
         const incoming = calleeRegisters(this.program);
-        const saved = this.savedRegisters();
+        const saved = this.frameless ? [] : this.savedRegisters();
         // The frame size depends on the deepest spill, known only after the body, so the
         // prologue is emitted as placeholders and patched below.
-        this.emit(0);
-        this.emit(0);
+        if (!this.frameless) {
+            this.emit(0);
+            this.emit(0);
+        }
         for (let k = 0; k < saved.length; k++) this.emit(0);
         for (let i = 0; i < count; i++) this.writeLocal(incoming[i], i);
         // Capacity homes belong to unwritten parameters, still in their argument registers here.
         for (const [id, reg] of this.locations?.homes ?? []) {
             if (typeof id === "string") {
                 if (id[0] === "c") this.constant(reg, Number(id.slice(1)));
+                else if (id[0] === "f") this.floatConstant(reg, Number(id.slice(1)));
             } else if (id < 0) this.load(reg, 0, incoming[-1 - id]);
         }
         // Pointer homes of parameters, from the incoming argument registers.
@@ -1171,6 +1210,13 @@ class FunctionCode {
                 else if (other < count && local < other) this.pointerFrom(reg, incoming[local], incoming[r], K0, incoming[other]);
             }
         while (this.at < this.program.code.length && !this.step(this.cell())) {}
+        this.bodyUsesFrame = Boolean(this.usesFrame); // before the epilogue reloads ra
+        if (this.frameless) {
+            this.mark(this.exit);
+            this.emit(instruction.i(0x67, ZERO, 0, RA, 0));
+            this.patchBranches();
+            return this;
+        }
         const frame = (4 * (this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
@@ -1305,11 +1351,48 @@ function lowerLeaf(fn, callables, targets, select, facts) {
 // rv32/plan/saved-homes.js
 // Callee-saved homes, per register class.
 
+// A function with an f32 parameter, local or result. Its leaves get more free registers than an integer function's
+// (planSavedHomes); integer functions keep the plans their pinned images record.
+const floatingFunction = fn => fn.result === "f32" || fn.params.includes("f32") || Boolean(fn.localTypes);
+
+// The deepest operand stack of a leaf's tape (a leaf's only calls are guarded returns, which take and give one
+// value): f operand-stack registers from there on are never used, so they are free homes.
+function deepestStack(code) {
+    let height = 0, deepest = 0;
+    const blocks = [];
+    for (let at = 0; at < code.length; at = opNext(code, at)) {
+        const op = code[at], row = tapeRow(op);
+        if (op >= BLOCK && op <= IF) {
+            if (op === IF) height--;
+            blocks.push({height, value: code[at + 1] !== VOID});
+            continue;
+        }
+        if (op === ELSE) { height = blocks.at(-1).height; continue; }
+        if (op === END) {
+            const block = blocks.pop();
+            if (block) height = block.height + Number(block.value);
+            continue;
+        }
+        height += op === CALL ? 0 : row.push.length - row.pop.length;
+        deepest = Math.max(deepest, height);
+    }
+    return deepest;
+}
+
+// An f32 leaf may keep its first integer parameter in a0 when nothing uses a0 as scratch: no buffer access (a
+// capacity), no division check.
+const A0_SCRATCH = new Set([CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, I32_DIV_S, I32_REM_S]);
+function a0Free(code) {
+    for (let at = 0; at < code.length; at = opNext(code, at)) if (A0_SCRATCH.has(code[at])) return false;
+    return true;
+}
+
 // The register class of a planner key: a parameter or frame local by its type (fn.params, and fn.localTypes for
 // the frame locals when the front end gives them; a local without a type is an integer), every other key
 // (capacities -1 - b, constants "c<n>", pointer homes "p...") by the integer class.
 function keyClass(fn, id) {
-    if (typeof id !== "number" || id < 0) return X;
+    if (typeof id === "string") return id[0] === "f" ? F : X; // "f<bits>": an f32 constant
+    if (id < 0) return X;
     const params = fn.params.length;
     return typeClass(id < params ? fn.params[id] : fn.localTypes?.[id - params]);
 }
@@ -1337,9 +1420,11 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reus
     const disjoint = (r, [s, e]) => r.spans.every(([s2, e2]) => e < s2 || s > e2);
     if (leaf) {
         const incoming = calleeRegisters(fn);
-        // An incoming register the leaf may keep: not the first of its class, not a7 while it caches a capacity.
-        const keeps = reg => reg !== A0 && reg !== FA0 && !(capacityCached && reg === A0 + 7);
-        for (let p = 1; p < fn.params.length; p++) if (keeps(incoming[p]) && (scores.get(p) ?? 0) >= 2) {
+        // An incoming register the leaf may keep: not a0 (the emitter's scratch), not a7 while it caches a capacity.
+        // fa0 is only ever written by a return, so an f32 parameter may stay there, the first one included.
+        const floating = floatingFunction(fn), a0 = floating && a0Free(fn.code);
+        const keeps = reg => (reg !== A0 || a0) && !(capacityCached && reg === A0 + 7);
+        for (let p = 0; p < fn.params.length; p++) if (keeps(incoming[p]) && (scores.get(p) ?? 0) >= 2) {
             homes.set(p, incoming[p]);
             opened.push({reg: incoming[p], cls: keyClass(fn, p), spans: [span(p)]});
         }
@@ -1347,7 +1432,9 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reus
             if (closed[id]) continue;
             const used = incoming.filter(reg => reg >> 5 === id).length;
             for (let k = Math.max(1, used); k < (capacityCached && id === X ? 7 : 8); k++) free.push({reg: args[k], cls: id, cost: 0});
+            if (floating) for (const reg of REGISTER_CLASSES[id].leafHomes ?? []) free.push({reg, cls: id, cost: 0});
         }
+        if (floating) for (const reg of REGISTER_CLASSES[F].stack.slice(deepestStack(fn.code))) free.push({reg, cls: F, cost: 0});
         // reuseArgs: the argument register of a parameter without its own home there is free once
         // the prologue has written the parameter to its slot or home. Only a plain local, first
         // written in the body, may take it: parameter, capacity and pointer homes are filled in
@@ -1488,6 +1575,10 @@ function planLocations(fn, options, inlineCall) {
         // constants: a literal the emitter would load into a register, scored like a local.
         if (opcode === I32_CONST && options.constants && constantForm(tape, offset + 1, options.select) === "register")
             weigh("c" + a);
+        // An f32 constant always needs a register (two or three instructions to make): key "f<bits>", class f. Its
+        // home is made in the prologue, on every call, so a use counts 0.6: two unconditional uses, or one in a loop,
+        // claim a free register; one unconditional and one conditional use do not.
+        if (opcode === F32_CONST && options.constants && a !== 0) weigh("f" + a, 0.6);
         if (opcode === LOCAL_SET) {
             writes.add(a);
             // A homed write turns a store into a move: worth less than a read, which disappears.
@@ -1692,6 +1783,9 @@ function storelessAnalysis(callables, importCount) {
 const PASSES = [
     // inline is observed at the "inline" checkpoint, after the guarded-return and PIE stages (compile.js).
     {name: "inline", group: "inline", kind: "transform", observe: false},
+    // fields rewrites only functions with f32 field loads, and is observed with the next transform, so the observed
+    // tapes of integer programs stay what they were.
+    {name: "fields", group: "inline", kind: "transform", observe: false},
     {name: "commute", group: "inline", kind: "transform"},
     {name: "conjunctions", group: "loops", kind: "transform"},
     {name: "sets", group: "loops", kind: "transform"},
@@ -1756,7 +1850,7 @@ const DEFAULT_SELECT = Object.freeze({immediates: true, divisions: true, branche
 const DEFAULT_LOCATIONS = Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
     capacities: true, nested: true, constants: true, share: true, pointers: true});
 const DEFAULT_POLICY = Object.freeze({
-    passes: Object.freeze(["inline", "commute", "rotate", "version", "split"]),
+    passes: Object.freeze(["inline", "fields", "commute", "rotate", "version", "split"]),
     inlineGuardedReturns: true,
     operandLocations: DEFAULT_LOCATIONS,
     select: DEFAULT_SELECT,
@@ -1776,7 +1870,7 @@ const POLICIES = Object.freeze({
     // worlds with a long boot compile whose loops gain little from versioning: Chess with the 3D painter
     // compiles in 3.76 s instead of 4.66 s on the P4 (6 s deadline), and versioning saves its engine 0.45%
     // of instructions (PICOCALC-COMPILE-BUDGET Step 6).
-    balanced: Object.freeze({...DEFAULT_POLICY, passes: Object.freeze(["inline", "commute", "rotate"])}),
+    balanced: Object.freeze({...DEFAULT_POLICY, passes: Object.freeze(["inline", "fields", "commute", "rotate"])}),
     default: DEFAULT_POLICY,
     // "kernel" is "default" plus what only a compute kernel can afford to compile: the division facts
     // (ranges, facts) cost Chess's boot compile about a quarter more, past its budget, but take the ray
@@ -1787,7 +1881,7 @@ const POLICIES = Object.freeze({
     // of unhomed parameters take it to 10.99 ms at no compile cost (Step 21). The ray tracer uses it.
     kernel: Object.freeze({
         ...DEFAULT_POLICY,
-        passes: Object.freeze(["inline", "commute", "conjunctions", "sets", "rotate", "ranges", "version", "hoist",
+        passes: Object.freeze(["inline", "fields", "commute", "conjunctions", "sets", "rotate", "ranges", "version", "hoist",
             "induction", "split", "facts"]),
         operandLocations: Object.freeze({...DEFAULT_LOCATIONS, pointerOnly: true, reuseArgs: true}),
         select: Object.freeze({...DEFAULT_SELECT, loadHomes: true}),
@@ -1923,8 +2017,9 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn)) : undefined;
             // observePlan(name, plan): a read-only view of the operand-location plan, for tools.
             if (plan) options?.observePlan?.(fn.name, plan);
-            const emit = longBranches => {
+            const emit = (longBranches, frameless) => {
                 const emitter = new Emitter(fn, callables, targets);
+                if (frameless) emitter.frameless = true;
                 emitter.select = options?.select;
                 emitter.versioned = passes.has("version");
                 emitter.facts = facts;
@@ -1933,12 +2028,19 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 return emitter.lower();
             };
             compiled = time(fn, "emit", () => {
-                try {
-                    return emit(false);
-                } catch (error) {
-                    if (error !== SHORT_BRANCH_RANGE) throw error;
-                    return emit(true);
-                }
+                let longBranches = false;
+                const lowered = frameless => {
+                    try {
+                        return emit(longBranches, frameless);
+                    } catch (error) {
+                        if (error !== SHORT_BRANCH_RANGE) throw error;
+                        longBranches = true;
+                        return emit(true, frameless);
+                    }
+                };
+                // An f32 function that used no frame is emitted again without one (FunctionCode.dropsFrame).
+                const code = lowered(false);
+                return code.dropsFrame ? lowered(true) : code;
             });
         }
         for (const pass of finishes) time(fn, pass.finishName ?? pass.name, () => pass.finish(fn, ctx));
@@ -2074,5 +2176,5 @@ globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES,
     passes: PASSES.map(({name, group, kind, needs}) => ({name, group, kind, needs: needs ?? [], file: GROUPS[group]}))};
 
 // The names the pass-group bundles import from this one.
-globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, F32, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape, tapeRow};
+globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape, tapeRow};
 })();

@@ -6,7 +6,8 @@
 //   node tests/compiler/typed-f32-fixture.mjs           write tools/trace-repl/pkg/traceapi/testdata/f32-differential.json
 //   node tests/compiler/typed-f32-fixture.mjs --check   exit 1 unless the file is what this writes
 import {readFileSync, writeFileSync} from "node:fs";
-import {HAND, HAND_FUNCTIONS, POLICIES, bits, floatInput, generated, generatedInputs, random, realm} from "./f32-cases.mjs";
+import {HAND, HAND_FUNCTIONS, MATH, MATH_FUNCTIONS, POLICIES, bits, floatInput, generated, generatedInputs, mathInputs, random, realm}
+    from "./f32-cases.mjs";
 
 const OUT = new URL("../../tools/trace-repl/pkg/traceapi/testdata/f32-differential.json", import.meta.url);
 
@@ -31,6 +32,8 @@ export async function fixture() {
     const h = random(13);
     await add(HAND, Object.entries(HAND_FUNCTIONS).flatMap(([name, params]) =>
         Array.from({length: 24}, () => ({name, args: params.map(type => type === "f32" ? floatInput(h) : h.below(9))}))));
+    const m = random(17);
+    await add(MATH, Object.keys(MATH_FUNCTIONS).flatMap(name => mathInputs(m, name, 30).map(args => ({name, args}))));
     return {policies: POLICIES, programs};
 }
 

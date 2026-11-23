@@ -6,10 +6,12 @@ import {LOCAL_SET} from "../encoding/tape.js";
 export class StackMethods {
     // A float register (32-63) loads and stores a word (flw, fsw); kind is the integer width (lw, lhu, sh...).
     load(reg, offset, base = SP, kind = 2) {
+        if (base === SP) this.usesFrame = true;
         this.emit(reg < 32 ? instruction.i(0x03, reg, kind, base, offset) : loadWord(reg, offset, base));
     }
 
     store(reg, offset, base = SP, kind = 2) {
+        if (base === SP) this.usesFrame = true;
         this.emit(reg < 32 ? instruction.s(kind, base, reg, offset) : storeWord(reg, offset, base));
     }
 

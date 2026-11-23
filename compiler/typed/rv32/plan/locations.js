@@ -1,7 +1,7 @@
 // planLocations: operand homes, pointer groups and pointer-only skips.
 import {A0, X} from "../encoding/registers.js";
 import {constantForm} from "../encoding/selection.js";
-import {CHECKED_ADDRESS, UNCHECKED_ADDRESS, CELLS, LOCAL_GET, LITERAL_STORES, LOCAL_SET, I32_ADD, I32_CONST, CALL, EFFECTS, STORES, BLOCK, IF, LOOP, END, RETURN, opNext} from "../encoding/tape.js";
+import {CHECKED_ADDRESS, UNCHECKED_ADDRESS, CELLS, LOCAL_GET, LITERAL_STORES, LOCAL_SET, I32_ADD, I32_CONST, F32_CONST, CALL, EFFECTS, STORES, BLOCK, IF, LOOP, END, RETURN, opNext} from "../encoding/tape.js";
 import {keyClass, planSavedHomes} from "./saved-homes.js";
 
 // Assign permanent homes only in framed scalar functions with a checked access.
@@ -108,6 +108,10 @@ export function planLocations(fn, options, inlineCall) {
         // constants: a literal the emitter would load into a register, scored like a local.
         if (opcode === I32_CONST && options.constants && constantForm(tape, offset + 1, options.select) === "register")
             weigh("c" + a);
+        // An f32 constant always needs a register (two or three instructions to make): key "f<bits>", class f. Its
+        // home is made in the prologue, on every call, so a use counts 0.6: two unconditional uses, or one in a loop,
+        // claim a free register; one unconditional and one conditional use do not.
+        if (opcode === F32_CONST && options.constants && a !== 0) weigh("f" + a, 0.6);
         if (opcode === LOCAL_SET) {
             writes.add(a);
             // A homed write turns a store into a move: worth less than a read, which disappears.
