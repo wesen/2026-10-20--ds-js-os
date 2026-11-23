@@ -215,3 +215,42 @@ The playable image built at `6195cab` (`10695eee…`) is installed and recorded.
 ### What should be done in the future
 
 - **The painter check with peripherals off.** `device.health(…, "off-by-user")` should wait for the painter, as the peripherals-on branch does. It is a small fix in `bench/board/device.py`; I'll do it at the next idle point.
+
+## Step 7: The black screen, and ASYNC-TAPE merged
+
+The user reported a black display. The cause was the screen's on/off state, not a fault. ASYNC-TAPE came back no-go on its main idea, with a useful cleanup, and is merged.
+
+### Prompt Context
+
+**User messages (verbatim):** "i don't see anything on the display though, is that normal?"; "sorry i was messing with the keys, maybe t was showing a black screen or so? maybe there's nothing in the gallery?"; "it flashed and work in whatever you did in the previous turn a minute ago. now it's black again".
+
+### What I did
+
+- **Bus statistics** (`buses`):
+  - i2c0: 1,048 transfers, 0 errors, so the keyboard was fine.
+  - spi2: 246 transfers since boot, unchanged across my capture.
+- **Framebuffer capture** (`shot`): the launcher, not black. The compositor was drawing, but nothing was going to the panel.
+- **Looked for a screen-off timer.** There is none. `apps/js/picocalc/drivers/power.js` turns the backlight to 0 when the compositor sends `screen`, and the compositor sends that only on the power key (`compositor.js:591`). A power-key press among the user's key presses would turn the screen off.
+- **Pressed the power key** with `key power` on the console. spi2 went from 246 to 630 transfers, so frames reach the panel again.
+- **Asked the user to confirm.** If it is very dim, the STM32 reset may have reset the backlight register.
+- **ASYNC-TAPE merge.**
+  - Clean merge. Both generated bundles check current.
+  - `make test` exit 0; the gates pass with both policies (digests and counts as before; 24/24).
+  - I accepted its compile-peak deviation: +8,160 B in the RV32 backend's final assembly, which the ticket did not touch; +0.14 % absolute. The agent's control showed that adding small dead functions to the base compiler moves the same metric by 4–12 KB.
+
+### What didn't work
+
+- **Querying the power driver.** `send power screen {}` returned `unknown command send (try help)`. The playable profile doesn't build the console's `send` command, so I couldn't read the power driver's state directly.
+
+### What I learned
+
+- **Silent SPI means a dark or idle panel.** A framebuffer capture shows what the compositor drew, not what the panel shows. When the spi2 transfer count doesn't move, the panel isn't being updated, or the screen is off.
+- **ASYNC-TAPE's no-go reasons** (details in its design doc's Study section):
+  - Editor's layout is already minimal (57 declared + 13 lowered fields).
+  - A tape-level lowering would rebuild the control tree the statement skeleton already has, and would need binding names the tape doesn't carry.
+  - Streaming still needs a whole-program pre-pass.
+  - Text generation is about 6 % of the rewrite on the device.
+- **What ASYNC-TAPE delivered instead:**
+  - `compiler/typed/async/` modules, bundled back into one file.
+  - Errors mapped to source positions without a second compile.
+  - A real async test with 18 diagnostics checked on both targets.
