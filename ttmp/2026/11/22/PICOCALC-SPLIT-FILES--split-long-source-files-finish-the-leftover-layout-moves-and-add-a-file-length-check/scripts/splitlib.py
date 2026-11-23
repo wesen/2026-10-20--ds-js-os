@@ -54,7 +54,8 @@ def split(source, parts, moved=(), edits=None, dry=None, post=()):
     if not dry:
         dirty = subprocess.run(["git", "status", "--porcelain", "--untracked-files=no"], cwd=REPO,
                                capture_output=True, text=True).stdout
-        assert not dirty, "commit first:\n" + dirty
+        dirty = "".join(l + "\n" for l in dirty.splitlines() if not l[3:].startswith("ttmp/"))   # the scripts may be
+        assert not dirty, "commit first:\n" + dirty                                               # edited meanwhile
     src = lines_of(source)
     n = len(src)
     used = [0] * (n + 1)

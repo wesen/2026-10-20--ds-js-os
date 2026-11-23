@@ -36,10 +36,10 @@ ifeq ($(BOARD),papers3)
   ENG_SRC := mquickjs.c dtoa.c libm.c cutils.c
   GEN     := $(BUILD)/gen
   CFLAGS  += -I$(GEN) -I$(ENG) -DBOARD_PAPERS3 -DNUCLEUS_GRAY8 -DNUCLEUS_FONT_HEADER='"font_paper.h"' -DMQJS_VERSION=\"$(shell cat $(ENG)/VERSION)\"
-  OS_SRC  := nucleus/agent_transport.c nucleus/kernel.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
+  OS_SRC  := nucleus/agent_transport.c nucleus/kernel.c nucleus/kernel_channels.c nucleus/kernel_supervision.c nucleus/kernel_reports.c nucleus/vm_mqjs.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
              sim/papers3/board.c sim/papers3/bus.c sim/papers3/epd.c sim/papers3/gt911.c sim/papers3/bm8563.c \
              host/port_host.c host/agent_host.c host/main_host.c host/native_proc.c
-  HDRS    := nucleus/nucleus.h sdk/nw_wire.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
+  HDRS    := nucleus/nucleus.h nucleus/kernel_internal.h sdk/nw_wire.h nucleus/font_paper.h sim/papers3/papers3.h host/board.h $(GEN)/mqjs_stdlib.h $(ENG)/mquickjs.h
   BIN     := $(BUILD)/papers3-host
   SCRIPTS := ../apps/tours/papers3
   JSROOT  := ../apps/js/papers3
@@ -50,9 +50,9 @@ else
   ENG_SRC := quickjs.c libregexp.c libunicode.c cutils.c dtoa.c
   CFLAGS  += -I$(ENG) -DCONFIG_VERSION=\"2026-06-04\"
   CFLAGS  += -DPICOCALC_RAYTRACE=1
-  OS_SRC  := nucleus/raytrace_demo.c nucleus/agent_transport.c nucleus/kernel.c nucleus/vm.c nucleus/vm_ops.c nucleus/vm_sys.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
+  OS_SRC  := nucleus/raytrace_demo.c nucleus/agent_transport.c nucleus/kernel.c nucleus/kernel_channels.c nucleus/kernel_supervision.c nucleus/kernel_reports.c nucleus/vm.c nucleus/vm_ops.c nucleus/vm_sys.c nucleus/hw.c nucleus/gfx.c nucleus/png.c nucleus/util.c nucleus/fs.c nucleus/native.c nucleus/native_wasm.c \
              sim/st7365p.c sim/stm32kbd.c sim/board.c sim/bus_sim.c host/port_host.c host/agent_host.c host/net_host.c host/main_host.c host/native_proc.c
-  HDRS    := nucleus/nucleus.h nucleus/vm_quickjs.h nucleus/raytrace_demo.h sdk/nw_wire.h nucleus/font_data.h sim/picocalc.h host/board.h
+  HDRS    := nucleus/nucleus.h nucleus/kernel_internal.h nucleus/vm_quickjs.h nucleus/raytrace_demo.h sdk/nw_wire.h nucleus/font_data.h sim/picocalc.h host/board.h
   BIN     := $(BUILD)/picocalc-host
   SCRIPTS := ../apps/tours/picocalc
   JSROOT  := ../apps/js/picocalc
