@@ -2,7 +2,7 @@
 import {A0, X, inOwnRegister} from "../encoding/registers.js";
 import {constantForm} from "../encoding/selection.js";
 import {CHECKED_ADDRESS, UNCHECKED_ADDRESS, CELLS, LOCAL_GET, LITERAL_STORES, LOCAL_SET, I32_ADD, I32_CONST, F32_CONST, CALL, EFFECTS, STORES, BLOCK, IF, LOOP, END, RETURN, opNext} from "../encoding/tape.js";
-import {keyClass, planSavedHomes} from "./saved-homes.js";
+import {floatingFunction, keyClass, planSavedHomes} from "./saved-homes.js";
 
 // Assign permanent homes only in framed scalar functions with a checked access.
 export function planLocations(fn, options, inlineCall) {
@@ -10,7 +10,9 @@ export function planLocations(fn, options, inlineCall) {
     // Forwarding and capacity reuse need a checked access; saved homes apply to any framed function.
     if (!options.saved && !tape.includes(CHECKED_ADDRESS) && !tape.includes(UNCHECKED_ADDRESS)) return null;
     const reads = new Map(), writes = new Set(), scores = new Map();
-    let receiver, straight = true, pure = true, leaf = true, loops = 0, ifs = 0;
+    let receiver, straight = true, pure = true, leaf = true, loops = 0, ifs = 0, guarded = false;
+    // callFree: the offsets of the calls a return does not follow at once (saved-homes.js).
+    const calls = [];
     // Estimated executions per invocation: four inside a loop. Saved homes cost a fixed
     // save and restore per call, so their estimate also halves under each enclosing if:
     // a value used only on a rarely taken path should stay in its slot.
@@ -117,7 +119,10 @@ export function planLocations(fn, options, inlineCall) {
             // A homed write turns a store into a move: worth less than a read, which disappears.
             if (options.saved) weigh(a, 0.5);
         }
-        if (opcode === CALL && !inlineCall(a)) leaf = false;
+        if (opcode === CALL && !inlineCall(a)) {
+            leaf = false;
+            if (options.callFree && tape[at] !== RETURN && at !== tape.length - 1) calls.push(offset);
+        } else if (opcode === CALL) guarded = true;
         if (EFFECTS[opcode] & STORES) pure = false;
         if (opcode >= BLOCK && opcode <= IF) {
             blocks.push(opcode);
@@ -213,7 +218,8 @@ export function planLocations(fn, options, inlineCall) {
             }
         }
     }
-    if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined, intervals, options.reuseArgs);
+    const callFree = options.callFree && !leaf && !guarded && intervals && floatingFunction(fn) ? calls : undefined;
+    if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined, intervals, options.reuseArgs, callFree);
     else if (options.homes && leaf) {
         let reg = A0 + Math.max(1, fn.params.length);
         const end = A0 + (receiver === undefined ? 8 : 7);
@@ -269,5 +275,5 @@ export function planLocations(fn, options, inlineCall) {
         for (const w of steps) skips.set(w.at - 5, {end: w.at + 2, local: g.L, inc: w.inc});
     }
     // scores and intervals are what planSavedHomes chose from; only observePlan reads them.
-    return {receiver,forward,homes,direct,pointers,pointerWrites,increments,skips,scores,intervals};
+    return {receiver,forward,homes,direct,pointers,pointerWrites,increments,skips,scores,intervals,callFree: homes.callFree};
 }

@@ -95,7 +95,7 @@ if (verbose) console.log(`${g.scenes.length} scenes; fixed kernel ${g.fixedKerne
 const TYPED_APP = 'apps/typed/candela-gallery';
 const typedGallery = await generateTypedGallery(CDL, gallery);
 const typedOutputs = new Map(Object.entries(typedGallery.files).map(([name, text]) => [`${TYPED_APP}/${name}`, text]));
-if (verbose) console.log(`Typed: ${typedGallery.stats.functions} functions, ${typedGallery.stats.frames} frames, ${typedGallery.stats.arenaWords} arena words`);
+if (verbose) console.log(`Typed: ${typedGallery.stats.functions} functions, ${typedGallery.stats.arenaWords} arena words`);
 
 // ---- VENDOR.json ----
 const files = {};

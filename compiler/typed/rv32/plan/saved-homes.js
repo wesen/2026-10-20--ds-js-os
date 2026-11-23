@@ -61,7 +61,13 @@ export function keyClass(fn, id) {
 // Each class has its own registers (encoding/registers.js REGISTER_CLASSES): an f32 local takes fa_i, a spare
 // fa register or fs0..fs11 (ilp32f), by the same rules; fa0 stays free like a0.
 const SAVED_MARGIN = 2;
-export function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reuseArgs) {
+// callFree (operandLocations.callFree, PICOCALC-CANDELA-KERNEL-CODEGEN): the tape offsets of a calling f32 function's
+// calls (those a return does not follow at once). fa1-fa7, ft8 and ft9 are then free homes, at no cost, for plain
+// locals whose live interval contains none of them: no call clobbers such a local while it lives, and the emitter
+// moves a pending read of one to the operand stack before it sets up a call's arguments (calls.js). The registers so
+// used are returned in the set callFree.
+export const CALL_FREE_HOMES = [43, 44, 45, 46, 47, 48, 49, 60, 61];
+export function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reuseArgs, callFree) {
     // A class without a key takes no part: an integer-only function plans exactly as before register classes.
     const floats = fn.params.includes("f32") || Boolean(fn.localTypes?.includes("f32"));
     const free = [], opened = [], closed = [false, !floats];
@@ -70,6 +76,8 @@ export function planSavedHomes(fn, scores, homes, leaf, capacityCached, interval
     // constants, slots live everywhere) occupy their register for the whole function.
     const span = id => intervals?.get(id) ?? [-Infinity, Infinity];
     const disjoint = (r, [s, e]) => r.spans.every(([s2, e2]) => e < s2 || s > e2);
+    const crosses = ([s, e]) => callFree.some(c => s < c && c < e);
+    if (callFree && !closed[F]) for (const reg of CALL_FREE_HOMES) free.push({reg, cls: F, cost: 0, localsOnly: true, callFree: true});
     if (leaf) {
         const incoming = calleeRegisters(fn);
         // An incoming register the leaf may keep: not a0 (the emitter's scratch), not a7 while it caches a capacity.
@@ -102,21 +110,24 @@ export function planSavedHomes(fn, scores, homes, leaf, capacityCached, interval
         if (closed[cls]) continue;
         const own = span(id);
         const plain = typeof id === "number" && id >= fn.params.length;
-        const shared = intervals && score >= 1 ? opened.find(r => r.cls === cls && (plain || !r.localsOnly) && disjoint(r, own)) : undefined;
+        const callSafe = !callFree || !crosses(own);
+        const shared = intervals && score >= 1 ? opened.find(r => r.cls === cls && (plain || !r.localsOnly) && disjoint(r, own) &&
+            (callSafe || !r.callFree)) : undefined;
         if (shared) {
             homes.set(id, shared.reg);
             shared.spans.push(own);
             continue;
         }
-        const at = free.findIndex(f => f.cls === cls && (plain || !f.localsOnly));
+        const at = free.findIndex(f => f.cls === cls && (plain || !f.localsOnly) && (callSafe || !f.callFree));
         if (at < 0 || score <= (free[at].cost ? SAVED_MARGIN * free[at].cost : 1)) {
             if (intervals) continue;
             closed[cls] = true;
             if (closed[X] && closed[F]) break;
             continue;
         }
-        const [{reg, localsOnly}] = free.splice(at, 1);
+        const [{reg, localsOnly, callFree: unsaved}] = free.splice(at, 1);
         homes.set(id, reg);
-        opened.push({reg, cls, spans: [own], localsOnly});
+        opened.push({reg, cls, spans: [own], localsOnly, callFree: unsaved});
+        if (unsaved) homes.callFree = (homes.callFree ?? new Set()).add(reg);
     }
 }

@@ -137,3 +137,52 @@ BOARD-HARNESS fixed and tested four harness defects and found a fifth. Its board
   3. the `--health-only` gate.
 
   Then release the other agents for board work.
+
+## Step 4: TYPED-VALUES merged; CANDELA-KERNEL-CODEGEN launched
+
+TYPED-VALUES delivered all seven language features on both targets with every host gate green and integer images byte-identical. Only its device check is outstanding, waiting on the board. I merged it and launched wave 2.
+
+### What I did
+
+- **Merged `worktree-agent-a78b28ed420b7fd04`** (`83dadd8` … `976fca5`). Clean merge; bundles current; `make test` exit 0; gates pass with both policies (ray `430f0d501659`, Chess 6,981 words, 25/25).
+- **Decisions the ticket made** (its design's Refinements):
+  - `value record Vec3 {…}`, constructed `Vec3(a, b, c)` and scalar-replaced by the front end; no pass sees a value record.
+  - Record results through Wasm multi-value, and on RV32 in a0–a7/fa0–fa7, then the caller's stack-argument area.
+  - `continue` through a block around the body.
+  - `?:` as `if (result T)`.
+  - `u32` as an i32 with unsigned operations.
+  - `new Float32Array(N)` local arrays, with counted-loop counters unchecked (proved in the front end).
+- **Effects it measured:**
+  - A Vec3 loop: 3,020 instructions against 5,124 for the memory-record workaround.
+  - Boot apps compile 1–7 % slower on host QuickJS. Chess is estimated at about 65 % of its deadline on the P4; the device check will settle it.
+- **Launched CANDELA-KERNEL-CODEGEN** (Opus, `xhigh`). Host steps first: regenerate, keep the three Candela checks, profile, then compiler work. The board study waits for the power cycle.
+
+### What warrants a second pair of eyes
+
+- **The TYPED-VALUES device check is now on the coordinator.** The next playable install, after the power cycle, must confirm every boot compile within 75 % of its deadline, Chess above all.
+- **A pre-existing bug the ticket found:** Wasm inspection crashes on `0xfc`-prefixed operations, so `i32(f32)` cannot be inspected through Wasm. It is a task.
+
+## Step 5: COMPILER-DEVICE-COST's host work done; merge held for the board study
+
+COMPILER-DEVICE-COST finished everything that can be done off the board and stopped at the board pause. I did not merge it. Its changes are safe functionally, but two of them (debug stripping and arena reuse) exist to change device memory and time, and neither has been measured on the P4.
+
+### What the ticket delivered (host)
+
+- **`TYPEDCOMPILE` instrumentation** per compile: per-source load and run time, heap, teardown, and PSRAM-heap calls.
+- **`JS_STRIP_DEBUG`** in every compile runtime. Compiler bytecode went from 1,065 KB to 191 KB (to 263 KB with `JS_STRIP_SOURCE` only). The compile peak dropped 324 KB for Agenda and 438 KB for Chess with a device-like allocator. Compile-error messages are identical (33 cases); stack traces lose file:line.
+- **A deviation from the design.** Moving `split` alone changed nothing: Files compiles under `interactive`, and `default` needs `version` and `hoist`. Instead the kernel-only passes became a third group (`typed-rv32-kernel.js`).
+- **One bundler** (`compiler/typed/bundle.mjs`), with every bundle byte-identical.
+- **Arena reuse,** outside the ticket: compiles keep up to 64 freed 4 KB arenas. On the host, Chess's heap allocations fell from 4,149 to 1,955.
+- **The pass-group slowdown,** partly explained. The compile runs 0.4–1.1 % more instructions in the lazy layout, and the arena churn changes with which bundles are loaded. That accounts for about 20 of Chess's 96 ms.
+
+### What's left (board)
+
+1. An in-image session of about 18 min.
+2. A paired boot study, 4 arms × 3 blocks.
+3. The final image gate.
+
+All of it is scripted.
+
+### What warrants a second pair of eyes
+
+- **The board runs the ticket's bench image `fa144453`, not playable.** After the power cycle the first step must be `make restore-playable` from main, before anything else judges health.

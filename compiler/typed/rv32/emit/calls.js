@@ -1,11 +1,15 @@
 // FunctionCode's calls and the callee-saved registers its prologue saves.
 import {A0, FA0, FT10, T5, T6, OPERAND_STACKS, RA, calleeRegisters, calleeResults, isSavedRegister, stackWords,
     typeClass} from "../encoding/registers.js";
-import {CALL, CELLS} from "../encoding/tape.js";
+import {CALL, CELLS, LOCAL_SET} from "../encoding/tape.js";
 
 export class CallMethods {
     call(index) {
         const callee = this.functions[index], count = callee.params.length;
+        // A pending read of a call-free home (operandLocations.callFree) moves to the operand stack first: the argument
+        // moves and the call write those registers.
+        const unsaved = this.locations?.callFree;
+        if (unsaved) for (let d = 0; d < this.depth; d++) if (unsaved.has(this.direct[d])) this.materializeAt(d);
         // ilp32f: integer arguments in a0-a7, f32 in fa0-fa7, each popped from its class's operand stack; an f32
         // beyond fa7 in the next integer register; the rest in the stack words at sp + 4k (outgoingWords).
         const incoming = calleeRegisters(callee);
@@ -35,7 +39,23 @@ export class CallMethods {
         // A record result's leaves, in order, from their registers and the stack words at sp + 4k.
         const results = calleeResults(callee);
         if (!results) return this.push(callee.result === "f32" ? FA0 : A0);
-        for (let i = 0; i < results.length; i++) {
+        // The local.set operations that follow the call store its top leaves (the last first): under the kernel
+        // policy (direct reads) each such leaf goes from its register or stack word to the local, not through the
+        // operand stack (PICOCALC-CANDELA-KERNEL-CODEGEN). A leaf whose local's home is the register of a leaf
+        // still to be read, or whose local.set the plan treats specially, ends the run.
+        const plan = this.locations, tape = this.program.code, n = results.length;
+        let fused = 0;
+        if (plan?.direct && this.floating) {
+            const pending = new Set(results.filter(reg => reg >= 0));
+            for (; fused < n; fused++) {
+                const at = this.at + 2 * fused, local = tape[at + 1], reg = results[n - 1 - fused];
+                if (tape[at] !== LOCAL_SET || plan.forward.has(at) || plan.skips?.has(at) || plan.pointerWrites?.has(local)) break;
+                pending.delete(reg);
+                const home = plan.homes.get(local);
+                if (home !== undefined && pending.has(home)) break;
+            }
+        }
+        for (let i = 0; i < n - fused; i++) {
             const reg = results[i];
             if (reg >= 0) this.push(reg);
             else {
@@ -43,6 +63,18 @@ export class CallMethods {
                 this.load(scratch, 4 * (-1 - reg));
                 this.push(scratch);
             }
+        }
+        for (let k = 0; k < fused; k++) {
+            const i = n - 1 - k, reg = results[i], local = tape[this.at + 1];
+            let value = reg;
+            if (reg < 0) {
+                const home = plan.homes.get(local);
+                value = home ?? (typeClass(callee.results[i]) ? FT10 : T5);
+                if (home !== undefined) this.materialize(home);
+                this.load(value, 4 * (-1 - reg));
+            }
+            if (value !== plan.homes.get(local)) this.writeLocal(value, local);
+            this.at += 2;
         }
     }
 

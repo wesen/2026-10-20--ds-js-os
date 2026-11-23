@@ -1,18 +1,15 @@
-// lower.mjs: one WGSL function lowered to one Typed function, scalarized (PICOCALC-CANDELA-TYPED).
+// lower.mjs: one WGSL function lowered to one Typed function (PICOCALC-CANDELA-TYPED, PICOCALC-CANDELA-KERNEL-CODEGEN).
 //
-// Typed has f32, i32 and bool scalars, records reached through references, buffers and no vectors, so:
-//   - a vector is its components: a vec3f local `p` is the three f32 locals p__x, p__y, p__z, a vector parameter three
-//     parameters, a vector result the first component as the result and the others in the kernel record's r1..r3
-//     (read by the caller right after the call);
-//   - a struct is a record; each struct local or temporary of a function owns one record in the function's static
-//     frame (WGSL has no recursion, so one frame per function is enough), a struct parameter is the caller's record
-//     (WGSL parameters are immutable), and a struct result is written into a record the caller passes (q_ret);
-//   - parameters beyond ilp32f's eight per register class go through the callee's frame;
-//   - `continue`, which Typed lacks, is folded into the following statements or becomes a one-shot inner loop;
+// The lowering computes with scalars and aggregates (values.mjs). In the Typed it writes:
+//   - an aggregate local (a WGSL vector or struct) is a local of its value record (V3f, Hit, ...), read leaf by leaf
+//     (`p.x`, `h.P__x`), written whole (`h = f(...)`, `p = V3f(...)`) or by leaf;
+//   - an aggregate parameter is the leaves the function reads (signatures.mjs), each a scalar parameter (`p__x`);
+//   - an aggregate result is a record result: `return V3f(...)`, and the caller binds the call to a local of the record;
+//   - a local array is a Typed local array (`new Int32Array(48)`), the module's tables are buffers of the kernel record;
 //   - the math built-ins are those of the C++ kernel's CPU arm (cdl_math.h with CDL_FAST_FLOOR, CDL_FAST_TRIG,
 //     CDL_FAST_EXP), in Typed helpers, or compiler/typed/lib/math.typed where libm is called.
 // Evaluation order is WGSL's: operands left to right; every call with an effect on module state, every read of a
-// module variable and every call that returns a vector or a struct is bound to a local at the point it is evaluated.
+// module variable and every call that returns an aggregate is bound to a local at the point it is evaluated.
 import { VECTORS, COMPONENTS, isVec, isScalar, vecOf, RESERVED, flit, ilit, isAtom, sc, TYPED, DEFAULT, LowerError } from './values.mjs';
 import { CallMethods } from './lower-calls.mjs';
 import { StatementMethods } from './lower-statements.mjs';
@@ -24,13 +21,11 @@ export class FunctionLowerer {
   // prog: the Program (program.mjs); fn: { name, ast, module, sig }
   constructor(prog, fn) {
     this.prog = prog; this.fn = fn; this.ast = fn.ast; this.sig = fn.sig;
-    this.used = new Set(['q_k', 'q_fr', 'q_ret']);
+    this.used = new Set(['q_k']);
     this.scopes = [new Map()];
     this.out = [[]];
     this.prologue = new Map();     // local -> line, in first-use order
-    this.frame = [];               // [field, type] of this function's frame record
-    this.frameNames = new Set();
-    this.loops = [];               // { oneShot, brk }
+    this.loops = 0;
     this.n = 0;
   }
   fail(msg, node) { throw new LowerError(`${this.fn.name}${node && node.at ? ' (' + node.at + ')' : ''}: ${msg}`); }
@@ -41,7 +36,7 @@ export class FunctionLowerer {
   block(lines) { for (const l of lines) this.emit('    ' + l); }
   fresh(base) {
     base = base.replace(/\W/g, '_');
-    if (RESERVED.has(base)) base += '_';
+    if (RESERVED.has(base) || this.prog.structs.has(base)) base += '_';
     let name = base, k = 1;
     while (this.used.has(name) || RESERVED.has(name)) name = `${base}_${k++}`;
     this.used.add(name);
@@ -49,31 +44,10 @@ export class FunctionLowerer {
   }
   temp() { return this.fresh('q_t' + this.n++); }
   needK(node) { if (!this.sig.needsK) this.fail('internal: needs the kernel record but its signature has none', node); }
-  framePtr(node) {
-    this.needK(node);
-    if (!this.prologue.has('q_fr')) this.prologue.set('q_fr', `const q_fr = q_k.f_${this.fn.name};`);
-    return 'q_fr';
-  }
-  frameField(base, type, kind = 'local') {
-    let name = base.replace(/\W/g, '_'), k = 1;
-    if (RESERVED.has(name)) name += '_';
-    while (this.frameNames.has(name)) name = `${base}_${k++}`;
-    this.frameNames.add(name);
-    this.frame.push([name, type, kind]);
-    return name;
-  }
   buffer(field) {        // a buffer of the kernel record, bound once in the prologue
     this.needK();
     const local = 'q_' + field;
     if (!this.prologue.has(local)) { this.prologue.set(local, `const ${local} = q_k.${field};`); this.used.add(local); }
-    return local;
-  }
-  // a fresh struct record of this function's frame, bound to a local
-  slot(struct, base) {
-    const fr = this.framePtr();
-    const field = this.frameField(base, struct);
-    const local = this.fresh(base);
-    this.emit(`const ${local} = ${fr}.${field};`);
     return local;
   }
 
@@ -88,21 +62,29 @@ export class FunctionLowerer {
   scoped(f) { this.scopes.push(new Map()); try { return f(); } finally { this.scopes.pop(); } }
 
   // ---- values ----
+  isAgg(t) { return this.prog.isAgg(t); }
+  // an aggregate local's leaves, read from its value record local
+  aggOf(t, name) { return { t, c: this.prog.leaves(t).map(([f, e]) => sc(e, `${name}.${f}`)) }; }
+  // the Typed constructor text of an aggregate value
+  ctor(v, node) {
+    const lv = this.prog.leaves(v.t);
+    return `${this.prog.rec(v.t)}(${v.c.map((x, i) => this.coerce(x, lv[i][1], node).e).join(', ')})`;
+  }
   coerce(v, t, node) {
+    if (!v) this.fail('internal: a leaf the signature does not pass', node);
     if (v.t === t) return v;
     if (v.t === 'aint') {
       if (t === 'f32') return sc('f32', flit(v.v));
       if (t === 'i32') return sc('i32', ilit(v.v));
       if (t === 'u32') { if (v.v < 0) this.fail('negative u32 literal', node); return sc('u32', ilit(v.v)); }
     }
-    if (isVec(t) && isScalar(v.t)) this.fail(`a scalar where ${t} is expected`, node);
+    if (this.isAgg(t) && isScalar(v.t)) this.fail(`a scalar where ${t} is expected`, node);
     this.fail(`expected ${t}, got ${v.t}`, node);
   }
   concrete(v) { return v.t === 'aint' ? this.coerce(v, 'i32') : v; }
   atom(v) {
     if (v.t === 'aint') return v;
-    if (isVec(v.t)) return { t: v.t, c: v.c.map(c => this.atom(c)) };
-    if (v.ref !== undefined) return v;
+    if (v.c) return { t: v.t, c: v.c.map(c => c && this.atom(c)) };
     if (isAtom(v.e)) return v;
     const name = this.temp();
     this.emit(`const ${name}: ${TYPED[v.t]} = ${v.e};`);
@@ -110,7 +92,7 @@ export class FunctionLowerer {
   }
   bindTemp(v) {           // always a fresh local (for values read after a later write)
     if (v.t === 'aint') return v;
-    if (isVec(v.t)) return { t: v.t, c: v.c.map(c => this.bindTemp(c)) };
+    if (v.c) return { t: v.t, c: v.c.map(c => this.bindTemp(c)) };
     const name = this.temp();
     this.emit(`const ${name}: ${TYPED[v.t]} = ${v.e};`);
     return { ...v, e: name };
@@ -138,8 +120,14 @@ export class FunctionLowerer {
       case 'call': return this.call(node);
       case 'bitcast': {
         const a = this.concrete(this.ex(node.a));
-        if (node.to === 'u32' || node.to === 'i32') { if (a.t !== 'f32') this.fail('bitcast to an integer needs an f32', node); return sc(node.to, `Math.bitsOf(${a.e})`); }
-        if (node.to === 'f32') { if (a.t !== 'u32' && a.t !== 'i32') this.fail('bitcast to f32 needs an integer', node); return sc('f32', `Math.fromBits(${a.e})`); }
+        if (node.to === 'u32' || node.to === 'i32') {
+          if (a.t !== 'f32') this.fail('bitcast to an integer needs an f32', node);
+          return sc(node.to, node.to === 'u32' ? `u32(Math.bitsOf(${a.e}))` : `Math.bitsOf(${a.e})`);
+        }
+        if (node.to === 'f32') {
+          if (a.t !== 'u32' && a.t !== 'i32') this.fail('bitcast to f32 needs an integer', node);
+          return sc('f32', `Math.fromBits(${a.t === 'u32' ? `i32(${a.e})` : a.e})`);
+        }
         this.fail('bitcast to ' + node.to, node);
       }
     }
@@ -148,8 +136,7 @@ export class FunctionLowerer {
   read(b, node) {
     switch (b.k) {
       case 'scalar': return sc(b.t, b.name);
-      case 'vec': return { t: b.t, c: b.comps.map(c => sc(VECTORS[b.t][0], c)) };
-      case 'struct': return { t: b.t, ref: b.ref, binding: b };
+      case 'agg': return b.leafNames ? { t: b.t, c: b.leafNames.map((n, i) => n && sc(this.prog.leaves(b.t)[i][1], n)) } : this.aggOf(b.t, b.name);
       case 'const': return b.value;
       case 'spectral': return b.value !== undefined ? sc('bool', String(b.value)) : (this.needK(node), sc('bool', 'q_k.' + (b.field || 'spectral')));
       case 'global': {
@@ -167,15 +154,14 @@ export class FunctionLowerer {
       const ix = [...name].map(ch => { const i = COMPONENTS.indexOf(ch); if (i < 0 || i >= n) this.fail('swizzle .' + name, node); return i; });
       if (ix.length === 1) return v.c[ix[0]];
       const dup = new Set(ix).size !== ix.length;
-      const c = dup ? v.c.map(x => this.atom(x)) : v.c;
+      const c = dup ? v.c.map(x => x && this.atom(x)) : v.c;
       return { t: vecOf(elem, ix.length), c: ix.map(i => c[i]) };
     }
-    if (v.ref !== undefined) {
-      const s = this.prog.structs.get(v.t);
-      const m = s.members.find(m => m.name === name);
+    if (this.prog.structs.has(v.t)) {
+      const m = this.prog.structs.get(v.t).members.find(m => m.name === name);
       if (!m) this.fail(`${v.t} has no member ${name}`, node);
-      if (isVec(m.type)) return { t: m.type, c: m.fields.map(f => sc(VECTORS[m.type][0], `${v.ref}.${f}`)) };
-      return sc(m.type, `${v.ref}.${m.fields[0]}`);
+      if (isVec(m.type)) return { t: m.type, c: v.c.slice(m.off, m.off + m.n) };
+      return v.c[m.off];
     }
     this.fail(`member .${name} of ${v.t}`, node);
   }
@@ -183,18 +169,17 @@ export class FunctionLowerer {
     if (node.obj.k !== 'id') this.fail('indexing a computed value', node);
     const b = this.lookup(node.obj.name, node);
     if (b.k !== 'array') this.fail('indexing a non-array', node);
-    const i = this.coerce(this.concrete(this.ex(node.idx)), 'i32', node);
-    const buf = b.buf ?? this.buffer(b.field);
-    const load = `${buf}.getF32(${i.e})`;
-    return b.elem === 'f32' ? sc('f32', load) : sc(b.elem, `Math.bitsOf(${load})`);
+    const i = this.concrete(this.ex(node.idx));
+    if (i.t !== 'i32' && i.t !== 'u32') this.fail('index of type ' + i.t, node);
+    if (b.name) return sc(b.elem, `${b.name}[${i.e}]`);
+    return sc('f32', `${this.buffer(b.field)}.getF32(${i.e})`);
   }
   unary(node) {
     const a = this.ex(node.a);
     if (node.op === '-') {
       if (a.t === 'aint') return { t: 'aint', v: -a.v };
       if (isVec(a.t)) return { t: a.t, c: a.c.map(c => sc(c.t, `(-${c.e})`)) };
-      if (a.t === 'bool') this.fail('negating a bool', node);
-      if (a.t === 'f32' && /^[\d.]+(e-?\d+)?$/.test(a.e)) return sc('f32', `(-${a.e})`);
+      if (a.t === 'bool' || a.t === 'u32') this.fail('negating a ' + a.t, node);
       return sc(a.t, `(-${a.e})`);
     }
     if (node.op === '!') { if (a.t !== 'bool') this.fail('! on ' + a.t, node); return sc('bool', `(!${a.e})`); }
@@ -209,9 +194,7 @@ export class FunctionLowerer {
       a = this.concrete(a); b = this.concrete(b);
       if (b.t !== 'u32' && b.t !== 'i32') this.fail('shift count ' + b.t, node);
       if (a.t !== 'i32' && a.t !== 'u32') this.fail('shift of ' + a.t, node);
-      const r = sc(a.t, `(${a.e} ${op === '<<' ? '<<' : (a.t === 'u32' ? '>>>' : '>>')} ${b.e})`);
-      if (a.t === 'u32' && op === '>>' && /^\d+$/.test(b.e) && +b.e >= 1) r.small = true;
-      return r;
+      return sc(a.t, `(${a.e} ${op === '<<' ? '<<' : (a.t === 'u32' ? '>>>' : '>>')} ${b.e})`);
     }
     if (isVec(a.t) || isVec(b.t)) {
       const t = isVec(a.t) ? a.t : b.t, [elem, n] = VECTORS[t];
@@ -230,14 +213,10 @@ export class FunctionLowerer {
   scalarOp(op, a, b, node) {
     if (a.t !== b.t) this.fail(`${a.t} ${op} ${b.t}`, node);
     const t = a.t;
-    if (op in CMP) {
-      if (t === 'u32' && op !== '==' && op !== '!=') this.fail('unsigned comparison', node);
-      return sc('bool', `(${a.e} ${CMP[op]} ${b.e})`);
-    }
+    if (op in CMP) return sc('bool', `(${a.e} ${CMP[op]} ${b.e})`);
     if (t === 'bool') this.fail(`operator ${op} on bool`, node);
     if (['&', '|', '^'].includes(op)) { if (t === 'f32') this.fail(`${op} on f32`, node); return sc(t, `(${a.e} ${op} ${b.e})`); }
     if (op === '%' && t === 'f32') this.fail('% on f32', node);
-    if ((op === '/' || op === '%') && t === 'u32') this.fail('unsigned division', node);
     if (!['+', '-', '*', '/', '%'].includes(op)) this.fail('operator ' + op, node);
     return sc(t, `(${a.e} ${op} ${b.e})`);
   }
@@ -263,26 +242,24 @@ export class FunctionLowerer {
       let f = this.ex(nf), t = this.ex(nt);
       const c = this.atom(this.coerce(this.ex(nc), 'bool', nc));
       [f, t] = this.unifyPair(f, t, node);
-      f = this.atom(f); t = this.atom(t);
-      return this.choose(c, () => t, () => f, f.t, node);
+      return this.choose(c, this.atom(t), this.atom(f), node);
     }
     const c = this.atom(this.coerce(this.ex(nc), 'bool', nc));
     const ct = this.capture(() => this.ex(nt)), cf = this.capture(() => this.ex(nf));
-    let [vf, vt] = this.unifyPair(cf.v, ct.v, node);
+    const [vf, vt] = this.unifyPair(cf.v, ct.v, node);
     const type = vf.t;
-    const simple = v => isVec(v.t) ? v.c.every(x => isAtom(x.e)) : (v.t === 'aint' || isAtom(v.e));
-    if (!ct.lines.length && !cf.lines.length && simple(vf) && simple(vt)) return this.choose(c, () => vt, () => vf, type, node);
+    const simple = v => v.c ? v.c.every(x => isAtom(x.e)) : (v.t === 'aint' || isAtom(v.e));
+    if (!ct.lines.length && !cf.lines.length && simple(vf) && simple(vt)) return this.choose(c, vt, vf, node);
     // lazy: each argument computed in its branch
-    const names = isVec(type) ? Array.from({ length: VECTORS[type][1] }, () => this.temp()) : [this.temp()];
-    const elem = isVec(type) ? VECTORS[type][0] : type;
-    for (const n of names) this.emit(`let ${n}: ${TYPED[elem]} = ${DEFAULT[elem]};`);
+    const elems = this.isAgg(type) ? this.prog.leaves(type).map(l => l[1]) : [type];
+    const names = elems.map(() => this.temp());
+    names.forEach((n, i) => this.emit(`let ${n}: ${TYPED[elems[i]]} = ${DEFAULT[elems[i]]};`));
     const assign = (lines, v) => {
       this.block(lines);
-      const cs = isVec(type) ? v.c : [v];
-      cs.forEach((x, i) => this.emit(`    ${names[i]} = ${this.coerce(x, elem, node).e};`));
+      (v.c ?? [v]).forEach((x, i) => this.emit(`    ${names[i]} = ${this.coerce(x, elems[i], node).e};`));
     };
     this.emit(`if (${c.e}) {`); assign(ct.lines, vt); this.emit('} else {'); assign(cf.lines, vf); this.emit('}');
-    return isVec(type) ? { t: type, c: names.map(n => sc(elem, n)) } : sc(type, names[0]);
+    return this.isAgg(type) ? { t: type, c: names.map((n, i) => sc(elems[i], n)) } : sc(type === 'aint' ? 'i32' : type, names[0]);
   }
   unifyPair(f, t, node) {
     if (f.t === 'aint' && t.t === 'aint') return [this.coerce(f, 'i32'), this.coerce(t, 'i32')];
@@ -291,17 +268,10 @@ export class FunctionLowerer {
     if (f.t !== t.t) this.fail(`select of ${f.t} and ${t.t}`, node);
     return [f, t];
   }
-  choose(c, getT, getF, type, node) {      // both values computed and atomic: pick by c
-    const t = getT(), f = getF();
-    const one = (tv, fv) => {
-      const name = this.temp();
-      this.emit(`let ${name}: ${TYPED[fv.t]} = ${fv.e};`);
-      this.emit(`if (${c.e}) { ${name} = ${tv.e}; }`);
-      return sc(fv.t, name);
-    };
-    if (isVec(type)) return { t: type, c: f.c.map((fc, i) => one(t.c[i], fc)) };
-    if (type === 'aint') return one(this.coerce(t, 'i32'), this.coerce(f, 'i32'));
-    return one(t, f);
+  // both values computed and atomic: the conditional expression, per leaf
+  choose(c, t, f, node) {
+    if (f.c) return { t: f.t, c: f.c.map((fc, i) => sc(fc.t, `(${c.e} ? ${t.c[i].e} : ${fc.e})`)) };
+    return sc(f.t, `(${c.e} ? ${t.e} : ${f.e})`);
   }
 
   call(node) {
@@ -333,17 +303,11 @@ export class FunctionLowerer {
   convert(to, A, node) {
     if (A.length !== 1) this.fail(to + '() takes one argument', node);
     const v = this.ex(A[0]);
-    if (isVec(v.t)) this.fail(`${to}(${v.t})`, node);
+    if (v.c) this.fail(`${to}(${v.t})`, node);
     if (v.t === 'aint') return this.coerce(v, to, node);
     if (v.t === to) return v;
-    if (to === 'f32') {
-      if (v.t === 'i32') return sc('f32', `f32(${v.e})`);
-      if (v.t === 'u32' && v.small) return sc('f32', `f32(${v.e})`);
-      this.fail(`f32(${v.t}) (only u32 values below 2^31 convert)`, node);
-    }
-    if (to === 'i32') { if (v.t === 'f32') return sc('i32', `i32(${v.e})`); if (v.t === 'u32') return sc('i32', v.e); }
-    if (to === 'u32') { if (v.t === 'f32') return sc('u32', `i32(${v.e})`); if (v.t === 'i32') return sc('u32', v.e); }
-    this.fail(`${to}(${v.t})`, node);
+    if (v.t === 'bool') this.fail(`${to}(bool)`, node);
+    return sc(to, `${to}(${v.e})`);
   }
   accessor(n, A, node) {
     if (A.length !== 1) this.fail(n + '() takes one argument', node);

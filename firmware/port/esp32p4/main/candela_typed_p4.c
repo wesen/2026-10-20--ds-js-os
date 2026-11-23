@@ -6,9 +6,9 @@
 // RGB and spectral scenes alike; the core pairs a scene with an instance of its mode). The C++ kernel (cg, cgs) stays
 // in the firmware as the benchmark arm; candela_gallery_p4.c chooses between them.
 //
-// Memory: the program's arena (its kernel record K at word 0, a static frame per function, struct records, the GGX
-// and sky tables), laid out from its cdlLayout cells; a line buffer; the scene's five row buffers. Typed buffers carry
-// their capacity in UTF-16 units in their first word.
+// Memory: the program's arena (its kernel record K at word 0, the GGX and sky tables; vectors and structs are value
+// records on the stack since PICOCALC-CANDELA-KERNEL-CODEGEN), laid out from its cdlLayout cells; a line buffer; the
+// scene's five row buffers. Typed buffers carry their capacity in UTF-16 units in their first word.
 #include "candela_gallery.h"
 #include "esp_elf.h"
 #include "esp_heap_caps.h"
