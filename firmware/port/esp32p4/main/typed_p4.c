@@ -9,18 +9,24 @@
 #include "typed_apps.h"
 #include "typed_lex_index.h"
 #include "quickjs.h"
+#include "esp_cpu.h"
+#include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
 typedef struct {
   size_t live, peak, limit;
   vtime_t deadline;
+  // The calls this compile made to the port's heap (QuickJS's arenas and large blocks) and the CPU cycles inside them.
+  uint32_t mallocs, frees, reallocs;
+  uint64_t heap_cycles;
 } compile_heap;
 
 // Where one compile's time went, printed after it as one TYPEDCOMPILE line (outside the timed compile): each compiler
 // source it evaluated (from the bytecode cache or parsed, with the time to load the bytecode and to run the source's
 // top level), the call to the linker's entry (front end, back end and link; a pass group the back end loads is an
-// evaluation inside it) and the runtime's teardown (PICOCALC-COMPILER-DEVICE-COST).
+// evaluation inside it), the runtime's teardown, and the calls to the port's heap with the time spent in them
+// (PICOCALC-COMPILER-DEVICE-COST).
 typedef struct {
   char path[32];
   bool parsed, in_call;
@@ -44,26 +50,36 @@ static void account(compile_heap *heap, size_t old, size_t current) {
 static void *compile_malloc(JSMallocState *state, size_t size) {
   compile_heap *heap = state->opaque;
   if (heap->live >= heap->limit || size > heap->limit - heap->live) return NULL;
+  uint32_t begun = esp_cpu_get_cycle_count();
   void *ptr = port_heap_malloc(size);
   if (ptr) account(heap, 0, port_heap_usable(ptr));
+  heap->mallocs++;
+  heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
   return ptr;
 }
 
 static void compile_free(JSMallocState *state, void *ptr) {
   if (!ptr) return;
-  account(state->opaque, port_heap_usable(ptr), 0);
+  compile_heap *heap = state->opaque;
+  uint32_t begun = esp_cpu_get_cycle_count();
+  account(heap, port_heap_usable(ptr), 0);
   port_heap_free(ptr);
+  heap->frees++;
+  heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
 }
 
 static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
   if (!ptr) return compile_malloc(state, size);
   if (!size) { compile_free(state, ptr); return NULL; }
   compile_heap *heap = state->opaque;
+  uint32_t begun = esp_cpu_get_cycle_count();
   size_t old = port_heap_usable(ptr);
   size_t retained = heap->live - old;
   if (retained >= heap->limit || size > heap->limit - retained) return NULL;
   void *next = port_heap_realloc(ptr, size);
   if (next) account(heap, old, port_heap_usable(next));
+  heap->reallocs++;
+  heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
   return next;
 }
 
@@ -301,8 +317,11 @@ done:
   printf("%s compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu\n",
          app, source_kind, module ? "ok" : "failed",
          (long long)(port_clock() - started), heap->peak, module ? *length : 0);
-  printf("TYPEDCOMPILE {\"app\":\"%s\",\"beforeUs\":%lld,\"setupUs\":%lld,\"callUs\":%lld,\"freeUs\":%lld,\"evals\":[",
-         app, (long long)state.before_us, (long long)state.setup_us, (long long)state.call_us, (long long)state.free_us);
+  printf("TYPEDCOMPILE {\"app\":\"%s\",\"beforeUs\":%lld,\"setupUs\":%lld,\"callUs\":%lld,\"freeUs\":%lld,"
+         "\"heap\":{\"mallocs\":%lu,\"frees\":%lu,\"reallocs\":%lu,\"us\":%llu},\"evals\":[",
+         app, (long long)state.before_us, (long long)state.setup_us, (long long)state.call_us, (long long)state.free_us,
+         (unsigned long)heap->mallocs, (unsigned long)heap->frees, (unsigned long)heap->reallocs,
+         (unsigned long long)(heap->heap_cycles / CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ));
   for (int i = 0; i < state.evals; i++) {
     const compile_eval *e = &state.eval[i];
     printf("%s{\"path\":\"%s\",\"bytecode\":\"%s\",\"inCall\":%s,\"loadUs\":%lld,\"runUs\":%lld,\"liveBytes\":%zu}",
