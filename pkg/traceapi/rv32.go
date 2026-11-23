@@ -101,7 +101,7 @@ func (j *jsImports) Resolve(k int) (tracerv32.Call, string, error) {
 	}, "", nil
 }
 
-// runRV32(image, at, x, bytes, counts, offsets, limit, limitText, lookup, invoke)
+// runRV32(image, at, x, bytes, counts, offsets, limit, limitText, lookup, invoke, f, fcsr, checks)
 // runs the reference's loop on the wrapper's arrays and reports how it ended.
 func runRV32(vm *goja.Runtime, poll func() error, call goja.FunctionCall) goja.Value {
 	image := exportBytes(vm, call.Argument(0), "program.image")
@@ -126,12 +126,16 @@ func runRV32(vm *goja.Runtime, poll func() error, call goja.FunctionCall) goja.V
 	if !ok1 || !ok2 {
 		typeError(vm, "import lookup and invoke must be functions")
 	}
+	fregs, ok := call.Argument(10).Export().([]uint32)
+	if !ok || len(fregs) != 32 {
+		typeError(vm, "f registers must be a Uint32Array(32)")
+	}
 	view := (*[32]int32)(regs)
 	m := tracerv32.Machine{
 		Image: image, Memory: memory, Counts: counts, X: view, Relocations: relocations,
 		Imports: &jsImports{vm: vm, lookup: lookup, invoke: invoke, regs: call.Argument(2), view: view},
 		Limit:   tracerv32.LimitFromFloat(call.Argument(6).ToFloat()), LimitText: call.Argument(7).String(),
-		Poll: poll,
+		Poll: poll, F: (*[32]uint32)(fregs), Fcsr: uint32(call.Argument(11).ToInteger()), NoChecks: !call.Argument(12).ToBoolean(),
 	}
 	out, err := m.Run(at)
 	o := vm.NewObject()
@@ -149,6 +153,7 @@ func runRV32(vm *goja.Runtime, poll func() error, call goja.FunctionCall) goja.V
 		panic(err)
 	default:
 		_ = o.Set("trap", out.Trap)
+		_ = o.Set("fcsr", m.Fcsr)
 		_ = o.Set("at", out.At)
 		_ = o.Set("steps", out.Steps)
 	}

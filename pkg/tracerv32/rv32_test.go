@@ -5,6 +5,7 @@ import (
 	"errors"
 	"math"
 	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -104,24 +105,55 @@ func TestImportFaultOrder(t *testing.T) {
 
 func TestDecodeFaultsOnlyWhenExecuted(t *testing.T) {
 	cases := map[string]uint32{
-		"unsupported RV32 opcode 0x17 at 0x0":  0x00000517, // auipc a0, 0
-		"unsupported RV32 opcode 0x73 at 0x0":  0x00000073, // ecall
-		"unsupported load at 0x0":              iType(0, a0, 3, a0, 0x03),
-		"unsupported store at 0x0":             sType(0, a0, a0, 3),
-		"unsupported M instruction at 0x0":     rType(1, a0, a0, 2, a0, 0x33), // mulhsu
-		"unsupported branch at 0x0":            bType(8, a0, a0, 2),
-		"unsupported jal link register at 0x0": jType(8, 5),
-		"unsupported jalr at 0x0":              0x000080e7, // jalr ra, 0(ra)
+		"unsupported system instruction at 0x0":  0x00000073, // ecall
+		"unsupported system instruction at 0x0 ": 0x30002573, // csrr a0, mstatus
+		"unsupported RV32 opcode 0x5b at 0x0":    0x0000005b,
+		"unsupported load at 0x0":                iType(0, a0, 3, a0, 0x03),
+		"unsupported store at 0x0":               sType(0, a0, a0, 3),
+		"unsupported branch at 0x0":              bType(8, a0, a0, 2),
+		"unsupported jalr at 0x0":                iType(0, ra, 1, ra, 0x67),     // funct3 1
+		"unsupported F instruction at 0x0":       rType(0, a1, a0, 5, a0, 0x53), // fadd.s with rm 5
 	}
 	for message, word := range cases {
-		wantFault(t, exec(t, image(word, ret), nil, nil, Machine{}), message)
+		wantFault(t, exec(t, image(word, ret), nil, nil, Machine{}), strings.TrimSpace(message))
 		r := exec(t, image(li(a0, 1), ret, word), nil, nil, Machine{})
 		if r.err != nil || r.x[a0] != 1 {
 			t.Fatalf("%s: unexecuted word faulted: %v", message, r.err)
 		}
 	}
-	for _, f3 := range []uint32{5, 7} { // divu, remu
-		wantFault(t, exec(t, image(rType(1, a0, a0, f3, a0, 0x33)), nil, nil, Machine{}), "unsupported M instruction at 0x0")
+}
+
+// RV32IM beyond what typed-rv32 emits: mulhsu, divu, remu, auipc, jal and jalr with any link register.
+func TestFullIntegerSet(t *testing.T) {
+	min := int32(math.MinInt32)
+	for i, c := range []struct {
+		word         uint32
+		a, b, result int32
+	}{
+		{rType(1, a1, a0, 2, a0, 0x33), -1, -1, -1}, {rType(1, a1, a0, 2, a0, 0x33), min, -1, min},
+		{rType(1, a1, a0, 5, a0, 0x33), -2, 3, 0x55555554}, {rType(1, a1, a0, 5, a0, 0x33), 7, 0, -1},
+		{rType(1, a1, a0, 7, a0, 0x33), -1, 10, 5}, {rType(1, a1, a0, 7, a0, 0x33), 7, 0, 7},
+		{0x00001517, 0, 0, 0x1000}, // auipc a0, 1 at 0
+	} {
+		r := exec(t, image(c.word, ret), nil, []int32{c.a, c.b}, Machine{})
+		if r.err != nil || r.x[a0] != c.result {
+			t.Errorf("case %d: a0=%#x, want %#x; %v", i, uint32(r.x[a0]), uint32(c.result), r.err)
+		}
+	}
+	// jal t0 links t0 without a frame; jalr x0, 0(t0) jumps back without a return check.
+	r := exec(t, image(jType(8, 5), ret, li(a0, 3), iType(0, 5, 0, 0, 0x67)), nil, nil, Machine{})
+	if r.err != nil || r.x[a0] != 3 || r.x[5] != 4 {
+		t.Fatalf("%+v %v a0=%d t0=%d", r.out, r.err, r.x[a0], r.x[5])
+	}
+	// jalr ra, 0(t1) is a checked call; with NoChecks a mismatched ret is a plain jump.
+	r = exec(t, image(addi(sp, sp, -16), sw(ra, sp, 12), li(6, 28), iType(0, 6, 0, ra, 0x67), lw(ra, sp, 12), addi(sp, sp, 16), ret, li(a0, 4), ret), nil, nil, Machine{})
+	if r.err != nil || r.x[a0] != 4 {
+		t.Fatalf("%+v %v a0=%d", r.out, r.err, r.x[a0])
+	}
+	wantFault(t, exec(t, image(li(ra, 8), ret, ret), nil, nil, Machine{}), "return address does not match the call at 0x4")
+	r = exec(t, image(li(ra, 8), ret, li(a0, 6), ebreak), nil, nil, Machine{NoChecks: true})
+	if r.err != nil || !r.out.Trap || r.x[a0] != 6 {
+		t.Fatalf("%+v %v", r.out, r.err)
 	}
 }
 

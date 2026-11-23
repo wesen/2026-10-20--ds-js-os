@@ -1,6 +1,7 @@
 # The repository's entry points (PICOCALC-REPO-LAYOUT). Ticket scripts call these tools; they do not copy them.
 #
-#   make test                            every fast suite: Node, generated files, Go, the host binary's Python tests, cji
+#   make test                            every fast suite: Node, generated files, Go, the host binary's Python tests, cji,
+#                                        the RV32 conformance suite
 #   make test-host [OPTIONS=JSON]        the compiler gates: ray frame, Chess oracle, 24 replays (OPTIONS='{"policy":"kernel"}')
 #   make firmware PROFILE=playable       build a firmware profile (firmware/port/esp32p4/profiles/*.env) into BUILD
 #   make playable                        build the playable profile at HEAD and store its image by digest
@@ -22,7 +23,7 @@ PERIPHERALS ?=
 STUDY       ?=
 STUDY_OUT   ?= /tmp/picocalc-study-$(basename $(notdir $(STUDY)))-$(COMMIT)
 
-test: test-node test-generated test-go test-native test-cji
+test: test-node test-generated test-go test-native test-cji test-rv32
 
 # Node: the firmware's app tests and the Typed compiler's tests (firmware/Makefile test-apps runs tests/compiler too).
 test-node:
@@ -32,6 +33,7 @@ test-node:
 test-generated:
 	node compiler/typed/rv32/build.mjs --check
 	node tools/gen/candela/regenerate.mjs --check
+	node bench/rv32/vectors.mjs --check
 
 test-go:
 	go test ./...
@@ -43,6 +45,11 @@ test-native:
 # cji's included fixtures: native worlds compiled by cji and replayed on rv32emu against their C control.
 test-cji:
 	$(MAKE) -s -C compiler/cji test
+
+# The RV32 conformance suite (bench/reference/rv32, RV32F captured on the ESP32-P4) on the reference interpreter and
+# rv32emu; pkg/tracerv32 runs it in test-go. docs/rv32-executors.md.
+test-rv32:
+	node --test tests/rv32/conformance.test.mjs tests/rv32/rv32emu.test.mjs
 
 test-host:
 	bench/host/gates.sh $(if $(OPTIONS),--options '$(OPTIONS)')
@@ -75,5 +82,5 @@ bench-board:
 candela-sources:
 	node tools/gen/candela/regenerate.mjs
 
-.PHONY: test test-node test-generated test-go test-native test-cji test-host test-replays firmware playable \
+.PHONY: test test-node test-generated test-go test-native test-cji test-rv32 test-host test-replays firmware playable \
         install-playable restore-playable bench-board candela-sources

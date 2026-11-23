@@ -1,5 +1,5 @@
 /* Chapter 29: runtime/aot_main.c for the rv32 test firmware. The program is a module the machine
-   loads (bench/emu/emu.c): it sets fw_cji_main and fw_cji_error_shape to the module's symbols. */
+   loads (bench/emu/elf.c): it sets fw_cji_main and fw_cji_error_shape to the module's symbols. */
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>

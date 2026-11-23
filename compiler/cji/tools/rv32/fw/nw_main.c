@@ -3,7 +3,7 @@
  *   rv32emu fw-nw.elf NAME.so -- NW_SELF=NAME EVENT...
  *   rv32emu fw-nw.elf A.so B.so ... -- world A EVENT... world B EVENT...
  *
- * The machine (bench/emu/emu.c) loads each module as elf_loader would and puts its entry in
+ * The machine (bench/emu, rv32emu) loads each module as elf_loader would and puts its entry in
  * fw_entries. This is the kernel's side of picocalc-os's sdk/nw_elf.h: its table is {abi, call,
  * error}; call is runtime/nw_world.c's mapping of an operation to an nw_* function, and the nw_*
  * functions are tools/nw_fake.c's, which print what they are given. main calls each module's

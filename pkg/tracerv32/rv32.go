@@ -3,10 +3,11 @@
 // reference interpreter bench/host/rv32-interp.js.
 //
 // The reference stays authoritative: this package implements its loop
-// statement by statement, including its subset (RV32IM without mulhsu, divu
-// and remu; jalr only as ret), its calling-convention checks, the order of its
-// checks, its fault messages and its per-PC counts. It deliberately does not
-// follow the RISC-V specification where the reference differs from it.
+// statement by statement, including its instruction set (RV32IMF and the CSR
+// instructions on fflags, frm and fcsr), its calling-convention checks, the
+// order of its checks, its fault messages and its per-PC counts. Both pass the
+// conformance vectors of bench/reference/rv32 (conformance_test.go), whose
+// RV32F expectations were captured on the ESP32-P4; see docs/rv32-executors.md.
 //
 // The setup that precedes the reference's loop (guest memory size, register
 // initialisation, argument conversion) is JavaScript and stays JavaScript: the
@@ -82,6 +83,9 @@ type Machine struct {
 	Limit       int64         // a step with steps > Limit faults (see LimitFromFloat)
 	LimitText   string        // String(limit) as the reference prints it
 	Poll        func() error  // called every PollInterval steps; a non-nil error ends the run with it
+	F           *[32]uint32   // f registers as bit patterns, in and out; nil runs with zeros and discards them
+	Fcsr        uint32        // fcsr in and out (frm << 5 | fflags)
+	NoChecks    bool          // turn the calling-convention checks off (the reference's options.checks = false)
 }
 
 // Outcome is how a run that did not fault ended.
@@ -119,13 +123,43 @@ func (m *Machine) Run(entry int64) (out Outcome, err error) {
 	size := int64(len(mem))
 	counts := m.Counts
 	x := *m.X
-	defer func() { *m.X = x }()
+	var f [32]uint32
+	if m.F != nil {
+		f = *m.F
+	}
+	fcsr := m.Fcsr & 0xff
+	defer func() {
+		*m.X = x
+		if m.F != nil {
+			*m.F = f
+		}
+		m.Fcsr = fcsr
+	}()
+	checks := !m.NoChecks
 	frames := make([]frame, 1, 64)
 	frames[0] = frame{pc: ReturnToHost, saved: savedOf(&x)}
 	at := entry
 	var steps int64
 	fault := func(message string) error {
 		return &Fault{Message: message + " at 0x" + hex32(at), At: at, Steps: steps}
+	}
+	call := func(target int64) error {
+		if x[2]&15 != 0 {
+			return fault("unaligned sp at internal call")
+		}
+		frames = append(frames, frame{pc: target, saved: savedOf(&x)})
+		return nil
+	}
+	// The rounding mode of an F instruction: its rm field, or frm for rm = 7.
+	rounding := func(rm int32) (uint32, error) {
+		mode := uint32(rm) & 7
+		if mode == 7 {
+			mode = fcsr >> 5
+		}
+		if mode > 4 {
+			return 0, fault("unsupported F instruction")
+		}
+		return mode, nil
 	}
 	// One comparison per step covers both the step limit and the next poll:
 	// checkpoint is the first step at which either needs attention.
@@ -237,6 +271,20 @@ func (m *Machine) Run(entry int64) (out Outcome, err error) {
 			x[in.rd&31] = a * b
 		case kMULH:
 			x[in.rd&31] = int32((int64(a) * int64(b)) >> 32)
+		case kMULHSU:
+			x[in.rd&31] = int32((int64(a) * int64(uint32(b))) >> 32)
+		case kDIVU:
+			if b == 0 {
+				x[in.rd&31] = -1
+			} else {
+				x[in.rd&31] = int32(uint32(a) / uint32(b))
+			}
+		case kREMU:
+			if b == 0 {
+				x[in.rd&31] = a
+			} else {
+				x[in.rd&31] = int32(uint32(a) % uint32(b))
+			}
 		case kMULHU:
 			x[in.rd&31] = int32((uint64(uint32(a)) * uint64(uint32(b))) >> 32)
 		case kDIV:
@@ -279,6 +327,8 @@ func (m *Machine) Run(entry int64) (out Outcome, err error) {
 			x[in.rd&31] = a & b
 		case kLUI:
 			x[in.rd&31] = in.imm
+		case kAUIPC:
+			x[in.rd&31] = int32(at) + in.imm
 		case kBEQ:
 			if a == b {
 				next = at + int64(in.imm)
@@ -306,27 +356,60 @@ func (m *Machine) Run(entry int64) (out Outcome, err error) {
 		case kJAL0:
 			next = at + int64(in.imm)
 		case kJAL1:
-			if x[2]&15 != 0 {
-				return out, fault("unaligned sp at internal call")
-			}
-			frames = append(frames, frame{pc: next, saved: savedOf(&x)})
-			x[1] = int32(next)
-			next = at + int64(in.imm)
-		case kRET:
-			next = int64(a)
-			if len(frames) == 0 {
-				return out, fault("return address does not match the call")
-			}
-			f := frames[len(frames)-1]
-			frames = frames[:len(frames)-1]
-			if next != f.pc {
-				return out, fault("return address does not match the call")
-			}
-			for i, r := range CalleeSaved {
-				if x[r] != f.saved[i] {
-					return out, fault("callee-saved x" + strconv.Itoa(r) + " changed across a call")
+			if checks {
+				if err := call(next); err != nil {
+					return out, err
 				}
 			}
+			x[1] = int32(next)
+			next = at + int64(in.imm)
+		case kJAL:
+			x[in.rd&31] = int32(next)
+			next = at + int64(in.imm)
+		case kRET:
+			target := int64(a &^ 1)
+			if checks {
+				if len(frames) == 0 {
+					return out, fault("return address does not match the call")
+				}
+				fr := frames[len(frames)-1]
+				frames = frames[:len(frames)-1]
+				if target != fr.pc {
+					return out, fault("return address does not match the call")
+				}
+				for i, r := range CalleeSaved {
+					if x[r] != fr.saved[i] {
+						return out, fault("callee-saved x" + strconv.Itoa(r) + " changed across a call")
+					}
+				}
+			}
+			next = target
+		case kJALR:
+			target := int64((a + in.imm) &^ 1)
+			if in.rd == 1 && checks {
+				if err := call(next); err != nil {
+					return out, err
+				}
+			}
+			if in.rd != 0 {
+				x[in.rd&31] = int32(next)
+			}
+			next = target
+		case kFENCE:
+		case kCSR:
+			fcsr = csrOp(fcsr, uint32(in.imm), uint32(a), in.rs1, &x[in.rd&31])
+		case kFLW:
+			address := int64(a) + int64(in.imm)
+			if address < 0 || address+4 > size {
+				return out, outside(address, fault)
+			}
+			f[in.rd&31] = binary.LittleEndian.Uint32(mem[address:])
+		case kFSW:
+			address := int64(a) + int64(in.imm)
+			if address < 0 || address+4 > size {
+				return out, outside(address, fault)
+			}
+			binary.LittleEndian.PutUint32(mem[address:], f[in.rs2&31])
 		case kEBREAK:
 			return Outcome{Trap: true, At: at, Steps: steps}, nil
 		case kIMPORT:
@@ -361,8 +444,17 @@ func (m *Machine) Run(entry int64) (out Outcome, err error) {
 				snapshot = bytes.Clone(image)
 				code = decodeImage(snapshot, m.Relocations)
 			}
-		default: // kFault: a word the reference rejects when it executes it
+		case kFault: // a word the reference rejects when it executes it
 			return out, fault(faultMessages[in.imm])
+		default: // RV32F arithmetic, moves, compares and conversions
+			var rm uint32
+			if rounds(in.kind) {
+				var err error
+				if rm, err = rounding(in.imm); err != nil {
+					return out, err
+				}
+			}
+			fcsr |= fpOp(in, rm, &x, &f)
 		}
 		x[0] = 0
 		at = next

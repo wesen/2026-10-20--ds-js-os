@@ -1,5 +1,5 @@
 /* CJI-4, part 2: the firmware's loader for a module in memory, as picocalc-os's native_elf_p4.c loads one with
- * elf_loader's esp_elf_relocate(elf, buf, len): what bench/emu/emu.c's load_shared does for the emulator, done by
+ * elf_loader's esp_elf_relocate(elf, buf, len): what bench/emu/elf.c's load_shared does for the emulator, done by
  * the firmware itself, so that a world compiled on the board (slas writes its module into memory) is loaded the way
  * every native world is. The same rules (design-doc/01-design.md, section 1.1): the header as native_elf_p4.c checks
  * it, the PT_LOAD span into one zeroed block, only R_RISCV_32, R_RISCV_RELATIVE and R_RISCV_JUMP_SLOT at aligned

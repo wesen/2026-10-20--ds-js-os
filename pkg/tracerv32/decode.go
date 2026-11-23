@@ -28,9 +28,12 @@ const (
 	kANDI
 	kMUL
 	kMULH
+	kMULHSU
 	kMULHU
 	kDIV
+	kDIVU
 	kREM
+	kREMU
 	kADD
 	kSUB
 	kSLL
@@ -42,6 +45,7 @@ const (
 	kOR
 	kAND
 	kLUI
+	kAUIPC
 	kBEQ
 	kBNE
 	kBLT
@@ -50,15 +54,46 @@ const (
 	kBGEU
 	kJAL0 // jal x0: a jump
 	kJAL1 // jal x1: an internal call
-	kRET
+	kJAL  // jal linking another register
+	kRET  // jalr x0, 0(x1): a checked return
+	kJALR // any other jalr
+	kFENCE
+	kCSR // imm: csr | funct3 << 12
 	kEBREAK
 	kIMPORT // a relocated call site; imm is the relocation's index
+	// RV32F. For the rounding ones imm holds the rm field; for the fused ones, rm | rs3 << 8.
+	kFLW
+	kFSW
+	kFMADD
+	kFMSUB
+	kFNMSUB
+	kFNMADD
+	kFADD
+	kFSUB
+	kFMUL
+	kFDIV
+	kFSQRT
+	kFSGNJ
+	kFSGNJN
+	kFSGNJX
+	kFMIN
+	kFMAX
+	kFCVTWS
+	kFCVTWUS
+	kFCVTSW
+	kFCVTSWU
+	kFMVXW
+	kFCLASS
+	kFLE
+	kFLT
+	kFEQ
+	kFMVWX
 	kindCount
 )
 
 // inst is one predecoded word. imm is the sign-extended immediate, the
-// branch or jump offset, the lui value, the relocation index or the index of
-// a fault message, depending on kind.
+// branch or jump offset, the lui value, the relocation index, the index of
+// a fault message, a CSR operation or a rounding mode, depending on kind.
 type inst struct {
 	kind         kind
 	rd, rs1, rs2 uint8
@@ -69,10 +104,10 @@ type inst struct {
 const (
 	fLoad = iota
 	fStore
-	fM
 	fBranch
-	fJal
 	fJalr
+	fF
+	fSystem
 	fOpcode // + opcode: "unsupported RV32 opcode 0x…"
 )
 
@@ -80,10 +115,10 @@ var faultMessages = func() []string {
 	m := []string{
 		fLoad:   "unsupported load",
 		fStore:  "unsupported store",
-		fM:      "unsupported M instruction",
 		fBranch: "unsupported branch",
-		fJal:    "unsupported jal link register",
 		fJalr:   "unsupported jalr",
+		fF:      "unsupported F instruction",
+		fSystem: "unsupported system instruction",
 	}
 	for op := 0; op < 128; op++ {
 		m = append(m, "unsupported RV32 opcode 0x"+strconv.FormatInt(int64(op), 16))
@@ -118,6 +153,13 @@ func decode(w uint32) inst {
 	imm := int32(w) >> 20
 	in := inst{rd: rd, rs1: rs1, rs2: rs2, imm: imm}
 	bad := func(message int) inst { return inst{kind: kFault, imm: int32(message)} }
+	pick := func(k kind, ok bool) inst {
+		if !ok {
+			return bad(fF)
+		}
+		in.kind = k
+		return in
+	}
 	switch op {
 	case 0x03:
 		switch f3 {
@@ -171,20 +213,7 @@ func decode(w uint32) inst {
 		}
 	case 0x33:
 		if f7 == 1 {
-			switch f3 {
-			case 0:
-				in.kind = kMUL
-			case 1:
-				in.kind = kMULH
-			case 3:
-				in.kind = kMULHU
-			case 4:
-				in.kind = kDIV
-			case 6:
-				in.kind = kREM
-			default:
-				return bad(fM)
-			}
+			in.kind = [8]kind{kMUL, kMULH, kMULHSU, kMULHU, kDIV, kDIVU, kREM, kREMU}[f3]
 			break
 		}
 		switch f3 {
@@ -215,6 +244,8 @@ func decode(w uint32) inst {
 		}
 	case 0x37:
 		in.kind, in.imm = kLUI, int32(w&0xfffff000)
+	case 0x17:
+		in.kind, in.imm = kAUIPC, int32(w&0xfffff000)
 	case 0x63:
 		in.imm = int32(w)>>31<<12 | int32((w>>7)&1)<<11 | int32((w>>25)&63)<<5 | int32((w>>8)&15)<<1
 		switch f3 {
@@ -241,13 +272,62 @@ func decode(w uint32) inst {
 		case 0:
 			in.kind = kJAL0
 		default:
-			return bad(fJal)
+			in.kind = kJAL
 		}
 	case 0x67:
-		if w != Ret {
+		switch {
+		case f3 != 0:
 			return bad(fJalr)
+		case w == Ret:
+			in.kind = kRET
+		default:
+			in.kind = kJALR
 		}
-		in.kind = kRET
+	case 0x0f:
+		in.kind = kFENCE
+	case 0x73:
+		csr := w >> 20
+		if f3&3 == 0 || csr < 1 || csr > 3 {
+			return bad(fSystem)
+		}
+		in.kind, in.imm = kCSR, int32(csr|f3<<12)
+	case 0x07:
+		return pick(kFLW, f3 == 2)
+	case 0x27:
+		in.imm = int32((f7<<5)|uint32(rd)) << 20 >> 20
+		return pick(kFSW, f3 == 2)
+	case 0x43, 0x47, 0x4b, 0x4f:
+		in.imm = int32(f3 | (w>>27)<<8)
+		return pick([4]kind{kFMADD, kFMSUB, kFNMSUB, kFNMADD}[(op-0x43)/4], f7&3 == 0)
+	case 0x53:
+		in.imm = int32(f3)
+		switch f7 {
+		case 0x00:
+			return pick(kFADD, true)
+		case 0x04:
+			return pick(kFSUB, true)
+		case 0x08:
+			return pick(kFMUL, true)
+		case 0x0c:
+			return pick(kFDIV, true)
+		case 0x2c:
+			return pick(kFSQRT, rs2 == 0)
+		case 0x10:
+			return pick([4]kind{kFSGNJ, kFSGNJN, kFSGNJX, kFault}[f3&3], f3 < 3)
+		case 0x14:
+			return pick([2]kind{kFMIN, kFMAX}[f3&1], f3 < 2)
+		case 0x60:
+			return pick([2]kind{kFCVTWS, kFCVTWUS}[rs2&1], rs2 < 2)
+		case 0x68:
+			return pick([2]kind{kFCVTSW, kFCVTSWU}[rs2&1], rs2 < 2)
+		case 0x70:
+			return pick([2]kind{kFMVXW, kFCLASS}[f3&1], rs2 == 0 && f3 < 2)
+		case 0x50:
+			return pick([4]kind{kFLE, kFLT, kFEQ, kFault}[f3&3], f3 < 3)
+		case 0x78:
+			return pick(kFMVWX, rs2 == 0 && f3 == 0)
+		}
+		return bad(fF)
 	default:
 		return bad(fOpcode + int(op))
 	}

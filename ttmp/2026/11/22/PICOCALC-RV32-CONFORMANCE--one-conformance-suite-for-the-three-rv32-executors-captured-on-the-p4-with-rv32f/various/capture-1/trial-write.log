@@ -1,0 +1,31 @@
+esptool.py v4.10.0
+Serial port /dev/ttyACM0
+Connecting....
+Chip is ESP32-P4 (revision v1.3)
+Features: High-Performance MCU
+Crystal is 40MHz
+MAC: e8:f6:0a:e0:ec:9f
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 921600
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00010000 to 0x000c4fff...
+Compressed 741328 bytes to 176226...
+Writing at 0x00010000... (9 %)
+Writing at 0x00021ef9... (18 %)
+Writing at 0x0003c97d... (27 %)
+Writing at 0x00055810... (36 %)
+Writing at 0x0006af59... (45 %)
+Writing at 0x0008f24d... (54 %)
+Writing at 0x000a244a... (63 %)
+Writing at 0x000ac170... (72 %)
+Writing at 0x000b2c4d... (81 %)
+Writing at 0x000b9522... (90 %)
+Writing at 0x000bf76a... (100 %)
+Wrote 741328 bytes (176226 compressed) at 0x00010000 in 5.7 seconds (effective 1033.9 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Staying in bootloader.
