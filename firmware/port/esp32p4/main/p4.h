@@ -74,9 +74,9 @@ void p4_typed_cache_store(const char *name, const char *label, const uint8_t key
                           size_t length, int64_t compile_us);   // queued for the writer task; the module is copied
 bool p4_typed_cache_hold(int timeout_ms);   // no further writes (a reboot or a flash follows); true when none is running
 void p4_typed_cache_console(const char *args);   // typed cache [clear | corrupt APP flip|cut]
-#define P4_TYPED_HOLD() p4_typed_cache_hold(12000)
+#define P4_TYPED_HOLD(ms) p4_typed_cache_hold(ms)
 #else
-#define P4_TYPED_HOLD() true
+#define P4_TYPED_HOLD(ms) true
 #endif
 
 #if PICOCALC_BENCH

@@ -188,10 +188,10 @@ void console_exec(char *line) {
   else if (!strcmp(cmd, "net")) p4_agent_console(rest);
   else if (!strcmp(cmd, "ls") || !strcmp(cmd, "cat") || !strcmp(cmd, "df") || !strcmp(cmd, "put")) p4_fs_console(cmd, rest);
   else if (!strcmp(cmd, "hold")) {   // the compiled-module cache's writer first: a flash must not cut an entry's write
-    if (!P4_TYPED_HOLD()) puts("typed cache: a write is still running");
+    if (!P4_TYPED_HOLD(12000)) puts("typed cache: a write is still running");
     printf("i2c0 %s; reboot or flash now\n", bus_p4_hold(100) ? "held between transactions" : "still busy");
   } else if (!strcmp(cmd, "reboot")) {
-    if (!P4_TYPED_HOLD()) puts("typed cache: a write is still running");
+    if (!P4_TYPED_HOLD(5000)) puts("typed cache: a write is still running");
     printf("i2c0 %s; rebooting\n", bus_p4_hold(100) ? "held" : "still busy");
     fflush(stdout); vTaskDelay(pdMS_TO_TICKS(20)); esp_restart();
   }
