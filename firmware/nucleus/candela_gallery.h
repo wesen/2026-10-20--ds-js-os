@@ -93,10 +93,12 @@ int cg_begin(cg_state *s, const cg_scene_desc *d, const cg_instance *inst, const
 // The P4's Typed arm (candela_typed_p4.c, PICOCALC_CANDELA_TYPED): its program loads in the background.
 enum { CGT_IDLE, CGT_LOADING, CGT_READY, CGT_FAILED };
 int cgt_state(void);
+const char *cgt_state_name(void);   // idle, loading, ready, failed
 double cgt_loading_s(void);   // seconds since the load started, while it runs
-void cgt_prepare(void);       // start loading it on a task of its own, unless it is loading, loaded or failed
-int cgt_cached(void);         // its compiled program is in the compiled-module cache (a load is a read)
-int cgt_load_now(void);       // load it on the caller's task; non-zero when it is ready
+void cgt_prepare(void);       // start loading it on a task of its own (once no Typed compile has run for 10 s)
+int cgt_ready_now(void);      // ready; a cached program (a cache read, about a second) is loaded on the caller's task
+int cgt_poll(void);           // ready; else, when idle, cgt_prepare
+const char *cgt_caption(void);   // what C++ is doing for the caption: "C++, Typed compiling 12 s", "C++ (Typed failed)"
 void cg_end(cg_state *s);          // free the scene's memory (the sky workspace stays)
 void cg_free_all(cg_state *s);     // and the sky workspace
 

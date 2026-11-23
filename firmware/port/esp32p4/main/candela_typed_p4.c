@@ -152,22 +152,33 @@ static bool load(char *err, size_t n) {
 }
 
 // The gallery's first use of this arm after a firmware update compiles for about 85 s; every later one reads the
-// cache. With the program cached, the gallery loads it before its scene (cgt_cached, cgt_load_now); otherwise it
-// draws with the C++ kernel while cgt_prepare compiles it on a task of its own, and cgt_state says how far it is.
+// cache. With the program cached, the gallery loads it before its scene (cgt_ready_now); otherwise it draws with the
+// C++ kernel while cgt_poll has it compiled on a task of its own, and cgt_state and cgt_caption say how far it is.
 static void load_task(void *arg) {
   char err[96];
   if (!load(err, sizeof err))
     printf("CGAL {\"ev\":\"error\",\"what\":\"typed-load\",\"error\":\"%s\"}\n", err);
   vTaskDeleteWithCaps(NULL);
 }
-int cgt_cached(void) { return p4_typed_app_cached(p4_typed_app_find("candela-gallery"), 0); }
-int cgt_load_now(void) {
-  char err[96];
-  if (load(err, sizeof err)) return true;
-  printf("CGAL {\"ev\":\"error\",\"what\":\"typed-load\",\"error\":\"%s\"}\n", err);
-  return false;
-}
 int cgt_state(void) { return loaded ? CGT_READY : failed && !loading ? CGT_FAILED : loading ? CGT_LOADING : CGT_IDLE; }
+const char *cgt_state_name(void) { return (const char *const[]){"idle", "loading", "ready", "failed"}[cgt_state()]; }
+int cgt_ready_now(void) {
+  char err[96];
+  if (cgt_state() == CGT_IDLE && p4_typed_app_cached(p4_typed_app_find("candela-gallery"), 0) && !load(err, sizeof err))
+    printf("CGAL {\"ev\":\"error\",\"what\":\"typed-load\",\"error\":\"%s\"}\n", err);
+  return loaded;
+}
+int cgt_poll(void) {
+  if (cgt_state() == CGT_IDLE) cgt_prepare();
+  return loaded;
+}
+const char *cgt_caption(void) {
+  static char caption[32];
+  const int state = cgt_state();
+  if (state == CGT_LOADING) snprintf(caption, sizeof caption, "C++, Typed compiling %d s", (int)cgt_loading_s());
+  else snprintf(caption, sizeof caption, state == CGT_FAILED ? "C++ (Typed failed)" : "C++");
+  return caption;
+}
 double cgt_loading_s(void) { return loading && load_started_us ? (esp_timer_get_time() - load_started_us) / 1e6 : 0; }
 // Not while another compile runs or has just run: the painter's compile after a cold boot has a deadline, and two
 // compiles share PSRAM's bandwidth.

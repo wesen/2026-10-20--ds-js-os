@@ -85,14 +85,10 @@ static const cg_instance *instance_of(const cg_scene_desc *d, int a) {
   (void)a;
   return d->spectral ? &cgs_gallery : &cg_gallery;
 }
-// The worker's arm for a new scene: Typed once its program is loaded. A cached program is read now (about a second);
-// one that must be compiled is left to the worker's loop, and C++ draws meanwhile.
+// The worker's arm for a new scene: Typed once its program is loaded (candela_typed_p4.c cgt_ready_now), else C++.
 static int arm_now(void) {
 #if PICOCALC_CANDELA_TYPED
-  if (arm == ARM_TYPED && cgt_state() != CGT_READY) {
-    if (cgt_state() == CGT_IDLE && cgt_cached()) cgt_load_now();
-    if (cgt_state() != CGT_READY) return ARM_CPP;
-  }
+  if (arm == ARM_TYPED && !cgt_ready_now()) return ARM_CPP;
 #endif
   return arm;
 }
@@ -103,15 +99,9 @@ static void publish(void) {
 }
 
 // What the caption says about the kernel: "Typed", "C++", or "C++, Typed compiling 12 s" during the load.
-static char caption[32];
 static const char *arm_caption(void) {
 #if PICOCALC_CANDELA_TYPED
-  if (arm == ARM_TYPED && drawing == ARM_CPP) {
-    const int state = cgt_state();
-    if (state == CGT_LOADING) snprintf(caption, sizeof caption, "C++, Typed compiling %d s", (int)cgt_loading_s());
-    else snprintf(caption, sizeof caption, state == CGT_FAILED ? "C++ (Typed failed)" : "C++");
-    return caption;
-  }
+  if (arm == ARM_TYPED && drawing == ARM_CPP) return cgt_caption();
 #endif
   return drawing == ARM_TYPED ? "Typed" : "C++";
 }
@@ -234,14 +224,11 @@ static void show(int64_t t) {
   }
 }
 
-static const char *typed_state(void) {
 #if PICOCALC_CANDELA_TYPED
-  static const char *const STATE[] = {"idle", "loading", "ready", "failed"};
-  return STATE[cgt_state()];
+#define typed_state cgt_state_name
 #else
-  return "absent";
+static const char *typed_state(void) { return "absent"; }
 #endif
-}
 
 static void status(void) {
   printf("CGAL {\"ev\":\"status\",\"arm\":\"%s\",\"drawing\":\"%s\",\"typed\":\"%s\",\"scene\":\"%s\",\"index\":%d,\"scenes\":%u,\"pass\":%u,\"sub\":%u,\"samples\":%" PRIu64
@@ -410,16 +397,12 @@ static void worker(void *arg) {
     sc.last_visible_us = t;
     if (paused || !visible) continue;
 #if PICOCALC_CANDELA_TYPED
-    // Typed preferred while C++ draws: start compiling it once no other compile has run for a while; once it is
-    // ready, restart a scene that has barely begun with it, else let the next scene take it.
-    if (arm == ARM_TYPED && drawing == ARM_CPP) {
-      const int state = cgt_state();
-      if (state == CGT_IDLE) cgt_prepare();
-      else if (state == CGT_READY && st.pass < 2) {
-        end_scene("typed-ready");
-        begin_scene(current);
-        continue;
-      }
+    // Typed preferred while C++ draws: cgt_poll compiles it once compiles are quiet; when it is ready a scene that has
+    // barely begun restarts with it, a later one leaves it to the next scene.
+    if (arm == ARM_TYPED && drawing == ARM_CPP && cgt_poll() && st.pass < 2) {
+      end_scene("typed-ready");
+      begin_scene(current);
+      continue;
     }
 #endif
     if (done) {
