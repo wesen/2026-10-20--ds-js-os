@@ -25,9 +25,14 @@ bench/emu/emu.c -- PICOCALC-RV32-CONFORMANCE
 apps/typed/agenda/wasm-world.c -- PICOCALC-AGENDA-TYPED-WORLD
 firmware/port/esp32p4/main/CMakeLists.txt -- PICOCALC-TYPED-APP-MANIFEST
 
-# Being split by PICOCALC-SPLIT-FILES
-apps/js/papers3/system/compositor.js -- PICOCALC-SPLIT-FILES
-firmware/port/esp32p4/main/agent_p4.c -- PICOCALC-SPLIT-FILES
-apps/js/picocalc/system/compositor.js -- PICOCALC-SPLIT-FILES
-apps/js/picocalc/system/agent.js -- PICOCALC-SPLIT-FILES
-firmware/sdk/typed/world.c -- PICOCALC-SPLIT-FILES
+# A QuickJS world is one file when it loads (kernel.c add_world reads the manifest entry's one "file" and evaluates
+# it as one script). Splitting one needs a bundling step or a manifest entry with several files; that belongs with
+# the manifest work of PICOCALC-TYPED-APP-MANIFEST, which also changes the compositor's ray-tracer and painter paths.
+apps/js/picocalc/system/compositor.js -- one-file QuickJS world (PICOCALC-TYPED-APP-MANIFEST: multi-file worlds)
+apps/js/papers3/system/compositor.js -- one-file QuickJS world (PICOCALC-TYPED-APP-MANIFEST: multi-file worlds)
+apps/js/picocalc/system/agent.js -- one-file QuickJS world (PICOCALC-TYPED-APP-MANIFEST: multi-file worlds)
+
+# Deferred by PICOCALC-SPLIT-FILES (see its diary): their build lists are in main/CMakeLists.txt, which
+# PICOCALC-TYPED-APP-MANIFEST is rewriting, and each is one module around a block of file-scope state
+firmware/sdk/typed/world.c -- the Typed world runtime; split after PICOCALC-TYPED-APP-MANIFEST (four build lists)
+firmware/port/esp32p4/main/agent_p4.c -- Wi-Fi and HTTPS around ~20 shared statics; split after PICOCALC-TYPED-APP-MANIFEST
