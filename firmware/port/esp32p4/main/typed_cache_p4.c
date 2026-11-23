@@ -10,10 +10,13 @@
 // - The writes. A compile's module goes to a writer task, so a boot does not wait for flash writes. A flash write or
 //   erase stops both cores' caches for tens of ms; one that lands inside a world's turn (a turn that waits for the
 //   flash lock or the SPI queue) can push it past its budget (the first device run lost Agent, Files and the
-//   compositor that way). So the writer runs on the kernel's core, waits while a compile runs there, and writes one
-//   4 KB piece per idle gap the kernel announces (p4_typed_cache_idle: nothing due for 10 ms), at a priority above
-//   the kernel's for the piece, so no turn starts in the middle of one (a turn can start up to one piece late).
-//   "hold" stops it.
+//   compositor that way). So the writer runs on the kernel's core below the kernel (priority 3), waits while a
+//   compile runs there, and starts one 4 KB piece per idle gap the kernel announces (p4_typed_cache_idle: nothing
+//   due for 10 ms), only while the kernel still waits in that gap: running below the kernel on its core, the writer
+//   runs only while the kernel is blocked, and the flag tells a wait between turns from one inside a turn. It must
+//   stay below the kernel: an erase yields every 20 ms (CONFIG_SPI_FLASH_YIELD_DURING_ERASE), and a writer above the
+//   kernel came back from that yield inside the turn that had started, which cost the keyboard its 20 ms budget
+//   five times in a row (session A3). "hold" stops it.
 // - One lock around every file operation on the cache except the .tmp write: FATFS here cannot delete an open file
 //   safely (CONFIG_FATFS_FS_LOCK=0).
 #include <inttypes.h>
@@ -172,27 +175,28 @@ char *p4_typed_cache_read(const char *name, const uint8_t key[32], size_t *lengt
 // ---- writes ----
 typedef struct { tc_header h; char *module; } write_job;
 static QueueHandle_t writes;
-static SemaphoreHandle_t gap;   // given by the kernel task when it has nothing due for 50 ms
-static volatile bool held, writing;
+static SemaphoreHandle_t gap;   // given by the kernel task when it has nothing due for 10 ms
+static volatile bool held, writing, kernel_idle;
 
 void p4_typed_cache_idle(int64_t wait_us) {
-  if (gap && wait_us >= 10000 && (writing || uxQueueMessagesWaiting(writes))) xSemaphoreGive(gap);
+  kernel_idle = wait_us >= 10000;
+  if (gap && kernel_idle && (writing || uxQueueMessagesWaiting(writes))) xSemaphoreGive(gap);
 }
 
-// One piece of flash work: back at the waiting priority, rest as long as the last piece took (the kernel keeps at
-// least half of core 1 while the writer writes), wait until no compile has run on core 1 for 2 s and the kernel
-// announces an idle gap, then run the piece above the kernel.
-enum { WAIT_PRIORITY = 3, PIECE_PRIORITY = 6 };
+// One piece of flash work: rest as long as the last piece took (the kernel keeps at least half of core 1 while the
+// writer writes), wait until no compile has run on core 1 for 2 s, then for a gap the kernel announced and still
+// waits in (a token can be stale: given before a wait the kernel has left since).
+enum { PRIORITY = 3 };
 static int64_t piece_start;
 static bool paced(void *arg) {
   (void)arg;
-  vTaskPrioritySet(NULL, WAIT_PRIORITY);
   if (piece_start) vTaskDelay(pdMS_TO_TICKS((now() - piece_start) / 1000 + 1));
-  while (!held && !p4_typed_compiles_quiet(1, 2000000)) vTaskDelay(pdMS_TO_TICKS(200));
-  while (!held && xSemaphoreTake(gap, pdMS_TO_TICKS(200)) != pdTRUE) {}
-  if (held) return false;
+  for (;;) {
+    while (!held && !p4_typed_compiles_quiet(1, 2000000)) vTaskDelay(pdMS_TO_TICKS(200));
+    if (held) return false;
+    if (xSemaphoreTake(gap, pdMS_TO_TICKS(200)) == pdTRUE && kernel_idle) break;
+  }
   piece_start = now();
-  vTaskPrioritySet(NULL, PIECE_PRIORITY);
   return true;
 }
 
@@ -220,7 +224,6 @@ static void writer(void *arg) {
       ok = tc_commit(DIR, j->h.key, why, sizeof why);
       xSemaphoreGive(lock);
     }
-    vTaskPrioritySet(NULL, WAIT_PRIORITY);
     piece_start = 0;
     const int64_t t3 = now();
     if (ok)
@@ -248,8 +251,8 @@ void p4_typed_cache_store(const char *name, const char *label, const uint8_t key
   if (start) {
     QueueHandle_t q = xQueueCreate(16, sizeof(write_job *));
     gap = xSemaphoreCreateBinary();
-    // above the gallery's worker and the painter's build while it waits, so a granted gap is used at once
-    if (q && gap && xTaskCreatePinnedToCoreWithCaps(writer, "tcache-w", 8 * 1024, NULL, WAIT_PRIORITY, NULL, 1,
+    // below the kernel, above the gallery's worker and the painter's build, so a granted gap is used at once
+    if (q && gap && xTaskCreatePinnedToCoreWithCaps(writer, "tcache-w", 8 * 1024, NULL, PRIORITY, NULL, 1,
                                                     MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) == pdPASS)
       writes = q;
   }
