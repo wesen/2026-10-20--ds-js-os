@@ -21,9 +21,16 @@ typedef struct {
   unsigned over_limit, no_psram;   // refused allocations: past the heap cap, or PSRAM had no block
 } compile_heap;
 
-static void account(compile_heap *heap, size_t old, size_t current) {
+// QuickJS starts its cycle collector from the size the allocator reports in malloc_size (js_trigger_gc: at 1.5 times
+// the size the last collection left). Its own allocator keeps that count; a custom one must, as the worlds' does
+// (nucleus/vm.c). This one did not until PICOCALC-COMPILE-CACHE, so no compile ever collected a cycle: the gallery's
+// Typed program grew past 17.8 MB and ran PSRAM empty.
+static void account(JSMallocState *state, size_t old, size_t current) {
+  compile_heap *heap = state->opaque;
   heap->live = heap->live - old + current;
   if (heap->live > heap->peak) heap->peak = heap->live;
+  state->malloc_size = heap->live;
+  state->malloc_count += (current != 0) - (old != 0);
 }
 
 // A compile must not take the PSRAM the running worlds need: the gallery's Typed program, compiled beside them,
@@ -42,14 +49,14 @@ static void *compile_malloc(JSMallocState *state, size_t size) {
   if (heap->live >= heap->limit || size > heap->limit - heap->live) { heap->over_limit++; return NULL; }
   if (!psram_spare(heap, size)) return NULL;
   void *ptr = port_heap_malloc(size);
-  if (ptr) account(heap, 0, port_heap_usable(ptr));
+  if (ptr) account(state, 0, port_heap_usable(ptr));
   else heap->no_psram++;
   return ptr;
 }
 
 static void compile_free(JSMallocState *state, void *ptr) {
   if (!ptr) return;
-  account(state->opaque, port_heap_usable(ptr), 0);
+  account(state, port_heap_usable(ptr), 0);
   port_heap_free(ptr);
 }
 
@@ -62,7 +69,7 @@ static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
   if (retained >= heap->limit || size > heap->limit - retained) { heap->over_limit++; return NULL; }
   if (size > old && !psram_spare(heap, size)) return NULL;
   void *next = port_heap_realloc(ptr, size);
-  if (next) account(heap, old, port_heap_usable(next));
+  if (next) account(state, old, port_heap_usable(next));
   else heap->no_psram++;
   return next;
 }
