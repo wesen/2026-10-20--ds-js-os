@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import "../../compiler/typed/tape.js";
 import "../../compiler/typed/typed-wasm.js";
 import "../../compiler/typed/typed-async.js";
 import "../../compiler/typed/typed-rv32.js";

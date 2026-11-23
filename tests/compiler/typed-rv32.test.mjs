@@ -6,7 +6,7 @@ import {createContext, runInContext} from "node:vm";
 
 function compiler() {
     const ctx = createContext({});
-    for (const file of ["typed-wasm.js", "typed-rv32.js"]) {
+    for (const file of ["tape.js", "typed-wasm.js", "typed-rv32.js"]) {
         runInContext(readFileSync(new URL("../../compiler/typed/" + file, import.meta.url), "utf8"), ctx,
             {filename: file});
     }
@@ -63,11 +63,11 @@ test("buffer accesses, calls and scalar spills still use the framed backend", ()
 });
 
 test("the framed backend still diagnoses an unsupported numeric operation", () => {
-    const {typedRv32, typedWasm} = compiler();
+    const {typedRv32, typedWasm, typedTape} = compiler();
     const compileFunctions = typedWasm.compileFunctions;
     typedWasm.compileFunctions = (source, base, imports, limit, numeric, onFunction, onSignatures, options) =>
         compileFunctions(source, base, imports, limit, numeric, fn => {
-            const add = fn.code.indexOf(0x6a);
+            const add = fn.code.indexOf(typedTape.I32_ADD);
             assert(add >= 0);
             fn.code[add] = 0xff;
             onFunction(fn);
@@ -258,7 +258,7 @@ test("the default policy applies the qualified options and stock reproduces the 
 
 test("saved homes and direct reads keep the ABI and reproduce stock results", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js", "bench/host/typed-ray-bench.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js", "bench/host/typed-ray-bench.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp, typedRayBench} = ctx;
     // Inlining would turn mix into a leaf without callee-saved homes; this test keeps the calls.
@@ -299,7 +299,7 @@ function mix(n: i32): i32 {
 
 test("instruction selection matches stock code on constant division, immediates and fused branches", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     const all = {select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true}};
@@ -346,7 +346,7 @@ function leaf(a: i32, b: i32): i32 { return (a - b) * 4 + a / 8 - b % 4 + a / 3;
 
 test("inlining, capacity and constant homes, commutation and loop rotation match stock code", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     const src = `function clamp(v: i32, lo: i32, hi: i32): i32 {
@@ -407,7 +407,7 @@ function fill(out: buffer, buf: buffer, n: i32): i32 {
 
 test("short forward branches fall back to the long form beyond the conditional-branch range", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // The if-arm in `far` is longer than 4 KiB of code, so its exit branch cannot be short.
@@ -441,7 +441,7 @@ ${body}
 
 test("pointer homes keep checked accesses, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // r[x + k] with an increment, r[i + k] with a recomputed index, r[b + k] from a
@@ -507,7 +507,7 @@ function fill(work: buffer, n: i32): i32 {
 
 test("division facts change code only for dividends proven non-negative, and keep results identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // proven: a counter from 0, a local whose writes are 117, 177 and level / 3, a buffer read.
@@ -573,9 +573,9 @@ test("division facts change code only for dividends proven non-negative, and kee
 
 test("versioned loops and split locals keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
-    const {typedRv32, typedRv32Interp} = ctx;
+    const {typedRv32, typedRv32Interp, typedTape} = ctx;
     // Every index form select.version proves: k + c, c + k, k, a*k + b with offsets, an
     // invariant base plus k, constants; with a non-constant start, an early return, nested
     // loops and stores. Each size list crosses the point where the guard fails.
@@ -629,7 +629,7 @@ function fill(work: buffer, n: i32): i32 {
     const unchecked = {};
     const candidate = typedRv32.compile(src, [], undefined, {select: {...select, version: true},
         operandLocations: {...locations, split: true},
-        observeTape: (name, phase, code) => { if (phase === "split") unchecked[name] = code.includes(0xf3); }});
+        observeTape: (name, phase, code) => { if (phase === "split") unchecked[name] = typedTape.decode(code).some(o => o.opcode === typedTape.UNCHECKED_ADDRESS); }});
     const plain = typedRv32.compile(src, [], undefined, {});
     const stock = typedRv32.compile(src, [], undefined, {policy: "stock"});
     const cells = 40;
@@ -656,9 +656,9 @@ function fill(work: buffer, n: i32): i32 {
 
 test("value sets fold pure inlined blocks only over proven constant sets, and keep results and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
-    const {typedRv32, typedRv32Interp} = ctx;
+    const {typedRv32, typedRv32Interp, typedTape} = ctx;
     // folded: level is one of 117, 177, 39, 59 (the ray tracer's floor), right after the if that
     // divides it (sunk into both arms), beside a second copy of the same callee over a buffer
     // read, which shares its locals; the same not adjacent to the if (one tree of four values);
@@ -739,9 +739,8 @@ function hundred(d: i32): i32 { return 100 / d; }
     const kernel = typedRv32.policies.kernel;
     const withSets = {policy: "kernel", select: {...kernel.select, sets: true}};
     const without = {policy: "kernel", select: {...kernel.select, sets: false}};
-    const CELLS = {0x02: 1, 0x03: 1, 0x04: 1, 0x0c: 1, 0x0d: 1, 0x10: 1, 0x20: 1, 0x21: 1, 0x28: 2, 0x2f: 2, 0x36: 2, 0x3b: 2,
-        0x41: 1, 0xf1: 2, 0xf2: 2, 0xf3: 3};
-    const opcodes = code => { const out = []; for (let at = 0; at < code.length; at += 1 + (CELLS[code[at]] ?? 0)) out.push(code[at]); return out; };
+    const opcodes = code => typedTape.decode(code).map(o => o.opcode);
+    const {I32_MUL, I32_DIV_S} = typedTape;
     for (const [name, [folded, src]] of Object.entries(fns)) {
         const tapes = {};
         const b = typedRv32.compile(helpers + src, [], undefined, {...withSets,
@@ -753,8 +752,8 @@ function hundred(d: i32): i32 { return 100 / d; }
         // The floor's sunk copies absorb level / 3, leaving the unfoldable copy's two multiplies
         // and two divisions; spaced keeps level / 3.
         const ops = opcodes(tapes.sets), count = op => ops.filter(x => x === op).length;
-        if (name === "floor") assert.deepEqual([count(0x6c), count(0x6d)], [2, 2], "floor multiplies and divisions");
-        if (name === "spaced") assert.deepEqual([count(0x6c), count(0x6d)], [0, 1], "spaced multiplies and divisions");
+        if (name === "floor") assert.deepEqual([count(I32_MUL), count(I32_DIV_S)], [2, 2], "floor multiplies and divisions");
+        if (name === "spaced") assert.deepEqual([count(I32_MUL), count(I32_DIV_S)], [0, 1], "spaced multiplies and divisions");
     }
     const all = helpers + Object.values(fns).map(([, src]) => src).join("\n");
     const stock = typedRv32.compile(all, [], undefined, {policy: "stock"});
@@ -778,7 +777,7 @@ function hundred(d: i32): i32 { return 100 / d; }
 
 test("hoisted loop invariants keep results, stores and traps identical, including aliased buffers", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // moved: invariant loads (with the out == work guard), an invariant pure statement, y / 16
@@ -878,7 +877,7 @@ test("hoisted loop invariants keep results, stores and traps identical, includin
 
 test("fused conjunctions and loads into homes keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // band: && in two ifs, one body with an early return. pick: an inlined callee whose return
@@ -941,7 +940,7 @@ function flag(work: buffer, n: i32): i32 {
 
 test("induction variables and pointer-only sources keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // [induction, pointer-only]: rows and nested (InShadow's shape) both; mixed reads its affine
@@ -1019,7 +1018,7 @@ test("induction variables and pointer-only sources keep results, stores and trap
 
 test("locals in the argument registers of unhomed parameters keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // Each function reads some parameters once, outside its loop (no home), and keeps more

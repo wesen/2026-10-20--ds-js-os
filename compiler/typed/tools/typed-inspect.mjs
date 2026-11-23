@@ -38,7 +38,7 @@ function describeStack(ins, range, operations, locals, localCount) {
     const local=locals.find(l=>l.index===slot);
     if (local) return (local.parameter?"parameter ":"local ")+(local.name??("#"+slot));
     if (slot>=0 && slot<localCount) return "compiler temporary #"+slot;
-    if (operations.some(o=>o.opcode===0x10)) return "live operand across call";
+    if (operations.some(o=>o.op==="call")) return "live operand across call";
     return "operand stack";
 }
 
@@ -82,12 +82,12 @@ function functionDump(front, emission, program, bytes, counts, source) {
             words.push({pc,word,text:ins.text,stack,executions});
         }
         const decisions=[...(r.decisions??[])];
-        if (ops.some(o=>o.opcode===0x6d || o.opcode===0x6f)) {
+        if (ops.some(o=>o.op==="i32.div_s" || o.op==="i32.rem_s")) {
             if (words.some(w=>w.word===0x00100073)) decisions.push("checked signed arithmetic: emitted trap path");
-            else if (ops[0].opcode===0x41 && ops[0].operands[0]>0)
+            else if (ops[0].op==="i32.const" && ops[0].operands[0]>0)
                 decisions.push("positive literal divisor: zero and signed division overflow are impossible");
         }
-        if (ops.some(o=>o.opcode===0xf1) && words.some(w=>w.word===0x00100073))
+        if (ops.some(o=>o.op==="text.checked_address") && words.some(w=>w.word===0x00100073))
             decisions.push("unsigned index compared with runtime capacity before payload access");
         return {start:r.start,end:r.end,ordinals,role:r.role,segment:r.segment,decisions,words};
     });
@@ -107,7 +107,7 @@ function inspect(file,v) {
     if ((v.backend || v.profile) && target==="wasm") throw Error("--backend and --profile require a native target");
     const source=read(file), ctx=vm.createContext({});
     if (v["pie-loops"] && target==="wasm") throw Error("--pie-loops requires a native target");
-    for(const name of ["typed-wasm","typed-async",...(v["pie-loops"]?["typed-pie-loops"]:[]),"typed-rv32"]) {
+    for(const name of ["tape","typed-wasm","typed-async",...(v["pie-loops"]?["typed-pie-loops"]:[]),"typed-rv32"]) {
         const path=name==="typed-rv32" && v.backend?v.backend:new URL("../"+name+".js",import.meta.url);
         vm.runInContext(read(path),ctx,{filename:String(path)});
     }

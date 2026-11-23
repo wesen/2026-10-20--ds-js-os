@@ -13,9 +13,9 @@ func TestWrapSeparatesFilesAndRecordsLines(t *testing.T) {
 	texts := make([]string, len(Modules))
 	present := make([]bool, len(Modules))
 	// typed-wasm ends in a comment without a newline; typed-world starts with "(".
-	texts[0], present[0] = "(() => { globalThis.typedWasm = {n: 1}; })() // trailing", true
-	texts[2], present[2] = "(() => {\n  globalThis.typedWorld = {late: () => typedRv32.n};\n})();\n", true
-	texts[3], present[3] = "(() => { globalThis.typedRv32 = {n: typedWasm.n + 1}; })();", true
+	texts[1], present[1] = "(() => { globalThis.typedWasm = {n: 1}; })() // trailing", true
+	texts[3], present[3] = "(() => {\n  globalThis.typedWorld = {late: () => typedRv32.n};\n})();\n", true
+	texts[4], present[4] = "(() => { globalThis.typedRv32 = {n: typedWasm.n + 1}; })();", true
 	src, lines := wrap(texts, present)
 	if len(lines) != 3 || lines[0] != 4 || lines[1] != 6 || lines[2] != 11 {
 		t.Fatalf("lines %v\n%s", lines, src)

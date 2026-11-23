@@ -1,4 +1,4 @@
-// Loads the Typed compiler into globalThis (typedWasm, typedAsync, typedRv32, typedWorld, typedPieLoops), as the
+// Loads the Typed compiler into globalThis (typedTape, typedWasm, typedAsync, typedRv32, typedWorld, typedPieLoops), as the
 // firmware bundles it, for the bench scripts.
 //
 // TYPED_RV32_OPTIONS, a JSON object such as {"policy": "kernel"}, becomes the default options of every
@@ -24,5 +24,5 @@ if (defaults) {
         },
     });
 }
-for (const file of ["typed-wasm.js", "typed-async.js", "typed-rv32.js", "typed-world.js", "typed-pie-loops.js"])
+for (const file of ["tape.js", "typed-wasm.js", "typed-async.js", "typed-rv32.js", "typed-world.js", "typed-pie-loops.js"])
     await import(pathToFileURL(repoPath("compiler/typed", file)).href);

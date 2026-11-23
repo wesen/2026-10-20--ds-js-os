@@ -17,20 +17,20 @@ const SET_LIMIT = 4;
 // The i32 result of a comparison or arithmetic opcode, or undefined where it would trap.
 function i32Fold(op, x, y) {
     switch (op) {
-    case 0x46: return x === y ? 1 : 0;
-    case 0x47: return x !== y ? 1 : 0;
-    case 0x48: return x < y ? 1 : 0;
-    case 0x4a: return x > y ? 1 : 0;
-    case 0x4c: return x <= y ? 1 : 0;
-    case 0x4e: return x >= y ? 1 : 0;
-    case 0x4f: return (x >>> 0) >= (y >>> 0) ? 1 : 0;
-    case 0x6a: return (x + y) | 0;
-    case 0x6b: return (x - y) | 0;
-    case 0x6c: return Math.imul(x, y);
-    case 0x6d: return y === 0 || (x === -2147483648 && y === -1) ? undefined : (x / y) | 0;
-    case 0x6f: return y === 0 ? undefined : y === -1 ? 0 : (x % y) | 0;
-    case 0x74: return x << (y & 31);
-    case 0x75: return x >> (y & 31);
+    case I32_EQ: return x === y ? 1 : 0;
+    case I32_NE: return x !== y ? 1 : 0;
+    case I32_LT_S: return x < y ? 1 : 0;
+    case I32_GT_S: return x > y ? 1 : 0;
+    case I32_LE_S: return x <= y ? 1 : 0;
+    case I32_GE_S: return x >= y ? 1 : 0;
+    case I32_GE_U: return (x >>> 0) >= (y >>> 0) ? 1 : 0;
+    case I32_ADD: return (x + y) | 0;
+    case I32_SUB: return (x - y) | 0;
+    case I32_MUL: return Math.imul(x, y);
+    case I32_DIV_S: return y === 0 || (x === -2147483648 && y === -1) ? undefined : (x / y) | 0;
+    case I32_REM_S: return y === 0 ? undefined : y === -1 ? 0 : (x % y) | 0;
+    case I32_SHL: return x << (y & 31);
+    case I32_SHR_S: return x >> (y & 31);
     }
     return undefined;
 }
@@ -40,23 +40,23 @@ function i32Fold(op, x, y) {
 function setCandidates(code) {
     const found = [], endOf = new Map(), open = [];
     for (let at = 0; at < code.length; at = opNext(code, at)) {
-        if (code[at] >= 0x02 && code[at] <= 0x04) open.push(at);
-        else if (code[at] === 0x0b && open.length) endOf.set(open.pop(), at);
+        if (code[at] >= BLOCK && code[at] <= IF) open.push(at);
+        else if (code[at] === END && open.length) endOf.set(open.pop(), at);
     }
     for (let at = 0; at < code.length; at = opNext(code, at)) {
-        if (code[at] !== 0x02 || code[at + 1] !== 0x7f) continue;
+        if (code[at] !== BLOCK || code[at + 1] !== I32) continue;
         const end = endOf.get(at);
         if (end === undefined) return [];
         let height = 0, ok = true;
         const free = new Set(), writes = new Set();
         for (let p = at + 2; p < end && ok; p = opNext(code, p)) {
-            const op = code[p], arity = op === 0x41 || op === 0x20 ? 0 : op === 0x21 || op === 0x1a || op === 0x45 ? 1 : 2;
-            if (op !== 0x41 && op !== 0x20 && op !== 0x21 && op !== 0x1a && op !== 0x45 &&
-                !((op >= 0x46 && op <= 0x4f) || (op >= 0x6a && op <= 0x75))) { ok = false; break; }
+            const op = code[p], arity = op === I32_CONST || op === LOCAL_GET ? 0 : op === LOCAL_SET || op === DROP || op === I32_EQZ ? 1 : 2;
+            if (op !== I32_CONST && op !== LOCAL_GET && op !== LOCAL_SET && op !== DROP && op !== I32_EQZ &&
+                !((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) { ok = false; break; }
             if (height < arity) { ok = false; break; }
-            if (op === 0x20 && !writes.has(code[p + 1])) free.add(code[p + 1]);
-            if (op === 0x21) writes.add(code[p + 1]);
-            height += op === 0x41 || op === 0x20 ? 1 : op === 0x45 ? 0 : -1;
+            if (op === LOCAL_GET && !writes.has(code[p + 1])) free.add(code[p + 1]);
+            if (op === LOCAL_SET) writes.add(code[p + 1]);
+            height += op === I32_CONST || op === LOCAL_GET ? 1 : op === I32_EQZ ? 0 : -1;
         }
         if (ok && height === 1 && free.size <= 1) found.push({start: at, end, free: [...free][0], writes});
     }
@@ -69,11 +69,11 @@ function evaluateSetBlock(code, block, v) {
     if (block.free !== undefined) locals.set(block.free, v);
     for (let p = block.start + 2; p < block.end; p = opNext(code, p)) {
         const op = code[p], a = code[p + 1];
-        if (op === 0x41) stack.push(a | 0);
-        else if (op === 0x20) stack.push(locals.get(a));
-        else if (op === 0x21) locals.set(a, stack.pop());
-        else if (op === 0x1a) stack.pop();
-        else if (op === 0x45) stack.push(stack.pop() === 0 ? 1 : 0);
+        if (op === I32_CONST) stack.push(a | 0);
+        else if (op === LOCAL_GET) stack.push(locals.get(a));
+        else if (op === LOCAL_SET) locals.set(a, stack.pop());
+        else if (op === DROP) stack.pop();
+        else if (op === I32_EQZ) stack.push(stack.pop() === 0 ? 1 : 0);
         else {
             const y = stack.pop(), r = i32Fold(op, stack.pop(), y);
             if (r === undefined) return undefined;
@@ -90,12 +90,12 @@ function entrySets(code, arity, wanted) {
     const loopWrites = new Map(), open = [];
     for (let at = 0; at < code.length; at = opNext(code, at)) {
         const op = code[at];
-        if (op >= 0x02 && op <= 0x04) open.push({op, at, writes: new Set()});
-        else if (op === 0x0b && open.length) {
+        if (op >= BLOCK && op <= IF) open.push({op, at, writes: new Set()});
+        else if (op === END && open.length) {
             const frame = open.pop();
-            if (frame.op === 0x03) loopWrites.set(frame.at, frame.writes);
+            if (frame.op === LOOP) loopWrites.set(frame.at, frame.writes);
             if (open.length) for (const w of frame.writes) open.at(-1).writes.add(w);
-        } else if (op === 0x21 && open.length && tracked.has(code[at + 1])) open.at(-1).writes.add(code[at + 1]);
+        } else if (op === LOCAL_SET && open.length && tracked.has(code[at + 1])) open.at(-1).writes.add(code[at + 1]);
     }
     // A state maps a local to its possible values; an absent local is unknown.
     const join = states => states.reduce((x, y) => {
@@ -124,17 +124,17 @@ function entrySets(code, arity, wanted) {
     const pop = () => stack.length ? stack.pop() : null;
     for (let at = 0; at < code.length; at = opNext(code, at)) {
         const op = code[at], a = code[at + 1];
-        if (op >= 0x02 && op <= 0x04) {
+        if (op >= BLOCK && op <= IF) {
             if (!dead && wanted.has(at)) found.set(at, state.get(wanted.get(at)) ?? null);
-            if (op === 0x04 && !dead) pop();
-            frames.push({op, height: stack.length, value: a === 0x7f, deadEntry: dead, breaks: [], entry: state, thenEnd: null, sawElse: false});
-            if (!dead && op === 0x03 && loopWrites.get(at).size) {
+            if (op === IF && !dead) pop();
+            frames.push({op, height: stack.length, value: a === I32, deadEntry: dead, breaks: [], entry: state, thenEnd: null, sawElse: false});
+            if (!dead && op === LOOP && loopWrites.get(at).size) {
                 state = new Map(state);
                 for (const w of loopWrites.get(at)) state.delete(w);
             }
             continue;
         }
-        if (op === 0x05) {
+        if (op === ELSE) {
             const frame = frames.at(-1);
             if (!frame) return null;
             frame.thenEnd = dead ? null : state;
@@ -144,12 +144,12 @@ function entrySets(code, arity, wanted) {
             stack.length = frame.height;
             continue;
         }
-        if (op === 0x0b) {
+        if (op === END) {
             const frame = frames.pop();
             if (!frame) continue;
-            const incoming = frame.op === 0x03 ? [] : [...frame.breaks];
+            const incoming = frame.op === LOOP ? [] : [...frame.breaks];
             if (!dead) incoming.push(state);
-            if (frame.op === 0x04 && !frame.deadEntry) incoming.push(frame.sawElse ? frame.thenEnd : frame.entry);
+            if (frame.op === IF && !frame.deadEntry) incoming.push(frame.sawElse ? frame.thenEnd : frame.entry);
             const reached = incoming.filter(Boolean);
             stack.length = frame.height;
             if (frame.value) stack.push(null);
@@ -159,32 +159,32 @@ function entrySets(code, arity, wanted) {
         }
         if (dead) continue;
         switch (op) {
-        case 0x41: stack.push([a | 0]); break;
-        case 0x20: stack.push(state.get(a) ?? null); break;
-        case 0x21: {
+        case I32_CONST: stack.push([a | 0]); break;
+        case LOCAL_GET: stack.push(state.get(a) ?? null); break;
+        case LOCAL_SET: {
             const v = pop();
             if (!tracked.has(a) || (!v && !state.has(a))) break;
             state = new Map(state);
             if (v) state.set(a, v); else state.delete(a);
             break;
         }
-        case 0x1a: pop(); break;
-        case 0x45: { const v = pop(); stack.push(v ? [...new Set(v.map(x => x === 0 ? 1 : 0))] : null); break; }
-        case 0x0c: case 0x0d: {
-            if (op === 0x0d) pop();
+        case DROP: pop(); break;
+        case I32_EQZ: { const v = pop(); stack.push(v ? [...new Set(v.map(x => x === 0 ? 1 : 0))] : null); break; }
+        case BR: case BR_IF: {
+            if (op === BR_IF) pop();
             const target = frames[frames.length - 1 - a];
-            if (target && target.op !== 0x03) target.breaks.push(state);
-            if (op === 0x0c) dead = true;
+            if (target && target.op !== LOOP) target.breaks.push(state);
+            if (op === BR) dead = true;
             break;
         }
-        case 0x0f: case 0x00: dead = true; break;
-        case 0x10: for (let i = arity(a); i > 0; i--) pop(); stack.push(null); break;
-        case 0x28: case 0x2f: pop(); stack.push(null); break;
-        case 0x36: case 0x3b: pop(); pop(); break;
-        case 0xf1: case 0xf3: stack.push(null); break;
-        case 0xf2: break;
+        case RETURN: case UNREACHABLE: dead = true; break;
+        case CALL: for (let i = arity(a); i > 0; i--) pop(); stack.push(null); break;
+        case I32_LOAD: case I32_LOAD16_U: pop(); stack.push(null); break;
+        case I32_STORE: case I32_STORE16: pop(); pop(); break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(null); break;
+        case LITERAL_STORES: break;
         default: {
-            if (!((op >= 0x46 && op <= 0x4f) || (op >= 0x6a && op <= 0x75))) return null;
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return null;
             const y = pop(), x = pop();
             stack.push(apply(op, x, y));
         }
@@ -200,20 +200,20 @@ function liveAfterBlocks(code, tracked, starts) {
         indexOf.set(at, offsets.length);
         offsets.push(at);
         const op = code[at];
-        if (op >= 0x02 && op <= 0x04) open.push(at);
-        else if (op === 0x05 && open.length) elseOf.set(open.at(-1), at);
-        else if (op === 0x0b && open.length) { const s = open.pop(); endOf.set(s, at); startOf.set(at, s); }
+        if (op >= BLOCK && op <= IF) open.push(at);
+        else if (op === ELSE && open.length) elseOf.set(open.at(-1), at);
+        else if (op === END && open.length) { const s = open.pop(); endOf.set(s, at); startOf.set(at, s); }
     }
     const union = (x, y) => { if (!y || !y.size) return x; const out = new Set(x); for (const v of y) out.add(v); return out; };
     const result = new Map();
     function construct(s, out, labels) {
         const op = code[s], body = indexOf.get(s) + 1, end = indexOf.get(endOf.get(s));
         const inner = [out, ...labels];
-        if (op === 0x02) {
+        if (op === BLOCK) {
             if (starts.has(s)) result.set(s, union(result.get(s) ?? new Set(), out));
             return seq(body, end, out, inner);
         }
-        if (op === 0x04) {
+        if (op === IF) {
             if (!elseOf.has(s)) return union(seq(body, end, out, inner), out);
             const otherwise = indexOf.get(elseOf.get(s));
             return union(seq(body, otherwise, out, inner), seq(otherwise + 1, end, out, inner));
@@ -230,19 +230,19 @@ function liveAfterBlocks(code, tracked, starts) {
         let live = out;
         for (let i = to - 1; i >= from; i--) {
             const at = offsets[i], op = code[at], a = code[at + 1];
-            if (op === 0x0b) {
+            if (op === END) {
                 const s = startOf.get(at);
                 if (s === undefined) continue;
                 live = construct(s, live, labels);
                 i = indexOf.get(s);
                 continue;
             }
-            if (op === 0x21 && live.has(a)) { live = new Set(live); live.delete(a); }
-            else if ((op === 0x20 || op === 0xf2) && tracked.has(a)) live = union(live, new Set([a]));
-            else if (op === 0xf1 || op === 0xf3) { for (const x of [a, code[at + 2]]) if (tracked.has(x)) live = union(live, new Set([x])); }
-            else if (op === 0x0c) live = labels[a] ?? new Set();
-            else if (op === 0x0d) live = union(live, labels[a]);
-            else if (op === 0x0f || op === 0x00) live = new Set();
+            if (op === LOCAL_SET && live.has(a)) { live = new Set(live); live.delete(a); }
+            else if ((op === LOCAL_GET || op === LITERAL_STORES) && tracked.has(a)) live = union(live, new Set([a]));
+            else if (op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS) { for (const x of [a, code[at + 2]]) if (tracked.has(x)) live = union(live, new Set([x])); }
+            else if (op === BR) live = labels[a] ?? new Set();
+            else if (op === BR_IF) live = union(live, labels[a]);
+            else if (op === RETURN || op === UNREACHABLE) live = new Set();
         }
         return live;
     }
@@ -252,10 +252,10 @@ function liveAfterBlocks(code, tracked, starts) {
 
 // The comparison tree selecting results[i] when local holds values[i] (values sorted).
 function setTree(local, values, results) {
-    if (results.every(r => r === results[0])) return [0x41, results[0]];
+    if (results.every(r => r === results[0])) return [I32_CONST, results[0]];
     const mid = values.length >> 1;
-    return [0x20, local, 0x41, values[mid], 0x48, 0x04, 0x7f, ...setTree(local, values.slice(0, mid), results.slice(0, mid)),
-        0x05, ...setTree(local, values.slice(mid), results.slice(mid)), 0x0b];
+    return [LOCAL_GET, local, I32_CONST, values[mid], I32_LT_S, IF, I32, ...setTree(local, values.slice(0, mid), results.slice(0, mid)),
+        ELSE, ...setTree(local, values.slice(mid), results.slice(mid)), END];
 }
 
 // A foldable block right after a void `if` moves into both of its arms, the if then producing the
@@ -269,10 +269,10 @@ function pureArm(code, from, to) {
     let height = 0;
     for (let p = from; p < to; p = opNext(code, p)) {
         const op = code[p];
-        if (op === 0x41 || op === 0x20) height++;
-        else if (op === 0x45) { if (height < 1) return false; }
-        else if (op === 0x21 || op === 0x1a) { if (--height < 0) return false; }
-        else if ((op >= 0x46 && op <= 0x4f) || (op >= 0x6a && op <= 0x75)) { if (--height < 1) return false; }
+        if (op === I32_CONST || op === LOCAL_GET) height++;
+        else if (op === I32_EQZ) { if (height < 1) return false; }
+        else if (op === LOCAL_SET || op === DROP) { if (--height < 0) return false; }
+        else if ((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S)) { if (--height < 1) return false; }
         else return false;
     }
     return height === 0;
@@ -283,41 +283,41 @@ function sinkSetBlocks(code, blocks) {
     let at = 0, changed = false;
     for (const b of blocks) {
         const ifEnd = b.start - 1;
-        if (code[ifEnd] !== 0x0b) continue;
+        if (code[ifEnd] !== END) continue;
         let s = -1;
         for (let k = 0, opened = []; k < ifEnd; k = opNext(code, k)) {
             const op = code[k];
-            if (op >= 0x02 && op <= 0x04) opened.push(k);
-            else if (op === 0x0b) opened.pop();
+            if (op >= BLOCK && op <= IF) opened.push(k);
+            else if (op === END) opened.pop();
             if (opNext(code, k) === ifEnd) s = opened.at(-1) ?? -1;
         }
-        if (s < at || code[s] !== 0x04 || code[s + 1] !== 0x40 || opClose(code, s) !== ifEnd) continue;
+        if (s < at || code[s] !== IF || code[s + 1] !== VOID || opClose(code, s) !== ifEnd) continue;
         let otherwise = -1, selfBranch = false;
         for (let k = s + 2, depth = 0; k < ifEnd; k = opNext(code, k)) {
             const op = code[k];
-            if (op >= 0x02 && op <= 0x04) depth++;
-            else if (op === 0x0b) depth--;
-            else if (op === 0x05 && depth === 0) otherwise = k;
-            else if ((op === 0x0c || op === 0x0d) && code[k + 1] === depth) selfBranch = true;
+            if (op >= BLOCK && op <= IF) depth++;
+            else if (op === END) depth--;
+            else if (op === ELSE && depth === 0) otherwise = k;
+            else if ((op === BR || op === BR_IF) && code[k + 1] === depth) selfBranch = true;
         }
         if (selfBranch) continue;
         const body = code.slice(b.start + 2, b.end);
         const arm = (from, to) => {
-            if (pureArm(code, from, to)) out.push(0x02, 0x7f, ...code.slice(from, to), ...body, 0x0b);
-            else out.push(...code.slice(from, to), 0x02, 0x7f, ...body, 0x0b);
+            if (pureArm(code, from, to)) out.push(BLOCK, I32, ...code.slice(from, to), ...body, END);
+            else out.push(...code.slice(from, to), BLOCK, I32, ...body, END);
         };
         for (let p = at; p < s; p++) out.push(code[p]);
-        out.push(0x04, 0x7f);
+        out.push(IF, I32);
         if (otherwise < 0) {
             arm(s + 2, ifEnd);
-            out.push(0x05);
+            out.push(ELSE);
             arm(ifEnd, ifEnd);
         } else {
             arm(s + 2, otherwise);
-            out.push(0x05);
+            out.push(ELSE);
             arm(otherwise + 1, ifEnd);
         }
-        out.push(0x0b);
+        out.push(END);
         at = b.end + 1;
         changed = true;
     }
@@ -327,12 +327,12 @@ function sinkSetBlocks(code, blocks) {
 }
 
 function foldValueSets(code, arity, sink = true) {
-    for (let at = 0; at < code.length; at = opNext(code, at)) if (!(OPERAND_CELLS[code[at]] >= 0)) return null;
+    for (let at = 0; at < code.length; at = opNext(code, at)) if (!(CELLS[code[at]] >= 0)) return null;
     // Only a local written a constant somewhere can have a known set: a cheap filter, since most
     // inlined blocks read parameters or loaded values.
     const constantWrites = new Set();
     for (let at = 0, prev = -1; at < code.length; prev = at, at = opNext(code, at))
-        if (code[at] === 0x21 && prev >= 0 && code[prev] === 0x41) constantWrites.add(code[at + 1]);
+        if (code[at] === LOCAL_SET && prev >= 0 && code[prev] === I32_CONST) constantWrites.add(code[at + 1]);
     const candidates = setCandidates(code).filter(c => c.free === undefined || constantWrites.has(c.free));
     if (!candidates.length) return null;
     const wanted = new Map(candidates.filter(c => c.free !== undefined).map(c => [c.start, c.free]));

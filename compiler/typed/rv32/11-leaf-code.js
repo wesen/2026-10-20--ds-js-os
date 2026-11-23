@@ -2,9 +2,9 @@
 // Accepted body: if (x <relation> K) return -x or C; return x.
 // The branch below skips the taken action when the source predicate is false.
 const GUARDED_FALSE = new Map([
-    [0x46,[1,false]], [0x47,[0,false]], // eq: bne, ne: beq
-    [0x48,[5,false]], [0x4a,[5,true]],  // lt: bge x,K; gt: bge K,x
-    [0x4c,[4,true]], [0x4e,[4,false]],  // le: blt K,x; ge: blt x,K
+    [I32_EQ,[1,false]], [I32_NE,[0,false]], // eq: bne, ne: beq
+    [I32_LT_S,[5,false]], [I32_GT_S,[5,true]],  // lt: bge x,K; gt: bge K,x
+    [I32_LE_S,[4,true]], [I32_GE_S,[4,false]],  // le: blt K,x; ge: blt x,K
 ]);
 
 function guardedReturnSummary(fn) {
@@ -12,13 +12,13 @@ function guardedReturnSummary(fn) {
     if (fn.nlocals || fn.params.length !== 1 || fn.params[0] !== "i32" || fn.result !== "i32" ||
         (t.length !== 14 && t.length !== 17)) return null;
     const branch = GUARDED_FALSE.get(t[4]);
-    if (!branch || t[0] !== 0x20 || t[1] !== 0 || t[2] !== 0x41 || t[5] !== 0x04 ||
-        t[6] !== 0x40 || t[7] !== 0x41) return null;
+    if (!branch || t[0] !== LOCAL_GET || t[1] !== 0 || t[2] !== I32_CONST || t[5] !== IF ||
+        t[6] !== VOID || t[7] !== I32_CONST) return null;
     const negate = t.length === 17;
-    if (negate && (t[8] !== 0 || t[9] !== 0x20 || t[10] !== 0 || t[11] !== 0x6b)) return null;
+    if (negate && (t[8] !== 0 || t[9] !== LOCAL_GET || t[10] !== 0 || t[11] !== I32_SUB)) return null;
     const tail = t.length - 5;
-    if (t[tail] !== 0x0f || t[tail+1] !== 0x0b || t[tail+2] !== 0x20 ||
-        t[tail+3] !== 0 || t[tail+4] !== 0x0b) return null;
+    if (t[tail] !== RETURN || t[tail+1] !== END || t[tail+2] !== LOCAL_GET ||
+        t[tail+3] !== 0 || t[tail+4] !== END) return null;
     return {kind: branch[0], swap: branch[1], limit: t[3], negate, literal: t[8]};
 }
 
@@ -45,11 +45,9 @@ class GuardedReturnCode extends FunctionCode {
 
 // An allowlist keeps any new operation with a possible frame dependency on the
 // ordinary path until its frameless lowering is reviewed.
-const LEAF_OPERANDS = new Map([
-    [0x02,1],[0x04,1],[0x05,0],[0x0b,0],[0x0c,1],[0x0d,1],[0x0f,0],
-    [0x1a,0],[0x20,1],[0x41,1],[0x45,0],
-    [0x46,0],[0x47,0],[0x48,0],[0x4a,0],[0x4c,0],[0x4e,0],[0x4f,0],
-    ...Array.from(ALU.keys(), op => [op,0]),
+const LEAF_OPERATIONS = new Set([
+    BLOCK, IF, ELSE, END, BR, BR_IF, RETURN, DROP, LOCAL_GET, I32_CONST, I32_EQZ,
+    I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, ...ALU.keys(),
 ]);
 const LEAF_SPILL = Symbol("frameless function needs an operand spill");
 const SHORT_BRANCH_RANGE = Symbol("a forward branch target is beyond the conditional-branch range");
@@ -58,7 +56,7 @@ class LeafCode extends FunctionCode {
     spill() { throw LEAF_SPILL; }
 
     step(op) {
-        if (op !== 0x20) return super.step(op);
+        if (op !== LOCAL_GET) return super.step(op);
         const local = this.cell();
         if (local >= this.program.params.length) throw LEAF_SPILL;
         // select.leafParams: a frameless leaf never writes a parameter, so reads use it in place.
@@ -90,10 +88,10 @@ function observeSteps(fn) {
         const live = this.depth;
         const done = step.call(this, op);
         const decisions = [];
-        if (op === 0x10 && this.inlinedGuard) {
+        if (op === CALL && this.inlinedGuard) {
             decisions.push("inline guarded return from verified i32 helper");
             this.inlinedGuard = false;
-        } else if (op === 0x10) {
+        } else if (op === CALL) {
             const args = this.functions[this.program.code[inputStart + 1]].params.length;
             decisions.push("preserve " + Math.min(Math.max(0, live - args), STACK_REGISTERS.length) +
                 " register-held operands across call");
@@ -149,10 +147,10 @@ function lowerLeaf(fn, callables, targets, select, facts) {
     if (fn.params.length > 8 || !fn.params.every(type => type === "i32" || type === "bool"))
         return declineLeaf(fn, "argument list outside leaf convention");
     for (let at = 0; at < fn.code.length;) {
-        const operands = LEAF_OPERANDS.get(fn.code[at++]);
-        if (operands === undefined || at + operands > fn.code.length)
+        const op = fn.code[at++];
+        if (!LEAF_OPERATIONS.has(op) || at + CELLS[op] > fn.code.length)
             return declineLeaf(fn, "operation outside frameless allowlist");
-        at += operands;
+        at += CELLS[op];
     }
     try {
         const leaf = new LeafCode(fn, callables, targets);

@@ -304,6 +304,7 @@ A revision object, `const c = compiler.at(rev)`:
 | `c.revision`, `c.requested`, `c.key` | The full commit SHA (or `"worktree"`), the name you passed, and the cache key. |
 | `c.files` | `[{path, sha256, bytes, line}]`. `line` is the file's first line in the evaluated source, which `where` uses. |
 | `c.missing` | Optional files absent at that revision. |
+| `c.typedTape` | The tape definition (`compiler/typed/tape.js`): opcode constants, `cells`, `effects`, `rows`, `next`, `close`, `name`, `decode(code)`; `null` before PICOCALC-TYPED-TAPE. |
 | `c.typedWasm`, `c.typedAsync`, `c.typedWorld`, `c.typedRv32`, `c.typedPieLoops` | The front end and backends, as each file publishes them. |
 | `c.interp`, `c.rayBench` | `tools/rv32-interp.js` and `tools/typed-ray-bench.js`, running the JavaScript reference interpreter. |
 | `c.native.interp`, `c.native.rayBench` | `native.interp` is `rv32`. `native.rayBench` is the revision's benchmark bound to `rv32`: same layout, arguments and checks, about 50 ms per opening frame. |

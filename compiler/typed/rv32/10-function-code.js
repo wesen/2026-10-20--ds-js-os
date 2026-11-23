@@ -38,7 +38,7 @@ class FunctionCode {
     // operands; every caller's sequence reads its operands no later than its first write.
     destination() {
         const tape = this.program.code, plan = this.locations;
-        if (!this.select?.results || !plan || tape[this.at] !== 0x21 || plan.forward.has(this.at)) return undefined;
+        if (!this.select?.results || !plan || tape[this.at] !== LOCAL_SET || plan.forward.has(this.at)) return undefined;
         const home = plan.homes.get(tape[this.at + 1]);
         if (home === undefined) return undefined;
         this.pendingWrite = [tape[this.at + 1], this.at];
@@ -127,7 +127,7 @@ class FunctionCode {
         // folded the set into it.
         const tape = this.program.code;
         let constant;
-        if (plan.skips) for (const o of [this.currentOp, this.previousOp]) if (o !== undefined && tape[o] === 0x41 && o + 2 === at) constant = tape[o + 1];
+        if (plan.skips) for (const o of [this.currentOp, this.previousOp]) if (o !== undefined && tape[o] === I32_CONST && o + 2 === at) constant = tape[o + 1];
         for (const {reg, r, K0, other} of list) {
             if (step !== undefined) {
                 this.emit(instruction.i(0x13, reg, 0, reg, 2 * step));
@@ -152,7 +152,7 @@ class FunctionCode {
         }
     }
 
-    // The address of receiver[index + j]: checked against the capacity, or unchecked (0xf3, in a
+    // The address of receiver[index + j]: checked against the capacity, or unchecked (UNCHECKED_ADDRESS, in a
     // copy of a loop that select.version proved in range), and read at once when a UTF-16 load
     // follows.
     checkedAddress(receiver, index, constant, pointer, unchecked = false, j = 0) {
@@ -169,7 +169,7 @@ class FunctionCode {
             this.emit(0x00100073);
         }
         const out = this.resultRegister(), tape = this.program.code;
-        const loads = tape[this.at] === 0x2f && tape[this.at+2] === 4;
+        const loads = tape[this.at] === I32_LOAD16_U && tape[this.at+2] === 4;
         // select.loadHomes: a fused load whose value a homed local takes next loads into the
         // home (destination()), not into a stack register and a move. The address registers
         // are read by the load itself, so the home may be one of them.
@@ -274,11 +274,11 @@ class FunctionCode {
         const out = stored ?? this.resultRegister();
         const alu = ALU.get(op);
         if (alu) {
-            if (op === 0x6d || op === 0x6f) {
+            if (op === I32_DIV_S || op === I32_REM_S) {
                 this.emit(instruction.b(1, b, ZERO, 8));
                 this.emit(0x00100073);
             }
-            if (op === 0x6d) {
+            if (op === I32_DIV_S) {
                 const safe = {};
                 // A frameless function still keeps its parameters in argument registers.
                 const check = this.frameless ? T5 : A0;
@@ -290,17 +290,17 @@ class FunctionCode {
                 this.mark(safe);
             }
             this.emit(instruction.r(0x33, out, alu[0], a, b, alu[1]));
-        } else if (op === 0x46 || op === 0x47) {
+        } else if (op === I32_EQ || op === I32_NE) {
             this.emit(instruction.r(0x33, out, 4, a, b)); // xor
-            if (op === 0x46) this.emit(instruction.i(0x13, out, 3, out, 1)); // seqz
+            if (op === I32_EQ) this.emit(instruction.i(0x13, out, 3, out, 1)); // seqz
             else this.emit(instruction.r(0x33, out, 3, ZERO, out)); // snez
         } else {
-            const unsigned = op === 0x4f;
-            if (![0x48, 0x4a, 0x4c, 0x4e, 0x4f].includes(op))
+            const unsigned = op === I32_GE_U;
+            if (![I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U].includes(op))
                 throw new SyntaxError("unsupported RV32 operator " + op);
-            const swap = op === 0x4a || op === 0x4c;
+            const swap = op === I32_GT_S || op === I32_LE_S;
             this.emit(instruction.r(0x33, out, unsigned ? 3 : 2, swap ? b : a, swap ? a : b));
-            if (op === 0x4c || op === 0x4e || unsigned)
+            if (op === I32_LE_S || op === I32_GE_S || unsigned)
                 this.emit(instruction.i(0x13, out, 4, out, 1));
         }
         this.result(out, stored);
@@ -319,7 +319,7 @@ class FunctionCode {
         if (kind === "divide") {
             const nonNegative = this.facts?.has(this.at + 1) ?? false;
             this.at += 2;
-            this.divideByConstant(next === 0x6f, c, nonNegative);
+            this.divideByConstant(next === I32_REM_S, c, nonNegative);
             return true;
         }
         const form = IMMEDIATE_FORMS.get(next)(c);
@@ -389,43 +389,43 @@ class FunctionCode {
     // Whether the operation at `at` (after a predicate) is a branch the predicate can fuse with.
     fusible(at) {
         const tape = this.program.code;
-        const consumer = tape[at] === 0x45 ? tape[at + 1] : tape[at];
-        return consumer === 0x04 || consumer === 0x0d;
+        const consumer = tape[at] === I32_EQZ ? tape[at + 1] : tape[at];
+        return consumer === IF || consumer === BR_IF;
     }
 
     branchTarget() {
         const block = this.control.at(-1 - this.cell());
-        return block.op === 0x03 ? block.start : block.end;
+        return block.op === LOOP ? block.start : block.end;
     }
 
     // select.branches: a comparison consumed by if or br_if becomes one conditional branch.
     fuseBranch(op) {
         const encoding = PREDICATES.get(op);
         if (!encoding || !this.fusible(this.at)) return false;
-        const negate = this.program.code[this.at] === 0x45;
+        const negate = this.program.code[this.at] === I32_EQZ;
         const consumer = this.program.code[this.at + Number(negate)];
         this.at += 1 + Number(negate);
         const [kind, swap] = encoding;
-        const right = op === 0x45 ? ZERO : this.pop(T6);
+        const right = op === I32_EQZ ? ZERO : this.pop(T6);
         const left = this.pop(T5);
         // As at every control operation, pending direct reads move to their stack registers.
         this.materialize();
         const a = swap ? right : left;
         const b = swap ? left : right;
         const whenTrue = kind ^ Number(negate);
-        if (consumer === 0x04) this.begin(consumer, whenTrue ^ 1, a, b);
+        if (consumer === IF) this.begin(consumer, whenTrue ^ 1, a, b);
         else this.branch(whenTrue, a, b, this.branchTarget());
         return true;
     }
 
     begin(op, kind = 0, a, b = ZERO) {
         const type = this.cell();
-        if (type !== 0x40 && type !== 0x7f) throw new SyntaxError("unsupported RV32 control result");
-        const condition = op === 0x04 ? a ?? this.pop(T5) : ZERO;
-        const block = {op, depth: this.depth, value: type === 0x7f, start: {}, alternate: {}, end: {}};
+        if (type !== VOID && type !== I32) throw new SyntaxError("unsupported RV32 control result");
+        const condition = op === IF ? a ?? this.pop(T5) : ZERO;
+        const block = {op, depth: this.depth, value: type === I32, start: {}, alternate: {}, end: {}};
         this.control.push(block);
         this.mark(block.start);
-        if (op === 0x04) this.branch(kind, condition, b, block.alternate);
+        if (op === IF) this.branch(kind, condition, b, block.alternate);
     }
 
     end() {
@@ -468,14 +468,14 @@ class FunctionCode {
             this.currentOp = undefined;
             return false;
         }
-        if (op >= 0x02 && op <= 0x0f) this.materialize();
+        if (op >= BLOCK && op <= RETURN) this.materialize();
         if (plan?.forward.has(this.at - 1)) {
             const site = this.at - 1, tape = this.program.code;
-            const constant = op === 0x41 ? this.cell() : undefined;
-            // [const c] set t access r t, or set t access r t: access is 0xf1 or 0xf3 (with j).
+            const constant = op === I32_CONST ? this.cell() : undefined;
+            // [const c] set t access r t, or set t access r t: access is CHECKED_ADDRESS or UNCHECKED_ADDRESS (with j).
             const accessAt = constant === undefined ? site + 2 : site + 4;
-            const unchecked = tape[accessAt] === 0xf3, j = unchecked ? tape[accessAt + 3] : 0;
-            const direct = unchecked && constant >= 0 && constant + j <= 1021 && tape[accessAt + 4] === 0x2f && tape[accessAt + 6] === 4;
+            const unchecked = tape[accessAt] === UNCHECKED_ADDRESS, j = unchecked ? tape[accessAt + 3] : 0;
+            const direct = unchecked && constant >= 0 && constant + j <= 1021 && tape[accessAt + 4] === I32_LOAD16_U && tape[accessAt + 6] === 4;
             const constantHome = constant === undefined ? undefined : plan.homes.get("c" + constant);
             const index = constant === undefined ? this.pop(T5) : constantHome ?? T5;
             if (constant !== undefined) {
@@ -491,7 +491,7 @@ class FunctionCode {
             return false;
         }
         // The capacity header of a buffer with a capacity home: the home itself.
-        if (op === 0x20 && plan && this.select?.version && this.program.code[this.at + 1] === 0x28 && this.program.code[this.at + 3] === 0) {
+        if (op === LOCAL_GET && plan && this.select?.version && this.program.code[this.at + 1] === I32_LOAD && this.program.code[this.at + 3] === 0) {
             const home = plan.homes.get(-1 - this.program.code[this.at]);
             if (home !== undefined) {
                 this.at += 4;
@@ -499,36 +499,36 @@ class FunctionCode {
                 return false;
             }
         }
-        if (op === 0x20 && this.capacityReady && this.program.code[this.at] === plan.receiver &&
-            this.program.code[this.at+1] === 0x28 && this.program.code[this.at+3] === 0) {
+        if (op === LOCAL_GET && this.capacityReady && this.program.code[this.at] === plan.receiver &&
+            this.program.code[this.at+1] === I32_LOAD && this.program.code[this.at+3] === 0) {
             this.at += 4;
             this.push(A0 + 7);
             return false;
         }
-        if (this.select?.branches && op >= 0x45 && op <= 0x4f && this.fuseBranch(op)) return false;
-        if (op === 0x41 && this.select && this.selectConstant()) return false;
+        if (this.select?.branches && op >= I32_EQZ && op <= I32_GE_U && this.fuseBranch(op)) return false;
+        if (op === I32_CONST && this.select && this.selectConstant()) return false;
         switch (op) {
-        case 0x00: this.emit(0x00100073); break;  // Wasm unreachable
-        case 0x02: case 0x03: case 0x04: this.begin(op); break;
-        case 0x05: {
+        case UNREACHABLE: this.emit(0x00100073); break;  // Wasm unreachable
+        case BLOCK: case LOOP: case IF: this.begin(op); break;
+        case ELSE: {
             const block = this.control.at(-1);
             this.jump(block.end);
             this.mark(block.alternate);
             this.depth = block.depth;
             break;
         }
-        case 0x0b: return this.end();
-        case 0x0c: case 0x0d: {
+        case END: return this.end();
+        case BR: case BR_IF: {
             const block = this.control.at(-1 - this.cell());
-            const target = block.op === 0x03 ? block.start : block.end;
-            if (op === 0x0d) this.branch(1, this.pop(T5), ZERO, target);
+            const target = block.op === LOOP ? block.start : block.end;
+            if (op === BR_IF) this.branch(1, this.pop(T5), ZERO, target);
             else this.jump(target);
             break;
         }
-        case 0x0f: this.move(A0, this.pop(A0)); this.jump(this.exit); break;
-        case 0x10: this.call(this.cell()); break;
-        case 0x1a: this.depth--; break;
-        case 0x20: {
+        case RETURN: this.move(A0, this.pop(A0)); this.jump(this.exit); break;
+        case CALL: this.call(this.cell()); break;
+        case DROP: this.depth--; break;
+        case LOCAL_GET: {
             const local = this.cell();
             const home = plan?.direct ? plan.homes.get(local) : undefined;
             if (home !== undefined) {
@@ -541,29 +541,29 @@ class FunctionCode {
             this.result(out, stored);
             break;
         }
-        case 0x21: {
+        case LOCAL_SET: {
             const value = this.pop(T5), local = this.cell();
             this.writeLocal(value, local);
             this.pointersAfterWrite(local, this.at - 2, value);
             break;
         }
-        case 0x28: case 0x2f: case 0x36: case 0x3b: {
+        case I32_LOAD: case I32_LOAD16_U: case I32_STORE: case I32_STORE16: {
             this.cell(); // alignment hint
             const offset = this.cell();
             if (offset > 2047) throw new SyntaxError("RV32 field offset exceeds the instruction range");
-            if (op === 0x28 || op === 0x2f) {
+            if (op === I32_LOAD || op === I32_LOAD16_U) {
                 const base = this.pop(T5);
                 const stored = this.destination();
                 const out = stored ?? this.resultRegister();
-                this.load(out, offset, base, op === 0x28 ? 2 : 5); // lw or lhu
+                this.load(out, offset, base, op === I32_LOAD ? 2 : 5); // lw or lhu
                 this.result(out, stored);
             } else {
                 const value = this.pop(T6);
-                this.store(value, offset, this.pop(T5), op === 0x36 ? 2 : 1); // sw or sh
+                this.store(value, offset, this.pop(T5), op === I32_STORE ? 2 : 1); // sw or sh
             }
             break;
         }
-        case 0x41: {
+        case I32_CONST: {
             const n = this.cell();
             const constantHome = plan?.homes.get("c" + n);
             if (constantHome !== undefined) {
@@ -576,7 +576,7 @@ class FunctionCode {
             this.result(out, stored);
             break;
         }
-        case 0x45: {
+        case I32_EQZ: {
             const value = this.pop(T5);
             const stored = this.destination();
             const out = stored ?? this.resultRegister();
@@ -584,19 +584,19 @@ class FunctionCode {
             this.result(out, stored);
             break;
         }
-        case 0xf1: { // checked UTF-16 address, before any payload load or write RHS
+        case CHECKED_ADDRESS: { // checked UTF-16 address, before any payload load or write RHS
             const receiver = this.cell(), position = this.cell();
             this.readLocal(T5, position);
             this.checkedAddress(receiver, T5);
             break;
         }
-        case 0xf3: { // unchecked UTF-16 address of receiver[position + j] (select.version)
+        case UNCHECKED_ADDRESS: { // unchecked UTF-16 address of receiver[position + j] (select.version)
             const receiver = this.cell(), position = this.cell(), j = this.cell();
             this.readLocal(T5, position);
             this.checkedAddress(receiver, T5, undefined, undefined, true, j);
             break;
         }
-        case 0xf2: { // ordered UTF-16 stores after the complete range check
+        case LITERAL_STORES: { // ordered UTF-16 stores after the complete range check
             const address = this.cell();
             const value = this.program.literals[this.cell()];
             this.readLocal(T5, address);

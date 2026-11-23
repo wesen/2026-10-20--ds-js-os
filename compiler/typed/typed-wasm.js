@@ -1,24 +1,22 @@
 // Direct Wasm emitter for PicoCalc world sources. Runs in a bare QuickJS realm.
 (() => {
 "use strict";
-const OP = {
-    if: 0x04, else: 0x05, end: 0x0b, return: 0x0f,
-    get: 0x20, set: 0x21, const: 0x41, eqz: 0x45,
-    lt: 0x48, add: 0x6a, sub: 0x6b, div: 0x6d,
-};
-const I32 = 0x7f;
-const VOID = 0x40;
+// The tape's opcodes and block types (tape.js, loaded first). The Wasm mode writes the same opcodes.
+const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET, LOCAL_SET,
+    I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
+    I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S,
+    RETURN, CHECKED_ADDRESS, LITERAL_STORES, I32, VOID} = typedTape;
 const LITERAL = Symbol("integer literal");
 const scalarType = type => type === LITERAL ? "i32" : type;
 const BINARY = Object.assign(Object.create(null), Object.fromEntries([
     ["||", [1, "bool", "bool"]], ["&&", [2, "bool", "bool"]],
-    ["===", [3, null, "bool", 0x46]], ["!==", [3, null, "bool", 0x47]],
-    ["<", [4, "i32", "bool", OP.lt]],
-    ["<=", [4, "i32", "bool", 0x4c]], [">", [4, "i32", "bool", 0x4a]],
-    [">=", [4, "i32", "bool", 0x4e]], [">>", [5, "i32", "i32", 0x75]],
-    ["+", [6, "i32", "i32", OP.add]], ["-", [6, "i32", "i32", OP.sub]],
-    ["*", [7, "i32", "i32", 0x6c]], ["/", [7, "i32", "i32", OP.div]],
-    ["%", [7, "i32", "i32", 0x6f]],
+    ["===", [3, null, "bool", I32_EQ]], ["!==", [3, null, "bool", I32_NE]],
+    ["<", [4, "i32", "bool", I32_LT_S]],
+    ["<=", [4, "i32", "bool", I32_LE_S]], [">", [4, "i32", "bool", I32_GT_S]],
+    [">=", [4, "i32", "bool", I32_GE_S]], [">>", [5, "i32", "i32", I32_SHR_S]],
+    ["+", [6, "i32", "i32", I32_ADD]], ["-", [6, "i32", "i32", I32_SUB]],
+    ["*", [7, "i32", "i32", I32_MUL]], ["/", [7, "i32", "i32", I32_DIV_S]],
+    ["%", [7, "i32", "i32", I32_REM_S]],
 ]));
 const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
@@ -312,8 +310,8 @@ class FunctionEmitter {
     }
 
     emitConst(value) {
-        if (value >= -64 && value < 64) this.code.push(OP.const, value & 127);
-        else this.code.push(OP.const, ...signed(value));
+        if (value >= -64 && value < 64) this.code.push(I32_CONST, value & 127);
+        else this.code.push(I32_CONST, ...signed(value));
     }
 
     emitIndex(op, index) {
@@ -335,18 +333,18 @@ class FunctionEmitter {
         const a = this.nextLocal++;
         const b = this.nextLocal++;
         this.want(this.expr(), "i32");
-        this.emitIndex(OP.set, a);
+        this.emitIndex(LOCAL_SET, a);
         { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
         this.want(this.expr(), "i32");
-        this.emitIndex(OP.set, b);
+        this.emitIndex(LOCAL_SET, b);
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
-        this.emitIndex(OP.get, a);
-        this.emitIndex(OP.get, b);
-        this.code.push(OP.lt, OP.if, I32);
-        this.emitIndex(OP.get, name === "min" ? a : b);
-        this.code.push(OP.else);
-        this.emitIndex(OP.get, name === "min" ? b : a);
-        this.code.push(OP.end);
+        this.emitIndex(LOCAL_GET, a);
+        this.emitIndex(LOCAL_GET, b);
+        this.code.push(I32_LT_S, IF, I32);
+        this.emitIndex(LOCAL_GET, name === "min" ? a : b);
+        this.code.push(ELSE);
+        this.emitIndex(LOCAL_GET, name === "min" ? b : a);
+        this.code.push(END);
     }
 
     prefix() {
@@ -361,7 +359,7 @@ class FunctionEmitter {
         case "!": {
             lex.next();
             this.want(this.expr(8), "bool");
-            this.code.push(OP.eqz);
+            this.code.push(I32_EQZ);
             return "bool";
         }
         case "-": {
@@ -374,7 +372,7 @@ class FunctionEmitter {
             this.emitConst(0);
             const type = this.expr(8);
             this.want(type, "i32");
-            this.code.push(OP.sub);
+            this.code.push(I32_SUB);
             return type;
         }
         case "true": {
@@ -438,7 +436,7 @@ class FunctionEmitter {
             return "SurfacePoint";
         }
         if (binding.type === "i32" || binding.type === "bool") {
-            this.emitIndex(OP.get, binding.index);
+            this.emitIndex(LOCAL_GET, binding.index);
             return binding.type;
         }
         if ((binding.type === "string" || binding.type === "buffer") && (lex.token.value === "." && (lex.next(), true))) {
@@ -447,8 +445,8 @@ class FunctionEmitter {
                 return "i32";
             }
             if ((lex.token.value === "length" && (lex.next(), true))) {
-                this.emitIndex(OP.get, binding.index);
-                this.code.push(0x28, 2, 0);
+                this.emitIndex(LOCAL_GET, binding.index);
+                this.code.push(I32_LOAD, 2, 0);
                 return "i32";
             }
             { if (lex.token.value !== "charCodeAt") lex.fail("expected charCodeAt"); lex.next(); }
@@ -456,12 +454,12 @@ class FunctionEmitter {
             const pos = this.nextLocal++;
             this.want(this.expr(), "i32");
             { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
-            this.emitIndex(OP.set, pos);
+            this.emitIndex(LOCAL_SET, pos);
             this.codeUnitAddress(binding.index, pos);
-            this.code.push(0x2f, 1, 4);
+            this.code.push(I32_LOAD16_U, 1, 4);
             return "i32";
         }
-        this.emitIndex(OP.get, binding.index);
+        this.emitIndex(LOCAL_GET, binding.index);
         return binding.type;
     }
 
@@ -478,17 +476,17 @@ class FunctionEmitter {
             if (op === "&&" || op === "||") {
                 this.want(type, "bool");
                 lex.next();
-                this.code.push(OP.if, I32);
+                this.code.push(IF, I32);
                 if (op === "&&") {
                     this.want(this.expr(precedence + 1), "bool");
-                    this.code.push(OP.else);
+                    this.code.push(ELSE);
                     this.emitConst(0);
                 } else {
                     this.emitConst(1);
-                    this.code.push(OP.else);
+                    this.code.push(ELSE);
                     this.want(this.expr(precedence + 1), "bool");
                 }
-                this.code.push(OP.end);
+                this.code.push(END);
                 type = "bool";
             } else {
                 const numeric = precedence === 3 || precedence === 4 || precedence === 6;
@@ -513,17 +511,17 @@ class FunctionEmitter {
         { if (this.lex.token.value !== "return") this.lex.fail("expected return"); this.lex.next(); }
         this.want(this.expr(), type);
         { if (this.lex.token.value !== ";") this.lex.fail("expected ;"); this.lex.next(); }
-        if (branch) this.code.push(OP.return);
+        if (branch) this.code.push(RETURN);
     }
 
     codeUnitAddress(receiver, position) {
-        this.emitIndex(OP.get, position);
-        this.emitIndex(OP.get, receiver);
-        this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
-        this.emitIndex(OP.get, receiver);
-        this.emitIndex(OP.get, position);
+        this.emitIndex(LOCAL_GET, position);
+        this.emitIndex(LOCAL_GET, receiver);
+        this.code.push(I32_LOAD, 2, 0, I32_GE_U, IF, VOID, UNREACHABLE, END);
+        this.emitIndex(LOCAL_GET, receiver);
+        this.emitIndex(LOCAL_GET, position);
         this.emitConst(1);
-        this.code.push(0x74, OP.add);
+        this.code.push(I32_SHL, I32_ADD);
     }
 
     bufferWrite(receiver) {
@@ -536,12 +534,12 @@ class FunctionEmitter {
         { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         const position = this.nextLocal++;
         this.want(this.expr(), "i32");
-        this.emitIndex(OP.set, position);
+        this.emitIndex(LOCAL_SET, position);
         { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
         this.codeUnitAddress(receiver, position);
         this.want(this.expr(), "i32");
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
-        this.code.push(0x3b, 1, 4); // i32.store16 into the buffer's data after its capacity
+        this.code.push(I32_STORE16, 1, 4); // i32.store16 into the buffer's data after its capacity
     }
 
     bufferLiteral(receiver) {
@@ -549,7 +547,7 @@ class FunctionEmitter {
         { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         const position = this.nextLocal++, address = this.nextLocal++;
         this.want(this.expr(), "i32");
-        this.emitIndex(OP.set, position);
+        this.emitIndex(LOCAL_SET, position);
         { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
         if (lex.token.kind !== "str") lex.fail("expected a double-quoted string literal");
         const value = JSON.parse(lex.token.value);
@@ -560,21 +558,21 @@ class FunctionEmitter {
         // Check the whole write before mutating the buffer. A negative start
         // is outside the unsigned bound even if the literal would end inside.
         this.codeUnitAddress(receiver, position);
-        this.emitIndex(OP.set, address);
-        this.emitIndex(OP.get, position);
+        this.emitIndex(LOCAL_SET, address);
+        this.emitIndex(LOCAL_GET, position);
         this.emitConst(value.length - 1);
-        this.code.push(OP.add);
-        this.emitIndex(OP.get, receiver);
-        this.code.push(0x28, 2, 0, 0x4f, OP.if, VOID, 0x00, OP.end);
+        this.code.push(I32_ADD);
+        this.emitIndex(LOCAL_GET, receiver);
+        this.code.push(I32_LOAD, 2, 0, I32_GE_U, IF, VOID, UNREACHABLE, END);
         this.emitLiteralStores(address, value);
         return value.length;
     }
 
     emitLiteralStores(address, value) {
         for (let i = 0; i < value.length; i++) {
-            this.emitIndex(OP.get, address);
+            this.emitIndex(LOCAL_GET, address);
             this.emitConst(value.charCodeAt(i));
-            this.emitMemory(0x3b, 1, 4 + 2 * i);
+            this.emitMemory(I32_STORE16, 1, 4 + 2 * i);
         }
     }
 
@@ -616,7 +614,7 @@ class FunctionEmitter {
                 type = this.memberCall(this.aliases?.methods.get(type), scalarType(type), true, name);
             } else {
                 const field = this.field(type, name);
-                this.emitMemory(0x28, 2, field.offset);
+                this.emitMemory(I32_LOAD, 2, field.offset);
                 type = field.type;
             }
         }
@@ -632,10 +630,10 @@ class FunctionEmitter {
         if (!lex.accept("{")) {
             this.want(this.expr(), options);
             const record = this.nextLocal++;
-            this.emitIndex(OP.set, record);
+            this.emitIndex(LOCAL_SET, record);
             for (const field of fields.values()) {
-                this.emitIndex(OP.get, record);
-                this.emitMemory(0x28, 2, field.offset);
+                this.emitIndex(LOCAL_GET, record);
+                this.emitMemory(I32_LOAD, 2, field.offset);
             }
             return;
         }
@@ -649,7 +647,7 @@ class FunctionEmitter {
             this.want(this.expr(), field.type);
             if (pending.size || field.offset !== 4 * seen.size) {
                 const temp = this.nextLocal++;
-                this.emitIndex(OP.set, temp);
+                this.emitIndex(LOCAL_SET, temp);
                 pending.set(name, temp);
             }
             seen.add(name);
@@ -658,7 +656,7 @@ class FunctionEmitter {
         lex.expect("}");
         for (const name of fields.keys()) {
             if (!seen.has(name)) lex.fail("missing option " + options + "." + name);
-            if (pending.has(name)) this.emitIndex(OP.get, pending.get(name));
+            if (pending.has(name)) this.emitIndex(LOCAL_GET, pending.get(name));
         }
     }
 
@@ -676,9 +674,9 @@ class FunctionEmitter {
             const state = named?.type === "WorldState" ? named :
                 [...this.locals.values()].find(local => local.type === "WorldState");
             if (!state) lex.fail("start requires an ambient WorldState binding");
-            this.emitIndex(OP.get, state.index);
-            this.emitMemory(0x28, 2, this.records.get("WorldState").get(startField).offset);
-            this.code.push(OP.eqz, OP.if, I32);
+            this.emitIndex(LOCAL_GET, state.index);
+            this.emitMemory(I32_LOAD, 2, this.records.get("WorldState").get(startField).offset);
+            this.code.push(I32_EQZ, IF, I32);
         }
         const end = options ? callee.params.length - this.records.get(options).size : callee.params.length;
         for (let i = first; i < end; i++) {
@@ -690,14 +688,14 @@ class FunctionEmitter {
             this.optionArgument(options);
         }
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
-        this.emitIndex(0x10, callee.index);
+        this.emitIndex(CALL, callee.index);
         const ordinal = callee.index - this.functionBase;
         if (this.edges && ordinal >= 0 && !this.edges.includes(ordinal))
             this.edges.push(ordinal);
         if (startField) {
-            this.code.push(OP.else);
+            this.code.push(ELSE);
             this.emitConst(0);
-            this.code.push(OP.end);
+            this.code.push(END);
         }
         return callee.result;
     }
@@ -726,19 +724,19 @@ class FunctionEmitter {
             { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
             this.want(this.expr(), "bool");
             { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
-            this.code.push(OP.if, VOID);
+            this.code.push(IF, VOID);
             this.controls++;
             if (lex.token.value === "{") this.block(result);
             else this.result(result, true);
             if (!(lex.token.value === "else" && (lex.next(), true))) break;
-            this.code.push(OP.else);
+            this.code.push(ELSE);
             if ((lex.token.value === "if" && (lex.next(), true))) continue;
             if (lex.token.value === "{") this.block(result);
             else this.result(result, true);
             break;
         } while (true);
         while (this.controls > enclosing) {
-            this.code.push(OP.end);
+            this.code.push(END);
             this.controls--;
         }
     }
@@ -756,9 +754,9 @@ class FunctionEmitter {
         // Expression control blocks close within expr(), before any break can appear.
         this.loopExits.push(this.controls);
         this.controls += 2;
-        this.code.push(0x02, VOID, 0x03, VOID);
+        this.code.push(BLOCK, VOID, LOOP, VOID);
         this.want(this.expr(), "bool");
-        this.code.push(OP.eqz, 0x0d, 1);
+        this.code.push(I32_EQZ, BR_IF, 1);
         let update;
         if (counted) {
             { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
@@ -774,7 +772,7 @@ class FunctionEmitter {
             if (this.inspection) this.code.append(update);
             else for (const cell of update) this.code.push(cell);
         }
-        this.code.push(0x0c, 0, OP.end, OP.end);
+        this.code.push(BR, 0, END, END);
         this.controls -= 2;
         this.loopExits.pop();
         this.locals = enclosing;
@@ -795,7 +793,7 @@ class FunctionEmitter {
         { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
         const type = this.expr();
         if (annotation !== null) this.want(type, annotation);
-        this.emitIndex(OP.set, this.local(id, annotation ?? scalarType(type), mutable));
+        this.emitIndex(LOCAL_SET, this.local(id, annotation ?? scalarType(type), mutable));
     }
 
     assignment(id, statement = false) {
@@ -806,23 +804,23 @@ class FunctionEmitter {
             if (local.type === "buffer") this.bufferWrite(local.index);
             else {
                 const name = lex.ident();
-                this.emitIndex(OP.get, local.index);
+                this.emitIndex(LOCAL_GET, local.index);
                 if (lex.token.value === "(") {
                     const type = this.memberCall(this.aliases?.methods.get(local.type), local.type, true, name);
                     if (lex.token.value === ".") this.postfix(type);
-                    this.code.push(0x1a);
+                    this.code.push(DROP);
                     return;
                 }
                 const field = this.field(local.type, name);
                 { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
                 this.want(this.expr(), field.type);
-                this.emitMemory(0x36, 2, field.offset);
+                this.emitMemory(I32_STORE, 2, field.offset);
             }
         } else {
             if (!local.mutable) lex.fail("expected mutable local " + id);
             { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
             this.want(this.expr(), local.type);
-            this.emitIndex(OP.set, local.index);
+            this.emitIndex(LOCAL_SET, local.index);
         }
     }
 
@@ -836,26 +834,26 @@ class FunctionEmitter {
             let last = first;
             while (values[i] === last + 1) last = values[i++];
             if (first === last) {
-                this.emitIndex(OP.get, slot);
+                this.emitIndex(LOCAL_GET, slot);
                 this.emitConst(first);
-                this.code.push(0x46);
+                this.code.push(I32_EQ);
             } else {
                 this.emitConst((last - first) | 0);
-                this.emitIndex(OP.get, slot);
+                this.emitIndex(LOCAL_GET, slot);
                 if (first !== 0) {
                     this.emitConst(first);
-                    this.code.push(OP.sub);
+                    this.code.push(I32_SUB);
                 }
-                this.code.push(0x4f);
+                this.code.push(I32_GE_U);
             }
             if (i < values.length) {
-                this.code.push(OP.if, I32);
+                this.code.push(IF, I32);
                 this.emitConst(1);
-                this.code.push(OP.else);
+                this.code.push(ELSE);
                 joins++;
             }
         }
-        while (joins-- > 0) this.code.push(OP.end);
+        while (joins-- > 0) this.code.push(END);
     }
 
     match(result) {
@@ -866,7 +864,7 @@ class FunctionEmitter {
         if (!members) lex.fail("match requires an enum, got " + scalarType(type));
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
         const slot = this.nextLocal++;
-        this.emitIndex(OP.set, slot);
+        this.emitIndex(LOCAL_SET, slot);
         { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
         const seen = new Set();
         const enclosing = this.controls;
@@ -881,16 +879,16 @@ class FunctionEmitter {
             } while ((lex.token.value === "," && (lex.next(), true)));
             { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
             this.matchGroup(slot, values);
-            this.code.push(OP.if, VOID);
+            this.code.push(IF, VOID);
             this.controls++;
             this.block(result);
-            this.code.push(OP.else);
+            this.code.push(ELSE);
         }
         const missing = [...members.keys()].filter(member => !seen.has(member));
         if (missing.length) lex.fail("match on " + type + " does not cover: " + missing.join(", "));
-        this.code.push(0x00); // A raw ABI word outside the declared domain traps.
+        this.code.push(UNREACHABLE); // A raw ABI word outside the declared domain traps.
         while (this.controls > enclosing) {
-            this.code.push(OP.end);
+            this.code.push(END);
             this.controls--;
         }
     }
@@ -922,7 +920,7 @@ class FunctionEmitter {
             const exit = this.loopExits.at(-1);
             if (exit === undefined) lex.fail("break outside a loop");
             { if (lex.token.value !== ";") lex.fail("expected ;"); lex.next(); }
-            this.emitIndex(0x0c, this.controls - exit - 1);
+            this.emitIndex(BR, this.controls - exit - 1);
             return;
         }
         case "const": case "let":
@@ -933,12 +931,12 @@ class FunctionEmitter {
             if ((lex.token.value === "(" && (lex.next(), true))) {
                 const type = this.call(id);
                 if (lex.token.value === ".") this.postfix(type);
-                this.code.push(0x1a); // drop the unused call result
+                this.code.push(DROP); // drop the unused call result
             } else if (!this.locals.has(id) && this.aliases?.namespaces.has(id)) {
                 lex.expect(".");
                 const type = this.memberCall(this.aliases.namespaces.get(id), id, false);
                 if (lex.token.value === ".") this.postfix(type);
-                this.code.push(0x1a);
+                this.code.push(DROP);
             } else {
                 this.assignment(id, true);
             }
@@ -957,7 +955,7 @@ class FunctionEmitter {
         while (lex.token.value !== "return") this.statement(result);
         this.result(result, false);
         { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
-        this.code.push(OP.end);
+        this.code.push(END);
         fn.nlocals = this.nextLocal - params.length;
         fn.code = this.code;
         return this.finish(fn);
@@ -973,17 +971,17 @@ class FunctionEmitter {
 // The RV32 backend consumes one number per opcode and immediate. Only the
 // Wasm writer needs variable-length integers and framed function bodies.
 class NumericFunctionEmitter extends FunctionEmitter {
-    emitConst(value) { this.code.push(OP.const, value); }
+    emitConst(value) { this.code.push(I32_CONST, value); }
     emitIndex(op, index) { this.code.push(op, index); }
     emitMemory(op, alignment, offset) { this.code.push(op, alignment, offset); }
 
     codeUnitAddress(receiver, position) {
-        this.code.push(0xf1, receiver, position); // checked UTF-16 address
+        this.code.push(CHECKED_ADDRESS, receiver, position); // checked UTF-16 address
     }
 
     emitLiteralStores(address, value) {
         this.literals ??= [];
-        this.code.push(0xf2, address, this.literals.push(value) - 1); // checked literal stores
+        this.code.push(LITERAL_STORES, address, this.literals.push(value) - 1); // checked literal stores
     }
 
     finish(fn) {
@@ -1028,43 +1026,10 @@ class InspectionTape extends Array {
     }
 }
 
-let inspectedOpcodes;
+// Inspection decodes the tape with tape.js; the Wasm mode's bytes carry LEB128 immediates.
 function inspectOperations(tape, numeric) {
-    const specs = inspectedOpcodes ??= {
-        0x00:["unreachable"], 0x02:["block","byte"], 0x03:["loop","byte"], 0x04:["if","byte"],
-        0x05:["else"], 0x0b:["end"], 0x0c:["br","u"], 0x0d:["br_if","u"], 0x0f:["return"],
-        0x10:["call","u"], 0x1a:["drop"], 0x20:["local.get","u"], 0x21:["local.set","u"],
-        0x28:["i32.load","u","u"], 0x2f:["i32.load16_u","u","u"],
-        0x36:["i32.store","u","u"], 0x3b:["i32.store16","u","u"], 0x41:["i32.const","s"],
-        0x45:["i32.eqz"], 0x46:["i32.eq"], 0x47:["i32.ne"], 0x48:["i32.lt_s"], 0x4a:["i32.gt_s"],
-        0x4c:["i32.le_s"], 0x4e:["i32.ge_s"], 0x4f:["i32.ge_u"], 0x6a:["i32.add"], 0x6b:["i32.sub"],
-        0x6c:["i32.mul"], 0x6d:["i32.div_s"], 0x6f:["i32.rem_s"], 0x74:["i32.shl"], 0x75:["i32.shr_s"],
-        0xf1:["text.checked_address","u","u"], 0xf2:["text.literal_stores","u","u"],
-    };
-    const operations = [];
-    let at = 0;
-    function operand(format) {
-        if (numeric || format === "byte") return tape[at++];
-        let value = 0;
-        for (let bits = 0; bits <= 28; bits += 7) {
-            const part = tape[at++];
-            if (part === undefined) break;
-            value += (part & 127) * 2 ** bits;
-            if (!(part & 128)) return format === "s" && (part & 64) ? value - 2 ** (bits + 7) : value;
-        }
-        throw new Error("invalid Typed inspection operand");
-    }
-    while (at < tape.length) {
-        const offset = at;
-        const opcode = tape[at++];
-        const spec = specs[opcode];
-        if (!spec) throw new Error("unknown Typed inspection opcode " + opcode);
-        const [op, ...formats] = spec;
-        const operands = formats.map(operand);
-        if (at > tape.length) throw new Error("truncated Typed inspection operation");
-        operations.push({ordinal: operations.length, offset, length: at - offset,
-            op, opcode, operands, source: tape.spans ? {...tape.spans[offset]} : undefined});
-    }
+    const operations = typedTape.decode(tape, !numeric);
+    for (const operation of operations) operation.source = tape.spans ? {...tape.spans[operation.offset]} : undefined;
     return operations;
 }
 
@@ -1628,8 +1593,8 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength, opti
         if (target < 0 || signature(functions[target]).join(",") !== types[definitions[slot]]?.join(","))
             throw new SyntaxError("Wasm runtime slot signature mismatch for " + entry);
         const bridge = [0];
-        for (let i = 0; i < functions[target].params.length; i++) bridge.push(OP.get, ...unsigned(i));
-        bridge.push(0x10, ...unsigned(base + target), OP.end);
+        for (let i = 0; i < functions[target].params.length; i++) bridge.push(LOCAL_GET, ...unsigned(i));
+        bridge.push(CALL, ...unsigned(base + target), END);
         bodies[slot] = [...unsigned(bridge.length), ...bridge];
     }
     const replacement = new Map([
@@ -1662,6 +1627,6 @@ globalThis.compileTyped = (source, options) => {
     if (asyncSource) bytes.asyncSource = asyncSource;
     return bytes;
 };
-globalThis.typedWasm = {decodeNumericOperations: tape => inspectOperations(tape, true), compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
+globalThis.typedWasm = {compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
     parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts, withLexIndices};
 })();

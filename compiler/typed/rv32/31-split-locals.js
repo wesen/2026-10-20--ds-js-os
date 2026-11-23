@@ -16,13 +16,13 @@ function splitLocals(code, params, nlocals) {
     };
     for (let at = 0; at < code.length; at = opNext(code, at)) {
         const op = code[at];
-        if (!(OPERAND_CELLS[op] >= 0)) return null;
-        if (op === 0x05) { path.pop(); path.push(region++); }
-        else if (op === 0x0b) path.pop();
-        if (op === 0x20 || op === 0xf2) note(at + 1, false);
-        else if (op === 0x21) note(at + 1, true);
-        else if (op === 0xf1 || op === 0xf3) { note(at + 1, false); note(at + 2, false); }
-        if (op >= 0x02 && op <= 0x04) path.push(region++);
+        if (!(CELLS[op] >= 0)) return null;
+        if (op === ELSE) { path.pop(); path.push(region++); }
+        else if (op === END) path.pop();
+        if (op === LOCAL_GET || op === LITERAL_STORES) note(at + 1, false);
+        else if (op === LOCAL_SET) note(at + 1, true);
+        else if (op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS) { note(at + 1, false); note(at + 2, false); }
+        if (op >= BLOCK && op <= IF) path.push(region++);
     }
     const inside = (outer, inner) => outer.length <= inner.length && outer.every((x, i) => inner[i] === x);
     const out = code.slice();

@@ -13,30 +13,20 @@
 // in the loop, or a constant, on an unwritten parameter r, are proved in range for every
 // iteration by one guard before the loop: k ranges over [k0, N - 1], so the largest index is
 // a*(N - 1) + b (+ M). If the guard holds, a copy of the loop runs with those accesses unchecked
-// (0xf3 r t j: the address of r[t + j]); otherwise the original loop runs. An access that the
+// (UNCHECKED_ADDRESS r t j: the address of r[t + j]); otherwise the original loop runs. An access that the
 // fast copy leaves unchecked would not trap in the original either, so traps, their position
 // and every store before them are unchanged. Affine locals are i = a*k + b written once in B
 // and read only after that write in its own region. The guard keeps every term below 2^31:
 // N <= 2^20, a <= 1024 and 0 <= b <= 2^20.
 const VERSION_LIMITS = Object.freeze({coefficient: 1024, offset: 1 << 20, bound: 1 << 20, bodyCells: 2000});
-function opNext(code, at) { return at + 1 + OPERAND_CELLS[code[at]]; }
-function opClose(code, at) {
-    let depth = 0;
-    for (let k = at; k < code.length; k = opNext(code, k)) {
-        const op = code[k];
-        if (op >= 0x02 && op <= 0x04) depth++;
-        else if (op === 0x0b && --depth === 0) return k;
-    }
-    return -1;
-}
 function versionLoops(code, params, hoist, induction) {
-    for (let at = 0; at < code.length; at = opNext(code, at)) if (!(OPERAND_CELLS[code[at]] >= 0)) return null;
+    for (let at = 0; at < code.length; at = opNext(code, at)) if (!(CELLS[code[at]] >= 0)) return null;
     // select.hoist: where each local is read, so a moved statement's local can be checked for
     // reads outside its loop (hoistInvariants).
     const readsAt = new Map();
     if (hoist || induction) for (let at = 0; at < code.length; at = opNext(code, at)) {
         const op = code[at];
-        const locals = op === 0x20 || op === 0xf2 ? [code[at + 1]] : op === 0xf1 || op === 0xf3 ? [code[at + 1], code[at + 2]] : [];
+        const locals = op === LOCAL_GET || op === LITERAL_STORES ? [code[at + 1]] : op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS ? [code[at + 1], code[at + 2]] : [];
         for (const x of locals) { if (!readsAt.has(x)) readsAt.set(x, []); readsAt.get(x).push(at); }
     }
     // A single-use index local can absorb the constant of its index into the access.
@@ -44,8 +34,8 @@ function versionLoops(code, params, hoist, induction) {
     const read = local => reads.set(local, (reads.get(local) ?? 0) + 1);
     for (let at = 0; at < code.length; at = opNext(code, at)) {
         const op = code[at];
-        if (op === 0x20 || op === 0xf2) read(code[at + 1]);
-        else if (op === 0xf1) { read(code[at + 1]); read(code[at + 2]); }
+        if (op === LOCAL_GET || op === LITERAL_STORES) read(code[at + 1]);
+        else if (op === CHECKED_ADDRESS) { read(code[at + 1]); read(code[at + 2]); }
     }
     let changed = false;
     const out = transform(code);
@@ -56,7 +46,7 @@ function versionLoops(code, params, hoist, induction) {
         let prev = -1, prev2 = -1;
         for (let at = 0; at < src.length;) {
             // k0 is a known non-negative constant when `const c; set k` precedes the loop.
-            const k0Known = prev2 >= 0 && src[prev2] === 0x41 && src[prev2 + 1] >= 0 && src[prev] === 0x21 && src[prev + 1] === src[at + 3];
+            const k0Known = prev2 >= 0 && src[prev2] === I32_CONST && src[prev2 + 1] >= 0 && src[prev] === LOCAL_SET && src[prev + 1] === src[at + 3];
             const v = version(src, at, k0Known, k0Known ? src[prev2 + 1] : undefined);
             if (v) {
                 out.push(...v.cells);
@@ -74,34 +64,34 @@ function versionLoops(code, params, hoist, induction) {
     }
 
     function version(src, at, k0Known, k0) {
-        if (src[at] !== 0x02 || src[at + 1] !== 0x40 || src[at + 2] !== 0x20 || src[at + 6] !== 0x48 || src[at + 7] !== 0x45 ||
-            src[at + 8] !== 0x0d || src[at + 9] !== 0 || src[at + 10] !== 0x03 || src[at + 11] !== 0x40) return null;
+        if (src[at] !== BLOCK || src[at + 1] !== VOID || src[at + 2] !== LOCAL_GET || src[at + 6] !== I32_LT_S || src[at + 7] !== I32_EQZ ||
+            src[at + 8] !== BR_IF || src[at + 9] !== 0 || src[at + 10] !== LOOP || src[at + 11] !== VOID) return null;
         const k = src[at + 3], boundOp = src[at + 4], bound = src[at + 5];
-        if (boundOp !== 0x41 && boundOp !== 0x20) return null;
+        if (boundOp !== I32_CONST && boundOp !== LOCAL_GET) return null;
         const loopEnd = opClose(src, at + 10), blockEnd = opClose(src, at);
         if (loopEnd < 0 || blockEnd !== loopEnd + 1) return null;
         const cond = src.slice(at + 2, at + 7);
-        if (src.slice(loopEnd - 7, loopEnd).join() !== [...cond, 0x0d, 0].join()) return null;
+        if (src.slice(loopEnd - 7, loopEnd).join() !== [...cond, BR_IF, 0].join()) return null;
         const bodyStart = at + 12, bodyEnd = loopEnd - 7;
         if (bodyEnd - bodyStart > VERSION_LIMITS.bodyCells) return null;
         const inc = bodyEnd - 7;
-        if (inc < bodyStart || src[inc] !== 0x20 || src[inc + 1] !== k || src[inc + 2] !== 0x41 || src[inc + 4] !== 0x6a ||
-            src[inc + 5] !== 0x21 || src[inc + 6] !== k || !(src[inc + 3] >= 1 && src[inc + 3] <= 64)) return null;
-        if (boundOp === 0x41 && !(bound >= 1 && bound <= VERSION_LIMITS.bound)) return null;
+        if (inc < bodyStart || src[inc] !== LOCAL_GET || src[inc + 1] !== k || src[inc + 2] !== I32_CONST || src[inc + 4] !== I32_ADD ||
+            src[inc + 5] !== LOCAL_SET || src[inc + 6] !== k || !(src[inc + 3] >= 1 && src[inc + 3] <= 64)) return null;
+        if (boundOp === I32_CONST && !(bound >= 1 && bound <= VERSION_LIMITS.bound)) return null;
         const ops = [], writes = new Map();
         for (let p = bodyStart; p < bodyEnd; p = opNext(src, p)) {
             ops.push({op: src[p], at: p, a: src[p + 1], b: src[p + 2]});
-            if (src[p] === 0x21) writes.set(src[p + 1], (writes.get(src[p + 1]) ?? 0) + 1);
+            if (src[p] === LOCAL_SET) writes.set(src[p + 1], (writes.get(src[p + 1]) ?? 0) + 1);
         }
-        if (writes.get(k) !== 1 || (boundOp === 0x20 && writes.has(bound))) return null;
+        if (writes.get(k) !== 1 || (boundOp === LOCAL_GET && writes.has(bound))) return null;
         const o = j => ops[j] ?? {};
         // End of the region that opens around ops[i]: the closing end or else of its construct.
         const regionEnd = i => {
             for (let j = i + 1, level = 0; j < ops.length; j++) {
                 const op = ops[j].op;
-                if (op >= 0x02 && op <= 0x04) level++;
-                else if (op === 0x0b) { if (level-- === 0) return j; }
-                else if (op === 0x05 && level === 0) return j;
+                if (op >= BLOCK && op <= IF) level++;
+                else if (op === END) { if (level-- === 0) return j; }
+                else if (op === ELSE && level === 0) return j;
             }
             return ops.length;
         };
@@ -115,14 +105,14 @@ function versionLoops(code, params, hoist, induction) {
         // Affine form of the value that ops[i] consumes, from the operations just before it.
         function expression(i) {
             const scaled = (f, m, c) => f && {a: f.a * m, b: f.b * m + c};
-            if (o(i - 1).op === 0x6a && o(i - 2).op === 0x41 && o(i - 3).op === 0x6c && o(i - 4).op === 0x41 && o(i - 5).op === 0x20)
+            if (o(i - 1).op === I32_ADD && o(i - 2).op === I32_CONST && o(i - 3).op === I32_MUL && o(i - 4).op === I32_CONST && o(i - 5).op === LOCAL_GET)
                 return scaled(formOf(o(i - 5).a, i), o(i - 4).a, o(i - 2).a);
-            if (o(i - 1).op === 0x6a && o(i - 2).op === 0x6c && o(i - 3).op === 0x41 && o(i - 4).op === 0x20 && o(i - 5).op === 0x41)
+            if (o(i - 1).op === I32_ADD && o(i - 2).op === I32_MUL && o(i - 3).op === I32_CONST && o(i - 4).op === LOCAL_GET && o(i - 5).op === I32_CONST)
                 return scaled(formOf(o(i - 4).a, i), o(i - 3).a, o(i - 5).a);
-            if (o(i - 1).op === 0x6c && o(i - 2).op === 0x41 && o(i - 3).op === 0x20) return scaled(formOf(o(i - 3).a, i), o(i - 2).a, 0);
-            if (o(i - 1).op === 0x6a && o(i - 2).op === 0x41 && o(i - 3).op === 0x20) return scaled(formOf(o(i - 3).a, i), 1, o(i - 2).a);
-            if (o(i - 1).op === 0x6a && o(i - 2).op === 0x20 && o(i - 3).op === 0x41) return scaled(formOf(o(i - 2).a, i), 1, o(i - 3).a);
-            if (o(i - 1).op === 0x20) return scaled(formOf(o(i - 1).a, i), 1, 0);
+            if (o(i - 1).op === I32_MUL && o(i - 2).op === I32_CONST && o(i - 3).op === LOCAL_GET) return scaled(formOf(o(i - 3).a, i), o(i - 2).a, 0);
+            if (o(i - 1).op === I32_ADD && o(i - 2).op === I32_CONST && o(i - 3).op === LOCAL_GET) return scaled(formOf(o(i - 3).a, i), 1, o(i - 2).a);
+            if (o(i - 1).op === I32_ADD && o(i - 2).op === LOCAL_GET && o(i - 3).op === I32_CONST) return scaled(formOf(o(i - 2).a, i), 1, o(i - 3).a);
+            if (o(i - 1).op === LOCAL_GET) return scaled(formOf(o(i - 1).a, i), 1, 0);
             return null;
         }
         const inRange = f => f && f.a >= 0 && f.a <= VERSION_LIMITS.coefficient && f.b >= 0 && f.b <= VERSION_LIMITS.offset;
@@ -135,29 +125,29 @@ function versionLoops(code, params, hoist, induction) {
         };
         for (let i = 0; i < ops.length; i++) {
             const {op, a, b} = ops[i];
-            if (op === 0x21 && a !== k && writes.get(a) === 1) {
+            if (op === LOCAL_SET && a !== k && writes.get(a) === 1) {
                 const f = expression(i);
                 if (inRange(f)) affine.set(a, {...f, def: i, end: regionEnd(i)});
             }
-            if (op !== 0xf1 || a >= params || o(i - 1).op !== 0x21 || o(i - 1).a !== b) continue;
+            if (op !== CHECKED_ADDRESS || a >= params || o(i - 1).op !== LOCAL_SET || o(i - 1).a !== b) continue;
             const e = i - 1, single = reads.get(b) === 1 && writes.get(b) === 1;
             let f = null, M, fold;
-            if (o(e - 1).op === 0x41 && o(e - 1).a >= 0 && o(e - 1).a <= VERSION_LIMITS.offset) f = {a: 0, b: o(e - 1).a};
+            if (o(e - 1).op === I32_CONST && o(e - 1).a >= 0 && o(e - 1).a <= VERSION_LIMITS.offset) f = {a: 0, b: o(e - 1).a};
             else if (inRange(f = expression(e))) {
                 // [x, const j, add] or [const j, x, add] before set t: j moves into the access.
-                if (single && o(e - 1).op === 0x6a && (o(e - 2).op === 0x41 || o(e - 3).op === 0x41) &&
-                    (o(e - 2).op === 0x41 ? o(e - 3).op === 0x20 : o(e - 2).op === 0x20)) {
-                    const c = o(e - 2).op === 0x41 ? e - 2 : e - 3;
+                if (single && o(e - 1).op === I32_ADD && (o(e - 2).op === I32_CONST || o(e - 3).op === I32_CONST) &&
+                    (o(e - 2).op === I32_CONST ? o(e - 3).op === LOCAL_GET : o(e - 2).op === LOCAL_GET)) {
+                    const c = o(e - 2).op === I32_CONST ? e - 2 : e - 3;
                     fold = {drop: [ops[c].at, ops[e - 1].at], j: ops[c].a};
                 }
             } else {
                 f = null;
-                const sum = (x, y) => o(e - 1).op === 0x6a && o(e - 2).op === 0x20 && o(e - 3).op === 0x20 &&
+                const sum = (x, y) => o(e - 1).op === I32_ADD && o(e - 2).op === LOCAL_GET && o(e - 3).op === LOCAL_GET &&
                     invariant(o(e - x).a) && inRange(formOf(o(e - y).a, e)) ? [o(e - x).a, formOf(o(e - y).a, e)] : null;
                 const pair = sum(3, 2) ?? sum(2, 3);
                 if (pair) { M = pair[0]; f = {a: pair[1].a, b: pair[1].b}; }
-                else if (o(e - 1).op === 0x20 && invariant(o(e - 1).a)) { M = o(e - 1).a; f = {a: 0, b: 0}; }
-                else if (o(e - 1).op === 0x6a && o(e - 2).op === 0x41 && o(e - 3).op === 0x20 && invariant(o(e - 3).a) && inRange({a: 0, b: o(e - 2).a})) {
+                else if (o(e - 1).op === LOCAL_GET && invariant(o(e - 1).a)) { M = o(e - 1).a; f = {a: 0, b: 0}; }
+                else if (o(e - 1).op === I32_ADD && o(e - 2).op === I32_CONST && o(e - 3).op === LOCAL_GET && invariant(o(e - 3).a) && inRange({a: 0, b: o(e - 2).a})) {
                     M = o(e - 3).a; f = {a: 0, b: o(e - 2).a};
                     if (single) fold = {drop: [ops[e - 2].at, ops[e - 1].at], j: o(e - 2).a};
                 }
@@ -169,19 +159,19 @@ function versionLoops(code, params, hoist, induction) {
         if (!eligible.size) return null;
         // Guard: each term pushes a failure condition and leaves the guard block with br_if 0.
         const terms = [];
-        const cap = r => [0x20, r, 0x28, 2, 0];
-        const largest = (a, b) => boundOp === 0x41 ? [0x41, a * (bound - 1) + b] : [0x20, bound, 0x41, a, 0x6c, 0x41, b - a, 0x6a];
-        if (!k0Known) terms.push(0x20, k, 0x41, 0, 0x48, 0x0d, 0);
-        if (boundOp === 0x20) terms.push(0x20, bound, 0x41, VERSION_LIMITS.bound, 0x4a, 0x0d, 0);
+        const cap = r => [LOCAL_GET, r, I32_LOAD, 2, 0];
+        const largest = (a, b) => boundOp === I32_CONST ? [I32_CONST, a * (bound - 1) + b] : [LOCAL_GET, bound, I32_CONST, a, I32_MUL, I32_CONST, b - a, I32_ADD];
+        if (!k0Known) terms.push(LOCAL_GET, k, I32_CONST, 0, I32_LT_S, BR_IF, 0);
+        if (boundOp === LOCAL_GET) terms.push(LOCAL_GET, bound, I32_CONST, VERSION_LIMITS.bound, I32_GT_S, BR_IF, 0);
         for (const [r, m] of limits) {
             const plain = [...m.values()].filter(x => x.M === undefined), shifted = [...m.values()].filter(x => x.M !== undefined);
-            if (boundOp === 0x41 && plain.length) {
+            if (boundOp === I32_CONST && plain.length) {
                 const top = Math.max(...plain.map(x => x.a * (bound - 1) + x.b));
-                terms.push(0x41, top, ...cap(r), 0x4e, 0x0d, 0);
-            } else for (const x of plain) terms.push(...largest(x.a, x.b), ...cap(r), 0x4e, 0x0d, 0);
-            if (shifted.length) terms.push(...cap(r), 0x41, 0, 0x48, 0x0d, 0);
-            for (const M of new Set(shifted.map(x => x.M))) terms.push(0x20, M, 0x41, 0, 0x48, 0x0d, 0);
-            for (const x of shifted) terms.push(...largest(x.a, x.b), ...cap(r), 0x20, x.M, 0x6b, 0x4e, 0x0d, 0);
+                terms.push(I32_CONST, top, ...cap(r), I32_GE_S, BR_IF, 0);
+            } else for (const x of plain) terms.push(...largest(x.a, x.b), ...cap(r), I32_GE_S, BR_IF, 0);
+            if (shifted.length) terms.push(...cap(r), I32_CONST, 0, I32_LT_S, BR_IF, 0);
+            for (const M of new Set(shifted.map(x => x.M))) terms.push(LOCAL_GET, M, I32_CONST, 0, I32_LT_S, BR_IF, 0);
+            for (const x of shifted) terms.push(...largest(x.a, x.b), ...cap(r), LOCAL_GET, x.M, I32_SUB, I32_GE_S, BR_IF, 0);
         }
         // The fast body: unchecked accesses, and branches that leave the loop one level further
         // out (the loop now sits inside the guard block).
@@ -199,20 +189,20 @@ function versionLoops(code, params, hoist, induction) {
             const readsHere = [];
             for (let i = 0; i < ops.length; i++) {
                 const {op, a, b} = ops[i];
-                if (((op === 0x20 || op === 0xf2) && a === local) || ((op === 0xf1 || op === 0xf3) && (a === local || b === local))) readsHere.push(i);
+                if (((op === LOCAL_GET || op === LITERAL_STORES) && a === local) || ((op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS) && (a === local || b === local))) readsHere.push(i);
             }
             if (!readsHere.length || readsHere.some(i => i <= f.def) || (readsAt.get(local)?.length ?? -1) !== readsHere.length) continue;
             let start = f.def, net = 0;
             for (let j = f.def - 1; j >= 0; j--) {
                 const op = ops[j].op;
-                if (op === 0x20 || op === 0x41) net++;
-                else if (op === 0x6a || op === 0x6c) net--;
+                if (op === LOCAL_GET || op === I32_CONST) net++;
+                else if (op === I32_ADD || op === I32_MUL) net--;
                 else break;
                 if (net === 1) { start = j; break; }
             }
             if (start === f.def) continue;
             let absorbed = false, multiplies = false;
-            for (let j = start; j <= f.def; j++) { if (folded.has(ops[j].at)) absorbed = true; if (ops[j].op === 0x6c) multiplies = true; }
+            for (let j = start; j <= f.def; j++) { if (folded.has(ops[j].at)) absorbed = true; if (ops[j].op === I32_MUL) multiplies = true; }
             const i32 = x => Number.isInteger(x) && x >= -2147483648 && x <= 2147483647;
             if (absorbed || !multiplies || !i32(f.a * k0 + f.b) || !i32(f.a * src[inc + 3])) continue;
             for (let j = start; j <= f.def; j++) skip.add(ops[j].at);
@@ -223,12 +213,12 @@ function versionLoops(code, params, hoist, induction) {
         for (const p of skip) drop.add(p);
         for (let p = bodyStart, depth = 0; p < bodyEnd; p = opNext(src, p)) {
             const op = src[p];
-            if (p === inc) for (const r of reduced) fast.push(0x20, r.local, 0x41, r.a * src[inc + 3], 0x6a, 0x21, r.local);
+            if (p === inc) for (const r of reduced) fast.push(LOCAL_GET, r.local, I32_CONST, r.a * src[inc + 3], I32_ADD, LOCAL_SET, r.local);
             if (drop.has(p)) continue;
-            if (op === 0xf1 && eligible.has(p)) { unchecked.add(fast.length); fast.push(0xf3, src[p + 1], src[p + 2], eligible.get(p).j); continue; }
-            if ((op === 0x0c || op === 0x0d) && src[p + 1] > depth) { fast.push(op, src[p + 1] + 1); continue; }
-            if (op >= 0x02 && op <= 0x04) depth++;
-            else if (op === 0x0b) depth--;
+            if (op === CHECKED_ADDRESS && eligible.has(p)) { unchecked.add(fast.length); fast.push(UNCHECKED_ADDRESS, src[p + 1], src[p + 2], eligible.get(p).j); continue; }
+            if ((op === BR || op === BR_IF) && src[p + 1] > depth) { fast.push(op, src[p + 1] + 1); continue; }
+            if (op >= BLOCK && op <= IF) depth++;
+            else if (op === END) depth--;
             for (let j = p; j < opNext(src, p); j++) fast.push(src[j]);
         }
         // select.hoist, for loops at the function's top level (whose reads outside the loop are
@@ -245,14 +235,14 @@ function versionLoops(code, params, hoist, induction) {
             const h = hoistSubexpressions(inner, k, hoist.arity, hoist.fresh);
             if (h) { inner = h.body; computed = h.pre; }
         }
-        const start = reduced.flatMap(r => [0x41, r.a * k0 + r.b, 0x21, r.local]);
-        const cells = [0x02, 0x40, ...cond, 0x45, 0x0d, 0,
-            0x02, 0x40, ...terms, ...moved.aliasTerms, ...moved.pre, ...computed, ...start,
-            0x03, 0x40, ...inner, ...cond, 0x0d, 0, 0x0b,
-            0x0c, 1,
-            0x0b,
-            0x03, 0x40, ...src.slice(bodyStart, bodyEnd), ...cond, 0x0d, 0, 0x0b,
-            0x0b];
+        const start = reduced.flatMap(r => [I32_CONST, r.a * k0 + r.b, LOCAL_SET, r.local]);
+        const cells = [BLOCK, VOID, ...cond, I32_EQZ, BR_IF, 0,
+            BLOCK, VOID, ...terms, ...moved.aliasTerms, ...moved.pre, ...computed, ...start,
+            LOOP, VOID, ...inner, ...cond, BR_IF, 0, END,
+            BR, 1,
+            END,
+            LOOP, VOID, ...src.slice(bodyStart, bodyEnd), ...cond, BR_IF, 0, END,
+            END];
         return {cells, end: blockEnd + 1};
     }
 }
@@ -261,7 +251,7 @@ function versionLoops(code, params, hoist, induction) {
 // every iteration moves into the guard block, after the guard's terms and before the loop.
 // A statement `E; set X` moves when:
 //  - E reads only constants, locals the loop does not write (or that a moved statement writes),
-//    capacities (`get r; load32 2 0`) and loads through this level's unchecked accesses (0xf3)
+//    capacities (`get r; load32 2 0`) and loads through this level's unchecked accesses (UNCHECKED_ADDRESS)
 //    with invariant buffer and index; E divides only by constants other than 0 and -1. So E
 //    cannot trap, and the guard has already proved those accesses in range;
 //  - X is written once in the loop, every read of X in the loop follows that write inside the
@@ -281,8 +271,8 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
     const writes = new Map(), readsOf = new Map();
     for (let i = 0; i < ops.length; i++) {
         const p = ops[i], op = body[p];
-        if (op === 0x21) writes.set(body[p + 1], (writes.get(body[p + 1]) ?? 0) + 1);
-        const locals = op === 0x20 || op === 0xf2 ? [body[p + 1]] : op === 0xf1 || op === 0xf3 ? [body[p + 1], body[p + 2]] : [];
+        if (op === LOCAL_SET) writes.set(body[p + 1], (writes.get(body[p + 1]) ?? 0) + 1);
+        const locals = op === LOCAL_GET || op === LITERAL_STORES ? [body[p + 1]] : op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS ? [body[p + 1], body[p + 2]] : [];
         for (const x of locals) { if (!readsOf.has(x)) readsOf.set(x, []); readsOf.get(x).push(i); }
     }
     // Statements (ops start..set at their construct's entry height), stored buffers, calls.
@@ -290,47 +280,47 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
     let tags = [], dead = false, start = 0, loadsOk = true;
     for (let i = 0; i < ops.length; i++) {
         const p = ops[i], op = body[p], a = body[p + 1];
-        if (op >= 0x02 && op <= 0x04) {
-            if (!dead && op === 0x04) tags.pop();
-            frames.push({base: tags.length, value: a === 0x7f, deadEntry: dead});
+        if (op >= BLOCK && op <= IF) {
+            if (!dead && op === IF) tags.pop();
+            frames.push({base: tags.length, value: a === I32, deadEntry: dead});
             start = i + 1;
             continue;
         }
-        if (op === 0x05 || op === 0x0b) {
-            const frame = op === 0x05 ? frames.at(-1) : frames.pop();
+        if (op === ELSE || op === END) {
+            const frame = op === ELSE ? frames.at(-1) : frames.pop();
             if (!frame || !frames.length) return null;
             tags.length = frame.base;
-            if (op === 0x0b && frame.value) tags.push(null);
+            if (op === END && frame.value) tags.push(null);
             dead = frame.deadEntry;
             if (tags.length === frames.at(-1).base) start = i + 1;
             continue;
         }
         if (dead) continue;
         switch (op) {
-        case 0x41: case 0x20: tags.push(null); break;
-        case 0x21:
+        case I32_CONST: case LOCAL_GET: tags.push(null); break;
+        case LOCAL_SET:
             tags.pop();
             if (tags.length === frames.at(-1).base) statements.push({start, set: i, local: a});
             break;
-        case 0x1a: case 0x0d: tags.pop(); break;
-        case 0x0c: case 0x0f: case 0x00: dead = true; break;
-        case 0x10:
+        case DROP: case BR_IF: tags.pop(); break;
+        case BR: case RETURN: case UNREACHABLE: dead = true; break;
+        case CALL:
             for (let n = arity(a); n > 0; n--) tags.pop();
             tags.push(null);
             if (!storeless(a)) loadsOk = false;
             break;
-        case 0x28: case 0x2f: tags.pop(); tags.push(null); break;
-        case 0x36: case 0x3b: {
+        case I32_LOAD: case I32_LOAD16_U: tags.pop(); tags.push(null); break;
+        case I32_STORE: case I32_STORE16: {
             tags.pop();
             const buffer = tags.pop();
             if (buffer === null || buffer === undefined) loadsOk = false; else stored.add(buffer);
             break;
         }
-        case 0xf1: case 0xf3: tags.push(a); break;
-        case 0xf2: stored.add(a); break;
-        case 0x45: break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: tags.push(a); break;
+        case LITERAL_STORES: stored.add(a); break;
+        case I32_EQZ: break;
         default:
-            if (!((op >= 0x46 && op <= 0x4f) || (op >= 0x6a && op <= 0x75))) return null;
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return null;
             tags.pop(); tags.pop(); tags.push(null);
         }
         if (!dead && tags.length === frames.at(-1).base) start = i + 1;
@@ -339,9 +329,9 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
     const regionEnd = i => {
         for (let j = i + 1, level = 0; j < ops.length; j++) {
             const op = body[ops[j]];
-            if (op >= 0x02 && op <= 0x04) level++;
-            else if (op === 0x0b) { if (level-- === 0) return j; }
-            else if (op === 0x05 && level === 0) return j;
+            if (op >= BLOCK && op <= IF) level++;
+            else if (op === END) { if (level-- === 0) return j; }
+            else if (op === ELSE && level === 0) return j;
         }
         return ops.length;
     };
@@ -359,15 +349,15 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
             const buffers = [];
             for (let i = start; i < set && ok; i++) {
                 const p = ops[i], op = body[p], a = body[p + 1], prev = i > start ? ops[i - 1] : -1;
-                if (op === 0x41) continue;
-                if (op === 0x20) ok = invariant(a);
-                else if (op === 0xf3) {
+                if (op === I32_CONST) continue;
+                if (op === LOCAL_GET) ok = invariant(a);
+                else if (op === UNCHECKED_ADDRESS) {
                     ok = unchecked.has(p) && invariant(a) && invariant(body[p + 2]) && loadsOk && !stored.has(a);
                     buffers.push(a);
-                } else if (op === 0x2f) ok = prev >= 0 && body[prev] === 0xf3;
-                else if (op === 0x28) ok = body[p + 2] === 0 && prev >= 0 && body[prev] === 0x20 && invariant(body[prev + 1]);
-                else if (op === 0x6d || op === 0x6f) ok = prev >= 0 && body[prev] === 0x41 && body[prev + 1] !== 0 && body[prev + 1] !== -1;
-                else ok = op === 0x45 || (op >= 0x46 && op <= 0x4f) || (op >= 0x6a && op <= 0x75);
+                } else if (op === I32_LOAD16_U) ok = prev >= 0 && body[prev] === UNCHECKED_ADDRESS;
+                else if (op === I32_LOAD) ok = body[p + 2] === 0 && prev >= 0 && body[prev] === LOCAL_GET && invariant(body[prev + 1]);
+                else if (op === I32_DIV_S || op === I32_REM_S) ok = prev >= 0 && body[prev] === I32_CONST && body[prev + 1] !== 0 && body[prev + 1] !== -1;
+                else ok = op === I32_EQZ || (op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S);
             }
             if (!ok) continue;
             hoisted.add(n);
@@ -383,13 +373,13 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
     for (const n of hoisted) if (!isCopy(n)) {
         for (let i = statements[n].start; i < statements[n].set; i++) {
             const p = ops[i], op = body[p];
-            if (op === 0x20) needed.add(body[p + 1]);
-            if (op === 0xf3) needed.add(body[p + 2]);
+            if (op === LOCAL_GET) needed.add(body[p + 1]);
+            if (op === UNCHECKED_ADDRESS) needed.add(body[p + 2]);
         }
     }
     for (let grew = true; grew;) {
         grew = false;
-        for (const n of hoisted) if (isCopy(n) && needed.has(statements[n].local) && body[ops[statements[n].start]] === 0x20 &&
+        for (const n of hoisted) if (isCopy(n) && needed.has(statements[n].local) && body[ops[statements[n].start]] === LOCAL_GET &&
             !needed.has(body[ops[statements[n].start] + 1])) { needed.add(body[ops[statements[n].start] + 1]); grew = true; }
     }
     if (![...hoisted].some(n => !isCopy(n))) return null;
@@ -411,7 +401,7 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
         }
     }
     const aliasTerms = [];
-    for (const r of loaded) for (const s of stored) aliasTerms.push(0x20, s, 0x20, r, 0x46, 0x0d, 0);
+    for (const r of loaded) for (const s of stored) aliasTerms.push(LOCAL_GET, s, LOCAL_GET, r, I32_EQ, BR_IF, 0);
     return {pre, body: out, aliasTerms};
 }
 
@@ -426,9 +416,9 @@ function hoistSubexpressions(body, k, arity, fresh) {
     const ops = [];
     for (let p = 0; p < body.length; p = opNext(body, p)) ops.push(p);
     const written = new Set();
-    for (const p of ops) if (body[p] === 0x21) written.add(body[p + 1]);
+    for (const p of ops) if (body[p] === LOCAL_SET) written.add(body[p + 1]);
     const invariant = local => local !== k && !written.has(local);
-    const isCompare = op => op === 0x45 || (op >= 0x46 && op <= 0x4f);
+    const isCompare = op => op === I32_EQZ || (op >= I32_EQ && op <= I32_GE_U);
     // A slot is {inv, start, end, work}: the ops start..end compute it.
     const ranges = [], frames = [{base: 0, value: false, deadEntry: false}];
     let slots = [], dead = false;
@@ -444,42 +434,42 @@ function hoistSubexpressions(body, k, arity, fresh) {
     const consume = (count, branch) => flush(slots.splice(Math.max(0, slots.length - count), count), branch);
     for (let i = 0; i < ops.length; i++) {
         const p = ops[i], op = body[p], a = body[p + 1];
-        if (op >= 0x02 && op <= 0x04) {
-            if (!dead && op === 0x04) consume(1);
-            frames.push({base: slots.length, value: a === 0x7f, deadEntry: dead});
+        if (op >= BLOCK && op <= IF) {
+            if (!dead && op === IF) consume(1);
+            frames.push({base: slots.length, value: a === I32, deadEntry: dead});
             continue;
         }
-        if (op === 0x05 || op === 0x0b) {
-            const frame = op === 0x05 ? frames.at(-1) : frames.pop();
+        if (op === ELSE || op === END) {
+            const frame = op === ELSE ? frames.at(-1) : frames.pop();
             if (!frame || !frames.length) return null;
             consume(slots.length - frame.base);
-            if (op === 0x0b && frame.value) slots.push(opaque);
+            if (op === END && frame.value) slots.push(opaque);
             dead = frame.deadEntry;
             continue;
         }
         if (dead) continue;
         switch (op) {
-        case 0x41: slots.push({inv: true, start: i, end: i, work: 0}); break;
-        case 0x20: slots.push(invariant(a) ? {inv: true, start: i, end: i, work: 0} : opaque); break;
-        case 0x21: case 0x1a: consume(1); break;
-        case 0x0d: consume(1, true); break;
-        case 0x0c: case 0x0f: case 0x00: consume(slots.length - frames.at(-1).base); dead = true; break;
-        case 0x10: consume(arity(a)); slots.push(opaque); break;
-        case 0x28: {
+        case I32_CONST: slots.push({inv: true, start: i, end: i, work: 0}); break;
+        case LOCAL_GET: slots.push(invariant(a) ? {inv: true, start: i, end: i, work: 0} : opaque); break;
+        case LOCAL_SET: case DROP: consume(1); break;
+        case BR_IF: consume(1, true); break;
+        case BR: case RETURN: case UNREACHABLE: consume(slots.length - frames.at(-1).base); dead = true; break;
+        case CALL: consume(arity(a)); slots.push(opaque); break;
+        case I32_LOAD: {
             const x = slots.at(-1);
-            combine(i, 1, body[p + 2] === 0 && x?.inv && x.start === x.end && body[ops[x.start]] === 0x20);
+            combine(i, 1, body[p + 2] === 0 && x?.inv && x.start === x.end && body[ops[x.start]] === LOCAL_GET);
             break;
         }
-        case 0x2f: combine(i, 1, false); break;
-        case 0x36: case 0x3b: consume(2); break;
-        case 0xf1: case 0xf3: slots.push(opaque); break;
-        case 0xf2: break;
-        case 0x45: combine(i, 1, true); break;
+        case I32_LOAD16_U: combine(i, 1, false); break;
+        case I32_STORE: case I32_STORE16: consume(2); break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: slots.push(opaque); break;
+        case LITERAL_STORES: break;
+        case I32_EQZ: combine(i, 1, true); break;
         default: {
-            if (!((op >= 0x46 && op <= 0x4f) || (op >= 0x6a && op <= 0x75))) return null;
-            if (op === 0x6d || op === 0x6f) {
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return null;
+            if (op === I32_DIV_S || op === I32_REM_S) {
                 const d = slots.at(-1);
-                const constant = d?.inv && d.start === d.end && body[ops[d.start]] === 0x41 ? body[ops[d.start] + 1] : undefined;
+                const constant = d?.inv && d.start === d.end && body[ops[d.start]] === I32_CONST ? body[ops[d.start] + 1] : undefined;
                 combine(i, 2, constant !== undefined && constant !== 0 && constant !== -1, 2);
             } else combine(i, 2, true);
         }
@@ -491,7 +481,7 @@ function hoistSubexpressions(body, k, arity, fresh) {
     const groups = [];
     for (const r of ranges) {
         const last = groups.at(-1), next = ops[r.end + 1];
-        const branch = isCompare(body[ops[r.end]]) && next !== undefined && body[next] === 0x0d ? body[next + 1] : undefined;
+        const branch = isCompare(body[ops[r.end]]) && next !== undefined && body[next] === BR_IF ? body[next + 1] : undefined;
         const prev = last?.at(-1);
         if (branch !== undefined && prev?.branch === branch && prev.end + 2 === r.start) last.push({...r, branch});
         else groups.push([{...r, branch}]);
@@ -504,10 +494,10 @@ function hoistSubexpressions(body, k, arity, fresh) {
     const cells = (from, to) => { const xs = []; for (let i = from; i <= to; i++) for (let j = ops[i]; j < opNext(body, ops[i]); j++) xs.push(body[j]); return xs; };
     for (const g of groups) {
         const t = fresh();
-        g.forEach((r, n) => { pre.push(...cells(r.start, r.end)); if (n) pre.push(0x6a); });
-        pre.push(0x21, t);
+        g.forEach((r, n) => { pre.push(...cells(r.start, r.end)); if (n) pre.push(I32_ADD); });
+        pre.push(LOCAL_SET, t);
         // The first member's ops become `get t`; later members and their br_if disappear.
-        replace.set(g[0].start, {end: g[0].end, cells: [0x20, t]});
+        replace.set(g[0].start, {end: g[0].end, cells: [LOCAL_GET, t]});
         for (const r of g.slice(1)) replace.set(r.start - 1, {end: r.end, cells: []});
     }
     for (let i = 0; i < ops.length; i++) {

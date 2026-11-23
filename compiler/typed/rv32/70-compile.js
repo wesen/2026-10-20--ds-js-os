@@ -4,7 +4,8 @@ function compile(source, imports = [], maxSourceLength, requested) {
     const targets = imported.map(fn => ({importIndex: fn.index}));
     const callables = imported.slice();
     const code = [];
-    // A function stores nothing when its tape has no store and calls only such functions.
+    // A function stores nothing when its tape has no operation with the STORES effect and calls
+    // only such functions.
     // Imports and functions not yet declared are assumed to store. A lowered function's tape is
     // released (consume), so lower() records the answer for each function first.
     const storelessMemo = new Map();
@@ -15,8 +16,8 @@ function compile(source, imports = [], maxSourceLength, requested) {
         let result = Boolean(tape);
         for (let at = 0; result && at < tape.length; at = opNext(tape, at)) {
             const op = tape[at];
-            if (!(OPERAND_CELLS[op] >= 0) || op === 0x36 || op === 0x3b || op === 0xf2) result = false;
-            else if (op === 0x10) result = storeless(tape[at + 1]);
+            if (!(CELLS[op] >= 0) || EFFECTS[op] & STORES) result = false;
+            else if (op === CALL) result = storeless(tape[at + 1]);
         }
         storelessMemo.set(index, result);
         return result;

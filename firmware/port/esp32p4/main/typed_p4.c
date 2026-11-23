@@ -67,7 +67,10 @@ typedef struct {
   uint8_t *bytes;
   size_t length;
 } compiled_source;
-static compiled_source compiled_sources[8];
+// One entry per compiler source a firmware evaluates. The playable firmware evaluates nine
+// (typed/tape.js, wasm.js, async.js, rv32.js, world.js and four app linkers); a source that
+// finds no free entry is parsed on every compile.
+static compiled_source compiled_sources[12];
 static SemaphoreHandle_t compiled_lock;
 static portMUX_TYPE compiled_lock_init = portMUX_INITIALIZER_UNLOCKED;
 
@@ -151,7 +154,7 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   ctx = JS_NewContext(rt);
   if (!ctx) goto done;
   if (!typed_lex_index_install(ctx)) goto rejected;
-  if (!eval_file(ctx, "typed/wasm.js") ||
+  if (!eval_file(ctx, "typed/tape.js") || !eval_file(ctx, "typed/wasm.js") ||
       (!strcmp(linker, "typed/world.js") && !eval_file(ctx, "typed/async.js")) ||
       (engine == ENG_NATIVE && !eval_file(ctx, limits && limits->rv32_backend ? limits->rv32_backend : "typed/rv32.js")) ||
       !eval_file(ctx, linker)) goto rejected;

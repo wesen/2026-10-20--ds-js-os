@@ -11,11 +11,11 @@ Every loader still reads the single bundle: the unit tests, the 24 replays, the 
 
 | File | Contents |
 |---|---|
-| `00-encoding.js` | registers, instruction encoders, ALU and predicate tables, immediates, division magic numbers |
+| `00-encoding.js` | the tape names from `compiler/typed/tape.js` (`typedTape`, loaded first), registers, instruction encoders, ALU and predicate tables, immediates, division magic numbers |
 | `10-function-code.js` | `FunctionCode`, the streaming emitter: operand stack, homes, checked addresses, pointers, branches, prologue and epilogue |
 | `11-leaf-code.js` | guarded-return helpers, `LeafCode` (frameless leaves), `observeSteps`, `lowerLeaf` |
-| `20-inline-and-commute.js` | `OPERAND_CELLS` (the tape opcodes the passes accept), `inlineCalls`, `commuteConstants` |
-| `30-version-loops.js` | `versionLoops` with induction variables, `hoistInvariants`, `hoistSubexpressions`; tape helpers `opNext`, `opClose` |
+| `20-inline-and-commute.js` | `inlineCalls`, `commuteConstants` |
+| `30-version-loops.js` | `versionLoops` with induction variables, `hoistInvariants`, `hoistSubexpressions` |
 | `31-split-locals.js` | `splitLocals` (one local per live range) |
 | `40-ranges.js` | `localRanges`, `divisionFacts` (`select.facts`) |
 | `41-value-sets.js` | `foldValueSets` and its analyses (`select.sets`) |

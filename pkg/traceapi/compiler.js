@@ -1,7 +1,7 @@
 /* compiler.js — the Typed compiler at a git revision or from the working tree.
  * The host injects one bridge object, __compiler, and deletes it after this script runs.
  * Public global: compiler. compiler.at(rev) returns one revision's modules:
- *   {revision, files, missing, typedWasm, typedAsync, typedWorld, typedRv32, typedPieLoops,
+ *   {revision, files, missing, typedTape, typedWasm, typedAsync, typedWorld, typedRv32, typedPieLoops,
  *    interp, rayBench, globals} plus read(path), world(name), typedSources(), ray, native and where(line).
  * Two revisions in one session share nothing: each was evaluated in its own scope.
  */

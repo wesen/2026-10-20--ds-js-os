@@ -2,7 +2,9 @@
 (() => {
 "use strict";
 
-const get = 0x20, set = 0x21, literal = 0x41, add = 0x6a, address = 0xf1;
+const {BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, DROP, LOCAL_GET, LOCAL_SET, I32_LOAD, I32_LOAD16_U, I32_STORE16, I32_CONST,
+    I32_EQZ, I32_EQ, I32_LT_S, I32_GE_S, I32_ADD, I32_SUB, I32_SHR_S, CHECKED_ADDRESS, LITERAL_STORES, I32, VOID} = typedTape;
+const get = LOCAL_GET, set = LOCAL_SET, literal = I32_CONST, add = I32_ADD, address = CHECKED_ADDRESS;
 const is = (op, code, arg) => op?.opcode === code && (arg === undefined || op.operands[0] === arg);
 function value(op) {
     if (is(op, get)) return {local:op.operands[0]};
@@ -24,22 +26,22 @@ function memoryEffects(ops, begin, end, iv) {
     for (let i=begin;i<end;i++) {
         const op=ops[i], [slot,index]=op.operands;
         switch (op.opcode) {
-        case 0x04:
-            stack.pop(); controls.push({entry:stack.slice(),result:slot===0x7f}); break;
-        case 0x05: stack=controls.at(-1).entry.slice(); break;
-        case 0x0b: {
+        case IF:
+            stack.pop(); controls.push({entry:stack.slice(),result:slot===I32}); break;
+        case ELSE: stack=controls.at(-1).entry.slice(); break;
+        case END: {
             const c=controls.pop(); stack=c.entry; if(c.result) stack.push(null);
             break;
         }
         case get: case literal: stack.push(null); break;
-        case set: case 0x1a: stack.pop(); break;
+        case set: case DROP: stack.pop(); break;
         case address: {
             const base=is(ops[i-1],set,index)?affineBefore(ops,i-1,iv):undefined;
             stack.push({buffer:slot,base});
             break;
         }
-        case 0x2f: case 0x28: case 0x45: stack.pop(); stack.push(null); break;
-        case 0x3b: {
+        case I32_LOAD16_U: case I32_LOAD: case I32_EQZ: stack.pop(); stack.push(null); break;
+        case I32_STORE16: {
             stack.pop();
             const dest=stack.pop();
             if (!dest?.base || op.operands[1]!==4) return {reason:"store address is not a proved unit-stride buffer access"};
@@ -47,7 +49,7 @@ function memoryEffects(ops, begin, end, iv) {
             break;
         }
         default:
-            if (op.opcode<0x46 || op.opcode>0x75) return {reason:"continuation has an unsupported control transfer, call or memory effect"};
+            if (op.opcode<I32_EQ || op.opcode>I32_SHR_S) return {reason:"continuation has an unsupported control transfer, call or memory effect"};
             stack.pop(); stack.pop(); stack.push(null);
         }
     }
@@ -57,25 +59,25 @@ function memoryEffects(ops, begin, end, iv) {
 function analyzeLoop(ops, loop, matching) {
     const reject=reason=>({loop:ops[loop].offset,reason});
     const end=matching.get(loop);
-    if (!is(ops[loop-1],0x02,64) || !is(ops[loop],0x03,64) || !is(ops[end+1],0x0b)) return reject("requires a counted block/loop pair");
+    if (!is(ops[loop-1],BLOCK,VOID) || !is(ops[loop],LOOP,VOID) || !is(ops[end+1],END)) return reject("requires a counted block/loop pair");
     const iv=ops[loop+1]?.operands[0], bound=value(ops[loop+2]);
-    if (!is(ops[loop+1],get) || !bound || !is(ops[loop+3],0x48) || !is(ops[loop+4],0x45) || !is(ops[loop+5],0x0d,1))
+    if (!is(ops[loop+1],get) || !bound || !is(ops[loop+3],I32_LT_S) || !is(ops[loop+4],I32_EQZ) || !is(ops[loop+5],BR_IF,1))
         return reject("requires a signed increasing index below an invariant bound");
     function sequence(at,pattern) {return pattern.every(([c,a],i)=>is(ops[at+i],c,a));}
-    if (!sequence(end-5,[[get,iv],[literal,1],[add],[set,iv],[0x0c,0]])) return reject("backedge does not advance the index by one");
+    if (!sequence(end-5,[[get,iv],[literal,1],[add],[set,iv],[BR,0]])) return reject("backedge does not advance the index by one");
     const begin=loop+6,row=value(ops[begin]);
     let i=begin+1;
     if (!row) return reject("no invariant subtraction operand");
     while (i<end && i<=begin+4 && !is(ops[i],set)) i++;
     const base=affineBefore(ops,i,iv);
     if (!base || !is(ops[i],set) || !is(ops[i+1],address) || ops[i+1].operands[1]!==ops[i].operands[0] ||
-        !sequence(i+2,[[0x2f,1],[0x6b],[set]]) || ops[i+2].operands[1]!==4)
+        !sequence(i+2,[[I32_LOAD16_U,1],[I32_SUB],[set]]) || ops[i+2].operands[1]!==4)
         return reject("no contiguous checked u16 subtraction producer");
     // Consume exactly the producer expression; extra stack values cannot cross this boundary.
     if (i-begin!==(is(ops[i-1],add)?4:2)) return reject("unexpected producer operand stack");
     const buffer=ops[i+1].operands[0],indexSlot=ops[i].operands[0],difference=ops[i+4].operands[0];
     const predicate=i+5, condition=i+8;
-    if (!sequence(predicate,[[get,difference],[literal,0],[0x4e],[0x04,64]]) || matching.get(condition)!==end-6)
+    if (!sequence(predicate,[[get,difference],[literal,0],[I32_GE_S],[IF,VOID]]) || matching.get(condition)!==end-6)
         return reject("difference must feed a single nonnegative guarded continuation");
     const update=end-5;
     const seen=new Set();
@@ -90,12 +92,12 @@ function analyzeLoop(ops, loop, matching) {
     // omitted by the fast path, so require it to have exactly its original use.
     for (let j=0;j<ops.length;j++) {
         const op=ops[j],uses=is(op,get)?op.operands:is(op,address)?op.operands:
-            is(op,0xf2)?[op.operands[0]]:[];
+            is(op,LITERAL_STORES)?[op.operands[0]]:[];
         if (uses.includes(indexSlot) && j!==i+1) return reject("index temporary is live outside the producer");
         if (uses.includes(difference) && (j<predicate || j>=update))
             return reject("signed difference is observable outside its nonnegative arm");
         if (is(op,set,difference) && j!==i+4) return reject("difference has another definition");
-        if (is(op,0x05) && matching.get(j)===condition) return reject("miss has an observable alternative");
+        if (is(op,ELSE) && matching.get(j)===condition) return reject("miss has an observable alternative");
     }
     const effects=memoryEffects(ops,condition+1,end-6,iv);
     if (effects.reason) return reject(effects.reason);
@@ -107,13 +109,13 @@ function analyzeLoop(ops, loop, matching) {
 }
 
 function analyze(fn) {
-    const ops=typedWasm.decodeNumericOperations(fn.code), matching=new Map(), stack=[];
+    const ops=typedTape.decode(fn.code), matching=new Map(), stack=[];
     for (let i=0;i<ops.length;i++) {
-        if ([0x02,0x03,0x04].includes(ops[i].opcode)) stack.push(i);
-        if (is(ops[i],0x05)) matching.set(i,stack.at(-1));
-        if (is(ops[i],0x0b) && stack.length) matching.set(stack.pop(),i);
+        if ([BLOCK,LOOP,IF].includes(ops[i].opcode)) stack.push(i);
+        if (is(ops[i],ELSE)) matching.set(i,stack.at(-1));
+        if (is(ops[i],END) && stack.length) matching.set(stack.pop(),i);
     }
-    return ops.flatMap((o,i)=>is(o,0x03)?[analyzeLoop(ops,i,matching)]:[]);
+    return ops.flatMap((o,i)=>is(o,LOOP)?[analyzeLoop(ops,i,matching)]:[]);
 }
 
 // The ESP words use fixed operands. scripts/01-reference-words.S is the
@@ -126,11 +128,11 @@ const zero=0, sp=2, a0=10, x=12, lanes=13, uniform=14, input=15, lanePtr=16, lim
 // cell match is only a necessary condition: an immediate can look like an
 // opcode. The structural analyzer still decides every acceptance.
 function mayContainProducer(tape) {
-    for (let at=tape.indexOf(0x2f); at>=0; at=tape.indexOf(0x2f,at+1)) {
-        if (tape[at+1]===1 && tape[at+2]===4 && tape[at+3]===0x6b &&
+    for (let at=tape.indexOf(I32_LOAD16_U); at>=0; at=tape.indexOf(I32_LOAD16_U,at+1)) {
+        if (tape[at+1]===1 && tape[at+2]===4 && tape[at+3]===I32_SUB &&
             tape[at+4]===set && tape[at+6]===get && tape[at+5]===tape[at+7] &&
-            tape[at+8]===literal && tape[at+9]===0 && tape[at+10]===0x4e &&
-            tape[at+11]===0x04 && tape[at+12]===64) return true;
+            tape[at+8]===literal && tape[at+9]===0 && tape[at+10]===I32_GE_S &&
+            tape[at+11]===IF && tape[at+12]===VOID) return true;
     }
     return false;
 }
@@ -162,7 +164,7 @@ function lower(fn,callables,targets,mode,FunctionCode,ins) {
             this.locals=this.packet/4+5; // aligned packet, then broadcast slot
         }
         step(op) {
-            const p=op===0x03 && plans.get(this.at-1);
+            const p=op===LOOP && plans.get(this.at-1);
             if (p && this.depth===0) this.grouped(p);
             return super.step(op);
         }

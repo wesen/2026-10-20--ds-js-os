@@ -2,7 +2,7 @@
 function planLocations(fn, options, inlineCall) {
     const tape = fn.code;
     // Forwarding and capacity reuse need a checked access; saved homes apply to any framed function.
-    if (!options.saved && !tape.includes(0xf1) && !tape.includes(0xf3)) return null;
+    if (!options.saved && !tape.includes(CHECKED_ADDRESS) && !tape.includes(UNCHECKED_ADDRESS)) return null;
     const reads = new Map(), writes = new Set(), scores = new Map();
     let receiver, straight = true, pure = true, leaf = true, loops = 0, ifs = 0;
     // Estimated executions per invocation: four inside a loop. Saved homes cost a fixed
@@ -43,50 +43,50 @@ function planLocations(fn, options, inlineCall) {
     let prev3Opcode = -1, prev3A = -1, prev4Opcode = -1, prev4A = -1;
     for (let at = 0; at < tape.length;) {
         const offset = at, opcode = tape[at++];
-        const cells = OPERAND_CELLS[opcode];
+        const cells = CELLS[opcode];
         // An opcode the planner does not know gets no plan; the emitter reports it.
         if (cells < 0) return null;
         const a = cells > 0 ? tape[at] : undefined, b = cells > 1 ? tape[at + 1] : undefined;
         at += cells;
         if (at > tape.length) throw new Error("truncated Typed inspection operation");
         if (options.pointers) {
-            if ((opcode === 0x20 || opcode === 0xf2) && !writes.has(a)) readEarly.add(a);
-            if (opcode === 0xf1 || opcode === 0xf3) for (const x of [a, b]) if (!writes.has(x)) readEarly.add(x);
-            if (opcode === 0x21) {
+            if ((opcode === LOCAL_GET || opcode === LITERAL_STORES) && !writes.has(a)) readEarly.add(a);
+            if (opcode === CHECKED_ADDRESS || opcode === UNCHECKED_ADDRESS) for (const x of [a, b]) if (!writes.has(x)) readEarly.add(x);
+            if (opcode === LOCAL_SET) {
                 // L = L + c or L = c + L: the three preceding operations.
                 let inc;
-                if (prevOpcode === 0x6a) {
-                    if (prev2Opcode === 0x41 && prev3Opcode === 0x20 && prev3A === a) inc = prev2A;
-                    else if (prev2Opcode === 0x20 && prev2A === a && prev3Opcode === 0x41) inc = prev3A;
+                if (prevOpcode === I32_ADD) {
+                    if (prev2Opcode === I32_CONST && prev3Opcode === LOCAL_GET && prev3A === a) inc = prev2A;
+                    else if (prev2Opcode === LOCAL_GET && prev2A === a && prev3Opcode === I32_CONST) inc = prev3A;
                 }
                 if (!writesOf.has(a)) writesOf.set(a, []);
                 writesOf.get(a).push({at: offset, w: weightNow(), inc, depth: loops});
             }
-            if ((opcode === 0xf1 || opcode === 0xf3) && prevOpcode === 0x21 && prevA === b) {
+            if ((opcode === CHECKED_ADDRESS || opcode === UNCHECKED_ADDRESS) && prevOpcode === LOCAL_SET && prevA === b) {
                 // r[L], r[L + k], r[k + L] and r[L + M] for locals L and M, the index expression
                 // being the operations before the local.set.
                 let L, M, k = 0;
-                if (prev2Opcode === 0x20) L = prev2A;
-                else if (prev2Opcode === 0x6a) {
-                    if (prev3Opcode === 0x41 && prev4Opcode === 0x20) { L = prev4A; k = prev3A; }
-                    else if (prev3Opcode === 0x20 && prev4Opcode === 0x41) { L = prev3A; k = prev4A; }
-                    else if (prev3Opcode === 0x20 && prev4Opcode === 0x20 && prev3A !== prev4A) { L = Math.min(prev3A, prev4A); M = Math.max(prev3A, prev4A); }
+                if (prev2Opcode === LOCAL_GET) L = prev2A;
+                else if (prev2Opcode === I32_ADD) {
+                    if (prev3Opcode === I32_CONST && prev4Opcode === LOCAL_GET) { L = prev4A; k = prev3A; }
+                    else if (prev3Opcode === LOCAL_GET && prev4Opcode === I32_CONST) { L = prev3A; k = prev4A; }
+                    else if (prev3Opcode === LOCAL_GET && prev4Opcode === LOCAL_GET && prev3A !== prev4A) { L = Math.min(prev3A, prev4A); M = Math.max(prev3A, prev4A); }
                 }
-                if (opcode === 0xf3) k += tape[offset + 3];
+                if (opcode === UNCHECKED_ADDRESS) k += tape[offset + 3];
                 if (L !== undefined && L !== b && M !== b) pointerAccesses.push({at: prevOffset, r: a, L, M, k, w: weightNow(), depth: loops});
             }
         }
         if (options.share) {
-            if (opcode === 0x20 || opcode === 0xf2) occur(a, offset, true);
-            else if (opcode === 0x21) occur(a, offset, false);
-            else if (opcode === 0xf1 || opcode === 0xf3) { occur(a, offset, true); occur(b, offset, true); }
+            if (opcode === LOCAL_GET || opcode === LITERAL_STORES) occur(a, offset, true);
+            else if (opcode === LOCAL_SET) occur(a, offset, false);
+            else if (opcode === CHECKED_ADDRESS || opcode === UNCHECKED_ADDRESS) { occur(a, offset, true); occur(b, offset, true); }
         }
-        if (opcode === 0xf3) {
+        if (opcode === UNCHECKED_ADDRESS) {
             read(a); read(b);
-            if (prevOpcode === 0x21 && prevA === b)
-                candidates.push({id: b, at: prev2Opcode === 0x41 ? prev2Offset : prevOffset});
+            if (prevOpcode === LOCAL_SET && prevA === b)
+                candidates.push({id: b, at: prev2Opcode === I32_CONST ? prev2Offset : prevOffset});
         }
-        if (opcode === 0xf1) {
+        if (opcode === CHECKED_ADDRESS) {
             if (straight && receiver === undefined) receiver = a;
             if (options.capacities) {
                 const before = scores.get(-1);
@@ -95,31 +95,31 @@ function planLocations(fn, options, inlineCall) {
                 scores.delete(-1);
             }
             read(a); read(b);
-            if (prevOpcode === 0x21 && prevA === b)
-                candidates.push({id: b, at: prev2Opcode === 0x41 ? prev2Offset : prevOffset});
+            if (prevOpcode === LOCAL_SET && prevA === b)
+                candidates.push({id: b, at: prev2Opcode === I32_CONST ? prev2Offset : prevOffset});
         }
-        if (opcode === 0x20 || opcode === 0xf2) read(a);
+        if (opcode === LOCAL_GET || opcode === LITERAL_STORES) read(a);
         // constants: a literal the emitter would load into a register, scored like a local.
-        if (opcode === 0x41 && options.constants && constantForm(tape, offset + 1, options.select) === "register")
+        if (opcode === I32_CONST && options.constants && constantForm(tape, offset + 1, options.select) === "register")
             weigh("c" + a);
-        if (opcode === 0x21) {
+        if (opcode === LOCAL_SET) {
             writes.add(a);
             // A homed write turns a store into a move: worth less than a read, which disappears.
             if (options.saved) weigh(a, 0.5);
         }
-        if (opcode === 0x10 && !inlineCall(a)) leaf = false;
-        if (opcode === 0x36 || opcode === 0x3b || opcode === 0xf2) pure = false;
-        if (opcode >= 0x02 && opcode <= 0x04) {
+        if (opcode === CALL && !inlineCall(a)) leaf = false;
+        if (EFFECTS[opcode] & STORES) pure = false;
+        if (opcode >= BLOCK && opcode <= IF) {
             blocks.push(opcode);
-            if (opcode === 0x03) { loops++; loopStarts.push(offset); }
-            if (opcode === 0x04) ifs++;
+            if (opcode === LOOP) { loops++; loopStarts.push(offset); }
+            if (opcode === IF) ifs++;
         }
-        if (opcode === 0x0b) {
+        if (opcode === END) {
             const closed = blocks.pop();
-            if (closed === 0x03) { loops--; loopSpans.push([loopStarts.pop(), offset]); }
-            if (closed === 0x04) ifs--;
+            if (closed === LOOP) { loops--; loopSpans.push([loopStarts.pop(), offset]); }
+            if (closed === IF) ifs--;
         }
-        if (opcode >= 0x02 && opcode <= 0x0f) straight = false;
+        if (opcode >= BLOCK && opcode <= RETURN) straight = false;
         prev4Opcode = prev3Opcode; prev4A = prev3A; prev3Opcode = prev2Opcode; prev3A = prev2A;
         prev2Opcode = prevOpcode; prev2Offset = prevOffset; prev2A = prevA;
         prevOpcode = opcode; prevOffset = offset; prevA = a;
@@ -238,18 +238,18 @@ function planLocations(fn, options, inlineCall) {
         // L must be an unchecked access (which needs no index) or a step. A checked access needs
         // L's value for its bounds check; the slow copy of a versioned loop recomputes L from its
         // definition, which is not a step, so its checked accesses see the exact value.
-        const L = g.L, unchecked = q => tape[q] === 0xf3;
-        const safeRead = q => (tape[q + 2] === 0x21 && unchecked(q + 4)) ||
-            (tape[q + 2] === 0x41 && tape[q + 4] === 0x6a && tape[q + 5] === 0x21 && (tape[q + 6] === L || unchecked(q + 7))) ||
-            (q >= 2 && tape[q - 2] === 0x41 && tape[q + 2] === 0x6a && tape[q + 3] === 0x21 && unchecked(q + 5));
+        const L = g.L, unchecked = q => tape[q] === UNCHECKED_ADDRESS;
+        const safeRead = q => (tape[q + 2] === LOCAL_SET && unchecked(q + 4)) ||
+            (tape[q + 2] === I32_CONST && tape[q + 4] === I32_ADD && tape[q + 5] === LOCAL_SET && (tape[q + 6] === L || unchecked(q + 7))) ||
+            (q >= 2 && tape[q - 2] === I32_CONST && tape[q + 2] === I32_ADD && tape[q + 3] === LOCAL_SET && unchecked(q + 5));
         let stale = false;
         for (const w of steps) {
             const span = loopSpans.filter(([s0, e0]) => s0 <= w.at && w.at <= e0).sort((x, y) => y[0] - x[0])[0];
             if (!span) { stale = true; break; }
             for (let q = span[0]; q < span[1] && !stale; q = opNext(tape, q)) {
                 const op = tape[q];
-                if ((op === 0x20 || op === 0xf2) && tape[q + 1] === L && !(op === 0x20 && safeRead(q))) stale = true;
-                if ((op === 0xf1 || op === 0xf3) && (tape[q + 1] === L || tape[q + 2] === L)) stale = true;
+                if ((op === LOCAL_GET || op === LITERAL_STORES) && tape[q + 1] === L && !(op === LOCAL_GET && safeRead(q))) stale = true;
+                if ((op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS) && (tape[q + 1] === L || tape[q + 2] === L)) stale = true;
             }
         }
         if (stale) continue;

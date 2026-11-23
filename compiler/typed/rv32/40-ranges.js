@@ -22,55 +22,55 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
     const reach = target => { if (target?.value) target.result = rangeJoin(target.result, top()); };
     for (let at = 0; at < code.length; at = opNext(code, at)) {
         const op = code[at], a = code[at + 1];
-        if (dead && op !== 0x05 && op !== 0x0b && !(op >= 0x02 && op <= 0x04)) continue;
-        if (dead && op >= 0x02 && op <= 0x04) { blocks.push({op, value: false, height: stack.length, result: null, deadEntry: true}); continue; }
+        if (dead && op !== ELSE && op !== END && !(op >= BLOCK && op <= IF)) continue;
+        if (dead && op >= BLOCK && op <= IF) { blocks.push({op, value: false, height: stack.length, result: null, deadEntry: true}); continue; }
         switch (op) {
-        case 0x41: stack.push([a, a]); break;
-        case 0x20: stack.push(rangeOf(a)); break;
-        case 0x21: onWrite(at, a, pop()); break;
-        case 0x1a: pop(); break;
-        case 0x0d: pop(); reach(blocks[blocks.length - 1 - a]); break;
-        case 0x0c: reach(blocks[blocks.length - 1 - a]); dead = true; break;
-        case 0x0f: pop(); dead = true; break;
-        case 0x00: dead = true; break;
-        case 0x45: pop(); stack.push([0, 1]); break;
-        case 0x28: pop(); stack.push(RANGE_TOP); break;
-        case 0x2f: pop(); stack.push([0, 65535]); break;
-        case 0x36: case 0x3b: pop(); pop(); break;
-        case 0xf1: case 0xf3: stack.push(RANGE_TOP); break;
-        case 0xf2: break;
-        case 0x10: for (let i = arity(a); i > 0; i--) pop(); stack.push(RANGE_TOP); break;
-        case 0x02: case 0x03: case 0x04:
-            if (op === 0x04) pop();
-            blocks.push({op, value: a === 0x7f, height: stack.length, result: null});
+        case I32_CONST: stack.push([a, a]); break;
+        case LOCAL_GET: stack.push(rangeOf(a)); break;
+        case LOCAL_SET: onWrite(at, a, pop()); break;
+        case DROP: pop(); break;
+        case BR_IF: pop(); reach(blocks[blocks.length - 1 - a]); break;
+        case BR: reach(blocks[blocks.length - 1 - a]); dead = true; break;
+        case RETURN: pop(); dead = true; break;
+        case UNREACHABLE: dead = true; break;
+        case I32_EQZ: pop(); stack.push([0, 1]); break;
+        case I32_LOAD: pop(); stack.push(RANGE_TOP); break;
+        case I32_LOAD16_U: pop(); stack.push([0, 65535]); break;
+        case I32_STORE: case I32_STORE16: pop(); pop(); break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(RANGE_TOP); break;
+        case LITERAL_STORES: break;
+        case CALL: for (let i = arity(a); i > 0; i--) pop(); stack.push(RANGE_TOP); break;
+        case BLOCK: case LOOP: case IF:
+            if (op === IF) pop();
+            blocks.push({op, value: a === I32, height: stack.length, result: null});
             break;
-        case 0x05: case 0x0b: {
-            const block = op === 0x05 ? blocks.at(-1) : blocks.pop();
+        case ELSE: case END: {
+            const block = op === ELSE ? blocks.at(-1) : blocks.pop();
             if (!block) break;
             if (block.value && !dead) block.result = rangeJoin(block.result, top());
             stack.length = block.height;
             dead = block.deadEntry ?? false;
-            if (op === 0x0b && block.value) stack.push(block.result ?? RANGE_TOP);
+            if (op === END && block.value) stack.push(block.result ?? RANGE_TOP);
             break;
         }
         default: {
-            if (!((op >= 0x46 && op <= 0x4f) || (op >= 0x6a && op <= 0x75))) return false;
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return false;
             const y = pop(), x = pop();
             let r = RANGE_TOP;
-            if (op <= 0x4f) r = [0, 1];
+            if (op <= I32_GE_U) r = [0, 1];
             else if (!x || !y) r = null;
-            else if (op === 0x6a) r = rangeFits(x[0] + y[0], x[1] + y[1]);
-            else if (op === 0x6b) r = rangeFits(x[0] - y[1], x[1] - y[0]);
-            else if (op === 0x6c) {
+            else if (op === I32_ADD) r = rangeFits(x[0] + y[0], x[1] + y[1]);
+            else if (op === I32_SUB) r = rangeFits(x[0] - y[1], x[1] - y[0]);
+            else if (op === I32_MUL) {
                 const p = [x[0] * y[0], x[0] * y[1], x[1] * y[0], x[1] * y[1]];
                 r = rangeFits(Math.min(...p), Math.max(...p));
-            } else if ((op === 0x6d || op === 0x6f) && y[0] === y[1] && y[0] > 0) {
+            } else if ((op === I32_DIV_S || op === I32_REM_S) && y[0] === y[1] && y[0] > 0) {
                 const d = y[0];
                 onDivide(at, x);
-                r = op === 0x6d ? [Math.trunc(x[0] / d), Math.trunc(x[1] / d)]
+                r = op === I32_DIV_S ? [Math.trunc(x[0] / d), Math.trunc(x[1] / d)]
                     : x[0] >= 0 ? [0, Math.min(x[1], d - 1)] : [-(d - 1), d - 1];
-            } else if (op === 0x75 && y[0] === y[1] && y[0] >= 0 && y[0] < 32) r = [x[0] >> y[0], x[1] >> y[0]];
-            else if (op === 0x71 && y[0] === y[1] && y[0] >= 0) r = [0, y[0]];
+            } else if (op === I32_SHR_S && y[0] === y[1] && y[0] >= 0 && y[0] < 32) r = [x[0] >> y[0], x[1] >> y[0]];
+            else if (op === 0x71 && y[0] === y[1] && y[0] >= 0) r = [0, y[0]]; // i32.and, not in the tape yet (PICOCALC-TYPED-BITWISE)
             stack.push(r);
         }
         }
@@ -87,38 +87,38 @@ function localRanges(code, params, arity) {
     // Most functions divide by no constant: one scan, and no intervals to compute.
     let divides = false;
     for (let at = 0; at < code.length; at = opNext(code, at)) {
-        if (!(OPERAND_CELLS[code[at]] >= 0)) return null;
-        if (code[at] === 0x41 && code[at + 1] > 0 && (code[at + 2] === 0x6d || code[at + 2] === 0x6f)) divides = true;
+        if (!(CELLS[code[at]] >= 0)) return null;
+        if (code[at] === I32_CONST && code[at + 1] > 0 && (code[at + 2] === I32_DIV_S || code[at + 2] === I32_REM_S)) divides = true;
     }
     if (!divides) return null;
     const counters = new Map();
     for (let at = 0; at < code.length; at = opNext(code, at)) {
-        if (code[at] !== 0x02 || code[at + 1] !== 0x40 || code[at + 2] !== 0x20 || code[at + 6] !== 0x48 || code[at + 7] !== 0x45 ||
-            code[at + 8] !== 0x0d || code[at + 9] !== 0 || code[at + 10] !== 0x03 || code[at + 11] !== 0x40) continue;
+        if (code[at] !== BLOCK || code[at + 1] !== VOID || code[at + 2] !== LOCAL_GET || code[at + 6] !== I32_LT_S || code[at + 7] !== I32_EQZ ||
+            code[at + 8] !== BR_IF || code[at + 9] !== 0 || code[at + 10] !== LOOP || code[at + 11] !== VOID) continue;
         const k = code[at + 3], boundOp = code[at + 4], bound = code[at + 5];
-        if (boundOp !== 0x41 && boundOp !== 0x20) continue;
+        if (boundOp !== I32_CONST && boundOp !== LOCAL_GET) continue;
         const loopEnd = opClose(code, at + 10);
         if (loopEnd < 0 || opClose(code, at) !== loopEnd + 1) continue;
         const inc = loopEnd - 14;
-        if (inc < at + 12 || code[inc] !== 0x20 || code[inc + 1] !== k || code[inc + 2] !== 0x41 || code[inc + 4] !== 0x6a ||
-            code[inc + 5] !== 0x21 || code[inc + 6] !== k || !(code[inc + 3] >= 1 && code[inc + 3] <= 64)) continue;
-        if (code[inc + 7] !== 0x20 || code[inc + 8] !== k || code[inc + 9] !== boundOp || code[inc + 10] !== bound ||
-            code[inc + 11] !== 0x48 || code[inc + 12] !== 0x0d || code[inc + 13] !== 0) continue;
+        if (inc < at + 12 || code[inc] !== LOCAL_GET || code[inc + 1] !== k || code[inc + 2] !== I32_CONST || code[inc + 4] !== I32_ADD ||
+            code[inc + 5] !== LOCAL_SET || code[inc + 6] !== k || !(code[inc + 3] >= 1 && code[inc + 3] <= 64)) continue;
+        if (code[inc + 7] !== LOCAL_GET || code[inc + 8] !== k || code[inc + 9] !== boundOp || code[inc + 10] !== bound ||
+            code[inc + 11] !== I32_LT_S || code[inc + 12] !== BR_IF || code[inc + 13] !== 0) continue;
         let writes = 0, boundWritten = false;
-        for (let p = at + 12; p < loopEnd; p = opNext(code, p)) if (code[p] === 0x21) {
+        for (let p = at + 12; p < loopEnd; p = opNext(code, p)) if (code[p] === LOCAL_SET) {
             if (code[p + 1] === k) writes++;
-            if (boundOp === 0x20 && code[p + 1] === bound) boundWritten = true;
+            if (boundOp === LOCAL_GET && code[p + 1] === bound) boundWritten = true;
         }
         if (writes === 1 && !boundWritten)
-            counters.set(inc + 5, {bound: boundOp === 0x41 ? [bound, bound] : null, local: bound, step: code[inc + 3]});
+            counters.set(inc + 5, {bound: boundOp === I32_CONST ? [bound, bound] : null, local: bound, step: code[inc + 3]});
     }
     const seen = new Set(), unknown = new Set();
     const touch = (x, write) => { if (x >= params && !seen.has(x) && !write) unknown.add(x); seen.add(x); };
     for (let at = 0; at < code.length; at = opNext(code, at)) {
         const op = code[at];
-        if (op === 0x20 || op === 0xf2) touch(code[at + 1], false);
-        else if (op === 0x21) touch(code[at + 1], true);
-        else if (op === 0xf1 || op === 0xf3) { touch(code[at + 1], false); touch(code[at + 2], false); }
+        if (op === LOCAL_GET || op === LITERAL_STORES) touch(code[at + 1], false);
+        else if (op === LOCAL_SET) touch(code[at + 1], true);
+        else if (op === CHECKED_ADDRESS || op === UNCHECKED_ADDRESS) { touch(code[at + 1], false); touch(code[at + 2], false); }
     }
     const ranges = new Map();
     const rangeOf = local => local < params || unknown.has(local) ? RANGE_TOP : ranges.get(local) ?? null;

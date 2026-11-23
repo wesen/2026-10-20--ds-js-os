@@ -135,8 +135,8 @@ func TestCompilerRevisionsCoexistInOneSession(t *testing.T) {
 	if got.Where.Path != "picocalc-os/compiler/typed-rv32.js" || got.Where.Line != 10 {
 		t.Fatalf("where: %+v", got.Where)
 	}
-	// Before eaf0872 the two host tools did not exist; the revision still loads.
-	if len(got.Old.Missing) != 2 || got.Old.Interp != nil || got.Old.RayBench != nil {
+	// Before eaf0872 the two host tools did not exist, and tape.js is newer still; the revision still loads.
+	if len(got.Old.Missing) != 3 || got.Old.Interp != nil || got.Old.RayBench != nil {
 		t.Fatalf("25cd108: %+v", got.Old)
 	}
 }

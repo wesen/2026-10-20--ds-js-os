@@ -37,9 +37,11 @@ type Module struct {
 }
 
 // Modules lists the files a revision loads, in the order PICOCALC-RAY-PARITY
-// used. The order only has to put each file after those it uses at load time;
-// later references go through live let bindings.
+// used, with the tape definition (tape.js) first because typed-wasm.js and
+// typed-rv32.js read it at load time. The order only has to put each file after
+// those it uses at load time; later references go through live let bindings.
 var Modules = []Module{
+	{"typedTape", "typedTape", compilerPaths("tape.js"), false}, // PICOCALC-TYPED-TAPE; absent before it
 	{"typedWasm", "typedWasm", compilerPaths("typed-wasm.js"), true},
 	{"typedAsync", "typedAsync", compilerPaths("typed-async.js"), false},
 	{"typedWorld", "typedWorld", compilerPaths("typed-world.js"), true},
