@@ -23,8 +23,9 @@ typedef struct {
   int64_t deadline_us;         // the compile is interrupted after this long
   const p4_typed_variant *variants;
   int n_variants;
-  const char *edit_file;       // editable: a file under the store that replaces the first source
-  const char *edit_tail;       // the assembled sources after the first
+  const char *edit_file;       // editable: a file under the store that replaces one source
+  const char *edit_head;       // the assembled sources before the editable one
+  const char *edit_tail;       // the assembled sources after it
   size_t edit_limit;
 } p4_typed_app;
 
