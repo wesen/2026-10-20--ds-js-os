@@ -135,6 +135,14 @@ export class FunctionCode {
             const value = this.pop(this.localClass(this.program.code[this.at]) ? FT10 : T5), local = this.cell();
             this.writeLocal(value, local);
             this.pointersAfterWrite(local, this.at - 2, value);
+            // An f32 function's `local.set x; local.get x` of a local in its slot: the stored register is the value
+            // (PICOCALC-CANDELA-KERNEL-CODEGEN).
+            const tape = this.program.code;
+            if (this.floating && tape[this.at] === LOCAL_GET && tape[this.at + 1] === local && plan?.homes.get(local) === undefined &&
+                !plan?.skips?.has(this.at) && !plan?.forward.has(this.at) && !plan?.pointerWrites?.has(local)) {
+                this.at += 2;
+                this.push(value);
+            }
             break;
         }
         case I32_LOAD: case I32_LOAD16_U: case I32_STORE: case I32_STORE16: {

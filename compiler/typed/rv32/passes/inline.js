@@ -16,15 +16,18 @@ import {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP
 //
 // A callee with a record result (several results) becomes `block; <f's tape> end; local.get r_0 ... r_{n-1}`: the
 // tape's block types hold one value, so each `return` and the final `end` first store the leaves into result locals
-// r_i, which follow the callee's own locals in its range.
+// r_i, which follow the callee's own locals in its range. A callee with a record result and no `return` before its
+// final `end` is copied without the block, leaving its leaves on the operand stack (PICOCALC-CANDELA-KERNEL-CODEGEN).
 //
 // Only calls inside a caller's loop are inlined, unless `anywhere` is set or the callee has an f32 parameter, local
-// or result (an f32 call costs its caller saved f registers and spills, and f32 helpers are small); the library
+// or result (an f32 call costs its caller saved f registers and spills, and f32 helpers are small; `floating`); the library
 // keeps each candidate fully expanded (`anywhere`), so a callee inlined into a loop brings
 // its own callees with it.
 // maxLoopDepth bounds the loop nesting a call site and the callee's own loops may form
 // together: a callee whose loops already amortize its call is left out of a caller's loop.
-export const INLINE_DEFAULTS = Object.freeze({calleeCells: 1000, callerCells: 8000, maxLoopDepth: 2});
+// callerLocals bounds the caller's locals after inlining (each callee inlined the first time adds its parameters,
+// locals and result locals): a frame holds a slot per local and reaches about 1000 slots, and split may add more.
+export const INLINE_DEFAULTS = Object.freeze({calleeCells: 1000, callerCells: 8000, maxLoopDepth: 2, callerLocals: 400});
 
 export function loopDepth(code) {
     let depth = 0, deepest = 0;
@@ -37,6 +40,10 @@ export function loopDepth(code) {
     return deepest;
 }
 
+// A library candidate with an f32 parameter, local or result (a record result's leaves included).
+const floating = callee => callee !== undefined && (callee.types !== undefined || callee.result === "f32" ||
+    Boolean(callee.results?.includes("f32")));
+
 export function inlineCalls(fn, library, limits, arity, anywhere) {
     const tape = fn.code;
     // Cheap rejections before the walk: no call to a library function, or (for the
@@ -45,7 +52,7 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
     for (let i = tape.indexOf(CALL); i >= 0 && !float; i = tape.indexOf(CALL, i + 1)) {
         const callee = library.get(tape[i + 1]);
         candidate ||= callee !== undefined;
-        float ||= callee?.types !== undefined;
+        float ||= floating(callee);
     }
     if (!candidate || (!anywhere && !float && !tape.includes(LOOP))) return null;
     // Until the first inlined call the output is a copy of the input, so the output length at
@@ -56,7 +63,7 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
         for (let at = 0; at < tape.length && !site;) {
             const opcode = tape[at], cells = CELLS[opcode];
             if (cells < 0) return null;
-            if (opcode === CALL && (anywhere || loops > 0 || library.get(tape[at + 1])?.types)) {
+            if (opcode === CALL && (anywhere || loops > 0 || floating(library.get(tape[at + 1])))) {
                 const callee = library.get(tape[at + 1]);
                 site = callee !== undefined && at + callee.code.length <= limits.callerCells &&
                     loops + callee.loops <= limits.maxLoopDepth;
@@ -79,8 +86,11 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
         const opcode = tape[at], cells = CELLS[opcode], a = tape[at + 1];
         if (cells < 0) return null;
         let callee = opcode === CALL ? library.get(a) : undefined;
-        if (callee && !anywhere && loops === 0 && !callee.types) callee = undefined;
+        if (callee && !anywhere && loops === 0 && !floating(callee)) callee = undefined;
         if (callee && (out.length + callee.code.length > limits.callerCells || loops + callee.loops > limits.maxLoopDepth))
+            callee = undefined;
+        if (callee && !bases.has(callee) &&
+            locals - fn.params.length + callee.params + callee.nlocals + (callee.results?.length ?? 0) > limits.callerLocals)
             callee = undefined;
         if (!callee) {
             const start = out.length;
@@ -153,7 +163,8 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
         for (let i = callee.params - 1; i >= 0; i--) if (!subst[i]) out.push(LOCAL_SET, base + i);
         const results = callee.results?.length ?? 0, resultBase = base + callee.params + callee.nlocals;
         const storeResults = () => { for (let r = results - 1; r >= 0; r--) out.push(LOCAL_SET, resultBase + r); };
-        out.push(BLOCK, results ? VOID : callee.result === "f32" ? F32 : I32);
+        const open = results > 0 && !callee.returns;
+        if (!open) out.push(BLOCK, results ? VOID : callee.result === "f32" ? F32 : I32);
         const local = v => v < callee.params && subst[v] ? subst[v].local : base + v;
         let depth = 0;
         const body = callee.code;
@@ -163,7 +174,10 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
             if (op === RETURN) { storeResults(); out.push(BR, depth); continue; }
             if (op >= BLOCK && op <= IF) depth++;
             if (op === END) depth--;
-            if (op === END && depth < 0) storeResults();
+            if (op === END && depth < 0) {
+                if (open) continue;
+                storeResults();
+            }
             if (op === LOCAL_GET && v < callee.params && subst[v]?.constant !== undefined) out.push(I32_CONST, subst[v].constant);
             else if (op === LOCAL_GET || op === LOCAL_SET) out.push(op, local(v));
             else if (op === CHECKED_ADDRESS) out.push(op, local(v), local(body[k - 1]));
@@ -175,7 +189,8 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
         for (let i = 0; i < sp; i++) if (stackKind[i] === 1 && stackValue[i] >= base && stackValue[i] < resultBase + results)
             stackKind[i] = 0;
         if (!results) push(0, 0, 0);
-        for (let r = 0; r < results; r++) {
+        if (open) for (let r = 0; r < results; r++) push(0, 0, 0);
+        else for (let r = 0; r < results; r++) {
             push(out.length, 1, resultBase + r);
             out.push(LOCAL_GET, resultBase + r);
         }
@@ -192,14 +207,16 @@ export function inlineCandidate(fn, code, limits, guarded) {
     // A callee's local arrays would need a place in the caller's area: such a callee stays a call.
     if (fn.async || guarded || fn.literals || fn.arrayBytes || code.length > limits.calleeCells) return null;
     const written = fn.params.map(() => false), addressed = fn.params.map(() => false);
+    let returns = false;
     for (let at = 0; at < code.length;) {
         const op = code[at], n = CELLS[op];
         if (n < 0 || op === LITERAL_STORES || (op === CALL && code[at + 1] === fn.index)) return null;
+        if (op === RETURN) returns = true;
         if (op === LOCAL_SET && code[at + 1] < fn.params.length) written[code[at + 1]] = true;
         if (op === CHECKED_ADDRESS) for (const v of [code[at + 1], code[at + 2]]) if (v < fn.params.length) addressed[v] = true;
         at += 1 + n;
     }
-    return {params: fn.params.length, written, addressed, result: fn.result, results: fn.results};
+    return {params: fn.params.length, written, addressed, result: fn.result, results: fn.results, returns};
 }
 
 // The types of a library copy's parameters and frame locals, when one is an f32 (inlineCalls copies them into

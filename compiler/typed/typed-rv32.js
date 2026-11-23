@@ -718,6 +718,10 @@ class BranchMethods {
 class CallMethods {
     call(index) {
         const callee = this.functions[index], count = callee.params.length;
+        // A pending read of a call-free home (operandLocations.callFree) moves to the operand stack first: the argument
+        // moves and the call write those registers.
+        const unsaved = this.locations?.callFree;
+        if (unsaved) for (let d = 0; d < this.depth; d++) if (unsaved.has(this.direct[d])) this.materializeAt(d);
         // ilp32f: integer arguments in a0-a7, f32 in fa0-fa7, each popped from its class's operand stack; an f32
         // beyond fa7 in the next integer register; the rest in the stack words at sp + 4k (outgoingWords).
         const incoming = calleeRegisters(callee);
@@ -747,7 +751,23 @@ class CallMethods {
         // A record result's leaves, in order, from their registers and the stack words at sp + 4k.
         const results = calleeResults(callee);
         if (!results) return this.push(callee.result === "f32" ? FA0 : A0);
-        for (let i = 0; i < results.length; i++) {
+        // The local.set operations that follow the call store its top leaves (the last first): under the kernel
+        // policy (direct reads) each such leaf goes from its register or stack word to the local, not through the
+        // operand stack (PICOCALC-CANDELA-KERNEL-CODEGEN). A leaf whose local's home is the register of a leaf
+        // still to be read, or whose local.set the plan treats specially, ends the run.
+        const plan = this.locations, tape = this.program.code, n = results.length;
+        let fused = 0;
+        if (plan?.direct && this.floating) {
+            const pending = new Set(results.filter(reg => reg >= 0));
+            for (; fused < n; fused++) {
+                const at = this.at + 2 * fused, local = tape[at + 1], reg = results[n - 1 - fused];
+                if (tape[at] !== LOCAL_SET || plan.forward.has(at) || plan.skips?.has(at) || plan.pointerWrites?.has(local)) break;
+                pending.delete(reg);
+                const home = plan.homes.get(local);
+                if (home !== undefined && pending.has(home)) break;
+            }
+        }
+        for (let i = 0; i < n - fused; i++) {
             const reg = results[i];
             if (reg >= 0) this.push(reg);
             else {
@@ -755,6 +775,18 @@ class CallMethods {
                 this.load(scratch, 4 * (-1 - reg));
                 this.push(scratch);
             }
+        }
+        for (let k = 0; k < fused; k++) {
+            const i = n - 1 - k, reg = results[i], local = tape[this.at + 1];
+            let value = reg;
+            if (reg < 0) {
+                const home = plan.homes.get(local);
+                value = home ?? (typeClass(callee.results[i]) ? FT10 : T5);
+                if (home !== undefined) this.materialize(home);
+                this.load(value, 4 * (-1 - reg));
+            }
+            if (value !== plan.homes.get(local)) this.writeLocal(value, local);
+            this.at += 2;
         }
     }
 
@@ -966,6 +998,15 @@ class HomeMethods {
             if (reg === undefined) this.spill(d, h);
             else this.move(reg, h);
         }
+    }
+
+    // materialize() for the operand at depth d alone.
+    materializeAt(d) {
+        const h = this.direct[d];
+        this.direct[d] = undefined;
+        const reg = OPERAND_STACKS[h >> 5][d];
+        if (reg === undefined) this.spill(d, h);
+        else this.move(reg, h);
     }
 
     pushHome(home) {
@@ -1243,6 +1284,14 @@ class FunctionCode {
             const value = this.pop(this.localClass(this.program.code[this.at]) ? FT10 : T5), local = this.cell();
             this.writeLocal(value, local);
             this.pointersAfterWrite(local, this.at - 2, value);
+            // An f32 function's `local.set x; local.get x` of a local in its slot: the stored register is the value
+            // (PICOCALC-CANDELA-KERNEL-CODEGEN).
+            const tape = this.program.code;
+            if (this.floating && tape[this.at] === LOCAL_GET && tape[this.at + 1] === local && plan?.homes.get(local) === undefined &&
+                !plan?.skips?.has(this.at) && !plan?.forward.has(this.at) && !plan?.pointerWrites?.has(local)) {
+                this.at += 2;
+                this.push(value);
+            }
             break;
         }
         case I32_LOAD: case I32_LOAD16_U: case I32_STORE: case I32_STORE16: {
@@ -1623,7 +1672,13 @@ function keyClass(fn, id) {
 // Each class has its own registers (encoding/registers.js REGISTER_CLASSES): an f32 local takes fa_i, a spare
 // fa register or fs0..fs11 (ilp32f), by the same rules; fa0 stays free like a0.
 const SAVED_MARGIN = 2;
-function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reuseArgs) {
+// callFree (operandLocations.callFree, PICOCALC-CANDELA-KERNEL-CODEGEN): the tape offsets of a calling f32 function's
+// calls (those a return does not follow at once). fa1-fa7, ft8 and ft9 are then free homes, at no cost, for plain
+// locals whose live interval contains none of them: no call clobbers such a local while it lives, and the emitter
+// moves a pending read of one to the operand stack before it sets up a call's arguments (calls.js). The registers so
+// used are returned in the set callFree.
+const CALL_FREE_HOMES = [43, 44, 45, 46, 47, 48, 49, 60, 61];
+function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reuseArgs, callFree) {
     // A class without a key takes no part: an integer-only function plans exactly as before register classes.
     const floats = fn.params.includes("f32") || Boolean(fn.localTypes?.includes("f32"));
     const free = [], opened = [], closed = [false, !floats];
@@ -1632,6 +1687,8 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reus
     // constants, slots live everywhere) occupy their register for the whole function.
     const span = id => intervals?.get(id) ?? [-Infinity, Infinity];
     const disjoint = (r, [s, e]) => r.spans.every(([s2, e2]) => e < s2 || s > e2);
+    const crosses = ([s, e]) => callFree.some(c => s < c && c < e);
+    if (callFree && !closed[F]) for (const reg of CALL_FREE_HOMES) free.push({reg, cls: F, cost: 0, localsOnly: true, callFree: true});
     if (leaf) {
         const incoming = calleeRegisters(fn);
         // An incoming register the leaf may keep: not a0 (the emitter's scratch), not a7 while it caches a capacity.
@@ -1664,22 +1721,25 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reus
         if (closed[cls]) continue;
         const own = span(id);
         const plain = typeof id === "number" && id >= fn.params.length;
-        const shared = intervals && score >= 1 ? opened.find(r => r.cls === cls && (plain || !r.localsOnly) && disjoint(r, own)) : undefined;
+        const callSafe = !callFree || !crosses(own);
+        const shared = intervals && score >= 1 ? opened.find(r => r.cls === cls && (plain || !r.localsOnly) && disjoint(r, own) &&
+            (callSafe || !r.callFree)) : undefined;
         if (shared) {
             homes.set(id, shared.reg);
             shared.spans.push(own);
             continue;
         }
-        const at = free.findIndex(f => f.cls === cls && (plain || !f.localsOnly));
+        const at = free.findIndex(f => f.cls === cls && (plain || !f.localsOnly) && (callSafe || !f.callFree));
         if (at < 0 || score <= (free[at].cost ? SAVED_MARGIN * free[at].cost : 1)) {
             if (intervals) continue;
             closed[cls] = true;
             if (closed[X] && closed[F]) break;
             continue;
         }
-        const [{reg, localsOnly}] = free.splice(at, 1);
+        const [{reg, localsOnly, callFree: unsaved}] = free.splice(at, 1);
         homes.set(id, reg);
-        opened.push({reg, cls, spans: [own], localsOnly});
+        opened.push({reg, cls, spans: [own], localsOnly, callFree: unsaved});
+        if (unsaved) homes.callFree = (homes.callFree ?? new Set()).add(reg);
     }
 }
 
@@ -1692,7 +1752,9 @@ function planLocations(fn, options, inlineCall) {
     // Forwarding and capacity reuse need a checked access; saved homes apply to any framed function.
     if (!options.saved && !tape.includes(CHECKED_ADDRESS) && !tape.includes(UNCHECKED_ADDRESS)) return null;
     const reads = new Map(), writes = new Set(), scores = new Map();
-    let receiver, straight = true, pure = true, leaf = true, loops = 0, ifs = 0;
+    let receiver, straight = true, pure = true, leaf = true, loops = 0, ifs = 0, guarded = false;
+    // callFree: the offsets of the calls a return does not follow at once (saved-homes.js).
+    const calls = [];
     // Estimated executions per invocation: four inside a loop. Saved homes cost a fixed
     // save and restore per call, so their estimate also halves under each enclosing if:
     // a value used only on a rarely taken path should stay in its slot.
@@ -1799,7 +1861,10 @@ function planLocations(fn, options, inlineCall) {
             // A homed write turns a store into a move: worth less than a read, which disappears.
             if (options.saved) weigh(a, 0.5);
         }
-        if (opcode === CALL && !inlineCall(a)) leaf = false;
+        if (opcode === CALL && !inlineCall(a)) {
+            leaf = false;
+            if (options.callFree && tape[at] !== RETURN && at !== tape.length - 1) calls.push(offset);
+        } else if (opcode === CALL) guarded = true;
         if (EFFECTS[opcode] & STORES) pure = false;
         if (opcode >= BLOCK && opcode <= IF) {
             blocks.push(opcode);
@@ -1895,7 +1960,8 @@ function planLocations(fn, options, inlineCall) {
             }
         }
     }
-    if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined, intervals, options.reuseArgs);
+    const callFree = options.callFree && !leaf && !guarded && intervals && floatingFunction(fn) ? calls : undefined;
+    if (options.saved) planSavedHomes(fn, scores, homes, leaf, receiver !== undefined, intervals, options.reuseArgs, callFree);
     else if (options.homes && leaf) {
         let reg = A0 + Math.max(1, fn.params.length);
         const end = A0 + (receiver === undefined ? 8 : 7);
@@ -1951,7 +2017,7 @@ function planLocations(fn, options, inlineCall) {
         for (const w of steps) skips.set(w.at - 5, {end: w.at + 2, local: g.L, inc: w.inc});
     }
     // scores and intervals are what planSavedHomes chose from; only observePlan reads them.
-    return {receiver,forward,homes,direct,pointers,pointerWrites,increments,skips,scores,intervals};
+    return {receiver,forward,homes,direct,pointers,pointerWrites,increments,skips,scores,intervals,callFree: homes.callFree};
 }
 
 // rv32/analysis/storeless.js
@@ -1985,7 +2051,8 @@ function storelessAnalysis(callables, importCount) {
 //
 //   name     the pass's name in a policy, in timing rows and, for a transform, in observeTape
 //   group    the bundle that holds its code (GROUPS)
-//   kind     "transform" rewrites fn.code and is observed after it runs; "analysis" leaves a result in the
+//   kind     "transform" rewrites fn.code and is observed after it runs (observe: false, never; "changed", when its
+//            run returns "changed"); "analysis" leaves a result in the
 //            function's context; "option" has no stage of its own and changes the pass it needs
 //   needs    passes that must precede it in the same list
 //
@@ -2012,6 +2079,10 @@ const PASSES = [
     {name: "hoist", group: "loops", kind: "option", needs: ["version"]},
     {name: "induction", group: "loops", kind: "option", needs: ["version"]},
     {name: "split", group: "loops", kind: "transform"},
+    // rows and coalesce rewrite only f32 functions and is observed only when it changes a tape, so integer programs' observed
+    // tapes stay what they were.
+    {name: "rows", group: "loops", kind: "transform", observe: "changed"},
+    {name: "coalesce", group: "loops", kind: "transform", observe: "changed"},
     {name: "facts", group: "loops", kind: "analysis", needs: ["ranges"]},
 ];
 PASSES.forEach((pass, order) => pass.order = order);
@@ -2099,8 +2170,8 @@ const POLICIES = Object.freeze({
     kernel: Object.freeze({
         ...DEFAULT_POLICY,
         passes: Object.freeze(["inline", "fields", "commute", "conjunctions", "sets", "rotate", "ranges", "version", "hoist",
-            "induction", "split", "facts"]),
-        operandLocations: Object.freeze({...DEFAULT_LOCATIONS, pointerOnly: true, reuseArgs: true}),
+            "induction", "split", "rows", "coalesce", "facts"]),
+        operandLocations: Object.freeze({...DEFAULT_LOCATIONS, pointerOnly: true, reuseArgs: true, callFree: true}),
         select: Object.freeze({...DEFAULT_SELECT, loadHomes: true}),
     }),
     stock: Object.freeze({passes: Object.freeze([])}),
@@ -2229,7 +2300,8 @@ function compile(source, imports = [], maxSourceLength, requested) {
                 if (fn.literals) fn.literals = null;
                 return;
             }
-            if (stage.kind === "transform" && stage.observe !== false) observe(stage.name);
+            if (stage.kind === "transform" && (stage.observe === "changed" ? lowered === "changed" : stage.observe !== false))
+                observe(stage.name);
         }
         const {Emitter, facts} = ctx;
         let compiled = time(fn, "leaf", () => lowerLeaf(fn, callables, targets, options?.select, facts));
@@ -2397,5 +2469,5 @@ globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES,
     passes: PASSES.map(({name, group, kind, needs}) => ({name, group, kind, needs: needs ?? [], file: GROUPS[group]}))};
 
 // The names the pass-group bundles import from this one.
-globalThis.typedRv32Modules = {ARRAY_ADDRESS, ARRAY_ZERO, BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, floatingFunction, installPasses, opClose, opNext, replaceTape, tapeRow};
+globalThis.typedRv32Modules = {ARRAY_ADDRESS, ARRAY_ZERO, BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_CONST, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, floatingFunction, installPasses, opClose, opNext, replaceTape, tapeRow};
 })();

@@ -32,6 +32,15 @@ export class HomeMethods {
         }
     }
 
+    // materialize() for the operand at depth d alone.
+    materializeAt(d) {
+        const h = this.direct[d];
+        this.direct[d] = undefined;
+        const reg = OPERAND_STACKS[h >> 5][d];
+        if (reg === undefined) this.spill(d, h);
+        else this.move(reg, h);
+    }
+
     pushHome(home) {
         this.classes[this.depth] = home >> 5;
         this.direct[this.depth++] = home;
