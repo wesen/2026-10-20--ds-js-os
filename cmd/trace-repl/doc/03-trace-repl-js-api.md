@@ -309,7 +309,7 @@ A revision object, `const c = compiler.at(rev)`:
 | `c.native.interp`, `c.native.rayBench` | `native.interp` is `rv32`. `native.rayBench` is the revision's benchmark bound to `rv32`: same layout, arguments and checks, about 50 ms per opening frame. |
 | `c.globals` | Every name the files published, such as `compileTypedWorldRv32`. |
 | `c.ray` | The text of `raytrace.typed` at that revision. |
-| `c.world(name)` | `{name, layout, text, files}`: `worlds/NAME/source.list` assembled, or the built-in layouts of `files` and `agenda` (`layout: "builtin"`). |
+| `c.world(name)` | `{name, layout, text, files}`: the sources of `apps/typed/NAME/app.json`, each followed by a newline (`layout: "app.json"`); before the app manifests, `source.list` or the built-in layouts of `files` and `agenda` (`layout: "builtin"`). |
 | `c.read(path)` | A file at that revision: `{path, revision, sha256, bytes, gzip, text}`. |
 | `c.typedSources()` | The `.typed` source paths at that revision. |
 | `c.where(line)` | Maps a `compiler@REV:LINE` stack position to `{path, line}`, or `null`. |

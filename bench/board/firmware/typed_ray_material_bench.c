@@ -1,3 +1,4 @@
+// Moved from firmware/port/esp32p4/main (PICOCALC-TYPED-APP-MANIFEST): built only by the bench profile.
 // Compare the installed mixed renderer with a single complete Typed frame.
 #include "candela_p4.h"
 #include "candela_scene.h"
@@ -31,9 +32,9 @@ static bool load_once(void) {
     size_t ns = 0, nt = 0, ni = 0;
     int64_t begin = port_clock();
     char *source = p4_bundle_read("typedmat/main.typed", &ns, NULL, 0);
-    char *slot = p4_bundle_read("candela/slot.elf", &nt, NULL, 0);
+    char *slot = p4_bundle_read("candela/reactor.elf", &nt, NULL, 0);
     char *bytes = source && slot ? p4_typed_compile("typedmat", "typedmat/main.typed", source, ns,
-        "typedmat/link.js", "linkTypedMaterial", ENG_NATIVE, slot, nt, &ni, begin, &limits) : NULL;
+        "typedmat/link.js", "linkTypedMaterial", NULL, slot, nt, &ni, begin, &limits) : NULL;
     free(source);
     free(slot);
     if (!bytes) return false;

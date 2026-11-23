@@ -1,0 +1,21 @@
+{
+  "name": "raytrace",
+  "kind": "module",
+  "sources": ["raytrace.typed"],
+  "link": "apps/typed/raytrace/link.js",
+  "entry": "linkTypedRay",
+  "reactor": {
+    "sources": ["firmware/port/esp32p4/main/candela_slot.c", "firmware/port/esp32p4/main/candela_slot.S"]
+  },
+  "policy": "kernel",
+  "heapBytes": 4194304,
+  "deadlineMs": 8000,
+  "host": {
+    "sources": ["firmware/port/esp32p4/main/typed_ray_p4.c"],
+    "defines": ["PICOCALC_TYPED_RAY=1"]
+  },
+  "notes": [
+    "kernel: 10.99 ms per frame against 16.26 ms for default, about 2.0 s of compile on first display (RAY-PARITY).",
+    "The four entry trampolines are the Candela slot's; typed_ray_p4.c draws the frame into the compositor's raytrace view."
+  ]
+}
