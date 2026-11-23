@@ -1,0 +1,6 @@
+candela compile source=candela/callback.typed status=ok us=2542858 peak_js_bytes=1839472 module_bytes=66816
+files compile source=bundle status=ok us=1452129 peak_js_bytes=1733748 module_bytes=243644
+editor compile source=bundle status=ok us=3423601 peak_js_bytes=3066764 module_bytes=243644
+agenda compile source=bundle status=ok us=2653027 peak_js_bytes=2363184 module_bytes=243644
+chess compile source=bundle status=ok us=4190563 peak_js_bytes=3076688 module_bytes=276412
+chess/painter compile source=screen-message status=ok us=5750067 peak_js_bytes=1910288 module_bytes=33840
