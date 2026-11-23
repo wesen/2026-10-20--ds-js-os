@@ -17,6 +17,25 @@ typedef struct {
   vtime_t deadline;
 } compile_heap;
 
+// Where one compile's time went, printed after it as one TYPEDCOMPILE line (outside the timed compile): each compiler
+// source it evaluated (from the bytecode cache or parsed, with the time to load the bytecode and to run the source's
+// top level), the call to the linker's entry (front end, back end and link; a pass group the back end loads is an
+// evaluation inside it) and the runtime's teardown (PICOCALC-COMPILER-DEVICE-COST).
+typedef struct {
+  char path[32];
+  bool parsed, in_call;
+  vtime_t load_us, run_us;
+  size_t live;  // the compiler heap after the evaluation
+} compile_eval;
+
+typedef struct {
+  compile_heap heap;  // first: the allocator's and the interrupt handler's opaque
+  bool in_call;
+  int evals;
+  compile_eval eval[12];
+  vtime_t before_us, setup_us, call_us, free_us;  // before: from `started` (reading the source and reactor)
+} compile_state;
+
 static void account(compile_heap *heap, size_t old, size_t current) {
   heap->live = heap->live - old + current;
   if (heap->live > heap->peak) heap->peak = heap->live;
@@ -94,25 +113,33 @@ static compiled_source *compiled_find(const char *path, bool claim) {
 }
 
 static bool eval_file(JSContext *ctx, const char *path) {
+  compile_state *state = JS_GetContextOpaque(ctx);
+  compile_eval *record = state && state->evals < (int)(sizeof(state->eval) / sizeof(*state->eval))
+      ? &state->eval[state->evals++] : NULL;
+  vtime_t begun = port_clock();
+  if (record) {
+    snprintf(record->path, sizeof(record->path), "%s", path);
+    record->in_call = state->in_call;
+  }
   compiled_source *cached = compiled_find(path, false);
   uint8_t *bytes = cached ? cached->bytes : NULL;
+  JSValue function = JS_UNDEFINED;
   if (bytes) {
-    JSValue function = JS_ReadObject(ctx, bytes, cached->length, JS_READ_OBJ_BYTECODE);
-    if (!JS_IsException(function)) {
-      JSValue value = JS_EvalFunction(ctx, function);
-      bool ok = !JS_IsException(value);
-      JS_FreeValue(ctx, value);
-      return ok;
+    function = JS_ReadObject(ctx, bytes, cached->length, JS_READ_OBJ_BYTECODE);
+    if (JS_IsException(function)) {
+      JS_FreeValue(ctx, JS_GetException(ctx));
+      printf("typed compiler bytecode: cannot read %s, parsing it\n", path);
     }
-    JS_FreeValue(ctx, JS_GetException(ctx));
-    printf("typed compiler bytecode: cannot read %s, parsing it\n", path);
   }
-  size_t length;
-  char *text = p4_bundle_read(path, &length, NULL, 0);
-  if (!text) return false;
-  JSValue function = JS_Eval(ctx, text, length, path, JS_EVAL_TYPE_GLOBAL | JS_EVAL_FLAG_COMPILE_ONLY);
-  free(text);
-  if (JS_IsException(function)) return false;
+  if (!bytes || JS_IsException(function)) {
+    size_t length;
+    char *text = p4_bundle_read(path, &length, NULL, 0);
+    if (!text) return false;
+    function = JS_Eval(ctx, text, length, path, JS_EVAL_TYPE_GLOBAL | JS_EVAL_FLAG_COMPILE_ONLY);
+    free(text);
+    if (JS_IsException(function)) return false;
+    if (record) record->parsed = true;
+  }
   if (!bytes) {
     size_t size = 0;
     uint8_t *written = JS_WriteObject(ctx, &size, function, JS_WRITE_OBJ_BYTECODE);
@@ -132,9 +159,15 @@ static bool eval_file(JSContext *ctx, const char *path) {
     }
     if (written) js_free(ctx, written);
   }
+  vtime_t loaded = port_clock();
   JSValue value = JS_EvalFunction(ctx, function);
   bool ok = !JS_IsException(value);
   JS_FreeValue(ctx, value);
+  if (record) {
+    record->load_us = loaded - begun;
+    record->run_us = port_clock() - loaded;
+    record->live = state->heap.live;
+  }
   return ok;
 }
 
@@ -164,16 +197,21 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
                        size_t source_length, const char *linker, const char *entry,
                        const char *const *compiler, const char *reactor, size_t reactor_length,
                        size_t *length, vtime_t started, const p4_compile_limits *limits) {
-  compile_heap heap = {.limit = limits->heap_bytes, .deadline = started + limits->duration_us};
-  JSRuntime *rt = JS_NewRuntime2(&compiler_allocator, &heap);
+  compile_state state = {.heap = {.limit = limits->heap_bytes, .deadline = started + limits->duration_us}};
+  compile_heap *heap = &state.heap;
+  vtime_t phase = port_clock();
+  state.before_us = phase - started;
+  JSRuntime *rt = JS_NewRuntime2(&compiler_allocator, heap);
   JSContext *ctx = NULL;
   char *module = NULL;
   if (!rt) goto done;
   JS_SetMaxStackSize(rt, port_js_stack());
-  JS_SetInterruptHandler(rt, compile_interrupt, &heap);
+  JS_SetInterruptHandler(rt, compile_interrupt, heap);
   ctx = JS_NewContext(rt);
   if (!ctx) goto done;
+  JS_SetContextOpaque(ctx, &state);
   if (!typed_lex_index_install(ctx) || !install_rv32_load(ctx)) goto rejected;
+  state.setup_us = port_clock() - phase;
   // The tape definition, the front end, the compiler modules the app names (typed/async.js), the RV32 back end, then the linker.
   if (!eval_file(ctx, "typed/tape.js") || !eval_file(ctx, "typed/wasm.js")) goto rejected;
   for (const char *const *m = compiler; m && *m; m++)
@@ -204,7 +242,13 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
       if (ready) printf("%s native compiler policy=%s\n", app, limits->policy);
     }
   }
-  if (ready) result = JS_Call(ctx, function, JS_UNDEFINED, argc, args);
+  if (ready) {
+    state.in_call = true;
+    phase = port_clock();
+    result = JS_Call(ctx, function, JS_UNDEFINED, argc, args);
+    state.call_us = port_clock() - phase;
+    state.in_call = false;
+  }
   JS_FreeValue(ctx, args[2]);
   JS_FreeValue(ctx, args[1]); JS_FreeValue(ctx, args[0]);
   JS_FreeValue(ctx, function); JS_FreeValue(ctx, global);
@@ -240,11 +284,22 @@ rejected:
     JS_FreeValue(ctx, exception);
   }
 done:
+  phase = port_clock();
   if (ctx) JS_FreeContext(ctx);
   if (rt) JS_FreeRuntime(rt);
+  state.free_us = port_clock() - phase;
   printf("%s compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu\n",
          app, source_kind, module ? "ok" : "failed",
-         (long long)(port_clock() - started), heap.peak, module ? *length : 0);
+         (long long)(port_clock() - started), heap->peak, module ? *length : 0);
+  printf("TYPEDCOMPILE {\"app\":\"%s\",\"beforeUs\":%lld,\"setupUs\":%lld,\"callUs\":%lld,\"freeUs\":%lld,\"evals\":[",
+         app, (long long)state.before_us, (long long)state.setup_us, (long long)state.call_us, (long long)state.free_us);
+  for (int i = 0; i < state.evals; i++) {
+    const compile_eval *e = &state.eval[i];
+    printf("%s{\"path\":\"%s\",\"bytecode\":\"%s\",\"inCall\":%s,\"loadUs\":%lld,\"runUs\":%lld,\"liveBytes\":%zu}",
+           i ? "," : "", e->path, e->parsed ? "parsed" : "cached", e->in_call ? "true" : "false",
+           (long long)e->load_us, (long long)e->run_us, e->live);
+  }
+  printf("]}\n");
   return module;
 }
 
