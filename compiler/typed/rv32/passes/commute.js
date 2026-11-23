@@ -38,6 +38,8 @@ export function commuteConstants(code, arity) {
         else if (op === CALL) {
             const n = arity(a), args = stack.splice(stack.length - n, n);
             stack.push({start: n ? args[0]?.start ?? NaN : start});
+            // A record result's further leaves start nowhere a literal could move past.
+            for (let k = arity.results?.(a) ?? 1; k > 1; k--) stack.push({start: NaN});
         } else if (op >= BLOCK && op <= IF) {
             if (op === IF) stack.pop();
             blocks.push({value: a !== VOID, height: stack.length});

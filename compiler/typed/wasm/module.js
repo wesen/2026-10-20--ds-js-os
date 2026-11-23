@@ -11,9 +11,13 @@ function section(id, data) {
 // A Typed type as a Wasm value type: f32 is F32, every other type an i32.
 const valueType = type => type === "f32" ? F32 : I32;
 
+// A record result is several results (WebAssembly's multi-value), one per leaf.
 function signature(fn) {
-    return [0x60, ...vec(fn.params.map(valueType)), 1, valueType(fn.result)];
+    return [0x60, ...vec(fn.params.map(valueType)), ...vec((fn.results ?? [fn.result]).map(valueType))];
 }
+
+// What compile, linkWorld and typedRv32.compile publish of each function.
+const publicSignature = ({name, params, result, results}) => ({name, params, result, ...(results && {results})});
 
 // options.maxSourceLength (default 64 KiB) and options.memoryPages (the exported memory's fixed size in 64 KiB pages,
 // default 1) serve large programs such as the Candela kernel (PICOCALC-CANDELA-TYPED); the defaults keep every module.
@@ -46,7 +50,7 @@ function compile(source, options) {
         records: recordLayouts(records),
         enums: enumLayouts(enums),
         distinct: [...distinct],
-        signatures: functions.map(({ name, params, result }) => ({ name, params, result })),
+        signatures: functions.map(publicSignature),
         ...(asyncLayout && {asyncLayout}),
         ...(asyncSource && {asyncSource}),
     };

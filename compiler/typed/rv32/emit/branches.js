@@ -88,7 +88,7 @@ export class BranchMethods {
     end() {
         const block = this.control.pop();
         if (!block) {
-            this.move(this.returnRegister, this.pop(this.returnRegister));
+            this.returnValue();
             return true;
         }
         if (block.alternate.at === undefined) this.mark(block.alternate);

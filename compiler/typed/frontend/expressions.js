@@ -43,8 +43,9 @@ const UNSIGNED = Object.assign(Object.create(null), {"<": I32_LT_U, "<=": I32_LE
 const PREFIX = 11; // the operand of a prefix operator binds tighter than every binary operator
 
 class ExpressionParser {
-    constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases) {
+    constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases, values) {
         this.aliases = aliases;
+        this.values = values;
         this.records = records;
         this.enums = enums;
         this.distinct = distinct;
@@ -181,18 +182,9 @@ class ExpressionParser {
             } else this.code.push(unsigned ? F32_CONVERT_I32_U : F32_CONVERT_I32_S);
             return "f32";
         }
-        case "u32": {
-            // An integer keeps its bits; f32 -> u32 truncates toward zero and saturates, NaN gives 2^32 - 1
-            // (tape.js f32.to_u32).
+        case "u32":
             lex.next();
-            lex.expect("(");
-            const type = this.expr();
-            lex.expect(")");
-            if (type === "f32") this.code.push(U32_TRUNC_F32);
-            else if (scalarType(type) !== "i32" && !unsignedType(type) && !this.enums.has(type) && !this.distinct.has(type))
-                lex.fail("u32 conversion requires an integer or an f32, got " + scalarType(type));
-            return "u32";
-        }
+            return this.unsignedConversion();
         }
         if (lex.token.kind === "float") {
             this.emitFloat(lex.floatValue());
@@ -214,6 +206,7 @@ class ExpressionParser {
                 { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
                 return generatedType ?? name;
             }
+            if (this.values?.has(name)) return this.construct(name);
             return this.call(name);
         }
         const binding = this.locals.get(name);
@@ -234,6 +227,7 @@ class ExpressionParser {
             this.emitConst(0);
             return "SurfacePoint";
         }
+        if (this.values?.has(binding.type)) return this.valueRead(binding.type, binding.index);
         if (binding.type === "i32" || binding.type === "bool") {
             this.emitIndex(LOCAL_GET, binding.index);
             return binding.type;
@@ -398,6 +392,8 @@ class ExpressionParser {
             const name = lex.ident();
             if (lex.token.value === "(") {
                 type = this.memberCall(this.aliases?.methods.get(type), scalarType(type), true, name);
+            } else if (this.values?.has(type)) {
+                type = this.stackField(type, name);
             } else {
                 const field = this.field(type, name);
                 this.emitMemory(field.type === "f32" ? F32_LOAD : I32_LOAD, 2, field.offset);
@@ -464,10 +460,12 @@ class ExpressionParser {
             this.emitMemory(I32_LOAD, 2, this.records.get("WorldState").get(startField).offset);
             this.code.push(I32_EQZ, IF, I32);
         }
-        const end = options ? callee.params.length - this.records.get(options).size : callee.params.length;
+        // A value record argument leaves its leaves on the stack, the callee's consecutive parameters.
+        const params = callee.sourceParams ?? callee.params;
+        const end = options ? params.length - this.records.get(options).size : params.length;
         for (let i = first; i < end; i++) {
             if (i !== first) lex.expect(",");
-            this.want(this.expr(), callee.params[i]);
+            this.want(this.expr(), params[i]);
         }
         if (options) {
             if (end !== first) lex.expect(",");

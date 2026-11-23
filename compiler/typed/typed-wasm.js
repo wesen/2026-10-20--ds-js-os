@@ -224,10 +224,10 @@ class Lexer {
         return value;
     }
 
-    type(records, enums, distinct) {
+    type(records, enums, distinct, values) {
         const { value } = this.token;
         if (value !== "i32" && value !== "f32" && value !== "u32" && value !== "bool" && value !== "string" && value !== "buffer" &&
-            !records.has(value) && !enums?.has(value) && !distinct?.has(value))
+            !records.has(value) && !enums?.has(value) && !distinct?.has(value) && !values?.has(value))
             this.fail("unknown type " + value);
         this.next();
         return value;
@@ -265,9 +265,13 @@ class Lexer {
 }
 
 // ---- frontend/declarations.js
-// The signature pass: records, enums, distinct types, member aliases, function signatures, and the call graph's
-// acyclicity check; and the layouts the backends publish.
-function scanSignatures(lex, records, declared, functionBase, enums, distinct, asyncSpans = false) {
+// The signature pass: records, value records, enums, distinct types, member aliases, function signatures, and the call
+// graph's acyclicity check; and the layouts the backends publish.
+//
+// A value record parameter is its leaves, consecutive parameters in field order (fn.params, fn.paramNames "v.x"); the
+// signature as written is fn.sourceParams and fn.sourceNames, present only when a value record appears. A value record
+// result is fn.result (its name) and fn.results, the types of its leaves.
+function scanSignatures(lex, records, declared, functionBase, enums, distinct, asyncSpans = false, values) {
     const functions = [];
     while (lex.token.kind !== "eof") {
         const start = lex.token.at;
@@ -275,25 +279,42 @@ function scanSignatures(lex, records, declared, functionBase, enums, distinct, a
         { if (lex.token.value !== "function") lex.fail("expected function"); lex.next(); }
         const name = lex.ident();
         if (name === "memory") lex.fail("reserved memory export");
-        if (declared.has(name) || distinct.has(name)) lex.fail("duplicate function " + name);
+        if (declared.has(name) || distinct.has(name) || values?.has(name)) lex.fail("duplicate function " + name);
         const params = [], paramNames = [];
         const paramAts = asyncSpans ? [] : null;
+        let sourceParams, sourceNames;
         { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
         if (!(lex.token.value === ")" && (lex.next(), true))) {
+            const names = [], types = [];
             do {
                 paramAts?.push(lex.token.at);
                 const id = lex.ident();
                 { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
-                params.push(lex.type(records, enums, distinct));
-                if (paramNames.includes(id)) lex.fail("duplicate local " + id);
-                paramNames.push(id);
+                const type = lex.type(records, enums, distinct, values);
+                if (names.includes(id)) lex.fail("duplicate local " + id);
+                names.push(id);
+                types.push(type);
+                const value = values?.get(type);
+                if (value) {
+                    sourceParams = types;
+                    for (let k = 0; k < value.leaves.length; k++) {
+                        params.push(value.leaves[k]);
+                        paramNames.push(id + "." + value.paths[k]);
+                    }
+                } else {
+                    params.push(type);
+                    paramNames.push(id);
+                }
             } while ((lex.token.value === "," && (lex.next(), true)));
             { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+            if (sourceParams) sourceNames = names;
         }
         { if (lex.token.value !== ":") lex.fail("expected :"); lex.next(); }
-        const result = lex.type(records, enums, distinct);
+        const result = lex.type(records, enums, distinct, values);
         if (lex.token.value !== "{") lex.fail("expected {");
         const fn = {name, index: functionBase + functions.length, params, paramNames, result, bodyAt: lex.token.at};
+        if (sourceParams) Object.assign(fn, {sourceParams, sourceNames});
+        if (values?.has(result)) fn.results = values.get(result).leaves;
         declared.set(name, fn);
         functions.push(fn);
         const end = lex.skipBody();
@@ -393,7 +414,7 @@ function checkMembers(lex, aliases, declared, records) {
             const fail = message => { lex.token.at = member.at; lex.fail(owner + "." + name + ": " + message); };
             const fn = declared.get(member.target);
             if (!fn) fail("unknown target " + member.target);
-            if (receiver && fn.params[0] !== owner) fail("target must take " + owner + " as its first parameter");
+            if (receiver && (fn.sourceParams ?? fn.params)[0] !== owner) fail("target must take " + owner + " as its first parameter");
             if (member.options) {
                 const fields = records.get(member.options);
                 const first = fn.params.length - fields.size;
@@ -407,29 +428,64 @@ function checkMembers(lex, aliases, declared, records) {
     }
 }
 
+// value record Name { field: type; ... }: a record whose variables are values, not references to memory. Its layout:
+// fields (name -> {type, offset, width}, offset and width in leaves), leaves (the scalar type of each leaf, nested
+// value records flattened in field order) and paths ("o.x", for parameter names).
+function parseValueRecord(lex, name, records, enums, distinct, values) {
+    const fields = new Map(), leaves = [], paths = [];
+    lex.expect("{");
+    while (lex.token.value !== "}") {
+        const field = lex.ident();
+        if (fields.has(field)) lex.fail("duplicate field " + field + " in " + name);
+        lex.expect(":");
+        const type = lex.type(records, enums, distinct, values);
+        lex.expect(";");
+        const nested = values.get(type);
+        fields.set(field, {type, offset: leaves.length, width: nested ? nested.leaves.length : 1});
+        if (nested) {
+            leaves.push(...nested.leaves);
+            for (const path of nested.paths) paths.push(field + "." + path);
+        } else {
+            leaves.push(type);
+            paths.push(field);
+        }
+    }
+    lex.next();
+    if (!fields.size) lex.fail("empty value record " + name);
+    return {fields, leaves, paths};
+}
+
 function parseDeclarations(lex, recordEnds) {
     const records = new Map();
     const enums = new Map();
     const distinct = new Set();
+    const values = new Map();
     let aliases;
     while (lex.token.value === "record" || lex.token.value === "enum" || lex.token.value === "type" ||
-           lex.token.value === "namespace" || lex.token.value === "methods") {
+           lex.token.value === "namespace" || lex.token.value === "methods" || lex.token.value === "value") {
         const kind = lex.token.value;
         lex.next();
+        if (kind === "value") lex.expect("record");
         const name = lex.ident();
         if (kind === "methods" || kind === "namespace") {
             aliases ??= {namespaces: new Map(), methods: new Map()};
             if (kind === "methods") {
-                if (!records.has(name) && !distinct.has(name) && !enums.has(name)) lex.fail("unknown receiver type " + name);
+                if (!records.has(name) && !distinct.has(name) && !enums.has(name) && !values.has(name))
+                    lex.fail("unknown receiver type " + name);
                 parseMembers(lex, aliases.methods, name, records);
             } else {
-                if (records.has(name) || enums.has(name) || distinct.has(name)) lex.fail("namespace collides with type " + name);
+                if (records.has(name) || enums.has(name) || distinct.has(name) || values.has(name))
+                    lex.fail("namespace collides with type " + name);
                 parseMembers(lex, aliases.namespaces, name, records);
             }
             continue;
         }
-        if (records.has(name) || enums.has(name) || distinct.has(name) || aliases?.namespaces.has(name))
+        if (records.has(name) || enums.has(name) || distinct.has(name) || values.has(name) || aliases?.namespaces.has(name))
             lex.fail("duplicate " + kind + " " + name);
+        if (kind === "value") {
+            values.set(name, parseValueRecord(lex, name, records, enums, distinct, values));
+            continue;
+        }
         if (kind === "enum") {
             enums.set(name, parseEnum(lex, name));
             continue;
@@ -456,7 +512,7 @@ function parseDeclarations(lex, recordEnds) {
         { if (lex.token.value !== "}") lex.fail("expected }"); lex.next(); }
         records.set(name, fields);
     }
-    return {records, enums, distinct, aliases};
+    return {records, enums, distinct, aliases, values};
 }
 
 function recordLayouts(records) {
@@ -513,8 +569,9 @@ const UNSIGNED = Object.assign(Object.create(null), {"<": I32_LT_U, "<=": I32_LE
 const PREFIX = 11; // the operand of a prefix operator binds tighter than every binary operator
 
 class ExpressionParser {
-    constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases) {
+    constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases, values) {
         this.aliases = aliases;
+        this.values = values;
         this.records = records;
         this.enums = enums;
         this.distinct = distinct;
@@ -651,18 +708,9 @@ class ExpressionParser {
             } else this.code.push(unsigned ? F32_CONVERT_I32_U : F32_CONVERT_I32_S);
             return "f32";
         }
-        case "u32": {
-            // An integer keeps its bits; f32 -> u32 truncates toward zero and saturates, NaN gives 2^32 - 1
-            // (tape.js f32.to_u32).
+        case "u32":
             lex.next();
-            lex.expect("(");
-            const type = this.expr();
-            lex.expect(")");
-            if (type === "f32") this.code.push(U32_TRUNC_F32);
-            else if (scalarType(type) !== "i32" && !unsignedType(type) && !this.enums.has(type) && !this.distinct.has(type))
-                lex.fail("u32 conversion requires an integer or an f32, got " + scalarType(type));
-            return "u32";
-        }
+            return this.unsignedConversion();
         }
         if (lex.token.kind === "float") {
             this.emitFloat(lex.floatValue());
@@ -684,6 +732,7 @@ class ExpressionParser {
                 { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
                 return generatedType ?? name;
             }
+            if (this.values?.has(name)) return this.construct(name);
             return this.call(name);
         }
         const binding = this.locals.get(name);
@@ -704,6 +753,7 @@ class ExpressionParser {
             this.emitConst(0);
             return "SurfacePoint";
         }
+        if (this.values?.has(binding.type)) return this.valueRead(binding.type, binding.index);
         if (binding.type === "i32" || binding.type === "bool") {
             this.emitIndex(LOCAL_GET, binding.index);
             return binding.type;
@@ -868,6 +918,8 @@ class ExpressionParser {
             const name = lex.ident();
             if (lex.token.value === "(") {
                 type = this.memberCall(this.aliases?.methods.get(type), scalarType(type), true, name);
+            } else if (this.values?.has(type)) {
+                type = this.stackField(type, name);
             } else {
                 const field = this.field(type, name);
                 this.emitMemory(field.type === "f32" ? F32_LOAD : I32_LOAD, 2, field.offset);
@@ -934,10 +986,12 @@ class ExpressionParser {
             this.emitMemory(I32_LOAD, 2, this.records.get("WorldState").get(startField).offset);
             this.code.push(I32_EQZ, IF, I32);
         }
-        const end = options ? callee.params.length - this.records.get(options).size : callee.params.length;
+        // A value record argument leaves its leaves on the stack, the callee's consecutive parameters.
+        const params = callee.sourceParams ?? callee.params;
+        const end = options ? params.length - this.records.get(options).size : params.length;
         for (let i = first; i < end; i++) {
             if (i !== first) lex.expect(",");
-            this.want(this.expr(), callee.params[i]);
+            this.want(this.expr(), params[i]);
         }
         if (options) {
             if (end !== first) lex.expect(",");
@@ -1067,9 +1121,28 @@ for (const name of Object.getOwnPropertyNames(FloatParsing.prototype))
         Object.getOwnPropertyDescriptor(FloatParsing.prototype, name));
 
 // ---- frontend/values.js
-// The front end's value types (PICOCALC-TYPED-VALUES): the conditional expression. Their methods are ExpressionParser's
-// (copied onto its prototype below, as floats.js does).
+// The front end's value types (PICOCALC-TYPED-VALUES): the conditional expression, the u32 conversion and value records.
+// Their methods are ExpressionParser's (copied onto its prototype below, as floats.js does).
+//
+// A value record is scalar-replaced as it is parsed: a local of a value record type is one local per leaf (its scalar
+// fields, nested value records flattened in field order), consecutive from binding.index, and an expression of a value
+// record type leaves its leaves on the operand stack in that order, as a call of a function with a record result
+// does (WebAssembly's multi-value). A field of a local is a local.get of its leaf; storing a value is one local.set
+// per leaf, the last first; a parameter of a value record type is its leaves, as consecutive parameters.
 class ValueParsing {
+    // u32(x) after "u32": an integer keeps its bits; f32 -> u32 truncates toward zero and saturates, NaN gives 2^32 - 1
+    // (tape.js f32.to_u32).
+    unsignedConversion() {
+        const lex = this.lex;
+        lex.expect("(");
+        const type = this.expr();
+        lex.expect(")");
+        if (type === "f32") this.code.push(U32_TRUNC_F32);
+        else if (scalarType(type) !== "i32" && !unsignedType(type) && !this.enums.has(type) && !this.distinct.has(type))
+            lex.fail("u32 conversion requires an integer or an f32, got " + scalarType(type));
+        return "u32";
+    }
+
     // The conditional expression after its condition: if (result T) a else b end. The block type is the first
     // arm's, written once that arm is parsed; both arms have one type (a literal takes the other arm's).
     choice(condition) {
@@ -1080,11 +1153,26 @@ class ValueParsing {
         this.code.push(IF, I32);
         const first = this.expr();
         lex.expect(":");
+        if (this.values?.has(first)) return this.valueChoice(at, first);
         if (first === "f32") this.code[at + 1] = F32;
         this.code.push(ELSE);
         const second = this.expr();
         this.code.push(END);
         return this.unify(first, second);
+    }
+
+    // A conditional of value records: a block type has one value, so each arm stores its leaves into the same fresh
+    // locals (if (void) a; set; else b; set; end) and the result reads them.
+    valueChoice(at, type) {
+        this.code[at + 1] = VOID;
+        const index = this.valueLocals(type);
+        this.setLeaves(type, index);
+        this.code.push(ELSE);
+        this.want(this.expr(), type);
+        this.setLeaves(type, index);
+        this.code.push(END);
+        this.pushLeaves(type, index);
+        return type;
     }
 
     // The type of two values that meet (the arms of a conditional): one type, or a literal and an integer type.
@@ -1095,6 +1183,88 @@ class ValueParsing {
         if (b === LITERAL && (integer(a) || a === U32_LITERAL)) return a;
         if (unsignedType(a) && unsignedType(b)) return "u32";
         this.lex.fail("conditional arms have different types: " + scalarType(a) + " and " + scalarType(b));
+    }
+
+    // The number of operand-stack values of a type: a value record's leaves, else one.
+    width(type) { return this.values?.get(type)?.leaves.length ?? 1; }
+
+    // Consecutive locals for the leaves of a value record; the first one's index.
+    valueLocals(type) {
+        const first = this.nextLocal;
+        for (const leaf of this.values.get(type).leaves) {
+            const index = this.nextLocal++;
+            if (leaf === "f32") (this.floatLocals ??= []).push(index);
+        }
+        return first;
+    }
+
+    // A named local of a value record type (a declaration or a parameter).
+    valueLocal(name, type, mutable) {
+        if (this.locals.has(name)) this.lex.fail("duplicate local " + name);
+        const index = this.valueLocals(type);
+        this.locals.set(name, {type, index, mutable});
+        return index;
+    }
+
+    pushLeaves(type, index) {
+        for (let k = 0, n = this.width(type); k < n; k++) this.emitIndex(LOCAL_GET, index + k);
+    }
+
+    setLeaves(type, index) {
+        for (let k = this.width(type) - 1; k >= 0; k--) this.emitIndex(LOCAL_SET, index + k);
+    }
+
+    // Drop a value nobody reads: one drop per leaf.
+    drop(type) {
+        for (let k = this.width(type); k > 0; k--) this.code.push(DROP);
+    }
+
+    // Type(a, b, ...) after its "(": one argument per field, in field order, each of its field's type (a nested value
+    // record takes any expression of its type). The leaves stay on the operand stack.
+    construct(type) {
+        const lex = this.lex;
+        let first = true;
+        for (const field of this.values.get(type).fields.values()) {
+            if (!first) lex.expect(",");
+            first = false;
+            this.want(this.expr(), field.type);
+        }
+        lex.expect(")");
+        return type;
+    }
+
+    valueField(type, name) {
+        const field = this.values.get(type).fields.get(name);
+        if (!field) this.lex.fail("unknown field " + type + "." + name);
+        return field;
+    }
+
+    // Part of a value record held in locals from index: .field follows nested value records, then the part is read,
+    // one local.get per leaf. A method call on a value takes its leaves as the receiver.
+    valueRead(type, index) {
+        const lex = this.lex;
+        while (this.values.has(type) && lex.token.value === ".") {
+            lex.next();
+            const name = lex.ident();
+            if (lex.token.value === "(") {
+                this.pushLeaves(type, index);
+                return this.memberCall(this.aliases?.methods.get(type), type, true, name);
+            }
+            const field = this.valueField(type, name);
+            type = field.type;
+            index += field.offset;
+        }
+        this.pushLeaves(type, index);
+        return type;
+    }
+
+    // .name of a value record on the operand stack (a call's result, a constructor, a conditional): its leaves go to
+    // fresh locals and the field is read from them.
+    stackField(type, name) {
+        const index = this.valueLocals(type);
+        this.setLeaves(type, index);
+        const field = this.valueField(type, name);
+        return this.valueRead(field.type, index + field.offset);
     }
 }
 for (const name of Object.getOwnPropertyNames(ValueParsing.prototype))
@@ -1253,7 +1423,7 @@ class FunctionEmitter extends ExpressionParser {
         const mutable = lex.token.value === "let";
         lex.next();
         const id = lex.ident();
-        const annotation = (lex.token.value === ":" && (lex.next(), true)) ? lex.type(this.records, this.enums, this.distinct) : null;
+        const annotation = (lex.token.value === ":" && (lex.next(), true)) ? lex.type(this.records, this.enums, this.distinct, this.values) : null;
         if (mutable && annotation !== null && lex.isGeneratedLocal?.(id) && lex.token.value === ";") {
             // Every continuation path reaches the original initializer or a reload
             // before reading this slot, including on targets with uninitialized frames.
@@ -1263,22 +1433,25 @@ class FunctionEmitter extends ExpressionParser {
         { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
         const type = this.expr();
         if (annotation !== null) this.want(type, annotation);
-        this.emitIndex(LOCAL_SET, this.local(id, annotation ?? scalarType(type), mutable));
+        const declared = annotation ?? scalarType(type);
+        if (this.values?.has(declared)) this.setLeaves(declared, this.valueLocal(id, declared, mutable));
+        else this.emitIndex(LOCAL_SET, this.local(id, declared, mutable));
     }
 
     assignment(id, statement = false) {
         const lex = this.lex;
         const local = this.locals.get(id);
         if (!local) lex.fail("unknown local " + id);
+        if (this.values?.has(local.type)) return this.valueAssignment(id, local, statement);
         if (statement && (lex.token.value === "." && (lex.next(), true))) {
             if (local.type === "buffer") this.bufferWrite(local.index);
             else {
                 const name = lex.ident();
                 this.emitIndex(LOCAL_GET, local.index);
                 if (lex.token.value === "(") {
-                    const type = this.memberCall(this.aliases?.methods.get(local.type), local.type, true, name);
-                    if (lex.token.value === ".") this.postfix(type);
-                    this.code.push(DROP);
+                    let type = this.memberCall(this.aliases?.methods.get(local.type), local.type, true, name);
+                    if (lex.token.value === ".") type = this.postfix(type);
+                    this.drop(type);
                     return;
                 }
                 const field = this.field(local.type, name);
@@ -1292,6 +1465,47 @@ class FunctionEmitter extends ExpressionParser {
             this.want(this.expr(), local.type);
             this.emitIndex(LOCAL_SET, local.index);
         }
+    }
+
+    // An assignment to a value record local or a part of it: v = e, v.f = e, v.o.f = e (a mutable local), a store
+    // through a record reference it holds (v.r.f = e), a method call on a part of it, or a buffer write.
+    valueAssignment(id, local, statement) {
+        const lex = this.lex;
+        let type = local.type, index = local.index;
+        while (statement && this.values.has(type) && lex.token.value === ".") {
+            lex.next();
+            const name = lex.ident();
+            if (lex.token.value === "(") {
+                this.pushLeaves(type, index);
+                let result = this.memberCall(this.aliases?.methods.get(type), type, true, name);
+                if (lex.token.value === ".") result = this.postfix(result);
+                this.drop(result);
+                return;
+            }
+            const field = this.valueField(type, name);
+            type = field.type;
+            index += field.offset;
+        }
+        if (statement && lex.accept(".")) {
+            if (type === "buffer") return this.bufferWrite(index);
+            const name = lex.ident();
+            this.emitIndex(LOCAL_GET, index);
+            if (lex.token.value === "(") {
+                let result = this.memberCall(this.aliases?.methods.get(type), type, true, name);
+                if (lex.token.value === ".") result = this.postfix(result);
+                this.drop(result);
+                return;
+            }
+            const field = this.field(type, name);
+            lex.expect("=");
+            this.want(this.expr(), field.type);
+            this.emitMemory(field.type === "f32" ? F32_STORE : I32_STORE, 2, field.offset);
+            return;
+        }
+        if (!local.mutable) lex.fail("expected mutable local " + id);
+        lex.expect("=");
+        this.want(this.expr(), type);
+        this.setLeaves(type, index);
     }
 
     matchGroup(slot, values) {
@@ -1408,14 +1622,14 @@ class FunctionEmitter extends ExpressionParser {
         default: {
             const id = lex.ident();
             if ((lex.token.value === "(" && (lex.next(), true))) {
-                const type = this.call(id);
-                if (lex.token.value === ".") this.postfix(type);
-                this.code.push(DROP); // drop the unused call result
+                let type = this.call(id);
+                if (lex.token.value === ".") type = this.postfix(type);
+                this.drop(type); // drop the unused call result
             } else if (!this.locals.has(id) && this.aliases?.namespaces.has(id)) {
                 lex.expect(".");
-                const type = this.memberCall(this.aliases.namespaces.get(id), id, false);
-                if (lex.token.value === ".") this.postfix(type);
-                this.code.push(DROP);
+                let type = this.memberCall(this.aliases.namespaces.get(id), id, false);
+                if (lex.token.value === ".") type = this.postfix(type);
+                this.drop(type);
             } else {
                 this.assignment(id, true);
             }
@@ -1426,8 +1640,13 @@ class FunctionEmitter extends ExpressionParser {
 
     function(fn) {
         const lex = this.lex;
-        const {params, paramNames, result} = fn;
-        for (let i = 0; i < params.length; i++) this.local(paramNames[i], params[i]);
+        const {params, paramNames, result, sourceParams} = fn;
+        // A value record parameter is its leaves, consecutive parameters: one value local.
+        if (sourceParams) for (let i = 0; i < sourceParams.length; i++) {
+            if (this.values?.has(sourceParams[i])) this.valueLocal(fn.sourceNames[i], sourceParams[i], false);
+            else this.local(fn.sourceNames[i], sourceParams[i]);
+        }
+        else for (let i = 0; i < params.length; i++) this.local(paramNames[i], params[i]);
         lex.offset = fn.bodyAt;
         lex.next();
         { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }
@@ -1590,7 +1809,7 @@ function originalError(error, lex, lowered, base) {
 
 function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignatures, inspect) {
     const {original, declarations, fields, bodies, generated} = lowered.plan;
-    const {enums, distinct, aliases} = declarations;
+    const {enums, distinct, aliases, values} = declarations;
     const records = new Map(declarations.records);
     if (fields.length) {
         const state = new Map(records.get("WorldState"));
@@ -1611,7 +1830,8 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
     const ordinaryCount = functions.length;
     let generatedSignatures;
     try {
-        generatedSignatures = scanSignatures(generatedLex, records, declared, functionBase + ordinaryCount, enums, distinct);
+        generatedSignatures = scanSignatures(generatedLex, records, declared, functionBase + ordinaryCount, enums, distinct,
+            false, values);
     } catch (error) {
         throw originalError(error, generatedLex, lowered, lowered.generatedAt);
     }
@@ -1639,7 +1859,7 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
             fn.bodyAt = body.at;
         }
         try {
-            const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+            const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases, values);
             if (inspect) finishFunction(emitter, fn, inspect,
                 lex === originalLex ? undefined : lex === generatedLex ? "synthetic-source" : "rewritten-body");
             else emitter.function(fn);
@@ -1656,15 +1876,15 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
 function emitFunctions(source, functionBase, imported, onFunction, onSignatures, inspect) {
     const lex = new Lexer(source, 0, source.length, true);
     const declared = new Map(imported.map(fn => [fn.name, fn]));
-    const {records, enums, distinct, aliases} = parseDeclarations(lex);
+    const {records, enums, distinct, aliases, values} = parseDeclarations(lex);
     for (const name of distinct) if (declared.has(name)) lex.fail("duplicate imported function " + name);
-    const functions = scanSignatures(lex, records, declared, functionBase, enums, distinct);
+    const functions = scanSignatures(lex, records, declared, functionBase, enums, distinct, false, values);
     if (!functions.length) lex.fail("expected a function");
     checkMembers(lex, aliases, declared, records);
     if (onSignatures) onSignatures(functions);
     const edges = functions.map(() => []);
     for (const [i, fn] of functions.entries()) {
-        const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases);
+        const emitter = new FunctionEmitter(lex, declared, records, edges[i], functionBase, enums, distinct, aliases, values);
         if (inspect) finishFunction(emitter, fn, inspect);
         else emitter.function(fn);
         if (onFunction) onFunction(fn);
@@ -1867,9 +2087,13 @@ function section(id, data) {
 // A Typed type as a Wasm value type: f32 is F32, every other type an i32.
 const valueType = type => type === "f32" ? F32 : I32;
 
+// A record result is several results (WebAssembly's multi-value), one per leaf.
 function signature(fn) {
-    return [0x60, ...vec(fn.params.map(valueType)), 1, valueType(fn.result)];
+    return [0x60, ...vec(fn.params.map(valueType)), ...vec((fn.results ?? [fn.result]).map(valueType))];
 }
+
+// What compile, linkWorld and typedRv32.compile publish of each function.
+const publicSignature = ({name, params, result, results}) => ({name, params, result, ...(results && {results})});
 
 // options.maxSourceLength (default 64 KiB) and options.memoryPages (the exported memory's fixed size in 64 KiB pages,
 // default 1) serve large programs such as the Candela kernel (PICOCALC-CANDELA-TYPED); the defaults keep every module.
@@ -1902,7 +2126,7 @@ function compile(source, options) {
         records: recordLayouts(records),
         enums: enumLayouts(enums),
         distinct: [...distinct],
-        signatures: functions.map(({ name, params, result }) => ({ name, params, result })),
+        signatures: functions.map(publicSignature),
         ...(asyncLayout && {asyncLayout}),
         ...(asyncSource && {asyncSource}),
     };
@@ -2102,7 +2326,7 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength, opti
     for (const part of sections) if (replacement.has(part.id)) part.bytes = replacement.get(part.id);
     return {bytes: encodeModule(header, sections), records: recordLayouts(records),
         enums: enumLayouts(enums), distinct: [...distinct],
-        signatures: functions.map(({name, params, result}) => ({name, params, result})),
+        signatures: functions.map(publicSignature),
         ...(asyncLayout && {asyncLayout}), ...(asyncSource && {asyncSource})};
 }
 
@@ -2129,5 +2353,6 @@ globalThis.compileTyped = (source, options) => {
     return bytes;
 };
 globalThis.typedWasm = {compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
-    parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts, withLexIndices};
+    parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts, withLexIndices,
+    publicSignature};
 })();

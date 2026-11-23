@@ -53,6 +53,26 @@ function argumentRegisters(types) {
 // argumentRegisters of a descriptor, cached on it (fn.registers): every call site asks for its callee's.
 const calleeRegisters = fn => fn.registers ??= argumentRegisters(fn.params);
 
+// Where a record result's leaves return (fn.results, PICOCALC-TYPED-VALUES): the integers in a0-a7 and the f32 in
+// fa0-fa7, each class in order, as the arguments arrive; a leaf beyond its class's eight takes the next stack word k
+// (-1 - k), at the caller's sp + 4k, which the callee writes before it returns. out.stack counts them.
+function resultLocations(types) {
+    const out = new Array(types.length);
+    let x = 0, f = 0, k = 0;
+    for (let i = 0; i < types.length; i++) {
+        if (types[i] === "f32") out[i] = f < 8 ? FA0 + f++ : -1 - k++;
+        else out[i] = x < 8 ? A0 + x++ : -1 - k++;
+    }
+    out.stack = k;
+    return out;
+}
+
+// resultLocations of a descriptor with a record result, cached on it (fn.returns); null for one result.
+const calleeResults = fn => fn.results ? fn.returns ??= resultLocations(fn.results) : null;
+
+// The stack words a call of fn needs at the caller's sp: its stack parameters, or its stack results if more.
+const stackWords = fn => Math.max(calleeRegisters(fn).stack, calleeResults(fn)?.stack ?? 0);
+
 // Whether parameter p of fn arrives in a register of its own class (not on the stack, not an f32 in an x register):
 // only such a parameter may stay in its incoming register or feed the prologue's capacity and pointer homes.
 const inOwnRegister = (fn, p) => {
@@ -556,7 +576,7 @@ class BranchMethods {
     end() {
         const block = this.control.pop();
         if (!block) {
-            this.move(this.returnRegister, this.pop(this.returnRegister));
+            this.returnValue();
             return true;
         }
         if (block.alternate.at === undefined) this.mark(block.alternate);
@@ -604,7 +624,33 @@ class CallMethods {
             const reg = direct[d] === undefined ? OPERAND_STACKS[classes[d]][d] : undefined;
             if (reg !== undefined) this.load(reg, this.slot(d));
         }
-        this.push(callee.result === "f32" ? FA0 : A0);
+        // A record result's leaves, in order, from their registers and the stack words at sp + 4k.
+        const results = calleeResults(callee);
+        if (!results) return this.push(callee.result === "f32" ? FA0 : A0);
+        for (let i = 0; i < results.length; i++) {
+            const reg = results[i];
+            if (reg >= 0) this.push(reg);
+            else {
+                const scratch = typeClass(callee.results[i]) ? FT10 : T5;
+                this.load(scratch, 4 * (-1 - reg));
+                this.push(scratch);
+            }
+        }
+    }
+
+    // The function's result into a0 or fa0, or a record result's leaves into their registers and the caller's stack
+    // words (calleeResults). Pending direct reads move to the operand stack first, so no leaf's move overwrites a home
+    // another leaf still reads (a leaf keeps its parameters in a0-a7 and fa0-fa7).
+    returnValue() {
+        const results = calleeResults(this.program);
+        if (!results) return this.move(this.returnRegister, this.pop(this.returnRegister));
+        this.materialize();
+        if (results.stack) this.callerStack(T6);
+        for (let i = results.length - 1; i >= 0; i--) {
+            const reg = results[i];
+            if (reg >= 0) this.move(reg, this.pop(reg));
+            else this.store(this.pop(typeClass(this.program.results[i]) ? FT10 : T5), 4 * (-1 - reg), T6);
+        }
     }
 
 
@@ -612,12 +658,12 @@ class CallMethods {
     // the stack. A program none of whose functions takes a stack word skips the walk.
     outgoingWords() {
         const functions = this.functions;
-        functions.stackWords ??= functions.reduce((most, fn) => Math.max(most, calleeRegisters(fn).stack), 0);
+        functions.stackWords ??= functions.reduce((most, fn) => Math.max(most, stackWords(fn)), 0);
         if (!functions.stackWords) return 0;
         const tape = this.program.code;
         let words = 0;
         for (let at = 0; at < tape.length; at += 1 + CELLS[tape[at]])
-            if (tape[at] === CALL) words = Math.max(words, calleeRegisters(functions[tape[at + 1]]).stack);
+            if (tape[at] === CALL) words = Math.max(words, stackWords(functions[tape[at + 1]]));
         return words;
     }
 
@@ -1067,12 +1113,14 @@ class FunctionCode {
         this.direct = [];
         this.classes = [];
         this.exit = {};
-        // ilp32f: an f32 result returns in fa0, every other in a0.
-        this.returnRegister = program.result === "f32" ? FA0 : A0;
+        // ilp32f: an f32 result returns in fa0, every other in a0; a record result's leaves return as returnValue()
+        // places them, and there is no single return register.
+        this.returnRegister = program.results ? undefined : program.result === "f32" ? FA0 : A0;
         // A function with an f32 parameter, local or result: its frame is dropped when it uses none (dropsFrame), and
         // its result is computed in fa0 where the next operation returns it (floatResult). Integer functions keep the
         // code their pinned images record.
-        this.floating = program.result === "f32" || program.params.includes("f32") || Boolean(program.localTypes);
+        this.floating = program.result === "f32" || program.params.includes("f32") || Boolean(program.localTypes) ||
+            Boolean(program.results?.includes("f32"));
         if (program.nativeInspection) observeSteps(this);
     }
 
@@ -1149,7 +1197,7 @@ class FunctionCode {
             else this.jump(target);
             break;
         }
-        case RETURN: this.move(this.returnRegister, this.pop(this.returnRegister)); this.jump(this.exit); break;
+        case RETURN: this.returnValue(); this.jump(this.exit); break;
         case CALL: this.call(this.cell()); break;
         case DROP: this.depth--; break;
         case LOCAL_GET: {
@@ -1448,8 +1496,10 @@ function declineLeaf(fn, reason) {
 function lowerLeaf(fn, callables, targets, select, facts) {
     if (fn.nlocals) return declineLeaf(fn, "function declares frame locals");
     if (fn.code.length > 128) return declineLeaf(fn, "operation tape exceeds 128 cells");
-    if (fn.params.length > 8 || !fn.params.every(type => type === "i32" || type === "bool" || type === "f32"))
+    if (fn.params.length > 8 || !fn.params.every(type => type === "i32" || type === "bool" || type === "f32" || type === "u32"))
         return declineLeaf(fn, "argument list outside leaf convention");
+    // A record result's stack words are written through the caller's sp, which a frameless leaf does not compute.
+    if (calleeResults(fn)?.stack) return declineLeaf(fn, "record result on the stack");
     for (let at = 0; at < fn.code.length;) {
         const op = fn.code[at++];
         if (!LEAF_OPERATIONS.has(op) || at + CELLS[op] > fn.code.length)
@@ -1472,7 +1522,8 @@ function lowerLeaf(fn, callables, targets, select, facts) {
 
 // A function with an f32 parameter, local or result. Its leaves get more free registers than an integer function's
 // (planSavedHomes); integer functions keep the plans their pinned images record.
-const floatingFunction = fn => fn.result === "f32" || fn.params.includes("f32") || Boolean(fn.localTypes);
+const floatingFunction = fn => fn.result === "f32" || fn.params.includes("f32") || Boolean(fn.localTypes) ||
+    Boolean(fn.results?.includes("f32"));
 
 // The deepest operand stack of a leaf's tape (a leaf's only calls are guarded returns, which take and give one
 // value): f operand-stack registers from there on are never used, so they are free homes.
@@ -2080,7 +2131,11 @@ function compile(source, imports = [], maxSourceLength, requested) {
     }
     const passes = new Set(options.passes);
     const chosen = PASSES.filter(pass => passes.has(pass.name));
-    const unit = {options, callables, targets, arity: index => callables[index].params.length,
+    // arity(index): a callee's parameter count (a value record parameter counts its leaves); arity.results(index): the
+    // values its call pushes (a record result's leaves, else one). Passes with an abstract operand stack use both.
+    const arity = index => callables[index].params.length;
+    arity.results = index => callables[index].results?.length ?? 1;
+    const unit = {options, callables, targets, arity,
         storeless: storelessAnalysis(callables, imported.length)};
     for (const pass of chosen) pass.setup?.(unit);
     const starts = chosen.filter(pass => pass.start);
@@ -2218,7 +2273,7 @@ function compile(source, imports = [], maxSourceLength, requested) {
     if (timing) timing.push({fn: null, pass: "compile", ms: clock() - started, cells: 0});
     return {image, entries, records: typedWasm.recordLayouts(records), enums: typedWasm.enumLayouts(enums),
         distinct: [...distinct], relocations, importCount: imports.length,
-        signatures: functions.map(({name, params, result}) => ({name, params, result})),
+        signatures: functions.map(typedWasm.publicSignature),
         ...(asyncLayout && {asyncLayout}), ...(asyncSource && {asyncSource})};
 }
 

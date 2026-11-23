@@ -65,7 +65,7 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength, opti
     for (const part of sections) if (replacement.has(part.id)) part.bytes = replacement.get(part.id);
     return {bytes: encodeModule(header, sections), records: recordLayouts(records),
         enums: enumLayouts(enums), distinct: [...distinct],
-        signatures: functions.map(({name, params, result}) => ({name, params, result})),
+        signatures: functions.map(publicSignature),
         ...(asyncLayout && {asyncLayout}), ...(asyncSource && {asyncSource})};
 }
 
@@ -92,4 +92,5 @@ globalThis.compileTyped = (source, options) => {
     return bytes;
 };
 globalThis.typedWasm = {compile, linkWorld, invoke, compileFunctions, Lexer, FunctionEmitter,
-    parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts, withLexIndices};
+    parseDeclarations, scanSignatures, checkAcyclic, inferredType: scalarType, recordLayouts, enumLayouts, withLexIndices,
+    publicSignature};

@@ -36,20 +36,31 @@ export function runRv32(program, name, params, result, args, memory = new Uint8A
     return {value: result === "f32" ? fromBits(run.fregisters[10]) : run.result, run};
 }
 
-// Compile once for WebAssembly and for every policy; check(name, args, expected) compares all of them.
+// Compile once for WebAssembly and for every policy; check(name, args, expected) compares all of them. A signature
+// with `results` (a record result's leaf types, all in registers) compares the list of leaves: WebAssembly's array,
+// RV32's a0... and fa0.... With memory, the memory each run leaves is compared with WebAssembly's.
 export async function differential(source, signatures) {
     const wasm = (await WebAssembly.instantiate(typedWasm.compile(source).bytes)).instance.exports;
     const images = POLICIES.map(policy => [policy, typedRv32.compile(source, [], 1 << 20, {policy})]);
     return (name, args, expected, memory) => {
-        const {params, result} = signatures[name];
+        const {params, result, results} = signatures[name];
         const where = name + "(" + args.join(", ") + ")";
-        const normal = v => result === "f32" ? bits(v) : result === "u32" ? v >>> 0 : v;
+        const normal = (v, type = result) => type === "f32" ? bits(v) : type === "u32" ? v >>> 0 : v;
+        const leaves = list => list.map((v, i) => normal(v, results[i]));
         if (memory) new Uint8Array(wasm.memory.buffer).set(memory);
-        assert.equal(normal(wasm[name](...args)), normal(expected), "Wasm " + where);
+        const got = wasm[name](...args);
+        if (results) assert.deepEqual(leaves(got), leaves(expected), "Wasm " + where);
+        else assert.equal(normal(got), normal(expected), "Wasm " + where);
+        const after = memory && new Uint8Array(wasm.memory.buffer).slice(0, memory.length);
         for (const [policy, program] of images) {
-            const {value, trap} = runRv32(program, name, params, result, args, memory);
+            const {value, trap, run} = runRv32(program, name, params, result, args, memory && memory.slice());
             assert(!trap, policy + " " + where + " trapped");
-            assert.equal(normal(value), normal(expected), policy + " " + where);
+            if (results) {
+                let x = 10, f = 10;
+                const got = results.map(type => type === "f32" ? fromBits(run.fregisters[f++]) : run.registers[x++]);
+                assert.deepEqual(leaves(got), leaves(expected), policy + " " + where);
+            } else assert.equal(normal(value), normal(expected), policy + " " + where);
+            if (memory) assert.deepEqual(Array.from(run.bytes), Array.from(after), policy + " " + where + " memory");
         }
     };
 }

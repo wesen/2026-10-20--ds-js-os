@@ -252,7 +252,10 @@ function entrySets(code, arity, wanted) {
             break;
         }
         case RETURN: case UNREACHABLE: dead = true; break;
-        case CALL: for (let i = arity(a); i > 0; i--) pop(); stack.push(null); break;
+        case CALL:
+            for (let i = arity(a); i > 0; i--) pop();
+            for (let i = arity.results?.(a) ?? 1; i > 0; i--) stack.push(null);
+            break;
         case I32_LOAD: case I32_LOAD16_U: pop(); stack.push(null); break;
         case I32_STORE: case I32_STORE16: pop(); pop(); break;
         case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(null); break;
@@ -504,7 +507,7 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
         case BR: case RETURN: case UNREACHABLE: dead = true; break;
         case CALL:
             for (let n = arity(a); n > 0; n--) tags.pop();
-            tags.push(null);
+            for (let n = arity.results?.(a) ?? 1; n > 0; n--) tags.push(null);
             if (!storeless(a)) loadsOk = false;
             break;
         case I32_LOAD: case I32_LOAD16_U: tags.pop(); tags.push(null); break;
@@ -652,7 +655,10 @@ function hoistSubexpressions(body, k, arity, fresh) {
         case LOCAL_SET: case DROP: consume(1); break;
         case BR_IF: consume(1, true); break;
         case BR: case RETURN: case UNREACHABLE: consume(slots.length - frames.at(-1).base); dead = true; break;
-        case CALL: consume(arity(a)); slots.push(opaque); break;
+        case CALL:
+            consume(arity(a));
+            for (let n = arity.results?.(a) ?? 1; n > 0; n--) slots.push(opaque);
+            break;
         case I32_LOAD: {
             const x = slots.at(-1);
             combine(i, 1, body[p + 2] === 0 && x?.inv && x.start === x.end && body[ops[x.start]] === LOCAL_GET);
@@ -1047,7 +1053,10 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
         case I32_STORE: case I32_STORE16: pop(); pop(); break;
         case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(RANGE_TOP); break;
         case LITERAL_STORES: break;
-        case CALL: for (let i = arity(a); i > 0; i--) pop(); stack.push(RANGE_TOP); break;
+        case CALL:
+            for (let i = arity(a); i > 0; i--) pop();
+            for (let i = arity.results?.(a) ?? 1; i > 0; i--) stack.push(RANGE_TOP);
+            break;
         case BLOCK: case LOOP: case IF:
             if (op === IF) pop();
             blocks.push({op, value: a !== VOID, height: stack.length, result: null});

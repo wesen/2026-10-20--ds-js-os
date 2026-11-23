@@ -191,7 +191,10 @@ function entrySets(code, arity, wanted) {
             break;
         }
         case RETURN: case UNREACHABLE: dead = true; break;
-        case CALL: for (let i = arity(a); i > 0; i--) pop(); stack.push(null); break;
+        case CALL:
+            for (let i = arity(a); i > 0; i--) pop();
+            for (let i = arity.results?.(a) ?? 1; i > 0; i--) stack.push(null);
+            break;
         case I32_LOAD: case I32_LOAD16_U: pop(); stack.push(null); break;
         case I32_STORE: case I32_STORE16: pop(); pop(); break;
         case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(null); break;

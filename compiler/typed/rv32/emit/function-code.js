@@ -31,12 +31,14 @@ export class FunctionCode {
         this.direct = [];
         this.classes = [];
         this.exit = {};
-        // ilp32f: an f32 result returns in fa0, every other in a0.
-        this.returnRegister = program.result === "f32" ? FA0 : A0;
+        // ilp32f: an f32 result returns in fa0, every other in a0; a record result's leaves return as returnValue()
+        // places them, and there is no single return register.
+        this.returnRegister = program.results ? undefined : program.result === "f32" ? FA0 : A0;
         // A function with an f32 parameter, local or result: its frame is dropped when it uses none (dropsFrame), and
         // its result is computed in fa0 where the next operation returns it (floatResult). Integer functions keep the
         // code their pinned images record.
-        this.floating = program.result === "f32" || program.params.includes("f32") || Boolean(program.localTypes);
+        this.floating = program.result === "f32" || program.params.includes("f32") || Boolean(program.localTypes) ||
+            Boolean(program.results?.includes("f32"));
         if (program.nativeInspection) observeSteps(this);
     }
 
@@ -113,7 +115,7 @@ export class FunctionCode {
             else this.jump(target);
             break;
         }
-        case RETURN: this.move(this.returnRegister, this.pop(this.returnRegister)); this.jump(this.exit); break;
+        case RETURN: this.returnValue(); this.jump(this.exit); break;
         case CALL: this.call(this.cell()); break;
         case DROP: this.depth--; break;
         case LOCAL_GET: {

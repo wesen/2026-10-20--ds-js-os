@@ -14,6 +14,10 @@ import {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP
 // `i32.const c` cells are removed and the callee reads x or c directly. A literal is not
 // substituted for a parameter used as a checked-address operand, which must be a local.
 //
+// A callee with a record result (several results) becomes `block; <f's tape> end; local.get r_0 ... r_{n-1}`: the
+// tape's block types hold one value, so each `return` and the final `end` first store the leaves into result locals
+// r_i, which follow the callee's own locals in its range.
+//
 // Only calls inside a caller's loop are inlined, unless `anywhere` is set or the callee has an f32 parameter, local
 // or result (an f32 call costs its caller saved f registers and spills, and f32 helpers are small); the library
 // keeps each candidate fully expanded (`anywhere`), so a callee inlined into a loop brings
@@ -92,7 +96,10 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
             else if ((opcode >= I32_EQ && opcode <= I32_GE_U) || (opcode >= I32_ADD && opcode <= I32_SHR_U)) { pop(2); push(0, 0, 0); }
             else if (opcode === I32_STORE || opcode === I32_STORE16) pop(2);
             else if (opcode === CHECKED_ADDRESS) push(0, 0, 0);
-            else if (opcode === CALL) { pop(arity(a)); push(0, 0, 0); }
+            else if (opcode === CALL) {
+                pop(arity(a));
+                for (let n = arity.results?.(a) ?? 1; n > 0; n--) push(0, 0, 0);
+            }
             else if (opcode >= BLOCK && opcode <= IF) {
                 if (opcode === IF) pop(1);
                 blocks.push({op: opcode, value: a !== VOID, height: sp});
@@ -116,11 +123,14 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
         if (base === undefined) {
             base = locals;
             bases.set(callee, base);
-            locals += callee.params + callee.nlocals;
-            // The callee's local types join the caller's (fn.localTypes, undefined entries are i32).
-            if (callee.types) {
+            locals += callee.params + callee.nlocals + (callee.results?.length ?? 0);
+            // The callee's local types join the caller's (fn.localTypes, undefined entries are i32), and so do the
+            // types of its result locals.
+            if (callee.types || callee.results?.includes("f32")) {
                 const own = types ??= (fn.localTypes ?? []).slice();
-                for (let i = 0; i < callee.types.length; i++) own[base - fn.params.length + i] = callee.types[i];
+                for (let i = 0; i < (callee.types?.length ?? 0); i++) own[base - fn.params.length + i] = callee.types[i];
+                const results = base - fn.params.length + callee.params + callee.nlocals;
+                callee.results?.forEach((type, r) => { own[results + r] = type === "f32" ? "f32" : "i32"; });
             }
         }
         // The arguments are the top callee.params entries (Array.prototype.slice semantics when
@@ -141,23 +151,34 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
         for (const arg of subst.filter(Boolean).sort((x, y) => y.at - x.at)) out.splice(arg.at, 2);
         pop(callee.params);
         for (let i = callee.params - 1; i >= 0; i--) if (!subst[i]) out.push(LOCAL_SET, base + i);
-        out.push(BLOCK, callee.result === "f32" ? F32 : I32);
+        const results = callee.results?.length ?? 0, resultBase = base + callee.params + callee.nlocals;
+        const storeResults = () => { for (let r = results - 1; r >= 0; r--) out.push(LOCAL_SET, resultBase + r); };
+        out.push(BLOCK, results ? VOID : callee.result === "f32" ? F32 : I32);
         const local = v => v < callee.params && subst[v] ? subst[v].local : base + v;
         let depth = 0;
         const body = callee.code;
         for (let k = 0; k < body.length;) {
             const op = body[k], n = CELLS[op], v = body[k + 1];
             k += 1 + n;
-            if (op === RETURN) { out.push(BR, depth); continue; }
+            if (op === RETURN) { storeResults(); out.push(BR, depth); continue; }
             if (op >= BLOCK && op <= IF) depth++;
             if (op === END) depth--;
+            if (op === END && depth < 0) storeResults();
             if (op === LOCAL_GET && v < callee.params && subst[v]?.constant !== undefined) out.push(I32_CONST, subst[v].constant);
             else if (op === LOCAL_GET || op === LOCAL_SET) out.push(op, local(v));
             else if (op === CHECKED_ADDRESS) out.push(op, local(v), local(body[k - 1]));
             else for (let j = n; j >= 0; j--) out.push(body[k - 1 - j]);
         }
-        // The callee's final `end` closed its function; here it closes the inlined block.
-        push(0, 0, 0);
+        // The callee's final `end` closed its function; here it closes the inlined block. Its result locals are plain
+        // local.get operands a later inlined call may substitute; an earlier copy's, which this copy has just
+        // overwritten, no longer are (the callee's range is shared by every copy).
+        for (let i = 0; i < sp; i++) if (stackKind[i] === 1 && stackValue[i] >= base && stackValue[i] < resultBase + results)
+            stackKind[i] = 0;
+        if (!results) push(0, 0, 0);
+        for (let r = 0; r < results; r++) {
+            push(out.length, 1, resultBase + r);
+            out.push(LOCAL_GET, resultBase + r);
+        }
         changed = true;
     }
     if (types) for (let i = 0; i < locals - fn.params.length; i++) types[i] ??= "i32";
@@ -177,7 +198,7 @@ export function inlineCandidate(fn, code, limits, guarded) {
         if (op === CHECKED_ADDRESS) for (const v of [code[at + 1], code[at + 2]]) if (v < fn.params.length) addressed[v] = true;
         at += 1 + n;
     }
-    return {params: fn.params.length, written, addressed, result: fn.result};
+    return {params: fn.params.length, written, addressed, result: fn.result, results: fn.results};
 }
 
 // The types of a library copy's parameters and frame locals, when one is an f32 (inlineCalls copies them into

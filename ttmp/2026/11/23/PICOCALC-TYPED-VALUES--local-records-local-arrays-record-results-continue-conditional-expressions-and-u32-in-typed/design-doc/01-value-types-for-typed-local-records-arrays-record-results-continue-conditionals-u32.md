@@ -187,3 +187,60 @@ Decisions taken against the code, in the order the features landed (diary steps 
 - The planner keeps no stack parameter, and no f32 that arrived in an integer register, in its incoming register
   (`inOwnRegister`), and builds capacity and pointer homes only from parameters that did arrive in their own class's
   register. A leaf with more than eight parameters was already declined.
+
+### Value records
+
+- **Spelling: `value record Vec3 { x: f32; y: f32; z: f32; }`**, a declaration of its own beside `record`. Today's
+  `record` means a reference to memory the host lays out (worlds share `WorldState` and `WorldEvent` with C, Candela's
+  arena records with `candela_typed_p4.c`), and every Typed program uses it that way; spelling references `ref Vec3` would
+  change every program for no gain, and one record declaration used both ways would let a reader not know whether
+  `a = b` copies or aliases. With two declarations the type's name says which it is. `value` is a keyword only at the
+  start of a declaration (programs use it as a local's name).
+- **Construction: `Vec3(1.0, 2.0, 3.0)`**, positional, one argument per field in field order, a nested value record
+  field taking any expression of its type (`Ray(o, Vec3(0.0, 0.0, 1.0))`). It needs no expected type (an object literal
+  `{x: 1.0, ...}` would, which a parser without a syntax tree has only in some positions), it is the form WGSL uses for
+  structs (`Ray(o, d)`, which Candela's generator translates), and it is the form Typed already uses for a distinct
+  type (`Id(3)`).
+- **Scalar replacement in the front end, as it parses.** A value record's layout is its leaves: scalar fields, nested
+  value records flattened in field order. A local of a value record type is one local per leaf, consecutive; `v.o.x` is
+  one `local.get`; an expression of a value record type leaves its leaves on the operand stack in order (the same
+  convention as a multi-value call); storing a value is one `local.set` per leaf, last first; `v.f = e` and
+  `v.o = e` set the leaf or the sub-range. `f(x).y` and `Vec3(...).y` store the leaves into fresh locals and read the
+  one asked for. No pass and no backend sees a value record: the tape holds only scalars.
+- **Value semantics.** Assignment copies (`let b = a; b.x = 1.0` leaves `a` alone); a field write needs a `let`
+  (`const` and parameters are immutable, as for scalars). This is not JavaScript's object semantics (an object is
+  aliased); Typed already differs from JavaScript in its `record`, `match` and integer types, and there is no address-of,
+  so a value record never aliases anything.
+- **Parameters** are the leaves, consecutive parameters in field order (`fn.params`, names `v.x`); the signature as written
+  is `fn.sourceParams`/`fn.sourceNames`, present only when a value record appears, so other functions' descriptors keep
+  their shape. A call checks each argument against the written type. Methods (`methods Vec3 { dot = dot; }`) take the
+  receiver's leaves.
+- **Fields** may be any scalar, a record reference (`v.cell.w = 1.0` stores through it) or an earlier value record. A
+  `record` cannot have a value record field (that would be an inline struct in memory, a different feature), and a value
+  record cannot contain itself (fields name only earlier types).
+- `?:` between value records stores each arm's leaves into the same fresh locals (`if void ... end`; a tape block holds
+  one value). `===` on value records is an error.
+- **Streaming and no syntax tree** shaped two things: the constructor form (no expected type needed), and the choice of
+  where a value lives — a named value is always in locals (a `local.get` per use), an unnamed one (a call's result) on
+  the operand stack until it is stored or selected from. Whether a leaf then lives in a register is the RV32 planner's
+  ordinary decision about a local.
+
+### Record results
+
+- **The tape and WebAssembly: multi-value.** A function's result is several values (`fn.results`, the leaves' types;
+  `fn.result` keeps the record's name); `return` and the final `end` take them all; the Wasm type is
+  `(result f32 f32 f32)` (WebAssembly 2.0, which Node and wasm3-era engines accept).
+- **RV32: the leaves return as arguments arrive.** Integer leaves in `a0`-`a7` and f32 leaves in `fa0`-`fa7`, each class
+  in order; a leaf beyond its class's eight takes the next stack word in the caller's stack-argument area (the same area
+  as stack parameters, sized for the larger of the two). ilp32f itself returns a struct in at most two registers per
+  class and a larger one through a hidden pointer; Typed's convention keeps a `Vec3` (three f32) and Candela's `BS`
+  (seven f32, three integers) entirely in registers. A function with one result keeps the integer-only ABI of existing
+  worlds (`a0`, or `fa0` for an f32).
+- The callee moves pending direct reads to the operand stack before placing the leaves (`returnValue`), so a leaf kept
+  in an argument register is never overwritten by another leaf's move; it writes stack leaves through the caller's sp
+  (`addi t6, sp, frame`, patched as for stack parameters). A frameless leaf with stack leaves is declined.
+- **Passes.** Every abstract operand stack now pushes a call's result count (`arity.results`). The inline pass inlines a
+  callee with a record result as `block; body end; local.get r_0..r_{n-1}`, each `return` and the final `end` storing the
+  leaves into result locals that follow the callee's own; those reads may be substituted into a later inlined call like
+  any plain local read, and an earlier copy's reads stop being substitutable once a later copy of the same callee
+  overwrites the shared result locals.

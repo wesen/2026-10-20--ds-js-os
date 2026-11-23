@@ -1,5 +1,6 @@
 // FunctionCode's calls and the callee-saved registers its prologue saves.
-import {A0, FA0, FT10, T5, OPERAND_STACKS, RA, calleeRegisters, isSavedRegister, typeClass} from "../encoding/registers.js";
+import {A0, FA0, FT10, T5, T6, OPERAND_STACKS, RA, calleeRegisters, calleeResults, isSavedRegister, stackWords,
+    typeClass} from "../encoding/registers.js";
 import {CALL, CELLS} from "../encoding/tape.js";
 
 export class CallMethods {
@@ -31,7 +32,33 @@ export class CallMethods {
             const reg = direct[d] === undefined ? OPERAND_STACKS[classes[d]][d] : undefined;
             if (reg !== undefined) this.load(reg, this.slot(d));
         }
-        this.push(callee.result === "f32" ? FA0 : A0);
+        // A record result's leaves, in order, from their registers and the stack words at sp + 4k.
+        const results = calleeResults(callee);
+        if (!results) return this.push(callee.result === "f32" ? FA0 : A0);
+        for (let i = 0; i < results.length; i++) {
+            const reg = results[i];
+            if (reg >= 0) this.push(reg);
+            else {
+                const scratch = typeClass(callee.results[i]) ? FT10 : T5;
+                this.load(scratch, 4 * (-1 - reg));
+                this.push(scratch);
+            }
+        }
+    }
+
+    // The function's result into a0 or fa0, or a record result's leaves into their registers and the caller's stack
+    // words (calleeResults). Pending direct reads move to the operand stack first, so no leaf's move overwrites a home
+    // another leaf still reads (a leaf keeps its parameters in a0-a7 and fa0-fa7).
+    returnValue() {
+        const results = calleeResults(this.program);
+        if (!results) return this.move(this.returnRegister, this.pop(this.returnRegister));
+        this.materialize();
+        if (results.stack) this.callerStack(T6);
+        for (let i = results.length - 1; i >= 0; i--) {
+            const reg = results[i];
+            if (reg >= 0) this.move(reg, this.pop(reg));
+            else this.store(this.pop(typeClass(this.program.results[i]) ? FT10 : T5), 4 * (-1 - reg), T6);
+        }
     }
 
 
@@ -39,12 +66,12 @@ export class CallMethods {
     // the stack. A program none of whose functions takes a stack word skips the walk.
     outgoingWords() {
         const functions = this.functions;
-        functions.stackWords ??= functions.reduce((most, fn) => Math.max(most, calleeRegisters(fn).stack), 0);
+        functions.stackWords ??= functions.reduce((most, fn) => Math.max(most, stackWords(fn)), 0);
         if (!functions.stackWords) return 0;
         const tape = this.program.code;
         let words = 0;
         for (let at = 0; at < tape.length; at += 1 + CELLS[tape[at]])
-            if (tape[at] === CALL) words = Math.max(words, calleeRegisters(functions[tape[at + 1]]).stack);
+            if (tape[at] === CALL) words = Math.max(words, stackWords(functions[tape[at + 1]]));
         return words;
     }
 

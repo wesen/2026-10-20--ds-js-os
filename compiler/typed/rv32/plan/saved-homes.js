@@ -4,7 +4,8 @@ import {CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, I32_DIV_S, I32_REM_S
 
 // A function with an f32 parameter, local or result. Its leaves get more free registers than an integer function's
 // (planSavedHomes); integer functions keep the plans their pinned images record.
-export const floatingFunction = fn => fn.result === "f32" || fn.params.includes("f32") || Boolean(fn.localTypes);
+export const floatingFunction = fn => fn.result === "f32" || fn.params.includes("f32") || Boolean(fn.localTypes) ||
+    Boolean(fn.results?.includes("f32"));
 
 // The deepest operand stack of a leaf's tape (a leaf's only calls are guarded returns, which take and give one
 // value): f operand-stack registers from there on are never used, so they are free homes.

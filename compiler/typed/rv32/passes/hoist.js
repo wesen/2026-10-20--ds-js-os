@@ -63,7 +63,7 @@ export function hoistInvariants(body, unchecked, k, readOutside, storeless, arit
         case BR: case RETURN: case UNREACHABLE: dead = true; break;
         case CALL:
             for (let n = arity(a); n > 0; n--) tags.pop();
-            tags.push(null);
+            for (let n = arity.results?.(a) ?? 1; n > 0; n--) tags.push(null);
             if (!storeless(a)) loadsOk = false;
             break;
         case I32_LOAD: case I32_LOAD16_U: tags.pop(); tags.push(null); break;
@@ -211,7 +211,10 @@ export function hoistSubexpressions(body, k, arity, fresh) {
         case LOCAL_SET: case DROP: consume(1); break;
         case BR_IF: consume(1, true); break;
         case BR: case RETURN: case UNREACHABLE: consume(slots.length - frames.at(-1).base); dead = true; break;
-        case CALL: consume(arity(a)); slots.push(opaque); break;
+        case CALL:
+            consume(arity(a));
+            for (let n = arity.results?.(a) ?? 1; n > 0; n--) slots.push(opaque);
+            break;
         case I32_LOAD: {
             const x = slots.at(-1);
             combine(i, 1, body[p + 2] === 0 && x?.inv && x.start === x.end && body[ops[x.start]] === LOCAL_GET);

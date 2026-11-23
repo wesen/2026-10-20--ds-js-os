@@ -46,6 +46,26 @@ export function argumentRegisters(types) {
 // argumentRegisters of a descriptor, cached on it (fn.registers): every call site asks for its callee's.
 export const calleeRegisters = fn => fn.registers ??= argumentRegisters(fn.params);
 
+// Where a record result's leaves return (fn.results, PICOCALC-TYPED-VALUES): the integers in a0-a7 and the f32 in
+// fa0-fa7, each class in order, as the arguments arrive; a leaf beyond its class's eight takes the next stack word k
+// (-1 - k), at the caller's sp + 4k, which the callee writes before it returns. out.stack counts them.
+export function resultLocations(types) {
+    const out = new Array(types.length);
+    let x = 0, f = 0, k = 0;
+    for (let i = 0; i < types.length; i++) {
+        if (types[i] === "f32") out[i] = f < 8 ? FA0 + f++ : -1 - k++;
+        else out[i] = x < 8 ? A0 + x++ : -1 - k++;
+    }
+    out.stack = k;
+    return out;
+}
+
+// resultLocations of a descriptor with a record result, cached on it (fn.returns); null for one result.
+export const calleeResults = fn => fn.results ? fn.returns ??= resultLocations(fn.results) : null;
+
+// The stack words a call of fn needs at the caller's sp: its stack parameters, or its stack results if more.
+export const stackWords = fn => Math.max(calleeRegisters(fn).stack, calleeResults(fn)?.stack ?? 0);
+
 // Whether parameter p of fn arrives in a register of its own class (not on the stack, not an f32 in an x register):
 // only such a parameter may stay in its incoming register or feed the prologue's capacity and pointer homes.
 export const inOwnRegister = (fn, p) => {

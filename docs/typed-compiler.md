@@ -51,7 +51,7 @@ into one IIFE (one scope, so they are not ES modules), and `--check`, run by `ma
 | `frontend/declarations.js` | records, enums, distinct types, member aliases (`parseDeclarations`), `scanSignatures`, `checkAcyclic`, `recordLayouts` |
 | `frontend/expressions.js` | the tape's constants for the bundle; `ExpressionParser`: the tape writer (`emitConst`, `emitFloat`, `emitIndex`, `emitMemory`, `codeUnitAddress`, `emitLiteralStores`) and the expressions |
 | `frontend/floats.js` | the f32 operators and `Math` functions, `Math.min`/`max`, `getF32`/`setF32` addresses, the tape surgery of a negated or converted literal (methods of `ExpressionParser`) |
-| `frontend/values.js` | the value types (PICOCALC-TYPED-VALUES): the conditional expression (methods of `ExpressionParser`) |
+| `frontend/values.js` | the value types (PICOCALC-TYPED-VALUES): the conditional expression, `u32(x)`, value records (methods of `ExpressionParser`) |
 | `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`async/body.js` subclasses it) |
 | `frontend/inspect.js` | the front end's `frontend` inspection event (`target: "tape"`) |
 | `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async lowering (`emitSpanFunctions`; `originalError` maps lowered-code diagnostics to original positions) |
@@ -187,6 +187,25 @@ takes its context's type, so a hex literal is the same 32 bits as an `i32` or a 
 and `continue` is a branch to that block's end, so a `for` loop's update runs and the condition is tested again, also
 after `rotate` has moved the condition to the bottom of the loop. The front end decides before parsing the body by
 scanning its text for the word (`bodyContinues` in `frontend/statements.js`).
+
+### Value records
+
+`value record Vec3 { x: f32; y: f32; z: f32; }` declares a record whose variables are values, where `record` declares
+a reference to memory the host lays out. A field is a scalar, a record reference or an earlier value record; its
+leaves are its scalar fields with nested value records flattened in field order (`Ray { o: Vec3; d: Vec3; }` has six).
+`Vec3(1.0, 2.0, 3.0)` constructs one, one argument per field. The front end replaces it by scalars as it parses: a
+local is one local per leaf, `v.o.x` is one `local.get`, an expression leaves its leaves on the operand stack, and
+`let b = a` copies (`v.x = e` needs a `let`). A parameter is its leaves, consecutive parameters (`fn.params`, names
+`v.x`; `fn.sourceParams` keeps the signature as written); methods take the receiver's leaves. A function may return
+one: its result is the leaves (`fn.results`; WebAssembly multi-value, `(result f32 f32 f32)`), `f(x).y` stores them into
+fresh locals and reads one, and `c ? a : b` of two stores each arm into the same locals. `===` on them is an error. No
+pass and no backend sees a value record, only scalar locals and calls with several results.
+
+RV32 returns a record result's leaves as the arguments arrive: integers in `a0`-`a7`, `f32` in `fa0`-`fa7`, and a leaf
+beyond its class's eight in the next word of the caller's stack-argument area (`resultLocations`, `calleeResults`); a
+single result keeps `a0` or `fa0`. The callee writes stack leaves through the caller's sp (`returnValue`); a frameless
+leaf with stack leaves is declined. The passes with an abstract operand stack push `arity.results(i)` values for a
+call, and `inline` inlines such a callee by storing its leaves into result locals at each `return` and its end.
 
 RV32 lowers `and`, `or`, `xor`, `sll`, `sra`, `srl` and, when the right operand is a literal (`select.immediates`;
 the `commute` pass moves a literal to the right of `&`, `|` and `^`), `andi`, `ori`, `xori` for literals in

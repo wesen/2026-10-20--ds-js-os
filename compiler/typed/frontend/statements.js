@@ -149,7 +149,7 @@ class FunctionEmitter extends ExpressionParser {
         const mutable = lex.token.value === "let";
         lex.next();
         const id = lex.ident();
-        const annotation = (lex.token.value === ":" && (lex.next(), true)) ? lex.type(this.records, this.enums, this.distinct) : null;
+        const annotation = (lex.token.value === ":" && (lex.next(), true)) ? lex.type(this.records, this.enums, this.distinct, this.values) : null;
         if (mutable && annotation !== null && lex.isGeneratedLocal?.(id) && lex.token.value === ";") {
             // Every continuation path reaches the original initializer or a reload
             // before reading this slot, including on targets with uninitialized frames.
@@ -159,22 +159,25 @@ class FunctionEmitter extends ExpressionParser {
         { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
         const type = this.expr();
         if (annotation !== null) this.want(type, annotation);
-        this.emitIndex(LOCAL_SET, this.local(id, annotation ?? scalarType(type), mutable));
+        const declared = annotation ?? scalarType(type);
+        if (this.values?.has(declared)) this.setLeaves(declared, this.valueLocal(id, declared, mutable));
+        else this.emitIndex(LOCAL_SET, this.local(id, declared, mutable));
     }
 
     assignment(id, statement = false) {
         const lex = this.lex;
         const local = this.locals.get(id);
         if (!local) lex.fail("unknown local " + id);
+        if (this.values?.has(local.type)) return this.valueAssignment(id, local, statement);
         if (statement && (lex.token.value === "." && (lex.next(), true))) {
             if (local.type === "buffer") this.bufferWrite(local.index);
             else {
                 const name = lex.ident();
                 this.emitIndex(LOCAL_GET, local.index);
                 if (lex.token.value === "(") {
-                    const type = this.memberCall(this.aliases?.methods.get(local.type), local.type, true, name);
-                    if (lex.token.value === ".") this.postfix(type);
-                    this.code.push(DROP);
+                    let type = this.memberCall(this.aliases?.methods.get(local.type), local.type, true, name);
+                    if (lex.token.value === ".") type = this.postfix(type);
+                    this.drop(type);
                     return;
                 }
                 const field = this.field(local.type, name);
@@ -188,6 +191,47 @@ class FunctionEmitter extends ExpressionParser {
             this.want(this.expr(), local.type);
             this.emitIndex(LOCAL_SET, local.index);
         }
+    }
+
+    // An assignment to a value record local or a part of it: v = e, v.f = e, v.o.f = e (a mutable local), a store
+    // through a record reference it holds (v.r.f = e), a method call on a part of it, or a buffer write.
+    valueAssignment(id, local, statement) {
+        const lex = this.lex;
+        let type = local.type, index = local.index;
+        while (statement && this.values.has(type) && lex.token.value === ".") {
+            lex.next();
+            const name = lex.ident();
+            if (lex.token.value === "(") {
+                this.pushLeaves(type, index);
+                let result = this.memberCall(this.aliases?.methods.get(type), type, true, name);
+                if (lex.token.value === ".") result = this.postfix(result);
+                this.drop(result);
+                return;
+            }
+            const field = this.valueField(type, name);
+            type = field.type;
+            index += field.offset;
+        }
+        if (statement && lex.accept(".")) {
+            if (type === "buffer") return this.bufferWrite(index);
+            const name = lex.ident();
+            this.emitIndex(LOCAL_GET, index);
+            if (lex.token.value === "(") {
+                let result = this.memberCall(this.aliases?.methods.get(type), type, true, name);
+                if (lex.token.value === ".") result = this.postfix(result);
+                this.drop(result);
+                return;
+            }
+            const field = this.field(type, name);
+            lex.expect("=");
+            this.want(this.expr(), field.type);
+            this.emitMemory(field.type === "f32" ? F32_STORE : I32_STORE, 2, field.offset);
+            return;
+        }
+        if (!local.mutable) lex.fail("expected mutable local " + id);
+        lex.expect("=");
+        this.want(this.expr(), type);
+        this.setLeaves(type, index);
     }
 
     matchGroup(slot, values) {
@@ -304,14 +348,14 @@ class FunctionEmitter extends ExpressionParser {
         default: {
             const id = lex.ident();
             if ((lex.token.value === "(" && (lex.next(), true))) {
-                const type = this.call(id);
-                if (lex.token.value === ".") this.postfix(type);
-                this.code.push(DROP); // drop the unused call result
+                let type = this.call(id);
+                if (lex.token.value === ".") type = this.postfix(type);
+                this.drop(type); // drop the unused call result
             } else if (!this.locals.has(id) && this.aliases?.namespaces.has(id)) {
                 lex.expect(".");
-                const type = this.memberCall(this.aliases.namespaces.get(id), id, false);
-                if (lex.token.value === ".") this.postfix(type);
-                this.code.push(DROP);
+                let type = this.memberCall(this.aliases.namespaces.get(id), id, false);
+                if (lex.token.value === ".") type = this.postfix(type);
+                this.drop(type);
             } else {
                 this.assignment(id, true);
             }
@@ -322,8 +366,13 @@ class FunctionEmitter extends ExpressionParser {
 
     function(fn) {
         const lex = this.lex;
-        const {params, paramNames, result} = fn;
-        for (let i = 0; i < params.length; i++) this.local(paramNames[i], params[i]);
+        const {params, paramNames, result, sourceParams} = fn;
+        // A value record parameter is its leaves, consecutive parameters: one value local.
+        if (sourceParams) for (let i = 0; i < sourceParams.length; i++) {
+            if (this.values?.has(sourceParams[i])) this.valueLocal(fn.sourceNames[i], sourceParams[i], false);
+            else this.local(fn.sourceNames[i], sourceParams[i]);
+        }
+        else for (let i = 0; i < params.length; i++) this.local(paramNames[i], params[i]);
         lex.offset = fn.bodyAt;
         lex.next();
         { if (lex.token.value !== "{") lex.fail("expected {"); lex.next(); }

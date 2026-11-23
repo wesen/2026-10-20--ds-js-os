@@ -216,10 +216,10 @@ class Lexer {
         return value;
     }
 
-    type(records, enums, distinct) {
+    type(records, enums, distinct, values) {
         const { value } = this.token;
         if (value !== "i32" && value !== "f32" && value !== "u32" && value !== "bool" && value !== "string" && value !== "buffer" &&
-            !records.has(value) && !enums?.has(value) && !distinct?.has(value))
+            !records.has(value) && !enums?.has(value) && !distinct?.has(value) && !values?.has(value))
             this.fail("unknown type " + value);
         this.next();
         return value;
