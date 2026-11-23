@@ -22,7 +22,7 @@ const instruction = {
 // The tape's opcodes, block types, effects and walkers (compiler/typed/tape.js, loaded first).
 const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, RETURN, CALL, DROP, LOCAL_GET, LOCAL_SET,
     I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
-    I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S,
+    I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR, I32_SHL, I32_SHR_S, I32_SHR_U,
     CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, STORES,
     cells: CELLS, effects: EFFECTS, next: opNext, close: opClose} = typedTape;
 
@@ -105,7 +105,7 @@ function divisionMagic(d) {
 
 const ALU = new Map([
     [I32_ADD,[0,0]], [I32_SUB,[0,0x20]], [I32_MUL,[0,1]], [I32_DIV_S,[4,1]], [I32_REM_S,[6,1]],
-    [I32_SHL,[1,0]], [I32_SHR_S,[5,0x20]],
+    [I32_AND,[7,0]], [I32_OR,[6,0]], [I32_XOR,[4,0]], [I32_SHL,[1,0]], [I32_SHR_S,[5,0x20]], [I32_SHR_U,[5,0]],
 ]);
 
 // select.branches: the branch funct3 taken when the predicate holds, and whether the
@@ -131,8 +131,12 @@ const IMMEDIATE_FORMS = new Map([
     [I32_ADD, c => fitsImmediate(c) ? [[0, c]] : null],                       // addi
     [I32_SUB, c => fitsImmediate(-c) ? [[0, -c]] : null],                     // addi -c
     [I32_MUL, c => c === 1 ? [[0, 0]] : powerOfTwo(c) > 0 ? [[1, powerOfTwo(c)]] : null], // mv, slli
+    [I32_AND, c => fitsImmediate(c) ? [[7, c]] : null],                        // andi
+    [I32_OR, c => fitsImmediate(c) ? [[6, c]] : null],                         // ori
+    [I32_XOR, c => fitsImmediate(c) ? [[4, c]] : null],                        // xori (c = -1: not)
     [I32_SHL, c => [[1, c & 31]]],                                            // slli
     [I32_SHR_S, c => [[5, 0x400 | (c & 31)]]],                                  // srai
+    [I32_SHR_U, c => [[5, c & 31]]],                                            // srli
     [I32_LT_S, c => fitsImmediate(c) ? [[2, c]] : null],                       // slti
     [I32_LE_S, c => c < 2047 && c >= -2049 ? [[2, c + 1]] : null],             // a <= c as a < c+1
     [I32_GE_S, c => fitsImmediate(c) ? [[2, c], [4, 1]] : null],               // !(a < c)
@@ -1750,5 +1754,5 @@ globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES,
     passes: PASSES.map(({name, group, kind, needs}) => ({name, group, kind, needs: needs ?? [], file: GROUPS[group]}))};
 
 // The names the pass-group bundles import from this one.
-globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_REM_S, I32_SHL, I32_SHR_S, I32_STORE, I32_STORE16, I32_SUB, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape};
+globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape};
 })();

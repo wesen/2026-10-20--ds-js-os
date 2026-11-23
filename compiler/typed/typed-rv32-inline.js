@@ -4,7 +4,7 @@
 (() => {
 "use strict";
 if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-inline.js");
-const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_CONST, I32_EQ, I32_EQZ, I32_GE_U, I32_LOAD, I32_LOAD16_U, I32_MUL, I32_NE, I32_SHR_S, I32_STORE, I32_STORE16, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNREACHABLE, VOID, installPasses, replaceTape} = globalThis.typedRv32Modules;
+const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_EQ, I32_EQZ, I32_GE_U, I32_LOAD, I32_LOAD16_U, I32_MUL, I32_NE, I32_OR, I32_SHR_U, I32_STORE, I32_STORE16, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNREACHABLE, VOID, installPasses, replaceTape} = globalThis.typedRv32Modules;
 
 // rv32/passes/inline.js
 // The inline pass and the inliner's library candidates.
@@ -91,7 +91,7 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
                 for (let i = 0; i < sp; i++) if (stackKind[i] === 1 && stackValue[i] === a) stackKind[i] = 0;
             } else if (opcode === DROP || opcode === BR_IF) pop(1);
             else if (opcode === I32_EQZ || opcode === I32_LOAD || opcode === I32_LOAD16_U) { pop(1); push(0, 0, 0); }
-            else if ((opcode >= I32_EQ && opcode <= I32_GE_U) || (opcode >= I32_ADD && opcode <= I32_SHR_S)) { pop(2); push(0, 0, 0); }
+            else if ((opcode >= I32_EQ && opcode <= I32_GE_U) || (opcode >= I32_ADD && opcode <= I32_SHR_U)) { pop(2); push(0, 0, 0); }
             else if (opcode === I32_STORE || opcode === I32_STORE16) pop(2);
             else if (opcode === CHECKED_ADDRESS) push(0, 0, 0);
             else if (opcode === CALL) { pop(arity(a)); push(0, 0, 0); }
@@ -175,11 +175,11 @@ function inlineCandidate(fn, code, limits, guarded) {
 // The commute pass.
 
 // the commute pass: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
-// eq, ne), so the literal reaches selectConstant as a right operand. Moving a literal past
+// eq, ne, and, or, xor), so the literal reaches selectConstant as a right operand. Moving a literal past
 // e cannot change e's effects. Each abstract stack entry records where its cells start in
 // the output; an expression whose start is not certain (a value block) is NaN and is never
 // moved past.
-const COMMUTATIVE = new Set([I32_ADD, I32_MUL, I32_EQ, I32_NE]);
+const COMMUTATIVE = new Set([I32_ADD, I32_MUL, I32_EQ, I32_NE, I32_AND, I32_OR, I32_XOR]);
 
 function commuteConstants(code, arity) {
     const out = [], stack = [], blocks = [];
@@ -188,7 +188,7 @@ function commuteConstants(code, arity) {
         const op = code[at], cells = CELLS[op], a = code[at + 1];
         if (cells < 0) return null;
         const start = out.length;
-        if ((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S)) {
+        if ((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U)) {
             const right = stack.pop(), left = stack.pop();
             if (!left || !right) return null;
             if (COMMUTATIVE.has(op) && left.constant !== undefined && right.constant === undefined &&
