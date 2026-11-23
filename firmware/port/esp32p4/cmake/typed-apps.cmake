@@ -12,7 +12,8 @@ set(TYPED_COMPILER
     "typed/rv32.js=${REPO}/compiler/typed/typed-rv32.js"
     # The RV32 pass groups: typed_p4.c's typedRv32Load evaluates one when a compile's policy needs it.
     "typed/rv32-inline.js=${REPO}/compiler/typed/typed-rv32-inline.js"
-    "typed/rv32-loops.js=${REPO}/compiler/typed/typed-rv32-loops.js")
+    "typed/rv32-loops.js=${REPO}/compiler/typed/typed-rv32-loops.js"
+    "typed/rv32-kernel.js=${REPO}/compiler/typed/typed-rv32-kernel.js")
 
 # A reactor or slot ELF: built from the manifest's sources with the native-world flags, then bundled.
 function(typed_reactor published)

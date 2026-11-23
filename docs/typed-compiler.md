@@ -14,7 +14,7 @@ object on `globalThis` (the RV32 backend's three are bundled from the ES modules
 | `typed-wasm.js` | `typedWasm` | The front end (lexer, signature pass, parser and type checker writing the tape) and the WebAssembly backend, built from `frontend/*.js` and `wasm/*.js` by `node compiler/typed/frontend/build.mjs` |
 | `typed-async.js` | `typedAsync` | Lowers `async` functions into ordinary Typed functions over `WorldState` frames before emission (worlds that have them), built from `async/*.js` by `node compiler/typed/async/build.mjs` |
 | `typed-rv32.js` | `typedRv32` | The RV32 backend's core, bundled from `rv32/` by `node compiler/typed/rv32/build.mjs` ([README](../compiler/typed/rv32/README.md)) |
-| `typed-rv32-inline.js`, `typed-rv32-loops.js` | (installs passes) | The two pass groups; after `typed-rv32.js`, loaded up front or on demand through `typedRv32Load` |
+| `typed-rv32-inline.js`, `typed-rv32-loops.js`, `typed-rv32-kernel.js` | (installs passes) | The three pass groups (what `balanced`, `default` and `kernel` add in turn); after `typed-rv32.js`, loaded up front or on demand through `typedRv32Load` |
 | `typed-world.js` | `typedWorld`, `compileTypedWorld*` | The world ABI: two entries and the SDK imports, in trampoline order |
 | `typed-pie-loops.js` | `typedPieLoops` | Optional: ESP32-P4 PIE vector words for qualifying loops (`pieLoops`) |
 

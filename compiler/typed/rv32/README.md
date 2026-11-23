@@ -1,16 +1,17 @@
 # RV32 backend sources
 
-The RV32 backend is a set of ES modules in this directory. `build.mjs` bundles them into three plain scripts, which
+The RV32 backend is a set of ES modules in this directory. `build.mjs` bundles them into four plain scripts, which
 every loader reads (the tests, the replays, the trace-REPL workbench, the tools and the firmware):
 
 | Bundle | Entry | Holds |
 |---|---|---|
 | `compiler/typed/typed-rv32.js` | `index.js` | the core: encoding, the emitters, the planner, the pass registry, policies, `compile`, `linkSlot`; publishes `typedRv32` |
 | `compiler/typed/typed-rv32-inline.js` | `passes/inline-group.js` | the passes `balanced` adds: `inline`, `commute`, `rotate` |
-| `compiler/typed/typed-rv32-loops.js` | `passes/loops-group.js` | the passes `default` and `kernel` add: `version` (with `hoist`, `induction`), `split`, `conjunctions`, `sets`, `ranges`, `facts` |
+| `compiler/typed/typed-rv32-loops.js` | `passes/loops-group.js` | the passes `default` adds to `balanced`: `version` (with `hoist`, `induction`), `split` |
+| `compiler/typed/typed-rv32-kernel.js` | `passes/kernel-group.js` | the passes only `kernel` runs: `conjunctions`, `sets`, `ranges`, `facts` |
 
 ```sh
-node compiler/typed/rv32/build.mjs          # rewrite the three bundles
+node compiler/typed/rv32/build.mjs          # rewrite the four bundles
 node compiler/typed/rv32/build.mjs --check  # fail if one is stale (make test-generated, tests/compiler/typed-rv32.test.mjs)
 ```
 

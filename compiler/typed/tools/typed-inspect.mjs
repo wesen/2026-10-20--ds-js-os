@@ -108,7 +108,7 @@ function inspect(file,v) {
     const source=read(file), ctx=vm.createContext({});
     if (v["pie-loops"] && target==="wasm") throw Error("--pie-loops requires a native target");
     // --backend replaces the whole RV32 backend (a single-file build); otherwise the core and its pass groups.
-    const rv32=v.backend?["typed-rv32"]:["typed-rv32","typed-rv32-inline","typed-rv32-loops"];
+    const rv32=v.backend?["typed-rv32"]:["typed-rv32","typed-rv32-inline","typed-rv32-loops","typed-rv32-kernel"];
     for(const name of ["tape","typed-wasm","typed-async",...(v["pie-loops"]?["typed-pie-loops"]:[]),...rv32]) {
         const path=name==="typed-rv32" && v.backend?v.backend:new URL("../"+name+".js",import.meta.url);
         vm.runInContext(read(path),ctx,{filename:String(path)});

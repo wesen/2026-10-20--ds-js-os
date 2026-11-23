@@ -87,9 +87,9 @@ typedef struct {
   uint8_t *bytes;
   size_t length;
 } compiled_source;
-// One entry per compiler source a firmware evaluates. The playable firmware evaluates eleven
-// (typed/tape.js, wasm.js, async.js, rv32.js, rv32-inline.js, rv32-loops.js, world.js and four
-// app linkers); a source that finds no free entry is parsed on every compile.
+// One entry per compiler source a firmware evaluates. The playable firmware evaluates twelve
+// (typed/tape.js, wasm.js, async.js, rv32.js, rv32-inline.js, rv32-loops.js, rv32-kernel.js,
+// world.js and four app linkers); a source that finds no free entry is parsed on every compile.
 static compiled_source compiled_sources[16];
 static SemaphoreHandle_t compiled_lock;
 static portMUX_TYPE compiled_lock_init = portMUX_INITIALIZER_UNLOCKED;

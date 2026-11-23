@@ -7,6 +7,7 @@ import "../../compiler/typed/typed-wasm.js";
 import "../../compiler/typed/typed-rv32.js";
 import "../../compiler/typed/typed-rv32-inline.js";
 import "../../compiler/typed/typed-rv32-loops.js";
+import "../../compiler/typed/typed-rv32-kernel.js";
 import "../../compiler/typed/typed-pie-loops.js";
 
 const source = readFileSync(new URL("../../apps/typed/raytrace/raytrace.typed",import.meta.url),"utf8");

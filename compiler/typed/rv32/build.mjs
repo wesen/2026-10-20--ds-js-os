@@ -18,7 +18,9 @@ export const BUNDLES = [
     {file: "typed-rv32-inline.js", entry: "passes/inline-group.js",
         what: "The RV32 passes of the \"inline\" group: inline, commute, rotate. Load after typed-rv32.js."},
     {file: "typed-rv32-loops.js", entry: "passes/loops-group.js",
-        what: "The RV32 passes of the \"loops\" group: conjunctions, sets, ranges, version, hoist, induction, split, facts. Load after typed-rv32.js."},
+        what: "The RV32 passes of the \"loops\" group: version, hoist, induction, split. Load after typed-rv32.js."},
+    {file: "typed-rv32-kernel.js", entry: "passes/kernel-group.js",
+        what: "The RV32 passes of the \"kernel\" group: conjunctions, sets, ranges, facts. Load after typed-rv32.js."},
 ];
 
 export function bundles() {

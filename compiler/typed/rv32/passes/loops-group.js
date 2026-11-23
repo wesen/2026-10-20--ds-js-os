@@ -1,16 +1,10 @@
-// The "loops" group (typed-rv32-loops.js): version with hoist and induction, split, and the passes only
-// "kernel" runs (conjunctions, sets, ranges, facts). Loading this module installs them in the registry.
-import {fuseConjunctions} from "./conjunctions.js";
-import {foldValueSets} from "./value-sets.js";
+// The "loops" group (typed-rv32-loops.js): what "default" adds to "balanced", version with its options hoist and
+// induction, and split. Loading this module installs them in the registry.
 import {versionLoops} from "./version-loops.js";
 import {splitLocals} from "./split-locals.js";
-import {divisionFacts, localRanges} from "../analysis/ranges.js";
 import {installPasses, replaceTape} from "./registry.js";
 
 installPasses("loops", {
-    conjunctions: {run: fn => replaceTape(fn, fuseConjunctions(fn.code))},
-    sets: {run: (fn, ctx) => replaceTape(fn, foldValueSets(fn.code, ctx.arity))},
-    ranges: {run(fn, ctx) { ctx.ranges = localRanges(fn.code, fn.params.length, ctx.arity); }},
     version: {run(fn, ctx) {
         const hoist = ctx.passes.has("hoist") ?
             {storeless: ctx.storeless, arity: ctx.arity, fresh: () => fn.params.length + fn.nlocals++} : undefined;
@@ -34,9 +28,6 @@ installPasses("loops", {
             }
             ctx.origin = local => local >= before ? split.origin[local - before] : local;
         }
-    }},
-    facts: {run(fn, ctx) {
-        if (ctx.ranges) ctx.facts = divisionFacts(fn.code, fn.params.length, ctx.arity, ctx.ranges, ctx.origin) ?? undefined;
     }},
 });
 // A marker for loaders that list what a realm holds (the trace-REPL workbench's module table).

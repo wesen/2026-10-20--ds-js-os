@@ -13,7 +13,7 @@ import {readFileSync, writeFileSync} from "node:fs";
 import {runInThisContext} from "node:vm";
 
 const root = new URL("../../", import.meta.url);
-for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js", "bench/host/typed-ray-bench.js"])
+for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js", "bench/host/typed-ray-bench.js"])
     runInThisContext(readFileSync(new URL(file, root), "utf8"), {filename: file});
 
 export const OPENING_DIGEST = JSON.parse(readFileSync(new URL("../reference/ray-opening.json", import.meta.url))).sha256;

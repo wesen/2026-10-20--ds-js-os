@@ -179,7 +179,7 @@ test("a checked constant read can use a halfword displacement and a dominating c
 
 test("saved homes and direct reads keep the ABI and reproduce stock results", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js", "bench/host/typed-ray-bench.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js", "bench/host/typed-ray-bench.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp, typedRayBench} = ctx;
     // Inlining would turn mix into a leaf without callee-saved homes; this test keeps the calls.
@@ -220,7 +220,7 @@ function mix(n: i32): i32 {
 
 test("instruction selection matches stock code on constant division, immediates and fused branches", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     const all = {select: {immediates: true, divisions: true, branches: true, results: true, leafParams: true}};
@@ -267,7 +267,7 @@ function leaf(a: i32, b: i32): i32 { return (a - b) * 4 + a / 8 - b % 4 + a / 3;
 
 test("inlining, capacity and constant homes, commutation and loop rotation match stock code", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     const src = `function clamp(v: i32, lo: i32, hi: i32): i32 {
@@ -328,7 +328,7 @@ function fill(out: buffer, buf: buffer, n: i32): i32 {
 
 test("short forward branches fall back to the long form beyond the conditional-branch range", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // The if-arm in `far` is longer than 4 KiB of code, so its exit branch cannot be short.
@@ -362,7 +362,7 @@ ${body}
 
 test("pointer homes keep checked accesses, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // r[x + k] with an increment, r[i + k] with a recomputed index, r[b + k] from a
