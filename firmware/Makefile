@@ -165,10 +165,11 @@ test-clock: $(BIN)
 	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_clock_native.py
 
 # System services through the host binary: guarded channels, the log ring, the simulated network and time zone,
-# and apps from storage (sys.spawn, sys.stop).
+# apps from storage (sys.spawn, sys.stop), and a manifest entry's JavaScript fallback.
 test-sys: $(BIN)
 	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_sys_native.py
 	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_loader_native.py
+	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) tests/test_fallback_native.py
 
 # Files through the host binary: claims, paths, rights, narrowing, passing and revoking handles (no device needed).
 test-fs: $(BIN)

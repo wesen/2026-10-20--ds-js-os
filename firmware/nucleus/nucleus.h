@@ -323,6 +323,7 @@ bool world_claims(world_t *W, const char *claim);
 // the engine binding: vm.c (QuickJS) or vm_mqjs.c (MicroQuickJS); one is linked into a build
 typedef struct {                // one entry of system.json's "worlds", as the binding's JSON parser read it
   char name[NAME_LEN], file[96], engine[12];
+  char fallback[96];            // "fallback": a JavaScript file that runs when file cannot be read (a compile failed)
   bool has_budget, has_mem, has_prio, has_store;
 #if PICOCALC_CANDELA_WORLD
   bool has_long, has_stack;   // "long_ms", "stack_kb" (PICOCALC-CANDELA-WORLD)

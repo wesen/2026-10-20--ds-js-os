@@ -724,12 +724,6 @@ static world_t *pick(bool *is_settle) {
       if (!W->in_turn && W->mbox && (!ok || W->mbox->t < t || (W->mbox->t == t && W->mbox->seq < s))) { t = W->mbox->t; s = W->mbox->seq; ok = true; set = false; }
     }
     int pr = W->boot_ready ? 10 : W->prio;   // starting a world comes first, in manifest order
-#if PICOCALC_AGENDA_EARLY_BOOT
-    if (ok && !W->boot_ready && (set || W->mbox->kind == M_START)) {
-      extern bool p4_agenda_boot_dispatch(const world_t *, int);
-      if (p4_agenda_boot_dispatch(W, set ? W->settles->promise : 0)) pr = 11;
-    }
-#endif
     if (ok && (!best || pr > bp || (pr == bp && (t < bt || (t == bt && s < bs))))) { best = W; bt = t; bs = s; bset = set; bp = pr; }
   }
   *is_settle = bset;
@@ -754,20 +748,12 @@ static void run_segment(world_t *W, bool is_settle) {
   const char *budget_kind = "turn";
   vtime_t budget = W->budget_us;
   bool booting = W->boot_ready;
-#if PICOCALC_TYPED_AGENDA
-  extern void p4_agenda_stage(const world_t *, const char *);
-  if (booting) p4_agenda_stage(W, "world-init");
-  if (is_settle) p4_agenda_stage(W, "settle");
-#endif
   if (booting) {
     if (K.trace) klog("starting %s (%s)", W->name, W->file);
     W->boot_ready = false;
     budget_kind = "start";
     budget = MS(600);
     rc = boot_world(W);
-#if PICOCALC_TYPED_AGENDA
-    p4_agenda_stage(W, "world-init-done");
-#endif
     if (rc == 0 && W->restarts++ > 0) publish_status(W, "running", NULL, 0);
   } else {
     eng_begin_segment(W, budget);
@@ -809,10 +795,6 @@ static void run_segment(world_t *W, bool is_settle) {
       free(W->frame); W->frame = f;
       char *post = frame_message(W);
       kernel_publish(W, "frames", post, NULL, 0);
-#if PICOCALC_TYPED_AGENDA
-      extern void p4_agenda_frame(world_t *, vtime_t);
-      p4_agenda_frame(W, K.vnow);
-#endif
       free(post);
     } else free(f);
   }
@@ -833,11 +815,6 @@ static void run_segment(world_t *W, bool is_settle) {
   else if (W->turn_failed) snprintf(why, sizeof why, "%s", W->turn_error ? W->turn_error : "its turn failed");
   W->cpu_us += cost;
   K.lane_busy += cost;
-#if PICOCALC_TYPED_AGENDA
-  // finish_turn and crash clear the current turn label.
-  extern void p4_agenda_world_segment(const world_t *, vtime_t, vtime_t, bool);
-  p4_agenda_world_segment(W, K.vnow, cost, booting);
-#endif
   if (why[0]) {
     if (W->status == W_RESTARTING || W->status == W_STOPPED) {   // it never started: count it as a crash of the start
       W->status = W_IDLE;
@@ -963,6 +940,14 @@ static int add_world(void *arg, const manifest_world_t *mw) {
   char path[512];
   snprintf(path, sizeof path, "%s/%s", K.js_root, W->file);
   W->source = port_read_file(path, &W->source_len);   // JavaScript text, or a binary's bytes
+  if (!W->source && mw->fallback[0]) {
+    // A compiled world whose compile failed (the P4's Typed apps): its JavaScript version runs instead.
+    klog("%s: %s is unavailable; running %s", W->name, W->file, mw->fallback);
+    snprintf(W->file, sizeof W->file, "%s", mw->fallback);
+    W->engine = ENG_JS;
+    snprintf(path, sizeof path, "%s/%s", K.js_root, W->file);
+    W->source = port_read_file(path, &W->source_len);
+  }
   if (!W->source) { fprintf(stderr, "cannot read %s\n", path); free(W); return -1; }
   snprintf(W->kind, sizeof W->kind, "world");
   snprintf(W->title, sizeof W->title, "%s", W->name);
