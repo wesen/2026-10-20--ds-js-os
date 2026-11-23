@@ -29,7 +29,6 @@ firmware/port/esp32p4/main/CMakeLists.txt -- PICOCALC-TYPED-APP-MANIFEST
 firmware/nucleus/vm.c -- PICOCALC-SPLIT-FILES
 firmware/nucleus/kernel.c -- PICOCALC-SPLIT-FILES
 firmware/nucleus/vm_mqjs.c -- PICOCALC-SPLIT-FILES
-tools/gen/candela/translator/lower.js -- PICOCALC-SPLIT-FILES
 firmware/nucleus/native.c -- PICOCALC-SPLIT-FILES
 apps/js/papers3/system/compositor.js -- PICOCALC-SPLIT-FILES
 firmware/port/esp32p4/main/agent_p4.c -- PICOCALC-SPLIT-FILES
