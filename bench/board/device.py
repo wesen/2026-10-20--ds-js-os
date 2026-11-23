@@ -300,17 +300,30 @@ def write_app(build, out, tag, port=PORT):
     esp("verify_flash", build, out, tag + "-verify", port)
 
 
+def quiesce(port, log):
+    """hold the running firmware before esptool resets it, so the reset cannot land in the middle of a keyboard
+    transfer (an ESP32-only reset there is the suspected cause of the keyboard controller wedging). Best effort: an
+    image without the console (a study app) or a hung one cannot hold, and a restore must still go ahead."""
+    try:
+        hold(Console(port, log, drain_s=1))
+        return True
+    except (AssertionError, TimeoutError, serial.SerialException):
+        return False
+
+
 def install(build, out, peripherals="on", port=PORT, health_only=False):
     """Flash a build (unless health_only), wait for the boot compiles, check health. Returns the after-record."""
     digest = check_build(build)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=False)
     with acquire(), (out / "uart.log").open("wb", buffering=0) as log:
+        record = {"build": str(build), "sha256": digest}
         if not health_only:
+            record["heldBeforeFlash"] = quiesce(port, log)
             write_app(build, out, "install", port)
         console = Console(port, log)
         try:
-            record = {"build": str(build), "sha256": digest, "health": health(console, peripherals)}
+            record["health"] = health(console, peripherals)
         finally:
             console.close()
     save(out / "after.json", record)

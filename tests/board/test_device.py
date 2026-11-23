@@ -185,5 +185,32 @@ class BusWindow(BoardTest):
         self.assertGreater(value["health"]["i2c0Window"]["transfers"], 0)
 
 
+class InstallHold(BoardTest):
+    """An install holds the firmware (i2c0 between transactions) before esptool resets it."""
+
+    def install(self, board):
+        writes = []
+        real = device.Console
+        with tempfile.TemporaryDirectory() as tmp, \
+                mock.patch.object(device, "Console", lambda port, log, drain_s=13: real(board, log, drain_s)), \
+                mock.patch.object(device, "acquire", lambda: mock.MagicMock()), \
+                mock.patch.object(device, "check_build", lambda build: "0" * 64), \
+                mock.patch.object(device, "write_app", lambda *a: writes.append([c for _, c in board.commands])):
+            record = device.install(Path(tmp), Path(tmp) / "out", "on")
+        self.assertEqual(len(writes), 1)
+        return record, writes[0]
+
+    def test_hold_comes_before_the_write(self):
+        record, before_write = self.install(self.board(uptime_s=2.0))
+        self.assertEqual(before_write, ["hold"])
+        self.assertTrue(record["heldBeforeFlash"])
+        self.assertIn("health", record)
+
+    def test_a_firmware_that_cannot_hold_is_still_flashed(self):
+        record, before_write = self.install(self.board(uptime_s=2.0, silent={"hold"}))
+        self.assertEqual(before_write, ["hold"])
+        self.assertFalse(record["heldBeforeFlash"])
+
+
 if __name__ == "__main__":
     unittest.main()
