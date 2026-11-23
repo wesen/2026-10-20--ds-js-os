@@ -1,0 +1,44 @@
+[
+ {
+  "block": 0,
+  "arm": "control",
+  "dir": "b00-control",
+  "sha256": "10695eeedd574264bedb1dfacc5e8e20310b75b8ba477e12daed51d0306a1d0c",
+  "healthy": true
+ },
+ {
+  "block": 0,
+  "arm": "candidate",
+  "dir": "b00-candidate",
+  "sha256": "3edccad77689379f842e23a0e72dfeb857d54600eec3750054d1eb13e2812197",
+  "healthy": true
+ },
+ {
+  "block": 1,
+  "arm": "candidate",
+  "dir": "b01-candidate",
+  "sha256": "3edccad77689379f842e23a0e72dfeb857d54600eec3750054d1eb13e2812197",
+  "healthy": true
+ },
+ {
+  "block": 1,
+  "arm": "control",
+  "dir": "b01-control",
+  "sha256": "10695eeedd574264bedb1dfacc5e8e20310b75b8ba477e12daed51d0306a1d0c",
+  "healthy": true
+ },
+ {
+  "block": 2,
+  "arm": "control",
+  "dir": "b02-control",
+  "sha256": "10695eeedd574264bedb1dfacc5e8e20310b75b8ba477e12daed51d0306a1d0c",
+  "healthy": true
+ },
+ {
+  "block": 2,
+  "arm": "candidate",
+  "dir": "b02-candidate",
+  "sha256": "3edccad77689379f842e23a0e72dfeb857d54600eec3750054d1eb13e2812197",
+  "healthy": true
+ }
+]

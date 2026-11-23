@@ -1,0 +1,9 @@
+| App | control s | candidate s | paired Δ s (per block) | 75 % of deadline | control peak KB | candidate peak KB | paired Δ KB |
+|---|---:|---:|---|---:|---:|---:|---:|
+| agenda | 0.700 | 0.715 | +0.015, +0.014, +0.015 | 1.27 | 1177 | 1028 | -149, -149, -149 |
+| editor | 3.219 | 3.237 | +0.017, +0.018, +0.020 | 4.50 | 2972 | 2815 | -157, -157, -157 |
+| files | 0.447 | 0.471 | +0.024, +0.024, +0.024 | 1.27 | 969 | 1004 | +34, +34, +34 |
+| chess | 3.920 | 4.016 | +0.096, +0.096, +0.096 | 4.50 | 2957 | 2835 | -122, -122, -122 |
+| candela | 2.263 | 2.342 | +0.077, +0.079, +0.080 | | 1608 | 1638 | +29, +29, +29 |
+control bytecode cache: {"typed/tape.js": 13640, "typed/wasm.js": 239373, "typed/rv32.js": 474091, "candela/link.js": 1874, "files/link.js": 3144, "typed/async.js": 166436, "typed/world.js": 9924, "agenda/link.js": 5522, "chess/painter/link.js": 1189}
+candidate bytecode cache: {"typed/tape.js": 13642, "typed/wasm.js": 239373, "typed/rv32.js": 260813, "candela/link.js": 1874, "typed/rv32-inline.js": 44824, "typed/rv32-loops.js": 195486, "files/link.js": 3144, "typed/async.js": 166436, "typed/world.js": 9924, "agenda/link.js": 5522, "chess/painter/link.js": 1189}

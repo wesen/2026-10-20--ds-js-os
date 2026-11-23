@@ -33,6 +33,8 @@ bundle up front. The modules also run unbundled in Node (`package.json` sets `"t
 | `plan/` | `locations.js` (`planLocations`), `saved-homes.js` |
 
 The bundler understands `import {a, b as c} from "./x.js"` and `export` before a top-level `function`, `class` or
-`const`; each module becomes a function scope in its bundle, and the module graph must be acyclic. The move from the
+`const`. Each bundle is one scope (scope hoisting: every top-level name in rv32/ is unique, which the build checks; a
+function scope per module made the QuickJS bytecode half again as large), the core publishes the names the groups
+import as `globalThis.typedRv32Modules`, and the module graph must be acyclic. The move from the
 numbered files (PICOCALC-TYPED-PIPELINE) changed no image: every policy's image and every observed tape of twelve
 compile units equals the numbered files' build.
