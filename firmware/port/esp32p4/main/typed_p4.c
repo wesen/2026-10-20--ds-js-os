@@ -14,12 +14,24 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
+// QuickJS keeps small objects in 4 KB arenas that it takes from the embedder, and returns an arena the moment its last
+// object is freed. A size class whose use swings across an arena boundary therefore takes and returns the same 4 KB
+// again and again: 2,100 to 5,100 arenas in one boot compile on the host, a number that moves with whatever else the
+// realm holds (PICOCALC-COMPILER-DEVICE-COST). On the P4 each is a TLSF allocation and free in PSRAM. A compile parks
+// up to ARENA_PARKED freed arena-sized blocks and hands them out again; a parked block stays counted as live (so the
+// peak counts what the compile holds) and the runtime's teardown frees them.
+#define ARENA_MIN 3584
+#define ARENA_BLOCK 4096
+#define ARENA_PARKED 64
+
 typedef struct {
   size_t live, peak, limit;
   vtime_t deadline;
   // The calls this compile made to the port's heap (QuickJS's arenas and large blocks) and the CPU cycles inside them.
-  uint32_t mallocs, frees, reallocs;
+  uint32_t mallocs, frees, reallocs, reused;
   uint64_t heap_cycles;
+  int parked_count;
+  void *parked[ARENA_PARKED];
 } compile_heap;
 
 // Where one compile's time went, printed after it as one TYPEDCOMPILE line (outside the timed compile): each compiler
@@ -49,6 +61,12 @@ static void account(compile_heap *heap, size_t old, size_t current) {
 
 static void *compile_malloc(JSMallocState *state, size_t size) {
   compile_heap *heap = state->opaque;
+  bool arena = size >= ARENA_MIN && size <= ARENA_BLOCK;
+  if (arena && heap->parked_count) {
+    heap->reused++;
+    return heap->parked[--heap->parked_count];
+  }
+  if (arena) size = ARENA_BLOCK;  // every arena-sized block can serve every arena-sized request
   if (heap->live >= heap->limit || size > heap->limit - heap->live) return NULL;
   uint32_t begun = esp_cpu_get_cycle_count();
   void *ptr = port_heap_malloc(size);
@@ -62,7 +80,13 @@ static void compile_free(JSMallocState *state, void *ptr) {
   if (!ptr) return;
   compile_heap *heap = state->opaque;
   uint32_t begun = esp_cpu_get_cycle_count();
-  account(heap, port_heap_usable(ptr), 0);
+  size_t usable = port_heap_usable(ptr);
+  if (usable >= ARENA_BLOCK && usable < ARENA_BLOCK + 64 && heap->parked_count < ARENA_PARKED) {
+    heap->parked[heap->parked_count++] = ptr;
+    heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
+    return;
+  }
+  account(heap, usable, 0);
   port_heap_free(ptr);
   heap->frees++;
   heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
@@ -313,14 +337,19 @@ done:
   phase = port_clock();
   if (ctx) JS_FreeContext(ctx);
   if (rt) JS_FreeRuntime(rt);
+  while (heap->parked_count) {
+    void *block = heap->parked[--heap->parked_count];
+    account(heap, port_heap_usable(block), 0);
+    port_heap_free(block);
+  }
   state.free_us = port_clock() - phase;
   printf("%s compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu\n",
          app, source_kind, module ? "ok" : "failed",
          (long long)(port_clock() - started), heap->peak, module ? *length : 0);
   printf("TYPEDCOMPILE {\"app\":\"%s\",\"beforeUs\":%lld,\"setupUs\":%lld,\"callUs\":%lld,\"freeUs\":%lld,"
-         "\"heap\":{\"mallocs\":%lu,\"frees\":%lu,\"reallocs\":%lu,\"us\":%llu},\"evals\":[",
+         "\"heap\":{\"mallocs\":%lu,\"frees\":%lu,\"reallocs\":%lu,\"reused\":%lu,\"us\":%llu},\"evals\":[",
          app, (long long)state.before_us, (long long)state.setup_us, (long long)state.call_us, (long long)state.free_us,
-         (unsigned long)heap->mallocs, (unsigned long)heap->frees, (unsigned long)heap->reallocs,
+         (unsigned long)heap->mallocs, (unsigned long)heap->frees, (unsigned long)heap->reallocs, (unsigned long)heap->reused,
          (unsigned long long)(heap->heap_cycles / CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ));
   for (int i = 0; i < state.evals; i++) {
     const compile_eval *e = &state.eval[i];
