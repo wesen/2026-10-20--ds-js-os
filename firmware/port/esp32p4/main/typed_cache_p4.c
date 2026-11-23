@@ -99,24 +99,20 @@ bool p4_typed_cache_key(const p4_typed_app *app, const char *bundled, const char
 }
 
 // ---- reads ----
-typedef struct { const uint8_t *key; char *module; tc_header h; tc_result r; char why[120]; TaskHandle_t waiter; } read_job;
-static void do_read(read_job *j) {
-  xSemaphoreTake(lock, portMAX_DELAY);
-  j->r = tc_read(DIR, j->key, &j->module, &j->h, j->why, sizeof j->why);
-  xSemaphoreGive(lock);
-}
-static void read_task(void *arg) {
-  read_job *j = arg;
-  do_read(j);
-  xTaskNotifyGive(j->waiter);
+// fn(arg) on a task with an internal stack, at the caller's priority and on its core, unless the caller's stack is
+// internal already (the kernel task's is).
+typedef struct { void (*fn)(void *); void *arg; TaskHandle_t waiter; } io_call;
+static void io_task(void *arg) {
+  io_call *c = arg;
+  c->fn(c->arg);
+  xTaskNotifyGive(c->waiter);
   vTaskSuspend(NULL);   // the caller deletes this task
 }
-// Runs fn(arg) on a task with an internal stack, unless the caller's stack is internal already.
-static bool on_internal_stack(TaskFunction_t task, void (*direct)(read_job *), read_job *j) {
-  if (esp_ptr_internal(&j)) { direct(j); return true; }
-  j->waiter = xTaskGetCurrentTaskHandle();
+static bool on_internal_stack(void (*fn)(void *), void *arg) {
+  io_call c = {fn, arg, xTaskGetCurrentTaskHandle()};
+  if (esp_ptr_internal(&c)) { fn(arg); return true; }
   TaskHandle_t h = NULL;
-  if (xTaskCreatePinnedToCoreWithCaps(task, "tcache-io", 6 * 1024, j, uxTaskPriorityGet(NULL), &h, xPortGetCoreID(),
+  if (xTaskCreatePinnedToCoreWithCaps(io_task, "tcache-io", 6 * 1024, &c, uxTaskPriorityGet(NULL), &h, xPortGetCoreID(),
                                       MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT) != pdPASS)
     return false;
   ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
@@ -124,10 +120,30 @@ static bool on_internal_stack(TaskFunction_t task, void (*direct)(read_job *), r
   return true;
 }
 
+typedef struct { const uint8_t *key; char *module; tc_header h; tc_result r; char why[120]; bool exists; } read_job;
+static void do_read(void *arg) {
+  read_job *j = arg;
+  xSemaphoreTake(lock, portMAX_DELAY);
+  j->r = tc_read(DIR, j->key, &j->module, &j->h, j->why, sizeof j->why);
+  xSemaphoreGive(lock);
+}
+static void do_exists(void *arg) {
+  read_job *j = arg;
+  xSemaphoreTake(lock, portMAX_DELAY);
+  j->exists = tc_exists(DIR, j->key);
+  xSemaphoreGive(lock);
+}
+
+bool p4_typed_cache_has(const uint8_t key[32]) {
+  read_job j = {.key = key};
+  init_locks();
+  return port_fs_root() && on_internal_stack(do_exists, &j) && j.exists;
+}
+
 char *p4_typed_cache_read(const char *name, const uint8_t key[32], size_t *length, int64_t key_us) {
   read_job j = {.key = key};
   const int64_t t0 = now();
-  if (!on_internal_stack(read_task, do_read, &j)) {
+  if (!on_internal_stack(do_read, &j)) {
     printf("%s cache miss key_us=%" PRId64 " (no internal stack for the read)\n", name, key_us);
     return NULL;
   }

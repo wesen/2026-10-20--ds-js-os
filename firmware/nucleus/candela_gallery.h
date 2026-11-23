@@ -95,6 +95,8 @@ enum { CGT_IDLE, CGT_LOADING, CGT_READY, CGT_FAILED };
 int cgt_state(void);
 double cgt_loading_s(void);   // seconds since the load started, while it runs
 void cgt_prepare(void);       // start loading it on a task of its own, unless it is loading, loaded or failed
+bool cgt_cached(void);        // its compiled program is in the compiled-module cache (a load is a read)
+bool cgt_load_now(void);      // load it on the caller's task; true when it is ready
 void cg_end(cg_state *s);          // free the scene's memory (the sky workspace stays)
 void cg_free_all(cg_state *s);     // and the sky workspace
 

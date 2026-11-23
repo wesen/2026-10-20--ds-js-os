@@ -297,6 +297,21 @@ static char *read_edited(const p4_typed_app *app, size_t *length) {
   return text;
 }
 
+// Real compiles (not cache hits) running now, and when the last one ended: a background compile waits for quiet.
+static volatile int compiles_running;
+static volatile vtime_t compiles_ended = -1;
+bool p4_typed_compiles_quiet(int64_t quiet_us) {
+  return !compiles_running && (compiles_ended < 0 || port_clock() - compiles_ended >= quiet_us);
+}
+
+bool p4_typed_app_cached(const p4_typed_app *app, int variant) {
+  if (!app || variant < 0 || (app->n_variants ? variant >= app->n_variants : variant != 0)) return false;
+  const p4_compile_limits limits = p4_typed_app_limits(app);
+  uint8_t key[32];
+  return p4_typed_cache_key(app, app->n_variants ? app->variants[variant].source : app->source, NULL, 0, &limits, key) &&
+         p4_typed_cache_has(key);
+}
+
 // The cache's key covers every input of the compile (typed_cache_p4.c); the deadline and heap limits apply only to a
 // real compile, whose clock starts after the lookup. The label kind (or the variant's source) groups entries for eviction.
 static char *compile_app(const p4_typed_app *app, int variant, const char *text, size_t text_length, const char *kind,
@@ -309,6 +324,7 @@ static char *compile_app(const p4_typed_app *app, int variant, const char *text,
   const bool keyed = cached && p4_typed_cache_key(app, bundled, text, text_length, &limits, key);
   char *module = keyed ? p4_typed_cache_read(app->name, key, length, port_clock() - asked) : NULL;
   if (module) return module;
+  __atomic_add_fetch(&compiles_running, 1, __ATOMIC_SEQ_CST);
   const vtime_t started = port_clock();
   size_t source_length = text_length, reactor_length = 0;
   char *source = text ? NULL : p4_bundle_read(bundled, &source_length, NULL, 0);
@@ -321,6 +337,8 @@ static char *compile_app(const p4_typed_app *app, int variant, const char *text,
   }
   free(reactor);
   free(source);
+  compiles_ended = port_clock();
+  __atomic_sub_fetch(&compiles_running, 1, __ATOMIC_SEQ_CST);
   if (module && keyed) p4_typed_cache_store(app->name, kind ? kind : bundled, key, module, *length, port_clock() - started);
   return module;
 }

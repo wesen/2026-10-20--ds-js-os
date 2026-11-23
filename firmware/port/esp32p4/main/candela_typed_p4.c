@@ -152,18 +152,27 @@ static bool load(char *err, size_t n) {
 }
 
 // The gallery's first use of this arm after a firmware update compiles for about 85 s; every later one reads the
-// cache. The gallery draws with the C++ kernel meanwhile (candela_gallery_p4.c): cgt_prepare starts the load on a
-// task of its own and cgt_state says how far it is.
+// cache. With the program cached, the gallery loads it before its scene (cgt_cached, cgt_load_now); otherwise it
+// draws with the C++ kernel while cgt_prepare compiles it on a task of its own, and cgt_state says how far it is.
 static void load_task(void *arg) {
   char err[96];
   if (!load(err, sizeof err))
     printf("CGAL {\"ev\":\"error\",\"what\":\"typed-load\",\"error\":\"%s\"}\n", err);
   vTaskDeleteWithCaps(NULL);
 }
+bool cgt_cached(void) { return p4_typed_app_cached(p4_typed_app_find("candela-gallery"), 0); }
+bool cgt_load_now(void) {
+  char err[96];
+  if (load(err, sizeof err)) return true;
+  printf("CGAL {\"ev\":\"error\",\"what\":\"typed-load\",\"error\":\"%s\"}\n", err);
+  return false;
+}
 int cgt_state(void) { return loaded ? CGT_READY : failed && !loading ? CGT_FAILED : loading ? CGT_LOADING : CGT_IDLE; }
 double cgt_loading_s(void) { return loading && load_started_us ? (esp_timer_get_time() - load_started_us) / 1e6 : 0; }
+// Not while another compile runs or has just run: the painter's compile after a cold boot has a deadline, and two
+// compiles share PSRAM's bandwidth.
 void cgt_prepare(void) {
-  if (loaded || failed || loading) return;
+  if (loaded || failed || loading || !p4_typed_compiles_quiet(10 * 1000000)) return;
   loading = true;
   if (xTaskCreatePinnedToCoreWithCaps(load_task, "cgt-load", 8 * 1024, NULL, 1, NULL, 0,
                                       MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT) != pdPASS)

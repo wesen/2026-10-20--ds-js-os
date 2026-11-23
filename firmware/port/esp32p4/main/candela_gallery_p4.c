@@ -85,12 +85,13 @@ static const cg_instance *instance_of(const cg_scene_desc *d, int a) {
   (void)a;
   return d->spectral ? &cgs_gallery : &cg_gallery;
 }
-// The worker's arm for a new scene: Typed once its program is loaded; until then C++, with the load started.
+// The worker's arm for a new scene: Typed once its program is loaded. A cached program is read now (about a second);
+// one that must be compiled is left to the worker's loop, and C++ draws meanwhile.
 static int arm_now(void) {
 #if PICOCALC_CANDELA_TYPED
   if (arm == ARM_TYPED && cgt_state() != CGT_READY) {
-    cgt_prepare();
-    return ARM_CPP;
+    if (cgt_state() == CGT_IDLE && cgt_cached()) cgt_load_now();
+    if (cgt_state() != CGT_READY) return ARM_CPP;
   }
 #endif
   return arm;
@@ -408,6 +409,19 @@ static void worker(void *arg) {
     if (visible && !paused) { sc.shown_us += t - sc.last_visible_us; }
     sc.last_visible_us = t;
     if (paused || !visible) continue;
+#if PICOCALC_CANDELA_TYPED
+    // Typed preferred while C++ draws: start compiling it once no other compile has run for a while; once it is
+    // ready, restart a scene that has barely begun with it, else let the next scene take it.
+    if (arm == ARM_TYPED && drawing == ARM_CPP) {
+      const int state = cgt_state();
+      if (state == CGT_IDLE) cgt_prepare();
+      else if (state == CGT_READY && st.pass < 2) {
+        end_scene("typed-ready");
+        begin_scene(current);
+        continue;
+      }
+    }
+#endif
     if (done) {
       if (t - sc.done_us >= HOLD_MS * 1000LL) { end_scene("target"); begin_scene(next_index(current, 1)); }
       continue;

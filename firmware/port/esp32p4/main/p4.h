@@ -70,6 +70,9 @@ void p4_typed_console(const char *args);
 bool p4_typed_cache_key(const p4_typed_app *app, const char *bundled, const char *text, size_t text_length,
                         const p4_compile_limits *limits, uint8_t key[32]);   // false: no filesystem, or an input missing
 char *p4_typed_cache_read(const char *name, const uint8_t key[32], size_t *length, int64_t key_us);   // NULL: a miss
+bool p4_typed_cache_has(const uint8_t key[32]);   // a valid header under this key (the module is not read)
+bool p4_typed_app_cached(const p4_typed_app *app, int variant);   // its bundled source's module is in the cache
+bool p4_typed_compiles_quiet(int64_t quiet_us);   // no compile runs, and none ended in the last quiet_us
 void p4_typed_cache_store(const char *name, const char *label, const uint8_t key[32], const char *module,
                           size_t length, int64_t compile_us);   // queued for the writer task; the module is copied
 bool p4_typed_cache_hold(int timeout_ms);   // no further writes (a reboot or a flash follows); true when none is running
