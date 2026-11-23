@@ -1,7 +1,8 @@
+// PICOCALC-TYPED-FRONTEND's scripts/02-qjs-measure.c, unchanged but for its name.
 // Compile time and peak heap of one Typed compile in a bare QuickJS realm on the host (the interpreter the P4 runs).
 // PICOCALC-TYPED-TAPE's scripts/02-qjs-compile-time.c plus an allocator that records the peak.
 //
-//   cc -O2 -DCONFIG_VERSION='"host"' -I firmware/third_party/quickjs -o qjs-measure 02-qjs-measure.c \
+//   cc -O2 -DCONFIG_VERSION='"host"' -I firmware/third_party/quickjs -o qjs-measure 03-qjs-measure.c \
 //      firmware/third_party/quickjs/{quickjs,libregexp,libunicode,cutils,dtoa}.c -lm -lpthread
 //   qjs-measure ROUNDS SOURCE MODE ARG FILE...
 //
@@ -133,7 +134,7 @@ int main(int argc, char **argv) {
         int32_t bytes = 0;
         JS_ToInt32(ctx, &bytes, v);
         JS_FreeValue(ctx, v);
-        printf("%d load_us=%.0f compile_us=%.0f peak=%zu out=%d\n", round, t1 - t0, t2 - t1, peak - base, bytes);
+        printf("%d load_us=%.0f compile_us=%.0f peak=%zu out=%d base=%zu\n", round, t1 - t0, t2 - t1, peak - base, bytes, base);
         JS_FreeContext(ctx);
         JS_FreeRuntime(rt);
     }

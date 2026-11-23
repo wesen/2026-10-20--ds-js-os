@@ -24,23 +24,30 @@ function compileFunctions(source, functionBase, imported = [], maxSourceLength =
     });
 }
 
-// A lexer over a piece of the lowered program, a rewritten body or the generated functions, that starts at offset
-// `base` of it. Its diagnostics name the position in the source the author wrote (lowered.originalAt), so an error
-// in lowered code needs no second compile.
-function configureGeneratedLexer(lex, lowered, base) {
+function configureGeneratedLexer(lex, lowered) {
     const generatedPrefix = lowered.prefix;
     lex.isGeneratedLocal = name => name.startsWith(generatedPrefix + "local_");
     lex.generatedWordType = name => name.startsWith(generatedPrefix + "word_")
         ? name.slice(generatedPrefix.length + "word_".length) : null;
     lex.generatedStartFields = lowered.startFields;
-    if (base !== undefined) {
-        const original = lowered.plan.original;
-        lex.fail = function (message) {
-            const lines = original.slice(0, lowered.originalAt(base + this.token.at)).split("\n");
-            throw new SyntaxError(lines.length + ":" + (lines.at(-1).length + 1) + ": " + message);
-        };
-    }
     return lex;
+}
+
+const position = (source, at) => {
+    const lines = source.slice(0, at).split("\n");
+    return lines.length + ":" + (lines.at(-1).length + 1);
+};
+
+// A diagnostic of lex, a lexer over a piece of the lowered program (a rewritten body, or the generated functions)
+// that starts at offset `base` of it, at the position in the source the author wrote (lowered.originalAt): an error
+// in lowered code needs no second compile. Lexer.fail names lex.token, which is still the failing token. Mapping here
+// rather than in an overridden fail keeps the lexers' shapes, which the compile's peak heap notices (8 KB on Editor).
+function originalError(error, lex, lowered, base) {
+    if (!(error instanceof SyntaxError)) return error;
+    const here = position(lex.source, lex.token.at) + ": ";
+    if (!error.message.startsWith(here)) return error;
+    const at = lowered.originalAt(base + lex.token.at);
+    return new SyntaxError(position(lowered.plan.original, at) + ": " + error.message.slice(here.length));
 }
 
 function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignatures, inspect) {
@@ -62,10 +69,15 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
         declared.set(fn.name, fn);
     }
     const originalLex = configureGeneratedLexer(new Lexer(original, 0, original.length, true), lowered);
-    const generatedLex = configureGeneratedLexer(new Lexer(generated, 0, generated.length, true), lowered,
-        lowered.generatedAt);
+    const generatedLex = configureGeneratedLexer(new Lexer(generated, 0, generated.length, true), lowered);
     const ordinaryCount = functions.length;
-    for (const fn of scanSignatures(generatedLex, records, declared, functionBase + ordinaryCount, enums, distinct)) {
+    let generatedSignatures;
+    try {
+        generatedSignatures = scanSignatures(generatedLex, records, declared, functionBase + ordinaryCount, enums, distinct);
+    } catch (error) {
+        throw originalError(error, generatedLex, lowered, lowered.generatedAt);
+    }
+    for (const fn of generatedSignatures) {
         fn.bodyAt += lowered.generatedAt;
         functions.push(fn);
     }
@@ -75,14 +87,17 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
     const edges = functions.map(() => []);
     for (const [i, fn] of functions.entries()) {
         const virtualAt = fn.bodyAt;
-        let lex = originalLex;
+        let lex = originalLex, base;
         if (i >= ordinaryCount) {
             lex = generatedLex;
-            fn.bodyAt -= lowered.generatedAt;
+            base = lowered.generatedAt;
+            fn.bodyAt -= base;
         } else {
             const body = bodies[i];
-            if (body.text !== undefined)
-                lex = configureGeneratedLexer(new Lexer(body.text, 0, body.text.length, true), lowered, body.from);
+            if (body.text !== undefined) {
+                lex = configureGeneratedLexer(new Lexer(body.text, 0, body.text.length, true), lowered);
+                base = body.from;
+            }
             fn.bodyAt = body.at;
         }
         try {
@@ -90,6 +105,8 @@ function emitSpanFunctions(lowered, functionBase, imported, onFunction, onSignat
             if (inspect) finishFunction(emitter, fn, inspect,
                 lex === originalLex ? undefined : lex === generatedLex ? "synthetic-source" : "rewritten-body");
             else emitter.function(fn);
+        } catch (error) {
+            throw base === undefined ? error : originalError(error, lex, lowered, base);
         } finally {
             fn.bodyAt = virtualAt;
         }

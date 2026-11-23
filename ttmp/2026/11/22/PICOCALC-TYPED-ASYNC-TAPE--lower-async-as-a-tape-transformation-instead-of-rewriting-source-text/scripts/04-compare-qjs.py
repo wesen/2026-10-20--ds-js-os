@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
+# PICOCALC-TYPED-FRONTEND's scripts/04-compare-qjs.py, unchanged but for the harness's name.
 """Compare compile time and peak heap of two Typed compiler revisions in a bare QuickJS realm, in alternation.
 
     04-compare-qjs.py HARNESS OLD_DIR NEW_DIR SOURCE REACTOR [--blocks 12]
 
-HARNESS is 02-qjs-measure.c built. OLD_DIR and NEW_DIR are compiler/typed directories (tape.js, typed-wasm.js,
+HARNESS is 03-qjs-measure.c built. OLD_DIR and NEW_DIR are compiler/typed directories (tape.js, typed-wasm.js,
 typed-async.js, typed-rv32.js, typed-world.js). SOURCE is a world's Typed source (the Editor's source.list joined
 with newlines), REACTOR the Wasm reactor for compileTypedWorld. Each block runs old then new, or new then old, one
 fresh runtime and one compile each, for the RV32 compile under the P4's boot policy ("interactive", the policy the
 playable firmware uses for the Editor) and for the Wasm world. Block k sets QJS_GC_PHASE=k % 16 for both arms
-(02-qjs-measure.c), so the peaks are taken over the cycle collector's phases. Prints medians and the ratio new/old,
+(03-qjs-measure.c), so the peaks are taken over the cycle collector's phases. Prints medians and the ratio new/old,
 and the peaks' ranges. Host timing:
 it says whether the interpreter does more work, not how long the P4 takes.
 """

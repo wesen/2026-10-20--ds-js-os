@@ -119,11 +119,13 @@ async-first parse inside the front end would only move the pass.
 
 - **No second compile for errors.** `compileFunctions` used to catch a `SyntaxError`, compile the whole lowered text
   again with `emitFunctions` only to get a line and column in it, and map that back through the chunks
-  (`GeneratedText.remap`, and an internal error if the second compile passed). The lexers of the rewritten bodies
-  and of the generated functions now report the original position themselves: `configureGeneratedLexer(lex, lowered,
-  base)` overrides `fail` with `lowered.originalAt(base + token.at)`. The position is the same one the remap
-  computed. The test is the 18 diagnostics in `tests/compiler/typed-async.test.mjs`, each with its exact message,
-  on both targets.
+  (`GeneratedText.remap`, and an internal error if the second compile passed). Now `emitSpanFunctions` maps a
+  diagnostic of a rewritten body's lexer, or of the generated functions' lexer, as it is thrown:
+  `originalError(error, lex, lowered, base)` locates the failing token with `lowered.originalAt(base + lex.token.at)`.
+  The position is the same one the remap computed. The test is the 18 diagnostics in
+  `tests/compiler/typed-async.test.mjs`, each with its exact message, on both targets. A first version overrode
+  `fail` on each of those lexers instead. That added a property to six lexer instances and raised the compile's peak
+  by about 8 KB in QuickJS, so the mapping moved into a `catch` that runs only on an error.
 - **Modules.** `compiler/typed/async/{scan,body,liveness,allocate,text,lower,tasks,rewrite}.js` are bundled into
   `typed-async.js` by `compiler/typed/async/build.mjs`, as `frontend/build.mjs` bundles `typed-wasm.js`. Every loader
   (firmware `typed/async.js`, bench, trace REPL, tests) still reads one file. `make test-generated` checks the bundle.
