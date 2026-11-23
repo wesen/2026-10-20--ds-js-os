@@ -307,3 +307,27 @@ The playable image `0a0d5d8f…` (built at `f4fc56c`, the PIPELINE merge) is ins
 
 - **`bench/board/gallery.py` waits at most `--wait` seconds (default 60)** for a scene, records `drawing` (null when not drawing), and runs the digests anyway; `gallery digest` does not need the gallery in front. Rerun into `various/09-gallery-f4fc56c`: 18/18 agree.
 - **Committed** `PLAYABLE.json`, the evidence and the script change.
+
+## Step 10: BITWISE and REGISTERS merged, F32 started, vault report 1
+
+Milestone 1 is complete: TAPE, FRONTEND, PIPELINE, REGISTERS, BITWISE and ASYNC-TAPE are on `main`. The first vault report is published, and F32 is running.
+
+### Prompt Context
+
+**User message (verbatim, mid-step):** "how muchis left / ahead of us?" Answered with the ticket status.
+
+### What I did
+
+- **Merged BITWISE.** Clean merge; bundles current; `make test` exit 0; gates pass with both policies.
+- **Installed the BITWISE firmware.** `a5420d94…`, built at `06fac5f`. Every boot app compiled through the updated C lexical index. Health passes with peripherals on; gallery 18/18.
+- **Merged REGISTERS** (`5784a35`). Clean merge; the agent had already merged `main` in. Bundles current; `make test` exit 0; gates pass with both policies (digests and counts as before; 24/24).
+- **Started F32** from `156e595`, with the REGISTERS agent's "left for F32" list in the brief.
+- **Vault report 1:** "PROJECT REPORT - PicoCalc Compiler - One Tape, a Target-Neutral Front End, Declared Passes and Register Classes - Refactoring the Typed Compiler for Floats - A Technical Deep Dive", go-go-parc `6058943`. The tape example in Section 2 came from compiling `clampAdd` with `observeTape` (18 RV32 words under `interactive`).
+
+### What didn't work
+
+- **The first vault push** was rejected because the remote had moved (another project's report). `git pull --rebase` then `git push` succeeded.
+
+### What warrants a second pair of eyes
+
+- **Compiler load memory.** REGISTERS grew it by about 45 KB on the host (about 26 KB on the P4). The root cause is that the firmware does not set `JS_STRIP_SOURCE`, so QuickJS keeps the bundles' source text resident. This is a small firmware change with a large memory effect. It is worth its own measured change: boot compile peak before and after, and confirming that error messages still carry what the firmware needs.
