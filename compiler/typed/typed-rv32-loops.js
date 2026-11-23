@@ -3,13 +3,11 @@
 // This code executes in the host tools and can execute in a bare QuickJS realm.
 (() => {
 "use strict";
-const modules = globalThis.typedRv32Modules;
-if (!modules) throw new Error("load typed-rv32.js before typed-rv32-loops.js");
+if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-loops.js");
+const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_REM_S, I32_SHL, I32_SHR_S, I32_STORE, I32_STORE16, I32_SUB, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape} = globalThis.typedRv32Modules;
 
 // rv32/passes/conjunctions.js
-modules["passes/conjunctions.js"] = (() => {
 // The conjunctions pass.
-const {opNext, CELLS, IF, I32, opClose, BLOCK, END, ELSE, I32_CONST, BR_IF, VOID, BR} = modules["encoding/tape.js"];
 
 // the conjunctions pass: the frontend lowers `a && b` to a value if, `a; if (result i32) b else
 // const 0 end`, whose 0/1 result a following `if` or `br_if` tests again. Fused, the value is
@@ -61,13 +59,9 @@ function fuseConjunctions(code) {
     }
     return changed ? code : null;
 }
-return {fuseConjunctions};
-})();
 
 // rv32/passes/value-sets.js
-modules["passes/value-sets.js"] = (() => {
 // The sets pass.
-const {I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S, opNext, BLOCK, IF, END, I32, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, I32_EQZ, LOOP, ELSE, BR, BR_IF, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, VOID, opClose, CELLS} = modules["encoding/tape.js"];
 
 // the sets pass: precompute a pure value block over a local that holds one of a few constants.
 // A value block (`block (result i32)`) whose body is straight-line arithmetic over constants and
@@ -435,13 +429,9 @@ function foldValueSets(code, arity, sink = true) {
     for (let p = at; p < code.length; p++) out.push(code[p]);
     return out;
 }
-return {foldValueSets};
-})();
 
 // rv32/passes/hoist.js
-modules["passes/hoist.js"] = (() => {
 // The hoist option of the version pass: loop invariants and subexpressions into the guard block.
-const {opNext, LOCAL_SET, LOCAL_GET, LITERAL_STORES, CHECKED_ADDRESS, UNCHECKED_ADDRESS, BLOCK, IF, I32, ELSE, END, I32_CONST, DROP, BR_IF, BR, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_EQZ, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_DIV_S, I32_REM_S} = modules["encoding/tape.js"];
 
 // the hoist pass: a statement of a versioned loop's fast copy that computes the same value in
 // every iteration moves into the guard block, after the guard's terms and before the loop.
@@ -703,14 +693,9 @@ function hoistSubexpressions(body, k, arity, fresh) {
     }
     return {pre, body: out};
 }
-return {hoistInvariants, hoistSubexpressions};
-})();
 
 // rv32/passes/version-loops.js
-modules["passes/version-loops.js"] = (() => {
 // The version pass, with induction variables.
-const {opNext, CELLS, LOCAL_GET, LITERAL_STORES, CHECKED_ADDRESS, UNCHECKED_ADDRESS, I32_CONST, LOCAL_SET, BLOCK, VOID, I32_LT_S, I32_EQZ, BR_IF, LOOP, opClose, I32_ADD, IF, END, ELSE, I32_MUL, I32_LOAD, I32_GT_S, I32_GE_S, I32_SUB, BR} = modules["encoding/tape.js"];
-const {hoistInvariants, hoistSubexpressions} = modules["passes/hoist.js"];
 
 // the version pass: a rotated counted loop (rotateLoops)
 //   block  get k (const n | get N) lt_s eqz br_if 0  loop  B  get k (n | N) lt_s br_if 0  end  end
@@ -952,13 +937,9 @@ function versionLoops(code, params, hoist, induction) {
         return {cells, end: blockEnd + 1};
     }
 }
-return {versionLoops};
-})();
 
 // rv32/passes/split-locals.js
-modules["passes/split-locals.js"] = (() => {
 // The split pass.
-const {opNext, CELLS, ELSE, END, LOCAL_GET, LITERAL_STORES, LOCAL_SET, CHECKED_ADDRESS, UNCHECKED_ADDRESS, BLOCK, IF} = modules["encoding/tape.js"];
 
 // operandLocations.split: give every web of a local its own local id. A web starts at a write;
 // every later occurrence inside the region that holds that write (a block, loop, if-arm or
@@ -1009,13 +990,9 @@ function splitLocals(code, params, nlocals) {
     // origin[i] is the local that fresh local params + nlocals + i was split from.
     return fresh === params + nlocals ? null : {code: out, nlocals: fresh - params, origin};
 }
-return {splitLocals};
-})();
 
 // rv32/analysis/ranges.js
-modules["analysis/ranges.js"] = (() => {
 // Local value ranges and division facts (the ranges and facts passes).
-const {opNext, ELSE, END, BLOCK, IF, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, BR_IF, BR, RETURN, UNREACHABLE, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, CALL, LOOP, I32, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, CELLS, VOID, I32_LT_S, opClose} = modules["encoding/tape.js"];
 
 // the facts pass: division and remainder by a positive constant whose dividend is never
 // negative, so the emitter can drop the rounding bias and the sign correction. Two steps:
@@ -1182,19 +1159,10 @@ function divisionFacts(code, params, arity, ranges, origin) {
     const rangeOf = local => local < params ? RANGE_TOP : ranges.get(origin(local)) ?? RANGE_TOP;
     return rangePass(code, arity, rangeOf, () => {}, (at, x) => { if (x && x[0] >= 0) facts.add(at); }) ? facts : null;
 }
-return {localRanges, divisionFacts};
-})();
 
 // rv32/passes/loops-group.js
-modules["passes/loops-group.js"] = (() => {
 // The "loops" group (typed-rv32-loops.js): version with hoist and induction, split, and the passes only
 // "kernel" runs (conjunctions, sets, ranges, facts). Loading this module installs them in the registry.
-const {fuseConjunctions} = modules["passes/conjunctions.js"];
-const {foldValueSets} = modules["passes/value-sets.js"];
-const {versionLoops} = modules["passes/version-loops.js"];
-const {splitLocals} = modules["passes/split-locals.js"];
-const {divisionFacts, localRanges} = modules["analysis/ranges.js"];
-const {installPasses, replaceTape} = modules["passes/registry.js"];
 
 installPasses("loops", {
     conjunctions: {run: fn => replaceTape(fn, fuseConjunctions(fn.code))},
@@ -1223,6 +1191,4 @@ installPasses("loops", {
 });
 // A marker for loaders that list what a realm holds (the trace-REPL workbench's module table).
 globalThis.typedRv32Loops = {group: "loops"};
-return {};
-})();
 })();

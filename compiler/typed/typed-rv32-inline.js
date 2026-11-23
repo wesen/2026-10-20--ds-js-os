@@ -3,13 +3,11 @@
 // This code executes in the host tools and can execute in a bare QuickJS realm.
 (() => {
 "use strict";
-const modules = globalThis.typedRv32Modules;
-if (!modules) throw new Error("load typed-rv32.js before typed-rv32-inline.js");
+if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-inline.js");
+const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_CONST, I32_EQ, I32_EQZ, I32_GE_U, I32_LOAD, I32_LOAD16_U, I32_MUL, I32_NE, I32_SHR_S, I32_STORE, I32_STORE16, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNREACHABLE, VOID, installPasses, replaceTape} = globalThis.typedRv32Modules;
 
 // rv32/passes/inline.js
-modules["passes/inline.js"] = (() => {
 // The inline pass and the inliner's library candidates.
-const {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP, BR_IF, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_STORE, I32_STORE16, CHECKED_ADDRESS, I32, ELSE, RETURN, BR, LITERAL_STORES} = modules["encoding/tape.js"];
 
 // inline: replace calls to small internal functions lowered earlier with their tapes.
 // A call `args…; call f` becomes `local.set p_{n-1} … local.set p_0; block (result i32)
@@ -172,13 +170,9 @@ function inlineCandidate(fn, code, limits, guarded) {
     }
     return {params: fn.params.length, written, addressed};
 }
-return {INLINE_DEFAULTS, loopDepth, inlineCalls, inlineCandidate};
-})();
 
 // rv32/passes/commute.js
-modules["passes/commute.js"] = (() => {
 // The commute pass.
-const {I32_ADD, I32_MUL, I32_EQ, I32_NE, CELLS, I32_GE_U, I32_SHR_S, I32_CONST, LOCAL_GET, CHECKED_ADDRESS, I32_EQZ, I32_LOAD, I32_LOAD16_U, LOCAL_SET, DROP, BR_IF, I32_STORE, I32_STORE16, CALL, BLOCK, IF, I32, ELSE, END} = modules["encoding/tape.js"];
 
 // the commute pass: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
 // eq, ne), so the literal reaches selectConstant as a right operand. Moving a literal past
@@ -229,13 +223,9 @@ function commuteConstants(code, arity) {
     }
     return changed ? out : null;
 }
-return {commuteConstants};
-})();
 
 // rv32/passes/rotate.js
-modules["passes/rotate.js"] = (() => {
 // The rotate pass.
-const {CELLS, BLOCK, IF, END, VOID, LOOP, BR, I32_EQZ, BR_IF, RETURN, UNREACHABLE} = modules["encoding/tape.js"];
 
 // the rotate pass: the frontend emits every loop as
 //     block; loop; C; eqz; br_if 1; B; br 0; end; end
@@ -295,17 +285,10 @@ function rotateLoops(code) {
     emit(0, code.length, out);
     return changed ? out : null;
 }
-return {rotateLoops};
-})();
 
 // rv32/passes/inline-group.js
-modules["passes/inline-group.js"] = (() => {
 // The "inline" group (typed-rv32-inline.js): inline, commute and rotate, the passes "balanced" adds to the
 // core. Loading this module installs them in the registry.
-const {INLINE_DEFAULTS, inlineCalls, inlineCandidate, loopDepth} = modules["passes/inline.js"];
-const {commuteConstants} = modules["passes/commute.js"];
-const {rotateLoops} = modules["passes/rotate.js"];
-const {installPasses, replaceTape} = modules["passes/registry.js"];
 
 installPasses("inline", {
     inline: {
@@ -343,6 +326,4 @@ installPasses("inline", {
 });
 // A marker for loaders that list what a realm holds (the trace-REPL workbench's module table).
 globalThis.typedRv32Inline = {group: "inline"};
-return {};
-})();
 })();

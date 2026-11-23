@@ -3,10 +3,8 @@
 // This code executes in the host tools and can execute in a bare QuickJS realm.
 (() => {
 "use strict";
-const modules = globalThis.typedRv32Modules = Object.create(null);
 
 // rv32/encoding/registers.js
-modules["encoding/registers.js"] = (() => {
 // RV32 registers and the instruction encoders.
 const ZERO = 0, RA = 1, SP = 2, A0 = 10, T5 = 30, T6 = 31;
 const STACK_REGISTERS = [5, 6, 7, 28, 29]; // t0–t4
@@ -19,25 +17,17 @@ const instruction = {
     j: (rd, imm) => ((imm & 0x100000) << 11) | ((imm & 0x7fe) << 20) | ((imm & 0x800) << 9) |
         (imm & 0xff000) | (rd << 7) | 0x6f,
 };
-return {ZERO, RA, SP, A0, T5, T6, STACK_REGISTERS, instruction};
-})();
 
 // rv32/encoding/tape.js
-modules["encoding/tape.js"] = (() => {
 // The tape's opcodes, block types, effects and walkers (compiler/typed/tape.js, loaded first).
 const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, RETURN, CALL, DROP, LOCAL_GET, LOCAL_SET,
     I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
     I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S,
     CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, STORES,
     cells: CELLS, effects: EFFECTS, next: opNext, close: opClose} = typedTape;
-return {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, RETURN, CALL, DROP, LOCAL_GET, LOCAL_SET, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, STORES, CELLS, EFFECTS, opNext, opClose};
-})();
 
 // rv32/emit/addresses.js
-modules["emit/addresses.js"] = (() => {
 // FunctionCode's checked and unchecked buffer addresses.
-const {T6, A0, instruction} = modules["encoding/registers.js"];
-const {I32_LOAD16_U} = modules["encoding/tape.js"];
 
 class AddressMethods {
     // The address of receiver[index + j]: checked against the capacity, or unchecked (UNCHECKED_ADDRESS, in a
@@ -89,11 +79,8 @@ class AddressMethods {
     }
 
 }
-return {AddressMethods};
-})();
 
 // rv32/encoding/division.js
-modules["encoding/division.js"] = (() => {
 // Division by a constant without a divide.
 // Signed division by a constant d in [3, 2^31) that is not a power of two: q = mulh(n, M)
 // (+ n when M is negative), shifted right arithmetically by s, plus one when n < 0.
@@ -112,13 +99,9 @@ function divisionMagic(d) {
     } while (q1 < delta || (q1 === delta && r1 === 0));
     return {magic: (q2 + 1) | 0, shift: p - 32};
 }
-return {divisionMagic};
-})();
 
 // rv32/encoding/selection.js
-modules["encoding/selection.js"] = (() => {
 // Instruction-selection tables: ALU operations, fused predicates, immediate forms, constantForm.
-const {I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, IF, BR_IF} = modules["encoding/tape.js"];
 
 const ALU = new Map([
     [I32_ADD,[0,0]], [I32_SUB,[0,0x20]], [I32_MUL,[0,1]], [I32_DIV_S,[4,1]], [I32_REM_S,[6,1]],
@@ -173,16 +156,9 @@ function constantForm(tape, at, s) {
     if (c === 0) return "zero";
     return IMMEDIATE_FORMS.get(next)?.(c) ? "immediate" : "register";
 }
-return {ALU, PREDICATES, fitsImmediate, powerOfTwo, IMMEDIATE_FORMS, constantForm};
-})();
 
 // rv32/emit/arithmetic.js
-modules["emit/arithmetic.js"] = (() => {
 // FunctionCode's binary operations, constant selection and division by constants.
-const {divisionMagic} = modules["encoding/division.js"];
-const {T6, T5, instruction, ZERO, A0} = modules["encoding/registers.js"];
-const {ALU, constantForm, IMMEDIATE_FORMS, powerOfTwo, fitsImmediate} = modules["encoding/selection.js"];
-const {I32_DIV_S, I32_REM_S, I32_EQ, I32_NE, I32_GE_U, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S} = modules["encoding/tape.js"];
 
 class ArithmeticMethods {
     binary(op) {
@@ -305,15 +281,9 @@ class ArithmeticMethods {
     }
 
 }
-return {ArithmeticMethods};
-})();
 
 // rv32/emit/branches.js
-modules["emit/branches.js"] = (() => {
 // FunctionCode's branches, labels and structured control.
-const {instruction, ZERO, T6, T5, A0} = modules["encoding/registers.js"];
-const {PREDICATES} = modules["encoding/selection.js"];
-const {I32_EQZ, IF, BR_IF, LOOP, VOID, I32} = modules["encoding/tape.js"];
 
 const SHORT_BRANCH_RANGE = Symbol("a forward branch target is beyond the conditional-branch range");
 
@@ -411,13 +381,9 @@ class BranchMethods {
     }
 
 }
-return {SHORT_BRANCH_RANGE, BranchMethods};
-})();
 
 // rv32/plan/saved-homes.js
-modules["plan/saved-homes.js"] = (() => {
 // Callee-saved homes.
-const {A0} = modules["encoding/registers.js"];
 
 // Callee-saved registers a function may claim as homes. Each claimed register costs a
 // save in the prologue and a restore in the epilogue, but survives calls. s0 stays free.
@@ -476,14 +442,9 @@ function planSavedHomes(fn, scores, homes, leaf, capacityCached, intervals, reus
         opened.push({reg, spans: [own], localsOnly});
     }
 }
-return {isSavedRegister, planSavedHomes};
-})();
 
 // rv32/emit/calls.js
-modules["emit/calls.js"] = (() => {
 // FunctionCode's calls and the callee-saved registers its prologue saves.
-const {A0, STACK_REGISTERS, RA} = modules["encoding/registers.js"];
-const {isSavedRegister} = modules["plan/saved-homes.js"];
 
 class CallMethods {
     call(index) {
@@ -510,14 +471,9 @@ class CallMethods {
     }
 
 }
-return {CallMethods};
-})();
 
 // rv32/emit/homes.js
-modules["emit/homes.js"] = (() => {
 // FunctionCode's register homes: local reads and writes, direct reads, pointer homes.
-const {STACK_REGISTERS, instruction, T6} = modules["encoding/registers.js"];
-const {I32_CONST} = modules["encoding/tape.js"];
 
 class HomeMethods {
     readLocal(reg, local) {
@@ -612,14 +568,9 @@ class HomeMethods {
     }
 
 }
-return {HomeMethods};
-})();
 
 // rv32/emit/inspection.js
-modules["emit/inspection.js"] = (() => {
 // The native inspection view: per-operation word ranges for typed-inspect and the workbench.
-const {STACK_REGISTERS} = modules["encoding/registers.js"];
-const {CALL} = modules["encoding/tape.js"];
 
 // Wrap only the selected instance. The ordinary emitter and the leaf emitter
 // keep their real instruction loop, including lookahead and zero-word ops.
@@ -680,11 +631,8 @@ function nativeEmission(fn, start, inspect) {
         start, end: start + length, localCount: fn.locals, frame: fn.frameless ? "leaf" : "framed",
         leafDecision: fn.program.nativeInspection.leafDecision, loops: fn.program.loopDecisions, ranges});
 }
-return {observeSteps, nativeEmission};
-})();
 
 // rv32/emit/mixin.js
-modules["emit/mixin.js"] = (() => {
 // FunctionCode is one class written in several files: each file holds a group of its methods as a class of its
 // own, and mixin() copies their methods onto FunctionCode's prototype, as class methods (not enumerable). The
 // prototype chain stays one level deep, so a method call costs what it did when the methods shared one class
@@ -698,14 +646,9 @@ function mixin(target, ...groups) {
         }
     }
 }
-return {mixin};
-})();
 
 // rv32/emit/stack.js
-modules["emit/stack.js"] = (() => {
 // FunctionCode's operand stack: loads, stores, constants, result destinations, spills.
-const {SP, instruction, ZERO, STACK_REGISTERS, T5} = modules["encoding/registers.js"];
-const {LOCAL_SET} = modules["encoding/tape.js"];
 
 class StackMethods {
     load(reg, offset, base = SP, kind = 2) {
@@ -784,22 +727,9 @@ class StackMethods {
     resultRegister() { return STACK_REGISTERS[this.depth] ?? T5; }
 
 }
-return {StackMethods};
-})();
 
 // rv32/emit/function-code.js
-modules["emit/function-code.js"] = (() => {
 // FunctionCode, the streaming emitter: one pass over a function's tape that writes RV32 words.
-const {AddressMethods} = modules["emit/addresses.js"];
-const {ArithmeticMethods} = modules["emit/arithmetic.js"];
-const {BranchMethods} = modules["emit/branches.js"];
-const {CallMethods} = modules["emit/calls.js"];
-const {HomeMethods} = modules["emit/homes.js"];
-const {observeSteps} = modules["emit/inspection.js"];
-const {mixin} = modules["emit/mixin.js"];
-const {StackMethods} = modules["emit/stack.js"];
-const {instruction, T5, A0, ZERO, T6, SP, RA} = modules["encoding/registers.js"];
-const {BLOCK, RETURN, I32_CONST, UNCHECKED_ADDRESS, I32_LOAD16_U, LOCAL_GET, I32_LOAD, I32_EQZ, I32_GE_U, UNREACHABLE, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_SET, I32_STORE, I32_STORE16, CHECKED_ADDRESS, LITERAL_STORES} = modules["encoding/tape.js"];
 
 class FunctionCode {
     constructor(program, functions, starts) {
@@ -1017,15 +947,9 @@ class FunctionCode {
     }
 }
 mixin(FunctionCode, StackMethods, HomeMethods, AddressMethods, BranchMethods, ArithmeticMethods, CallMethods);
-return {FunctionCode};
-})();
 
 // rv32/emit/guarded-return.js
-modules["emit/guarded-return.js"] = (() => {
 // Guarded scalar returns: a tiny unary helper's body, applied at the call site.
-const {FunctionCode} = modules["emit/function-code.js"];
-const {T5, ZERO, T6, instruction} = modules["encoding/registers.js"];
-const {I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, LOCAL_GET, I32_CONST, IF, VOID, I32_SUB, RETURN, END} = modules["encoding/tape.js"];
 
 // Describe a tiny unary integer helper only after its verified operation tape is available.
 // Accepted body: if (x <relation> K) return -x or C; return x.
@@ -1071,16 +995,9 @@ class GuardedReturnCode extends FunctionCode {
         if (this.inspection) this.inlinedGuard = true;
     }
 }
-return {guardedReturnSummary, GuardedReturnCode};
-})();
 
 // rv32/emit/leaf-code.js
-modules["emit/leaf-code.js"] = (() => {
 // LeafCode: frameless leaves.
-const {FunctionCode} = modules["emit/function-code.js"];
-const {A0, instruction, ZERO, RA} = modules["encoding/registers.js"];
-const {ALU} = modules["encoding/selection.js"];
-const {BLOCK, IF, ELSE, END, BR, BR_IF, RETURN, DROP, LOCAL_GET, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, CELLS} = modules["encoding/tape.js"];
 
 // An allowlist keeps any new operation with a possible frame dependency on the
 // ordinary path until its frameless lowering is reviewed.
@@ -1140,16 +1057,9 @@ function lowerLeaf(fn, callables, targets, select, facts) {
         return declineLeaf(fn, "leaf requires frame storage");
     }
 }
-return {lowerLeaf};
-})();
 
 // rv32/plan/locations.js
-modules["plan/locations.js"] = (() => {
 // planLocations: operand homes, pointer groups and pointer-only skips.
-const {A0} = modules["encoding/registers.js"];
-const {constantForm} = modules["encoding/selection.js"];
-const {CHECKED_ADDRESS, UNCHECKED_ADDRESS, CELLS, LOCAL_GET, LITERAL_STORES, LOCAL_SET, I32_ADD, I32_CONST, CALL, EFFECTS, STORES, BLOCK, IF, LOOP, END, RETURN, opNext} = modules["encoding/tape.js"];
-const {planSavedHomes} = modules["plan/saved-homes.js"];
 
 // Assign permanent homes only in framed scalar functions with a checked access.
 function planLocations(fn, options, inlineCall) {
@@ -1411,13 +1321,9 @@ function planLocations(fn, options, inlineCall) {
     // scores and intervals are what planSavedHomes chose from; only observePlan reads them.
     return {receiver,forward,homes,direct,pointers,pointerWrites,increments,skips,scores,intervals};
 }
-return {planLocations};
-})();
 
 // rv32/analysis/storeless.js
-modules["analysis/storeless.js"] = (() => {
 // Which functions store nothing (the hoist option of the version pass asks it about callees).
-const {CALL, CELLS, EFFECTS, STORES, opNext} = modules["encoding/tape.js"];
 
 // A function stores nothing when its tape has no operation with the STORES effect and calls only such
 // functions. Imports and functions not yet declared are assumed to store. callables grows as the front end
@@ -1439,11 +1345,8 @@ function storelessAnalysis(callables, importCount) {
         return result;
     };
 }
-return {storelessAnalysis};
-})();
 
 // rv32/passes/registry.js
-modules["passes/registry.js"] = (() => {
 // The tape passes, in the one order the pipeline runs them. A policy names a subset (policy.js); compile.js
 // runs it. The table is part of the core bundle (typed-rv32.js); each pass's code is in its group's bundle,
 // which installs it here when it loads.
@@ -1512,11 +1415,8 @@ function loadPasses(names) {
             throw new Error("the RV32 pass " + name + " needs " + GROUPS[group] + "; load it after typed-rv32.js");
     }
 }
-return {PASSES, GROUPS, replaceTape, passByName, installPasses, loadPasses};
-})();
 
 // rv32/policy.js
-modules["policy.js"] = (() => {
 // Named code-generation policies. A policy is a list of tape passes (passes/registry.js, in pipeline order) and
 // the parameters of the stages that are not tape passes: guarded-return inlining, the operand-location
 // planner (operandLocations) and the emitter's instruction selection (select).
@@ -1526,7 +1426,6 @@ modules["policy.js"] = (() => {
 // 2026-11-21 before those became defaults, kept as the control arm for experiments.
 // PIE loop lowering stays opt-in (pieLoops): it needs typed-pie-loops.js and saved under 1% of a ray frame
 // for about 70 ms of cold compile on the P4.
-const {PASSES, passByName} = modules["passes/registry.js"];
 
 const DEFAULT_SELECT = Object.freeze({immediates: true, divisions: true, branches: true, results: true, leafParams: true,
     shortBranches: true});
@@ -1606,23 +1505,10 @@ function resolveOptions(options) {
     resolved.passes = passes;
     return resolved;
 }
-return {POLICIES, resolveOptions};
-})();
 
 // rv32/compile.js
-modules["compile.js"] = (() => {
 // compile: the front end's functions, one at a time, through the policy's pipeline to RV32 words, then the
 // image's layout and relocations.
-const {instruction} = modules["encoding/registers.js"];
-const {FunctionCode} = modules["emit/function-code.js"];
-const {GuardedReturnCode, guardedReturnSummary} = modules["emit/guarded-return.js"];
-const {lowerLeaf} = modules["emit/leaf-code.js"];
-const {SHORT_BRANCH_RANGE} = modules["emit/branches.js"];
-const {nativeEmission} = modules["emit/inspection.js"];
-const {planLocations} = modules["plan/locations.js"];
-const {storelessAnalysis} = modules["analysis/storeless.js"];
-const {PASSES, loadPasses} = modules["passes/registry.js"];
-const {resolveOptions} = modules["policy.js"];
 
 // Per function, the stages before the emitter run in this order: the policy's passes in registry order, with
 // three stages that are not tape passes after inline: the guarded-return summary (inlineGuardedReturns), the
@@ -1787,13 +1673,9 @@ function compile(source, imports = [], maxSourceLength, requested) {
         signatures: functions.map(({name, params, result}) => ({name, params, result})),
         ...(asyncLayout && {asyncLayout}), ...(asyncSource && {asyncSource})};
 }
-return {compile};
-})();
 
 // rv32/link.js
-modules["link.js"] = (() => {
 // linkSlot: place a compiled program in a native world's reactor.
-const {instruction, ZERO, RA} = modules["encoding/registers.js"];
 
 // The bundled, already linked SDK reactor reserves this area in executable
 // text. The native world loader still validates and relocates the completed ELF.
@@ -1859,20 +1741,14 @@ function linkSlot(program, runtime, entries) {
     }
     return bytes;
 }
-return {linkSlot};
-})();
 
 // rv32/index.js
-modules["index.js"] = (() => {
 // The core bundle's entry (typed-rv32.js): publishes globalThis.typedRv32. The pass groups are separate
 // bundles (passes/registry.js, GROUPS) that install their passes when they load.
-const {compile} = modules["compile.js"];
-const {linkSlot} = modules["link.js"];
-const {POLICIES} = modules["policy.js"];
-const {GROUPS, PASSES} = modules["passes/registry.js"];
 
 globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES,
     passes: PASSES.map(({name, group, kind, needs}) => ({name, group, kind, needs: needs ?? [], file: GROUPS[group]}))};
-return {};
-})();
+
+// The names the pass-group bundles import from this one.
+globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_REM_S, I32_SHL, I32_SHR_S, I32_STORE, I32_STORE16, I32_SUB, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape};
 })();
