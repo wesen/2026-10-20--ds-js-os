@@ -1,5 +1,5 @@
 // The hoist option of the version pass: loop invariants and subexpressions into the guard block.
-import {opNext, LOCAL_SET, LOCAL_GET, LITERAL_STORES, CHECKED_ADDRESS, UNCHECKED_ADDRESS, BLOCK, IF, I32, VOID, ELSE, END, I32_CONST, DROP, BR_IF, BR, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_EQZ, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_DIV_S, I32_REM_S, I32_DIV_U, I32_REM_U} from "../encoding/tape.js";
+import {opNext, LOCAL_SET, LOCAL_GET, LITERAL_STORES, CHECKED_ADDRESS, UNCHECKED_ADDRESS, BLOCK, IF, I32, VOID, ELSE, END, I32_CONST, DROP, BR_IF, BR, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_EQZ, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_DIV_S, I32_REM_S, I32_DIV_U, I32_REM_U, ARRAY_ADDRESS, ARRAY_ZERO} from "../encoding/tape.js";
 
 // A division or remainder: it traps on a zero divisor (and div_s on -2^31 / -1), so it moves only with a literal divisor.
 const dividing = op => op === I32_DIV_S || op === I32_REM_S || op === I32_DIV_U || op === I32_REM_U;
@@ -75,6 +75,9 @@ export function hoistInvariants(body, unchecked, k, readOutside, storeless, arit
         }
         case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: tags.push(a); break;
         case LITERAL_STORES: stored.add(a); break;
+        // A local array's address: no buffer's (a store through it clears loadsOk, as an unknown address does).
+        case ARRAY_ADDRESS: tags.push(null); break;
+        case ARRAY_ZERO: loadsOk = false; break;
         case I32_EQZ: break;
         default:
             if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
@@ -222,8 +225,8 @@ export function hoistSubexpressions(body, k, arity, fresh) {
         }
         case I32_LOAD16_U: combine(i, 1, false); break;
         case I32_STORE: case I32_STORE16: consume(2); break;
-        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: slots.push(opaque); break;
-        case LITERAL_STORES: break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: case ARRAY_ADDRESS: slots.push(opaque); break;
+        case LITERAL_STORES: case ARRAY_ZERO: break;
         case I32_EQZ: combine(i, 1, true); break;
         default: {
             if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;

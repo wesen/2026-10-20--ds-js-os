@@ -170,6 +170,7 @@ test-apps:
 	$(NODE) ../tests/compiler/typed-f32.test.mjs
 	$(NODE) ../tests/compiler/typed-values.test.mjs
 	$(NODE) ../tests/compiler/typed-values-calls.test.mjs
+	$(NODE) ../tests/compiler/typed-values-arrays.test.mjs
 	$(NODE) ../tests/compiler/typed-rv32-large-frame.test.mjs
 
 # The wall clock through the host binary: clock.wall/set/zone, Date, -w and -z.

@@ -52,6 +52,7 @@ into one IIFE (one scope, so they are not ES modules), and `--check`, run by `ma
 | `frontend/expressions.js` | the tape's constants for the bundle; `ExpressionParser`: the tape writer (`emitConst`, `emitFloat`, `emitIndex`, `emitMemory`, `codeUnitAddress`, `emitLiteralStores`) and the expressions |
 | `frontend/floats.js` | the f32 operators and `Math` functions, `Math.min`/`max`, `getF32`/`setF32` addresses, the tape surgery of a negated or converted literal (methods of `ExpressionParser`) |
 | `frontend/values.js` | the value types (PICOCALC-TYPED-VALUES): the conditional expression, `u32(x)`, value records (methods of `ExpressionParser`) |
+| `frontend/arrays.js` | local arrays: `new Int32Array(n)`, `a[i]`, `a.length` (methods of `ExpressionParser`) |
 | `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`async/body.js` subclasses it) |
 | `frontend/inspect.js` | the front end's `frontend` inspection event (`target: "tape"`) |
 | `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async lowering (`emitSpanFunctions`; `originalError` maps lowered-code diagnostics to original positions) |
@@ -107,7 +108,7 @@ pops and pushes (WebAssembly's encodings: `I32 = 0x7f`), and a bit set of effect
 | `TRAPS` | may trap | `i32.div_s`, `i32.div_u`, `i32.rem_s`, `i32.rem_u`, `text.checked_address`, `unreachable` |
 | `CONTROL` | opens, separates or closes a block, or leaves the function | `block`, `loop`, `if`, `else`, `end`, `br`, `return`, `unreachable` |
 
-The table has 73 rows: `unreachable`, `block`, `loop`, `if`, `else`, `end`, `br`, `br_if`, `return`, `call`, `drop`,
+The table has 75 rows: `unreachable`, `block`, `loop`, `if`, `else`, `end`, `br`, `br_if`, `return`, `call`, `drop`,
 `local.get`, `local.set`, `i32.load`, `i32.load16_u`, `i32.store`, `i32.store16`, `i32.const`, eleven comparisons
 (`eqz`, `eq`, `ne`, `lt_s`, `lt_u`, `gt_s`, `gt_u`, `le_s`, `le_u`, `ge_s`, `ge_u`), thirteen arithmetic and bitwise
 operations (`add`, `sub`, `mul`, `div_s`, `div_u`, `rem_s`, `rem_u`, `and`, `or`, `xor`, `shl`, `shr_s`, `shr_u`), the
@@ -123,6 +124,8 @@ f32 rows (`f32.load`, `f32.store`, `f32.const`, six comparisons, `abs`, `neg`, `
 | `0xf4` | `f32.to_i32` | 0 | f32 to i32 toward zero, saturating, NaN to 2^31-1 (RV32F's `fcvt.w.s rtz`; Wasm: `i32.trunc_sat_f32_s` and a NaN select) |
 | `0xf5`, `0xf6` | `f32.min_num`, `f32.max_num` | 0 | the other operand when one is NaN (RV32F's `fmin.s`, `fmax.s`; Wasm: `f32.min`/`max` and two NaN selects) |
 | `0xf7` | `f32.to_u32` | 0 | f32 to u32 toward zero, saturating (negative to 0), NaN to 2^32-1 (RV32F's `fcvt.wu.s rtz`; Wasm: `i32.trunc_sat_f32_u` and a NaN select) |
+| `0xf8` | `array.address offset` | 1 | the address of byte `offset` of the function's local-array area (RV32: `addi rd, sp, base + offset`; Wasm: `i32.const` of a static address) |
+| `0xf9` | `array.zero offset bytes` | 2 | zeroes `bytes` bytes of the area from `offset` (RV32: `sw zero` per word up to 16, else a loop; Wasm: `memory.fill`) |
 
 A value is an `i32` or an `f32` (`F32 = 0x7d`): `bool`, enums, `buffer`, `string` and record references are `i32` at the
 tape level. An `f32.const` cell holds the literal's IEEE bits as an i32 (its Wasm encoding is four little-endian bytes,
@@ -206,6 +209,20 @@ beyond its class's eight in the next word of the caller's stack-argument area (`
 single result keeps `a0` or `fa0`. The callee writes stack leaves through the caller's sp (`returnValue`); a frameless
 leaf with stack leaves is declined. The passes with an abstract operand stack push `arity.results(i)` values for a
 call, and `inline` inlines such a callee by storing its leaves into result locals at each `return` and its end.
+
+### Local arrays
+
+`const a = new Float32Array(16)` (also `Int32Array`, `Uint32Array`, with `let` or `const`) declares an array of a
+literal length from 1 to 1024 whose elements are `f32`, `i32` or `u32`. The declaration zeroes it each time it runs, as
+JavaScript's `new` and WGSL's `var` do. `a[i]` reads and `a[i] = e;` writes an element; the index is an `i32` or a
+`u32`, compared unsigned with the length (a negative index traps too: `local.get i; i32.const n; i32.ge_u; if;
+unreachable; end`); a literal index is checked by the compiler and needs no check at run time. `a.length` is a literal.
+An array is not a value: it is not assigned, passed, returned or compared, and it never aliases memory. A function's
+arrays are one area (`fn.arrayBytes`): RV32 places it in the frame between the stack-argument area and the slots (in a
+large frame, above `ra`, `s0` and the saved registers), and the Wasm backend at a static address below the previous
+function's area from the top of the module's memory, which is correct because the call graph is acyclic (no function
+is active twice); `linkWorld` refuses arrays, as the runtime owns a linked world's memory. A function with arrays has a
+frame, and `inline` leaves its calls in place.
 
 RV32 lowers `and`, `or`, `xor`, `sll`, `sra`, `srl` and, when the right operand is a literal (`select.immediates`;
 the `commute` pass moves a literal to the right of `&`, `|` and `^`), `andi`, `ori`, `xori` for literals in

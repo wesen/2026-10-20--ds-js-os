@@ -51,9 +51,36 @@ const values = `function pick(a: i32, b: u32, c: f32): i32 {
     return c > 1.0 ? s : a<3?1:b>7?2:3;
 }
 `;
+const records = `value record Vec3 { x: f32; y: f32; z: f32; }
+value record Ray { o: Vec3; d: Vec3; k: i32; }
+methods Vec3 { dot = dot; }
+function dot(a: Vec3, b: Vec3): f32 { return a.x * b.x + a.y * b.y + a.z * b.z; }
+function at(r: Ray, t: f32): Vec3 { return Vec3(r.o.x + r.d.x * t, r.o.y + r.d.y * t, r.o.z + r.d.z * t); }
+function use(value: i32, t: f32): f32 {
+    let v = Vec3(1.0, 2.0, f32(value));
+    v.y = v.y + 1.0;
+    const r = Ray(v, Vec3(0.0, 0.0, 1.0), value);
+    const p = value > 0 ? at(r, t) : r.d;
+    return p.dot(v) + at(r, 2.0).z;
+}
+`;
+const arrays = `function stacked(n: i32, x: f32): f32 {
+    const stack = new Int32Array(48);
+    const ring = new Float32Array(8);
+    const bits = new Uint32Array(0x10);
+    let sp = 0;
+    stack[sp] = n; sp = sp + 1;
+    while (sp > 0) { sp = sp - 1; const v = stack[sp]; if (v > 1 && sp < 46) { stack[sp] = v / 2; sp = sp + 1; } ring[v & 7] = x; }
+    bits[n & 15] = 4000000000;
+    return ring[0] + ring[stack.length - 41] + f32(bits[n & 15] / 3);
+}
+`;
 const sources = {
     bitwise,
     values,
+    records,
+    arrays,
+    arraysAdjacent: "a[i]=b[j[k]]+c[0x1f];d[ -1 ]a]][[ new Int32Array(3)",
     valuesAdjacent: "a?b:c?d:e ?? ?. a? .5 x?y:z continue;continued u32(x)?1:2",
     // Tokens that touch: >>>= is >>> then =, <<< is << then <, &&& is && then &, 0x1fz is one (invalid) literal.
     adjacent: "a>>>=b<<<c&&&d|||e^~f 0x1fz 0x 0X 07x 1x2 ~~a",

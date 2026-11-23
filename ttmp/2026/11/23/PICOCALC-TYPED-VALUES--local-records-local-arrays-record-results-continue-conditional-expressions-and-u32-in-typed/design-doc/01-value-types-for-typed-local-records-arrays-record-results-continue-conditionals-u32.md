@@ -244,3 +244,33 @@ Decisions taken against the code, in the order the features landed (diary steps 
   leaves into result locals that follow the callee's own; those reads may be substituted into a later inlined call like
   any plain local read, and an earlier copy's reads stop being substitutable once a later copy of the same callee
   overwrites the shared result locals.
+
+### Local arrays
+
+- **Syntax: JavaScript's typed arrays.** `const a = new Float32Array(16)`, `new Int32Array(n)`, `new Uint32Array(n)`;
+  `a[i]`, `a[i] = e;`, `a.length`. A JavaScript reader knows what it means, the JavaScript fallback of a boot app could
+  run the same lines, and the element type is in the name, so the declaration needs no annotation. The design's
+  `F32Array` would be a near-miss of a real name. `new` is now reserved; `[` and `]` are tokens (the lexer's `TOKEN`
+  and the P4's `typed_lex_index.c`). The length is an integer literal from 1 to 1024 (a large frame reaches about
+  4 KB).
+- **Zeroed at the declaration**, every time it runs, as JavaScript's `new` and WGSL's `var` (Candela's
+  `var stack: array<i32, 48>`) do. A C-style uninitialized array would make the WebAssembly oracle and RV32 disagree
+  on a read before a write; the cost is a `sw zero` per word (a three-instruction loop beyond 16 words).
+- **Checked indexing, unsigned.** `a[i]` traps when `i >= n` as an unsigned comparison, so a negative index traps too:
+  the front end writes `local.get i; i32.const n; i32.ge_u; if; unreachable; end` with existing tape rows, so every
+  pass already understands the check, and RV32 fuses it into one `bltu`/`bgeu` around an `ebreak`. An index that is not
+  a plain local is computed once into a fresh local. **The unchecked form** is the literal index: the front end checks
+  it and writes `array.address offset + 4i` with no run-time check (one `addi` and the load). Removing the check where
+  range analysis proves a variable index (a counted loop up to `a.length`) is left to a later ticket:
+  `analysis/ranges.js` runs only under `kernel` and only for functions that divide by a constant.
+- **Where an array lives.** RV32: in the frame, an area between the stack-argument area and the slots (above `ra`, `s0`
+  and the saved registers in a large frame), addressed from `sp` (`array.address`, a new pseudo-op that pushes the
+  address of an area offset; `array.zero` clears a range). WebAssembly has no frame memory: each function's area is a
+  static block below the previous function's from the top of the module's memory. That is exact because Typed's call
+  graph is acyclic (checkAcyclic), so no function is ever active twice and its arrays need one copy. `linkWorld`
+  refuses arrays, because the reactor runtime owns a linked world's memory.
+- **An array is not a value**: no assignment, parameter, result, comparison or address. So it never aliases memory a
+  pass reasons about (buffers, record fields); the passes treat `array.address` as an opaque i32 and an array store as
+  a store (conservative for `fields` and `storeless`, which a later change could refine).
+- **Passes.** The abstract operand stacks (inline, commute, hoist, value-sets, ranges) learn the two rows; `inline`
+  keeps calls to a function with arrays (its area would need a place in the caller's); frameless leaves decline them.

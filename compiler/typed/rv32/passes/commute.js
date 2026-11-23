@@ -1,5 +1,5 @@
 // The commute pass.
-import {I32_ADD, I32_MUL, I32_EQ, I32_NE, CELLS, I32_GE_U, I32_SHR_U, I32_AND, I32_OR, I32_XOR, I32_CONST, LOCAL_GET, CHECKED_ADDRESS, I32_EQZ, I32_LOAD, I32_LOAD16_U, LOCAL_SET, DROP, BR_IF, I32_STORE, I32_STORE16, CALL, BLOCK, IF, I32, VOID, ELSE, END, FLOATING, tapeRow} from "../encoding/tape.js";
+import {I32_ADD, I32_MUL, I32_EQ, I32_NE, CELLS, I32_GE_U, I32_SHR_U, I32_AND, I32_OR, I32_XOR, I32_CONST, LOCAL_GET, CHECKED_ADDRESS, I32_EQZ, I32_LOAD, I32_LOAD16_U, LOCAL_SET, DROP, BR_IF, I32_STORE, I32_STORE16, CALL, BLOCK, IF, I32, VOID, ELSE, END, FLOATING, tapeRow, ARRAY_ADDRESS} from "../encoding/tape.js";
 
 // the commute pass: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
 // eq, ne, and, or, xor), so the literal reaches selectConstant as a right operand. Moving a literal past
@@ -31,7 +31,7 @@ export function commuteConstants(code, arity) {
         for (let k = 0; k <= cells; k++) out.push(code[at + k]);
         at += 1 + cells;
         if (op === I32_CONST) stack.push({start, constant: a});
-        else if (op === LOCAL_GET || op === CHECKED_ADDRESS) stack.push({start});
+        else if (op === LOCAL_GET || op === CHECKED_ADDRESS || op === ARRAY_ADDRESS) stack.push({start});
         else if (op === I32_EQZ || op === I32_LOAD || op === I32_LOAD16_U) stack.push({start: stack.pop()?.start ?? NaN});
         else if (op === LOCAL_SET || op === DROP || op === BR_IF) stack.pop();
         else if (op === I32_STORE || op === I32_STORE16) { stack.pop(); stack.pop(); }

@@ -14,7 +14,7 @@ import {LARGE_BASE} from "./stack.js";
 // Above this many bytes of locals and saved registers a function takes the large-frame form (see lower()).
 const LARGE_FRAME_LOCALS = 1900;
 import {loadWord, storeWord} from "../encoding/instructions.js";
-import {BLOCK, RETURN, I32_CONST, UNCHECKED_ADDRESS, I32_LOAD16_U, LOCAL_GET, I32_LOAD, I32_EQZ, I32_GE_U, UNREACHABLE, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_SET, I32_STORE, I32_STORE16, CHECKED_ADDRESS, LITERAL_STORES} from "../encoding/tape.js";
+import {BLOCK, RETURN, I32_CONST, UNCHECKED_ADDRESS, I32_LOAD16_U, LOCAL_GET, I32_LOAD, I32_EQZ, I32_GE_U, UNREACHABLE, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_SET, I32_STORE, I32_STORE16, CHECKED_ADDRESS, LITERAL_STORES, ARRAY_ADDRESS, ARRAY_ZERO} from "../encoding/tape.js";
 
 export class FunctionCode {
     constructor(program, functions, starts) {
@@ -186,6 +186,19 @@ export class FunctionCode {
             this.checkedAddress(receiver, T5, undefined, undefined, true, j);
             break;
         }
+        case ARRAY_ADDRESS: { // a local array's element in the frame (array area offset)
+            const offset = this.arrayBase + this.cell();
+            const stored = this.destination();
+            const out = stored ?? this.resultRegister();
+            this.frameAddress(out, offset);
+            this.result(out, stored);
+            break;
+        }
+        case ARRAY_ZERO: {
+            const offset = this.arrayBase + this.cell();
+            this.zeroFrame(offset, this.cell());
+            break;
+        }
         case LITERAL_STORES: { // ordered UTF-16 stores after the complete range check
             const address = this.cell();
             const value = this.program.literals[this.cell()];
@@ -221,13 +234,17 @@ export class FunctionCode {
         // The stack-argument area of the calls this function makes, at the bottom of the frame (ilp32f: the caller's
         // sp + 4k): the slots start above it.
         const outgoing = this.frameless ? 0 : this.outgoingWords(), base = 4 * outgoing;
+        // Local arrays (fn.arrayBytes, a multiple of 4): an area below the slots, above the stack-argument area and,
+        // in a large frame, above ra, s0 and the saved registers.
+        const arrays = this.program.arrayBytes ?? 0;
         // A large frame (more locals than sp's 12-bit offsets reach, PICOCALC-CANDELA-TYPED): ra, s0 and the saved
         // registers at the bottom (above the stack-argument area), the locals and spills above them, and s0 = sp + 2032
         // as the base of every slot at 2032 or more (load/store pick the base). Only functions with that many locals
         // take this form.
-        this.large = !this.frameless && 4 * (outgoing + this.locals + saved.length + 2) > LARGE_FRAME_LOCALS;
+        this.large = !this.frameless && 4 * (outgoing + this.locals + saved.length + 2) + arrays > LARGE_FRAME_LOCALS;
         if (this.large) {
-            this.slotBase = base + 8 + 4 * saved.length;
+            this.arrayBase = base + 8 + 4 * saved.length;
+            this.slotBase = this.arrayBase + arrays;
             this.emit(0);
             this.emit(0);
             this.emit(instruction.r(0x33, SP, 0, SP, T5, 0x20));
@@ -240,7 +257,8 @@ export class FunctionCode {
             // prologue is emitted as placeholders and patched below.
             this.emit(0);
             this.emit(0);
-            if (outgoing) this.slotBase = base;
+            if (outgoing || arrays) this.slotBase = base + arrays;
+            this.arrayBase = base;
         }
         if (!this.large) for (let k = 0; k < saved.length; k++) this.emit(0);
         for (let i = 0; i < count; i++) if (incoming[i] >= 0) this.writeLocal(incoming[i], i);
@@ -296,7 +314,7 @@ export class FunctionCode {
             this.patchBranches();
             return this;
         }
-        const frame = (4 * (outgoing + this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
+        const frame = (4 * (outgoing + this.locals + this.spillDepth + saved.length + 1) + arrays + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
         this.patchCallerStacks(SP, frame);
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;

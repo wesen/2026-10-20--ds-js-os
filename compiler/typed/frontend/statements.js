@@ -157,6 +157,7 @@ class FunctionEmitter extends ExpressionParser {
             return;
         }
         { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
+        if (lex.token.value === "new") return this.arrayDeclaration(id, annotation);
         const type = this.expr();
         if (annotation !== null) this.want(type, annotation);
         const declared = annotation ?? scalarType(type);
@@ -169,6 +170,7 @@ class FunctionEmitter extends ExpressionParser {
         const local = this.locals.get(id);
         if (!local) lex.fail("unknown local " + id);
         if (this.values?.has(local.type)) return this.valueAssignment(id, local, statement);
+        if (local.array) return this.arrayAssignment(local.array, statement);
         if (statement && (lex.token.value === "." && (lex.next(), true))) {
             if (local.type === "buffer") this.bufferWrite(local.index);
             else {
@@ -387,6 +389,7 @@ class FunctionEmitter extends ExpressionParser {
 
     finish(fn) {
         if (this.literals) fn.literals = this.literals;
+        if (this.arrayBytes) fn.arrayBytes = this.arrayBytes;
         // fn.localTypes: the type class of each frame local ("f32" or "i32"), only when one is an f32; the RV32
         // planner and the Wasm local declarations read it.
         const params = fn.params.length;

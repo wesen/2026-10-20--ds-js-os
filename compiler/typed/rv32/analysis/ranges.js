@@ -1,5 +1,5 @@
 // Local value ranges and division facts (the ranges and facts passes).
-import {opNext, ELSE, END, BLOCK, IF, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, BR_IF, BR, RETURN, UNREACHABLE, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, CALL, LOOP, I32, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_SHR_U, I32_AND, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, CELLS, VOID, I32_LT_S, opClose, I32_DIV_U, I32_REM_U} from "../encoding/tape.js";
+import {opNext, ELSE, END, BLOCK, IF, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, BR_IF, BR, RETURN, UNREACHABLE, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, CALL, LOOP, I32, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_SHR_U, I32_AND, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, CELLS, VOID, I32_LT_S, opClose, I32_DIV_U, I32_REM_U, ARRAY_ADDRESS, ARRAY_ZERO} from "../encoding/tape.js";
 
 // the facts pass: division and remainder by a positive constant whose dividend is never
 // negative, so the emitter can drop the rounding bias and the sign correction. Two steps:
@@ -40,8 +40,8 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
         case I32_LOAD: pop(); stack.push(RANGE_TOP); break;
         case I32_LOAD16_U: pop(); stack.push([0, 65535]); break;
         case I32_STORE: case I32_STORE16: pop(); pop(); break;
-        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(RANGE_TOP); break;
-        case LITERAL_STORES: break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: case ARRAY_ADDRESS: stack.push(RANGE_TOP); break;
+        case LITERAL_STORES: case ARRAY_ZERO: break;
         case CALL:
             for (let i = arity(a); i > 0; i--) pop();
             for (let i = arity.results?.(a) ?? 1; i > 0; i--) stack.push(RANGE_TOP);

@@ -124,6 +124,11 @@ const ROWS = [
     // f32 -> u32 toward zero, saturating (negative values give 0); NaN gives 2^32 - 1 (fcvt.wu.s rtz; Wasm's
     // i32.trunc_sat_f32_u gives 0).
     [0xf7, "U32_TRUNC_F32", "f32.to_u32", [], [F32], [I32], 0],
+    // Local arrays (PICOCALC-TYPED-VALUES). offset (a number): the address of byte `offset` of the function's array
+    // area, fn.arrayBytes long (RV32: in the frame; WebAssembly: a static area at the top of the module's memory).
+    [0xf8, "ARRAY_ADDRESS", "array.address", ["u"], [], [I32], 0],
+    // offset bytes (numbers): zero `bytes` bytes of the array area from `offset`, where an array is declared.
+    [0xf9, "ARRAY_ZERO", "array.zero", ["u", "u"], [], [], STORES],
 ];
 
 const rows = [];

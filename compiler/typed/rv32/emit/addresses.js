@@ -1,8 +1,35 @@
 // FunctionCode's checked and unchecked buffer addresses.
-import {T6, A0, instruction} from "../encoding/registers.js";
+import {T5, T6, A0, SP, S0, ZERO, instruction} from "../encoding/registers.js";
 import {I32_LOAD16_U} from "../encoding/tape.js";
+import {LARGE_BASE} from "./stack.js";
 
 export class AddressMethods {
+    // reg = the address of frame byte `offset` (a local array's element): sp + offset, or s0 + offset - 2032 when a
+    // large frame's offset is beyond sp's reach.
+    frameAddress(reg, offset) {
+        this.usesFrame = true;
+        if (offset >= LARGE_BASE && this.large) this.emit(instruction.i(0x13, reg, 0, S0, offset - LARGE_BASE));
+        else this.emit(instruction.i(0x13, reg, 0, SP, offset));
+    }
+
+    // Zero `bytes` frame bytes from `offset` (array.zero): one sw zero per word up to 16 words, else a loop of t5
+    // from the first word to t6, the end.
+    zeroFrame(offset, bytes) {
+        if (bytes <= 64) {
+            for (let k = 0; k < bytes; k += 4) this.store(ZERO, offset + k);
+            return;
+        }
+        this.frameAddress(T5, offset);
+        if (bytes < 2048) this.emit(instruction.i(0x13, T6, 0, T5, bytes));
+        else {
+            this.constant(T6, bytes);
+            this.emit(instruction.r(0x33, T6, 0, T6, T5));
+        }
+        this.emit(instruction.s(2, T5, ZERO, 0));
+        this.emit(instruction.i(0x13, T5, 0, T5, 4));
+        this.emit(instruction.b(1, T5, T6, -8) >>> 0); // bne t5, t6, the sw
+    }
+
     // The address of receiver[index + j]: checked against the capacity, or unchecked (UNCHECKED_ADDRESS, in a
     // copy of a loop that the version pass proved in range), and read at once when a UTF-16 load
     // follows.

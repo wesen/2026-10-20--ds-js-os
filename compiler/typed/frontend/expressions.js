@@ -10,7 +10,7 @@ const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET
     F32, F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG, F32_CEIL,
     F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
     I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX,
-    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U, F32_CONVERT_I32_U, U32_TRUNC_F32} = typedTape;
+    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U, F32_CONVERT_I32_U, U32_TRUNC_F32, ARRAY_ADDRESS, ARRAY_ZERO} = typedTape;
 // An integer literal takes the integer type its context needs (i32, u32 or a distinct type); a decimal literal from
 // 2^31 to 2^32 - 1 is a u32 (U32_LITERAL), its i32 cell holding the same 32 bits.
 const LITERAL = Symbol("integer literal");
@@ -228,6 +228,7 @@ class ExpressionParser {
             return "SurfacePoint";
         }
         if (this.values?.has(binding.type)) return this.valueRead(binding.type, binding.index);
+        if (binding.array) return this.arrayRead(binding.array);
         if (binding.type === "i32" || binding.type === "bool") {
             this.emitIndex(LOCAL_GET, binding.index);
             return binding.type;

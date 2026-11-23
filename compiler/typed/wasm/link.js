@@ -44,6 +44,9 @@ function linkWorld(source, runtime, entries, imports = [], maxSourceLength, opti
     });
     const {functions, records, enums, distinct, asyncLayout, asyncSource} =
         compileWasmFunctions(source, base, imported, maxSourceLength, options);
+    // The runtime owns a linked world's memory, so there is no static area for local arrays.
+    const arrays = functions.find(fn => fn.arrayBytes);
+    if (arrays) throw new SyntaxError("local arrays need a module's own memory; a linked Wasm world has none (" + arrays.name + ")");
     for (const entry of entries) {
         const bytesName = Array.from(entry, ch => ch.charCodeAt(0)).join(",");
         const slot = exports.find(item => item.name === bytesName && item.kind === 0)?.index - importCount;

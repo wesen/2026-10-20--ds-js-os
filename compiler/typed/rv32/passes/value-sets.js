@@ -1,6 +1,6 @@
 // The sets pass.
 import {I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR, I32_SHL, I32_SHR_S, I32_SHR_U, opNext, BLOCK, IF, END, I32, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, I32_EQZ, LOOP, ELSE, BR, BR_IF, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, VOID, opClose, CELLS,
-    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U} from "../encoding/tape.js";
+    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U, ARRAY_ADDRESS, ARRAY_ZERO} from "../encoding/tape.js";
 
 // the sets pass: precompute a pure value block over a local that holds one of a few constants.
 // A value block (`block (result i32)`) whose body is straight-line arithmetic over constants and
@@ -197,8 +197,8 @@ function entrySets(code, arity, wanted) {
             break;
         case I32_LOAD: case I32_LOAD16_U: pop(); stack.push(null); break;
         case I32_STORE: case I32_STORE16: pop(); pop(); break;
-        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(null); break;
-        case LITERAL_STORES: break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: case ARRAY_ADDRESS: stack.push(null); break;
+        case LITERAL_STORES: case ARRAY_ZERO: break;
         default: {
             if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
             const y = pop(), x = pop();

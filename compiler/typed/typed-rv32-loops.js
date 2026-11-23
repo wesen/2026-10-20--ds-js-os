@@ -4,7 +4,7 @@
 (() => {
 "use strict";
 if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-loops.js");
-const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape} = globalThis.typedRv32Modules;
+const {ARRAY_ADDRESS, ARRAY_ZERO, BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape} = globalThis.typedRv32Modules;
 
 // rv32/passes/conjunctions.js
 // The conjunctions pass.
@@ -258,8 +258,8 @@ function entrySets(code, arity, wanted) {
             break;
         case I32_LOAD: case I32_LOAD16_U: pop(); stack.push(null); break;
         case I32_STORE: case I32_STORE16: pop(); pop(); break;
-        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(null); break;
-        case LITERAL_STORES: break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: case ARRAY_ADDRESS: stack.push(null); break;
+        case LITERAL_STORES: case ARRAY_ZERO: break;
         default: {
             if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
             const y = pop(), x = pop();
@@ -519,6 +519,9 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
         }
         case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: tags.push(a); break;
         case LITERAL_STORES: stored.add(a); break;
+        // A local array's address: no buffer's (a store through it clears loadsOk, as an unknown address does).
+        case ARRAY_ADDRESS: tags.push(null); break;
+        case ARRAY_ZERO: loadsOk = false; break;
         case I32_EQZ: break;
         default:
             if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
@@ -666,8 +669,8 @@ function hoistSubexpressions(body, k, arity, fresh) {
         }
         case I32_LOAD16_U: combine(i, 1, false); break;
         case I32_STORE: case I32_STORE16: consume(2); break;
-        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: slots.push(opaque); break;
-        case LITERAL_STORES: break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: case ARRAY_ADDRESS: slots.push(opaque); break;
+        case LITERAL_STORES: case ARRAY_ZERO: break;
         case I32_EQZ: combine(i, 1, true); break;
         default: {
             if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
@@ -1051,8 +1054,8 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
         case I32_LOAD: pop(); stack.push(RANGE_TOP); break;
         case I32_LOAD16_U: pop(); stack.push([0, 65535]); break;
         case I32_STORE: case I32_STORE16: pop(); pop(); break;
-        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(RANGE_TOP); break;
-        case LITERAL_STORES: break;
+        case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: case ARRAY_ADDRESS: stack.push(RANGE_TOP); break;
+        case LITERAL_STORES: case ARRAY_ZERO: break;
         case CALL:
             for (let i = arity(a); i > 0; i--) pop();
             for (let i = arity.results?.(a) ?? 1; i > 0; i--) stack.push(RANGE_TOP);

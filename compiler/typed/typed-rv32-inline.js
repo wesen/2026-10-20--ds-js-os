@@ -4,7 +4,7 @@
 (() => {
 "use strict";
 if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-inline.js");
-const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_EQ, I32_EQZ, I32_GE_U, I32_LOAD, I32_LOAD16_U, I32_MUL, I32_NE, I32_OR, I32_SHR_U, I32_STORE, I32_STORE16, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNREACHABLE, VOID, floatingFunction, installPasses, opNext, replaceTape, tapeRow} = globalThis.typedRv32Modules;
+const {ARRAY_ADDRESS, BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_EQ, I32_EQZ, I32_GE_U, I32_LOAD, I32_LOAD16_U, I32_MUL, I32_NE, I32_OR, I32_SHR_U, I32_STORE, I32_STORE16, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNREACHABLE, VOID, floatingFunction, installPasses, opNext, replaceTape, tapeRow} = globalThis.typedRv32Modules;
 
 // rv32/passes/inline.js
 // The inline pass and the inliner's library candidates.
@@ -103,7 +103,7 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
             else if (opcode === I32_EQZ || opcode === I32_LOAD || opcode === I32_LOAD16_U) { pop(1); push(0, 0, 0); }
             else if ((opcode >= I32_EQ && opcode <= I32_GE_U) || (opcode >= I32_ADD && opcode <= I32_SHR_U)) { pop(2); push(0, 0, 0); }
             else if (opcode === I32_STORE || opcode === I32_STORE16) pop(2);
-            else if (opcode === CHECKED_ADDRESS) push(0, 0, 0);
+            else if (opcode === CHECKED_ADDRESS || opcode === ARRAY_ADDRESS) push(0, 0, 0);
             else if (opcode === CALL) {
                 pop(arity(a));
                 for (let n = arity.results?.(a) ?? 1; n > 0; n--) push(0, 0, 0);
@@ -197,7 +197,8 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
 // no calls to itself, and not an async state machine. Records which parameters the body
 // writes and which it uses as checked-address operands.
 function inlineCandidate(fn, code, limits, guarded) {
-    if (fn.async || guarded || fn.literals || code.length > limits.calleeCells) return null;
+    // A callee's local arrays would need a place in the caller's area: such a callee stays a call.
+    if (fn.async || guarded || fn.literals || fn.arrayBytes || code.length > limits.calleeCells) return null;
     const written = fn.params.map(() => false), addressed = fn.params.map(() => false);
     for (let at = 0; at < code.length;) {
         const op = code[at], n = CELLS[op];
@@ -251,7 +252,7 @@ function commuteConstants(code, arity) {
         for (let k = 0; k <= cells; k++) out.push(code[at + k]);
         at += 1 + cells;
         if (op === I32_CONST) stack.push({start, constant: a});
-        else if (op === LOCAL_GET || op === CHECKED_ADDRESS) stack.push({start});
+        else if (op === LOCAL_GET || op === CHECKED_ADDRESS || op === ARRAY_ADDRESS) stack.push({start});
         else if (op === I32_EQZ || op === I32_LOAD || op === I32_LOAD16_U) stack.push({start: stack.pop()?.start ?? NaN});
         else if (op === LOCAL_SET || op === DROP || op === BR_IF) stack.pop();
         else if (op === I32_STORE || op === I32_STORE16) { stack.pop(); stack.pop(); }

@@ -1,5 +1,5 @@
 // The inline pass and the inliner's library candidates.
-import {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP, BR_IF, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, I32, F32, VOID, ELSE, RETURN, BR, LITERAL_STORES, FLOATING, tapeRow} from "../encoding/tape.js";
+import {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP, BR_IF, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, I32, F32, VOID, ELSE, RETURN, BR, LITERAL_STORES, FLOATING, tapeRow, ARRAY_ADDRESS} from "../encoding/tape.js";
 
 // inline: replace calls to small internal functions lowered earlier with their tapes.
 // A call `args…; call f` becomes `local.set p_{n-1} … local.set p_0; block (result i32)
@@ -95,7 +95,7 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
             else if (opcode === I32_EQZ || opcode === I32_LOAD || opcode === I32_LOAD16_U) { pop(1); push(0, 0, 0); }
             else if ((opcode >= I32_EQ && opcode <= I32_GE_U) || (opcode >= I32_ADD && opcode <= I32_SHR_U)) { pop(2); push(0, 0, 0); }
             else if (opcode === I32_STORE || opcode === I32_STORE16) pop(2);
-            else if (opcode === CHECKED_ADDRESS) push(0, 0, 0);
+            else if (opcode === CHECKED_ADDRESS || opcode === ARRAY_ADDRESS) push(0, 0, 0);
             else if (opcode === CALL) {
                 pop(arity(a));
                 for (let n = arity.results?.(a) ?? 1; n > 0; n--) push(0, 0, 0);
@@ -189,7 +189,8 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
 // no calls to itself, and not an async state machine. Records which parameters the body
 // writes and which it uses as checked-address operands.
 export function inlineCandidate(fn, code, limits, guarded) {
-    if (fn.async || guarded || fn.literals || code.length > limits.calleeCells) return null;
+    // A callee's local arrays would need a place in the caller's area: such a callee stays a call.
+    if (fn.async || guarded || fn.literals || fn.arrayBytes || code.length > limits.calleeCells) return null;
     const written = fn.params.map(() => false), addressed = fn.params.map(() => false);
     for (let at = 0; at < code.length;) {
         const op = code[at], n = CELLS[op];

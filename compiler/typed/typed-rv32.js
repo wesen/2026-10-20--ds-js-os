@@ -212,17 +212,137 @@ const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, RETURN, CALL, DROP, L
     F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG, F32_CEIL,
     F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
     I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX,
-    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U, F32_CONVERT_I32_U, U32_TRUNC_F32,
+    I32_LT_U, I32_GT_U, I32_LE_U, I32_DIV_U, I32_REM_U, F32_CONVERT_I32_U, U32_TRUNC_F32, ARRAY_ADDRESS, ARRAY_ZERO,
     cells: CELLS, effects: EFFECTS, next: opNext, close: opClose, row: tapeRow} = typedTape;
 // The f32 operations (a row that pops or pushes an f32): passes with an abstract operand stack take their pops and
 // pushes from the row (tapeRow(op).pop.length, .push.length).
 const FLOATING = new Uint8Array(256);
 for (const row of typedTape.rows) if (row.pop && [...row.pop, ...row.push].includes(F32)) FLOATING[row.code] = 1;
 
+// rv32/emit/stack.js
+// FunctionCode's operand stack: loads, stores, constants, result destinations, spills.
+
+// A large frame's second base: s0 = sp + LARGE_BASE reaches the slots at LARGE_BASE and above (function-code.js).
+const LARGE_BASE = 2032;
+
+class StackMethods {
+    // A float register (32-63) loads and stores a word (flw, fsw); kind is the integer width (lw, lhu, sh...).
+    load(reg, offset, base = SP, kind = 2) {
+        if (base === SP) this.usesFrame = true;
+        if (base === SP && offset >= LARGE_BASE && this.large) { base = S0; offset -= LARGE_BASE; }
+        this.emit(reg < 32 ? instruction.i(0x03, reg, kind, base, offset) : loadWord(reg, offset, base));
+    }
+
+    store(reg, offset, base = SP, kind = 2) {
+        if (base === SP) this.usesFrame = true;
+        if (base === SP && offset >= LARGE_BASE && this.large) { base = S0; offset -= LARGE_BASE; }
+        this.emit(reg < 32 ? instruction.s(kind, base, reg, offset) : storeWord(reg, offset, base));
+    }
+
+    constant(reg, n) {
+        const lo = (n << 20) >> 20;
+        if (n !== lo) this.emit(((n - lo) & 0xfffff000) | (reg << 7) | 0x37);
+        if (n === lo || lo !== 0 || !this.select?.immediates)
+            this.emit(instruction.i(0x13, reg, 0, n === lo ? ZERO : reg, lo));
+    }
+
+    // select.results: when the next operation stores this result into a homed local, the
+    // result is computed in the home and the store disappears. Call after popping the
+    // operands; every caller's sequence reads its operands no later than its first write.
+    destination() {
+        const tape = this.program.code, plan = this.locations;
+        if (!this.select?.results || !plan || tape[this.at] !== LOCAL_SET || plan.forward.has(this.at)) return undefined;
+        const home = plan.homes.get(tape[this.at + 1]);
+        if (home === undefined) return undefined;
+        this.pendingWrite = [tape[this.at + 1], this.at];
+        this.at += 2;
+        this.materialize(home);
+        return home;
+    }
+
+    // Push a result computed in resultRegister(), unless destination() stored it already.
+    result(out, stored) {
+        if (stored === undefined) this.push(out);
+        else if (this.pendingWrite) {
+            const [local, at] = this.pendingWrite;
+            this.pendingWrite = undefined;
+            this.pointersAfterWrite(local, at, stored);
+        }
+    }
+
+    // Within a class mv or fmv.s; across classes fmv.x.w or fmv.w.x (the bits unchanged).
+    move(to, from) {
+        if (to !== from) this.emit((to | from) < 32 ? instruction.i(0x13, to, 0, from, 0) : moveWord(to, from));
+    }
+
+
+    slot(depth) { return (this.slotBase ?? 0) + 4 * (this.locals + depth); }
+
+    spill(depth, reg) {
+        this.store(reg, this.slot(depth));
+        this.spillDepth = Math.max(this.spillDepth, depth + 1);
+    }
+
+    // The operand's class is the scratch register's: an f32 consumer pops with an f scratch (ft10, ft11).
+    pop(scratch) {
+        if (!this.depth) throw new SyntaxError("empty RV32 operand stack");
+        const depth = --this.depth;
+        const home = this.direct[depth];
+        if (home !== undefined) {
+            this.direct[depth] = undefined;
+            return home;
+        }
+        const reg = OPERAND_STACKS[scratch >> 5][depth];
+        if (reg !== undefined) return reg;
+        this.load(scratch, this.slot(depth));
+        return scratch;
+    }
+
+    // classes[d]: the register class of the operand at depth d (a call spills and reloads by it).
+    push(reg) {
+        const depth = this.depth++;
+        this.direct[depth] = undefined;
+        this.classes[depth] = reg >> 5;
+        const home = OPERAND_STACKS[reg >> 5][depth];
+        if (home === undefined) this.spill(depth, reg);
+        else this.move(home, reg);
+    }
+
+    // The register a result of class cls (0 integer, 1 float) is computed in.
+    resultRegister(cls = 0) { return OPERAND_STACKS[cls][this.depth] ?? (cls ? FT10 : T5); }
+
+}
+
 // rv32/emit/addresses.js
 // FunctionCode's checked and unchecked buffer addresses.
 
 class AddressMethods {
+    // reg = the address of frame byte `offset` (a local array's element): sp + offset, or s0 + offset - 2032 when a
+    // large frame's offset is beyond sp's reach.
+    frameAddress(reg, offset) {
+        this.usesFrame = true;
+        if (offset >= LARGE_BASE && this.large) this.emit(instruction.i(0x13, reg, 0, S0, offset - LARGE_BASE));
+        else this.emit(instruction.i(0x13, reg, 0, SP, offset));
+    }
+
+    // Zero `bytes` frame bytes from `offset` (array.zero): one sw zero per word up to 16 words, else a loop of t5
+    // from the first word to t6, the end.
+    zeroFrame(offset, bytes) {
+        if (bytes <= 64) {
+            for (let k = 0; k < bytes; k += 4) this.store(ZERO, offset + k);
+            return;
+        }
+        this.frameAddress(T5, offset);
+        if (bytes < 2048) this.emit(instruction.i(0x13, T6, 0, T5, bytes));
+        else {
+            this.constant(T6, bytes);
+            this.emit(instruction.r(0x33, T6, 0, T6, T5));
+        }
+        this.emit(instruction.s(2, T5, ZERO, 0));
+        this.emit(instruction.i(0x13, T5, 0, T5, 4));
+        this.emit(instruction.b(1, T5, T6, -8) >>> 0); // bne t5, t6, the sw
+    }
+
     // The address of receiver[index + j]: checked against the capacity, or unchecked (UNCHECKED_ADDRESS, in a
     // copy of a loop that the version pass proved in range), and read at once when a UTF-16 load
     // follows.
@@ -998,100 +1118,6 @@ function mixin(target, ...groups) {
     }
 }
 
-// rv32/emit/stack.js
-// FunctionCode's operand stack: loads, stores, constants, result destinations, spills.
-
-// A large frame's second base: s0 = sp + LARGE_BASE reaches the slots at LARGE_BASE and above (function-code.js).
-const LARGE_BASE = 2032;
-
-class StackMethods {
-    // A float register (32-63) loads and stores a word (flw, fsw); kind is the integer width (lw, lhu, sh...).
-    load(reg, offset, base = SP, kind = 2) {
-        if (base === SP) this.usesFrame = true;
-        if (base === SP && offset >= LARGE_BASE && this.large) { base = S0; offset -= LARGE_BASE; }
-        this.emit(reg < 32 ? instruction.i(0x03, reg, kind, base, offset) : loadWord(reg, offset, base));
-    }
-
-    store(reg, offset, base = SP, kind = 2) {
-        if (base === SP) this.usesFrame = true;
-        if (base === SP && offset >= LARGE_BASE && this.large) { base = S0; offset -= LARGE_BASE; }
-        this.emit(reg < 32 ? instruction.s(kind, base, reg, offset) : storeWord(reg, offset, base));
-    }
-
-    constant(reg, n) {
-        const lo = (n << 20) >> 20;
-        if (n !== lo) this.emit(((n - lo) & 0xfffff000) | (reg << 7) | 0x37);
-        if (n === lo || lo !== 0 || !this.select?.immediates)
-            this.emit(instruction.i(0x13, reg, 0, n === lo ? ZERO : reg, lo));
-    }
-
-    // select.results: when the next operation stores this result into a homed local, the
-    // result is computed in the home and the store disappears. Call after popping the
-    // operands; every caller's sequence reads its operands no later than its first write.
-    destination() {
-        const tape = this.program.code, plan = this.locations;
-        if (!this.select?.results || !plan || tape[this.at] !== LOCAL_SET || plan.forward.has(this.at)) return undefined;
-        const home = plan.homes.get(tape[this.at + 1]);
-        if (home === undefined) return undefined;
-        this.pendingWrite = [tape[this.at + 1], this.at];
-        this.at += 2;
-        this.materialize(home);
-        return home;
-    }
-
-    // Push a result computed in resultRegister(), unless destination() stored it already.
-    result(out, stored) {
-        if (stored === undefined) this.push(out);
-        else if (this.pendingWrite) {
-            const [local, at] = this.pendingWrite;
-            this.pendingWrite = undefined;
-            this.pointersAfterWrite(local, at, stored);
-        }
-    }
-
-    // Within a class mv or fmv.s; across classes fmv.x.w or fmv.w.x (the bits unchanged).
-    move(to, from) {
-        if (to !== from) this.emit((to | from) < 32 ? instruction.i(0x13, to, 0, from, 0) : moveWord(to, from));
-    }
-
-
-    slot(depth) { return (this.slotBase ?? 0) + 4 * (this.locals + depth); }
-
-    spill(depth, reg) {
-        this.store(reg, this.slot(depth));
-        this.spillDepth = Math.max(this.spillDepth, depth + 1);
-    }
-
-    // The operand's class is the scratch register's: an f32 consumer pops with an f scratch (ft10, ft11).
-    pop(scratch) {
-        if (!this.depth) throw new SyntaxError("empty RV32 operand stack");
-        const depth = --this.depth;
-        const home = this.direct[depth];
-        if (home !== undefined) {
-            this.direct[depth] = undefined;
-            return home;
-        }
-        const reg = OPERAND_STACKS[scratch >> 5][depth];
-        if (reg !== undefined) return reg;
-        this.load(scratch, this.slot(depth));
-        return scratch;
-    }
-
-    // classes[d]: the register class of the operand at depth d (a call spills and reloads by it).
-    push(reg) {
-        const depth = this.depth++;
-        this.direct[depth] = undefined;
-        this.classes[depth] = reg >> 5;
-        const home = OPERAND_STACKS[reg >> 5][depth];
-        if (home === undefined) this.spill(depth, reg);
-        else this.move(home, reg);
-    }
-
-    // The register a result of class cls (0 integer, 1 float) is computed in.
-    resultRegister(cls = 0) { return OPERAND_STACKS[cls][this.depth] ?? (cls ? FT10 : T5); }
-
-}
-
 // rv32/emit/function-code.js
 // FunctionCode, the streaming emitter: one pass over a function's tape that writes RV32 words.
 
@@ -1268,6 +1294,19 @@ class FunctionCode {
             this.checkedAddress(receiver, T5, undefined, undefined, true, j);
             break;
         }
+        case ARRAY_ADDRESS: { // a local array's element in the frame (array area offset)
+            const offset = this.arrayBase + this.cell();
+            const stored = this.destination();
+            const out = stored ?? this.resultRegister();
+            this.frameAddress(out, offset);
+            this.result(out, stored);
+            break;
+        }
+        case ARRAY_ZERO: {
+            const offset = this.arrayBase + this.cell();
+            this.zeroFrame(offset, this.cell());
+            break;
+        }
         case LITERAL_STORES: { // ordered UTF-16 stores after the complete range check
             const address = this.cell();
             const value = this.program.literals[this.cell()];
@@ -1303,13 +1342,17 @@ class FunctionCode {
         // The stack-argument area of the calls this function makes, at the bottom of the frame (ilp32f: the caller's
         // sp + 4k): the slots start above it.
         const outgoing = this.frameless ? 0 : this.outgoingWords(), base = 4 * outgoing;
+        // Local arrays (fn.arrayBytes, a multiple of 4): an area below the slots, above the stack-argument area and,
+        // in a large frame, above ra, s0 and the saved registers.
+        const arrays = this.program.arrayBytes ?? 0;
         // A large frame (more locals than sp's 12-bit offsets reach, PICOCALC-CANDELA-TYPED): ra, s0 and the saved
         // registers at the bottom (above the stack-argument area), the locals and spills above them, and s0 = sp + 2032
         // as the base of every slot at 2032 or more (load/store pick the base). Only functions with that many locals
         // take this form.
-        this.large = !this.frameless && 4 * (outgoing + this.locals + saved.length + 2) > LARGE_FRAME_LOCALS;
+        this.large = !this.frameless && 4 * (outgoing + this.locals + saved.length + 2) + arrays > LARGE_FRAME_LOCALS;
         if (this.large) {
-            this.slotBase = base + 8 + 4 * saved.length;
+            this.arrayBase = base + 8 + 4 * saved.length;
+            this.slotBase = this.arrayBase + arrays;
             this.emit(0);
             this.emit(0);
             this.emit(instruction.r(0x33, SP, 0, SP, T5, 0x20));
@@ -1322,7 +1365,8 @@ class FunctionCode {
             // prologue is emitted as placeholders and patched below.
             this.emit(0);
             this.emit(0);
-            if (outgoing) this.slotBase = base;
+            if (outgoing || arrays) this.slotBase = base + arrays;
+            this.arrayBase = base;
         }
         if (!this.large) for (let k = 0; k < saved.length; k++) this.emit(0);
         for (let i = 0; i < count; i++) if (incoming[i] >= 0) this.writeLocal(incoming[i], i);
@@ -1378,7 +1422,7 @@ class FunctionCode {
             this.patchBranches();
             return this;
         }
-        const frame = (4 * (outgoing + this.locals + this.spillDepth + saved.length + 1) + 15) & -16;
+        const frame = (4 * (outgoing + this.locals + this.spillDepth + saved.length + 1) + arrays + 15) & -16;
         if (frame > 2032) throw new SyntaxError("RV32 function frame exceeds the instruction range");
         this.patchCallerStacks(SP, frame);
         this.words[0] = instruction.i(0x13, SP, 0, SP, -frame) >>> 0;
@@ -2353,5 +2397,5 @@ globalThis.typedRv32 = {compile, linkSlot, policies: POLICIES,
     passes: PASSES.map(({name, group, kind, needs}) => ({name, group, kind, needs: needs ?? [], file: GROUPS[group]}))};
 
 // The names the pass-group bundles import from this one.
-globalThis.typedRv32Modules = {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, floatingFunction, installPasses, opClose, opNext, replaceTape, tapeRow};
+globalThis.typedRv32Modules = {ARRAY_ADDRESS, ARRAY_ZERO, BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_DIV_U, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_GT_U, I32_LE_S, I32_LE_U, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_LT_U, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_REM_U, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNCHECKED_ADDRESS, UNREACHABLE, VOID, floatingFunction, installPasses, opClose, opNext, replaceTape, tapeRow};
 })();
