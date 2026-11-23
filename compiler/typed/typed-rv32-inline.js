@@ -341,6 +341,8 @@ installPasses("inline", {
     commute: {run: (fn, ctx) => replaceTape(fn, commuteConstants(fn.code, ctx.arity))},
     rotate: {run: fn => replaceTape(fn, rotateLoops(fn.code))},
 });
+// A marker for loaders that list what a realm holds (the trace-REPL workbench's module table).
+globalThis.typedRv32Inline = {group: "inline"};
 return {};
 })();
 })();

@@ -32,3 +32,5 @@ installPasses("loops", {
         if (ctx.ranges) ctx.facts = divisionFacts(fn.code, fn.params.length, ctx.arity, ctx.ranges, ctx.origin) ?? undefined;
     }},
 });
+// A marker for loaders that list what a realm holds (the trace-REPL workbench's module table).
+globalThis.typedRv32Loops = {group: "loops"};

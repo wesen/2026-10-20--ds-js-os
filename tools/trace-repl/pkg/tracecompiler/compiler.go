@@ -46,6 +46,10 @@ var Modules = []Module{
 	{"typedAsync", "typedAsync", compilerPaths("typed-async.js"), false},
 	{"typedWorld", "typedWorld", compilerPaths("typed-world.js"), true},
 	{"typedRv32", "typedRv32", compilerPaths("typed-rv32.js"), true},
+	// PICOCALC-TYPED-PIPELINE: the pass groups, bundled apart from the core; absent before it, when
+	// typed-rv32.js held every pass. Each publishes a marker and installs its passes in typedRv32.
+	{"typedRv32Inline", "rv32Inline", compilerPaths("typed-rv32-inline.js"), false},
+	{"typedRv32Loops", "rv32Loops", compilerPaths("typed-rv32-loops.js"), false},
 	{"typedPieLoops", "typedPieLoops", compilerPaths("typed-pie-loops.js"), false},
 	{"typedRv32Interp", "interp", toolPaths("rv32-interp.js"), false},
 	{"typedRayBench", "rayBench", toolPaths("typed-ray-bench.js"), false},
