@@ -117,3 +117,43 @@ A content-addressed cache of compiled modules on the FAT partition (`/files`, ab
 
 - Compiling ahead of time on the host. The device compiles its own code; that is the point of the project.
 - Running a world before its compile finishes. That is the other remedy for boot latency; record it as a follow-up if the cache leaves the cold boot too slow.
+
+## Refinements (2026-11-23)
+
+Checked against `typed_p4.c`, `port_p4.c`, `fs_p4.c`, `nucleus/fs.c`, `kernel_supervision.c`, `main_p4.c`,
+`typed_apps.py`, `typed-apps.cmake`, `bundle_js.cmake` and the five callers of `p4_typed_app_compile` (diary Step 1).
+
+1. **Where.** `p4_typed_app_compile` is the one funnel for boot worlds, the Chess painter (`screen-message`), the
+   Candela scene variants, the ray tracer, the gallery's Typed program and `typed WORLD build|baseline`. The cache sits
+   there, so every caller gets it; the deadline clock starts after the lookup, so it covers only a real compile.
+2. **Hash at boot, not at build time.** The key is computed from the bytes the compile evaluates, so no build-graph
+   mistake can make a stale digest match. `typed_apps.py` could not digest the reactors anyway (CMake builds them
+   after it runs). Each bundle is hashed once per boot (a digest per bundle path, kept in RAM), with mbedTLS's
+   hardware SHA-256; the measured cost is in milestone 2's results.
+3. **The bundles in the key.** Every bundle under `typed/`, in path order, with its path: `typedRv32Load` maps
+   `typed-X` to `typed/X` and refuses anything else, so this set contains every pass group any policy can load. Then
+   the app's compiler modules in evaluation order, the RV32 back end's path (and its digest if it is not under
+   `typed/`), the linker's digest, the entry name, the reactor's digest, the source's digest and the policy name.
+4. **One C input.** `typed_lex_index.c` is a native tokenizer the front end calls; CMake hashes its source at configure
+   time (it is a configure dependency) and the key includes that digest, the QuickJS version and a format constant.
+5. **Layout.** One file per entry, `/files/.cache/typed/<first 32 hex digits of the key>.cache`: a 160-byte header
+   (magic, format, the full key, module length, the module's SHA-256, a sequence number, the app name, the source
+   label, the compile time, a header check) followed by the module. The name says it is not a bare ELF. Hidden
+   directories are private to the firmware: `fs_path_ok` rejects them and listings skip them.
+6. **I/O on an internal stack.** FAT calls end in flash operations that disable the caches, which ESP-IDF forbids from
+   a PSRAM stack; the painter's build worker and the gallery's compile task have PSRAM stacks. A cache read runs
+   directly when the caller's stack is internal (the kernel task at boot), otherwise on a short-lived helper task
+   with an internal stack, at the caller's priority and on its core.
+7. **Writes leave the boot's critical path.** A miss hands a copy of the module to a writer task (core 1, priority 1,
+   internal stack): it writes `<name>.tmp`, closes it, removes any old `<name>.cache` and renames. At priority 1 it
+   runs only when the kernel and the painter's compile (priority 2) are idle. `hold` also stops it between entries,
+   so a flash never cuts a write that has started.
+8. **Eviction.** N = 2 per app and source label (an edited Agenda does not evict the bundled one), plus a byte budget:
+   the cache uses at most 4 MB and leaves at least 1 MB of the partition free, deleting the oldest entries first.
+   Age is a sequence number in the header, since the wall clock is not set at boot. One firmware's modules take
+   about 1.96 MB, so two generations fit.
+9. **Console.** `typed cache` lists entries, `typed cache clear` deletes them. Every compile and hit line prints the
+   module's SHA-256 prefix, so a cold boot's fresh compile and a warm boot's hit can be compared byte for byte.
+10. **The Candela first use (milestone 4).** Recommended: the gallery draws with the C++ kernel while the Typed program
+    compiles in the background, and switches at the next scene once it is loaded; the caption says which kernel
+    draws. A "compiling" frame would leave the screen still for 85 s on the first use after every firmware update.
