@@ -10,7 +10,7 @@ ticket's copy of a guide is the record of what was known when it was written.
 | [candela-on-the-p4.md](candela-on-the-p4.md) | Candela's presets path-traced by the firmware and shown on the screen (the playable gallery) |
 | [agent/picocalc-agent-implementation.md](agent/picocalc-agent-implementation.md) | The LLM agent over the onboard ESP32-C6 (hardware, transport, build and provisioning) |
 | `compiler/typed/rv32/README.md` | The RV32 backend's modules, policies and option switches |
-| `cmd/trace-repl/doc/` (`trace-repl help`) | The compiler-evidence workbench: user guide, 25 query examples, JS API, CLI and HTTP |
+| `tools/trace-repl/doc/` (`trace-repl help`) | The compiler-evidence workbench: user guide, 25 query examples, JS API, CLI and HTTP |
 
 ## Where things are
 
@@ -25,5 +25,5 @@ ticket's copy of a guide is the record of what was known when it was written.
 | `bench/` | Measurement: host gates, the board harness, the emulator, reference data |
 | `tests/compiler/` | The Typed compiler's tests, including its pinned image digests |
 | `tools/gen/candela/` | The generators of `firmware/third_party/candela`'s generated files |
-| `cmd/trace-repl`, `pkg/` | The trace REPL (Go and goja) |
+| `tools/trace-repl/` | The trace REPL (Go and goja) |
 | `ttmp/` | Tickets: designs, diaries, results; never imported by code outside `ttmp/` |
