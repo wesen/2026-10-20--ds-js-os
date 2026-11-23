@@ -148,3 +148,21 @@ test("an encoder rejects a register of the other class", () => {
     assert.equal(loadWord(50, 8, 2), ENCODE.flw(50, 8, 2));
     assert.equal(storeWord(9, -4, 2), ENCODE.sw(9, -4, 2));
 });
+
+test("every ALU and immediate form of instruction selection is a row of the table", async () => {
+    // selection.js reads the tape's names, published by compiler/typed/tape.js.
+    const {runInThisContext} = await import("node:vm");
+    runInThisContext(readFileSync(new URL("../../compiler/typed/tape.js", import.meta.url), "utf8"));
+    const {ALU, IMMEDIATE_FORMS} = await import(new URL("../../compiler/typed/rv32/encoding/selection.js", import.meta.url));
+    const rowOf = (word, mask) => INSTRUCTION_ROWS.find(row => ((row.match & mask) >>> 0) === ((word & mask) >>> 0))?.mnemonic;
+    const alu = [...ALU.values()].map(([f3, f7]) => rowOf(instruction.r(0x33, 0, f3, 0, 0, f7), 0xfe00707f));
+    assert.deepEqual(alu.sort(), ["add", "and", "div", "mul", "or", "rem", "sll", "sra", "srl", "sub", "xor"]);
+    const forms = new Set();
+    for (const form of IMMEDIATE_FORMS.values()) for (const c of [0, 1, 2, 3, 8, 255, -5, 31])
+        for (const [f3, imm] of form(c) ?? []) {
+            const shift = f3 === 1 || f3 === 5;
+            forms.add(rowOf(instruction.i(0x13, 0, f3, 0, imm), shift ? 0xfe00707f : 0x707f));
+        }
+    assert(!forms.has(undefined));
+    for (const m of ["addi", "slli", "srai", "srli", "slti", "sltiu", "xori", "ori", "andi"]) assert(forms.has(m), m);
+});
