@@ -1,0 +1,26 @@
+ttmp/2026/11/19/PICOCALC-AGENDA-TYPED-WORLD--move-agenda-application-policy-into-typed-javascript/various/board-before/boots.json 0a0d5d8f
+  worlds {'agenda': ('native', 'agenda/compiled.bin', 'idle', ''), 'files': ('native', 'files/compiled.bin', 'idle', ''), 'editor': ('native', 'editor/compiled.bin', 'idle', ''), 'chess': ('native', 'chess/compiled.bin', 'idle', '')}
+  worlds {'agenda': ('native', 'agenda/compiled.bin', 'idle', ''), 'files': ('native', 'files/compiled.bin', 'idle', ''), 'editor': ('native', 'editor/compiled.bin', 'idle', ''), 'chess': ('native', 'chess/compiled.bin', 'idle', '')}
+  worlds {'agenda': ('native', 'agenda/compiled.bin', 'idle', ''), 'files': ('native', 'files/compiled.bin', 'idle', ''), 'editor': ('native', 'editor/compiled.bin', 'idle', ''), 'chess': ('native', 'chess/compiled.bin', 'idle', '')}
+  compile candela ['2.334 ok', '2.334 ok', '2.334 ok'] median 2.334
+  compile files ['0.472 ok', '0.472 ok', '0.472 ok'] median 0.472
+  compile editor ['3.247 ok', '3.246 ok', '3.248 ok'] median 3.247
+  compile agenda ['0.709 ok', '0.710 ok', '0.709 ok'] median 0.709
+  compile chess ['3.990 ok', '3.987 ok', '3.987 ok'] median 3.987
+  compile chess/painter ['8.107 failed', '8.092 failed', '8.189 failed'] median 8.107
+  first frame (kernel s) editor ['13.960', '13.955', '14.000'] median 13.960
+  first frame (kernel s) agenda ['16.261', '16.258', '16.390'] median 16.261
+  first frame (kernel s) files ['16.668', '16.702', '16.800'] median 16.702
+ttmp/2026/11/19/PICOCALC-AGENDA-TYPED-WORLD--move-agenda-application-policy-into-typed-javascript/various/board-after/boots.json 1782316e
+  worlds {'agenda': ('native', 'agenda/compiled.bin', 'idle', ''), 'files': ('native', 'files/compiled.bin', 'idle', ''), 'editor': ('native', 'editor/compiled.bin', 'idle', ''), 'chess': ('native', 'chess/compiled.bin', 'idle', '')}
+  worlds {'agenda': ('native', 'agenda/compiled.bin', 'idle', ''), 'files': ('native', 'files/compiled.bin', 'idle', ''), 'editor': ('native', 'editor/compiled.bin', 'idle', ''), 'chess': ('native', 'chess/compiled.bin', 'idle', '')}
+  worlds {'agenda': ('native', 'agenda/compiled.bin', 'idle', ''), 'files': ('native', 'files/compiled.bin', 'idle', ''), 'editor': ('native', 'editor/compiled.bin', 'idle', ''), 'chess': ('native', 'chess/compiled.bin', 'idle', '')}
+  compile candela ['2.334 ok', '2.334 ok', '2.333 ok'] median 2.334
+  compile files ['1.391 ok', '1.391 ok', '1.390 ok'] median 1.391
+  compile editor ['3.239 ok', '3.239 ok', '3.240 ok'] median 3.239
+  compile agenda ['2.517 ok', '2.516 ok', '2.516 ok'] median 2.516
+  compile chess ['3.971 ok', '3.968 ok', '3.968 ok'] median 3.968
+  compile chess/painter ['8.185 failed', '8.184 failed', '8.085 failed'] median 8.184
+  first frame (kernel s) editor ['16.724', '16.714', '16.663'] median 16.714
+  first frame (kernel s) agenda ['19.074', '19.070', '19.081'] median 19.074
+  first frame (kernel s) files ['19.464', '19.464', '19.485'] median 19.464

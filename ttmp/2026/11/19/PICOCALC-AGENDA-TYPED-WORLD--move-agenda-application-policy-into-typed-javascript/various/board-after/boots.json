@@ -1,0 +1,930 @@
+{
+  "build": "/tmp/picocalc-agenda-typed-world-build2",
+  "sha256": "1782316e9009ce44c49a500a810d02d528b66b897ae77331cdcc5efe71649cd8",
+  "boots": [
+    {
+      "compiles": [
+        {
+          "name": "candela",
+          "status": "ok",
+          "us": 2333576,
+          "moduleBytes": 66816,
+          "at": 4.90399752400117
+        },
+        {
+          "name": "files",
+          "status": "ok",
+          "us": 1390683,
+          "moduleBytes": 243644,
+          "at": 6.401552632974926
+        },
+        {
+          "name": "editor",
+          "status": "ok",
+          "us": 3239278,
+          "moduleBytes": 243644,
+          "at": 9.643623560958076
+        },
+        {
+          "name": "agenda",
+          "status": "ok",
+          "us": 2517338,
+          "moduleBytes": 243644,
+          "at": 12.177886904974002
+        },
+        {
+          "name": "chess",
+          "status": "ok",
+          "us": 3970617,
+          "moduleBytes": 276412,
+          "at": 16.16662999696564
+        },
+        {
+          "name": "chess/painter",
+          "status": "failed",
+          "us": 8185017,
+          "moduleBytes": 0,
+          "at": 28.02759715798311
+        }
+      ],
+      "firstFrames": {
+        "editor": {
+          "host": 19.155169742996804,
+          "kernelMs": 16723.951,
+          "to": "compositor",
+          "json": "{\"app\":\"editor\",\"title\":\"Editor\",\"frame\":{\"tree\":{\"t\":\"col\",\"gap\":8,\"kids\":[{\"t\""
+        },
+        "agenda": {
+          "host": 21.50640031695366,
+          "kernelMs": 19073.777,
+          "to": "compositor",
+          "json": "{\"app\":\"agenda\",\"title\":\"Agenda\",\"frame\":{\"tree\":{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\""
+        },
+        "files": {
+          "host": 21.90429444797337,
+          "kernelMs": 19464.312,
+          "to": "compositor",
+          "json": "{\"app\":\"files\",\"title\":\"Files\",\"frame\":{\"tree\":{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\":\""
+        }
+      },
+      "worlds": {
+        "keyboard": {
+          "engine": "native",
+          "file": "natives/keyboard.elf",
+          "state": "waiting",
+          "turns": 494,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "power": {
+          "engine": "native",
+          "file": "natives/power.elf",
+          "state": "idle",
+          "turns": 3,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "engine": "native",
+          "file": "natives/display.elf",
+          "state": "idle",
+          "turns": 11,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "compositor": {
+          "engine": "native",
+          "file": "natives/compositor.elf",
+          "state": "idle",
+          "turns": 116,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "agent": {
+          "engine": "native",
+          "file": "natives/agent.elf",
+          "state": "idle",
+          "turns": 122,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "chat": {
+          "engine": "js",
+          "file": "apps/chat.js",
+          "state": "idle",
+          "turns": 8,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "launcher": {
+          "engine": "js",
+          "file": "apps/launcher.js",
+          "state": "idle",
+          "turns": 7,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "files": {
+          "engine": "native",
+          "file": "files/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "editor": {
+          "engine": "native",
+          "file": "editor/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "calc": {
+          "engine": "js",
+          "file": "apps/calc.js",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "agenda": {
+          "engine": "native",
+          "file": "agenda/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "settings": {
+          "engine": "native",
+          "file": "natives/settings.elf",
+          "state": "idle",
+          "turns": 11,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "logs": {
+          "engine": "js",
+          "file": "apps/logs.js",
+          "state": "idle",
+          "turns": 19,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "loader": {
+          "engine": "js",
+          "file": "apps/loader.js",
+          "state": "idle",
+          "turns": 10,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "sysmon": {
+          "engine": "js",
+          "file": "apps/sysmon.js",
+          "state": "idle",
+          "turns": 20,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "repl": {
+          "engine": "js",
+          "file": "apps/repl.js",
+          "state": "idle",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "sandbox": {
+          "engine": "js",
+          "file": "system/sandbox.js",
+          "state": "idle",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "engine": "native",
+          "file": "natives/snake.elf",
+          "state": "idle",
+          "turns": 72,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "faults": {
+          "engine": "js",
+          "file": "apps/faults.js",
+          "state": "idle",
+          "turns": 5,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "flaky": {
+          "engine": "native",
+          "file": "natives/flaky.elf",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "raytrace": {
+          "engine": "js",
+          "file": "apps/raytrace.js",
+          "state": "idle",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "keys": {
+          "engine": "js",
+          "file": "apps/keys.js",
+          "state": "idle",
+          "turns": 10,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "about": {
+          "engine": "js",
+          "file": "apps/about.js",
+          "state": "idle",
+          "turns": 10,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "chess": {
+          "engine": "native",
+          "file": "chess/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "gallery": {
+          "engine": "js",
+          "file": "candela-gallery/gallery.js",
+          "state": "idle",
+          "turns": 37,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "toplog": {
+          "engine": "native",
+          "file": "natives/toplog.elf",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "nat-echo": {
+          "engine": "native",
+          "file": "natives/echo.elf",
+          "state": "idle",
+          "turns": 4,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "nat-bench": {
+          "engine": "native",
+          "file": "natives/bench.elf",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "nat-import": {
+          "engine": "native",
+          "file": "natives/wimport.elf",
+          "state": "stopped",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": "it links to path_open, which picocalc-os does not give a module"
+        },
+        "nat-dial": {
+          "engine": "native",
+          "file": "natives/dial.elf",
+          "state": "idle",
+          "turns": 11,
+          "restarts": 0,
+          "last_error": ""
+        }
+      }
+    },
+    {
+      "compiles": [
+        {
+          "name": "candela",
+          "status": "ok",
+          "us": 2333718,
+          "moduleBytes": 66816,
+          "at": 4.99356427998282
+        },
+        {
+          "name": "files",
+          "status": "ok",
+          "us": 1390716,
+          "moduleBytes": 243644,
+          "at": 6.491105841007084
+        },
+        {
+          "name": "editor",
+          "status": "ok",
+          "us": 3239334,
+          "moduleBytes": 243644,
+          "at": 9.736071533989161
+        },
+        {
+          "name": "agenda",
+          "status": "ok",
+          "us": 2515555,
+          "moduleBytes": 243644,
+          "at": 12.258856090018526
+        },
+        {
+          "name": "chess",
+          "status": "ok",
+          "us": 3967691,
+          "moduleBytes": 276412,
+          "at": 16.251488679030444
+        },
+        {
+          "name": "chess/painter",
+          "status": "failed",
+          "us": 8183963,
+          "moduleBytes": 0,
+          "at": 28.117734780011233
+        }
+      ],
+      "firstFrames": {
+        "editor": {
+          "host": 19.231673579022754,
+          "kernelMs": 16713.873,
+          "to": "compositor",
+          "json": "{\"app\":\"editor\",\"title\":\"Editor\",\"frame\":{\"tree\":{\"t\":\"col\",\"gap\":8,\"kids\":[{\"t\""
+        },
+        "agenda": {
+          "host": 21.59144341299543,
+          "kernelMs": 19069.628,
+          "to": "compositor",
+          "json": "{\"app\":\"agenda\",\"title\":\"Agenda\",\"frame\":{\"tree\":{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\""
+        },
+        "files": {
+          "host": 21.989211288979277,
+          "kernelMs": 19463.531,
+          "to": "compositor",
+          "json": "{\"app\":\"files\",\"title\":\"Files\",\"frame\":{\"tree\":{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\":\""
+        }
+      },
+      "worlds": {
+        "keyboard": {
+          "engine": "native",
+          "file": "natives/keyboard.elf",
+          "state": "idle",
+          "turns": 488,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "power": {
+          "engine": "native",
+          "file": "natives/power.elf",
+          "state": "idle",
+          "turns": 3,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "engine": "native",
+          "file": "natives/display.elf",
+          "state": "idle",
+          "turns": 11,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "compositor": {
+          "engine": "native",
+          "file": "natives/compositor.elf",
+          "state": "idle",
+          "turns": 116,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "agent": {
+          "engine": "native",
+          "file": "natives/agent.elf",
+          "state": "idle",
+          "turns": 121,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "chat": {
+          "engine": "js",
+          "file": "apps/chat.js",
+          "state": "idle",
+          "turns": 8,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "launcher": {
+          "engine": "js",
+          "file": "apps/launcher.js",
+          "state": "idle",
+          "turns": 7,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "files": {
+          "engine": "native",
+          "file": "files/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "editor": {
+          "engine": "native",
+          "file": "editor/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "calc": {
+          "engine": "js",
+          "file": "apps/calc.js",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "agenda": {
+          "engine": "native",
+          "file": "agenda/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "settings": {
+          "engine": "native",
+          "file": "natives/settings.elf",
+          "state": "idle",
+          "turns": 11,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "logs": {
+          "engine": "js",
+          "file": "apps/logs.js",
+          "state": "idle",
+          "turns": 19,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "loader": {
+          "engine": "js",
+          "file": "apps/loader.js",
+          "state": "idle",
+          "turns": 9,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "sysmon": {
+          "engine": "js",
+          "file": "apps/sysmon.js",
+          "state": "idle",
+          "turns": 19,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "repl": {
+          "engine": "js",
+          "file": "apps/repl.js",
+          "state": "idle",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "sandbox": {
+          "engine": "js",
+          "file": "system/sandbox.js",
+          "state": "idle",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "engine": "native",
+          "file": "natives/snake.elf",
+          "state": "idle",
+          "turns": 73,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "faults": {
+          "engine": "js",
+          "file": "apps/faults.js",
+          "state": "idle",
+          "turns": 5,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "flaky": {
+          "engine": "native",
+          "file": "natives/flaky.elf",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "raytrace": {
+          "engine": "js",
+          "file": "apps/raytrace.js",
+          "state": "idle",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "keys": {
+          "engine": "js",
+          "file": "apps/keys.js",
+          "state": "idle",
+          "turns": 10,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "about": {
+          "engine": "js",
+          "file": "apps/about.js",
+          "state": "idle",
+          "turns": 10,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "chess": {
+          "engine": "native",
+          "file": "chess/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "gallery": {
+          "engine": "js",
+          "file": "candela-gallery/gallery.js",
+          "state": "idle",
+          "turns": 36,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "toplog": {
+          "engine": "native",
+          "file": "natives/toplog.elf",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "nat-echo": {
+          "engine": "native",
+          "file": "natives/echo.elf",
+          "state": "idle",
+          "turns": 4,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "nat-bench": {
+          "engine": "native",
+          "file": "natives/bench.elf",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "nat-import": {
+          "engine": "native",
+          "file": "natives/wimport.elf",
+          "state": "stopped",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": "it links to path_open, which picocalc-os does not give a module"
+        },
+        "nat-dial": {
+          "engine": "native",
+          "file": "natives/dial.elf",
+          "state": "idle",
+          "turns": 11,
+          "restarts": 0,
+          "last_error": ""
+        }
+      }
+    },
+    {
+      "compiles": [
+        {
+          "name": "candela",
+          "status": "ok",
+          "us": 2333300,
+          "moduleBytes": 66816,
+          "at": 5.0312886770116165
+        },
+        {
+          "name": "files",
+          "status": "ok",
+          "us": 1390037,
+          "moduleBytes": 243644,
+          "at": 6.530733121035155
+        },
+        {
+          "name": "editor",
+          "status": "ok",
+          "us": 3240141,
+          "moduleBytes": 243644,
+          "at": 9.773650259012356
+        },
+        {
+          "name": "agenda",
+          "status": "ok",
+          "us": 2515859,
+          "moduleBytes": 243644,
+          "at": 12.299294247990474
+        },
+        {
+          "name": "chess",
+          "status": "ok",
+          "us": 3968295,
+          "moduleBytes": 276412,
+          "at": 16.292743014986627
+        },
+        {
+          "name": "chess/painter",
+          "status": "failed",
+          "us": 8085311,
+          "moduleBytes": 0,
+          "at": 28.132515259028878
+        }
+      ],
+      "firstFrames": {
+        "editor": {
+          "host": 19.22718322603032,
+          "kernelMs": 16662.828,
+          "to": "compositor",
+          "json": "{\"app\":\"editor\",\"title\":\"Editor\",\"frame\":{\"tree\":{\"t\":\"col\",\"gap\":8,\"kids\":[{\"t\""
+        },
+        "agenda": {
+          "host": 21.641494609008078,
+          "kernelMs": 19081.472,
+          "to": "compositor",
+          "json": "{\"app\":\"agenda\",\"title\":\"Agenda\",\"frame\":{\"tree\":{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\""
+        },
+        "files": {
+          "host": 22.051207631011494,
+          "kernelMs": 19484.929,
+          "to": "compositor",
+          "json": "{\"app\":\"files\",\"title\":\"Files\",\"frame\":{\"tree\":{\"t\":\"col\",\"gap\":4,\"kids\":[{\"t\":\""
+        }
+      },
+      "worlds": {
+        "keyboard": {
+          "engine": "native",
+          "file": "natives/keyboard.elf",
+          "state": "waiting",
+          "turns": 486,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "power": {
+          "engine": "native",
+          "file": "natives/power.elf",
+          "state": "idle",
+          "turns": 3,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "display": {
+          "engine": "native",
+          "file": "natives/display.elf",
+          "state": "idle",
+          "turns": 12,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "compositor": {
+          "engine": "native",
+          "file": "natives/compositor.elf",
+          "state": "idle",
+          "turns": 116,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "agent": {
+          "engine": "native",
+          "file": "natives/agent.elf",
+          "state": "idle",
+          "turns": 122,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "chat": {
+          "engine": "js",
+          "file": "apps/chat.js",
+          "state": "idle",
+          "turns": 8,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "launcher": {
+          "engine": "js",
+          "file": "apps/launcher.js",
+          "state": "idle",
+          "turns": 7,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "files": {
+          "engine": "native",
+          "file": "files/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "editor": {
+          "engine": "native",
+          "file": "editor/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "calc": {
+          "engine": "js",
+          "file": "apps/calc.js",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "agenda": {
+          "engine": "native",
+          "file": "agenda/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "settings": {
+          "engine": "native",
+          "file": "natives/settings.elf",
+          "state": "idle",
+          "turns": 12,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "logs": {
+          "engine": "js",
+          "file": "apps/logs.js",
+          "state": "idle",
+          "turns": 18,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "loader": {
+          "engine": "js",
+          "file": "apps/loader.js",
+          "state": "idle",
+          "turns": 9,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "sysmon": {
+          "engine": "js",
+          "file": "apps/sysmon.js",
+          "state": "idle",
+          "turns": 19,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "repl": {
+          "engine": "js",
+          "file": "apps/repl.js",
+          "state": "idle",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "sandbox": {
+          "engine": "js",
+          "file": "system/sandbox.js",
+          "state": "idle",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "snake": {
+          "engine": "native",
+          "file": "natives/snake.elf",
+          "state": "idle",
+          "turns": 68,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "faults": {
+          "engine": "js",
+          "file": "apps/faults.js",
+          "state": "idle",
+          "turns": 5,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "flaky": {
+          "engine": "native",
+          "file": "natives/flaky.elf",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "raytrace": {
+          "engine": "js",
+          "file": "apps/raytrace.js",
+          "state": "idle",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "keys": {
+          "engine": "js",
+          "file": "apps/keys.js",
+          "state": "idle",
+          "turns": 10,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "about": {
+          "engine": "js",
+          "file": "apps/about.js",
+          "state": "idle",
+          "turns": 10,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "chess": {
+          "engine": "native",
+          "file": "chess/compiled.bin",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "gallery": {
+          "engine": "js",
+          "file": "candela-gallery/gallery.js",
+          "state": "idle",
+          "turns": 36,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "toplog": {
+          "engine": "native",
+          "file": "natives/toplog.elf",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "nat-echo": {
+          "engine": "native",
+          "file": "natives/echo.elf",
+          "state": "idle",
+          "turns": 4,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "nat-bench": {
+          "engine": "native",
+          "file": "natives/bench.elf",
+          "state": "idle",
+          "turns": 1,
+          "restarts": 0,
+          "last_error": ""
+        },
+        "nat-import": {
+          "engine": "native",
+          "file": "natives/wimport.elf",
+          "state": "stopped",
+          "turns": 0,
+          "restarts": 0,
+          "last_error": "it links to path_open, which picocalc-os does not give a module"
+        },
+        "nat-dial": {
+          "engine": "native",
+          "file": "natives/dial.elf",
+          "state": "idle",
+          "turns": 11,
+          "restarts": 0,
+          "last_error": ""
+        }
+      }
+    }
+  ]
+}
