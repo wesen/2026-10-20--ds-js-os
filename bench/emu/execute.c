@@ -1,11 +1,11 @@
-/* rv32emu: the processor. */
+/* rv32emu: the processor, RV32IMFC with the CSR instructions on fflags, frm and fcsr (fpu.c holds RV32F). */
 #include "machine.h"
 
-/* ---- the processor: RV32IMC ---- */
+/* ---- the processor: RV32IMFC ---- */
 static inline int32_t sx(uint32_t v, int bits) { return (int32_t)(v << (32 - bits)) >> (32 - bits); }
-void run(void)
+static inline __attribute__((always_inline)) void execute(void)
 {
-	for (;;) {
+	{
 		uint32_t i = ld16(pc), len = 2;
 		if ((i & 3) != 3) i = expand_c(i, pc);   /* the C extension: 16 bits */
 		else i = ld32(pc), len = 4;
@@ -104,10 +104,28 @@ void run(void)
 			break;
 		case 0x0f: wr = 0; break;                                     /* fence */
 		case 0x73:                                                     /* ecall: a host call, its number in a7 */
+			if (f3 && (f3 & 3) && (i >> 20) >= 1 && (i >> 20) <= 3) { v = fp_csr(i, a); break; }   /* fflags, frm, fcsr */
 			wr = 0;
 			if (i == 0x00000073) hostcall(x[17]);
 			else if (i == 0x00100073) die("ebreak at %#x", pc);
 			else die("system instruction %#x at %#x", i, pc);
+			break;
+		case 0x07:                                                     /* flw */
+			if (f3 != 2) die("load %#x at %#x", i, pc);
+			f[rd] = ld32(a + (uint32_t)sx(i >> 20, 12));
+			wr = 0;
+			break;
+		case 0x27:                                                     /* fsw */
+			if (f3 != 2) die("store %#x at %#x", i, pc);
+			st32(a + (uint32_t)sx(((i >> 25) << 5) | ((i >> 7) & 31), 12), f[rs2]);
+			wr = 0;
+			break;
+		case 0x43: case 0x47: case 0x4b: case 0x4f:                    /* fmadd, fmsub, fnmsub, fnmadd */
+			fp_fused(i);
+			wr = 0;
+			break;
+		case 0x53:                                                     /* OP-FP */
+			wr = fp_op(i, a, &v);
 			break;
 		default:
 			die("instruction %#x at pc %#x", i, pc);
@@ -116,3 +134,6 @@ void run(void)
 		pc = next;
 	}
 }
+
+void step(void) { execute(); }
+void run(void) { for (;;) execute(); }

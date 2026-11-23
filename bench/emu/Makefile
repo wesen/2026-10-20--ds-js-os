@@ -1,9 +1,10 @@
-# rv32emu, the RV32IMF emulator that runs the host replays, the Chess oracle and cji's tests, and the three objects
+# rv32emu, the RV32IMFC emulator that runs the host replays, the Chess oracle and cji's tests, and the three objects
 # the replays' programs link against (found next to the emulator): cji's freestanding C runtime (a small libc, the
 # host-call stubs the emulator answers, soft-float helpers). That runtime lives in compiler/cji/tools/rv32/fw/ because the
 # firmware's device-compiler tool links it too.
 #
 #   make -C bench/emu       builds build/rv32emu and build/{libc,hostcalls,softfloat}.o
+#   make -C bench/emu build/rv32emu-vectors    the processor alone, for the conformance suite (tests/rv32)
 CC      ?= cc
 FW      := ../../compiler/cji/tools/rv32/fw
 RVCLANG := clang --target=riscv32-unknown-elf -march=rv32imc -mabi=ilp32 -O2 -nostdinc \
@@ -12,11 +13,16 @@ OBJECTS := build/libc.o build/hostcalls.o build/softfloat.o
 
 all: build/rv32emu $(OBJECTS)
 
-SOURCES := main.c machine.c host.c profile.c decode.c execute.c elf.c
+PROCESSOR := machine.c decode.c execute.c fpu.c
+SOURCES   := main.c host.c profile.c elf.c $(PROCESSOR)
 
 build/rv32emu: $(SOURCES) machine.h Makefile
 	mkdir -p build
 	$(CC) -std=gnu11 -O2 -Wall -o $@ $(SOURCES) -lm
+
+build/rv32emu-vectors: vectors.c $(PROCESSOR) machine.h Makefile
+	mkdir -p build
+	$(CC) -std=gnu11 -O2 -Wall -o $@ vectors.c $(PROCESSOR) -lm
 
 build/%.o: $(FW)/%.c Makefile $(wildcard $(FW)/include/*.h $(FW)/include/sys/*.h)
 	mkdir -p build

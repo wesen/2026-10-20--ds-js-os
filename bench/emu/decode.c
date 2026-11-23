@@ -1,4 +1,4 @@
-/* rv32emu: decoding. */
+/* rv32emu: decoding the C extension (with RV32FC's c.flw, c.fsw, c.flwsp, c.fswsp). */
 #include "machine.h"
 
 /* ---- the C extension: each 16-bit instruction becomes the 32-bit one it stands for ---- */
@@ -32,8 +32,8 @@ uint32_t expand_c(uint32_t c, uint32_t pc)
 			if (!u) break;
 			return enc_i((int32_t)u, 2, 0, rdp, 0x13);
 		}
-		case 2: return enc_i((int32_t)(bits(c, 12, 10) << 3 | bits(c, 6, 6) << 2 | bits(c, 5, 5) << 6), rs1p, 2, rdp, 0x03);   /* c.lw */
-		case 6: return enc_s((int32_t)(bits(c, 12, 10) << 3 | bits(c, 6, 6) << 2 | bits(c, 5, 5) << 6), rdp, rs1p, 2, 0x23);  /* c.sw */
+		case 2: case 3: return enc_i((int32_t)(bits(c, 12, 10) << 3 | bits(c, 6, 6) << 2 | bits(c, 5, 5) << 6), rs1p, 2, rdp, f3 == 2 ? 0x03 : 0x07);   /* c.lw, c.flw */
+		case 6: case 7: return enc_s((int32_t)(bits(c, 12, 10) << 3 | bits(c, 6, 6) << 2 | bits(c, 5, 5) << 6), rdp, rs1p, 2, f3 == 6 ? 0x23 : 0x27);  /* c.sw, c.fsw */
 		}
 		break;
 	case 1:
@@ -81,6 +81,7 @@ uint32_t expand_c(uint32_t c, uint32_t pc)
 		case 0: return enc_i((int32_t)(bits(c, 6, 2) | bits(c, 12, 12) << 5), rd, 1, rd, 0x13);   /* c.slli */
 		case 2: if (!rd) break;                                                                 /* c.lwsp */
 			return enc_i((int32_t)(bits(c, 12, 12) << 5 | bits(c, 6, 4) << 2 | bits(c, 3, 2) << 6), 2, 2, rd, 0x03);
+		case 3: return enc_i((int32_t)(bits(c, 12, 12) << 5 | bits(c, 6, 4) << 2 | bits(c, 3, 2) << 6), 2, 2, rd, 0x07);   /* c.flwsp */
 		case 4:
 			if (!bits(c, 12, 12)) {
 				if (!rs2) { if (!rd) break; return enc_i(0, rd, 0, 0, 0x67); }   /* c.jr */
@@ -88,7 +89,7 @@ uint32_t expand_c(uint32_t c, uint32_t pc)
 			}
 			if (!rs2) { if (!rd) break; return enc_i(0, rd, 0, 1, 0x67); }       /* c.jalr (c.ebreak: rd 0) */
 			return enc_r(0, rs2, rd, 0, rd);                                         /* c.add */
-		case 6: return enc_s((int32_t)(bits(c, 12, 9) << 2 | bits(c, 8, 7) << 6), rs2, 2, 2, 0x23);   /* c.swsp */
+		case 6: case 7: return enc_s((int32_t)(bits(c, 12, 9) << 2 | bits(c, 8, 7) << 6), rs2, 2, 2, f3 == 6 ? 0x23 : 0x27);   /* c.swsp, c.fswsp */
 		}
 		break;
 	}
