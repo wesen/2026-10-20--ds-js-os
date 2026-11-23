@@ -291,3 +291,75 @@ coordinator had found it wedged at about 13:10, before my install). The board wa
 ### Technical details
 - Board arms: `/tmp/picocalc-device-cost-arm-{control,split,strip}` (app, partition table, bootloader,
   picocalc-build.json).
+
+## Step 5: Gates on the host, and a cache simulation while the board is paused
+
+With the board paused, the host gates ran on the full branch, and callgrind's cache simulation tested the layout
+hypothesis for the slowdown: the same compile, with the same instructions and the same image, misses the simulated
+caches more or less depending only on which compiler bundles are in the realm, by 4 to 11 percent of the L2 data
+misses, and not always in the same direction.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** host-side work while the coordinator's pause holds ("Pause all board work until I tell
+you the user has power-cycled it; continue host-side work").
+**Inferred user intent:** keep the evidence moving without the board.
+**Commit (code):** db38a6b — "test(trace-repl): an old revision misses the kernel group bundle too"
+
+### What I did
+- `GOWORK=/tmp/picocalc-device-cost-go.work make test` (a go.work in /tmp: this worktree plus
+  `/home/manuel/code/wesen/go-go-golems/go-go-goja`, since go.mod's replace is relative to the main checkout).
+- `make test-host` and `make test-host OPTIONS='{"policy":"kernel"}'`.
+- `scripts/11-qjs-compile.c` (one warm compile after reading bytecode, `measured_compile` marked for callgrind's
+  `--toggle-collect`), `11-compile-driver.js`, `12-cachesim.sh`: P4-like caches (I1 16 KB 4-way, D1 64 KB 4-way,
+  L2 128 KB 8-way, 64 B lines), Agenda (`interactive`) and Chess (`balanced`) as world compiles, lazy (core, plus
+  inline for Chess) against all (every group), strip none and debug. Results in `various/01-cachesim/collected.txt`.
+
+### Why
+- The device's own counters come from the in-image session; this is a host proxy for the mechanism, cheap to run
+  while the board waits.
+
+### What worked
+- `make test`: exit 0 (134 node tests passing over the suites, test-generated, go, native, cji, rv32).
+- `make test-host`: ray 4,888,369 instructions, 11964 B, `430f0d501659` (reference); Chess 6981 words, 128,152,624
+  instructions, 21716 B; 25/25 workflows. Kernel: ray 3,239,635, 11544 B, `430f0d501659`; Chess 6981 words,
+  118,361,847, 19892 B; 25/25.
+- Cache simulation (instructions; L2 data misses read + write):
+
+| compile | strip | lazy Ir | all Ir | lazy L2D miss | all L2D miss | all - lazy |
+|---|---:|---:|---:|---:|---:|---:|
+| Agenda | none | 546.30 M | 545.03 M | 600,710 | 574,932 | -4.3 % |
+| Agenda | debug | 545.21 M | 546.37 M | 584,025 | 649,544 | +11.2 % |
+| Chess | none | 656.37 M | 655.79 M | 634,895 | 606,777 | -4.4 % |
+| Chess | debug | 655.45 M | 655.79 M | 676,836 | 639,718 | -5.5 % |
+
+  Images identical in every arm (Agenda 66,252 B, Chess 37,848 B, same checksum).
+
+### What didn't work
+- `make test` failed once in test-go: `--- FAIL: TestCompilerRevisionsCoexistInOneSession ... 25cd108:
+  {Missing:[... typed-rv32-inline.js typed-rv32-loops.js typed-rv32-kernel.js ...]}`: the trace REPL loads an old
+  revision and counts the bundles it lacks, now 6; the test expected 5. Fixed in db38a6b.
+- The first loop of callgrind runs printed `Collected : 0` and no result line for every run; run again one by one
+  with the same flags they collected normally. I did not find why; `12-cachesim.sh` keeps each run's log.
+
+### What I learned
+- Identical compile work in a different realm changes the simulated L2 data misses by tens of thousands, in either
+  direction. At a few hundred nanoseconds per PSRAM line fill on the P4, that is the order of TYPED-PIPELINE's
+  15-96 ms.
+
+### What was tricky to build
+- Measuring only the compile: the bytecode is written in a first runtime and read in a second, as on the device,
+  and only `measured_compile` (the driver's `JS_Eval`) is collected.
+
+### What warrants a second pair of eyes
+- A host allocator is not the P4's TLSF heap; the simulation shows that the effect exists and its size, not the
+  device's numbers.
+
+### What should be done in the future
+- The in-image session (E2, E3) measures the same comparison with the P4's own cache counters.
+
+### Code review instructions
+- `bash scripts/12-cachesim.sh /tmp/qjs-compile OUT` after building `11-qjs-compile.c` (command in its header).
+
+### Technical details
+- Events: `Ir Dr Dw I1mr D1mr D1mw ILmr DLmr DLmw`.
