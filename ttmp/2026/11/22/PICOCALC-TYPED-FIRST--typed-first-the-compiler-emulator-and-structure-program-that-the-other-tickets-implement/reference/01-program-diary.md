@@ -288,3 +288,22 @@ PIPELINE's paired board study (3 blocks):
 ### Milestone 1 status
 
 Vault report 1 (the compiler's new architecture) waits for REGISTERS and BITWISE. TAPE, FRONTEND, PIPELINE and ASYNC-TAPE are merged.
+
+## Step 9: The playable image at f4fc56c, and a gallery check that no longer needs the gallery in front
+
+The playable image `0a0d5d8f…` (built at `f4fc56c`, the PIPELINE merge) is installed and recorded. Health passes with the peripherals on, and the 18 scenes agree with the RV32 reference.
+
+### What didn't work
+
+- **The first gallery check.**
+
+  ```
+  AssertionError: no CGAL scene record within 120 s: the gallery is not drawing
+  ```
+
+  The healthy-input check presses keys, and the gallery draws only while it is on screen, so the gallery was not in front. APP-MANIFEST hit the same.
+
+### What I did
+
+- **`bench/board/gallery.py` waits at most `--wait` seconds (default 60)** for a scene, records `drawing` (null when not drawing), and runs the digests anyway; `gallery digest` does not need the gallery in front. Rerun into `various/09-gallery-f4fc56c`: 18/18 agree.
+- **Committed** `PLAYABLE.json`, the evidence and the script change.
