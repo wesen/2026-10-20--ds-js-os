@@ -729,28 +729,24 @@ class GeneratedText {
         return parts.join("");
     }
 
+    // The original source position of an offset in the lowered program: within a copied chunk the same character,
+    // within generated text the statement the chunk was generated for.
+    originalAt(offset) {
+        let low = 0, high = this.chunks.length;
+        while (low + 1 < high) {
+            const mid = (low + high) >>> 1;
+            if (this.chunks[mid].offset <= offset) low = mid;
+            else high = mid;
+        }
+        const chunk = this.chunks[low];
+        return chunk.at + (chunk.copied ? offset - chunk.offset : 0);
+    }
+
     result(prefix, layout) {
         let whole;
-        const materialize = () => whole ??= this.range(0, this.offset);
-        const remap = error => {
-            const source = materialize();
-            const match = /^(\d+):(\d+): ([\s\S]*)$/.exec(error.message);
-            if (!match) return error;
-            let offset = 0;
-            for (let i = 1; i < Number(match[1]); i++) offset = source.indexOf("\n", offset) + 1;
-            offset += Number(match[2]) - 1;
-            let low = 0, high = this.chunks.length;
-            while (low + 1 < high) {
-                const mid = (low + high) >>> 1;
-                if (this.chunks[mid].offset <= offset) low = mid;
-                else high = mid;
-            }
-            const chunk = this.chunks[low];
-            if (!chunk) return error;
-            const at = chunk.at + (chunk.copied ? offset - chunk.offset : 0);
-            return new SyntaxError(location(this.original, at) + ": " + match[3]);
-        };
-        return {get source() { return materialize(); }, layout, prefix, remap};
+        const writer = this;
+        return {get source() { return whole ??= writer.range(0, writer.offset); }, layout, prefix,
+            originalAt: offset => writer.originalAt(offset)};
     }
 }
 
@@ -1169,7 +1165,7 @@ function rewrite(source, imports = []) {
     lowered.plan = {
         original: source, declarations: program.types, fields,
         bodies: bodies.map(body => body.originalAt === undefined
-            ? {text: writer.range(body.from, body.to), at: 0} : {at: body.originalAt}),
+            ? {text: writer.range(body.from, body.to), at: 0, from: body.from} : {at: body.originalAt}),
         generated: writer.range(generatedAt, writer.offset),
     };
     return lowered;
