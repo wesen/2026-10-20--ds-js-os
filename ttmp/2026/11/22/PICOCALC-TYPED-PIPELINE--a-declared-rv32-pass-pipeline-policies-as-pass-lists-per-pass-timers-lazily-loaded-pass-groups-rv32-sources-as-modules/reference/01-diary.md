@@ -353,6 +353,10 @@ instruction counts do not show.
 - Board run 1 (module scopes): the same heap pattern (−138, −139, +44, −115 KB), times +15, +21, +40, +60 ms and
   Candela +182 ms; bytecode 367,451 + 64,933 + 269,019 B. Hoisting cut the first compile's extra from 182 to 79 ms.
 
+- After merging main at `3f867a1` (TYPED-ASYNC-TAPE; merge `312a944`, which also adds the pass groups to the new
+  `typed-async.test.mjs`): `make test` 112 node tests, 0 failing, everything else ok; both `make test-host` runs give
+  the numbers above; 84 of 84 digests equal `bf30d31`'s.
+
 ### What didn't work
 - Run 1's health checks failed on the painter (`painter {'sources': 0, 'compiles': 0, 'installed': False, ...}`) in
   every install, control included, with the keyboard bus failing; the compile lines were complete. Per the
