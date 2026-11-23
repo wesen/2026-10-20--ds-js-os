@@ -109,8 +109,16 @@ that needs more blocks or a different workload.
 `bench/board/device.py` is the only code that talks to the board. It holds the serial lock (one process owns the port
 at a time), the firmware console, esptool calls, the firmware's `hold` before flashing, the wait for the boot-time
 compiles (`settle`, up to 60 s), and the health check. Health has two modes: `peripherals="on"` requires every native
-world healthy, the Chess painter installed and the I2C keyboard answering; `"off-by-user"` records the keyboard,
-display and compositor without judging them, for when they are switched off on purpose.
+world healthy, the Chess painter installed and called, and the I2C keyboard answering; `"off-by-user"` waits for the
+painter in the same way and records the keyboard, display and compositor without judging them, for when they are
+switched off on purpose.
+
+Health judges a fresh boot. The `worlds` report has no time for an error, and its counters run from boot, so a board
+that has been up for more than `FRESH_S` (120 s) when the check starts is rebooted first with the console's `reboot`,
+which holds i2c0 between transactions before it restarts. That covers a health-only check hours after an install, or a
+"power cycle" that USB kept powered. Every health record carries the uptime it judged from (`boot`) and what each bus
+did over a 5 s window (`buses.deltas`, next to the counters since boot in `buses.totals`); the keyboard qualifies on
+the window: i2c0 transfers and no errors. `tests/board` tests the library against a fake console (`make test-board`).
 
 `firmware/PLAYABLE.json` records the firmware the handheld is left on: profile, commit, the digests of the app,
 partition table and bootloader, and the last health check. `bench/board/playable.py` keeps the files in
@@ -121,6 +129,8 @@ make playable                 # build the playable profile at HEAD and store it
 make install-playable         # flash it, settle, check health, rewrite PLAYABLE.json (then commit it)
 make restore-playable         # reinstall what PLAYABLE.json records
 python3 bench/board/run.py --probe DIR    # check store, board and health without flashing
+python3 bench/board/playable.py install --stored DIR --health-only   # health of the board as it is (reboots it if
+                                                                      # it has been up for long); PLAYABLE.json unchanged
 ```
 
 `run.py` refuses to start a study unless the stored playable files match `PLAYABLE.json`, and every study ends by

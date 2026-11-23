@@ -34,6 +34,13 @@ NATIVE = {w: f"natives/{w}.elf" for w in ("compositor", "snake", "keyboard", "di
 # With the keyboard and display switched off by the user, these are recorded but not judged.
 PERIPHERAL_WORLDS = ("keyboard", "display", "compositor")
 BUS = re.compile(r"bus (\S+)\s+busy\s+(\d+[.]\d+) ms, (\d+) transfers, (\d+) bytes, (\d+) errors")
+UPTIME = re.compile(r"^t = (\d+(?:[.]\d+)?) ms")
+# A health check judges only a boot it can account for: a board up longer than this when the check starts is
+# rebooted first, so errors left from hours ago (a keyboard wedge, a "power cycle" that USB kept powered) are gone.
+FRESH_S = 120
+# Bus health is judged on the change over this window, not on counters that run from boot.
+BUS_WINDOW_S = 5
+PAINTER_S = 30
 
 
 def sha(path):
@@ -53,22 +60,19 @@ def acquire():
 
 
 class Console:
-    """The firmware's line console: commands answer with lines that end in "#OK <command>"."""
+    """The firmware's line console: commands answer with lines that end in "#OK <command>".
 
-    def __init__(self, port, log):
-        self.port = serial.Serial(port, 115200, timeout=.03)
+    `port` is a device path or an object with pyserial's read/write/in_waiting (the tests' fake port)."""
+
+    def __init__(self, port, log, drain_s=13):
+        self.port = serial.Serial(port, 115200, timeout=.03) if isinstance(port, (str, os.PathLike)) else port
         self.port.reset_input_buffer()
         self.log = log
         self.pending = b""
         self.expected_restarts = set()
         # Opening the CH343 can pulse EN. Drain startup before writing a command,
         # since UART receives commands only after the RTOS console task starts.
-        ready = time.monotonic() + 13
-        while time.monotonic() < ready:
-            try:
-                self.line(ready)
-            except TimeoutError:
-                break
+        self.drain(drain_s)
 
     def close(self):
         self.port.close()
@@ -76,17 +80,31 @@ class Console:
     def send(self, command):
         self.port.write(("\n" + command + "\n").encode())
 
+    def drain(self, seconds):
+        """Read (and log) whatever the board prints for `seconds`."""
+        deadline = time.monotonic() + seconds
+        try:
+            while True:
+                self.line(deadline)
+        except TimeoutError:
+            pass
+
     def line(self, deadline):
-        while b"\n" not in self.pending:
+        """The next line. The deadline is absolute: once it has passed, TimeoutError, even with lines still buffered."""
+        while True:
             if time.monotonic() >= deadline:
                 raise TimeoutError(self.pending[-100:])
+            if b"\n" in self.pending:
+                line, self.pending = self.pending.split(b"\n", 1)
+                return line.rstrip(b"\r")
             chunk = self.port.read(max(1, self.port.in_waiting))
             self.log.write(chunk)
             self.pending += chunk
-        line, self.pending = self.pending.split(b"\n", 1)
-        return line.rstrip(b"\r")
 
     def command(self, command, timeout=3):
+        """The lines a command prints before its "#OK", or TimeoutError `timeout` seconds after sending it, however
+        many other lines (the gallery's CGAL records, the kernel log) arrive meanwhile. The "#OK" may end a line that
+        another task's output began; that output is kept as a line of its own."""
         self.send(command)
         expected = "#OK " + command.split()[0]
         deadline = time.monotonic() + timeout
@@ -96,7 +114,9 @@ class Console:
                 line = self.line(deadline).decode(errors="replace")
             except TimeoutError as exc:
                 raise TimeoutError(f"{command}: {lines[-2:]}") from exc
-            if line == expected:
+            if line.endswith(expected):
+                if len(line) > len(expected):
+                    lines.append(line[:-len(expected)])
                 if command.startswith("restart "):
                     self.expected_restarts.add(command.split()[1])
                 return lines
@@ -131,14 +151,44 @@ class Console:
                 found[m[1]] = dict(zip(("busyMs", "transfers", "bytes", "errors"), (float(m[2]), int(m[3]), int(m[4]), int(m[5]))))
         return found
 
-    def input_ready(self):
-        """The physical keyboard answers: I2C0 transfers increase and its error count does not."""
-        self.native_healthy()
-        before = self.buses()["i2c0"]
-        time.sleep(.4)
-        after = self.buses()["i2c0"]
-        if after["transfers"] <= before["transfers"] or after["errors"] != before["errors"]:
-            raise ValueError(f"physical keyboard I2C0 did not qualify: {before} -> {after}")
+    def uptime_ms(self, deadline_s=30):
+        """The kernel clock (`stats` prints "t = X ms" first): milliseconds since the firmware booted. Boot compiles
+        keep the kernel from answering for seconds, so a timed-out `stats` is asked again until deadline_s."""
+        deadline = time.monotonic() + deadline_s
+        while True:
+            try:
+                for line in self.command("stats", timeout=10):
+                    m = UPTIME.match(line)
+                    if m:
+                        return float(m[1])
+                raise ValueError("stats printed no kernel clock")
+            except TimeoutError:
+                if time.monotonic() >= deadline:
+                    raise
+
+    def reboot(self, drain_s=13):
+        """Restart the firmware from its console. `reboot` first holds i2c0 between transactions (a reset in the
+        middle of a keyboard transfer is what wedges the keyboard controller), then calls esp_restart(); it prints
+        "rebooting" and never "#OK". The port stays open: the CH343 is not reset."""
+        self.send("reboot")
+        deadline = time.monotonic() + 10
+        try:
+            while "rebooting" not in self.line(deadline).decode(errors="replace"):
+                pass
+        except TimeoutError as exc:
+            raise RuntimeError("the firmware did not answer reboot") from exc
+        self.expected_restarts.clear()
+        self.drain(drain_s)
+
+    def bus_window(self, seconds=None):
+        """What every bus did over the last `seconds` (BUS_WINDOW_S): the transfers, bytes, errors and busy time added
+        ("deltas"), next to the counters since boot ("totals"), which tell a bus's history, not its health."""
+        before, t0 = self.buses(), time.monotonic()
+        time.sleep(BUS_WINDOW_S if seconds is None else seconds)
+        after, t1 = self.buses(), time.monotonic()
+        deltas = {name: {k: round(after[name][k] - before[name][k], 2) for k in ("transfers", "bytes", "errors", "busyMs")}
+                  for name in sorted(before.keys() & after.keys())}
+        return {"seconds": round(t1 - t0, 2), "deltas": deltas, "totals": after}
 
 
 def esp(op, build, out, tag, port=PORT, app=None):
@@ -163,6 +213,19 @@ def painter(console):
     return next(json.loads(line) for line in console.command("painter") if line.startswith('{"sources"'))
 
 
+def wait_painter(console, calls, deadline_s=PAINTER_S):
+    """Chess hands the painter its sources some seconds after the boot compiles (later still with the display off):
+    poll until it is installed without rejects (and, if `calls`, has been called), or raise at the deadline."""
+    deadline = time.monotonic() + deadline_s
+    while True:
+        p = painter(console)
+        if p["installed"] and not p["rejects"] and (p["calls"] or not calls):
+            return p
+        if time.monotonic() >= deadline:
+            raise RuntimeError("painter " + str(p))
+        time.sleep(.15)
+
+
 def settle(console, limit=60):
     """Boot compiles run for seconds after a reset (Chess about 3.8 s); wait until no native world reads restarting."""
     deadline = time.monotonic() + limit
@@ -173,27 +236,39 @@ def settle(console, limit=60):
         time.sleep(1)
 
 
+def fresh_boot(console, limit_s=FRESH_S):
+    """Make the errors a health check judges belong to a boot it can account for. The `worlds` report has no time
+    for an error and its counters run from boot, so on a board up for longer than limit_s (a health-only check, a
+    "power cycle" that USB kept powered) the firmware is rebooted first. Returns the uptime the check starts from."""
+    up = console.uptime_ms()
+    if up <= limit_s * 1000:
+        return {"uptimeMs": up, "rebooted": False}
+    console.reboot()
+    after = console.uptime_ms()
+    if after > limit_s * 1000:
+        raise RuntimeError(f"the firmware did not restart: uptime {up:.0f} ms before reboot, {after:.0f} ms after")
+    return {"uptimeMs": after, "rebooted": True, "uptimeBeforeMs": up}
+
+
 def health(console, peripherals="on"):
-    """World health after settling. peripherals "on": every native world healthy, the painter installed, and the
-    physical keyboard answering. "off-by-user" (the user switched the keyboard and display off on purpose): the
-    keyboard probe is skipped and the keyboard, display and compositor are recorded but not judged."""
+    """World health of a fresh boot (fresh_boot) after settling, with what every bus did over BUS_WINDOW_S.
+    peripherals "on": every native world healthy, the painter installed and called, and the physical keyboard
+    answering (i2c0 transfers over the window, none of them errors). "off-by-user" (the user switched the keyboard
+    and display off on purpose): the painter is waited for in the same way; the keyboard, display, compositor and
+    buses are recorded but not judged."""
     assert peripherals in ("on", "off-by-user"), peripherals
+    boot = fresh_boot(console)
     still = settle(console)
     if peripherals == "on":
         worlds = console.native_healthy()
-        deadline = time.monotonic() + 20
-        while True:
-            p = painter(console)
-            if p["installed"] and p["calls"] and not p["rejects"]:
-                break
-            if time.monotonic() >= deadline:
-                raise RuntimeError("painter " + str(p))
-            time.sleep(.15)
+        p = wait_painter(console, calls=True)
         assert p["compiles"] == 1 and p["installed"] and p["rejects"] == 0, p
         assert all(worlds[k]["restarts"] == 0 for k in NATIVE), {k: worlds[k]["restarts"] for k in NATIVE}
-        console.input_ready()
-        buses = console.buses()
-        return {"peripherals": "on", "worlds": sorted(NATIVE), "painter": p, "i2c": buses["i2c0"], "spi": buses["spi2"],
+        buses = console.bus_window()
+        i2c = buses["deltas"].get("i2c0")
+        if not i2c or i2c["transfers"] <= 0 or i2c["errors"]:
+            raise ValueError(f"physical keyboard I2C0 did not qualify over {buses['seconds']} s: {i2c}")
+        return {"peripherals": "on", "boot": boot, "worlds": sorted(NATIVE), "painter": p, "buses": buses,
                 "restartingAfterSettle": still}
     worlds = console.worlds()
     seen = {k: {f: worlds.get(k, {}).get(f) for f in ("engine", "file", "state", "restarts", "last_error")} for k in NATIVE}
@@ -202,12 +277,11 @@ def health(console, peripherals="on"):
            or seen[k]["state"] in ("crashed", "stopped", "restarting") or seen[k]["last_error"]]
     if bad:
         raise RuntimeError(f"native worlds unhealthy with peripherals off: {[(k, seen[k]) for k in bad]}")
-    p = painter(console)
-    if p["compiles"] != 1 or not p["installed"] or p["rejects"]:
+    p = wait_painter(console, calls=False)
+    if p["compiles"] != 1:
         raise RuntimeError(f"painter {p}")
-    buses = console.buses()
-    return {"peripherals": "off by user", "keyboard": "off by user", "display": "off by user", "worlds": seen,
-            "judged": judged, "painter": p, "i2c": buses.get("i2c0"), "spi": buses.get("spi2"), "restartingAfterSettle": still}
+    return {"peripherals": "off by user", "keyboard": "off by user", "display": "off by user", "boot": boot,
+            "worlds": seen, "judged": judged, "painter": p, "buses": console.bus_window(), "restartingAfterSettle": still}
 
 
 def check_build(build, digest=None):
@@ -226,17 +300,30 @@ def write_app(build, out, tag, port=PORT):
     esp("verify_flash", build, out, tag + "-verify", port)
 
 
+def quiesce(port, log):
+    """hold the running firmware before esptool resets it, so the reset cannot land in the middle of a keyboard
+    transfer (an ESP32-only reset there is the suspected cause of the keyboard controller wedging). Best effort: an
+    image without the console (a study app) or a hung one cannot hold, and a restore must still go ahead."""
+    try:
+        hold(Console(port, log, drain_s=1))
+        return True
+    except (AssertionError, TimeoutError, serial.SerialException):
+        return False
+
+
 def install(build, out, peripherals="on", port=PORT, health_only=False):
     """Flash a build (unless health_only), wait for the boot compiles, check health. Returns the after-record."""
     digest = check_build(build)
     out = Path(out)
     out.mkdir(parents=True, exist_ok=False)
     with acquire(), (out / "uart.log").open("wb", buffering=0) as log:
+        record = {"build": str(build), "sha256": digest}
         if not health_only:
+            record["heldBeforeFlash"] = quiesce(port, log)
             write_app(build, out, "install", port)
         console = Console(port, log)
         try:
-            record = {"build": str(build), "sha256": digest, "health": health(console, peripherals)}
+            record["health"] = health(console, peripherals)
         finally:
             console.close()
     save(out / "after.json", record)
