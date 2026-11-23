@@ -1,0 +1,40 @@
+{
+  "peripherals": "on",
+  "worlds": [
+    "agenda",
+    "chess",
+    "compositor",
+    "display",
+    "editor",
+    "files",
+    "keyboard",
+    "snake"
+  ],
+  "painter": {
+    "sources": 1,
+    "compiles": 1,
+    "installed": true,
+    "packets": 1,
+    "calls": 1,
+    "paints": 0,
+    "rejects": 0,
+    "compile_us": 4921875,
+    "relocate_us": 1514,
+    "native_us": 1433,
+    "raster_us": 0,
+    "image_bytes": 33840
+  },
+  "i2c": {
+    "busyMs": 2493753.15,
+    "transfers": 417726,
+    "bytes": 1672571,
+    "errors": 0
+  },
+  "spi": {
+    "busyMs": 179704.76,
+    "transfers": 72930,
+    "bytes": 748971893,
+    "errors": 0
+  },
+  "restartingAfterSettle": []
+}
