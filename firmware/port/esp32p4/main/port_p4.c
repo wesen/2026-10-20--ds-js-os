@@ -106,17 +106,11 @@ char *p4_bundle_read(const char *path, size_t *len, char *buffer, size_t capacit
 }
 
 char *port_read_file(const char *path, size_t *len) {
-#if PICOCALC_TYPED_CHESS
-  if (!strcmp(path, "js/chess/compiled.bin")) return p4_chess_compile(len);
-#endif
-#if PICOCALC_TYPED_EDITOR
-  if (!strcmp(path, "js/editor/compiled.bin")) return p4_editor_compile(len);
-#endif
-#if PICOCALC_TYPED_FILES
-  if (!strcmp(path, "js/files/compiled.bin")) return p4_files_compile(len);
-#endif
-#if PICOCALC_TYPED_AGENDA
-  if (!strcmp(path, "js/agenda/compiled.bin")) return p4_agenda_take_module(len);
+#if PICOCALC_TYPED_APPS
+  // A Typed boot world's NAME/compiled.bin is compiled now (typed_p4.c); NULL lets the manifest's fallback run.
+  bool served;
+  char *module = p4_typed_world_read(!strncmp(path, "js/", 3) ? path + 3 : path, len, &served);
+  if (served) return module;
 #endif
   return p4_bundle_read(path, len, NULL, 0);
 }

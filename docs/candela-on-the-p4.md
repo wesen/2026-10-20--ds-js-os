@@ -116,13 +116,13 @@ The compositor is compiled by CJI from `apps/js/picocalc/system/compositor.js` i
 
 ### 5.5 The build option
 
-`PICOCALC_CANDELA_GALLERY` (default OFF) in `port/esp32p4/CMakeLists.txt`. With it, `port/esp32p4/main/CMakeLists.txt` compiles the kernel twice (instances `cg` and `cgs`) through one-line wrapper sources, the interpreter, the core, the scene table and the device side; bundles the world and appends its manifest entry to the typed manifests; and swaps the compositor's CJI input for the patched copy. Without it, nothing is added, and the three files it touches that the playable build compiles (`gfx.c`, `main_p4.c`, `p4.h`) preprocess to the same text as before (Section 8).
+`PICOCALC_CANDELA_GALLERY` (default OFF) in `port/esp32p4/CMakeLists.txt`; the playable profile sets it. With it, `port/esp32p4/cmake/candela.cmake` compiles the kernel twice (instances `cg` and `cgs`) through one-line wrapper sources, the interpreter, the core, the scene table and the device side; bundles the world, and `cmake/typed-apps.cmake` appends its manifest entry to the boot manifest (`system.typed.json`); and swaps the compositor's CJI input for the patched copy. Without it, nothing is added, and the three files it touches that the playable build compiles (`gfx.c`, `main_p4.c`, `p4.h`) preprocess to the same text as before (Section 8).
 
-`main_p4.c` gains no line: `ESP_ERROR_CHECK` writes `__LINE__` into the binary, so an added line above it changes the playable firmware. The console case is a macro, `P4_GALLERY_CONSOLE(cmd, rest)`, appended to the `raybench` line and defined in `p4.h` (empty without the option), and the worker starts on the compositor's first draw of the gallery (or the first `gallery` command), so `main()` calls nothing.
+`main_p4.c` gains no line: `ESP_ERROR_CHECK` writes `__LINE__` into the binary, so an added line above it changes the playable firmware. The console case is a macro, `P4_GALLERY_CONSOLE(cmd, rest)`, placed in `console_exec`'s chain and defined in `p4.h` (empty without the option), and the worker starts on the compositor's first draw of the gallery (or the first `gallery` command), so `main()` calls nothing.
 
 ```bash
 source ~/esp/esp-idf-5.4.2/export.sh
-firmware/port/esp32p4/build-smooth-chess.sh BUILD -D PICOCALC_CANDELA_GALLERY=ON
+firmware/port/esp32p4/build.sh playable BUILD
 ```
 
 ## 6. Floating-point contraction

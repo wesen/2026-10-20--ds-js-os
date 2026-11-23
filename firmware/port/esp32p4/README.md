@@ -45,19 +45,52 @@ The network build has been cross-compiled with ESP-IDF v5.4.2, ESP-Hosted 1.4.2,
 0.14.0. Physical Wi-Fi, TLS, display responsiveness, storage recovery, and battery behavior still
 need the hardware checks in the guide.
 
-### Typed Chess (optional)
+### Typed apps
 
-Add **-D PICOCALC_RV32_CHESS=ON** to compile and run the Chess world as RV32.
-For Wasm, build the shared reactor with **make -C picocalc-os typed-world-reactor** from the
-repository root and set **-D PICOCALC_TYPED_CHESS=ON** and **-D PICOCALC_RV32_CHESS=OFF**.
-Chess can be enabled alongside typed Files, Agenda and Editor.
+A profile lists its Typed apps (`APPS=(chess agenda editor files candela raytrace)` in `profiles/playable.env`;
+CMake's `PICOCALC_APPS`). Each is described by `apps/typed/NAME/app.json`, and the port compiles every one of them to
+RV32 on the handheld through one path, `p4_typed_app_compile` in `main/typed_p4.c`. A profile with apps runs them as
+ELF modules, so it also turns on `PICOCALC_NATIVE_ELF`; a Typed app replaces the CJI-compiled world of the same name.
 
-Press **H** from the launcher to play White. Use the arrows and **Enter** to select and move,
-**Q/R/B/N** to choose a promotion, **F2** to restart, and **Esc** to cancel or leave.
-The typed world handles checkmate, stalemate and basic dead material. Games live in memory.
+At configure time `typed_apps.py` reads the listed manifests and writes, into the build directory: the assembled
+sources, `typed_apps.c` (the table `typed_p4.c` compiles from, declared in `main/typed_apps.h`), the boot manifest
+`system.typed.json`, and `typed-apps.cmake` (bundle entries, reactor ELFs, the apps' C hosts and defines).
+
+| Field | Meaning |
+|---|---|
+| `name`, `kind` | `world`: a boot world the kernel reads as `NAME/compiled.bin`, compiled while it boots; `module`: compiled on demand by a C host |
+| `sources` | the app's sources in order, each followed by a newline (or `variants`: named commands that generate one source each, Candela's stages) |
+| `link`, `entry` | the linker's repository path and its global function, `entry(source, reactor, options)` |
+| `compiler` | compiler modules besides `typed/wasm.js` and `typed/rv32.js` (`typed/async.js` for `async` worlds) |
+| `reactor` | the reactor or slot ELF: repository `sources` and `defines`, built with the native-world flags |
+| `policy`, `heapBytes`, `deadlineMs` | the RV32 policy (`typed-rv32.js` `POLICIES`) and the compile's limits |
+| `world` | `replaces` an entry of `apps/js/picocalc/system.json` (with field overrides) or `append`s a new one |
+| `fallback` | `true`: the replaced entry's JavaScript file runs when the compile fails or misses its deadline |
+| `editable` | a file under the store that replaces the first source (`typed agenda build`) |
+| `painter` | Chess: the delivered painter, its limits and slot, and how it is embedded into Chess's source |
+| `host` | the C the app still needs in the firmware: sources, includes, defines |
+
+The console's `typed` lists the apps and their limits; `typed WORLD baseline` compiles a running world again from the
+bundle and restarts it, `typed WORLD build` from its editable file (`notes/agenda.typed` for Agenda).
+
+In Chess, press **H** from the launcher to play White. Use the arrows and **Enter** to select and move, **Q/R/B/N** to
+choose a promotion, **F2** to restart, **F3/F4** to turn the camera, and **Esc** to cancel or leave.
 [Chess design, qualification, and reproduction commands](../../../ttmp/2026/11/20/PICOCALC-TYPED-CHESS--a-playable-typed-chess-engine-and-a-repeatable-picocalc-compiler-workload/index.md)
 
-### Ordinary smooth 3D Chess release
+### Benchmarks
+
+`profiles/bench.env` is the playable profile plus `PICOCALC_BENCH`: the console benchmarks of `bench/board/firmware`
+(`raybench`, `cachestat`, `typedray`, `typedmat`, `candela bench`; `cmake/bench.cmake`). The playable image carries
+none of them.
+
+### CMake
+
+`main/CMakeLists.txt` is the component: the nucleus, QuickJS, WAMR and the bundle (`js_bundle.c`). The concerns have
+their own files in `cmake/`: `native-elf.cmake` (CJI worlds, C natives, the device compiler, CJI test fixtures),
+`typed-apps.cmake` (the compiler bundle and the apps), `candela.cmake` (the Candela world and gallery),
+`bench.cmake`.
+
+### The playable release
 
 From a clean checkout, source the ESP-IDF **v5.4.2** environment and make Node.js 24 available. The release build
 uses the tracked `dependencies.elf.lock` to resolve the native ELF loader. The first build can download those
@@ -75,11 +108,11 @@ or by hand, with the ESP-IDF v5.4.2 environment sourced:
 firmware/port/esp32p4/build.sh playable /tmp/picocalc-playable    # any profile in profiles/*.env
 ```
 
-`build.sh` prints the app digest and writes `picocalc-build.json` (profile, commit, options, digests) into the build
+`build.sh` prints the app digest and writes `picocalc-build.json` (profile, commit, apps, options, digests) into the build
 directory. Every profile builds reproducibly (`sdkconfig.reproducible`): one commit gives one app digest wherever it
 is checked out and built.
-The ordinary profile uses the real keyboard controller and display, includes native Files, Agenda, Editor, and
-Chess, and uses the app-delivered smooth 3D painter. Press **H** in the launcher, then **F3/F4** to turn the camera.
+The playable profile uses the real keyboard controller and display, compiles Files, Agenda, Editor and Chess (with
+the app-delivered smooth 3D painter) at boot, and the Candela scene and the Typed ray tracer on first display.
 
 On an existing installation, verify the published partition-table digest against the device before updating
 only the factory app at offset `0x10000`. This preserves the bootloader, settings, and files. The app binary

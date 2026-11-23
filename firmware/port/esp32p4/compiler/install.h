@@ -3,4 +3,4 @@
 
 void compiler_console(const char *command);
 void compiler_restore(void);
-void compiler_tick(bool defer_relocation);
+void compiler_tick(void);

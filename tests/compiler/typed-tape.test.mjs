@@ -30,7 +30,7 @@ function compiler() {
 // The compile units the firmware and the bench assemble from apps/typed.
 function units(world) {
     const app = (dir, name) => read("apps/typed/" + dir + "/" + name);
-    const list = dir => app(dir, "source.list").trim().split("\n").map(name => app(dir, name) + "\n").join("");
+    const list = dir => JSON.parse(app(dir, "app.json")).sources.map(name => app(dir, name) + "\n").join("");
     const scratch = mkdtempSync(join(tmpdir(), "typed-tape-"));
     const candela = stage => {
         const out = join(scratch, stage + ".typed");

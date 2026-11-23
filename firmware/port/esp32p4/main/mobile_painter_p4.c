@@ -31,8 +31,9 @@ _Static_assert(offsetof(draw_buffer, words) == 4, "typed drawing buffer layout")
 
 bool mobile_painter_source_allowed(const char *source, size_t length) {
   if (!source || !length || length > MOBILE_PAINTER_SOURCE_MAX) return false;
+  const p4_typed_app *unit = p4_typed_app_find("chess/painter");
   size_t known_length = 0;
-  char *known = p4_bundle_read("chess/painter.typed", &known_length, NULL, 0);
+  char *known = unit ? p4_bundle_read(unit->source, &known_length, NULL, 0) : NULL;
   bool allowed = known && length == known_length && !memcmp(source, known, length);
   free(known);
   return allowed;
@@ -44,21 +45,15 @@ mobile_painter_image mobile_painter_compile(const char *source, size_t length,
   if (stats) *stats = (mobile_painter_install_stats){0};
   if (!mobile_painter_source_allowed(source, length)) return image;
 
-  size_t reactor_length = 0;
-  char *reactor = p4_bundle_read("painter/slot.elf", &reactor_length, NULL, 0);
-  if (!reactor) return image;
-  // Wall time includes intervals when higher-priority UI work preempts the worker.
-  const p4_compile_limits limits = {.heap_bytes = 2 * 1024 * 1024, .duration_us = 8000000};
+  // Compile the bytes delivered by Chess, with the limits of Chess's app.json ("painter"); the firmware copy only
+  // authorizes them. Wall time includes intervals when higher-priority UI work preempts the worker.
   vtime_t started = port_clock();
-  // Compile the bytes delivered by Chess. The firmware copy only authorizes them.
-  image.bytes = p4_typed_compile("mobile-painter", "screen-message", source, length,
-                                 "painter/link.js", "linkMobilePainter", ENG_NATIVE, reactor,
-                                 reactor_length, &image.length, started, &limits);
+  image.bytes = p4_typed_app_compile(p4_typed_app_find("chess/painter"), 0, source, length, "screen-message",
+                                     &image.length);
   if (stats) {
     stats->compile_us = port_clock() - started;
     stats->image_bytes = image.length;
   }
-  free(reactor);
   return image;
 }
 

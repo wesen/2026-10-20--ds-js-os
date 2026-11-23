@@ -1,3 +1,4 @@
+// Moved from firmware/port/esp32p4/main (PICOCALC-TYPED-APP-MANIFEST): built only by the bench profile.
 // One scalar/PIE pair per console command lets the kernel dispatch between pairs.
 #include <errno.h>
 #include <inttypes.h>

@@ -1,3 +1,4 @@
+// Moved from firmware/port/esp32p4/main (PICOCALC-TYPED-APP-MANIFEST): built only by the bench profile.
 // Measuring the P4's caches (PICOCALC-SPEED): the console command
 //   cachestat loop|fib [default|internal|psram]   one calibration program in a fresh QuickJS runtime whose heap is
 //                                                 the C library's (as the boot calibration), internal SRAM only, or

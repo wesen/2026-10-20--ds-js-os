@@ -32,15 +32,6 @@ int port_fs_info(uint64_t *total, uint64_t *free_bytes) {
 }
 void port_fs_submit(fs_job_t *j, vtime_t at) {
   (void)at;
-#if PICOCALC_TYPED_AGENDA
-  world_t *world = world_by_id(j->w);
-  if (world && world->epoch == j->epoch) {
-    p4_agenda_stage(world, "file-submitted");
-#if PICOCALC_AGENDA_EARLY_BOOT
-    p4_agenda_boot_track_read(world, j);
-#endif
-  }
-#endif
   xQueueSend(q_fs, &j, portMAX_DELAY);
 }
 static void fs_worker(void *arg) {
@@ -56,13 +47,6 @@ static void fs_worker(void *arg) {
   }
 }
 void p4_fs_done(fs_job_t *j) {   // the kernel task
-#if PICOCALC_TYPED_AGENDA
-  world_t *world = world_by_id(j->w);
-  if (world && world->epoch == j->epoch) {
-    p4_agenda_stage(world, "file-returned");
-    if (j->op == FS_READ && j->ok) p4_agenda_boot_file_ready(world);
-  }
-#endif
   if (j->done) j->done(j, port_clock());
   else { kernel_settle_at(j->w, j->epoch, j->promise, j->ok, j->json, port_clock()); j->json = NULL; }
   fs_job_free(j);

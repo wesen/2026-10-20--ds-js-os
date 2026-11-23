@@ -43,45 +43,33 @@ void p4_store_init(void);             // never erases failed/old NVS automatical
 bool p4_config_available(void);
 void p4_tz_apply(void);               // the saved time zone (NVS "settings"/"tz") into TZ; UTC without one
 void p4_tz_console(const char *arg);  // console: tz [POSIX TZ]
-void p4_raybench(const char *args);   // one matched pair of native ray-tracing measurements
-void p4_cachestat(const char *args);   // perf_p4.c: the cache counters around a benchmark or a window
 void p4_agent_init(void);             // creates the native worker; never touches K from that worker
 void p4_agent_console(const char *args); // secret values are accepted but never echoed
 
-#if PICOCALC_TYPED_AGENDA || PICOCALC_TYPED_FILES || PICOCALC_TYPED_EDITOR || PICOCALC_TYPED_CHESS
+#if PICOCALC_TYPED_APPS
+// typed_p4.c: the Typed compiler on the handheld and the apps of typed_apps.h (apps/typed/NAME/app.json).
+#include "typed_apps.h"
 typedef struct {
-  size_t heap_bytes;         // 0: COMPILER_LIMIT (typed_p4.c)
-  vtime_t duration_us;       // 0: COMPILER_US
-  const char *rv32_backend;  // optional bundled backend for comparative compiler studies
-  const char *policy;        // optional named RV32 code-generation policy (typed-rv32.js POLICIES)
+  size_t heap_bytes;         // the compiler's heap cap
+  vtime_t duration_us;       // the compile is interrupted after this long
+  const char *rv32_backend;  // a bundled RV32 back end instead of typed/rv32.js (bench studies), or NULL
+  const char *policy;        // a named RV32 code-generation policy (typed-rv32.js POLICIES), or NULL
 } p4_compile_limits;
 char *p4_typed_compile(const char *app, const char *source_kind, const char *source,
-                       size_t source_length, const char *linker, const char *entry, int engine,
-                       const char *reactor, size_t reactor_length, size_t *length, vtime_t started,
-                       const p4_compile_limits *limits);
-#endif
-#if PICOCALC_TYPED_EDITOR
-char *p4_editor_compile(size_t *length);
-#endif
-#if PICOCALC_TYPED_FILES
-char *p4_files_compile(size_t *length);
-#endif
-#if PICOCALC_TYPED_CHESS
-char *p4_chess_compile(size_t *length);
+                       size_t source_length, const char *linker, const char *entry,
+                       const char *const *compiler, const char *reactor, size_t reactor_length,
+                       size_t *length, vtime_t started, const p4_compile_limits *limits);
+const p4_typed_app *p4_typed_app_find(const char *name);
+p4_compile_limits p4_typed_app_limits(const p4_typed_app *app);
+// The app compiled from its bundled source (variant: an index into its variants, 0 without), or from text.
+char *p4_typed_app_compile(const p4_typed_app *app, int variant, const char *text, size_t text_length,
+                           const char *kind, size_t *length);
+char *p4_typed_world_read(const char *path, size_t *length, bool *served);  // NAME/compiled.bin of a boot world
+void p4_typed_console(const char *args);
 #endif
 
-#if PICOCALC_TYPED_AGENDA
-bool p4_agenda_prepare(void);
-bool p4_agenda_boot_frame_pending(void);
-#if PICOCALC_AGENDA_EARLY_BOOT
-bool p4_agenda_boot_dispatch(const world_t *world, int promise);  // zero for the start message
-void p4_agenda_boot_track_read(const world_t *world, const fs_job_t *job);
-#endif
-void p4_agenda_boot_file_ready(const world_t *world);
-void p4_agenda_report_boot(void);
-void p4_agenda_stage(const world_t *world, const char *stage);
-char *p4_agenda_take_module(size_t *length);
-void p4_agenda_console(const char *command);
+#if PICOCALC_BENCH
+bool p4_bench_console(const char *cmd, const char *args);   // bench/board/firmware: false if cmd is not a benchmark
 #endif
 
 // The Candela gallery's console command (PICOCALC-CANDELA-GALLERY, candela_gallery_p4.c), one more case of
