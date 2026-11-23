@@ -1,14 +1,16 @@
 // FunctionCode's operand stack: loads, stores, constants, result destinations, spills.
 import {SP, instruction, ZERO, STACK_REGISTERS, T5} from "../encoding/registers.js";
+import {loadWord, moveWord, storeWord} from "../encoding/instructions.js";
 import {LOCAL_SET} from "../encoding/tape.js";
 
 export class StackMethods {
+    // A float register (32-63) loads and stores a word (flw, fsw); kind is the integer width (lw, lhu, sh...).
     load(reg, offset, base = SP, kind = 2) {
-        this.emit(instruction.i(0x03, reg, kind, base, offset));
+        this.emit(reg < 32 ? instruction.i(0x03, reg, kind, base, offset) : loadWord(reg, offset, base));
     }
 
     store(reg, offset, base = SP, kind = 2) {
-        this.emit(instruction.s(kind, base, reg, offset));
+        this.emit(reg < 32 ? instruction.s(kind, base, reg, offset) : storeWord(reg, offset, base));
     }
 
     constant(reg, n) {
@@ -42,8 +44,9 @@ export class StackMethods {
         }
     }
 
+    // Within a class mv or fmv.s; across classes fmv.x.w or fmv.w.x (the bits unchanged).
     move(to, from) {
-        if (to !== from) this.emit(instruction.i(0x13, to, 0, from, 0));
+        if (to !== from) this.emit((to | from) < 32 ? instruction.i(0x13, to, 0, from, 0) : moveWord(to, from));
     }
 
 

@@ -1,6 +1,7 @@
 // compile: the front end's functions, one at a time, through the policy's pipeline to RV32 words, then the
 // image's layout and relocations.
 import {instruction} from "./encoding/registers.js";
+import {encoder} from "./encoding/instructions.js";
 import {FunctionCode} from "./emit/function-code.js";
 import {GuardedReturnCode, guardedReturnSummary} from "./emit/guarded-return.js";
 import {lowerLeaf} from "./emit/leaf-code.js";
@@ -56,7 +57,7 @@ export function compile(source, imports = [], maxSourceLength, requested) {
         if (guarded === true || guarded(fn.name)) ctx.Emitter = GuardedReturnCode;
     }});
     if (mode !== undefined) inlined.push({name: "pie", terminal: true,
-        run: (fn, ctx) => typedPieLoops.lower(fn, callables, targets, mode, ctx.Emitter, instruction)});
+        run: (fn, ctx) => typedPieLoops.lower(fn, callables, targets, mode, ctx.Emitter, encoder)});
     stages.unshift(...inlined, {name: "inline", checkpoint: true});
 
     // timing: an array that receives {fn, pass, ms, cells} for every stage a function runs (cells: the

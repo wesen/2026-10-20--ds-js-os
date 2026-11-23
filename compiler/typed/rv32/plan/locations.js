@@ -1,8 +1,8 @@
 // planLocations: operand homes, pointer groups and pointer-only skips.
-import {A0} from "../encoding/registers.js";
+import {A0, X} from "../encoding/registers.js";
 import {constantForm} from "../encoding/selection.js";
 import {CHECKED_ADDRESS, UNCHECKED_ADDRESS, CELLS, LOCAL_GET, LITERAL_STORES, LOCAL_SET, I32_ADD, I32_CONST, CALL, EFFECTS, STORES, BLOCK, IF, LOOP, END, RETURN, opNext} from "../encoding/tape.js";
-import {planSavedHomes} from "./saved-homes.js";
+import {keyClass, planSavedHomes} from "./saved-homes.js";
 
 // Assign permanent homes only in framed scalar functions with a checked access.
 export function planLocations(fn, options, inlineCall) {
@@ -212,6 +212,7 @@ export function planLocations(fn, options, inlineCall) {
         let reg = A0 + Math.max(1, fn.params.length);
         const end = A0 + (receiver === undefined ? 8 : 7);
         for (const [id,score] of [...scores].sort((a,b)=>b[1]-a[1])) {
+            if (keyClass(fn, id) !== X) continue; // homes without saved: integer argument registers only
             if (reg >= end || score < 2) break;
             homes.set(id, reg++);
         }
