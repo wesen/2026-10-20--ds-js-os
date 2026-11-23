@@ -9,7 +9,15 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://compiler/typed/bundle.mjs
+      Note: the one bundler
+    - Path: repo://compiler/typed/rv32/passes/kernel-group.js
+      Note: passes only kernel runs
+    - Path: repo://compiler/typed/rv32/passes/registry.js
+      Note: groups inline, loops, kernel
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
+      Note: TYPEDCOMPILE phases and COMPILER_STRIP
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-23T12:44:21.321497763-05:00
