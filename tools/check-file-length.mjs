@@ -35,7 +35,7 @@ readFileSync(exceptionsFile, "utf8").split("\n").forEach((line, i) => {
   else exact.set(m[1], m[2]);
 });
 
-const tracked = execFileSync("git", ["ls-files", "-z"], { cwd: root, encoding: "utf8" }).split("\0")
+const tracked = execFileSync("git", ["ls-files", "-z"], { cwd: root, encoding: "utf8", maxBuffer: 256 * 1024 * 1024 }).split("\0")
   .filter((p) => p && !p.startsWith("ttmp/") && SOURCE.test(p));
 const long = [];
 for (const path of tracked) {
