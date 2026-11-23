@@ -216,7 +216,10 @@ call, and `inline` inlines such a callee by storing its leaves into result local
 literal length from 1 to 1024 whose elements are `f32`, `i32` or `u32`. The declaration zeroes it each time it runs, as
 JavaScript's `new` and WGSL's `var` do. `a[i]` reads and `a[i] = e;` writes an element; the index is an `i32` or a
 `u32`, compared unsigned with the length (a negative index traps too: `local.get i; i32.const n; i32.ge_u; if;
-unreachable; end`); a literal index is checked by the compiler and needs no check at run time. `a.length` is a literal.
+unreachable; end`). Two indices need no check at run time: a literal, which the compiler checks, and the counter of an
+enclosing counted loop `for (k = c; k < n; k = k + s)` with `n` at most the length, whose body never writes `k`
+(`c` and `s` not negative for a signed `k`): the front end records such a check and removes it when the loop's body
+ends without a write of `k` (`countedRange`, `proveChecks` in `frontend/arrays.js`). `a.length` is a literal.
 An array is not a value: it is not assigned, passed, returned or compared, and it never aliases memory. A function's
 arrays are one area (`fn.arrayBytes`): RV32 places it in the frame between the stack-argument area and the slots (in a
 large frame, above `ra`, `s0` and the saved registers), and the Wasm backend at a static address below the previous

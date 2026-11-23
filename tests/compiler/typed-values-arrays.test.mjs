@@ -258,3 +258,80 @@ function varying(i: i32): i32 {
     assert(varying.some(w => opcode(w) === 0x63 && (funct3(w) === 6 || funct3(w) === 7)));
     assert(varying.includes(0x00100073));
 });
+
+// A counted loop proves its counter below the array's length when its body never writes the counter: those checks go.
+const COUNTED = `function proven(x: i32): i32 {
+    const a = new Int32Array(8);
+    const b = new Uint32Array(4);
+    let s = 0;
+    for (let k = 0; k < a.length; k = k + 1) { a[k] = x * k; }
+    for (let k = 0; k < 8; k = k + 2) {
+        for (let j: u32 = 0; j < 4; j = j + 1) { b[j] = b[j] + u32(a[k]); s = s + a[k]; }
+        if (k === 4) { continue; }
+        s = s + a[k + 1];
+    }
+    return s + i32(b[3]);
+}
+function written(x: i32): i32 {
+    const a = new Int32Array(4);
+    let s = 0;
+    for (let k = 0; k < 4; k = k + 1) { k = k * x; s = s + a[k] + 1; }
+    return s;
+}
+function beyond(n: i32): i32 {
+    const a = new Int32Array(4);
+    let s = 0;
+    for (let k = 0; k < 5; k = k + 1) { if (k < n) { s = s + a[k]; } }
+    return s;
+}
+function below(n: i32): i32 {
+    const a = new Int32Array(4);
+    let s = 0;
+    for (let k = -1; k < 4; k = k + 1) { if (k >= n) { s = s + a[k]; } }
+    for (let k = 3; k < 4; k = k + -1) { if (k >= n) { s = s + a[k]; } else { return s; } }
+    return s;
+}
+`;
+
+function provenModel(x) {
+    const a = Array.from({length: 8}, (_, k) => x * k), b = new Uint32Array(4);
+    let s = 0;
+    for (let k = 0; k < 8; k += 2) {
+        for (let j = 0; j < 4; j++) { b[j] = b[j] + (a[k] >>> 0); s += a[k]; }
+        if (k === 4) continue;
+        s += a[k + 1];
+    }
+    return (s + (b[3] | 0)) | 0;
+}
+
+test("a counted loop's counter needs no check; a written counter, a larger bound or a negative start keep it", async () => {
+    const check = await differential(COUNTED, {proven: {params: ["i32"], result: "i32"}, written: {params: ["i32"], result: "i32"},
+        beyond: {params: ["i32"], result: "i32"}, below: {params: ["i32"], result: "i32"}});
+    for (const x of [0, 1, -7, 123456]) check("proven", [x], provenModel(x));
+    check("written", [1], 4);
+    check("beyond", [4], 0);
+    check("below", [0], 0);
+    const wasm = (await WebAssembly.instantiate(typedWasm.compile(COUNTED).bytes)).instance.exports;
+    for (const policy of ["stock", "default", "kernel"]) {
+        const program = typedRv32.compile(COUNTED, [], 1 << 20, {policy});
+        const run = (name, arg) => typedRv32Interp.run(program, name, [arg], new Uint8Array(64));
+        // written(5): k = 0 reads a[0], then k = 1 * 5 reads a[5]; beyond(5) reads a[4]; below(-1) reads a[-1].
+        for (const [name, arg] of [["written", 5], ["beyond", 5], ["below", -1]]) {
+            assert(run(name, arg).trap, policy + " " + name + "(" + arg + ")");
+            assert.throws(() => wasm[name](arg), /unreachable/);
+        }
+        // proven keeps only the check of a[k + 1] (an index that is not the counter itself); written and beyond
+        // keep one, below two.
+        const ebreaks = name => words(program, name).filter(w => w === 0x00100073).length;
+        assert.equal(ebreaks("proven"), 1, policy);
+        for (const name of ["written", "beyond"]) assert.equal(ebreaks(name), 1, policy + " " + name);
+        assert.equal(ebreaks("below"), 2, policy);
+    }
+    // The same image when the front end writes an inspection tape (whose spans the removal keeps aligned). The Wasm
+    // backend's inspection does not decode the 0xfc prefix of memory.fill (nor of the f32 truncations' expansions).
+    const events = [];
+    const inspected = typedRv32.compile(COUNTED, [], 1 << 20, {inspect: {function: "proven", emit(event) { events.push(event); }}});
+    assert.deepEqual(Array.from(inspected.image), Array.from(typedRv32.compile(COUNTED, [], 1 << 20).image));
+    const tape = events.find(event => event.kind === "frontend");
+    assert(tape && tape.operations.every(operation => operation.source), "front-end event with sources");
+});

@@ -259,10 +259,17 @@ Decisions taken against the code, in the order the features landed (diary steps 
 - **Checked indexing, unsigned.** `a[i]` traps when `i >= n` as an unsigned comparison, so a negative index traps too:
   the front end writes `local.get i; i32.const n; i32.ge_u; if; unreachable; end` with existing tape rows, so every
   pass already understands the check, and RV32 fuses it into one `bltu`/`bgeu` around an `ebreak`. An index that is not
-  a plain local is computed once into a fresh local. **The unchecked form** is the literal index: the front end checks
-  it and writes `array.address offset + 4i` with no run-time check (one `addi` and the load). Removing the check where
-  range analysis proves a variable index (a counted loop up to `a.length`) is left to a later ticket:
-  `analysis/ranges.js` runs only under `kernel` and only for functions that divide by a constant.
+  a plain local is computed once into a fresh local. **The unchecked forms.** A literal index: the front end checks
+  it and writes `array.address offset + 4i` with no run-time check (one `addi` and the load). The counter of a counted
+  loop: `for (k = c; k < n; k = k + s)` holds `0 <= k < n` whenever its body starts, if the body never writes `k`
+  (unsigned `<`; or signed with `c` and `s` not negative, so `k` never is). The front end proves this itself, as it
+  streams: the header's tape shape gives `c`, `n` and `s`; each `a[k]` with `n <= a.length` records its check's
+  position; when the body ends, a walk of the body's tape for `local.set k` decides, and the recorded checks are cut
+  out (nine cells each, later positions moved down; an inspection tape's spans with them). This is range analysis of
+  the one shape that matters for arrays, and it needs no pass, so it applies under every policy and leaves the
+  policies' pass lists, which board studies qualify, alone. `analysis/ranges.js` was not used: it runs only under
+  `kernel`, only for functions that divide by a constant, and its intervals are flow-insensitive (a counter's
+  interval includes its exit value `n`).
 - **Where an array lives.** RV32: in the frame, an area between the stack-argument area and the slots (above `ra`, `s0`
   and the saved registers in a large frame), addressed from `sp` (`array.address`, a new pseudo-op that pushes the
   address of an area offset; `array.zero` clears a range). WebAssembly has no frame memory: each function's area is a

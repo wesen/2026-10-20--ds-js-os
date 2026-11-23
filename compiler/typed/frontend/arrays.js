@@ -6,8 +6,9 @@
 // is enough because a function is never active twice, the call graph being acyclic). The declaration zeroes the
 // array (array.zero), as JavaScript's `new` and WGSL's `var` do, each time it runs. `a[i]` checks i against the
 // length, unsigned, so a negative index traps too (`local.get i; i32.const n; i32.ge_u; if; unreachable; end`), then
-// reads or writes the word at address + 4i; a literal index is checked here and costs no check at run time.
-// `a.length` is a literal. An array is not a value: it is not assigned, passed, returned or compared.
+// reads or writes the word at address + 4i. Two indices cost no check at run time: a literal, checked here, and the
+// counter of a counted loop that proves it in range (countedRange, proveChecks). `a.length` is a literal. An array is
+// not a value: it is not assigned, passed, returned or compared.
 const ARRAY_ELEMENTS = new Map([["Int32Array", "i32"], ["Uint32Array", "u32"], ["Float32Array", "f32"]]);
 const ARRAY_LIMIT = 1024;
 
@@ -54,6 +55,13 @@ class ArrayParsing {
         if (code.length === start + 2 && code[start] === LOCAL_GET) {
             local = code[start + 1];
             this.truncate(start);
+            // The counter of an enclosing counted loop below the length: the check may go when the loop ends.
+            for (let k = (this.countedLoops?.length ?? 0) - 1; k >= 0; k--) {
+                const proof = this.countedLoops[k];
+                if (proof.local !== local || proof.code !== code) continue;
+                if (proof.bound <= length) (this.boundChecks ??= []).push({at: code.length, proof});
+                break;
+            }
         } else this.emitIndex(LOCAL_SET, local = this.nextLocal++);
         this.emitIndex(LOCAL_GET, local);
         this.emitConst(length);
@@ -61,6 +69,44 @@ class ArrayParsing {
         this.emitIndex(LOCAL_GET, local);
         this.emitConst(2);
         code.push(I32_SHL, I32_ADD);
+    }
+
+    // A counted loop's range proof, after its header: `for (k = c; k < n; k = k + s)` (the tape `const c; set k`,
+    // `get k; const n; lt; eqz; br_if 1` and the update `get k; const s; add; set k`) holds k below n whenever its
+    // body starts, when the body never writes k: unsigned for lt_u, and for lt_s when c and s are not negative, so k
+    // never is. initAt is where the header's initialization starts, conditionAt its condition.
+    countedRange(initAt, conditionAt, update) {
+        const code = this.code;
+        if (conditionAt - initAt !== 8 || code.length !== conditionAt + 8 || code[initAt] !== I32_CONST ||
+            code[initAt + 2] !== LOCAL_SET) return null;
+        const local = code[initAt + 3], first = code[initAt + 1];
+        if (code[conditionAt] !== LOCAL_GET || code[conditionAt + 1] !== local || code[conditionAt + 2] !== I32_CONST)
+            return null;
+        if (update.length !== 7 || update[0] !== LOCAL_GET || update[1] !== local || update[2] !== I32_CONST ||
+            update[4] !== I32_ADD || update[5] !== LOCAL_SET || update[6] !== local) return null;
+        const bound = code[conditionAt + 3], compare = code[conditionAt + 4], step = update[3];
+        if (compare === I32_LT_U) return {local, bound: bound >>> 0, code};
+        if (compare === I32_LT_S && first >= 0 && step >= 0 && bound >= 0 && bound <= 1 << 30 && step <= 1 << 30)
+            return {local, bound, code};
+        return null;
+    }
+
+    // A counted loop's body has ended at the tape's end, from bodyAt: unless it writes the counter, the checks of
+    // the counter it recorded are removed (nine cells each; the positions of later checks move down).
+    proveChecks(proof, bodyAt) {
+        const code = this.code, checks = this.boundChecks ?? [];
+        this.boundChecks = checks.filter(check => check.proof !== proof);
+        for (let at = bodyAt; at < code.length; at += 1 + CELLS[code[at]])
+            if (code[at] === LOCAL_SET && code[at + 1] === proof.local) return;
+        const mine = checks.filter(check => check.proof === proof).sort((x, y) => y.at - x.at);
+        for (const {at} of mine) {
+            if (code[at] !== LOCAL_GET || code[at + 1] !== proof.local || code[at + 4] !== I32_GE_U || code[at + 5] !== IF ||
+                code[at + 7] !== UNREACHABLE || code[at + 8] !== END) throw new Error("array check moved at " + at);
+            code.copyWithin(at, at + 9);
+            code.length -= 9;
+            code.spans?.splice(at, 9);
+            for (const check of this.boundChecks) if (check.at > at) check.at -= 9;
+        }
     }
 
     // Drop the tape from start (an inspection tape's spans too).

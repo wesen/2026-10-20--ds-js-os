@@ -95,6 +95,7 @@ class FunctionEmitter extends ExpressionParser {
         const lex = this.lex;
         const enclosing = this.locals;
         { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
+        const initAt = this.code.length;
         if (counted) {
             this.locals = new Map(enclosing);
             if (lex.token.value === "let") this.declaration();
@@ -110,6 +111,7 @@ class FunctionEmitter extends ExpressionParser {
         this.loopExits.push(exit);
         this.controls += 2;
         this.code.push(BLOCK, VOID, LOOP, VOID);
+        const conditionAt = this.code.length;
         this.want(this.expr(), "bool");
         this.code.push(I32_EQZ, BR_IF, 1);
         let update;
@@ -122,6 +124,10 @@ class FunctionEmitter extends ExpressionParser {
             this.code = loopCode;
         }
         { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+        // A counted loop's range proof removes its counter's array checks (frontend/arrays.js) when it holds.
+        const proof = counted && this.arrayBytes ? this.countedRange(initAt, conditionAt, update) : null;
+        if (proof) (this.countedLoops ??= []).push(proof);
+        const bodyAt = this.code.length;
         const continues = lex.token.value === "{" && bodyContinues(lex.source, lex.offset);
         (this.loopContinues ??= []).push(continues ? exit + 2 : -1);
         if (continues) {
@@ -134,6 +140,10 @@ class FunctionEmitter extends ExpressionParser {
             this.controls--;
         }
         this.loopContinues.pop();
+        if (proof) {
+            this.countedLoops.pop();
+            this.proveChecks(proof, bodyAt);
+        }
         if (update) {
             if (this.inspection) this.code.append(update);
             else for (const cell of update) this.code.push(cell);
