@@ -31,6 +31,5 @@ firmware/nucleus/native.c -- PICOCALC-SPLIT-FILES
 apps/js/papers3/system/compositor.js -- PICOCALC-SPLIT-FILES
 firmware/port/esp32p4/main/agent_p4.c -- PICOCALC-SPLIT-FILES
 apps/js/picocalc/system/compositor.js -- PICOCALC-SPLIT-FILES
-firmware/nucleus/nucleus.h -- PICOCALC-SPLIT-FILES
 apps/js/picocalc/system/agent.js -- PICOCALC-SPLIT-FILES
 firmware/sdk/typed/world.c -- PICOCALC-SPLIT-FILES

@@ -14,7 +14,7 @@
 #define NW_WIRE_MAGIC 0x3130574eu   // "NW01"
 enum { NW_F_EVENT = 1, NW_F_CALL, NW_F_RESULT, NW_F_END };
 #define NW_WIRE_INIT 5              // the event kind that runs nw_init (the others are nw.h's NW_MESSAGE ... NW_SETTLE)
-// System calls, as numbered in nucleus/nucleus.h (host/native_proc.c checks that they agree)
+// System calls, as numbered in nucleus/nucleus_native.h (host/native_proc.c checks that they agree)
 enum {
   NW_CALL_LOG = 1, NW_CALL_NOW, NW_CALL_SELF, NW_CALL_SEND, NW_CALL_PUBLISH, NW_CALL_REPLY, NW_CALL_REJECT,
   NW_CALL_NEED, NW_CALL_PROVIDE, NW_CALL_EVERY, NW_CALL_KIND, NW_CALL_ASK, NW_CALL_SLEEP, NW_CALL_I2C_OPEN,

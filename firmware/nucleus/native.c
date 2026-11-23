@@ -15,7 +15,7 @@
 #include "../sdk/nw_wire.h"
 
 // Every backend numbers the system calls as the SDK does: the wire (processes) and the imports (WebAssembly)
-_Static_assert((int)NW_CALL_LOG == (int)NW_LOG && (int)NW_CALL_TIMER == (int)NW_TIMER && (int)NW_CALL_COUNT == (int)NW_CALLS, "sdk/nw_wire.h and nucleus.h number the system calls alike");
+_Static_assert((int)NW_CALL_LOG == (int)NW_LOG && (int)NW_CALL_TIMER == (int)NW_TIMER && (int)NW_CALL_COUNT == (int)NW_CALLS, "sdk/nw_wire.h and nucleus_native.h number the system calls alike");
 _Static_assert(NW_WIRE_INIT == (int)NW_INIT, "the init event's kind");
 _Static_assert(NW_WIRE_STR_MAX == NW_STR_MAX, "the longest string");
 
