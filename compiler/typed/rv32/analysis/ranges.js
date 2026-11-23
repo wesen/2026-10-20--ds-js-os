@@ -45,7 +45,7 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
         case CALL: for (let i = arity(a); i > 0; i--) pop(); stack.push(RANGE_TOP); break;
         case BLOCK: case LOOP: case IF:
             if (op === IF) pop();
-            blocks.push({op, value: a === I32, height: stack.length, result: null});
+            blocks.push({op, value: a !== VOID, height: stack.length, result: null});
             break;
         case ELSE: case END: {
             const block = op === ELSE ? blocks.at(-1) : blocks.pop();

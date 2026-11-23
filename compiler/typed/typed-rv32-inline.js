@@ -4,7 +4,7 @@
 (() => {
 "use strict";
 if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-inline.js");
-const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_EQ, I32_EQZ, I32_GE_U, I32_LOAD, I32_LOAD16_U, I32_MUL, I32_NE, I32_OR, I32_SHR_U, I32_STORE, I32_STORE16, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNREACHABLE, VOID, installPasses, replaceTape} = globalThis.typedRv32Modules;
+const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, EFFECTS, ELSE, END, F32, F32_LOAD, FLOATING, I32, I32_ADD, I32_AND, I32_CONST, I32_EQ, I32_EQZ, I32_GE_U, I32_LOAD, I32_LOAD16_U, I32_MUL, I32_NE, I32_OR, I32_SHR_U, I32_STORE, I32_STORE16, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, STORES, UNREACHABLE, VOID, floatingFunction, installPasses, opNext, replaceTape, tapeRow} = globalThis.typedRv32Modules;
 
 // rv32/passes/inline.js
 // The inline pass and the inliner's library candidates.
@@ -22,7 +22,8 @@ const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32
 // `i32.const c` cells are removed and the callee reads x or c directly. A literal is not
 // substituted for a parameter used as a checked-address operand, which must be a local.
 //
-// Only calls inside a caller's loop are inlined, unless `anywhere` is set; the library
+// Only calls inside a caller's loop are inlined, unless `anywhere` is set or the callee has an f32 parameter, local
+// or result (an f32 call costs its caller saved f registers and spills, and f32 helpers are small); the library
 // keeps each candidate fully expanded (`anywhere`), so a callee inlined into a loop brings
 // its own callees with it.
 // maxLoopDepth bounds the loop nesting a call site and the callee's own loops may form
@@ -44,9 +45,13 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
     const tape = fn.code;
     // Cheap rejections before the walk: no call to a library function, or (for the
     // function's own code) no loop. Operand cells can match too, which only costs a walk.
-    let candidate = false;
-    for (let i = tape.indexOf(CALL); i >= 0 && !candidate; i = tape.indexOf(CALL, i + 1)) candidate = library.has(tape[i + 1]);
-    if (!candidate || (!anywhere && !tape.includes(LOOP))) return null;
+    let candidate = false, float = false;
+    for (let i = tape.indexOf(CALL); i >= 0 && !float; i = tape.indexOf(CALL, i + 1)) {
+        const callee = library.get(tape[i + 1]);
+        candidate ||= callee !== undefined;
+        float ||= callee?.types !== undefined;
+    }
+    if (!candidate || (!anywhere && !float && !tape.includes(LOOP))) return null;
     // Until the first inlined call the output is a copy of the input, so the output length at
     // a call is its offset: a scan of the call sites decides exactly whether any is inlined.
     {
@@ -55,7 +60,7 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
         for (let at = 0; at < tape.length && !site;) {
             const opcode = tape[at], cells = CELLS[opcode];
             if (cells < 0) return null;
-            if (opcode === CALL && (anywhere || loops > 0)) {
+            if (opcode === CALL && (anywhere || loops > 0 || library.get(tape[at + 1])?.types)) {
                 const callee = library.get(tape[at + 1]);
                 site = callee !== undefined && at + callee.code.length <= limits.callerCells &&
                     loops + callee.loops <= limits.maxLoopDepth;
@@ -71,13 +76,14 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
     // and whether it is a plain local.get (kind 1) or i32.const (kind 2) of `value`; kind 0 is
     // any other value.
     const bases = new Map(), out = [], blocks = [], stackAt = [], stackKind = [], stackValue = [];
-    let locals = fn.params.length + fn.nlocals, loops = 0, changed = false, sp = 0;
+    let locals = fn.params.length + fn.nlocals, loops = 0, changed = false, sp = 0, types;
     const push = (at, kind, value) => { stackAt[sp] = at; stackKind[sp] = kind; stackValue[sp] = value; sp++; };
     const pop = n => { sp = Math.max(0, sp - n); };
     for (let at = 0; at < tape.length;) {
         const opcode = tape[at], cells = CELLS[opcode], a = tape[at + 1];
         if (cells < 0) return null;
-        let callee = opcode === CALL && (anywhere || loops > 0) ? library.get(a) : undefined;
+        let callee = opcode === CALL ? library.get(a) : undefined;
+        if (callee && !anywhere && loops === 0 && !callee.types) callee = undefined;
         if (callee && (out.length + callee.code.length > limits.callerCells || loops + callee.loops > limits.maxLoopDepth))
             callee = undefined;
         if (!callee) {
@@ -97,7 +103,7 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
             else if (opcode === CALL) { pop(arity(a)); push(0, 0, 0); }
             else if (opcode >= BLOCK && opcode <= IF) {
                 if (opcode === IF) pop(1);
-                blocks.push({op: opcode, value: a === I32, height: sp});
+                blocks.push({op: opcode, value: a !== VOID, height: sp});
                 if (opcode === LOOP) loops++;
             } else if (opcode === ELSE) sp = blocks.at(-1).height;
             else if (opcode === END && blocks.length) {
@@ -105,6 +111,11 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
                 if (block.op === LOOP) loops--;
                 sp = block.height;
                 if (block.value) push(0, 0, 0);
+            } else if (FLOATING[opcode]) {
+                // An f32 operation: its pops and pushes from tape.js; its result is never a plain local or literal.
+                const row = tapeRow(opcode);
+                pop(row.pop.length);
+                if (row.push.length) push(0, 0, 0);
             }
             continue;
         }
@@ -114,6 +125,11 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
             base = locals;
             bases.set(callee, base);
             locals += callee.params + callee.nlocals;
+            // The callee's local types join the caller's (fn.localTypes, undefined entries are i32).
+            if (callee.types) {
+                const own = types ??= (fn.localTypes ?? []).slice();
+                for (let i = 0; i < callee.types.length; i++) own[base - fn.params.length + i] = callee.types[i];
+            }
         }
         // The arguments are the top callee.params entries (Array.prototype.slice semantics when
         // the abstract stack is shorter).
@@ -133,7 +149,7 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
         for (const arg of subst.filter(Boolean).sort((x, y) => y.at - x.at)) out.splice(arg.at, 2);
         pop(callee.params);
         for (let i = callee.params - 1; i >= 0; i--) if (!subst[i]) out.push(LOCAL_SET, base + i);
-        out.push(BLOCK, I32);
+        out.push(BLOCK, callee.result === "f32" ? F32 : I32);
         const local = v => v < callee.params && subst[v] ? subst[v].local : base + v;
         let depth = 0;
         const body = callee.code;
@@ -152,7 +168,8 @@ function inlineCalls(fn, library, limits, arity, anywhere) {
         push(0, 0, 0);
         changed = true;
     }
-    return changed ? {code: out, nlocals: locals - fn.params.length} : null;
+    if (types) for (let i = 0; i < locals - fn.params.length; i++) types[i] ??= "i32";
+    return changed ? {code: out, nlocals: locals - fn.params.length, localTypes: types ?? fn.localTypes} : null;
 }
 
 // A function the inliner may copy: short, no literal stores (their table is per function),
@@ -168,7 +185,16 @@ function inlineCandidate(fn, code, limits, guarded) {
         if (op === CHECKED_ADDRESS) for (const v of [code[at + 1], code[at + 2]]) if (v < fn.params.length) addressed[v] = true;
         at += 1 + n;
     }
-    return {params: fn.params.length, written, addressed};
+    return {params: fn.params.length, written, addressed, result: fn.result};
+}
+
+// The types of a library copy's parameters and frame locals, when one is an f32 (inlineCalls copies them into
+// the caller's fn.localTypes); undefined for an integer-only copy.
+function inlineTypes(fn, copy) {
+    if (!fn.params.includes("f32") && !copy.localTypes) return undefined;
+    const types = fn.params.map(type => type === "f32" ? type : "i32");
+    for (let i = 0; i < copy.nlocals; i++) types.push(copy.localTypes?.[i] ?? "i32");
+    return types;
 }
 
 // rv32/passes/commute.js
@@ -213,12 +239,16 @@ function commuteConstants(code, arity) {
             stack.push({start: n ? args[0]?.start ?? NaN : start});
         } else if (op >= BLOCK && op <= IF) {
             if (op === IF) stack.pop();
-            blocks.push({value: a === I32, height: stack.length});
+            blocks.push({value: a !== VOID, height: stack.length});
         } else if (op === ELSE) stack.length = blocks.at(-1).height;
         else if (op === END && blocks.length) {
             const block = blocks.pop();
             stack.length = block.height;
             if (block.value) stack.push({start: NaN});
+        } else if (FLOATING[op]) {
+            // An f32 operation, by its row: it starts where its first operand does (or here, without operands).
+            const row = tapeRow(op), args = stack.splice(stack.length - row.pop.length, row.pop.length);
+            if (row.push.length) stack.push({start: row.pop.length ? args[0]?.start ?? NaN : start});
         }
     }
     return changed ? out : null;
@@ -286,6 +316,58 @@ function rotateLoops(code) {
     return changed ? out : null;
 }
 
+// rv32/passes/fields.js
+// The fields pass: an f32 field that a function reads more than once is loaded once.
+
+// `get r; f32.load a off` reads the same value every time when r is a parameter the function never writes and nothing
+// in the function stores to memory or calls a function that may (storeless). The first read of each (r, off) at the
+// function's top level, outside every block, runs before any later operation, so it becomes
+// `get r; f32.load a off; set t; get t` and every later read `get t`, for a fresh f32 local t. Integer loads stay as
+// they are: their images are pinned (PICOCALC-TYPED-F32; widening this to i32.load is a separate measurement).
+function reuseFloatFields(fn, storeless) {
+    const code = fn.code, params = fn.params.length;
+    if (!code.includes(F32_LOAD)) return null;
+    const written = new Set(), firsts = new Map(), count = new Map();
+    let depth = 0;
+    for (let at = 0; at < code.length; at = opNext(code, at)) {
+        const op = code[at];
+        if (!(CELLS[op] >= 0)) return null;
+        if (EFFECTS[op] & STORES) return null;
+        if (op === CALL && !storeless(code[at + 1])) return null;
+        if (op === LOCAL_SET) written.add(code[at + 1]);
+        if (op >= BLOCK && op <= IF) depth++;
+        else if (op === END) depth--;
+        if (op === LOCAL_GET && code[at + 1] < params && code[at + 2] === F32_LOAD) {
+            const key = code[at + 1] * 4096 + code[at + 4];
+            count.set(key, (count.get(key) ?? 0) + 1);
+            if (!firsts.has(key)) firsts.set(key, depth === 0 ? at : -1);
+        }
+    }
+    const reused = new Map();
+    let fresh = params + fn.nlocals;
+    for (const [key, at] of firsts)
+        if (at >= 0 && count.get(key) > 1 && !written.has(Math.floor(key / 4096)) && code[at + 4] < 4096) reused.set(key, {at, local: fresh++});
+    if (!reused.size) return null;
+    const out = [];
+    for (let at = 0; at < code.length;) {
+        const next = opNext(code, at);
+        if (code[at] === LOCAL_GET && code[at + 2] === F32_LOAD) {
+            const hit = reused.get(code[at + 1] * 4096 + code[at + 4]);
+            if (hit) {
+                if (hit.at === at) out.push(LOCAL_GET, code[at + 1], F32_LOAD, code[at + 3], code[at + 4], LOCAL_SET, hit.local);
+                out.push(LOCAL_GET, hit.local);
+                at = opNext(code, next);
+                continue;
+            }
+        }
+        for (let k = at; k < next; k++) out.push(code[k]);
+        at = next;
+    }
+    const localTypes = (fn.localTypes ?? Array(fn.nlocals).fill("i32")).slice();
+    for (let i = fn.nlocals; i < fresh - params; i++) localTypes[i] = "f32";
+    return {code: out, nlocals: fresh - params, localTypes};
+}
+
 // rv32/passes/inline-group.js
 // The "inline" group (typed-rv32-inline.js): inline, commute and rotate, the passes "balanced" adds to the
 // core. Loading this module installs them in the registry.
@@ -302,11 +384,12 @@ installPasses("inline", {
         run(fn, ctx) {
             const {inlining, inlineLibrary, arity} = ctx;
             const all = fn.code.length <= inlining.calleeCells ? inlineCalls(fn, inlineLibrary, inlining, arity, true) : null;
-            ctx.libraryCopy = all ?? {code: fn.code, nlocals: fn.nlocals};
+            ctx.libraryCopy = all ?? {code: fn.code, nlocals: fn.nlocals, localTypes: fn.localTypes};
             const loops = inlineCalls(fn, inlineLibrary, inlining, arity, false);
             if (loops) {
                 fn.code = loops.code;
                 fn.nlocals = loops.nlocals;
+                if (loops.localTypes) fn.localTypes = loops.localTypes;
             }
         },
         // After emission (a guarded-return summary, which the emitter's stages may set, excludes a candidate):
@@ -316,11 +399,17 @@ installPasses("inline", {
             const {inlining, inlineLibrary, libraryCopy, index} = ctx;
             const candidate = inlineCandidate(fn, libraryCopy.code, inlining, ctx.targets[index]?.guardedReturn);
             if (candidate) inlineLibrary.set(index, {...candidate, nlocals: libraryCopy.nlocals, code: libraryCopy.code.slice(),
-                loops: loopDepth(libraryCopy.code)});
+                loops: loopDepth(libraryCopy.code), types: inlineTypes(fn, libraryCopy)});
             inlining.report?.push({name: fn.name, cells: fn.code.length, locals: fn.params.length + fn.nlocals,
                 libraryCells: candidate ? libraryCopy.code.length : undefined});
         },
     },
+    // A function's storeless answer is computed from its tape before any pass rewrites it (as for hoist), here only for
+    // the functions the pass may rewrite or call: those with f32 values (an integer program pays nothing).
+    fields: {startName: "storeless", start(fn, ctx) { if (fn.code.includes(F32_LOAD) || floatingFunction(fn)) ctx.storeless(ctx.index); }, run(fn, ctx) {
+        const reused = reuseFloatFields(fn, ctx.storeless);
+        if (reused) Object.assign(fn, reused);
+    }},
     commute: {run: (fn, ctx) => replaceTape(fn, commuteConstants(fn.code, ctx.arity))},
     rotate: {run: fn => replaceTape(fn, rotateLoops(fn.code))},
 });

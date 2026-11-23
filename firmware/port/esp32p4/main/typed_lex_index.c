@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <string.h>
 
-enum token_kind { IDENTIFIER = 1, INTEGER, STRING, OPERATOR };
+enum token_kind { IDENTIFIER = 1, INTEGER, STRING, OPERATOR, FLOAT };
 typedef struct { uint32_t start, end, symbol, close; } token_row;
 typedef struct {
     uint32_t start, end, kind, byte_at, byte_len, hash;
@@ -62,6 +62,23 @@ static enum token_kind scan_token(scan_state *s) {
         /* A hex literal is 0x and word characters, as the reference's 0[xX]\w*; the parser checks the digits. */
         int word = kind == IDENTIFIER || (*p == '0' && remain >= 2 && (p[1] == 'x' || p[1] == 'X'));
         while (end < remain && (digit(p[end]) || (word && ident_start(p[end])))) end++;
+        if (kind == INTEGER && !word) {
+            /* A float literal, as the reference's \d+\.\d+([eE][+-]?\d+)? or \d+[eE][+-]?\d+. */
+            if (end + 1 < remain && p[end] == '.' && digit(p[end + 1])) {
+                kind = FLOAT;
+                end += 2;
+                while (end < remain && digit(p[end])) end++;
+            }
+            if (end + 1 < remain && (p[end] == 'e' || p[end] == 'E')) {
+                size_t at = end + 1;
+                if (p[at] == '+' || p[at] == '-') at++;
+                if (at < remain && digit(p[at])) {
+                    kind = FLOAT;
+                    end = at + 1;
+                    while (end < remain && digit(p[end])) end++;
+                }
+            }
+        }
         advance_ascii(s, (unsigned)end);
         return kind;
     }

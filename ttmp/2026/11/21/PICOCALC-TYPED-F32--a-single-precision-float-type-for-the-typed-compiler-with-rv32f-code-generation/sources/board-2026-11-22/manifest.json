@@ -1,0 +1,17 @@
+{
+ "N": 2000,
+ "blocks": 6,
+ "image": "0a1e8617fd5c37fb2de9040fc52109e5dbd178be0cf80edb615cad58fed1283d",
+ "entries": {
+  "sphere": 0,
+  "lambda": 208,
+  "ggx": 292,
+  "norm3": 596
+ },
+ "words": 179,
+ "hashes": {
+  "sphere": "e7716b1a",
+  "ggx": "160a7c60",
+  "norm3": "9df0569b"
+ }
+}

@@ -101,8 +101,9 @@ export function compile(source, imports = [], maxSourceLength, requested) {
                 index => Emitter === GuardedReturnCode && targets[index]?.guardedReturn)) : undefined;
             // observePlan(name, plan): a read-only view of the operand-location plan, for tools.
             if (plan) options?.observePlan?.(fn.name, plan);
-            const emit = longBranches => {
+            const emit = (longBranches, frameless) => {
                 const emitter = new Emitter(fn, callables, targets);
+                if (frameless) emitter.frameless = true;
                 emitter.select = options?.select;
                 emitter.versioned = passes.has("version");
                 emitter.facts = facts;
@@ -111,12 +112,19 @@ export function compile(source, imports = [], maxSourceLength, requested) {
                 return emitter.lower();
             };
             compiled = time(fn, "emit", () => {
-                try {
-                    return emit(false);
-                } catch (error) {
-                    if (error !== SHORT_BRANCH_RANGE) throw error;
-                    return emit(true);
-                }
+                let longBranches = false;
+                const lowered = frameless => {
+                    try {
+                        return emit(longBranches, frameless);
+                    } catch (error) {
+                        if (error !== SHORT_BRANCH_RANGE) throw error;
+                        longBranches = true;
+                        return emit(true, frameless);
+                    }
+                };
+                // An f32 function that used no frame is emitted again without one (FunctionCode.dropsFrame).
+                const code = lowered(false);
+                return code.dropsFrame ? lowered(true) : code;
             });
         }
         for (const pass of finishes) time(fn, pass.finishName ?? pass.name, () => pass.finish(fn, ctx));

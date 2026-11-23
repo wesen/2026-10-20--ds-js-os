@@ -6,7 +6,10 @@
 const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET, LOCAL_SET,
     I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
     I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR,
-    I32_SHL, I32_SHR_S, I32_SHR_U, RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS} = typedTape;
+    I32_SHL, I32_SHR_S, I32_SHR_U, RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS,
+    F32, F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG, F32_CEIL,
+    F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
+    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX} = typedTape;
 const LITERAL = Symbol("integer literal");
 const scalarType = type => type === LITERAL ? "i32" : type;
 // [precedence, operand type (null: any scalar), result type, opcode], with JavaScript's precedences. A distinct
@@ -49,6 +52,7 @@ class ExpressionParser {
         if (this.locals.has(name)) this.lex.fail("duplicate local " + name);
         const index = this.nextLocal++;
         this.locals.set(name, { type, index, mutable });
+        if (type === "f32") (this.floatLocals ??= []).push(index);
         return index;
     }
 
@@ -62,6 +66,7 @@ class ExpressionParser {
     // The tape writer: one cell per opcode and per operand (tape.js). The backends read the tape; the Wasm
     // backend serializes it (encodeFunction).
     emitConst(value) { this.code.push(I32_CONST, value); }
+    emitFloat(value) { this.code.push(F32_CONST, f32Bits(value)); }
     emitIndex(op, index) { this.code.push(op, index); }
     emitMemory(op, alignment, offset) { this.code.push(op, alignment, offset); }
 
@@ -74,29 +79,6 @@ class ExpressionParser {
     emitLiteralStores(address, value) {
         this.literals ??= [];
         this.code.push(LITERAL_STORES, address, this.literals.push(value) - 1);
-    }
-
-    minmax() {
-        const lex = this.lex;
-        { if (lex.token.value !== ".") lex.fail("expected ."); lex.next(); }
-        const name = lex.ident();
-        if (name !== "min" && name !== "max") lex.fail("expected Math.min or Math.max");
-        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
-        const a = this.nextLocal++;
-        const b = this.nextLocal++;
-        this.want(this.expr(), "i32");
-        this.emitIndex(LOCAL_SET, a);
-        { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
-        this.want(this.expr(), "i32");
-        this.emitIndex(LOCAL_SET, b);
-        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
-        this.emitIndex(LOCAL_GET, a);
-        this.emitIndex(LOCAL_GET, b);
-        this.code.push(I32_LT_S, IF, I32);
-        this.emitIndex(LOCAL_GET, name === "min" ? a : b);
-        this.code.push(ELSE);
-        this.emitIndex(LOCAL_GET, name === "min" ? b : a);
-        this.code.push(END);
     }
 
     prefix() {
@@ -121,8 +103,16 @@ class ExpressionParser {
                 this.emitConst(-2147483648);
                 return LITERAL;
             }
+            const at = this.code.length;
             this.emitConst(0);
             const type = this.expr(PREFIX);
+            if (type === "f32") {
+                // f32 negation flips the sign (-0.0 is -0); a literal's sign is flipped in its cell.
+                this.removeCells(at, 2);
+                if (this.code.length === at + 2 && this.code[at] === F32_CONST) this.code[at + 1] ^= 0x80000000;
+                else this.code.push(F32_NEG);
+                return type;
+            }
             this.want(type, "i32");
             this.code.push(I32_SUB);
             return type;
@@ -147,18 +137,40 @@ class ExpressionParser {
         }
         case "Math": {
             lex.next();
-            this.minmax();
-            return "i32";
+            return this.math();
         }
         case "i32": {
             lex.next();
             { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
             const type = this.expr();
-            if (!this.enums.has(type) && !this.distinct.has(type))
-                lex.fail("i32 conversion requires an enum or a distinct integer, got " + scalarType(type));
+            // f32 -> i32 truncates toward zero and saturates; NaN gives 2^31 - 1 (tape.js f32.to_i32).
+            if (type === "f32") this.code.push(I32_TRUNC_F32);
+            else if (!this.enums.has(type) && !this.distinct.has(type))
+                lex.fail("i32 conversion requires an f32, an enum or a distinct integer, got " + scalarType(type));
             { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
             return "i32";
         }
+        case "f32": {
+            // i32 -> f32, rounded to nearest even; a literal is converted in its cell.
+            lex.next();
+            lex.expect("(");
+            const at = this.code.length;
+            const type = this.expr();
+            lex.expect(")");
+            if (type === "f32") return type;
+            if (scalarType(type) !== "i32" && !this.distinct.has(type))
+                lex.fail("f32 conversion requires an i32, got " + scalarType(type));
+            if (this.code.length === at + 2 && this.code[at] === I32_CONST) {
+                this.code[at] = F32_CONST;
+                this.code[at + 1] = f32Bits(this.code[at + 1]);
+            } else this.code.push(F32_CONVERT_I32_S);
+            return "f32";
+        }
+        }
+        if (lex.token.kind === "float") {
+            this.emitFloat(lex.floatValue());
+            lex.next();
+            return "f32";
         }
         if (lex.token.kind === "int") {
             const value = lex.integerValue();
@@ -209,6 +221,13 @@ class ExpressionParser {
                 this.code.push(I32_LOAD, 2, 0);
                 return "i32";
             }
+            if (binding.type === "buffer" && lex.accept("getF32")) {
+                lex.expect("(");
+                this.floatAddress(binding.index);
+                lex.expect(")");
+                this.code.push(F32_LOAD, 2, 2);
+                return "f32";
+            }
             { if (lex.token.value !== "charCodeAt") lex.fail("expected charCodeAt"); lex.next(); }
             { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
             const pos = this.nextLocal++;
@@ -248,6 +267,13 @@ class ExpressionParser {
                 }
                 this.code.push(END);
                 type = "bool";
+            } else if (type === "f32") {
+                const float = FLOAT_BINARY[op];
+                if (!float) lex.fail("operator " + op + " is not defined on f32");
+                lex.next();
+                this.want(this.expr(precedence + 1), "f32");
+                this.code.push(float[1]);
+                type = float[0];
             } else {
                 const numeric = NOMINAL.has(precedence);
                 const nominal = numeric && this.distinct.has(type);
@@ -331,7 +357,7 @@ class ExpressionParser {
                 type = this.memberCall(this.aliases?.methods.get(type), scalarType(type), true, name);
             } else {
                 const field = this.field(type, name);
-                this.emitMemory(I32_LOAD, 2, field.offset);
+                this.emitMemory(field.type === "f32" ? F32_LOAD : I32_LOAD, 2, field.offset);
                 type = field.type;
             }
         }
@@ -350,7 +376,7 @@ class ExpressionParser {
             this.emitIndex(LOCAL_SET, record);
             for (const field of fields.values()) {
                 this.emitIndex(LOCAL_GET, record);
-                this.emitMemory(I32_LOAD, 2, field.offset);
+                this.emitMemory(field.type === "f32" ? F32_LOAD : I32_LOAD, 2, field.offset);
             }
             return;
         }

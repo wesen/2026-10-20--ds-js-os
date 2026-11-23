@@ -1,5 +1,5 @@
 // The hoist option of the version pass: loop invariants and subexpressions into the guard block.
-import {opNext, LOCAL_SET, LOCAL_GET, LITERAL_STORES, CHECKED_ADDRESS, UNCHECKED_ADDRESS, BLOCK, IF, I32, ELSE, END, I32_CONST, DROP, BR_IF, BR, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_EQZ, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_DIV_S, I32_REM_S} from "../encoding/tape.js";
+import {opNext, LOCAL_SET, LOCAL_GET, LITERAL_STORES, CHECKED_ADDRESS, UNCHECKED_ADDRESS, BLOCK, IF, I32, VOID, ELSE, END, I32_CONST, DROP, BR_IF, BR, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_EQZ, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_DIV_S, I32_REM_S} from "../encoding/tape.js";
 
 // the hoist pass: a statement of a versioned loop's fast copy that computes the same value in
 // every iteration moves into the guard block, after the guard's terms and before the loop.
@@ -36,7 +36,7 @@ export function hoistInvariants(body, unchecked, k, readOutside, storeless, arit
         const p = ops[i], op = body[p], a = body[p + 1];
         if (op >= BLOCK && op <= IF) {
             if (!dead && op === IF) tags.pop();
-            frames.push({base: tags.length, value: a === I32, deadEntry: dead});
+            frames.push({base: tags.length, value: a !== VOID, deadEntry: dead});
             start = i + 1;
             continue;
         }
@@ -190,7 +190,7 @@ export function hoistSubexpressions(body, k, arity, fresh) {
         const p = ops[i], op = body[p], a = body[p + 1];
         if (op >= BLOCK && op <= IF) {
             if (!dead && op === IF) consume(1);
-            frames.push({base: slots.length, value: a === I32, deadEntry: dead});
+            frames.push({base: slots.length, value: a !== VOID, deadEntry: dead});
             continue;
         }
         if (op === ELSE || op === END) {

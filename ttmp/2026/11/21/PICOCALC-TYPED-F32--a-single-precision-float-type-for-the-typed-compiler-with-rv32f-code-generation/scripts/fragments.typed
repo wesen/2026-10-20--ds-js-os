@@ -1,0 +1,45 @@
+// The three Candela fragments of PICOCALC-CANDELA-P4 scripts/09-numeric-bench.c (arm F32) in Typed: hitObj's
+// object-space sphere test, evalLobe's GGX term, safeNorm. A vector is a record of three f32 fields, as the C
+// functions read three consecutive floats.
+record V3 { x: f32; y: f32; z: f32; }
+
+function sphere(o: V3, d: V3, r: f32): f32 {
+    const a = d.x * d.x + d.y * d.y + d.z * d.z;
+    const b = o.x * d.x + o.y * d.y + o.z * d.z;
+    const c = o.x * o.x + o.y * o.y + o.z * o.z - r * r;
+    const disc = b * b - a * c;
+    if (disc < 0.0) { return 1e30; }
+    const s = Math.sqrt(disc);
+    let t = (-b - s) / a;
+    if (t < 0.0002) { t = (-b + s) / a; }
+    if (t < 0.0002) { return 1e30; }
+    return t;
+}
+
+function lambda(w: V3, al: f32): f32 {
+    const t = al * al * (w.x * w.x + w.y * w.y) / (w.z * w.z);
+    return (-1.0 + Math.sqrt(1.0 + t)) * 0.5;
+}
+
+function ggx(wo: V3, wi: V3, al: f32): f32 {
+    let hx = wo.x + wi.x;
+    let hy = wo.y + wi.y;
+    let hz = wo.z + wi.z;
+    const l = Math.sqrt(hx * hx + hy * hy + hz * hz);
+    hx = hx / l;
+    hy = hy / l;
+    hz = hz / l;
+    const x = hx / al;
+    const y = hy / al;
+    const k = x * x + y * y + hz * hz;
+    const D = 1.0 / (3.14159265 * al * al * k * k);
+    const G = 1.0 / (1.0 + lambda(wo, al) + lambda(wi, al));
+    return D * G / (4.0 * wo.z);
+}
+
+function norm3(v: V3): f32 {
+    const l = Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+    let k: f32 = 0.0;
+    if (l > 1e-20) { k = 1.0 / l; }
+    return v.x * k + 2.0 * v.y * k + 4.0 * v.z * k;
+}

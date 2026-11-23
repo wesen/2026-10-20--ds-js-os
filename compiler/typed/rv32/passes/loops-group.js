@@ -25,6 +25,13 @@ installPasses("loops", {
         if (split) {
             fn.code = split.code;
             fn.nlocals = split.nlocals;
+            // A web of an f32 local is an f32 local.
+            if (fn.localTypes) {
+                const types = fn.localTypes.slice(); // a library copy of the inline pass may share the array
+                for (let i = 0; i < split.origin.length; i++)
+                    types[before - fn.params.length + i] = types[split.origin[i] - fn.params.length] ?? "i32";
+                fn.localTypes = types;
+            }
             ctx.origin = local => local >= before ? split.origin[local - before] : local;
         }
     }},

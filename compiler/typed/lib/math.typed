@@ -1,0 +1,214 @@
+// Typed's f32 math library (PICOCALC-TYPED-F32): the functions Candela's kernel calls that RV32F has no instruction
+// for, in Typed, so the WebAssembly oracle and the RV32 build compute the same bits. A program includes it by
+// concatenating this file before its own functions. Accuracy against Math.fround(Math.f(x)) is measured by
+// compiler/typed/lib/accuracy.mjs and listed in compiler/typed/lib/README.md. The polynomials are Cephes's single
+// precision ones (S. L. Moshier, Cephes Math Library), evaluated in f32 without fused multiply-adds.
+
+// 2^n for an integer n in [-126, 127], from its bits.
+function pow2i(n: i32): f32 { return Math.fromBits((n + 127) << 23); }
+
+// x * 2^n for n in [-276, 254]: two exact power-of-two steps, so that a subnormal result rounds once.
+function ldexpf(x: f32, n: i32): f32 {
+    if (n > 127) { return x * pow2i(127) * pow2i(n - 127); }
+    if (n < -126) { return x * pow2i(n + 126) * pow2i(-126); }
+    return x * pow2i(n);
+}
+
+function fract(x: f32): f32 { return x - Math.floor(x); }
+function mix(a: f32, b: f32, t: f32): f32 { return a + (b - a) * t; }
+function clamp(x: f32, lo: f32, hi: f32): f32 { return Math.min(Math.max(x, lo), hi); }
+function saturate(x: f32): f32 { return Math.min(Math.max(x, 0.0), 1.0); }
+function step(edge: f32, x: f32): f32 { if (x >= edge) { return 1.0; } return 0.0; }
+function sign(x: f32): f32 { if (x > 0.0) { return 1.0; } if (x < 0.0) { return -1.0; } return 0.0; }
+function smoothstep(e0: f32, e1: f32, x: f32): f32 {
+    const t = clamp((x - e0) / (e1 - e0), 0.0, 1.0);
+    return t * t * (3.0 - 2.0 * t);
+}
+
+// sin and cos: x reduced by multiples of pi/4 (j = the octant), r = x - j pi/4 in three parts (Cody and Waite), then
+// the sine or cosine polynomial on |r| <= pi/4. The reduction is exact while j < 2^16 (|x| < about 51000); beyond
+// that it loses accuracy gradually, and from 2^23 (where every f32 is an integer) sin gives 0 and cos 1. NaN and the
+// infinities give NaN.
+function sinCosReduced(z: f32, j: i32): f32 {
+    const zz = z * z;
+    if (j === 1 || j === 2) {
+        return ((2.443315711809948e-5 * zz - 1.388731625493765e-3) * zz + 4.166664568298827e-2) * zz * zz - 0.5 * zz + 1.0;
+    }
+    return ((-1.9515295891e-4 * zz + 8.3321608736e-3) * zz - 1.6666654611e-1) * zz * z + z;
+}
+
+function sinf(x: f32): f32 {
+    let negative = Math.bitsOf(x) < 0;
+    const a = Math.abs(x);
+    if (!(a < 8388608.0)) { if (Math.bitsOf(a) >= 0x7f800000) { return (x - x) / (x - x); } return 0.0; }
+    let j = i32(a * 1.27323954473516);
+    let y = f32(j);
+    if ((j & 1) === 1) { j = j + 1; y = y + 1.0; }
+    j = j & 7;
+    if (j > 3) { negative = !negative; j = j - 4; }
+    const z = ((a - y * 0.78515625) - y * 2.4187564849853515625e-4) - y * 3.77489497744594108e-8;
+    const r = sinCosReduced(z, j);
+    if (negative) { return -r; }
+    return r;
+}
+
+function cosf(x: f32): f32 {
+    const a = Math.abs(x);
+    if (!(a < 8388608.0)) { if (Math.bitsOf(a) >= 0x7f800000) { return (x - x) / (x - x); } return 1.0; }
+    let j = i32(a * 1.27323954473516);
+    let y = f32(j);
+    if ((j & 1) === 1) { j = j + 1; y = y + 1.0; }
+    j = j & 7;
+    let negative = false;
+    if (j > 3) { j = j - 4; negative = true; }
+    if (j > 1) { negative = !negative; }
+    const z = ((a - y * 0.78515625) - y * 2.4187564849853515625e-4) - y * 3.77489497744594108e-8;
+    // The octant's other function: cosine where sinf takes the sine, and the reverse.
+    const r = sinCosReduced(z, j ^ 1);
+    if (negative) { return -r; }
+    return r;
+}
+
+function tanf(x: f32): f32 { return sinf(x) / cosf(x); }
+
+// e^x: x = n ln 2 + r with ln 2 in two parts, |r| <= ln 2 / 2, a degree-6 polynomial, then 2^n.
+function expf(x: f32): f32 {
+    if (x > 88.72283905206835) { return x * pow2i(127); }
+    if (x < -103.972077083992) { return 0.0; }
+    if (!(x === x)) { return x; }
+    const z = Math.floor(x * 1.44269504088896341 + 0.5);
+    const r = x - z * 0.693359375 + z * 2.12194440e-4;
+    const p = ((((((1.9875691500e-4 * r + 1.3981999507e-3) * r + 8.3334519073e-3) * r + 4.1665795894e-2) * r +
+        1.6666665459e-1) * r + 5.0000001201e-1) * r * r + r) + 1.0;
+    return ldexpf(p, i32(z));
+}
+
+// 2^x: x = n + r, |r| <= 1/2, a degree-6 polynomial, then 2^n.
+function exp2f(x: f32): f32 {
+    if (x >= 128.0) { return x * pow2i(127); }
+    if (x < -150.0) { return 0.0; }
+    if (!(x === x)) { return x; }
+    const n = Math.floor(x + 0.5);
+    const r = x - n;
+    const p = ((((((1.535336188319500e-4 * r + 1.339887440266574e-3) * r + 9.618437357674640e-3) * r +
+        5.550332471162809e-2) * r + 2.402264791363012e-1) * r + 6.931472028550421e-1) * r) + 1.0;
+    return ldexpf(p, i32(n));
+}
+
+// log(1 + f) - f for f = m - 1, m in [sqrt(1/2), sqrt(2)): f^3 P(f) - f^2 / 2.
+function logTail(f: f32): f32 {
+    const z = f * f;
+    return ((((((((7.0376836292e-2 * f - 1.1514610310e-1) * f + 1.1676998740e-1) * f - 1.2420140846e-1) * f +
+        1.4249322787e-1) * f - 1.6668057665e-1) * f + 2.0000714765e-1) * f - 2.4999993993e-1) * f + 3.3333331174e-1) * f * z - 0.5 * z;
+}
+
+// x = m 2^e for a positive finite x, m in [sqrt(1/2), sqrt(2)): e, with a subnormal x scaled by 2^24 first.
+function logExponent(x: f32): i32 {
+    let a = x;
+    let shift = 0;
+    if (a < 1.17549435e-38) { a = a * 16777216.0; shift = 24; }
+    const bits = Math.bitsOf(a);
+    const e = ((bits >> 23) & 255) - 126 - shift;
+    if (Math.fromBits((bits & 0x7fffff) | 0x3f000000) < 0.707106781186547524) { return e - 1; }
+    return e;
+}
+
+// m - 1 for the m of logExponent.
+function logFraction(x: f32): f32 {
+    let a = x;
+    if (a < 1.17549435e-38) { a = a * 16777216.0; }
+    const m = Math.fromBits((Math.bitsOf(a) & 0x7fffff) | 0x3f000000);
+    if (m < 0.707106781186547524) { return m + m - 1.0; }
+    return m - 1.0;
+}
+
+// The natural logarithm: f + tail + e ln 2, ln 2 in two parts. 0 gives -infinity, a negative x or NaN NaN.
+function logf(x: f32): f32 {
+    if (!(x > 0.0)) { if (x === 0.0) { return -1.0 / 0.0; } return (x - x) / (x - x); }
+    if (Math.bitsOf(x) === 0x7f800000) { return x; }
+    const e = f32(logExponent(x));
+    const f = logFraction(x);
+    return f + (logTail(f) - e * 2.12194440e-4) + e * 0.693359375;
+}
+
+// The base-2 logarithm: (f + tail) log2(e) + e, log2(e) as 1 + 0.4426950408889634.
+function log2f(x: f32): f32 {
+    if (!(x > 0.0)) { if (x === 0.0) { return -1.0 / 0.0; } return (x - x) / (x - x); }
+    if (Math.bitsOf(x) === 0x7f800000) { return x; }
+    const e = f32(logExponent(x));
+    const f = logFraction(x);
+    const y = logTail(f);
+    return y * 0.44269504088896340736 + f * 0.44269504088896340736 + y + f + e;
+}
+
+// x^y as 2^(y log2 x) for x > 0; x = 0 gives 0 (y > 0), 1 (y = 0) or infinity (y < 0); a negative x gives NaN
+// (Candela raises only non-negative bases). The error grows with |y log2 x| (the README's table).
+function powf(x: f32, y: f32): f32 {
+    if (y === 0.0) { return 1.0; }
+    if (x === 0.0) { if (y > 0.0) { return 0.0; } return 1.0 / 0.0; }
+    return exp2f(y * log2f(x));
+}
+
+// atan on [0, infinity): reduced to |t| <= tan(pi/8) around 0, pi/4 or pi/2, then an odd degree-9 polynomial.
+function atanPositive(a: f32): f32 {
+    let x = a;
+    let base: f32 = 0.0;
+    if (a > 2.414213562373095) { base = 1.5707963267948966; x = -1.0 / a; }
+    else if (a > 0.4142135623730950) { base = 0.7853981633974483; x = (a - 1.0) / (a + 1.0); }
+    const z = x * x;
+    return base + ((((8.05374449538e-2 * z - 1.38776856032e-1) * z + 1.99777106478e-1) * z - 3.33329491539e-1) * z * x + x);
+}
+
+function atanf(x: f32): f32 {
+    if (!(x === x)) { return x; }
+    const r = atanPositive(Math.abs(x));
+    return Math.copysign(r, x);
+}
+
+// atan2(y, x) in (-pi, pi], with C's signed zeros and infinities: the quadrant from the signs of x and y.
+function atan2f(y: f32, x: f32): f32 {
+    if (!(x === x) || !(y === y)) { return x + y; }
+    const ay = Math.abs(y);
+    const ax = Math.abs(x);
+    let r: f32 = 0.0;
+    if (Math.bitsOf(ay) === 0x7f800000 && Math.bitsOf(ax) === 0x7f800000) { r = 0.7853981633974483; }
+    else if (ax === 0.0 && ay === 0.0) { r = 0.0; }
+    else if (ax === 0.0) { r = 1.5707963267948966; }
+    else { r = atanPositive(ay / ax); }
+    // x < 0 (or -0): the angle from the negative x axis.
+    if (x < 0.0 || (x === 0.0 && Math.copysign(1.0, x) < 0.0)) { r = 3.14159265358979 - r; }
+    return Math.copysign(r, y);
+}
+
+// asin on [0, 1]: a degree-9 odd polynomial on [0, 1/2]; above, asin(a) = pi/2 - 2 asin(sqrt((1 - a) / 2)).
+function asinPositive(a: f32): f32 {
+    if (a > 0.5) {
+        const z = 0.5 * (1.0 - a);
+        const s = Math.sqrt(z);
+        const p = ((((4.2163199048e-2 * z + 2.4181311049e-2) * z + 4.5470025998e-2) * z + 7.4953002686e-2) * z + 1.6666752422e-1) * z * s + s;
+        return 1.5707963267948966 - (p + p);
+    }
+    const z = a * a;
+    return ((((4.2163199048e-2 * z + 2.4181311049e-2) * z + 4.5470025998e-2) * z + 7.4953002686e-2) * z + 1.6666752422e-1) * z * a + a;
+}
+
+function asinf(x: f32): f32 {
+    const a = Math.abs(x);
+    if (!(a <= 1.0)) { return (x - x) / (x - x); }
+    return Math.copysign(asinPositive(a), x);
+}
+
+// acos(x) = pi/2 - asin(x), except near 1 and -1, where 2 asin(sqrt((1 - |x|) / 2)) keeps the accuracy.
+function acosf(x: f32): f32 {
+    const a = Math.abs(x);
+    if (!(a <= 1.0)) { return (x - x) / (x - x); }
+    if (a > 0.5) {
+        const z = 0.5 * (1.0 - a);
+        const s = Math.sqrt(z);
+        const p = ((((4.2163199048e-2 * z + 2.4181311049e-2) * z + 4.5470025998e-2) * z + 7.4953002686e-2) * z + 1.6666752422e-1) * z * s + s;
+        if (x > 0.0) { return p + p; }
+        return 3.14159265358979 - (p + p);
+    }
+    // (pi/4 - asin(x)) + pi/4, with the bits of pi/2 that f32 pi/4 misses (Cephes).
+    return ((0.7853981633974483 - Math.copysign(asinPositive(a), x)) + 3.774894707930798e-8) + 0.7853981633974483;
+}

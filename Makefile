@@ -37,6 +37,7 @@ test-generated:
 	node compiler/typed/async/build.mjs --check
 	node tools/gen/candela/regenerate.mjs --check
 	node bench/rv32/vectors.mjs --check
+	node tests/compiler/typed-f32-fixture.mjs --check
 	node tools/check-file-length.mjs
 
 test-go:

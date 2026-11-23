@@ -1,7 +1,7 @@
 // FunctionCode's branches, labels and structured control.
 import {instruction, ZERO, T6, T5, A0} from "../encoding/registers.js";
 import {PREDICATES} from "../encoding/selection.js";
-import {I32_EQZ, IF, BR_IF, LOOP, VOID, I32} from "../encoding/tape.js";
+import {I32_EQZ, IF, BR_IF, LOOP, VOID, I32, F32} from "../encoding/tape.js";
 
 export const SHORT_BRANCH_RANGE = Symbol("a forward branch target is beyond the conditional-branch range");
 
@@ -77,9 +77,9 @@ export class BranchMethods {
 
     begin(op, kind = 0, a, b = ZERO) {
         const type = this.cell();
-        if (type !== VOID && type !== I32) throw new SyntaxError("unsupported RV32 control result");
+        if (type !== VOID && type !== I32 && type !== F32) throw new SyntaxError("unsupported RV32 control result");
         const condition = op === IF ? a ?? this.pop(T5) : ZERO;
-        const block = {op, depth: this.depth, value: type === I32, start: {}, alternate: {}, end: {}};
+        const block = {op, depth: this.depth, value: type !== VOID, float: type === F32, start: {}, alternate: {}, end: {}};
         this.control.push(block);
         this.mark(block.start);
         if (op === IF) this.branch(kind, condition, b, block.alternate);
@@ -88,13 +88,17 @@ export class BranchMethods {
     end() {
         const block = this.control.pop();
         if (!block) {
-            this.move(this.returnRegister, this.pop(A0));
+            this.move(this.returnRegister, this.pop(this.returnRegister));
             return true;
         }
         if (block.alternate.at === undefined) this.mark(block.alternate);
         this.mark(block.end);
         // Both arms put a result in the same home at the block's entry depth.
         this.depth = block.depth + Number(block.value);
+        if (block.value) {
+            this.direct[block.depth] = undefined;
+            this.classes[block.depth] = Number(block.float);
+        }
         return false;
     }
 

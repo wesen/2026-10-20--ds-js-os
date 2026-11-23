@@ -8,17 +8,17 @@
 // ---- frontend/lexer.js
 // The front end's lexer: the token regexp, the reserved words, and the lexical index a host may provide (the P4's C
 // scanner) so that the lexer reads precomputed token rows instead of running the regexp.
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~]))/y;
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
-const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
+const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32", "f32",
     "true", "false", "Math", "let", "while", "string", "record", "buffer",
     "else", "for", "break", "enum", "match", "type", "distinct",
     "async", "await"]);
 
 // An index belongs to one exact source string in one compilation.
 let lexicalScope = null;
-const indexKinds = ["", "id", "int", "str", "op"];
+const indexKinds = ["", "id", "int", "str", "op", "float"];
 
 function withLexIndices(compile) {
     const provide = globalThis.__typedLexIndex;
@@ -43,6 +43,16 @@ function indexFor(source) {
     };
     sources.set(source, index);
     return index;
+}
+
+// A number token is "float" when it has a fraction or an exponent (1.5, 2e-3, 1.0), else "int" (decimal or hex).
+function numberKind(value) {
+    if (value.length > 1 && (value[1] === "x" || value[1] === "X")) return "int";
+    for (let i = 1; i < value.length; i++) {
+        const c = value.charCodeAt(i);
+        if (c === 46 || c === 101 || c === 69) return "float";
+    }
+    return "int";
 }
 
 class Lexer {
@@ -155,7 +165,7 @@ class Lexer {
             const value = match[1];
             const first = value.charCodeAt(0);
             const id = first === 95 || (first >= 65 && first <= 90) || (first >= 97 && first <= 122);
-            const kind = id ? "id" : first >= 48 && first <= 57 ? "int" : first === 34 ? "str" : "op";
+            const kind = id ? "id" : first >= 48 && first <= 57 ? numberKind(value) : first === 34 ? "str" : "op";
             const at = TOKEN.lastIndex - value.length;
             const current = this.borrowCurrent ? this.token : null;
             if (current) {
@@ -189,6 +199,13 @@ class Lexer {
         return Number(value) | 0;
     }
 
+    // The value of the current "float" token, rounded to f32; a literal that rounds to infinity is an error.
+    floatValue() {
+        const value = Math.fround(Number(this.token.value));
+        if (!Number.isFinite(value)) this.fail("f32 literal out of range " + this.token.value);
+        return value;
+    }
+
     accept(value) {
         if (this.token.value !== value) return false;
         this.next();
@@ -209,7 +226,7 @@ class Lexer {
 
     type(records, enums, distinct) {
         const { value } = this.token;
-        if (value !== "i32" && value !== "bool" && value !== "string" && value !== "buffer" &&
+        if (value !== "i32" && value !== "f32" && value !== "bool" && value !== "string" && value !== "buffer" &&
             !records.has(value) && !enums?.has(value) && !distinct?.has(value))
             this.fail("unknown type " + value);
         this.next();
@@ -459,7 +476,10 @@ function enumLayouts(enums) {
 const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET, LOCAL_SET,
     I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
     I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR,
-    I32_SHL, I32_SHR_S, I32_SHR_U, RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS} = typedTape;
+    I32_SHL, I32_SHR_S, I32_SHR_U, RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS,
+    F32, F32_LOAD, F32_STORE, F32_CONST, F32_EQ, F32_NE, F32_LT, F32_GT, F32_LE, F32_GE, F32_ABS, F32_NEG, F32_CEIL,
+    F32_FLOOR, F32_TRUNC, F32_SQRT, F32_ADD, F32_SUB, F32_MUL, F32_DIV, F32_COPYSIGN, F32_CONVERT_I32_S,
+    I32_REINTERPRET_F32, F32_REINTERPRET_I32, I32_TRUNC_F32, F32_MIN, F32_MAX} = typedTape;
 const LITERAL = Symbol("integer literal");
 const scalarType = type => type === LITERAL ? "i32" : type;
 // [precedence, operand type (null: any scalar), result type, opcode], with JavaScript's precedences. A distinct
@@ -502,6 +522,7 @@ class ExpressionParser {
         if (this.locals.has(name)) this.lex.fail("duplicate local " + name);
         const index = this.nextLocal++;
         this.locals.set(name, { type, index, mutable });
+        if (type === "f32") (this.floatLocals ??= []).push(index);
         return index;
     }
 
@@ -515,6 +536,7 @@ class ExpressionParser {
     // The tape writer: one cell per opcode and per operand (tape.js). The backends read the tape; the Wasm
     // backend serializes it (encodeFunction).
     emitConst(value) { this.code.push(I32_CONST, value); }
+    emitFloat(value) { this.code.push(F32_CONST, f32Bits(value)); }
     emitIndex(op, index) { this.code.push(op, index); }
     emitMemory(op, alignment, offset) { this.code.push(op, alignment, offset); }
 
@@ -527,29 +549,6 @@ class ExpressionParser {
     emitLiteralStores(address, value) {
         this.literals ??= [];
         this.code.push(LITERAL_STORES, address, this.literals.push(value) - 1);
-    }
-
-    minmax() {
-        const lex = this.lex;
-        { if (lex.token.value !== ".") lex.fail("expected ."); lex.next(); }
-        const name = lex.ident();
-        if (name !== "min" && name !== "max") lex.fail("expected Math.min or Math.max");
-        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
-        const a = this.nextLocal++;
-        const b = this.nextLocal++;
-        this.want(this.expr(), "i32");
-        this.emitIndex(LOCAL_SET, a);
-        { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
-        this.want(this.expr(), "i32");
-        this.emitIndex(LOCAL_SET, b);
-        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
-        this.emitIndex(LOCAL_GET, a);
-        this.emitIndex(LOCAL_GET, b);
-        this.code.push(I32_LT_S, IF, I32);
-        this.emitIndex(LOCAL_GET, name === "min" ? a : b);
-        this.code.push(ELSE);
-        this.emitIndex(LOCAL_GET, name === "min" ? b : a);
-        this.code.push(END);
     }
 
     prefix() {
@@ -574,8 +573,16 @@ class ExpressionParser {
                 this.emitConst(-2147483648);
                 return LITERAL;
             }
+            const at = this.code.length;
             this.emitConst(0);
             const type = this.expr(PREFIX);
+            if (type === "f32") {
+                // f32 negation flips the sign (-0.0 is -0); a literal's sign is flipped in its cell.
+                this.removeCells(at, 2);
+                if (this.code.length === at + 2 && this.code[at] === F32_CONST) this.code[at + 1] ^= 0x80000000;
+                else this.code.push(F32_NEG);
+                return type;
+            }
             this.want(type, "i32");
             this.code.push(I32_SUB);
             return type;
@@ -600,18 +607,40 @@ class ExpressionParser {
         }
         case "Math": {
             lex.next();
-            this.minmax();
-            return "i32";
+            return this.math();
         }
         case "i32": {
             lex.next();
             { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
             const type = this.expr();
-            if (!this.enums.has(type) && !this.distinct.has(type))
-                lex.fail("i32 conversion requires an enum or a distinct integer, got " + scalarType(type));
+            // f32 -> i32 truncates toward zero and saturates; NaN gives 2^31 - 1 (tape.js f32.to_i32).
+            if (type === "f32") this.code.push(I32_TRUNC_F32);
+            else if (!this.enums.has(type) && !this.distinct.has(type))
+                lex.fail("i32 conversion requires an f32, an enum or a distinct integer, got " + scalarType(type));
             { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
             return "i32";
         }
+        case "f32": {
+            // i32 -> f32, rounded to nearest even; a literal is converted in its cell.
+            lex.next();
+            lex.expect("(");
+            const at = this.code.length;
+            const type = this.expr();
+            lex.expect(")");
+            if (type === "f32") return type;
+            if (scalarType(type) !== "i32" && !this.distinct.has(type))
+                lex.fail("f32 conversion requires an i32, got " + scalarType(type));
+            if (this.code.length === at + 2 && this.code[at] === I32_CONST) {
+                this.code[at] = F32_CONST;
+                this.code[at + 1] = f32Bits(this.code[at + 1]);
+            } else this.code.push(F32_CONVERT_I32_S);
+            return "f32";
+        }
+        }
+        if (lex.token.kind === "float") {
+            this.emitFloat(lex.floatValue());
+            lex.next();
+            return "f32";
         }
         if (lex.token.kind === "int") {
             const value = lex.integerValue();
@@ -662,6 +691,13 @@ class ExpressionParser {
                 this.code.push(I32_LOAD, 2, 0);
                 return "i32";
             }
+            if (binding.type === "buffer" && lex.accept("getF32")) {
+                lex.expect("(");
+                this.floatAddress(binding.index);
+                lex.expect(")");
+                this.code.push(F32_LOAD, 2, 2);
+                return "f32";
+            }
             { if (lex.token.value !== "charCodeAt") lex.fail("expected charCodeAt"); lex.next(); }
             { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
             const pos = this.nextLocal++;
@@ -701,6 +737,13 @@ class ExpressionParser {
                 }
                 this.code.push(END);
                 type = "bool";
+            } else if (type === "f32") {
+                const float = FLOAT_BINARY[op];
+                if (!float) lex.fail("operator " + op + " is not defined on f32");
+                lex.next();
+                this.want(this.expr(precedence + 1), "f32");
+                this.code.push(float[1]);
+                type = float[0];
             } else {
                 const numeric = NOMINAL.has(precedence);
                 const nominal = numeric && this.distinct.has(type);
@@ -784,7 +827,7 @@ class ExpressionParser {
                 type = this.memberCall(this.aliases?.methods.get(type), scalarType(type), true, name);
             } else {
                 const field = this.field(type, name);
-                this.emitMemory(I32_LOAD, 2, field.offset);
+                this.emitMemory(field.type === "f32" ? F32_LOAD : I32_LOAD, 2, field.offset);
                 type = field.type;
             }
         }
@@ -803,7 +846,7 @@ class ExpressionParser {
             this.emitIndex(LOCAL_SET, record);
             for (const field of fields.values()) {
                 this.emitIndex(LOCAL_GET, record);
-                this.emitMemory(I32_LOAD, 2, field.offset);
+                this.emitMemory(field.type === "f32" ? F32_LOAD : I32_LOAD, 2, field.offset);
             }
             return;
         }
@@ -877,6 +920,106 @@ class ExpressionParser {
     }
 }
 
+// ---- frontend/floats.js
+// The front end's f32 parts: the operators and Math functions on f32, the bits of an f32 literal, Math.min and
+// Math.max (on two i32 or two f32), the address of an f32 buffer element, and the tape surgery of a negated or
+// converted literal. Their methods are ExpressionParser's (copied onto its prototype below).
+// The operators on two f32 operands: [result type, opcode]. No implicit conversion: an i32 operand is an error.
+const FLOAT_BINARY = Object.assign(Object.create(null), {
+    "+": ["f32", F32_ADD], "-": ["f32", F32_SUB], "*": ["f32", F32_MUL], "/": ["f32", F32_DIV],
+    "===": ["bool", F32_EQ], "!==": ["bool", F32_NE], "<": ["bool", F32_LT], "<=": ["bool", F32_LE],
+    ">": ["bool", F32_GT], ">=": ["bool", F32_GE],
+});
+// Math functions on f32: [parameter count, opcode]. min and max also take two i32 (minmax).
+const FLOAT_MATH = Object.assign(Object.create(null), {
+    sqrt: [1, F32_SQRT], abs: [1, F32_ABS], floor: [1, F32_FLOOR], ceil: [1, F32_CEIL], trunc: [1, F32_TRUNC],
+    copysign: [2, F32_COPYSIGN],
+});
+// The IEEE bits of an f32, as the i32 the tape's f32.const cell holds.
+const F32_BITS = new Int32Array(1), F32_VIEW = new Float32Array(F32_BITS.buffer);
+const f32Bits = value => { F32_VIEW[0] = value; return F32_BITS[0]; };
+class FloatParsing {
+    // Remove n cells at `at` (a tape the front end is still writing; an inspection tape keeps its spans aligned).
+    removeCells(at, n) {
+        const code = this.code;
+        code.copyWithin(at, at + n);
+        code.length -= n;
+        code.spans?.splice(at, n);
+    }
+
+    // Math.f(...): min and max on two i32 or two f32, the FLOAT_MATH functions, and the bit casts bitsOf(f32): i32 and
+    // fromBits(i32): f32.
+    math() {
+        const lex = this.lex;
+        { if (lex.token.value !== ".") lex.fail("expected ."); lex.next(); }
+        const name = lex.ident();
+        if (name === "min" || name === "max") return this.minmax(name);
+        const rule = FLOAT_MATH[name];
+        if (!rule && name !== "bitsOf" && name !== "fromBits") lex.fail("unknown Math function " + name);
+        lex.expect("(");
+        if (name === "fromBits") {
+            this.want(this.expr(), "i32");
+            lex.expect(")");
+            this.code.push(F32_REINTERPRET_I32);
+            return "f32";
+        }
+        this.want(this.expr(), "f32");
+        if (rule?.[0] === 2) {
+            lex.expect(",");
+            this.want(this.expr(), "f32");
+        }
+        lex.expect(")");
+        this.code.push(rule ? rule[1] : I32_REINTERPRET_F32);
+        return rule ? "f32" : "i32";
+    }
+
+    minmax(name) {
+        const lex = this.lex;
+        { if (lex.token.value !== "(") lex.fail("expected ("); lex.next(); }
+        const a = this.nextLocal++;
+        const b = this.nextLocal++;
+        const first = this.expr();
+        if (first === "f32") {
+            // fmin.s and fmax.s (tape.js: f32.min_num, f32.max_num); a and b stay unused i32 locals.
+            lex.expect(",");
+            this.want(this.expr(), "f32");
+            lex.expect(")");
+            this.code.push(name === "min" ? F32_MIN : F32_MAX);
+            return "f32";
+        }
+        this.want(first, "i32");
+        this.emitIndex(LOCAL_SET, a);
+        { if (lex.token.value !== ",") lex.fail("expected ,"); lex.next(); }
+        this.want(this.expr(), "i32");
+        this.emitIndex(LOCAL_SET, b);
+        { if (lex.token.value !== ")") lex.fail("expected )"); lex.next(); }
+        this.emitIndex(LOCAL_GET, a);
+        this.emitIndex(LOCAL_GET, b);
+        this.code.push(I32_LT_S, IF, I32);
+        this.emitIndex(LOCAL_GET, name === "min" ? a : b);
+        this.code.push(ELSE);
+        this.emitIndex(LOCAL_GET, name === "min" ? b : a);
+        this.code.push(END);
+        return "i32";
+    }
+
+    // The checked address of f32 element i of a buffer: UTF-16 units 2i and 2i + 1, the check on 2i + 1, the f32 at
+    // offset 2 from the address of unit 2i + 1 (receiver + 4 + 4i, word-aligned). Leaves the address on the stack.
+    floatAddress(receiver) {
+        const position = this.nextLocal++;
+        this.want(this.expr(), "i32");
+        this.emitConst(1);
+        this.code.push(I32_SHL);
+        this.emitConst(1);
+        this.code.push(I32_ADD);
+        this.emitIndex(LOCAL_SET, position);
+        this.codeUnitAddress(receiver, position);
+    }
+}
+for (const name of Object.getOwnPropertyNames(FloatParsing.prototype))
+    if (name !== "constructor") Object.defineProperty(ExpressionParser.prototype, name,
+        Object.getOwnPropertyDescriptor(FloatParsing.prototype, name));
+
 // ---- frontend/statements.js
 // The front end's parser and type checker, part two: blocks, conditionals, loops, match, declarations and
 // assignments, and one function's body. typed-async.js (async/body.js) subclasses FunctionEmitter as its TypeChecker.
@@ -892,6 +1035,15 @@ class FunctionEmitter extends ExpressionParser {
         const lex = this.lex;
         if ((lex.token.value === "writeLiteral" && (lex.next(), true))) {
             this.bufferLiteral(receiver);
+            return;
+        }
+        if (lex.accept("setF32")) {
+            lex.expect("(");
+            this.floatAddress(receiver);
+            lex.expect(",");
+            this.want(this.expr(), "f32");
+            lex.expect(")");
+            this.code.push(F32_STORE, 2, 2);
             return;
         }
         { if (lex.token.value !== "setCharCodeAt") lex.fail("expected setCharCodeAt"); lex.next(); }
@@ -1014,7 +1166,7 @@ class FunctionEmitter extends ExpressionParser {
                 const field = this.field(local.type, name);
                 { if (lex.token.value !== "=") lex.fail("expected ="); lex.next(); }
                 this.want(this.expr(), field.type);
-                this.emitMemory(I32_STORE, 2, field.offset);
+                this.emitMemory(field.type === "f32" ? F32_STORE : I32_STORE, 2, field.offset);
             }
         } else {
             if (!local.mutable) lex.fail("expected mutable local " + id);
@@ -1163,6 +1315,14 @@ class FunctionEmitter extends ExpressionParser {
 
     finish(fn) {
         if (this.literals) fn.literals = this.literals;
+        // fn.localTypes: the type class of each frame local ("f32" or "i32"), only when one is an f32; the RV32
+        // planner and the Wasm local declarations read it.
+        const params = fn.params.length;
+        const floats = this.floatLocals?.filter(index => index >= params);
+        if (floats?.length) {
+            fn.localTypes = Array(fn.nlocals).fill("i32");
+            for (const index of floats) fn.localTypes[index - params] = "f32";
+        }
         return fn;
     }
 }
@@ -1441,18 +1601,59 @@ function pushLiteralStores(out, address, text) {
     }
 }
 
+// f32.to_i32 (RV32F's fcvt.w.s rtz): i32.trunc_sat_f32_s, but 2^31 - 1 for NaN. `scratch` is an f32 local.
+function pushTruncate(out, scratch) {
+    out.push(LOCAL_SET);
+    pushUnsigned(out, scratch);
+    out.push(I32_CONST, 0xff, 0xff, 0xff, 0xff, 0x07, LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(0xfc, 0x00, LOCAL_GET); // i32.trunc_sat_f32_s
+    pushUnsigned(out, scratch);
+    out.push(LOCAL_GET);
+    pushUnsigned(out, scratch);
+    out.push(F32_NE, 0x1b); // NaN: select 2^31 - 1
+}
+
+// f32.min_num and f32.max_num (RV32F's fmin.s, fmax.s): the other operand when one is NaN, else f32.min or f32.max,
+// which order -0 below +0 as fmin.s does. a and b are f32 scratch locals:
+//   select(select(min(a, b), a, b === b), b, a === a)
+function pushMinMax(out, op, a, b) {
+    const get = local => { out.push(LOCAL_GET); pushUnsigned(out, local); };
+    out.push(LOCAL_SET);
+    pushUnsigned(out, b);
+    out.push(LOCAL_SET);
+    pushUnsigned(out, a);
+    get(a); get(b); out.push(op === F32_MIN ? 0x96 : 0x97);
+    get(a); get(b); get(b); out.push(F32_EQ, 0x1b);
+    get(b); get(a); get(a); out.push(F32_EQ, 0x1b);
+}
+
+// The local declarations of a body: runs of one value type.
+function localGroups(types) {
+    const groups = [];
+    for (const type of types) {
+        const last = groups.at(-1);
+        if (last && last[1] === type) last[0]++;
+        else groups.push([1, type]);
+    }
+    return [...unsigned(groups.length), ...groups.flatMap(([count, type]) => [...unsigned(count), type])];
+}
+
 // fn.body: the framed body (size, locals, instructions) of fn's tape. `marks`, when given, receives the byte offset
 // of each tape operation within the instructions, by ordinal. Returns the instructions' length.
 function encodeFunction(fn, marks) {
     const tape = fn.code, out = [];
+    // The expansions of f32.to_i32, f32.min_num and f32.max_num use two f32 scratch locals after the function's own.
+    const first = fn.params.length + fn.nlocals;
+    let scratch = false;
     for (let at = 0; at < tape.length;) {
         const op = tape[at];
         const n = CELLS[op];
         if (marks) marks.push(out.length);
         // Most operands fit one LEB128 byte; those take the short paths.
-        if (n === 1 && op !== I32_CONST && tape[at + 1] < 128) {
+        if (n === 1 && op !== I32_CONST && op !== F32_CONST && tape[at + 1] < 128) {
             out.push(op, tape[at + 1]);
-        } else if (n === 0) {
+        } else if (n === 0 && op < I32_TRUNC_F32) {
             out.push(op);
         } else if (op === I32_CONST) {
             const value = tape[at + 1];
@@ -1465,6 +1666,15 @@ function encodeFunction(fn, marks) {
             pushCheckedAddress(out, tape[at + 1], tape[at + 2]);
         } else if (op === LITERAL_STORES) {
             pushLiteralStores(out, tape[at + 1], fn.literals[tape[at + 2]]);
+        } else if (op === F32_CONST) {
+            const bits = tape[at + 1];
+            out.push(op, bits & 255, (bits >>> 8) & 255, (bits >>> 16) & 255, bits >>> 24);
+        } else if (op === I32_TRUNC_F32) {
+            scratch = true;
+            pushTruncate(out, first);
+        } else if (op === F32_MIN || op === F32_MAX) {
+            scratch = true;
+            pushMinMax(out, op, first, first + 1);
         } else if (n < 0 || op === UNCHECKED_ADDRESS) {
             throw new Error("no Wasm encoding for tape opcode " + op + " at " + at);
         } else {
@@ -1473,7 +1683,9 @@ function encodeFunction(fn, marks) {
         }
         at += 1 + n;
     }
-    const locals = fn.nlocals ? [1, ...unsigned(fn.nlocals), I32] : [0];
+    const types = fn.localTypes ? fn.localTypes.map(type => type === "f32" ? F32 : I32) : Array(fn.nlocals).fill(I32);
+    if (scratch) types.push(F32, F32);
+    const locals = !types.length ? [0] : !fn.localTypes && !scratch ? [1, ...unsigned(fn.nlocals), I32] : localGroups(types);
     fn.body = unsigned(locals.length + out.length).concat(locals, out);
     return out.length;
 }
@@ -1509,8 +1721,11 @@ function section(id, data) {
     return [id, ...unsigned(data.length), ...data];
 }
 
+// A Typed type as a Wasm value type: f32 is F32, every other type an i32.
+const valueType = type => type === "f32" ? F32 : I32;
+
 function signature(fn) {
-    return [0x60, ...vec(fn.params.map(() => I32)), 1, I32];
+    return [0x60, ...vec(fn.params.map(valueType)), 1, valueType(fn.result)];
 }
 
 function compile(source, options) {
@@ -1751,6 +1966,7 @@ function invoke(exports, signature, args) {
     const words = args.map((value, i) => {
         if (signature.params[i] === "bool" && typeof value === "boolean") return Number(value);
         if (signature.params[i] === "i32" && i32(value)) return value;
+        if (signature.params[i] === "f32" && typeof value === "number") return value;
         throw new TypeError(signature.name + " expects " + signature.params[i] + " at argument " + i);
     });
     const value = exports[signature.name](...words);

@@ -196,7 +196,7 @@ function entrySets(code, arity, wanted) {
         if (op >= BLOCK && op <= IF) {
             if (!dead && wanted.has(at)) found.set(at, state.get(wanted.get(at)) ?? null);
             if (op === IF && !dead) pop();
-            frames.push({op, height: stack.length, value: a === I32, deadEntry: dead, breaks: [], entry: state, thenEnd: null, sawElse: false});
+            frames.push({op, height: stack.length, value: a !== VOID, deadEntry: dead, breaks: [], entry: state, thenEnd: null, sawElse: false});
             if (!dead && op === LOOP && loopWrites.get(at).size) {
                 state = new Map(state);
                 for (const w of loopWrites.get(at)) state.delete(w);
@@ -472,7 +472,7 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
         const p = ops[i], op = body[p], a = body[p + 1];
         if (op >= BLOCK && op <= IF) {
             if (!dead && op === IF) tags.pop();
-            frames.push({base: tags.length, value: a === I32, deadEntry: dead});
+            frames.push({base: tags.length, value: a !== VOID, deadEntry: dead});
             start = i + 1;
             continue;
         }
@@ -626,7 +626,7 @@ function hoistSubexpressions(body, k, arity, fresh) {
         const p = ops[i], op = body[p], a = body[p + 1];
         if (op >= BLOCK && op <= IF) {
             if (!dead && op === IF) consume(1);
-            frames.push({base: slots.length, value: a === I32, deadEntry: dead});
+            frames.push({base: slots.length, value: a !== VOID, deadEntry: dead});
             continue;
         }
         if (op === ELSE || op === END) {
@@ -1042,7 +1042,7 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
         case CALL: for (let i = arity(a); i > 0; i--) pop(); stack.push(RANGE_TOP); break;
         case BLOCK: case LOOP: case IF:
             if (op === IF) pop();
-            blocks.push({op, value: a === I32, height: stack.length, result: null});
+            blocks.push({op, value: a !== VOID, height: stack.length, result: null});
             break;
         case ELSE: case END: {
             const block = op === ELSE ? blocks.at(-1) : blocks.pop();
@@ -1189,6 +1189,13 @@ installPasses("loops", {
         if (split) {
             fn.code = split.code;
             fn.nlocals = split.nlocals;
+            // A web of an f32 local is an f32 local.
+            if (fn.localTypes) {
+                const types = fn.localTypes.slice(); // a library copy of the inline pass may share the array
+                for (let i = 0; i < split.origin.length; i++)
+                    types[before - fn.params.length + i] = types[split.origin[i] - fn.params.length] ?? "i32";
+                fn.localTypes = types;
+            }
             ctx.origin = local => local >= before ? split.origin[local - before] : local;
         }
     }},

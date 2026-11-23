@@ -170,7 +170,9 @@ Give every piece of code one home and keep ttmp as the work log. 2 tasks done, 1
 
 ## [PICOCALC-TYPED-F32](2026/11/21/PICOCALC-TYPED-F32--a-single-precision-float-type-for-the-typed-compiler-with-rv32f-code-generation/index.md)
 
-A single-precision float type for the Typed compiler with RV32F code generation. 0 tasks done, 0 open.
+A single-precision float type for the Typed compiler with RV32F code generation. 7 tasks done, 6 open.
+
+- Waiting on: a cold-compile board study of the branch (host: +1.6-2.1% compile); widening the f32-only code generation to integers; then PICOCALC-CANDELA-TYPED uses it
 
 ## [PICOCALC-CANDELA-GALLERY](2026/11/22/PICOCALC-CANDELA-GALLERY--a-gallery-of-candela-path-traced-scenes-on-the-picocalc-s-screen/index.md)
 

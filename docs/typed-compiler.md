@@ -49,7 +49,8 @@ into one IIFE (one scope, so they are not ES modules), and `--check`, run by `ma
 |---|---|
 | `frontend/lexer.js` | `TOKEN`, `RESERVED`, the host-provided lexical index (`withLexIndices`, `indexFor`), `Lexer` |
 | `frontend/declarations.js` | records, enums, distinct types, member aliases (`parseDeclarations`), `scanSignatures`, `checkAcyclic`, `recordLayouts` |
-| `frontend/expressions.js` | the tape's constants for the bundle; `ExpressionParser`: the tape writer (`emitConst`, `emitIndex`, `emitMemory`, `codeUnitAddress`, `emitLiteralStores`) and the expressions |
+| `frontend/expressions.js` | the tape's constants for the bundle; `ExpressionParser`: the tape writer (`emitConst`, `emitFloat`, `emitIndex`, `emitMemory`, `codeUnitAddress`, `emitLiteralStores`) and the expressions |
+| `frontend/floats.js` | the f32 operators and `Math` functions, `Math.min`/`max`, `getF32`/`setF32` addresses, the tape surgery of a negated or converted literal (methods of `ExpressionParser`) |
 | `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`async/body.js` subclasses it) |
 | `frontend/inspect.js` | the front end's `frontend` inspection event (`target: "tape"`) |
 | `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async lowering (`emitSpanFunctions`; `originalError` maps lowered-code diagnostics to original positions) |
@@ -98,26 +99,49 @@ pops and pushes (WebAssembly's encodings: `I32 = 0x7f`), and a bit set of effect
 
 | Effect | Meaning | Rows |
 |---|---|---|
-| `STORES` | writes memory | `i32.store`, `i32.store16`, `text.literal_stores` |
-| `LOADS` | reads memory | `i32.load`, `i32.load16_u` |
+| `STORES` | writes memory | `i32.store`, `i32.store16`, `f32.store`, `text.literal_stores` |
+| `LOADS` | reads memory | `i32.load`, `i32.load16_u`, `f32.load` |
 | `CALLS` | calls a function (whose own effects are the callee's) | `call` |
 | `BRANCHES` | may transfer control away from the next operation | `if`, `else`, `br`, `br_if`, `return`, `unreachable` |
 | `TRAPS` | may trap | `i32.div_s`, `i32.rem_s`, `text.checked_address`, `unreachable` |
 | `CONTROL` | opens, separates or closes a block, or leaves the function | `block`, `loop`, `if`, `else`, `end`, `br`, `return`, `unreachable` |
 
-The table has 40 rows: `unreachable`, `block`, `loop`, `if`, `else`, `end`, `br`, `br_if`, `return`, `call`, `drop`,
+The table has 66 rows: `unreachable`, `block`, `loop`, `if`, `else`, `end`, `br`, `br_if`, `return`, `call`, `drop`,
 `local.get`, `local.set`, `i32.load`, `i32.load16_u`, `i32.store`, `i32.store16`, `i32.const`, eight comparisons
 (`eqz`, `eq`, `ne`, `lt_s`, `gt_s`, `le_s`, `ge_s`, `ge_u`), eleven arithmetic and bitwise operations (`add`, `sub`,
-`mul`, `div_s`, `rem_s`, `and`, `or`, `xor`, `shl`, `shr_s`, `shr_u`) and the pseudo-ops:
+`mul`, `div_s`, `rem_s`, `and`, `or`, `xor`, `shl`, `shr_s`, `shr_u`), the f32 rows (`f32.load`, `f32.store`,
+`f32.const`, six comparisons, `abs`, `neg`, `ceil`, `floor`, `trunc`, `sqrt`, `add`, `sub`, `mul`, `div`, `copysign`,
+`f32.convert_i32_s`, `i32.reinterpret_f32`, `f32.reinterpret_i32`) and the pseudo-ops:
 
 | Opcode | Name | Cells | Meaning |
 |---|---|---|---|
 | `0xf1` | `text.checked_address receiver position` | 2 | the address of `receiver[position]` after checking `position` against the capacity; an `i32.load16_u` or `i32.store16` at offset 4 follows |
 | `0xf2` | `text.literal_stores address literal` | 2 | stores the UTF-16 units of `fn.literals[literal]` from `address + 4`, after a check covering the whole range |
 | `0xf3` | `text.unchecked_address receiver position j` | 3 | the address of `receiver[position + j]` without a check; written by loop versioning inside a loop whose range it proved |
+| `0xf4` | `f32.to_i32` | 0 | f32 to i32 toward zero, saturating, NaN to 2^31-1 (RV32F's `fcvt.w.s rtz`; Wasm: `i32.trunc_sat_f32_s` and a NaN select) |
+| `0xf5`, `0xf6` | `f32.min_num`, `f32.max_num` | 0 | the other operand when one is NaN (RV32F's `fmin.s`, `fmax.s`; Wasm: `f32.min`/`max` and two NaN selects) |
 
-All values are `i32` today: `bool`, enums, `buffer` and `string` references are `i32` at the tape level. The type columns
-use WebAssembly's value types so that `f32` (PICOCALC-TYPED-F32) adds rows, not structure.
+A value is an `i32` or an `f32` (`F32 = 0x7d`): `bool`, enums, `buffer`, `string` and record references are `i32` at the
+tape level. An `f32.const` cell holds the literal's IEEE bits as an i32 (its Wasm encoding is four little-endian bytes,
+operand format `"f"`). The rows whose value is the type of a local, callee or function (`local.get`, `local.set`,
+`call`, `drop`, `return`) pop or push `ANY`. A block type cell is `I32`, `F32` or `VOID`. The pseudo-ops `0xf4`-`0xf6`
+exist because WebAssembly and RV32F differ there: Typed takes RV32F's rule (one instruction on the device) and the Wasm
+backend expands to it, so the oracle stays exact. PICOCALC-TYPED-F32's design doc (Refinements) lists every rule.
+
+### f32
+
+`f32` is a type. Literals have a fraction or an exponent (`1.5`, `2e-3`, `1.0`; the lexer's kind `"float"`); an integer
+literal stays `i32`, so `x * 2` is an error and `x * 2.0` is not. `f32(i)` and `i32(x)` convert (i32 to f32 rounds to
+nearest even; f32 to i32 truncates and saturates, NaN to 2^31-1). On two f32: `+ - * /`, unary `-`, `< <= > >= === !==`
+(false with a NaN, `!==` true); `%`, the bitwise operators and mixing with i32 are errors. `Math.sqrt`, `abs`, `floor`,
+`ceil`, `trunc`, `copysign`, `min`, `max` take f32 (`min`/`max` also two i32); `Math.bitsOf(x)` and `Math.fromBits(n)`
+reinterpret the bits. A record field may be `f32`; `buf.getF32(i)` and `buf.setF32(i, x)` read and write the f32 at UTF-16
+units 2i and 2i+1 of a buffer (checked on unit 2i+1). Every operation rounds to nearest even and none is fused, so the
+RV32 build equals the WebAssembly build bit for bit (NaN payloads aside, which Typed leaves unspecified).
+`compiler/typed/lib/math.typed` is a library of the functions RV32F lacks (`sinf`, `expf`, `logf`, `atan2f`, ...), in
+Typed; its README gives each function's accuracy. `tests/compiler/typed-f32.test.mjs` compares generated f32
+expressions, hand-written programs and the library in WebAssembly, RV32 under every policy and a JavaScript model;
+`tools/trace-repl/pkg/traceapi/f32_test.go` runs the same cases (`typed-f32-fixture.mjs`) on the Go machine.
 
 `typedTape` publishes the constants (`typedTape.I32_ADD`, `typedTape.CHECKED_ADDRESS`, `typedTape.VOID`, the effect
 bits), `cells` and `effects` (typed arrays indexed by opcode; `cells` is -1 outside the tape), `rows`, `row(code)`,
@@ -202,7 +226,8 @@ A policy (`rv32/policy.js`) is a list of tape passes plus the planner's (`operan
 
 | Pass | Group | Kind | What it does | Module | Policies |
 |---|---|---|---|---|---|
-| `inline` | inline | transform | `inlineCalls`: calls to small functions in loops | `passes/inline.js` | balanced, default, kernel |
+| `inline` | inline | transform | `inlineCalls`: calls to small functions in loops, and to f32 functions anywhere | `passes/inline.js` | balanced, default, kernel |
+| `fields` | inline | transform | `reuseFloatFields`: one load per f32 field of an unwritten record parameter, when nothing stores | `passes/fields.js` | balanced, default, kernel |
 | `commute` | inline | transform | `commuteConstants`: `c OP e` → `e c OP` | `passes/commute.js` | balanced, default, kernel |
 | `conjunctions` | loops | transform | `fuseConjunctions` | `passes/conjunctions.js` | kernel |
 | `sets` | loops | transform | `foldValueSets` | `passes/value-sets.js` | kernel |
@@ -243,8 +268,15 @@ tables: argument registers (`a0`-`a7`, `fa0`-`fa7`), callee-saved registers, the
 to their classes independently. The planner gives each key the class of its type (`fn.params`, `fn.localTypes` for frame
 locals) and plans each class with its own free list and the same rules; the emitter's `load`, `store` and `move` pick
 `flw`, `fsw`, `fmv.s`, `fmv.x.w` or `fmv.w.x` for a float register, the prologue saves claimed `fs` registers, a call
-passes `f32` arguments in `fa` registers and an `f32` result returns in `fa0`. The operand stack still holds every value
-in `t0`-`t4`; nothing emits float arithmetic until PICOCALC-TYPED-F32 adds the tape's float operations.
+passes `f32` arguments in `fa` registers and an `f32` result returns in `fa0`. The operand stack has a register file per
+class: depth d is `t0`-`t4` for an integer and `ft0`-`ft7` for an f32 (`OPERAND_STACKS`), both classes share the spill
+slot of a depth, and a consumer pops with a scratch register of the class it expects (`t5`/`t6`, `ft10`/`ft11`).
+`emit/floats.js` lowers the f32 operations: RV32F with a static `rne` rounding mode, `fsgnj`/`fsgnjn`/`fsgnjx` for
+copysign, neg and abs, `feq`/`flt`/`fle` for comparisons, `fcvt` for conversions and floor/ceil/trunc (with a range check:
+an |x| of 2^23 or more is its own result), `fmv` for the bit casts. For a function with an f32 parameter, local or
+result (only: integer images stay pinned), the planner also homes f32 constants (`"f<bits>"`) and, in a leaf, may keep
+the first f32 parameter in `fa0` and use `ft8`, `ft9` and the unused f operand-stack registers; a returned f32 value is
+computed in `fa0`; and the function loses its frame when it uses none.
 
 `rv32/encoding/instructions.js` is one table of every instruction the backend may emit: RV32IM, the Zicsr instructions
 (on `fflags`, `frm`, `fcsr`), all of RV32F and the five PIE instructions of `typed-pie-loops.js`. A row is its mnemonic,

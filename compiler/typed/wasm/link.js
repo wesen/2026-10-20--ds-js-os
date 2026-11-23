@@ -75,6 +75,7 @@ function invoke(exports, signature, args) {
     const words = args.map((value, i) => {
         if (signature.params[i] === "bool" && typeof value === "boolean") return Number(value);
         if (signature.params[i] === "i32" && i32(value)) return value;
+        if (signature.params[i] === "f32" && typeof value === "number") return value;
         throw new TypeError(signature.name + " expects " + signature.params[i] + " at argument " + i);
     });
     const value = exports[signature.name](...words);

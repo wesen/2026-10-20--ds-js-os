@@ -92,7 +92,7 @@ test("generated bitwise expressions agree in WebAssembly, RV32 under every polic
     const cases = [];
     for (let i = 0; i < 300; i++) {
         const t = tree(r, 1 + r.below(5));
-        cases.push({name: "f" + i, tree: t, text: print(t, r)});
+        cases.push({name: "e" + i, tree: t, text: print(t, r)});
     }
     const source = cases.map(c => `function ${c.name}(a: i32, b: i32, c: i32): i32 {\n    return ${c.text};\n}\n`).join("");
     const wasm = (await WebAssembly.instantiate(typedWasm.compile(source).bytes)).instance.exports;

@@ -14,7 +14,7 @@ const DEFAULT_SELECT = Object.freeze({immediates: true, divisions: true, branche
 const DEFAULT_LOCATIONS = Object.freeze({forward: true, capacity: true, homes: true, saved: true, direct: true,
     capacities: true, nested: true, constants: true, share: true, pointers: true});
 const DEFAULT_POLICY = Object.freeze({
-    passes: Object.freeze(["inline", "commute", "rotate", "version", "split"]),
+    passes: Object.freeze(["inline", "fields", "commute", "rotate", "version", "split"]),
     inlineGuardedReturns: true,
     operandLocations: DEFAULT_LOCATIONS,
     select: DEFAULT_SELECT,
@@ -34,7 +34,7 @@ export const POLICIES = Object.freeze({
     // worlds with a long boot compile whose loops gain little from versioning: Chess with the 3D painter
     // compiles in 3.76 s instead of 4.66 s on the P4 (6 s deadline), and versioning saves its engine 0.45%
     // of instructions (PICOCALC-COMPILE-BUDGET Step 6).
-    balanced: Object.freeze({...DEFAULT_POLICY, passes: Object.freeze(["inline", "commute", "rotate"])}),
+    balanced: Object.freeze({...DEFAULT_POLICY, passes: Object.freeze(["inline", "fields", "commute", "rotate"])}),
     default: DEFAULT_POLICY,
     // "kernel" is "default" plus what only a compute kernel can afford to compile: the division facts
     // (ranges, facts) cost Chess's boot compile about a quarter more, past its budget, but take the ray
@@ -45,7 +45,7 @@ export const POLICIES = Object.freeze({
     // of unhomed parameters take it to 10.99 ms at no compile cost (Step 21). The ray tracer uses it.
     kernel: Object.freeze({
         ...DEFAULT_POLICY,
-        passes: Object.freeze(["inline", "commute", "conjunctions", "sets", "rotate", "ranges", "version", "hoist",
+        passes: Object.freeze(["inline", "fields", "commute", "conjunctions", "sets", "rotate", "ranges", "version", "hoist",
             "induction", "split", "facts"]),
         operandLocations: Object.freeze({...DEFAULT_LOCATIONS, pointerOnly: true, reuseArgs: true}),
         select: Object.freeze({...DEFAULT_SELECT, loadHomes: true}),
