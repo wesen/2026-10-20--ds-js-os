@@ -1,6 +1,6 @@
 // The front end's lexer: the token regexp, the reserved words, and the lexical index a host may provide (the P4's C
 // scanner) so that the lexer reads precomputed token rows instead of running the regexp.
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
@@ -170,6 +170,15 @@ class Lexer {
     fail(message) {
         const prefix = this.source.slice(0, this.token.at).split("\n");
         throw new SyntaxError(prefix.length + ":" + (prefix.at(-1).length + 1) + ": " + message);
+    }
+
+    // The value of the current "int" token: a decimal literal as written (its caller checks the range), a hex
+    // literal (0x and one to eight hex digits) as the i32 of its 32 bits, so 0xffffffff is -1.
+    integerValue() {
+        const value = this.token.value;
+        if (value.length < 2 || (value[1] !== "x" && value[1] !== "X")) return Number(value);
+        if (!/^0[xX][0-9a-fA-F]{1,8}$/.test(value)) this.fail("invalid hex literal " + value);
+        return Number(value) | 0;
     }
 
     accept(value) {
