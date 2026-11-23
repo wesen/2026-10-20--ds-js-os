@@ -83,3 +83,81 @@ and one bundler instead of three.
 - Board run 2 of TYPED-PIPELINE (control main e219349, candidate 211383b; 3 blocks, peripherals on):
   Agenda +15 ms, Editor +17-20 ms, Files +24 ms, Chess +96 ms, Candela (first compile) +77-80 ms; peak -149, -157,
   +34, -122, +29 KB. Bytecode: rv32.js 474,091 B -> 260,813 + rv32-inline.js 44,824 + rv32-loops.js 195,486 B.
+
+## Step 2: Instrumentation, the host's strip numbers, and what the design got wrong
+
+The device clock now brackets every phase of a Typed compile on the P4, and a host tool measures what QuickJS keeps
+of the compiler per strip mode. The host numbers are large: QuickJS keeps each function's source text, nested
+functions keep overlapping slices of it, and the bytecode cache stores all of them. Reading the code also corrected
+two premises of the ticket's design.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** instrument first, then change.
+**Inferred user intent:** know where the device's time goes before changing anything.
+**Commit (code):** 8c6a1ff — "feat(p4): time every Typed compile's phases (TYPEDCOMPILE line)"
+
+### What I did
+- `typed_p4.c`: a `compile_state` (the heap first, so the allocator's and the interrupt handler's opaque is
+  unchanged) set as the context opaque, so `eval_file` (also called from `typedRv32Load` inside the compile) records
+  per source: path, cached or parsed, `loadUs` (bytecode read, or text parse plus `JS_WriteObject`), `runUs` (the
+  source's top level), `liveBytes` after it, and whether it ran inside the call. Also `beforeUs` (reading the app's
+  source and reactor), `setupUs`, `callUs` (the linker entry: front end, back end, link) and `freeUs`
+  (`JS_FreeContext` + `JS_FreeRuntime`). One `TYPEDCOMPILE {...}` line after the existing summary line, outside the
+  timed region.
+- `scripts/01-qjs-bytecode.c`: host QuickJS (the vendored 2026-06-04), parse each compiler file with a strip mode,
+  keep `JS_WriteObject`'s bytecode, then read it into a fresh runtime as every later compile does.
+- Built the control image: `firmware/port/esp32p4/build.sh playable /tmp/picocalc-device-cost-control` (8c6a1ff,
+  app `adbe8ed4…`, about 15 minutes from scratch).
+
+### Why
+- The slowdown has to be located on the device; the host's instruction counts were already equal.
+
+### What worked
+- Host, all seven compiler sources (tape, wasm, rv32 core, inline, loops, async, world):
+
+| strip | bytecode total | realm after reading all | read peak | parse peak |
+|---|---:|---:|---:|---:|
+| none | 1,064,883 B | 1,138,560 B | 1,156,280 B | 1,374,504 B |
+| `JS_STRIP_SOURCE` | 263,411 B | 684,288 B | 686,528 B | 808,008 B |
+| `JS_STRIP_DEBUG` | 190,501 B | 578,728 B | 580,936 B | 735,224 B |
+
+  Per file (none / source / debug): rv32.js 338,362 / 79,102 / 57,474; wasm.js 274,213 / 65,451 / 48,126;
+  loops 197,809 / 50,504 / 33,882; async 166,117 / 41,707 / 30,887; inline 58,125 / 15,563 / 10,763.
+
+### What didn't work
+- First ticket scripts computed the repository root one level too shallow (`parents[5]` for a script file):
+  `subprocess.CalledProcessError ... returned non-zero exit status 1`; fixed to `parents[6]` (file) and
+  `parents[5]` (the scripts directory).
+
+### What I learned
+- **Compile runtimes never collect cycles.** This QuickJS has its own arena allocator over the embedder's
+  functions, and only its default allocator maintains `malloc_state.malloc_size`; `typed_p4.c`'s `compile_malloc`
+  does not, so `js_trigger_gc` (`quickjs.c:1804`, called only from object creation with `sizeof(JSObject)`) never
+  sees the 256 KB threshold crossed. Reference counting frees everything acyclic; cycles live until
+  `JS_FreeRuntime`. So the GC schedule cannot explain the slowdown (I had suspected device-specific block sizes
+  shifting it).
+- **Files no longer uses `default`.** Since PICOCALC-TYPED-FIRST it is a Typed world on `typed-world.js` with
+  `"policy": "interactive"` (apps/typed/files/app.json) and loads no pass group. The one `default` compile on the
+  playable image is Candela's scene (`apps/typed/candela/app.json` names no policy), the first compile of every
+  boot. `default` needs `version` (16 KB of source, which imports `hoist.js`, 15 KB) and `split` (2.7 KB): moving
+  only `split` into the core changes nothing, and moving `version` grows every boot compile's core.
+
+### What was tricky to build
+- Records survive `typedRv32Load` re-entering `eval_file` during the call: the record pointer comes from the context
+  opaque, and `in_call` marks group loads so their time can be subtracted from `callUs`.
+
+### What warrants a second pair of eyes
+- The stack frame of `p4_typed_compile` grows by about 0.7 KB (12 records); the JS stack limit is set after it.
+
+### What should be done in the future
+- N/A here; see Refinements in the design.
+
+### Code review instructions
+- `git show 8c6a1ff -- firmware/port/esp32p4/main/typed_p4.c`.
+- Host tool: build line in `scripts/01-qjs-bytecode.c`; `qjs-bytecode 2 tape.js typed-wasm.js ...` from
+  `compiler/typed/`.
+
+### Technical details
+- `TYPEDCOMPILE {"app","beforeUs","setupUs","callUs","freeUs","evals":[{"path","bytecode":"cached|parsed","inCall",
+  "loadUs","runUs","liveBytes"}]}`.
