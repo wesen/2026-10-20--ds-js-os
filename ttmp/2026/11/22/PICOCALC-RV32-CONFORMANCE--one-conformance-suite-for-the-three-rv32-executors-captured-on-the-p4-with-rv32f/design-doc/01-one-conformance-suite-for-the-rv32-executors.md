@@ -51,3 +51,40 @@ Three executors implement RV32 separately (see the program design, Section 2): `
 - **Moves and deletes** go through checked Python scripts in the ticket's `scripts/` (dry run, asserted counts), never shell one-liners.
 - **Diary.** Each ticket keeps `reference/01-diary.md` in the investigation format (Prompt Context, What I did, Why, What worked, What didn't work with exact errors, What I learned, What was tricky, What warrants a second pair of eyes, Future work, Code review instructions, Technical details), one step per milestone, with commit hashes.
 - **Commits** are focused, at validated boundaries, with the trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+
+## Refinements (2026-11-22)
+
+Checking the design against the code at `4b9a80b` changed the following; `docs/rv32-executors.md` describes the result.
+
+1. **The integer subset.** The reference interpreter executed only what `typed-rv32` emits (no `mulhsu`, `divu`,
+   `remu`, `auipc`, `fence`; `jal` only with `x0`/`ra`; `jalr` only as `ret`), and the Go machine copied the subset on
+   purpose. "Integer vectors pass on all three" therefore required extending both to all of RV32IM. The calling-convention
+   checks stay (a call is `jal` or `jalr` linking `ra`, a return is `ret`) and can be turned off with
+   `options.checks = false` / `Machine.NoChecks`; `options.registers`, `fregisters` and `fcsr` set the initial state.
+   Fault messages changed: "unsupported M instruction" and "unsupported jal link register" are gone, "unsupported F
+   instruction" and "unsupported system instruction" are new.
+2. **rv32emu was RV32IMC, not RV32IMF** (its Makefile comment said IMF). It gets RV32F and RV32FC too, not
+   conditionally: its role stays (item 6), and the replays will run Typed `f32` code on it once PICOCALC-TYPED-F32 lands.
+3. **Vector format.** JSON Lines in `bench/reference/rv32/vectors.jsonl`: `{id, class, word, x, f, fcsr, mem, board,
+   expect: {x, f, fcsr, mem, next} | {fault}}`, numbers in minimal hexadecimal, registers not named are zero and must
+   not change. Every vector runs at pc `0x2000` with a 32-byte window at `0x1100`, and uses rd = x10/f10, rs1 = x11/f11,
+   rs2 = x12/f12, rs3 = f13 (the capture stubs depend on it), with x10 and f10 preset to `0xdeadbeef`. The generator is
+   `bench/rv32/generate.mjs` (inputs and the RV32I model), the suite `bench/rv32/vectors.mjs` (build, `--check`,
+   `--board`, `load`, `check`). 15,664 vectors, 15,454 run on the board.
+4. **The capture app** is a new ESP-IDF app, `bench/board/rv32-vectors`, with one generated assembly stub per distinct
+   instruction word (264), so nothing is generated or patched at run time. `bench/board/rv32-capture.py` runs it through
+   `device.run_app`, which verifies the playable image first and restores and health-checks it afterwards.
+   Expectations: F vectors from the board only; integer arithmetic and memory vectors from the model, which the build
+   requires to agree with the board; control flow, `auipc`, `x0` and aliasing from the model alone (the board's pc is
+   not the vector's). Illegal encodings are not run on the board (they would trap the app).
+5. **Runners.** `tests/rv32/conformance.test.mjs` (reference), `pkg/tracerv32/conformance_test.go` (Go),
+   `tests/rv32/rv32emu.test.mjs`, which drives `bench/emu/build/rv32emu-vectors` (rv32emu's processor, one instruction
+   per input line, state out) and compares with the suite's own `check`. `make test-rv32` is part of `make test`;
+   `make test-generated` runs `vectors.mjs --check`.
+6. **Roles** are as proposed; the decision on replacing rv32emu with the Go machine is "not now", with the reasons in
+   `docs/rv32-executors.md`.
+7. **The split of `emu.c`** has nine files rather than four (`machine`, `decode`, `execute`, `fpu`, `elf`, `host`,
+   `profile`, `main`, plus `vectors.c` for the harness). The move itself is `scripts/01-split-emu.py`; the memory
+   accessors became `static inline` in `machine.h` afterwards so the split costs no speed.
+8. **Not covered:** misaligned loads and stores (the P4's behaviour is not captured), and the board's response to
+   illegal encodings.
