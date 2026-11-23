@@ -1,3 +1,6 @@
+// The split pass.
+import {opNext, CELLS, ELSE, END, LOCAL_GET, LITERAL_STORES, LOCAL_SET, CHECKED_ADDRESS, UNCHECKED_ADDRESS, BLOCK, IF} from "../encoding/tape.js";
+
 // operandLocations.split: give every web of a local its own local id. A web starts at a write;
 // every later occurrence inside the region that holds that write (a block, loop, if-arm or
 // else-arm, or the body) belongs to it, because in structured code the write precedes them on
@@ -5,7 +8,7 @@
 // web if it is a write; a read there makes the local unsplittable. Webs never read each other's
 // writes, so the renaming is exact. Two inlined copies of one callee, or the two copies of a
 // versioned loop, then have separate intervals for share.
-function splitLocals(code, params, nlocals) {
+export function splitLocals(code, params, nlocals) {
     const uses = new Map(), path = [];
     let region = 0;
     const note = (cell, write) => {

@@ -169,7 +169,7 @@ EX = [
          notice="The rows come from `repo.read`, so nothing is pasted into the cell, and the record of the run is the file in the repository. `stats.paired` pairs control and candidate by `block` and refuses unmatched or duplicate blocks. In RAY-PARITY run 15, the candidate saved a median 1.59% per block and won all six blocks. The C renderer took 7,733 µs."),
     dict(n="23-files-at-revisions", part=8, title="Files now and at a commit", max_items=15,
          ask="Has the policy table changed since the RV32 backend was split into modules?",
-         notice="The SHA-256 is the same at `2a5be8f` and in the working tree. `repo.show` resolves the revision to a full commit SHA, and `repo.list` reads a directory. Paths may not leave the repository, even through a symlink."),
+         notice="The policy table changed: PICOCALC-TYPED-PIPELINE made each policy a list of passes. `repo.show` resolves the revision to a full commit SHA, and `repo.list` reads a directory. Paths may not leave the repository, even through a symlink."),
     dict(n="24-save-a-result", part=8, title="Save a result with its provenance",
          ask="Keep a frame measurement beyond this session, and see what the record says about how it was made.",
          notice="The record names the session, whether a cell or a job saved it (`unit`), the repository's HEAD commit and every compiler revision the session had loaded. Here that includes `04b0854`, loaded by example 17 in the same session. `trace-repl results --name example-opening-frame` prints the record from the shell."),

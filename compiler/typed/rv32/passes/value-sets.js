@@ -1,4 +1,7 @@
-// select.sets: precompute a pure value block over a local that holds one of a few constants.
+// The sets pass.
+import {I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S, opNext, BLOCK, IF, END, I32, I32_CONST, LOCAL_GET, LOCAL_SET, DROP, I32_EQZ, LOOP, ELSE, BR, BR_IF, RETURN, UNREACHABLE, CALL, I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, UNCHECKED_ADDRESS, LITERAL_STORES, VOID, opClose, CELLS} from "../encoding/tape.js";
+
+// the sets pass: precompute a pure value block over a local that holds one of a few constants.
 // A value block (`block (result i32)`) whose body is straight-line arithmetic over constants and
 // at most one local L (read before the body writes it), and whose own writes are dead after the
 // block, computes one result per value of L. When the forward analysis below proves that L holds
@@ -326,7 +329,7 @@ function sinkSetBlocks(code, blocks) {
     return out;
 }
 
-function foldValueSets(code, arity, sink = true) {
+export function foldValueSets(code, arity, sink = true) {
     for (let at = 0; at < code.length; at = opNext(code, at)) if (!(CELLS[code[at]] >= 0)) return null;
     // Only a local written a constant somewhere can have a known set: a cheap filter, since most
     // inlined blocks read parameters or loaded values.

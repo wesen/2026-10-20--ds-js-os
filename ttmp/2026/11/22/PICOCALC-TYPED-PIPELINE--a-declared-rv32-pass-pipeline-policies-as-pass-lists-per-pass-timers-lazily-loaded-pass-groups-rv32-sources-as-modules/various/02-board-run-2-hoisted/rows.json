@@ -1,0 +1,344 @@
+[
+ {
+  "block": 0,
+  "arm": "control",
+  "dir": "b00-control",
+  "sha256": "10695eeedd574264bedb1dfacc5e8e20310b75b8ba477e12daed51d0306a1d0c",
+  "healthy": true,
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2263150,
+    "peak": 1647036,
+    "module": 66816
+   },
+   "files": {
+    "status": "ok",
+    "us": 446527,
+    "peak": 992664,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3218503,
+    "peak": 3043236,
+    "module": 242124
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 700268,
+    "peak": 1205424,
+    "module": 66364
+   },
+   "chess": {
+    "status": "ok",
+    "us": 3920121,
+    "peak": 3028476,
+    "module": 274892
+   },
+   "chess/painter": {
+    "status": "ok",
+    "us": 5129323,
+    "peak": 1783528,
+    "module": 33840
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13640,
+   "typed/wasm.js": 239373,
+   "typed/rv32.js": 474091,
+   "candela/link.js": 1874,
+   "files/link.js": 3144,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924,
+   "agenda/link.js": 5522,
+   "chess/painter/link.js": 1189
+  }
+ },
+ {
+  "block": 0,
+  "arm": "candidate",
+  "dir": "b00-candidate",
+  "sha256": "3edccad77689379f842e23a0e72dfeb857d54600eec3750054d1eb13e2812197",
+  "healthy": true,
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2340332,
+    "peak": 1677032,
+    "module": 66816
+   },
+   "files": {
+    "status": "ok",
+    "us": 470544,
+    "peak": 1027828,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3235252,
+    "peak": 2882348,
+    "module": 242124
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 715303,
+    "peak": 1053036,
+    "module": 66364
+   },
+   "chess": {
+    "status": "ok",
+    "us": 4016070,
+    "peak": 2903356,
+    "module": 274892
+   },
+   "chess/painter": {
+    "status": "ok",
+    "us": 5188702,
+    "peak": 1765808,
+    "module": 33840
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13642,
+   "typed/wasm.js": 239373,
+   "typed/rv32.js": 260813,
+   "candela/link.js": 1874,
+   "typed/rv32-inline.js": 44824,
+   "typed/rv32-loops.js": 195486,
+   "files/link.js": 3144,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924,
+   "agenda/link.js": 5522,
+   "chess/painter/link.js": 1189
+  }
+ },
+ {
+  "block": 1,
+  "arm": "candidate",
+  "dir": "b01-candidate",
+  "sha256": "3edccad77689379f842e23a0e72dfeb857d54600eec3750054d1eb13e2812197",
+  "healthy": true,
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2341747,
+    "peak": 1677032,
+    "module": 66816
+   },
+   "files": {
+    "status": "ok",
+    "us": 470702,
+    "peak": 1027828,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3237043,
+    "peak": 2882348,
+    "module": 242124
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 714310,
+    "peak": 1053036,
+    "module": 66364
+   },
+   "chess": {
+    "status": "ok",
+    "us": 4015782,
+    "peak": 2903356,
+    "module": 274892
+   },
+   "chess/painter": {
+    "status": "ok",
+    "us": 5252832,
+    "peak": 1765920,
+    "module": 33840
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13642,
+   "typed/wasm.js": 239373,
+   "typed/rv32.js": 260813,
+   "candela/link.js": 1874,
+   "typed/rv32-inline.js": 44824,
+   "typed/rv32-loops.js": 195486,
+   "files/link.js": 3144,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924,
+   "agenda/link.js": 5522,
+   "chess/painter/link.js": 1189
+  }
+ },
+ {
+  "block": 1,
+  "arm": "control",
+  "dir": "b01-control",
+  "sha256": "10695eeedd574264bedb1dfacc5e8e20310b75b8ba477e12daed51d0306a1d0c",
+  "healthy": true,
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2262652,
+    "peak": 1647036,
+    "module": 66816
+   },
+   "files": {
+    "status": "ok",
+    "us": 446731,
+    "peak": 992664,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3218655,
+    "peak": 3043236,
+    "module": 242124
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 699818,
+    "peak": 1205424,
+    "module": 66364
+   },
+   "chess": {
+    "status": "ok",
+    "us": 3920142,
+    "peak": 3028476,
+    "module": 274892
+   },
+   "chess/painter": {
+    "status": "ok",
+    "us": 6024975,
+    "peak": 1783628,
+    "module": 33840
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13640,
+   "typed/wasm.js": 239373,
+   "typed/rv32.js": 474091,
+   "candela/link.js": 1874,
+   "files/link.js": 3144,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924,
+   "agenda/link.js": 5522,
+   "chess/painter/link.js": 1189
+  }
+ },
+ {
+  "block": 2,
+  "arm": "control",
+  "dir": "b02-control",
+  "sha256": "10695eeedd574264bedb1dfacc5e8e20310b75b8ba477e12daed51d0306a1d0c",
+  "healthy": true,
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2261965,
+    "peak": 1647036,
+    "module": 66816
+   },
+   "files": {
+    "status": "ok",
+    "us": 446695,
+    "peak": 992664,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3217392,
+    "peak": 3043236,
+    "module": 242124
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 700354,
+    "peak": 1205424,
+    "module": 66364
+   },
+   "chess": {
+    "status": "ok",
+    "us": 3919658,
+    "peak": 3028476,
+    "module": 274892
+   },
+   "chess/painter": {
+    "status": "ok",
+    "us": 4833148,
+    "peak": 1783504,
+    "module": 33840
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13640,
+   "typed/wasm.js": 239373,
+   "typed/rv32.js": 474091,
+   "candela/link.js": 1874,
+   "files/link.js": 3144,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924,
+   "agenda/link.js": 5522,
+   "chess/painter/link.js": 1189
+  }
+ },
+ {
+  "block": 2,
+  "arm": "candidate",
+  "dir": "b02-candidate",
+  "sha256": "3edccad77689379f842e23a0e72dfeb857d54600eec3750054d1eb13e2812197",
+  "healthy": true,
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2341656,
+    "peak": 1677032,
+    "module": 66816
+   },
+   "files": {
+    "status": "ok",
+    "us": 470682,
+    "peak": 1027828,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3237629,
+    "peak": 2882348,
+    "module": 242124
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 715119,
+    "peak": 1053036,
+    "module": 66364
+   },
+   "chess": {
+    "status": "ok",
+    "us": 4015792,
+    "peak": 2903356,
+    "module": 274892
+   },
+   "chess/painter": {
+    "status": "ok",
+    "us": 5336250,
+    "peak": 1765808,
+    "module": 33840
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13642,
+   "typed/wasm.js": 239373,
+   "typed/rv32.js": 260813,
+   "candela/link.js": 1874,
+   "typed/rv32-inline.js": 44824,
+   "typed/rv32-loops.js": 195486,
+   "files/link.js": 3144,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924,
+   "agenda/link.js": 5522,
+   "chess/painter/link.js": 1189
+  }
+ }
+]

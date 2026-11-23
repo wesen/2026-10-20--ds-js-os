@@ -24,5 +24,5 @@ if (defaults) {
         },
     });
 }
-for (const file of ["tape.js", "typed-wasm.js", "typed-async.js", "typed-rv32.js", "typed-world.js", "typed-pie-loops.js"])
+for (const file of ["tape.js", "typed-wasm.js", "typed-async.js", "typed-rv32.js", "typed-rv32-inline.js", "typed-rv32-loops.js", "typed-world.js", "typed-pie-loops.js"])
     await import(pathToFileURL(repoPath("compiler/typed", file)).href);

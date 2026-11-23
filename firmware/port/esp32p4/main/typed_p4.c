@@ -68,10 +68,10 @@ typedef struct {
   uint8_t *bytes;
   size_t length;
 } compiled_source;
-// One entry per compiler source a firmware evaluates. The playable firmware evaluates nine
-// (typed/tape.js, wasm.js, async.js, rv32.js, world.js and four app linkers); a source that
-// finds no free entry is parsed on every compile.
-static compiled_source compiled_sources[12];
+// One entry per compiler source a firmware evaluates. The playable firmware evaluates eleven
+// (typed/tape.js, wasm.js, async.js, rv32.js, rv32-inline.js, rv32-loops.js, world.js and four
+// app linkers); a source that finds no free entry is parsed on every compile.
+static compiled_source compiled_sources[16];
 static SemaphoreHandle_t compiled_lock;
 static portMUX_TYPE compiled_lock_init = portMUX_INITIALIZER_UNLOCKED;
 
@@ -138,6 +138,28 @@ static bool eval_file(JSContext *ctx, const char *path) {
   return ok;
 }
 
+// typedRv32Load(file): the RV32 backend asks for a pass group's bundle ("typed-rv32-loops.js",
+// bundled as typed/rv32-loops.js) the first time a compile's policy needs it, so a compile under
+// "interactive" never loads one (PICOCALC-TYPED-PIPELINE).
+static JSValue rv32_load(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+  const char *file = argc > 0 ? JS_ToCString(ctx, argv[0]) : NULL;
+  char path[48];
+  bool named = file && !strncmp(file, "typed-", 6) &&
+               snprintf(path, sizeof(path), "typed/%s", file + 6) < (int)sizeof(path);
+  JS_FreeCString(ctx, file);
+  if (!named) return JS_ThrowTypeError(ctx, "typedRv32Load: not a typed-rv32 bundle");
+  // eval_file leaves an evaluation's exception pending, which the backend's call then raises.
+  if (!eval_file(ctx, path) && !JS_HasException(ctx)) return JS_ThrowReferenceError(ctx, "%s is not bundled", path);
+  return JS_UNDEFINED;
+}
+
+static bool install_rv32_load(JSContext *ctx) {
+  JSValue global = JS_GetGlobalObject(ctx);
+  bool ok = JS_SetPropertyStr(ctx, global, "typedRv32Load", JS_NewCFunction(ctx, rv32_load, "typedRv32Load", 1)) >= 0;
+  JS_FreeValue(ctx, global);
+  return ok;
+}
+
 char *p4_typed_compile(const char *app, const char *source_kind, const char *source,
                        size_t source_length, const char *linker, const char *entry,
                        const char *const *compiler, const char *reactor, size_t reactor_length,
@@ -151,7 +173,7 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   JS_SetInterruptHandler(rt, compile_interrupt, &heap);
   ctx = JS_NewContext(rt);
   if (!ctx) goto done;
-  if (!typed_lex_index_install(ctx)) goto rejected;
+  if (!typed_lex_index_install(ctx) || !install_rv32_load(ctx)) goto rejected;
   // The tape definition, the front end, the compiler modules the app names (typed/async.js), the RV32 back end, then the linker.
   if (!eval_file(ctx, "typed/tape.js") || !eval_file(ctx, "typed/wasm.js")) goto rejected;
   for (const char *const *m = compiler; m && *m; m++)

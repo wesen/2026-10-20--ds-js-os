@@ -144,7 +144,7 @@ Interrupting `eval --job` with Ctrl-C stops the job on the service as well. Clos
 A cell or job receives its parameters in the global `args`, a fresh object per cell. A cell sent without parameters sees `{}`, never an earlier cell's values, so a reusable script cannot pick up a parameter that another script left behind.
 
 ```sh
-trace-repl eval --session "$sid" --arg rev='"worktree"' --arg arms='{"base": {}, "split": {"operandLocations": {"split": true}}}' < frame-profile.js
+trace-repl eval --session "$sid" --arg rev='"worktree"' --arg arms='{"base": {"disable": ["split"]}, "split": {}}' < frame-profile.js
 trace-repl eval --session "$sid" --job --args-file arms.json --arg rev='"eaf0872"' < compile-cost.js
 ```
 

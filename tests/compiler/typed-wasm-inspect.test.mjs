@@ -5,6 +5,8 @@ import "../../compiler/typed/tape.js";
 import "../../compiler/typed/typed-wasm.js";
 import "../../compiler/typed/typed-async.js";
 import "../../compiler/typed/typed-rv32.js";
+import "../../compiler/typed/typed-rv32-inline.js";
+import "../../compiler/typed/typed-rv32-loops.js";
 
 function capture(name) {
     const events = [];
