@@ -1,0 +1,255 @@
+{
+  "playable": "f8f36bd1120251588de1c27911de2aa9069af828d3db9db6fb029773dc8af1e0",
+  "experiment": "ddcf66e6d38d5fc7c12ecf90b9bb88282ee98edfa43c0ebf966a24e471054a11",
+  "peripherals": "on",
+  "budget": {
+    "candela": {
+      "us": [
+        2185441
+      ],
+      "status": [
+        "ok"
+      ],
+      "deadlineUs": 8000000,
+      "share": [
+        0.273
+      ],
+      "within75": true,
+      "moduleBytes": [
+        66816
+      ],
+      "oldUs": [
+        2172239
+      ],
+      "oldModuleBytes": [
+        66816
+      ],
+      "oldDeadlineUs": 8000000
+    },
+    "files": {
+      "us": [
+        430934
+      ],
+      "status": [
+        "ok"
+      ],
+      "deadlineUs": 1700000,
+      "share": [
+        0.253
+      ],
+      "within75": true,
+      "moduleBytes": [
+        24424
+      ],
+      "oldUs": [
+        428333
+      ],
+      "oldModuleBytes": [
+        24424
+      ],
+      "oldDeadlineUs": 1700000
+    },
+    "editor": {
+      "us": [
+        3172856
+      ],
+      "status": [
+        "ok"
+      ],
+      "deadlineUs": 6000000,
+      "share": [
+        0.529
+      ],
+      "within75": true,
+      "moduleBytes": [
+        242124
+      ],
+      "oldUs": [
+        3178748
+      ],
+      "oldModuleBytes": [
+        242124
+      ],
+      "oldDeadlineUs": 6000000
+    },
+    "agenda": {
+      "us": [
+        675599
+      ],
+      "status": [
+        "ok"
+      ],
+      "deadlineUs": 1700000,
+      "share": [
+        0.397
+      ],
+      "within75": true,
+      "moduleBytes": [
+        66364
+      ],
+      "oldUs": [
+        673352
+      ],
+      "oldModuleBytes": [
+        66364
+      ],
+      "oldDeadlineUs": 1700000
+    },
+    "chess": {
+      "us": [
+        3868192
+      ],
+      "status": [
+        "ok"
+      ],
+      "deadlineUs": 6000000,
+      "share": [
+        0.645
+      ],
+      "within75": true,
+      "moduleBytes": [
+        274892
+      ],
+      "oldUs": [
+        3880128
+      ],
+      "oldModuleBytes": [
+        274892
+      ],
+      "oldDeadlineUs": 6000000
+    },
+    "chess/painter": {
+      "us": [
+        5010535
+      ],
+      "status": [
+        "ok"
+      ],
+      "deadlineUs": 8000000,
+      "share": [
+        0.626
+      ],
+      "within75": true,
+      "moduleBytes": [
+        33840
+      ],
+      "oldUs": [
+        4922123
+      ],
+      "oldModuleBytes": [
+        33840
+      ],
+      "oldDeadlineUs": 8000000
+    },
+    "raytrace": {
+      "us": [
+        2105512
+      ],
+      "status": [
+        "ok"
+      ],
+      "deadlineUs": 8000000,
+      "share": [
+        0.263
+      ],
+      "within75": true,
+      "moduleBytes": [
+        66816
+      ],
+      "oldUs": [
+        2111111
+      ],
+      "oldModuleBytes": [
+        66816
+      ],
+      "oldDeadlineUs": 8000000
+    }
+  },
+  "worldsSame": true,
+  "worldDiffs": {},
+  "missingWorlds": [],
+  "painter": [
+    {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 4929056,
+      "relocate_us": 1195,
+      "native_us": 1427,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 5012055,
+      "relocate_us": 1173,
+      "native_us": 1421,
+      "raster_us": 0,
+      "image_bytes": 33840
+    }
+  ],
+  "scenes": {
+    "0": {
+      "before": {
+        "width": 320,
+        "height": 320,
+        "crc32": "788a496b"
+      },
+      "after": {
+        "width": 320,
+        "height": 320,
+        "crc32": "788a496b"
+      }
+    },
+    "1": {
+      "before": {
+        "width": 320,
+        "height": 320,
+        "crc32": "ff3499b1"
+      },
+      "after": {
+        "width": 320,
+        "height": 320,
+        "crc32": "ff3499b1"
+      }
+    },
+    "2": {
+      "before": {
+        "width": 320,
+        "height": 320,
+        "crc32": "4d64e712"
+      },
+      "after": {
+        "width": 320,
+        "height": 320,
+        "crc32": "4d64e712"
+      }
+    },
+    "3": {
+      "before": {
+        "width": 320,
+        "height": 320,
+        "crc32": "85805f0b"
+      },
+      "after": {
+        "width": 320,
+        "height": 320,
+        "crc32": "85805f0b"
+      }
+    },
+    "trload": {
+      "before": "TRLOAD {\"program\":0,\"sourceBytes\":10438,\"elfBytes\":66816,\"segmentBytes\":66092,\"elapsedUs\":2116508,\"elfCRC\":\"00300430\"}",
+      "after": "TRLOAD {\"program\":0,\"sourceBytes\":10439,\"elfBytes\":66816,\"segmentBytes\":66092,\"elapsedUs\":2111557,\"elfCRC\":\"00300430\"}"
+    }
+  }
+}
