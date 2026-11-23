@@ -3,9 +3,9 @@
 // A function's tape is a flat array of numbers. Each operation is one opcode cell followed by its
 // operand cells, one number per operand (WebAssembly's LEB128 immediates as plain numbers). The
 // opcodes are WebAssembly's, plus three pseudo-ops for UTF-16 text buffers (0xf1-0xf3). The front
-// end (typed-wasm.js) writes it, the RV32 backend (typed-rv32.js, typed-pie-loops.js) reads and
-// rewrites it, and the tools decode it. In the Wasm emission mode the same opcodes start the
-// operations of a WebAssembly code section, with LEB128 immediates.
+// end (frontend/ in typed-wasm.js) writes it, the RV32 backend (typed-rv32.js, typed-pie-loops.js)
+// reads and rewrites it, the Wasm backend (wasm/encode.js) serializes it with LEB128 immediates and
+// the pseudo-ops expanded, and the tools decode it.
 //
 // Loaded before typed-wasm.js wherever the compiler is loaded; publishes globalThis.typedTape.
 // The passes walk raw cells with `cells` and test opcodes with the named constants: decoding a

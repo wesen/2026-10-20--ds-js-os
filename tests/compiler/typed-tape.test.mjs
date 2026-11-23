@@ -159,7 +159,7 @@ test("every tape the compiler produces from apps/typed matches the tape table", 
     const all = new Set(), wasm = new Set(), phases = new Set();
     let tapes = 0;
     for (const [unit, [source, imports]] of Object.entries(units(ctx.typedWorld.imports))) {
-        // The Wasm mode's operations, decoded from its bytes with the same table (units that link only as
+        // The Wasm backend's operations, decoded from its bytes with the same table (units that link only as
         // worlds, with the SDK imports, do not compile alone).
         try {
             ctx.typedWasm.compile(source, {inspect: {emit: event => {
@@ -183,9 +183,9 @@ test("every tape the compiler produces from apps/typed matches the tape table", 
     assert(tapes > 2000, "checked " + tapes + " tapes");
     t.diagnostic(tapes + " tapes checked");
     assert.deepEqual([...phases].sort(), ["commute", "conjunctions", "inline", "rotate", "sets", "split", "version"]);
-    // Every row is exercised, so none is dead weight: the numeric tape has every row but i32.shl, which only
-    // the Wasm mode writes (it computes a UTF-16 address where the numeric tape has text.checked_address),
-    // and the Wasm mode never writes a pseudo-op.
+    // Every row is exercised, so none is dead weight: the tape has every row but i32.shl, which only the Wasm
+    // backend writes (its expansion of text.checked_address computes the UTF-16 address), and the Wasm
+    // backend's bytes never hold a pseudo-op.
     const missing = codes => plain(T.rows.filter(row => !codes.has(row.code)).map(row => row.name));
     assert.deepEqual(missing(all), ["i32.shl"]);
     assert(wasm.has(T.I32_SHL));
