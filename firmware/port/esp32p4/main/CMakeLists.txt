@@ -216,8 +216,12 @@ if(PICOCALC_TYPED_AGENDA OR PICOCALC_TYPED_FILES OR PICOCALC_TYPED_EDITOR OR PIC
         if(NOT PICOCALC_RV32_STREAM_FUNCTIONS)
             set_property(SOURCE typed_p4.c APPEND PROPERTY COMPILE_DEFINITIONS PICOCALC_RV32_BUFFER_FUNCTIONS=1)
         endif()
-        list(APPEND BUNDLE_EXTRA "typed/rv32.js=${OS}/../compiler/typed/typed-rv32.js")
-        list(APPEND BUNDLE_EXTRA_DEPS "${OS}/../compiler/typed/typed-rv32.js")
+        # typed-rv32.js is the backend's core; typed_p4.c loads a pass group's bundle when a policy needs it.
+        list(APPEND BUNDLE_EXTRA "typed/rv32.js=${OS}/../compiler/typed/typed-rv32.js"
+            "typed/rv32-inline.js=${OS}/../compiler/typed/typed-rv32-inline.js"
+            "typed/rv32-loops.js=${OS}/../compiler/typed/typed-rv32-loops.js")
+        list(APPEND BUNDLE_EXTRA_DEPS "${OS}/../compiler/typed/typed-rv32.js"
+            "${OS}/../compiler/typed/typed-rv32-inline.js" "${OS}/../compiler/typed/typed-rv32-loops.js")
     endif()
     if(PICOCALC_NATIVE_ELF)
         set(typed_manifest "${system_json}")
