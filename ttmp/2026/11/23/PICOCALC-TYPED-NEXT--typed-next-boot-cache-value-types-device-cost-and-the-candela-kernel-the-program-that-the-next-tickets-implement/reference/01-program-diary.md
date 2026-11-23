@@ -161,3 +161,108 @@ TYPED-VALUES delivered all seven language features on both targets with every ho
 
 - **The TYPED-VALUES device check is now on the coordinator.** The next playable install, after the power cycle, must confirm every boot compile within 75 % of its deadline, Chess above all.
 - **A pre-existing bug the ticket found:** Wasm inspection crashes on `0xfc`-prefixed operations, so `i32(f32)` cannot be inspected through Wasm. It is a task.
+
+## Step 5: COMPILER-DEVICE-COST's host work done; merge held for the board study
+
+COMPILER-DEVICE-COST finished everything that can be done off the board and stopped at the board pause. I did not merge it. Its changes are safe functionally, but two of them (debug stripping and arena reuse) exist to change device memory and time, and neither has been measured on the P4.
+
+### What the ticket delivered (host)
+
+- **`TYPEDCOMPILE` instrumentation** per compile: per-source load and run time, heap, teardown, and PSRAM-heap calls.
+- **`JS_STRIP_DEBUG`** in every compile runtime. Compiler bytecode went from 1,065 KB to 191 KB (to 263 KB with `JS_STRIP_SOURCE` only). The compile peak dropped 324 KB for Agenda and 438 KB for Chess with a device-like allocator. Compile-error messages are identical (33 cases); stack traces lose file:line.
+- **A deviation from the design.** Moving `split` alone changed nothing: Files compiles under `interactive`, and `default` needs `version` and `hoist`. Instead the kernel-only passes became a third group (`typed-rv32-kernel.js`).
+- **One bundler** (`compiler/typed/bundle.mjs`), with every bundle byte-identical.
+- **Arena reuse,** outside the ticket: compiles keep up to 64 freed 4 KB arenas. On the host, Chess's heap allocations fell from 4,149 to 1,955.
+- **The pass-group slowdown,** partly explained. The compile runs 0.4–1.1 % more instructions in the lazy layout, and the arena churn changes with which bundles are loaded. That accounts for about 20 of Chess's 96 ms.
+
+### What's left (board)
+
+1. An in-image session of about 18 min.
+2. A paired boot study, 4 arms × 3 blocks.
+3. The final image gate.
+
+All of it is scripted.
+
+### What warrants a second pair of eyes
+
+- **The board runs the ticket's bench image `fa144453`, not playable.** After the power cycle the first step must be `make restore-playable` from main, before anything else judges health.
+
+## Step 6: CANDELA-KERNEL-CODEGEN's host work merged
+
+CANDELA-KERNEL-CODEGEN regenerated Candela with the value types, profiled the kernel and changed the compiler where the profile pointed. On the host, the kernel-bound scenes went from 1.89× to 1.41× C++. The board study waits for the power cycle. I merged the host work, since it changes only f32 functions under `kernel`, which no playable boot app uses.
+
+### What I did
+
+- **Merged `worktree-agent-a981885913a6ed2d3`** (`416e220` … `ea2b511`).
+  - Clean merge; bundles and generated files current (`regenerate.mjs --check`).
+  - `make test` exit 0; gates pass with both policies (ray `430f0d501659`, Chess 6,981 words, 25/25).
+
+### What the ticket found and changed
+
+- **The regenerated kernel was slower before any compiler change.** B-01 went from 10,279 to 11,464 instructions per sample, even with a source 302 KB instead of 372 KB.
+- **The profile pointed at the frame, not the arena.**
+  - Float arithmetic is under 7 % of instructions.
+  - The cost is frame loads and stores, register moves, and about 8 instructions of address and range check per `getF32`.
+- **Compiler changes, all limited to f32 functions under `kernel`:**
+  - an inlining budget (400 locals);
+  - the `rows` pass (one check and one base address per row, grouped by affine index);
+  - `coalesce`;
+  - float registers in call-free functions;
+  - open inlining of record results;
+  - result leaves written straight into locals.
+- **Host results** (16 rows of frame 0):
+  - kernel-bound geometric mean 1.885 → 1.410× C++;
+  - all 18 scenes 1.290 → 1.034×;
+  - the deepest stack 9,120 → 6,288 B.
+- **Checks:**
+  - E_rel ≤ 4.3e-4;
+  - Wasm vs RV32 identical on 14 scenes over 4 passes, and on 16 rows for the 4 heaviest;
+  - Typed reference digests unchanged;
+  - 84 of 84 integer digests identical.
+
+### What warrants a second pair of eyes
+
+- **The host ratio understates the device.** The baseline was 1.89× on the host and 2.49–2.79× on the P4 for the same scenes. The ≤ 1.5× kernel-bound target is only met if that gap has also narrowed. The board study decides.
+- **A merge conflict ahead.** COMPILER-DEVICE-COST, not yet merged, moved the kernel-only passes into a `typed-rv32-kernel.js` group. The new `rows` and `coalesce` passes are kernel-only, so its next merge of main must place them in that group.
+
+## Step 7: After the power cycle, a restore fix, the new playable, and the board released
+
+The user power-cycled the PicoCalc. The first restore with BOARD-HARNESS's new code crashed on a missing flag. Once fixed, the restore held the keyboard bus before flashing and passed health. The new playable from main was installed and doubled as TYPED-VALUES' device check. Then I released the board to the four agents.
+
+### Prompt Context
+
+**User message (verbatim):** "ok, power cycled"
+
+### What I did
+
+- **Built the playable from main** (`209af25`) in the background.
+- **`make restore-playable` failed:**
+
+  ```
+  AttributeError: 'Namespace' object has no attribute 'health_only'
+  ```
+
+  BOARD-HARNESS made `--stored` and `restore` share one path, which reads `args.health_only`. Only the `install` parser defines that flag. I fixed it with `getattr(args, "health_only", False)` and committed (`fix(board): playable.py restore has no --health-only flag`).
+- **Restore again:** exit 0, `heldBeforeFlash: true`, `rebooted: false`, i2c0 253 transfers in the 5 s window.
+- **Installed `54cfa09b` (209af25):** health passed with peripherals on; gallery 18/18. Committed `d66fb5f`.
+- **TYPED-VALUES' device check:**
+
+  | App | Compile | Deadline | Share |
+  |---|---:|---:|---:|
+  | Chess | 4.35 s | 6 s | 72.6 % |
+  | painter | 5.70 s | 8 s | 71.3 % |
+  | Agenda | 2.84 s | 4 s | 70.9 % |
+  | Editor | 3.54 s | 6 s | 58.9 % |
+  | Files | 1.52 s | 3 s | 50.6 % |
+  | Candela scene | 2.81 s | 8 s | 35 % |
+
+  All are within the 75 % rule. Chess rose from 4.19 s (69.8 %) to 4.35 s, consistent with the ticket's +1–7 % front-end estimate. Three apps are now above 70 %.
+- **Released the board** to BOARD-HARNESS (install gate, soak, `--health-only`), COMPILER-DEVICE-COST (merge main first: put `rows` and `coalesce` into its kernel group; then session, study, gate), CANDELA-KERNEL-CODEGEN (gallery arms and the paired study) and COMPILE-CACHE. All four were told to hold the lock per measurement block.
+
+### What I learned
+
+- **The harness's tests did not cover `restore`.** The fake-board suite tested `install` paths only. A one-line test of each subcommand's parsing would have caught it. Added as a follow-up.
+
+### What warrants a second pair of eyes
+
+- **Boot-compile margins are thinning.** Chess, the painter and Agenda are all at 71–73 % of their deadlines. The compile cache removes this pressure on warm boots, but a cold boot after every firmware update still compiles everything. COMPILER-DEVICE-COST's stripping and arena reuse are the candidates for the cold-boot margin.

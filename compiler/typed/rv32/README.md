@@ -8,7 +8,7 @@ every loader reads (the tests, the replays, the trace-REPL workbench, the tools 
 | `compiler/typed/typed-rv32.js` | `index.js` | the core: encoding, the emitters, the planner, the pass registry, policies, `compile`, `linkSlot`; publishes `typedRv32` |
 | `compiler/typed/typed-rv32-inline.js` | `passes/inline-group.js` | the passes `balanced` adds: `inline`, `commute`, `rotate` |
 | `compiler/typed/typed-rv32-loops.js` | `passes/loops-group.js` | the passes `default` adds to `balanced`: `version` (with `hoist`, `induction`), `split` |
-| `compiler/typed/typed-rv32-kernel.js` | `passes/kernel-group.js` | the passes only `kernel` runs: `conjunctions`, `sets`, `ranges`, `facts` |
+| `compiler/typed/typed-rv32-kernel.js` | `passes/kernel-group.js` | the passes only `kernel` runs: `conjunctions`, `sets`, `ranges`, `rows`, `coalesce`, `facts` |
 
 ```sh
 node compiler/typed/rv32/build.mjs          # rewrite the four bundles

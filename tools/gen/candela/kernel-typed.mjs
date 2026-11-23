@@ -1,6 +1,6 @@
 // kernel-typed.mjs: Candela's fixed kernel and the gallery's scene sections in Typed (PICOCALC-CANDELA-TYPED), next to
 // kernel.mjs (the same WGSL to C++). regenerate.mjs calls generateTypedGallery() and writes its files into
-// apps/typed/candela-gallery/; the lowering is typed/ (parse.mjs, lower.mjs, program.mjs, values.mjs).
+// apps/typed/candela-gallery/; the lowering is typed/ (parse.mjs, signatures.mjs, lower.mjs, program.mjs, values.mjs).
 //
 // Returns { files: { 'types.typed', 'kernel.typed', 'scenes.typed', 'glue.typed', 'layout.json' }, stats }. The app's
 // source is types.typed + compiler/typed/lib/math.typed + kernel.typed + scenes.typed + glue.typed (app.json).
@@ -43,7 +43,7 @@ export async function generateTypedGallery(root, gallery, { only } = {}) {
 // (src/kernel.js ${PIN['src/kernel.js'].slice(0, 16)}); do not edit: change the generator and run tools/gen/candela/regenerate.mjs.\n`;
   const sceneList = scenes.map((s, i) => `// scene ${i}: ${s.id} (${s.size} x ${s.size}${s.spectral ? ', spectral' : ''})`).join('\n');
   const files = {
-    'types.typed': head('records: Candela\'s structs, the functions\' static frames, the kernel record K') + p.types + '\n',
+    'types.typed': head('records: the vectors\' and Candela\'s structs\' value records, the kernel record K') + p.types + '\n',
     'kernel.typed': head('Candela\'s fixed kernel with the C++ kernel\'s CPU substitutions') + p.kernel + '\n',
     'scenes.typed': head('the gallery\'s scene sections and the five dispatchers\' targets') + sceneList + '\n' + p.scenes + '\n',
     'glue.typed': head('the entry points: cdlLayout, cdlInit, cdlSky, cdlRenderSpan') + p.glue + '\n',
