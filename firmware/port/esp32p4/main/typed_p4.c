@@ -82,6 +82,15 @@ static int compile_interrupt(JSRuntime *rt, void *opaque) {
 // instead of parsing. Bytecode does not depend on the runtime that wrote it, so the evaluated
 // functions, and the modules they compile, are the same either way. Entries are written once,
 // under the lock, and never freed.
+//
+// The bytecode keeps no debug information (PICOCALC-COMPILER-DEVICE-COST). Otherwise QuickJS keeps every function's
+// source text, and each nested function its own overlapping slice of it, in the realm and in this cache: on the host
+// the seven compiler sources make 1,065 KB of bytecode, 263 KB without source text (JS_STRIP_SOURCE) and 191 KB
+// without any debug information (JS_STRIP_DEBUG). A rejected compile's message is unchanged (its Typed position comes
+// from the compiler's own diagnostics); a stack trace through the compiler names its functions but not their lines,
+// which the host's run of the same compiler gives. Every compile runtime sets it, since whichever compile first
+// evaluates a source writes the bytecode the others read.
+#define COMPILER_STRIP JS_STRIP_DEBUG
 typedef struct {
   char path[48];
   uint8_t *bytes;
@@ -207,6 +216,7 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
   if (!rt) goto done;
   JS_SetMaxStackSize(rt, port_js_stack());
   JS_SetInterruptHandler(rt, compile_interrupt, heap);
+  JS_SetStripInfo(rt, COMPILER_STRIP);
   ctx = JS_NewContext(rt);
   if (!ctx) goto done;
   JS_SetContextOpaque(ctx, &state);
