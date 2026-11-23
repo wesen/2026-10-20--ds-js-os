@@ -13,6 +13,10 @@
 
 enum { SIDE = RAYTRACE_DEMO_SIDE, FRAME_BYTES = 2 * SIDE * SIDE, UPDATE_COUNT = 1024 };
 
+static uint32_t crc_bytes(const void *ptr, size_t length) {
+    return esp_rom_crc32_le(0, ptr, length);
+}
+
 static void measure(int fixture, int weight, bool row_first) {
     scene_module *active = p4_candela_active();
     if (!active || fixture<0 || fixture>1 || weight<0 || weight>256) { puts("candela: invalid trial"); return; }
@@ -50,7 +54,7 @@ static void measure(int fixture, int weight, bool row_first) {
            ",\"equal\":%d,\"crc\":\"%08" PRIx32 "\",\"graphCRC\":\"%08" PRIx32 "\","
            "\"nodes\":%u,\"materials\":%u,\"spheres\":%u,\"rgbSamples\":[%ld,%ld,%ld]}\n",
            fixture,weight,row_first,build_us,check_us,update_us,UPDATE_COUNT,param_only,time_us[0],time_us[1],
-           !memcmp(first,pixels,FRAME_BYTES),esp_rom_crc32_le(0,pixels,FRAME_BYTES),esp_rom_crc32_le(0,active->graph.cells,606),
+           !memcmp(first,pixels,FRAME_BYTES),crc_bytes(pixels,FRAME_BYTES),crc_bytes(active->graph.cells,606),
            active->graph.cells[2],active->graph.cells[3],active->graph.cells[4],(long)left,(long)right,(long)floor);
 done:
     port_big_free(first);
