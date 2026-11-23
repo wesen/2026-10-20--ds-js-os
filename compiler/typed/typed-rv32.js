@@ -55,7 +55,7 @@ const instruction = {
 };
 
 // rv32/encoding/instructions.js
-// The instruction table: RV32IM, Zicsr, RV32F and the PIE words of typed-pie-loops.js, one row each, and ENCODE,
+// The instruction table: RV32IM, Zicsr, RV32F and the PIE words of typed-pie-loops.js, one row each, and encoder(),
 // an encoder per row. A row is [mnemonic, fixed bits, assembler operands]; the operands' fields give the bits and
 // the encoder's arguments in order: encoder("lw")(rd, offset, base) for "xd, i12(x1)". Keys replace "." by "_".
 // Registers are numbers of registers.js (f_n = 32 + n); an encoder throws on the other class. An omitted rm is 7
