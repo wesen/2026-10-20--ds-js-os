@@ -15,6 +15,8 @@ Steps, run in order:
   shot:TAG         the screen, without pausing the gallery (its caption names the kernel), as TAG.png
   cmd:TEXT         a console command on the running firmware (TEXT's underscores become spaces), its lines kept
   health:TAG       reset, then device.health with peripherals on (the playable firmware's judgement)
+  gallery:ARM      bench/board/gallery.py's check on the running firmware, under this script's lock: every scene's
+                   "gallery digest ID 4 psram ARM" against the arm's reference (OUT/<step>/gallery.json, cgal.jsonl)
 
 OUT/steps.jsonl gets one record per step; OUT/<step>.log the UART bytes with "@<seconds>" per line.
 """
@@ -164,6 +166,39 @@ def command(port, path, text, timeout=300):
             console.close()
 
 
+def digests(port, out, arm, passes=4):
+    """gallery.py's main without its lock (this script holds it): the 18 scenes' digests against the arm's reference."""
+    reference = {r["id"]: r for r in map(json.loads, gallery.REFERENCES[arm].read_text().splitlines())}
+    out.mkdir(parents=True, exist_ok=True)
+    rec = gallery.Records(out / "cgal.jsonl")
+    result = {"arm": arm, "reference": str(gallery.REFERENCES[arm].relative_to(REPO)), "scenes": {}}
+    with (out / "uart.log").open("wb", buffering=0) as log:
+        console = device.Console(port, log)
+        try:
+            rec.step = "list"
+            gallery.command(console, rec, "gallery list")
+            ids = list(dict.fromkeys(r["id"] for r in map(json.loads, (out / "cgal.jsonl").read_text().splitlines())
+                                     if r.get("ev") == "scene-list"))
+            for sid in ids:
+                rec.step = f"digest-{sid}"
+                gallery.command(console, rec, f"gallery digest {sid} {passes} psram {arm}")
+                r = gallery.wait_for(console, rec, lambda r: r.get("ev") in ("digest", "error"), 900)
+                ref = reference.get(sid, {})
+                same = (r is not None and r.get("ev") == "digest" and r.get("arm", "cpp") == arm
+                        and all(r.get(k) == ref.get(k) for k in ("frame0", "acc", "disp")))
+                result["scenes"][sid] = {"same": same, "device": r,
+                                         "reference": {k: ref.get(k) for k in ("frame0", "acc", "disp")}}
+                print(f"{arm} {sid}: {'same' if same else 'DIFFERS'} frame0 {r and r.get('frame0')}", flush=True)
+                if r is None or (r.get("ev") == "error" and "compile" in r.get("error", "")):
+                    break   # the arm's program is not there (a Typed compile that failed fails every scene)
+        finally:
+            console.close()
+    result["agree"] = sum(s["same"] for s in result["scenes"].values())
+    result["of"] = len(reference)
+    device.save(out / "gallery.json", result)
+    return {"arm": arm, "agree": result["agree"], "of": result["of"], "out": str(out)}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("out", type=Path)
@@ -216,6 +251,8 @@ def main():
                         rec = {"health": device.health(console, "on")}
                     finally:
                         console.close()
+            elif kind == "gallery":
+                rec = digests(a.port, a.out / tag, arg)
             else:
                 raise SystemExit(f"unknown step {step}")
             rec = {"step": step, "tag": tag, "hostTime": round(t, 1), **rec}
