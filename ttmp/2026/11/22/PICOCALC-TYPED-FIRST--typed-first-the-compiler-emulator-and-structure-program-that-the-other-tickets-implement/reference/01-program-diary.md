@@ -403,3 +403,29 @@ F32 is merged and its firmware was installed and healthy. Vault report 2 (execut
 ### What should be done next
 
 - **After the power cycle:** run CANDELA-TYPED's device milestone (`scripts/04-device.py`, then `gallery.py --arm typed` and `--arm cpp`), then the paired board study.
+
+## Step 13: the board after the power cycle; CANDELA-TYPED resumed for its device milestones
+
+The user power-cycled the PicoCalc. The keyboard answers again. A fresh boot of the playable image passed health with peripherals on, and CANDELA-TYPED was resumed for its device milestones.
+
+### Prompt Context
+
+**User message (verbatim):** "powercycled"
+
+### What I did
+
+- **Health-only check** (`playable.py install ... --health-only --peripherals on`). It failed:
+
+  ```
+  RuntimeError: native worlds and peripheral drivers did not become healthy
+  ```
+
+  - **Cause:** the native world list showed `compositor ... restarts 1, last_error 'ran past its turn budget of 80 ms'`. Every other native world ran from its compiled file without error.
+  - **The ESP32 was not reset by the power cycle.** It stayed powered over USB, and its counters were cumulative: i2c0 showed 440,944 transfers and 437,641 errors, with `busyMs` above two hours. Over 5 s the bus showed +252 transfers and +0 errors, so the keyboard was healthy and the error totals were historical.
+- **`make restore-playable`** from the main checkout: reflash, fresh boot, health passed with peripherals on (`restartingAfterSettle: []`).
+- **Resumed CANDELA-TYPED** for milestone 3 (relocation fix on the device, Typed-arm digests, `gallery.py --arm typed|cpp` 18/18) and, if time allows, milestone 4 (the paired study). Milestone 5 is not to be done until there is a compile cache.
+
+### What warrants a second pair of eyes
+
+- **A compositor turn-budget overrun** (80 ms) on a playable image that had been up for hours, after the keyboard wedge and recovery. It may come from the I2C error storm making the keyboard path slow, or it may be a real overrun. Watch for it on future health checks.
+- **A "power cycle" doesn't reset the P4 while USB is connected.** A health check after a power cycle should reboot the board (or reinstall) before judging world errors.
