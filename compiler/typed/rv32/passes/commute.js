@@ -1,12 +1,12 @@
 // The commute pass.
-import {I32_ADD, I32_MUL, I32_EQ, I32_NE, CELLS, I32_GE_U, I32_SHR_S, I32_CONST, LOCAL_GET, CHECKED_ADDRESS, I32_EQZ, I32_LOAD, I32_LOAD16_U, LOCAL_SET, DROP, BR_IF, I32_STORE, I32_STORE16, CALL, BLOCK, IF, I32, ELSE, END} from "../encoding/tape.js";
+import {I32_ADD, I32_MUL, I32_EQ, I32_NE, CELLS, I32_GE_U, I32_SHR_U, I32_AND, I32_OR, I32_XOR, I32_CONST, LOCAL_GET, CHECKED_ADDRESS, I32_EQZ, I32_LOAD, I32_LOAD16_U, LOCAL_SET, DROP, BR_IF, I32_STORE, I32_STORE16, CALL, BLOCK, IF, I32, ELSE, END} from "../encoding/tape.js";
 
 // the commute pass: `c OP e` becomes `e c OP` for a literal c and commutative OP (add, mul,
-// eq, ne), so the literal reaches selectConstant as a right operand. Moving a literal past
+// eq, ne, and, or, xor), so the literal reaches selectConstant as a right operand. Moving a literal past
 // e cannot change e's effects. Each abstract stack entry records where its cells start in
 // the output; an expression whose start is not certain (a value block) is NaN and is never
 // moved past.
-const COMMUTATIVE = new Set([I32_ADD, I32_MUL, I32_EQ, I32_NE]);
+const COMMUTATIVE = new Set([I32_ADD, I32_MUL, I32_EQ, I32_NE, I32_AND, I32_OR, I32_XOR]);
 
 export function commuteConstants(code, arity) {
     const out = [], stack = [], blocks = [];
@@ -15,7 +15,7 @@ export function commuteConstants(code, arity) {
         const op = code[at], cells = CELLS[op], a = code[at + 1];
         if (cells < 0) return null;
         const start = out.length;
-        if ((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S)) {
+        if ((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U)) {
             const right = stack.pop(), left = stack.pop();
             if (!left || !right) return null;
             if (COMMUTATIVE.has(op) && left.constant !== undefined && right.constant === undefined &&

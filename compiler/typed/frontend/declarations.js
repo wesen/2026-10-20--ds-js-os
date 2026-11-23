@@ -79,7 +79,7 @@ function parseEnum(lex, name) {
         if ((lex.token.value === "=" && (lex.next(), true))) {
             const negative = (lex.token.value === "-" && (lex.next(), true));
             if (lex.token.kind !== "int") lex.fail("expected integer enum value");
-            next = Number(lex.token.value) * (negative ? -1 : 1);
+            next = lex.integerValue() * (negative ? -1 : 1);
             lex.next();
         }
         if (next < -2147483648 || next > 2147483647) lex.fail("i32 enum value out of range");

@@ -1,9 +1,9 @@
 // Instruction-selection tables: ALU operations, fused predicates, immediate forms, constantForm.
-import {I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, IF, BR_IF} from "./tape.js";
+import {I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR, I32_SHL, I32_SHR_S, I32_SHR_U, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S, I32_LE_S, I32_GE_S, I32_GE_U, IF, BR_IF} from "./tape.js";
 
 export const ALU = new Map([
     [I32_ADD,[0,0]], [I32_SUB,[0,0x20]], [I32_MUL,[0,1]], [I32_DIV_S,[4,1]], [I32_REM_S,[6,1]],
-    [I32_SHL,[1,0]], [I32_SHR_S,[5,0x20]],
+    [I32_AND,[7,0]], [I32_OR,[6,0]], [I32_XOR,[4,0]], [I32_SHL,[1,0]], [I32_SHR_S,[5,0x20]], [I32_SHR_U,[5,0]],
 ]);
 
 // select.branches: the branch funct3 taken when the predicate holds, and whether the
@@ -29,8 +29,12 @@ export const IMMEDIATE_FORMS = new Map([
     [I32_ADD, c => fitsImmediate(c) ? [[0, c]] : null],                       // addi
     [I32_SUB, c => fitsImmediate(-c) ? [[0, -c]] : null],                     // addi -c
     [I32_MUL, c => c === 1 ? [[0, 0]] : powerOfTwo(c) > 0 ? [[1, powerOfTwo(c)]] : null], // mv, slli
+    [I32_AND, c => fitsImmediate(c) ? [[7, c]] : null],                        // andi
+    [I32_OR, c => fitsImmediate(c) ? [[6, c]] : null],                         // ori
+    [I32_XOR, c => fitsImmediate(c) ? [[4, c]] : null],                        // xori (c = -1: not)
     [I32_SHL, c => [[1, c & 31]]],                                            // slli
     [I32_SHR_S, c => [[5, 0x400 | (c & 31)]]],                                  // srai
+    [I32_SHR_U, c => [[5, c & 31]]],                                            // srli
     [I32_LT_S, c => fitsImmediate(c) ? [[2, c]] : null],                       // slti
     [I32_LE_S, c => c < 2047 && c >= -2049 ? [[2, c + 1]] : null],             // a <= c as a < c+1
     [I32_GE_S, c => fitsImmediate(c) ? [[2, c], [4, 1]] : null],               // !(a < c)

@@ -105,10 +105,10 @@ pops and pushes (WebAssembly's encodings: `I32 = 0x7f`), and a bit set of effect
 | `TRAPS` | may trap | `i32.div_s`, `i32.rem_s`, `text.checked_address`, `unreachable` |
 | `CONTROL` | opens, separates or closes a block, or leaves the function | `block`, `loop`, `if`, `else`, `end`, `br`, `return`, `unreachable` |
 
-The table has 36 rows: `unreachable`, `block`, `loop`, `if`, `else`, `end`, `br`, `br_if`, `return`, `call`, `drop`,
+The table has 40 rows: `unreachable`, `block`, `loop`, `if`, `else`, `end`, `br`, `br_if`, `return`, `call`, `drop`,
 `local.get`, `local.set`, `i32.load`, `i32.load16_u`, `i32.store`, `i32.store16`, `i32.const`, eight comparisons
-(`eqz`, `eq`, `ne`, `lt_s`, `gt_s`, `le_s`, `ge_s`, `ge_u`), seven arithmetic operations (`add`, `sub`, `mul`,
-`div_s`, `rem_s`, `shl`, `shr_s`) and the pseudo-ops:
+(`eqz`, `eq`, `ne`, `lt_s`, `gt_s`, `le_s`, `ge_s`, `ge_u`), eleven arithmetic and bitwise operations (`add`, `sub`,
+`mul`, `div_s`, `rem_s`, `and`, `or`, `xor`, `shl`, `shr_s`, `shr_u`) and the pseudo-ops:
 
 | Opcode | Name | Cells | Meaning |
 |---|---|---|---|
@@ -132,6 +132,25 @@ receiver position` becomes `local.get position; local.get receiver; i32.load 2 0
 local.get receiver; local.get position; i32.const 1; i32.shl; i32.add`, and `text.literal_stores address literal`
 one `local.get address; i32.const unit; i32.store16 1 (4 + 2i)` per UTF-16 unit. `text.unchecked_address` has no Wasm
 encoding: only loop versioning writes it. So the WebAssembly oracle runs exactly the tape the RV32 backend receives.
+
+### Operators and literals
+
+The binary operators are JavaScript's, with its precedences, from loosest: `||`; `&&`; `|`; `^`; `&`; `===` `!==`;
+`<` `<=` `>` `>=`; `<<` `>>` `>>>`; `+` `-`; `*` `/` `%`. The prefix operators `!`, `-` and `~` bind tighter than all
+of them. All are on `i32` (`&&`, `||` and `!` on `bool`); a bitwise operator on a `bool` is a type error, so
+JavaScript's trap `a & 1 === 1` (which means `a & (1 === 1)`) does not compile. A shift uses the low five bits of its
+count, `>>>` is logical, `~x` is written to the tape as `x ^ -1`. A `distinct` integer type keeps its type through
+`|`, `^`, `&`, `+` and `-` with an operand of the same type or a literal, as before for `+` and `-`; shifts, `*`, `/`
+and `%` take and give `i32` (convert with `i32(...)`). Integer literals are decimal (at most 2147483647, and
+`-2147483648`) or hex: `0x` or `0X` and one to eight hex digits, the i32 of those 32 bits, so `0xffffffff` is `-1`
+and `0x80000000` is `-2147483648` (an enum member's value too). Any other word after `0x` is an error. The P4's
+lexical index (`firmware/port/esp32p4/main/typed_lex_index.c`) tokenizes the same way as the lexer's `TOKEN`.
+
+RV32 lowers `and`, `or`, `xor`, `sll`, `sra`, `srl` and, when the right operand is a literal (`select.immediates`;
+the `commute` pass moves a literal to the right of `&`, `|` and `^`), `andi`, `ori`, `xori` for literals in
+[-2048, 2047] and `slli`, `srai`, `srli` for any count. `analysis/ranges.js` bounds `x & y` by a non-negative operand
+and `x >>> c` by `2^(32-c) - 1`, so a later division by a constant can skip its sign correction; `value-sets` folds
+the operators; the other passes treat them as pure binary operations.
 
 ### An example
 
@@ -236,6 +255,9 @@ receives `{fn, pass, ms, cells}` for every stage each function runs and one `{fn
    `node compiler/typed/frontend/build.mjs`.
 3. Teach every pass that interprets operations rather than copying them: the abstract stacks in
    `passes/` (inline, commute, version-loops, hoist, value-sets), `analysis/ranges.js` and `plan/` reject unknown
-   opcodes or treat them conservatively; grep for a neighbouring opcode's name to find them.
+   opcodes or treat them conservatively; grep for a neighbouring opcode's name to find them. Several of them test
+   for a pure binary operation as `op >= I32_ADD && op <= I32_SHR_U` (and `typed-pie-loops.js` likewise).
+   A new token also goes into the P4's lexical index (`firmware/port/esp32p4/main/typed_lex_index.c`), which must
+   tokenize exactly as `TOKEN` in `frontend/lexer.js`.
 4. Lower it in `FunctionCode.step` (and in `LEAF_OPERATIONS` if frameless leaves may contain it).
 5. Run `node compiler/typed/rv32/build.mjs`, `make test` and the host gates.

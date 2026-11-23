@@ -5,20 +5,27 @@
 // The tape's opcodes, block types and cell counts (tape.js, loaded first), shared by every later module of the bundle.
 const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET, LOCAL_SET,
     I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
-    I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S,
-    RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS} = typedTape;
+    I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR,
+    I32_SHL, I32_SHR_S, I32_SHR_U, RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS} = typedTape;
 const LITERAL = Symbol("integer literal");
 const scalarType = type => type === LITERAL ? "i32" : type;
+// [precedence, operand type (null: any scalar), result type, opcode], with JavaScript's precedences. A distinct
+// integer type passes through the NOMINAL levels (| ^ &, equality, relational, + -): two operands of one distinct
+// type, or one and a literal, and an i32 result keeps the type. Shifts and * / % take and give i32.
 const BINARY = Object.assign(Object.create(null), Object.fromEntries([
     ["||", [1, "bool", "bool"]], ["&&", [2, "bool", "bool"]],
-    ["===", [3, null, "bool", I32_EQ]], ["!==", [3, null, "bool", I32_NE]],
-    ["<", [4, "i32", "bool", I32_LT_S]],
-    ["<=", [4, "i32", "bool", I32_LE_S]], [">", [4, "i32", "bool", I32_GT_S]],
-    [">=", [4, "i32", "bool", I32_GE_S]], [">>", [5, "i32", "i32", I32_SHR_S]],
-    ["+", [6, "i32", "i32", I32_ADD]], ["-", [6, "i32", "i32", I32_SUB]],
-    ["*", [7, "i32", "i32", I32_MUL]], ["/", [7, "i32", "i32", I32_DIV_S]],
-    ["%", [7, "i32", "i32", I32_REM_S]],
+    ["|", [3, "i32", "i32", I32_OR]], ["^", [4, "i32", "i32", I32_XOR]], ["&", [5, "i32", "i32", I32_AND]],
+    ["===", [6, null, "bool", I32_EQ]], ["!==", [6, null, "bool", I32_NE]],
+    ["<", [7, "i32", "bool", I32_LT_S]],
+    ["<=", [7, "i32", "bool", I32_LE_S]], [">", [7, "i32", "bool", I32_GT_S]],
+    [">=", [7, "i32", "bool", I32_GE_S]],
+    ["<<", [8, "i32", "i32", I32_SHL]], [">>", [8, "i32", "i32", I32_SHR_S]], [">>>", [8, "i32", "i32", I32_SHR_U]],
+    ["+", [9, "i32", "i32", I32_ADD]], ["-", [9, "i32", "i32", I32_SUB]],
+    ["*", [10, "i32", "i32", I32_MUL]], ["/", [10, "i32", "i32", I32_DIV_S]],
+    ["%", [10, "i32", "i32", I32_REM_S]],
 ]));
+const NOMINAL = new Set([3, 4, 5, 6, 7, 9]);
+const PREFIX = 11; // the operand of a prefix operator binds tighter than every binary operator
 
 class ExpressionParser {
     constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases) {
@@ -103,7 +110,7 @@ class ExpressionParser {
         }
         case "!": {
             lex.next();
-            this.want(this.expr(8), "bool");
+            this.want(this.expr(PREFIX), "bool");
             this.code.push(I32_EQZ);
             return "bool";
         }
@@ -115,9 +122,17 @@ class ExpressionParser {
                 return LITERAL;
             }
             this.emitConst(0);
-            const type = this.expr(8);
+            const type = this.expr(PREFIX);
             this.want(type, "i32");
             this.code.push(I32_SUB);
+            return type;
+        }
+        case "~": { // ~x is x ^ -1
+            lex.next();
+            const type = this.expr(PREFIX);
+            this.want(type, "i32");
+            this.emitConst(-1);
+            this.code.push(I32_XOR);
             return type;
         }
         case "true": {
@@ -146,7 +161,7 @@ class ExpressionParser {
         }
         }
         if (lex.token.kind === "int") {
-            const value = Number(lex.token.value);
+            const value = lex.integerValue();
             if (value > 2147483647) lex.fail("i32 literal out of range");
             this.emitConst(value);
             lex.next();
@@ -234,7 +249,7 @@ class ExpressionParser {
                 this.code.push(END);
                 type = "bool";
             } else {
-                const numeric = precedence === 3 || precedence === 4 || precedence === 6;
+                const numeric = NOMINAL.has(precedence);
                 const nominal = numeric && this.distinct.has(type);
                 if (!input && !nominal && scalarType(type) !== "i32" && type !== "bool" && !this.enums.has(type))
                     lex.fail("expected scalar equality operands");

@@ -4,7 +4,7 @@
 (() => {
 "use strict";
 if (!globalThis.typedRv32Modules) throw new Error("load typed-rv32.js before typed-rv32-loops.js");
-const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_REM_S, I32_SHL, I32_SHR_S, I32_STORE, I32_STORE16, I32_SUB, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape} = globalThis.typedRv32Modules;
+const {BLOCK, BR, BR_IF, CALL, CELLS, CHECKED_ADDRESS, DROP, ELSE, END, I32, I32_ADD, I32_AND, I32_CONST, I32_DIV_S, I32_EQ, I32_EQZ, I32_GE_S, I32_GE_U, I32_GT_S, I32_LE_S, I32_LOAD, I32_LOAD16_U, I32_LT_S, I32_MUL, I32_NE, I32_OR, I32_REM_S, I32_SHL, I32_SHR_S, I32_SHR_U, I32_STORE, I32_STORE16, I32_SUB, I32_XOR, IF, LITERAL_STORES, LOCAL_GET, LOCAL_SET, LOOP, RETURN, UNCHECKED_ADDRESS, UNREACHABLE, VOID, installPasses, opClose, opNext, replaceTape} = globalThis.typedRv32Modules;
 
 // rv32/passes/conjunctions.js
 // The conjunctions pass.
@@ -95,7 +95,11 @@ function i32Fold(op, x, y) {
     case I32_DIV_S: return y === 0 || (x === -2147483648 && y === -1) ? undefined : (x / y) | 0;
     case I32_REM_S: return y === 0 ? undefined : y === -1 ? 0 : (x % y) | 0;
     case I32_SHL: return x << (y & 31);
+    case I32_AND: return x & y;
+    case I32_OR: return x | y;
+    case I32_XOR: return x ^ y;
     case I32_SHR_S: return x >> (y & 31);
+    case I32_SHR_U: return (x >>> (y & 31)) | 0;
     }
     return undefined;
 }
@@ -117,7 +121,7 @@ function setCandidates(code) {
         for (let p = at + 2; p < end && ok; p = opNext(code, p)) {
             const op = code[p], arity = op === I32_CONST || op === LOCAL_GET ? 0 : op === LOCAL_SET || op === DROP || op === I32_EQZ ? 1 : 2;
             if (op !== I32_CONST && op !== LOCAL_GET && op !== LOCAL_SET && op !== DROP && op !== I32_EQZ &&
-                !((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) { ok = false; break; }
+                !((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) { ok = false; break; }
             if (height < arity) { ok = false; break; }
             if (op === LOCAL_GET && !writes.has(code[p + 1])) free.add(code[p + 1]);
             if (op === LOCAL_SET) writes.add(code[p + 1]);
@@ -249,7 +253,7 @@ function entrySets(code, arity, wanted) {
         case CHECKED_ADDRESS: case UNCHECKED_ADDRESS: stack.push(null); break;
         case LITERAL_STORES: break;
         default: {
-            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return null;
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
             const y = pop(), x = pop();
             stack.push(apply(op, x, y));
         }
@@ -337,7 +341,7 @@ function pureArm(code, from, to) {
         if (op === I32_CONST || op === LOCAL_GET) height++;
         else if (op === I32_EQZ) { if (height < 1) return false; }
         else if (op === LOCAL_SET || op === DROP) { if (--height < 0) return false; }
-        else if ((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S)) { if (--height < 1) return false; }
+        else if ((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U)) { if (--height < 1) return false; }
         else return false;
     }
     return height === 0;
@@ -506,7 +510,7 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
         case LITERAL_STORES: stored.add(a); break;
         case I32_EQZ: break;
         default:
-            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return null;
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
             tags.pop(); tags.pop(); tags.push(null);
         }
         if (!dead && tags.length === frames.at(-1).base) start = i + 1;
@@ -543,7 +547,7 @@ function hoistInvariants(body, unchecked, k, readOutside, storeless, arity) {
                 } else if (op === I32_LOAD16_U) ok = prev >= 0 && body[prev] === UNCHECKED_ADDRESS;
                 else if (op === I32_LOAD) ok = body[p + 2] === 0 && prev >= 0 && body[prev] === LOCAL_GET && invariant(body[prev + 1]);
                 else if (op === I32_DIV_S || op === I32_REM_S) ok = prev >= 0 && body[prev] === I32_CONST && body[prev + 1] !== 0 && body[prev + 1] !== -1;
-                else ok = op === I32_EQZ || (op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S);
+                else ok = op === I32_EQZ || (op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U);
             }
             if (!ok) continue;
             hoisted.add(n);
@@ -652,7 +656,7 @@ function hoistSubexpressions(body, k, arity, fresh) {
         case LITERAL_STORES: break;
         case I32_EQZ: combine(i, 1, true); break;
         default: {
-            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return null;
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return null;
             if (op === I32_DIV_S || op === I32_REM_S) {
                 const d = slots.at(-1);
                 const constant = d?.inv && d.start === d.end && body[ops[d.start]] === I32_CONST ? body[ops[d.start] + 1] : undefined;
@@ -1050,7 +1054,7 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
             break;
         }
         default: {
-            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_S))) return false;
+            if (!((op >= I32_EQ && op <= I32_GE_U) || (op >= I32_ADD && op <= I32_SHR_U))) return false;
             const y = pop(), x = pop();
             let r = RANGE_TOP;
             if (op <= I32_GE_U) r = [0, 1];
@@ -1066,7 +1070,10 @@ function rangePass(code, arity, rangeOf, onWrite, onDivide) {
                 r = op === I32_DIV_S ? [Math.trunc(x[0] / d), Math.trunc(x[1] / d)]
                     : x[0] >= 0 ? [0, Math.min(x[1], d - 1)] : [-(d - 1), d - 1];
             } else if (op === I32_SHR_S && y[0] === y[1] && y[0] >= 0 && y[0] < 32) r = [x[0] >> y[0], x[1] >> y[0]];
-            else if (op === 0x71 && y[0] === y[1] && y[0] >= 0) r = [0, y[0]]; // i32.and, not in the tape yet (PICOCALC-TYPED-BITWISE)
+            else if (op === I32_AND && (x[0] >= 0 || y[0] >= 0))
+                r = [0, Math.min(x[0] >= 0 ? x[1] : Infinity, y[0] >= 0 ? y[1] : Infinity)]; // a non-negative operand bounds it
+            else if (op === I32_SHR_U && y[0] === y[1] && y[0] > 0 && y[0] < 32)
+                r = x[0] >= 0 ? [x[0] >>> y[0], x[1] >>> y[0]] : [0, 2 ** (32 - y[0]) - 1];
             stack.push(r);
         }
         }

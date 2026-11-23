@@ -164,6 +164,7 @@ test-apps:
 	$(NODE) ../tests/compiler/typed-inspect.test.mjs
 	$(NODE) ../tests/compiler/typed-pie-loops.test.mjs
 	$(NODE) ../tests/compiler/typed-tape.test.mjs
+	$(NODE) ../tests/compiler/typed-bitwise.test.mjs
 
 # The wall clock through the host binary: clock.wall/set/zone, Date, -w and -z.
 test-clock: $(BIN)

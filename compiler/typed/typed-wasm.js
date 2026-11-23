@@ -8,7 +8,7 @@
 // ---- frontend/lexer.js
 // The front end's lexer: the token regexp, the reserved words, and the lexical index a host may provide (the P4's C
 // scanner) so that the lexer reads precomputed token rows instead of running the regexp.
-const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>|\|\||&&|[{}():;,.=\-+*/%!<>]))/y;
+const TOKEN = /\s*(?:\/\/[^\n]*(?:\n|$)\s*)*((?:[a-zA-Z_]\w*)|(?:0[xX]\w*)|(?:\d+)|(?:"(?:[^"\\\x00-\x1f]|\\(?:["\\/bfnrt]|u[0-9a-fA-F]{4}))*")|(?:!==|===|<=|>=|>>>|>>|<<|\|\||&&|[{}():;,.=\-+*/%!<>&|^~]))/y;
 // The signature pass only needs delimiters. The body parser checks token syntax.
 const BODY_TOKEN = /[{}]|\/\/[^\n]*|"(?:[^"\\\n]|\\[^\n])*"/g;
 const RESERVED = new Set(["function", "if", "const", "return", "bool", "i32",
@@ -180,6 +180,15 @@ class Lexer {
         throw new SyntaxError(prefix.length + ":" + (prefix.at(-1).length + 1) + ": " + message);
     }
 
+    // The value of the current "int" token: a decimal literal as written (its caller checks the range), a hex
+    // literal (0x and one to eight hex digits) as the i32 of its 32 bits, so 0xffffffff is -1.
+    integerValue() {
+        const value = this.token.value;
+        if (value.length < 2 || (value[1] !== "x" && value[1] !== "X")) return Number(value);
+        if (!/^0[xX][0-9a-fA-F]{1,8}$/.test(value)) this.fail("invalid hex literal " + value);
+        return Number(value) | 0;
+    }
+
     accept(value) {
         if (this.token.value !== value) return false;
         this.next();
@@ -320,7 +329,7 @@ function parseEnum(lex, name) {
         if ((lex.token.value === "=" && (lex.next(), true))) {
             const negative = (lex.token.value === "-" && (lex.next(), true));
             if (lex.token.kind !== "int") lex.fail("expected integer enum value");
-            next = Number(lex.token.value) * (negative ? -1 : 1);
+            next = lex.integerValue() * (negative ? -1 : 1);
             lex.next();
         }
         if (next < -2147483648 || next > 2147483647) lex.fail("i32 enum value out of range");
@@ -449,20 +458,27 @@ function enumLayouts(enums) {
 // The tape's opcodes, block types and cell counts (tape.js, loaded first), shared by every later module of the bundle.
 const {UNREACHABLE, BLOCK, LOOP, IF, ELSE, END, BR, BR_IF, CALL, DROP, LOCAL_GET, LOCAL_SET,
     I32_LOAD, I32_LOAD16_U, I32_STORE, I32_STORE16, I32_CONST, I32_EQZ, I32_EQ, I32_NE, I32_LT_S, I32_GT_S,
-    I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_SHL, I32_SHR_S,
-    RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS} = typedTape;
+    I32_LE_S, I32_GE_S, I32_GE_U, I32_ADD, I32_SUB, I32_MUL, I32_DIV_S, I32_REM_S, I32_AND, I32_OR, I32_XOR,
+    I32_SHL, I32_SHR_S, I32_SHR_U, RETURN, CHECKED_ADDRESS, LITERAL_STORES, UNCHECKED_ADDRESS, I32, VOID, cells: CELLS} = typedTape;
 const LITERAL = Symbol("integer literal");
 const scalarType = type => type === LITERAL ? "i32" : type;
+// [precedence, operand type (null: any scalar), result type, opcode], with JavaScript's precedences. A distinct
+// integer type passes through the NOMINAL levels (| ^ &, equality, relational, + -): two operands of one distinct
+// type, or one and a literal, and an i32 result keeps the type. Shifts and * / % take and give i32.
 const BINARY = Object.assign(Object.create(null), Object.fromEntries([
     ["||", [1, "bool", "bool"]], ["&&", [2, "bool", "bool"]],
-    ["===", [3, null, "bool", I32_EQ]], ["!==", [3, null, "bool", I32_NE]],
-    ["<", [4, "i32", "bool", I32_LT_S]],
-    ["<=", [4, "i32", "bool", I32_LE_S]], [">", [4, "i32", "bool", I32_GT_S]],
-    [">=", [4, "i32", "bool", I32_GE_S]], [">>", [5, "i32", "i32", I32_SHR_S]],
-    ["+", [6, "i32", "i32", I32_ADD]], ["-", [6, "i32", "i32", I32_SUB]],
-    ["*", [7, "i32", "i32", I32_MUL]], ["/", [7, "i32", "i32", I32_DIV_S]],
-    ["%", [7, "i32", "i32", I32_REM_S]],
+    ["|", [3, "i32", "i32", I32_OR]], ["^", [4, "i32", "i32", I32_XOR]], ["&", [5, "i32", "i32", I32_AND]],
+    ["===", [6, null, "bool", I32_EQ]], ["!==", [6, null, "bool", I32_NE]],
+    ["<", [7, "i32", "bool", I32_LT_S]],
+    ["<=", [7, "i32", "bool", I32_LE_S]], [">", [7, "i32", "bool", I32_GT_S]],
+    [">=", [7, "i32", "bool", I32_GE_S]],
+    ["<<", [8, "i32", "i32", I32_SHL]], [">>", [8, "i32", "i32", I32_SHR_S]], [">>>", [8, "i32", "i32", I32_SHR_U]],
+    ["+", [9, "i32", "i32", I32_ADD]], ["-", [9, "i32", "i32", I32_SUB]],
+    ["*", [10, "i32", "i32", I32_MUL]], ["/", [10, "i32", "i32", I32_DIV_S]],
+    ["%", [10, "i32", "i32", I32_REM_S]],
 ]));
+const NOMINAL = new Set([3, 4, 5, 6, 7, 9]);
+const PREFIX = 11; // the operand of a prefix operator binds tighter than every binary operator
 
 class ExpressionParser {
     constructor(lexer, functions, records, edges, functionBase, enums = new Map(), distinct = new Set(), aliases) {
@@ -547,7 +563,7 @@ class ExpressionParser {
         }
         case "!": {
             lex.next();
-            this.want(this.expr(8), "bool");
+            this.want(this.expr(PREFIX), "bool");
             this.code.push(I32_EQZ);
             return "bool";
         }
@@ -559,9 +575,17 @@ class ExpressionParser {
                 return LITERAL;
             }
             this.emitConst(0);
-            const type = this.expr(8);
+            const type = this.expr(PREFIX);
             this.want(type, "i32");
             this.code.push(I32_SUB);
+            return type;
+        }
+        case "~": { // ~x is x ^ -1
+            lex.next();
+            const type = this.expr(PREFIX);
+            this.want(type, "i32");
+            this.emitConst(-1);
+            this.code.push(I32_XOR);
             return type;
         }
         case "true": {
@@ -590,7 +614,7 @@ class ExpressionParser {
         }
         }
         if (lex.token.kind === "int") {
-            const value = Number(lex.token.value);
+            const value = lex.integerValue();
             if (value > 2147483647) lex.fail("i32 literal out of range");
             this.emitConst(value);
             lex.next();
@@ -678,7 +702,7 @@ class ExpressionParser {
                 this.code.push(END);
                 type = "bool";
             } else {
-                const numeric = precedence === 3 || precedence === 4 || precedence === 6;
+                const numeric = NOMINAL.has(precedence);
                 const nominal = numeric && this.distinct.has(type);
                 if (!input && !nominal && scalarType(type) !== "i32" && type !== "bool" && !this.enums.has(type))
                     lex.fail("expected scalar equality operands");

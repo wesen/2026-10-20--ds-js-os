@@ -50,3 +50,38 @@ The tokenizer in `typed-wasm.js` (`const TOKEN`) accepts `!== === <= >= >> || &&
 - **Moves and deletes** go through checked Python scripts in the ticket's `scripts/` (dry run, asserted counts), never shell one-liners.
 - **Diary.** Each ticket keeps `reference/01-diary.md` in the investigation format (Prompt Context, What I did, Why, What worked, What didn't work with exact errors, What I learned, What was tricky, What warrants a second pair of eyes, Future work, Code review instructions, Technical details), one step per milestone, with commit hashes.
 - **Commits** are focused, at validated boundaries, with the trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+
+## Refinements (2026-11-22)
+
+Checked against the code after TYPED-TAPE, TYPED-FRONTEND and TYPED-PIPELINE merged.
+
+- **Where the tokenizer is.** `TOKEN` now lives in `frontend/lexer.js`, and the front end already had `>>`
+  (`i32.shr_s`). There is a second tokenizer the design missed: the P4's lexical index
+  (`firmware/port/esp32p4/main/typed_lex_index.c`), which the firmware installs as `__typedLexIndex` and whose
+  token rows the lexer reads instead of running `TOKEN`. It has to tokenize identically: the old scanner splits
+  `0x1f` into `0` and `x1f` and `>>>` into `>>` and `>`, silently. It learns `>>>`, `<<`, `& | ^ ~` and `0[xX]\w*`.
+- **Precedence numbers.** JavaScript's: `|| 1, && 2, | 3, ^ 4, & 5, equality 6, relational 7, shifts 8, + - 9,
+  * / % 10`, prefix operands at 11. No compound assignment (the language has none).
+- **Distinct types.** The levels that already let a distinct integer through (equality, relational, `+ -`) gain
+  `| ^ &`: two operands of one distinct type, or one and a literal, and the result keeps the type (flag sets).
+  Shifts stay `i32` only, like `>>`, `*`, `/`, `%`. `~` takes `i32` like unary `-`.
+- **Bitwise on bool is an error.** Operands are `i32`; so `a & 1 === 1` (JavaScript: `a & (1 === 1)`) is a type
+  error rather than a silent bug.
+- **Hex literals.** `0x`/`0X` and 1-8 hex digits, the i32 of those bits (`0xffffffff` is -1). The lexer token is
+  `0[xX]\w*` so that `0xfg`, `0x` and nine digits are one token and one error ("invalid hex literal"). Enum member
+  values accept hex too (`Lexer.integerValue`). Decimal literals keep their limit (2147483647, and `-2147483648`).
+- **`~x`** is written as `x, i32.const -1, i32.xor` (cheap: RV32 gives `xori x, -1`). Note that a written `-1` is
+  `0 - 1` on the tape, not a literal, so `x ^ -1` uses the register form; folding `-literal` would move existing
+  images and is left out.
+- **RV32.** `ALU` gains `and/or/xor/srl` (`sll`, `sra` were there); `IMMEDIATE_FORMS` gains `andi/ori/xori` for a
+  literal in [-2048, 2047] and `srli`; `commute` treats `& | ^` as commutative. Passes that test for a pure binary
+  operation with `op >= I32_ADD && op <= I32_SHR_S` (commute, inline, hoist x3, value-sets x3, ranges, pie-loops) now
+  stop at `I32_SHR_U`; `and/or/xor` were already inside the range. `value-sets` folds the new operators.
+  `analysis/ranges.js`: `x & y` is in `[0, min of the non-negative operands' maxima]` when either operand is
+  non-negative (the rule TYPED-TAPE left unreachable at `0x71`), and `x >>> c` for a constant `0 < c < 32` is
+  `[x0 >>> c, x1 >>> c]` for non-negative `x`, else `[0, 2^(32-c) - 1]`. Every other pass (version-loops, rotate,
+  split-locals, conjunctions, storeless, plan/locations) leaves them opaque: its pattern matchers never match them
+  and its walkers copy them or give up on the function.
+- **Tape test.** `typed-tape.test.mjs` asserted that every row is exercised by `apps/typed`; no app uses the
+  bitwise rows yet, so it now lists them as the expected missing rows and the new `typed-bitwise.test.mjs` covers
+  them.

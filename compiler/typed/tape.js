@@ -61,8 +61,13 @@ const ROWS = [
     [0x6c, "I32_MUL", "i32.mul", [], [I32, I32], [I32], 0],
     [0x6d, "I32_DIV_S", "i32.div_s", [], [I32, I32], [I32], TRAPS],
     [0x6f, "I32_REM_S", "i32.rem_s", [], [I32, I32], [I32], TRAPS],
+    [0x71, "I32_AND", "i32.and", [], [I32, I32], [I32], 0],
+    [0x72, "I32_OR", "i32.or", [], [I32, I32], [I32], 0],
+    [0x73, "I32_XOR", "i32.xor", [], [I32, I32], [I32], 0],
+    // Shifts use the low five bits of the count, in WebAssembly and RV32 alike.
     [0x74, "I32_SHL", "i32.shl", [], [I32, I32], [I32], 0],
     [0x75, "I32_SHR_S", "i32.shr_s", [], [I32, I32], [I32], 0],
+    [0x76, "I32_SHR_U", "i32.shr_u", [], [I32, I32], [I32], 0],
     // Pseudo-ops, only in the numeric tape. Each operand is a local, except where noted.
     // receiver position: the address of receiver[position], after checking position against the
     // receiver's capacity; an i32.load16_u or i32.store16 at offset 4 follows.

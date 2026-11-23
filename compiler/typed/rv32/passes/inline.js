@@ -1,5 +1,5 @@
 // The inline pass and the inliner's library candidates.
-import {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP, BR_IF, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_S, I32_STORE, I32_STORE16, CHECKED_ADDRESS, I32, ELSE, RETURN, BR, LITERAL_STORES} from "../encoding/tape.js";
+import {CELLS, BLOCK, IF, LOOP, END, CALL, LOCAL_GET, I32_CONST, LOCAL_SET, DROP, BR_IF, I32_EQZ, I32_LOAD, I32_LOAD16_U, I32_EQ, I32_GE_U, I32_ADD, I32_SHR_U, I32_STORE, I32_STORE16, CHECKED_ADDRESS, I32, ELSE, RETURN, BR, LITERAL_STORES} from "../encoding/tape.js";
 
 // inline: replace calls to small internal functions lowered earlier with their tapes.
 // A call `args…; call f` becomes `local.set p_{n-1} … local.set p_0; block (result i32)
@@ -83,7 +83,7 @@ export function inlineCalls(fn, library, limits, arity, anywhere) {
                 for (let i = 0; i < sp; i++) if (stackKind[i] === 1 && stackValue[i] === a) stackKind[i] = 0;
             } else if (opcode === DROP || opcode === BR_IF) pop(1);
             else if (opcode === I32_EQZ || opcode === I32_LOAD || opcode === I32_LOAD16_U) { pop(1); push(0, 0, 0); }
-            else if ((opcode >= I32_EQ && opcode <= I32_GE_U) || (opcode >= I32_ADD && opcode <= I32_SHR_S)) { pop(2); push(0, 0, 0); }
+            else if ((opcode >= I32_EQ && opcode <= I32_GE_U) || (opcode >= I32_ADD && opcode <= I32_SHR_U)) { pop(2); push(0, 0, 0); }
             else if (opcode === I32_STORE || opcode === I32_STORE16) pop(2);
             else if (opcode === CHECKED_ADDRESS) push(0, 0, 0);
             else if (opcode === CALL) { pop(arity(a)); push(0, 0, 0); }
