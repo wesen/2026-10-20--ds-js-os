@@ -5,15 +5,16 @@ itself, at boot, inside a QuickJS runtime with a few megabytes of heap. It also 
 independent oracle, from the same tape. This guide describes its parts as they are: the pipeline, the tape that connects the front end to
 the backends, the passes, the backends and the checks that keep them honest. Later tickets keep it current.
 
-The sources are in `compiler/typed/`. They are classic scripts, not ES modules: each file is an IIFE that publishes one
-object on `globalThis`, and the loaders evaluate them in this order:
+The sources are in `compiler/typed/`. The loaders read classic scripts: each file is an IIFE that publishes one
+object on `globalThis` (the RV32 backend's three are bundled from the ES modules in `rv32/`), evaluated in this order:
 
 | File | Publishes | Contents |
 |---|---|---|
 | `tape.js` | `typedTape` | The tape's definition: opcodes, operand cells, operand and result types, effects, walkers |
 | `typed-wasm.js` | `typedWasm` | The front end (lexer, signature pass, parser and type checker writing the tape) and the WebAssembly backend, built from `frontend/*.js` and `wasm/*.js` by `node compiler/typed/frontend/build.mjs` |
-| `typed-async.js` | `typedAsync` | Rewrites `async` functions into ordinary Typed source before emission (worlds only) |
-| `typed-rv32.js` | `typedRv32` | The RV32 backend, built from `rv32/*.js` by `node compiler/typed/rv32/build.mjs` ([README](../compiler/typed/rv32/README.md)) |
+| `typed-async.js` | `typedAsync` | Lowers `async` functions into ordinary Typed functions over `WorldState` frames before emission (worlds that have them), built from `async/*.js` by `node compiler/typed/async/build.mjs` |
+| `typed-rv32.js` | `typedRv32` | The RV32 backend's core, bundled from `rv32/` by `node compiler/typed/rv32/build.mjs` ([README](../compiler/typed/rv32/README.md)) |
+| `typed-rv32-inline.js`, `typed-rv32-loops.js` | (installs passes) | The two pass groups; after `typed-rv32.js`, loaded up front or on demand through `typedRv32Load` |
 | `typed-world.js` | `typedWorld`, `compileTypedWorld*` | The world ABI: two entries and the SDK imports, in trampoline order |
 | `typed-pie-loops.js` | `typedPieLoops` | Optional: ESP32-P4 PIE vector words for qualifying loops (`pieLoops`) |
 
@@ -21,13 +22,14 @@ Every loader lists them: `bench/lib/compiler.mjs` (all bench scripts), the tests
 `compiler/typed/tools/typed-inspect.mjs`, `bench/board/stage.mjs` (the board app's cold compiles), the trace REPL's
 module table (`tools/trace-repl/pkg/tracecompiler/compiler.go`) and the firmware, which bundles them as `typed/tape.js`, `typed/wasm.js`
 and so on (`firmware/port/esp32p4/main/CMakeLists.txt`, `BUNDLE_EXTRA`) and evaluates them in `typed_p4.c`, keeping each
-file's QuickJS bytecode so that later compiles skip the parse.
+file's QuickJS bytecode so that later compiles skip the parse. The firmware evaluates a pass group only when a
+compile's policy needs it: `interactive` (Agenda, Editor) loads neither, `balanced` (Chess) the inline group.
 
 ## The pipeline
 
 ```
 Typed source
-  │  typed-async.js (worlds with async functions): rewritten into ordinary Typed source
+  │  typed-async.js (worlds with async functions): lowered into ordinary Typed source, which keeps its original positions
   ▼
 front end       Lexer → signature pass (records, enums, distinct types, acyclic calls) → FunctionEmitter,
   │             one function at a time, no syntax tree → the function's tape
@@ -48,13 +50,35 @@ into one IIFE (one scope, so they are not ES modules), and `--check`, run by `ma
 | `frontend/lexer.js` | `TOKEN`, `RESERVED`, the host-provided lexical index (`withLexIndices`, `indexFor`), `Lexer` |
 | `frontend/declarations.js` | records, enums, distinct types, member aliases (`parseDeclarations`), `scanSignatures`, `checkAcyclic`, `recordLayouts` |
 | `frontend/expressions.js` | the tape's constants for the bundle; `ExpressionParser`: the tape writer (`emitConst`, `emitIndex`, `emitMemory`, `codeUnitAddress`, `emitLiteralStores`) and the expressions |
-| `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`typed-async.js` subclasses it) |
+| `frontend/statements.js` | `FunctionEmitter extends ExpressionParser`: statements and one function's body (`async/body.js` subclasses it) |
 | `frontend/inspect.js` | the front end's `frontend` inspection event (`target: "tape"`) |
-| `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async rewrite |
+| `frontend/compile.js` | `compileFunctions`, streaming one tape at a time to `onFunction`, with the async lowering (`emitSpanFunctions`; `originalError` maps lowered-code diagnostics to original positions) |
 | `wasm/encode.js` | `encodeFunction` (tape → Wasm body), `compileWasmFunctions` (the front end driven for the Wasm backend) |
 | `wasm/module.js` | `compile` (a module of Typed functions), `WasmReader`, section reading and writing |
 | `wasm/inspect.js` | the Wasm backend's `frontend` and `emission` events, in Wasm operations and module byte ranges |
 | `wasm/link.js` | `linkWorld`, `invoke`, and what the bundle publishes |
+
+### The async lowering's modules
+
+An `async` function that awaits an SDK request or another async function becomes a *step function* over a static
+frame in `WorldState` (PICOCALC-CONTINUATION-G, PICOCALC-EDITOR-ASYNC). `typed-async.js` is generated from
+`compiler/typed/async/` by `node compiler/typed/async/build.mjs` the same way, and its `--check` runs in
+`make test-generated`. Its tests are `tests/compiler/typed-async.test.mjs`.
+
+| Module | Contents |
+|---|---|
+| `async/scan.js` | the whole-program pre-pass: task operations (`start`, `cancel`, `pending`, `resume`) in every body, from the lexical index when the host provides one (`indexedBodies`); call edges and acyclicity |
+| `async/body.js` | `AsyncBody`: an async body as a statement skeleton, each expression checked by `TypeChecker`, the front end's `FunctionEmitter` with its tape writers off |
+| `async/liveness.js` | the bindings live after each wait (`analyze`); a live non-scalar is an error |
+| `async/allocate.js` | the frames' fields in `WorldState` and `asyncLayout` |
+| `async/text.js` | `GeneratedText`: copied chunks of the source and generated text, each with an original position (`originalAt`) |
+| `async/lower.js` | `cut` and `emitStep`: one frame's step function dispatched by `pc` |
+| `async/tasks.js` | the generated `start`, `cancel`, `pending` and `resume` functions |
+| `async/rewrite.js` | `prepare`, `rewrite` and `typedAsync` |
+
+The lowered program is text, but its unchanged bodies are read from the original source, and the lexers of the rewritten
+bodies and of the generated functions report diagnostics at original positions (`originalError` in `frontend/compile.js`), so an
+error never needs a second compile. Why this is text and not a pass over the tape: PICOCALC-TYPED-ASYNC-TAPE's study.
 
 Two properties are deliberate. The compiler streams: `typedRv32.compile` asks the front end for one function at a
 time (`compileFunctions(..., onFunction)`) and lowers it before the next is parsed, so peak memory is one function's
@@ -99,7 +123,7 @@ use WebAssembly's value types so that `f32` (PICOCALC-TYPED-F32) adds rows, not 
 bits), `cells` and `effects` (typed arrays indexed by opcode; `cells` is -1 outside the tape), `rows`, `row(code)`,
 `name(code)`, `next(tape, at)` (the offset of the next operation), `close(tape, at)` (the `end` of the block at `at`)
 and `decode(tape, wasm)` (operation records, for tools; with `wasm` it reads LEB128 immediates). The backend's files
-destructure the constants once at load time (`rv32/00-encoding.js`), and the passes walk raw cells with `CELLS` and
+destructure the constants once at load time (`rv32/encoding/tape.js`), and the passes walk raw cells with `CELLS` and
 compare opcodes with the names: decoding every tape into objects cost a bare QuickJS realm about a quarter of a compile.
 
 The Wasm backend (`encodeFunction`) serializes a tape operation by operation: the opcode is the Wasm opcode and each
@@ -152,28 +176,35 @@ the image shrinks from 39 words (`stock`) to 32.
 
 ## The passes
 
-`compile` in `rv32/70-compile.js` runs the tape transforms in this order for each function, each switched on by an
-option (the policies in `rv32/60-policies.js` name sets of them):
+A policy (`rv32/policy.js`) is a list of tape passes plus the planner's (`operandLocations`) and the emitter's
+(`select`) switches. `rv32/passes/registry.js` declares the passes in the one order they run; `compile`
+(`rv32/compile.js`) runs the list for each function. `options.passes` replaces a policy's list, and `enable` and
+`disable` edit it by name (`{policy: "kernel", disable: ["sets"]}`); a pass whose `needs` are missing is refused.
 
-| Phase | Pass | File | Option |
-|---|---|---|---|
-| `inline` | `inlineCalls` (calls to small functions in loops) | `20-inline-and-commute.js` | `inline` |
-| `commute` | `commuteConstants` (`c OP e` → `e c OP`) | `20-inline-and-commute.js` | `select.commute` |
-| `conjunctions` | `fuseConjunctions` | `42-conjunctions-and-rotation.js` | `select.conjunctions` |
-| `sets` | `foldValueSets` | `41-value-sets.js` | `select.sets` |
-| `rotate` | `rotateLoops` | `42-conjunctions-and-rotation.js` | `select.rotate` |
-| `version` | `versionLoops` (with hoisting and induction variables) | `30-version-loops.js` | `select.version`, `select.hoist`, `select.induction` |
-| `split` | `splitLocals` | `31-split-locals.js` | `operandLocations.split` |
+| Pass | Group | Kind | What it does | Module | Policies |
+|---|---|---|---|---|---|
+| `inline` | inline | transform | `inlineCalls`: calls to small functions in loops | `passes/inline.js` | balanced, default, kernel |
+| `commute` | inline | transform | `commuteConstants`: `c OP e` → `e c OP` | `passes/commute.js` | balanced, default, kernel |
+| `conjunctions` | loops | transform | `fuseConjunctions` | `passes/conjunctions.js` | kernel |
+| `sets` | loops | transform | `foldValueSets` | `passes/value-sets.js` | kernel |
+| `rotate` | inline | transform | `rotateLoops`: bottom-tested loops | `passes/rotate.js` | balanced, default, kernel |
+| `ranges` | loops | analysis | `localRanges` | `analysis/ranges.js` | kernel |
+| `version` | loops | transform | `versionLoops`; needs `rotate` | `passes/version-loops.js` | default, kernel |
+| `hoist` | loops | option of `version` | loop invariants and subexpressions into the guard | `passes/hoist.js` | kernel |
+| `induction` | loops | option of `version` | induction variables in the fast copy | `passes/version-loops.js` | kernel |
+| `split` | loops | transform | `splitLocals`: one local per web | `passes/split-locals.js` | default, kernel |
+| `facts` | loops | analysis | `divisionFacts`; needs `ranges` | `analysis/ranges.js` | kernel |
 
-Then come the analyses that do not rewrite the tape: `localRanges` and `divisionFacts` (`40-ranges.js`,
-`select.facts`) and `planLocations` (`50-planner.js`, `operandLocations`), which assigns register homes.
-`options.observeTape(name, phase, code, nlocals)` sees a copy of the tape after each phase and `options.observePlan`
-the plan; the trace REPL's example 21 uses both.
+Three stages that are not tape passes run after `inline`: the guarded-return summary (`inlineGuardedReturns`), the PIE
+lowering (`pieLoops`) and the `inline` checkpoint. Then `lowerLeaf`, or `planLocations` (`plan/`) and `FunctionCode`
+(`emit/`). `options.observeTape(name, phase, code, nlocals)` sees a copy of the tape after each transform (and at the
+checkpoint) and `options.observePlan` the plan; the trace REPL's example 21 uses both. `options.timing`, an array,
+receives `{fn, pass, ms, cells}` for every stage each function runs and one `{fn: null, pass: "compile"}` row.
 
 ## The backends
 
-- **RV32** (`typed-rv32.js`). `lowerLeaf` (`11-leaf-code.js`) lowers small functions without a frame; everything else
-  goes through `FunctionCode` (`10-function-code.js`), a streaming emitter that walks the tape once with an operand
+- **RV32** (`typed-rv32.js`). `lowerLeaf` (`emit/leaf-code.js`) lowers small functions without a frame; everything else
+  goes through `FunctionCode` (`emit/function-code.js` and its method groups), a streaming emitter that walks the tape once with an operand
   stack in `t0`–`t4`, homes from the plan, checked addresses and fused compare-and-branch. `compile` lays the functions
   out, patches calls and returns `{image, entries, relocations, signatures, ...}`; `linkSlot` copies the image into a
   reactor ELF's reserved slot.
@@ -204,7 +235,7 @@ the plan; the trace REPL's example 21 uses both.
    same with LEB128 operands, give it an expansion in `encodeFunction` (`wasm/encode.js`); run
    `node compiler/typed/frontend/build.mjs`.
 3. Teach every pass that interprets operations rather than copying them: the abstract stacks in
-   `20-inline-and-commute.js`, `30-version-loops.js`, `40-ranges.js`, `41-value-sets.js` and the planner reject unknown
+   `passes/` (inline, commute, version-loops, hoist, value-sets), `analysis/ranges.js` and `plan/` reject unknown
    opcodes or treat them conservatively; grep for a neighbouring opcode's name to find them.
 4. Lower it in `FunctionCode.step` (and in `LEAF_OPERATIONS` if frameless leaves may contain it).
 5. Run `node compiler/typed/rv32/build.mjs`, `make test` and the host gates.

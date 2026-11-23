@@ -1,0 +1,50 @@
+[
+ {
+  "block": 0,
+  "arm": "control",
+  "dir": "b00-control",
+  "sha256": "1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")"
+ },
+ {
+  "block": 0,
+  "arm": "candidate",
+  "dir": "b00-candidate",
+  "sha256": "6822ac03de7b6bb3e27176b2258d9395cb5ea61d5e9a6ed4530bfc1bfb325be1",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")"
+ },
+ {
+  "block": 1,
+  "arm": "candidate",
+  "dir": "b01-candidate",
+  "sha256": "6822ac03de7b6bb3e27176b2258d9395cb5ea61d5e9a6ed4530bfc1bfb325be1",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")"
+ },
+ {
+  "block": 1,
+  "arm": "control",
+  "dir": "b01-control",
+  "sha256": "1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")"
+ },
+ {
+  "block": 2,
+  "arm": "control",
+  "dir": "b02-control",
+  "sha256": "1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")"
+ },
+ {
+  "block": 2,
+  "arm": "candidate",
+  "dir": "b02-candidate",
+  "sha256": "6822ac03de7b6bb3e27176b2258d9395cb5ea61d5e9a6ed4530bfc1bfb325be1",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")"
+ }
+]

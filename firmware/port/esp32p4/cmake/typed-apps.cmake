@@ -9,7 +9,10 @@ set(TYPED_COMPILER
     # tape.js defines the tape that typed-wasm.js writes and typed-rv32.js reads; typed_p4.c evaluates it first.
     "typed/tape.js=${REPO}/compiler/typed/tape.js"
     "typed/wasm.js=${REPO}/compiler/typed/typed-wasm.js"
-    "typed/rv32.js=${REPO}/compiler/typed/typed-rv32.js")
+    "typed/rv32.js=${REPO}/compiler/typed/typed-rv32.js"
+    # The RV32 pass groups: typed_p4.c's typedRv32Load evaluates one when a compile's policy needs it.
+    "typed/rv32-inline.js=${REPO}/compiler/typed/typed-rv32-inline.js"
+    "typed/rv32-loops.js=${REPO}/compiler/typed/typed-rv32-loops.js")
 
 # A reactor or slot ELF: built from the manifest's sources with the native-world flags, then bundled.
 function(typed_reactor published)

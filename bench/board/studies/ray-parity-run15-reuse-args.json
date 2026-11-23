@@ -5,6 +5,19 @@
    "name": "control",
    "options": {
     "policy": "stock",
+    "passes": [
+     "inline",
+     "commute",
+     "conjunctions",
+     "sets",
+     "rotate",
+     "ranges",
+     "version",
+     "hoist",
+     "induction",
+     "split",
+     "facts"
+    ],
     "operandLocations": {
      "forward": true,
      "capacity": true,
@@ -16,7 +29,6 @@
      "constants": true,
      "share": true,
      "pointers": true,
-     "split": true,
      "pointerOnly": true
     },
     "select": {
@@ -25,18 +37,9 @@
      "branches": true,
      "results": true,
      "leafParams": true,
-     "commute": true,
-     "rotate": true,
      "shortBranches": true,
-     "version": true,
-     "facts": true,
-     "sets": true,
-     "hoist": true,
-     "conjunctions": true,
-     "loadHomes": true,
-     "induction": true
+     "loadHomes": true
     },
-    "inline": true,
     "inlineGuardedReturns": true
    }
   },
@@ -44,6 +47,19 @@
    "name": "candidate",
    "options": {
     "policy": "stock",
+    "passes": [
+     "inline",
+     "commute",
+     "conjunctions",
+     "sets",
+     "rotate",
+     "ranges",
+     "version",
+     "hoist",
+     "induction",
+     "split",
+     "facts"
+    ],
     "operandLocations": {
      "forward": true,
      "capacity": true,
@@ -55,7 +71,6 @@
      "constants": true,
      "share": true,
      "pointers": true,
-     "split": true,
      "pointerOnly": true,
      "reuseArgs": true
     },
@@ -65,18 +80,9 @@
      "branches": true,
      "results": true,
      "leafParams": true,
-     "commute": true,
-     "rotate": true,
      "shortBranches": true,
-     "version": true,
-     "facts": true,
-     "sets": true,
-     "hoist": true,
-     "conjunctions": true,
-     "loadHomes": true,
-     "induction": true
+     "loadHomes": true
     },
-    "inline": true,
     "inlineGuardedReturns": true
    }
   }

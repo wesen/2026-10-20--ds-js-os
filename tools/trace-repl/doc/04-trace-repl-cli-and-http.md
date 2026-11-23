@@ -94,7 +94,7 @@ Every command exits with status 0 on success and 1 on failure, printing the erro
 | `--stop` | `job` | Interrupt the job instead of reporting it. |
 | `--name` | `results` | Print this record instead of the list. |
 
-`--arg` is a raw string-array flag, so commas and quotes inside JSON reach the service unchanged: `--arg arms='{"base": {}, "split": {"operandLocations": {"split": true}}}'` works. The same name twice, an invalid identifier or invalid JSON is refused before anything is sent.
+`--arg` is a raw string-array flag, so commas and quotes inside JSON reach the service unchanged: `--arg arms='{"base": {"disable": ["split"]}, "split": {}}'` works. The same name twice, an invalid identifier or invalid JSON is refused before anything is sent.
 
 ### Logging (every command)
 

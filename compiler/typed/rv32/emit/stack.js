@@ -1,0 +1,81 @@
+// FunctionCode's operand stack: loads, stores, constants, result destinations, spills.
+import {SP, instruction, ZERO, STACK_REGISTERS, T5} from "../encoding/registers.js";
+import {LOCAL_SET} from "../encoding/tape.js";
+
+export class StackMethods {
+    load(reg, offset, base = SP, kind = 2) {
+        this.emit(instruction.i(0x03, reg, kind, base, offset));
+    }
+
+    store(reg, offset, base = SP, kind = 2) {
+        this.emit(instruction.s(kind, base, reg, offset));
+    }
+
+    constant(reg, n) {
+        const lo = (n << 20) >> 20;
+        if (n !== lo) this.emit(((n - lo) & 0xfffff000) | (reg << 7) | 0x37);
+        if (n === lo || lo !== 0 || !this.select?.immediates)
+            this.emit(instruction.i(0x13, reg, 0, n === lo ? ZERO : reg, lo));
+    }
+
+    // select.results: when the next operation stores this result into a homed local, the
+    // result is computed in the home and the store disappears. Call after popping the
+    // operands; every caller's sequence reads its operands no later than its first write.
+    destination() {
+        const tape = this.program.code, plan = this.locations;
+        if (!this.select?.results || !plan || tape[this.at] !== LOCAL_SET || plan.forward.has(this.at)) return undefined;
+        const home = plan.homes.get(tape[this.at + 1]);
+        if (home === undefined) return undefined;
+        this.pendingWrite = [tape[this.at + 1], this.at];
+        this.at += 2;
+        this.materialize(home);
+        return home;
+    }
+
+    // Push a result computed in resultRegister(), unless destination() stored it already.
+    result(out, stored) {
+        if (stored === undefined) this.push(out);
+        else if (this.pendingWrite) {
+            const [local, at] = this.pendingWrite;
+            this.pendingWrite = undefined;
+            this.pointersAfterWrite(local, at, stored);
+        }
+    }
+
+    move(to, from) {
+        if (to !== from) this.emit(instruction.i(0x13, to, 0, from, 0));
+    }
+
+
+    slot(depth) { return 4 * (this.locals + depth); }
+
+    spill(depth, reg) {
+        this.store(reg, this.slot(depth));
+        this.spillDepth = Math.max(this.spillDepth, depth + 1);
+    }
+
+    pop(scratch) {
+        if (!this.depth) throw new SyntaxError("empty RV32 operand stack");
+        const depth = --this.depth;
+        const home = this.direct[depth];
+        if (home !== undefined) {
+            this.direct[depth] = undefined;
+            return home;
+        }
+        const reg = STACK_REGISTERS[depth];
+        if (reg !== undefined) return reg;
+        this.load(scratch, this.slot(depth));
+        return scratch;
+    }
+
+    push(reg) {
+        const depth = this.depth++;
+        this.direct[depth] = undefined;
+        const home = STACK_REGISTERS[depth];
+        if (home === undefined) this.spill(depth, reg);
+        else this.move(home, reg);
+    }
+
+    resultRegister() { return STACK_REGISTERS[this.depth] ?? T5; }
+
+}

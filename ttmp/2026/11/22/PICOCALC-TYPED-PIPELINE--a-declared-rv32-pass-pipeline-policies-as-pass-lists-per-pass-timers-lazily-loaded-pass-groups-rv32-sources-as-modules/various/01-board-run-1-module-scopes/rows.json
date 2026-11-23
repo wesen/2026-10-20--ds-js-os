@@ -1,0 +1,308 @@
+[
+ {
+  "block": 0,
+  "arm": "control",
+  "dir": "b00-control",
+  "sha256": "1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")",
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2264334,
+    "peak": 1645712,
+    "module": 66816
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 699574,
+    "peak": 1197360,
+    "module": 66364
+   },
+   "files": {
+    "status": "ok",
+    "us": 443508,
+    "peak": 983620,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3198044,
+    "peak": 3042388,
+    "module": 242124
+   },
+   "chess": {
+    "status": "ok",
+    "us": 3938945,
+    "peak": 3024512,
+    "module": 274892
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13640,
+   "typed/wasm.js": 231834,
+   "typed/rv32.js": 474091,
+   "candela/link.js": 1874,
+   "agenda/compile.js": 5525,
+   "files/compile.js": 3147,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924
+  }
+ },
+ {
+  "block": 0,
+  "arm": "candidate",
+  "dir": "b00-candidate",
+  "sha256": "6822ac03de7b6bb3e27176b2258d9395cb5ea61d5e9a6ed4530bfc1bfb325be1",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")",
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2448624,
+    "peak": 1693644,
+    "module": 66816
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 714435,
+    "peak": 1056048,
+    "module": 66364
+   },
+   "files": {
+    "status": "ok",
+    "us": 483705,
+    "peak": 1028240,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3218553,
+    "peak": 2900560,
+    "module": 242124
+   },
+   "chess": {
+    "status": "ok",
+    "us": 3998460,
+    "peak": 2906472,
+    "module": 274892
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13642,
+   "typed/wasm.js": 231834,
+   "typed/rv32.js": 367451,
+   "candela/link.js": 1874,
+   "typed/rv32-inline.js": 64933,
+   "typed/rv32-loops.js": 269019,
+   "agenda/compile.js": 5525,
+   "files/compile.js": 3147,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924
+  }
+ },
+ {
+  "block": 1,
+  "arm": "candidate",
+  "dir": "b01-candidate",
+  "sha256": "6822ac03de7b6bb3e27176b2258d9395cb5ea61d5e9a6ed4530bfc1bfb325be1",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")",
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2447635,
+    "peak": 1693644,
+    "module": 66816
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 714362,
+    "peak": 1056048,
+    "module": 66364
+   },
+   "files": {
+    "status": "ok",
+    "us": 483726,
+    "peak": 1028240,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3218131,
+    "peak": 2900560,
+    "module": 242124
+   },
+   "chess": {
+    "status": "ok",
+    "us": 3999979,
+    "peak": 2906472,
+    "module": 274892
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13642,
+   "typed/wasm.js": 231834,
+   "typed/rv32.js": 367451,
+   "candela/link.js": 1874,
+   "typed/rv32-inline.js": 64933,
+   "typed/rv32-loops.js": 269019,
+   "agenda/compile.js": 5525,
+   "files/compile.js": 3147,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924
+  }
+ },
+ {
+  "block": 1,
+  "arm": "control",
+  "dir": "b01-control",
+  "sha256": "1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")",
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2266168,
+    "peak": 1645712,
+    "module": 66816
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 700083,
+    "peak": 1197360,
+    "module": 66364
+   },
+   "files": {
+    "status": "ok",
+    "us": 443383,
+    "peak": 983620,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3198556,
+    "peak": 3042388,
+    "module": 242124
+   },
+   "chess": {
+    "status": "ok",
+    "us": 3940046,
+    "peak": 3024512,
+    "module": 274892
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13640,
+   "typed/wasm.js": 231834,
+   "typed/rv32.js": 474091,
+   "candela/link.js": 1874,
+   "agenda/compile.js": 5525,
+   "files/compile.js": 3147,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924
+  }
+ },
+ {
+  "block": 2,
+  "arm": "control",
+  "dir": "b02-control",
+  "sha256": "1f99bf386f64a3ddab527c9d60dc0cfbfd66f060c86ee34f734cfeeeb3cf4ec6",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")",
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2265687,
+    "peak": 1645712,
+    "module": 66816
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 699420,
+    "peak": 1197360,
+    "module": 66364
+   },
+   "files": {
+    "status": "ok",
+    "us": 443280,
+    "peak": 983620,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3198189,
+    "peak": 3042388,
+    "module": 242124
+   },
+   "chess": {
+    "status": "ok",
+    "us": 3939476,
+    "peak": 3024512,
+    "module": 274892
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13640,
+   "typed/wasm.js": 231834,
+   "typed/rv32.js": 474091,
+   "candela/link.js": 1874,
+   "agenda/compile.js": 5525,
+   "files/compile.js": 3147,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924
+  }
+ },
+ {
+  "block": 2,
+  "arm": "candidate",
+  "dir": "b02-candidate",
+  "sha256": "6822ac03de7b6bb3e27176b2258d9395cb5ea61d5e9a6ed4530bfc1bfb325be1",
+  "healthy": false,
+  "error": "RuntimeError(\"painter {'sources': 0, 'compiles': 0, 'installed': False, 'packets': 0, 'calls': 0, 'paints': 0, 'rejects': 0, 'compile_us': 0, 'relocate_us': 0, 'native_us': 0, 'raster_us': 0, 'image_bytes': 0}\")",
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2448113,
+    "peak": 1693644,
+    "module": 66816
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 713964,
+    "peak": 1056048,
+    "module": 66364
+   },
+   "files": {
+    "status": "ok",
+    "us": 483340,
+    "peak": 1028240,
+    "module": 24424
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3218908,
+    "peak": 2900560,
+    "module": 242124
+   },
+   "chess": {
+    "status": "ok",
+    "us": 3998911,
+    "peak": 2906472,
+    "module": 274892
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 13642,
+   "typed/wasm.js": 231834,
+   "typed/rv32.js": 367451,
+   "candela/link.js": 1874,
+   "typed/rv32-inline.js": 64933,
+   "typed/rv32-loops.js": 269019,
+   "agenda/compile.js": 5525,
+   "files/compile.js": 3147,
+   "typed/async.js": 166436,
+   "typed/world.js": 9924
+  }
+ }
+]

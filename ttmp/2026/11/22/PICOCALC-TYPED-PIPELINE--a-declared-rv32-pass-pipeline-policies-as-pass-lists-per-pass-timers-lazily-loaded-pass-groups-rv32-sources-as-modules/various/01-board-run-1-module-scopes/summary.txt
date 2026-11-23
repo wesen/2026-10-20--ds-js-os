@@ -1,0 +1,9 @@
+| App | control s | candidate s | paired Δ s (per block) | 75 % of deadline | control peak KB | candidate peak KB | paired Δ KB |
+|---|---:|---:|---|---:|---:|---:|---:|
+| agenda | 0.700 | 0.714 | +0.015, +0.014, +0.015 | 1.27 | 1169 | 1031 | -138, -138, -138 |
+| editor | 3.198 | 3.219 | +0.021, +0.020, +0.021 | 4.50 | 2971 | 2833 | -139, -139, -139 |
+| files | 0.443 | 0.484 | +0.040, +0.040, +0.040 | 1.27 | 961 | 1004 | +44, +44, +44 |
+| chess | 3.939 | 3.999 | +0.060, +0.060, +0.059 | 4.50 | 2954 | 2838 | -115, -115, -115 |
+| candela | 2.266 | 2.448 | +0.184, +0.181, +0.182 | | 1607 | 1654 | +47, +47, +47 |
+control bytecode cache: {"typed/tape.js": 13640, "typed/wasm.js": 231834, "typed/rv32.js": 474091, "candela/link.js": 1874, "agenda/compile.js": 5525, "files/compile.js": 3147, "typed/async.js": 166436, "typed/world.js": 9924}
+candidate bytecode cache: {"typed/tape.js": 13642, "typed/wasm.js": 231834, "typed/rv32.js": 367451, "candela/link.js": 1874, "typed/rv32-inline.js": 64933, "typed/rv32-loops.js": 269019, "agenda/compile.js": 5525, "files/compile.js": 3147, "typed/async.js": 166436, "typed/world.js": 9924}

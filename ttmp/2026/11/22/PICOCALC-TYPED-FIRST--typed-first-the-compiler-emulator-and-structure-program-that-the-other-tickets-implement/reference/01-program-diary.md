@@ -153,3 +153,138 @@ The playable build at `bf30d31` is installed and recorded. SPLIT-FILES is merged
 
 - **Long files left alone:** the two `compositor.js` files and `agent.js` (a QuickJS world loads one file), and `sdk/typed/world.c` and `agent_p4.c` (compiled from APP-MANIFEST's lists). They have tasks in its ticket.
 - **PaperS3 links fail before and after.** `native.c` was never in its CMake list, and the host build is missing `port_net_*` and `port_tz_set`.
+
+## Step 5: APP-MANIFEST and FRONTEND merged; the board and its record disagreed; wave 3
+
+Wave 1 is now fully merged (TAPE, CONFORMANCE, SPLIT-FILES, APP-MANIFEST), and so is the first wave-2 ticket (FRONTEND). APP-MANIFEST's merge had six conflicts. ASYNC-TAPE and AGENDA-TYPED-WORLD are unblocked and started. A probe showed that the board was not running the image `PLAYABLE.json` recorded.
+
+### What I did
+
+- **APP-MANIFEST merge** (`c8b5846`). Six conflicts:
+  - `firmware/nucleus/kernel.c`. SPLIT-FILES had moved the boot section (`kernel_init`, `add_world`, `kernel_boot`) to `kernel_supervision.c`. I kept that layout and carried APP-MANIFEST's manifest fallback (a world whose compiled file is missing runs its `"fallback"` JS) into `kernel_supervision.c`'s `add_world`. APP-MANIFEST's removal of the Agenda boot hooks merged cleanly; `grep` finds no `p4_agenda_` left in the nucleus.
+  - `firmware/port/esp32p4/main/CMakeLists.txt`. I took APP-MANIFEST's structure (the `cmake/*.cmake` includes, 96 lines) and kept SPLIT-FILES' split nucleus sources, minus the benchmarks APP-MANIFEST moved out (`raybench_p4.c`, `perf_p4.c`). `typed/tape.js` joined `TYPED_COMPILER` in `cmake/typed-apps.cmake`.
+  - `firmware/port/esp32p4/main/typed_p4.c`. Took APP-MANIFEST's rewritten eval chain; `typed/tape.js` is evaluated before `typed/wasm.js`. TAPE's 12-entry bytecode cache survived.
+  - `firmware/Makefile`. SPLIT-FILES' `../tests/native/` paths plus APP-MANIFEST's new fallback test, which I moved to `tests/native/` with `git mv`. It imports its harness from `test_fs_native.py` next to it.
+  - `firmware/README.md` and `tools/trace-repl/README.md`. Kept both sides' edits.
+  - Also removed the `main/CMakeLists.txt` entry from the file-length exceptions.
+- **A test broken by the merge.**
+
+  ```
+  Error: ENOENT: no such file or directory, open '…/apps/typed/editor/source.list'
+  ```
+
+  TAPE's tape-coverage test assembled units from `source.list`, which APP-MANIFEST replaced with `app.json`'s `sources`. The test now reads `app.json`. After the fix, `make test` exit 0, and the gates pass (both policies; digests and counts as before; 24/24).
+- **FRONTEND merge.** Clean. `make test` exit 0; gates pass.
+- **Wave 3.**
+  - Started ASYNC-TAPE (needs TAPE and FRONTEND) and AGENDA-TYPED-WORLD (needs APP-MANIFEST).
+  - Sent PIPELINE the new bundle wiring (`TYPED_COMPILER`, the `app.json` compiler modules, FRONTEND's kept fifth parameter).
+  - BITWISE waits for PIPELINE, because it edits the RV32 emitters PIPELINE is restructuring.
+- **Firmware.** Started a build of the playable profile at the FRONTEND merge, its install with `--peripherals off-by-user`, and the gallery's digest check.
+
+### What didn't work
+
+- **The probe.** `python3 bench/board/run.py --probe` failed at `esptool.py … verify_flash 0x10000 …/1f99bf38…/picocalc-os-p4.bin` (exit status 2). APP-MANIFEST's last step was `make restore-playable` in its worktree, whose `PLAYABLE.json` still named `f8f36bd1`. So it overwrote the `1f99bf38` I had installed and recorded in Step 4.
+  - **Lesson:** "restore the playable image" in a worktree restores that branch's record, not `main`'s.
+  - **Fix for the remaining briefs:** pass the restore target explicitly, or tell agents to merge `main` first. The current briefs say "restore the playable image"; ASYNC-TAPE and AGENDA-TYPED-WORLD start from a `main` whose record is replaced by this step's install, so theirs will also be stale. I'll check the board after each ticket with `--probe`.
+- **The keyboard.** APP-MANIFEST saw it work with peripherals on at the start of its board session, then fail on every transfer, on the old image as well. That fits the keyboard controller wedging after resets of only the ESP32, a failure noted in earlier tickets. Not debugged. The handheld needs a power cycle by a person.
+
+## Step 6: The playable image at 6195cab installed, the gallery checked, the keyboard back
+
+The playable image built at `6195cab` (`10695eee…`) is installed and recorded. The gallery agrees with the reference on all 18 scenes. Health passes with the peripherals on, because the user reset the keyboard.
+
+### Prompt Context
+
+**User messages (verbatim, mid-step):** "i reset the keyboard i think" and "feel free to always leave the latest firmware on there".
+
+### What I did
+
+- **Build, install and gallery check.** `make playable` at `6195cab` (the FRONTEND merge), then `playable.py install … --peripherals off-by-user`. The image was written and verified, but health failed on the painter:
+
+  ```
+  RuntimeError: painter {'sources': 0, 'compiles': 0, 'installed': False, …}
+  ```
+
+  With peripherals off, `device.health` checks the painter immediately, before Chess has delivered its source; APP-MANIFEST reported the same. `bench/board/gallery.py` on that boot: 18/18 scenes agree (`various/04-gallery-6195cab`).
+- **Health rerun with peripherals off.** `--health-only --peripherals off-by-user`, minutes later: passed (`various/05-…`).
+- **Health rerun with peripherals on.** After the user's keyboard reset, `--health-only --peripherals on`: passed, with every world healthy, the painter installed and the keyboard answering (`various/06-…`). `PLAYABLE.json` now records commit `6195cab`, dirty false, app `10695eee…`, peripherals on.
+
+### What I learned
+
+- **Keyboard state.** The keyboard's wedged I2C cleared with a reset by a person; it was not switched off. While wedged, every transfer errored with NACK.
+
+### What should be done in the future
+
+- **The painter check with peripherals off.** `device.health(…, "off-by-user")` should wait for the painter, as the peripherals-on branch does. It is a small fix in `bench/board/device.py`; I'll do it at the next idle point.
+
+## Step 7: The black screen, and ASYNC-TAPE merged
+
+The user reported a black display. The cause was the screen's on/off state, not a fault. ASYNC-TAPE came back no-go on its main idea, with a useful cleanup, and is merged.
+
+### Prompt Context
+
+**User messages (verbatim):** "i don't see anything on the display though, is that normal?"; "sorry i was messing with the keys, maybe t was showing a black screen or so? maybe there's nothing in the gallery?"; "it flashed and work in whatever you did in the previous turn a minute ago. now it's black again".
+
+### What I did
+
+- **Bus statistics** (`buses`):
+  - i2c0: 1,048 transfers, 0 errors, so the keyboard was fine.
+  - spi2: 246 transfers since boot, unchanged across my capture.
+- **Framebuffer capture** (`shot`): the launcher, not black. The compositor was drawing, but nothing was going to the panel.
+- **Looked for a screen-off timer.** There is none. `apps/js/picocalc/drivers/power.js` turns the backlight to 0 when the compositor sends `screen`, and the compositor sends that only on the power key (`compositor.js:591`). A power-key press among the user's key presses would turn the screen off.
+- **Pressed the power key** with `key power` on the console. spi2 went from 246 to 630 transfers, so frames reach the panel again.
+- **Asked the user to confirm.** If it is very dim, the STM32 reset may have reset the backlight register.
+- **ASYNC-TAPE merge.**
+  - Clean merge. Both generated bundles check current.
+  - `make test` exit 0; the gates pass with both policies (digests and counts as before; 24/24).
+  - I accepted its compile-peak deviation: +8,160 B in the RV32 backend's final assembly, which the ticket did not touch; +0.14 % absolute. The agent's control showed that adding small dead functions to the base compiler moves the same metric by 4–12 KB.
+
+### What didn't work
+
+- **Querying the power driver.** `send power screen {}` returned `unknown command send (try help)`. The playable profile doesn't build the console's `send` command, so I couldn't read the power driver's state directly.
+
+### What I learned
+
+- **Silent SPI means a dark or idle panel.** A framebuffer capture shows what the compositor drew, not what the panel shows. When the spi2 transfer count doesn't move, the panel isn't being updated, or the screen is off.
+- **ASYNC-TAPE's no-go reasons** (details in its design doc's Study section):
+  - Editor's layout is already minimal (57 declared + 13 lowered fields).
+  - A tape-level lowering would rebuild the control tree the statement skeleton already has, and would need binding names the tape doesn't carry.
+  - Streaming still needs a whole-program pre-pass.
+  - Text generation is about 6 % of the rewrite on the device.
+- **What ASYNC-TAPE delivered instead:**
+  - `compiler/typed/async/` modules, bundled back into one file.
+  - Errors mapped to source positions without a second compile.
+  - A real async test with 18 diagnostics checked on both targets.
+
+## Step 8: PIPELINE merged; REGISTERS and BITWISE started
+
+PIPELINE came back with byte-identical output. Two lazily loaded pass groups cut the compiler's peak heap by 122–157 KB for the boot apps that use them, and cost 15–96 ms of boot compile on the P4, for a reason not yet found. I merged it and started REGISTERS and BITWISE.
+
+### What I did
+
+- **Merged PIPELINE.** Clean merge; all three generated bundles check current. `make test` exit 0. `gates.sh` default and `kernel`: ray `430f0d501659`, Chess 6,981 words, 24/24 replays.
+- **Started REGISTERS and BITWISE in parallel.** Both touch `rv32/emit` and `rv32/encoding`. REGISTERS keeps its table additive, and BITWISE keeps its emitter cases local.
+- **Started a playable build, install and gallery check** at the PIPELINE merge.
+
+### Why I accepted the slowdown
+
+PIPELINE's paired board study (3 blocks):
+
+| App | Compile, control → candidate | Peak heap |
+|---|---|---|
+| Agenda | 0.700 → 0.715 s | −149 KB |
+| Editor | 3.219 → 3.237 s | −157 KB |
+| Files | 0.447 → 0.471 s | +34 KB |
+| Chess | 3.920 → 4.016 s | −122 KB |
+
+- Every app stays within 75 % of its deadline. Chess is closest, at 4.016 s against 4.50 s.
+- Memory is the scarcer resource for boot apps (a 768 KiB world allowance; Editor's compile peak is near its cap), so the heap saving is worth the time.
+- The slowdown happens only on the device: callgrind counts are equal on the host. It is recorded as an open question in PIPELINE's ticket, with suspects: memory placement, evaluating the group inside the compile, the emitter's prototype mixins.
+
+### What warrants a second pair of eyes
+
+- **Chess's deadline margin is 0.48 s.** Any later compile-time growth for Chess must be measured against it.
+- **Files loads both pass groups.** Moving `split` into the core would save its 34 KB.
+
+### Milestone 1 status
+
+Vault report 1 (the compiler's new architecture) waits for REGISTERS and BITWISE. TAPE, FRONTEND, PIPELINE and ASYNC-TAPE are merged.

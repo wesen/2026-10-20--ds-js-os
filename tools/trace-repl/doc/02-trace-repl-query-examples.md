@@ -1092,8 +1092,9 @@ trace-repl eval --session "$sid" < tools/trace-repl/examples/23-files-at-revisio
 ```js
 // Repository files now and at a commit: digests, sizes and a directory listing, without leaving the session.
 (() => {
-  // The backend moved from picocalc-os/compiler/rv32 to compiler/typed/rv32 (PICOCALC-REPO-LAYOUT); 2a5be8f has the old path.
-  const path = "compiler/typed/rv32/60-policies.js", old = "picocalc-os/compiler/rv32/60-policies.js";
+  // The backend moved from picocalc-os/compiler/rv32 to compiler/typed/rv32 (PICOCALC-REPO-LAYOUT); 2a5be8f has the old
+  // path. PICOCALC-TYPED-PIPELINE turned 60-policies.js into policy.js (policies as pass lists).
+  const path = "compiler/typed/rv32/policy.js", old = "picocalc-os/compiler/rv32/60-policies.js";
   const now = repo.read(path), then = repo.show("2a5be8f", old);
   return {path, worktree: {sha256: now.sha256, bytes: now.bytes}, at2a5be8f: {path: old, revision: then.revision, sha256: then.sha256, bytes: then.bytes},
           same: now.sha256 === then.sha256, sources: repo.list("compiler/typed/rv32").map(e => e.name)};
@@ -1102,31 +1103,28 @@ trace-repl eval --session "$sid" < tools/trace-repl/examples/23-files-at-revisio
 
 ```json
 {
-  "path": "compiler/typed/rv32/60-policies.js",
-  "worktree": {"sha256": "313c0c4a…", "bytes": 3893},
+  "path": "compiler/typed/rv32/policy.js",
+  "worktree": {"sha256": "44e44272…", "bytes": 6036},
   "at2a5be8f": {"path": "picocalc-os/compiler/rv32/60-policies.js", "revision": "2a5be8f7…", "sha256": "313c0c4a…", "bytes": 3893},
-  "same": true,
+  "same": false,
   "sources": [
-    "00-encoding.js",
-    "10-function-code.js",
-    "11-leaf-code.js",
-    "20-inline-and-commute.js",
-    "30-version-loops.js",
-    "31-split-locals.js",
-    "40-ranges.js",
-    "41-value-sets.js",
-    "42-conjunctions-and-rotation.js",
-    "43-inline-candidate.js",
-    "50-planner.js",
-    "60-policies.js",
-    "70-compile.js",
     "README.md",
-    "build.mjs"
+    "analysis",
+    "build.mjs",
+    "compile.js",
+    "emit",
+    "encoding",
+    "index.js",
+    "link.js",
+    "package.json",
+    "passes",
+    "plan",
+    "policy.js"
   ]
 }
 ```
 
-The SHA-256 is the same at `2a5be8f` and in the working tree. `repo.show` resolves the revision to a full commit SHA, and `repo.list` reads a directory. Paths may not leave the repository, even through a symlink.
+The policy table changed: PICOCALC-TYPED-PIPELINE made each policy a list of passes. `repo.show` resolves the revision to a full commit SHA, and `repo.list` reads a directory. Paths may not leave the repository, even through a symlink.
 
 ### 24. Save a result with its provenance
 

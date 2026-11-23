@@ -7,7 +7,7 @@ function emitInspection(inspect, event) {
     try {
         inspect.emit(event);
     } catch (error) {
-        // Async syntax recovery should see compiler diagnostics only.
+        // compileFunctions rethrows the observer's own error, never as a compiler diagnostic.
         throw new InspectionCallbackError(error);
     }
 }

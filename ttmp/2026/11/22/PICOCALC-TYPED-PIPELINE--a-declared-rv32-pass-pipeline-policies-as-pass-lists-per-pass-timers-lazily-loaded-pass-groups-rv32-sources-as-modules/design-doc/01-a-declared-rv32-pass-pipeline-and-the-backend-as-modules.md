@@ -64,3 +64,37 @@ Long files: `10-function-code.js` (659), `30-version-loops.js` (520), `70-compil
 - **Moves and deletes** go through checked Python scripts in the ticket's `scripts/` (dry run, asserted counts), never shell one-liners.
 - **Diary.** Each ticket keeps `reference/01-diary.md` in the investigation format (Prompt Context, What I did, Why, What worked, What didn't work with exact errors, What I learned, What was tricky, What warrants a second pair of eyes, Future work, Code review instructions, Technical details), one step per milestone, with commit hashes.
 - **Commits** are focused, at validated boundaries, with the trailer `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
+
+## Refinements (2026-11-22)
+
+Checked against the code at `bf30d31` and changed while implementing (diary steps 1-6):
+
+- **Pass list.** The tape passes are `inline, commute, conjunctions, sets, rotate, ranges, version, hoist, induction,
+  split, facts`, in that fixed order (`rv32/passes/registry.js`). `hoist` and `induction` are options of `version`
+  (`kind: "option"`, no stage of their own); `ranges` and `facts` are analyses (the old `select.facts` was both).
+  `version` needs `rotate`, `facts` needs `ranges`. `select` keeps only the emitter's switches (`immediates`,
+  `divisions`, `branches`, `results`, `leafParams`, `shortBranches`, `loadHomes`) and `operandLocations` only the
+  planner's; `split` is a pass. The emitter's one dependency on a pass (`select.version` in `FunctionCode.step`)
+  became `emitter.versioned`.
+- **Not tape passes.** The guarded-return summary (`inlineGuardedReturns`), the PIE lowering (`pieLoops`) and the
+  `"inline"` observeTape checkpoint (observed even without inlining, as before) stay stages driven by options,
+  between `inline` and the rest, so every observed tape is unchanged.
+- **Overrides.** `passes` replaces the list; `enable`/`disable` edit it by name (an added pass takes its pipeline
+  position). A `select` or `operandLocations` key that is now a pass, or a boolean `inline`, is refused with a message
+  naming the pass. No compatibility layer (the run-15 study JSON and the tests were rewritten).
+- **Pass hooks.** A pass has `setup(unit)` (per compile: the inliner's limits and library), `start` (hoist's
+  storeless answer, on the untransformed tape), `run`, and `finish` (the inliner's library candidate after
+  emission, timed as `candidate`).
+- **Timers.** `options.timing` rows are `{fn, pass, ms, cells}` per stage, including `leaf`, `plan`, `emit`; one
+  `{fn: null, pass: "compile"}` row; `options.clock` overrides the clock (tests use a counter).
+- **Modules and bundles.** Layout as designed, plus `index.js` (core entry), `emit/mixin.js` (FunctionCode's six
+  method groups, mixed into one flat prototype), `analysis/storeless.js`, `passes/inline-group.js` and
+  `passes/loops-group.js`. `10-function-code.js` became `emit/function-code.js` (232 lines) and six method files;
+  `30-version-loops.js` became `passes/version-loops.js` and `passes/hoist.js`. The bundler scope-hoists each bundle
+  (a function scope per module made the QuickJS bytecode 48 % larger).
+- **Lazy groups: two, not one.** `typed-rv32.js` (core), `typed-rv32-inline.js` (`inline`, `commute`, `rotate`:
+  what `balanced` adds) and `typed-rv32-loops.js` (the rest). The compiler asks for a missing group through
+  `globalThis.typedRv32Load(file)`; `typed_p4.c` defines it over its bytecode cache, so the firmware decides nothing
+  by policy name and an explicit override loads what it needs. Host loaders load all three.
+- **Tests.** `tests/compiler/typed-rv32.test.mjs` was split (four files and `rv32-helpers.mjs`) to drop its
+  file-length exception.
