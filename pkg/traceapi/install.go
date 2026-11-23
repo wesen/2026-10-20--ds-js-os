@@ -2,16 +2,38 @@
 package traceapi
 
 import (
-	_ "embed"
+	"embed"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/dop251/goja"
 	"github.com/go-go-golems/picocalc-trace/pkg/tracearchive"
 )
 
-//go:embed query.js
-var library string
+//go:embed query/*.js
+var queryFiles embed.FS
+
+// library is the query language: the files in query/, in file-name order, inside one function that receives the
+// global object and the bridge. They share that function's scope (each uses names the others declare), as
+// compiler/typed/rv32/*.js share typed-rv32.js's.
+var library = func() string {
+	entries, err := queryFiles.ReadDir("query")
+	if err != nil {
+		panic(err)
+	}
+	var b strings.Builder
+	b.WriteString("(function (root, bridge) {\n  'use strict';\n")
+	for _, e := range entries {
+		text, err := queryFiles.ReadFile("query/" + e.Name())
+		if err != nil {
+			panic(err)
+		}
+		b.Write(text)
+	}
+	b.WriteString("})(typeof globalThis !== 'undefined' ? globalThis : this, typeof __trace !== 'undefined' ? __trace : undefined);\n")
+	return b.String()
+}()
 
 // Install binds one session's query functions to the shared read-only archive.
 // It must finish before the VM evaluates user input and must not race with any

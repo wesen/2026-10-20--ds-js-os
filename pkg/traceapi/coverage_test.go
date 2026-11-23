@@ -9,7 +9,7 @@ import (
 	"github.com/dop251/goja"
 )
 
-// These tests pin the integration of query.js with the archive's actual bytes:
+// These tests pin the integration of query/*.js with the archive's actual bytes:
 // normalized index headers, loop-pass scopes that name only a header block,
 // and dump ranges that end with the next pass's announcement.
 

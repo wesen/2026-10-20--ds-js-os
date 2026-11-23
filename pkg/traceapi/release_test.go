@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// Release-integration checks for the merged query.js (release.js). Each script returns "ok" or a
+// Release-integration checks for the merged query library (query/*.js) (release.js). Each script returns "ok" or a
 // diagnostic string, so the comparison works whatever value() returns (an exported value or a JS value).
 func TestReleaseIntegration(t *testing.T) {
 	vm := session(t, loadArchive(t))

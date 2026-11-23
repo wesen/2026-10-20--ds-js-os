@@ -26,7 +26,6 @@ apps/typed/agenda/wasm-world.c -- PICOCALC-AGENDA-TYPED-WORLD
 firmware/port/esp32p4/main/CMakeLists.txt -- PICOCALC-TYPED-APP-MANIFEST
 
 # Being split by PICOCALC-SPLIT-FILES
-pkg/traceapi/query.js -- PICOCALC-SPLIT-FILES
 firmware/nucleus/vm.c -- PICOCALC-SPLIT-FILES
 firmware/nucleus/kernel.c -- PICOCALC-SPLIT-FILES
 firmware/nucleus/vm_mqjs.c -- PICOCALC-SPLIT-FILES

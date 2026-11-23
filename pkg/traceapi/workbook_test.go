@@ -154,7 +154,7 @@ func jsonLeaves(v any, nums *[]float64, bools *[]bool, texts *[]string) {
 	}
 }
 
-// TestWorkbookExamples needs the sibling's pkg/traceapi/query.js. It evaluates
+// TestWorkbookExamples needs the sibling's pkg/traceapi/query/*.js. It evaluates
 // each example in one persistent session of the served product, as an agent
 // would, after the workbook's common bindings.
 func TestWorkbookExamples(t *testing.T) {
