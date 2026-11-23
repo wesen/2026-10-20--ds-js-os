@@ -271,3 +271,55 @@ host-side work. main now has PICOCALC-BOARD-HARNESS merged ... Merge main before
 
 ### Technical details
 - Cache policy: 2 entries per (app, label), 4 MB budget, 1 MB reserve, `/files/.cache/typed`.
+
+## Step 4: Merging TYPED-VALUES, and the gallery file over 500 lines
+
+While the board stayed paused, main gained PICOCALC-TYPED-VALUES (a large compiler change: `typed-wasm.js`,
+`typed-rv32.js`, both pass groups, `tape.js`, and `typed_lex_index.c`). I merged it so the board session measures the
+compiler that will ship. Every one of those files is a key input, so every cache key changes with this merge, as the
+design intends. The merged tree failed one check, the 500-line limit on `candela_gallery_p4.c`; I moved the Typed
+arm's load policy into `candela_typed_p4.c`, and all host gates pass again.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1.
+**Assistant interpretation:** Keep the branch current with main before the board session; keep the gates green.
+**Inferred user intent:** The device results describe the firmware the coordinator will merge and install.
+**Commit (code):** 6b04e21 — "merge main (TYPED-VALUES) into PICOCALC-COMPILE-CACHE"; b17e811 — "refactor(gallery): the
+Typed arm's load policy lives in candela_typed_p4.c"; also 3f622d2 (I/O helper stack 8 KB, like the fs worker's).
+
+### What I did
+- `git merge main` (514b8e8). Rebuilt `/tmp/picocalc-compile-cache-dev2` (6,780,304 bytes at 6b04e21).
+- `scratchpad/all_gates.sh m2`: `make test`, `make test-host`, `make test-host OPTIONS='{"policy":"kernel"}'`.
+- Moved `arm_now`'s load, the caption and the state names behind `cgt_ready_now`, `cgt_poll`, `cgt_caption`,
+  `cgt_state_name` (`candela_typed_p4.c`, `candela_gallery.h`); `candela_gallery_p4.c` is 493 lines.
+- Rebuilt: app `f8d8d1c5d49cb15789b65a7a9c7b82ce61dfeb1dc2e0337ce3fdac07769b36d4` at b17e811, clean tree. `make test` again.
+
+### Why
+- No exception for the file: the limit exists to keep files to one concern, and the load policy belongs with the arm.
+
+### What worked
+- `make test-host`: ray `430f0d501659`, 6,981 words, 25/25; with `kernel`: `430f0d501659`, 6,981 words, 25/25.
+- `make test` (after the refactor): exit 0.
+
+### What didn't work
+- `make test` after the merge: `firmware/port/esp32p4/main/candela_gallery_p4.c: 510 lines, over 500; split it, or
+  list it in tools/file-length-exceptions.txt with a reason` (`make: *** [Makefile:41: test-generated] Error 1`).
+
+### What I learned
+- A compiler merge invalidates every entry at once; with two generations kept per app and source, the previous
+  firmware's entries survive one such update.
+
+### What was tricky to build
+- N/A
+
+### What warrants a second pair of eyes
+- N/A
+
+### What should be done in the future
+- The board session, still waiting for the power cycle (lock free, main's program diary unchanged).
+
+### Code review instructions
+- `candela_typed_p4.c` from `cgt_state` down.
+
+### Technical details
+- N/A
