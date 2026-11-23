@@ -1,10 +1,10 @@
 {
   "profile": "playable",
-  "commit": "46f57c0",
+  "commit": "209af25",
   "dirty": false,
   "app": {
     "file": "picocalc-os-p4.bin",
-    "sha256": "507a7064d0861fbabc5cfbdabaca38480c338ea8a248b58432f9d3ce7bf2ea8d"
+    "sha256": "54cfa09beef3d121fcb29739045c00e91b7429bf7a236be4d1198afd1f6b3b4d"
   },
   "partitionTable": {
     "sha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
@@ -12,7 +12,7 @@
   "bootloader": {
     "sha256": "8fddc159afedd2b5e83bb529ff872a35520d2a574fa51b4840e03bcd6f3b86a1"
   },
-  "store": "~/.cache/picocalc/firmware/507a7064d0861fbabc5cfbdabaca38480c338ea8a248b58432f9d3ce7bf2ea8d",
+  "store": "~/.cache/picocalc/firmware/54cfa09beef3d121fcb29739045c00e91b7429bf7a236be4d1198afd1f6b3b4d",
   "peripherals": "on",
   "health": {
     "judged": [
@@ -25,6 +25,13 @@
       "keyboard",
       "snake"
     ],
-    "restartingAfterSettle": []
+    "restartingAfterSettle": [],
+    "i2c0Window": {
+      "seconds": 5.24,
+      "transfers": 252,
+      "bytes": 1009,
+      "errors": 0,
+      "busyMs": 1527.13
+    }
   }
 }

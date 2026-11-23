@@ -186,3 +186,41 @@ All of it is scripted.
 ### What warrants a second pair of eyes
 
 - **The board runs the ticket's bench image `fa144453`, not playable.** After the power cycle the first step must be `make restore-playable` from main, before anything else judges health.
+
+## Step 6: CANDELA-KERNEL-CODEGEN's host work merged
+
+CANDELA-KERNEL-CODEGEN regenerated Candela with the value types, profiled the kernel and changed the compiler where the profile pointed. On the host, the kernel-bound scenes went from 1.89× to 1.41× C++. The board study waits for the power cycle. I merged the host work, since it changes only f32 functions under `kernel`, which no playable boot app uses.
+
+### What I did
+
+- **Merged `worktree-agent-a981885913a6ed2d3`** (`416e220` … `ea2b511`).
+  - Clean merge; bundles and generated files current (`regenerate.mjs --check`).
+  - `make test` exit 0; gates pass with both policies (ray `430f0d501659`, Chess 6,981 words, 25/25).
+
+### What the ticket found and changed
+
+- **The regenerated kernel was slower before any compiler change.** B-01 went from 10,279 to 11,464 instructions per sample, even with a source 302 KB instead of 372 KB.
+- **The profile pointed at the frame, not the arena.**
+  - Float arithmetic is under 7 % of instructions.
+  - The cost is frame loads and stores, register moves, and about 8 instructions of address and range check per `getF32`.
+- **Compiler changes, all limited to f32 functions under `kernel`:**
+  - an inlining budget (400 locals);
+  - the `rows` pass (one check and one base address per row, grouped by affine index);
+  - `coalesce`;
+  - float registers in call-free functions;
+  - open inlining of record results;
+  - result leaves written straight into locals.
+- **Host results** (16 rows of frame 0):
+  - kernel-bound geometric mean 1.885 → 1.410× C++;
+  - all 18 scenes 1.290 → 1.034×;
+  - the deepest stack 9,120 → 6,288 B.
+- **Checks:**
+  - E_rel ≤ 4.3e-4;
+  - Wasm vs RV32 identical on 14 scenes over 4 passes, and on 16 rows for the 4 heaviest;
+  - Typed reference digests unchanged;
+  - 84 of 84 integer digests identical.
+
+### What warrants a second pair of eyes
+
+- **The host ratio understates the device.** The baseline was 1.89× on the host and 2.49–2.79× on the P4 for the same scenes. The ≤ 1.5× kernel-bound target is only met if that gap has also narrowed. The board study decides.
+- **A merge conflict ahead.** COMPILER-DEVICE-COST, not yet merged, moved the kernel-only passes into a `typed-rv32-kernel.js` group. The new `rows` and `coalesce` passes are kernel-only, so its next merge of main must place them in that group.
