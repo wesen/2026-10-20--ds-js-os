@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Paired board study of the boot compiles over several firmware arms, installed in rotating order.
 
-usage: 09-boot-study.py --arm NAME=DIR [--arm NAME=DIR ...] --out OUT [--blocks 3]
+usage: 09-boot-study.py --arm NAME=DIR [--arm NAME=DIR ...] --out OUT [--blocks 3] [--lock-per-block]
        09-boot-study.py --summarize OUT
 
 The first arm is the control. Block b installs the arms rotated by b (ABC, BCA, CAB, ...) with
 bench/board/device.install (serial lock per install, write, verify, the boot's compiles, settle, health with
-peripherals on) and keeps each boot's UART log in OUT/bNN-ARM/. It never touches firmware/PLAYABLE.json; run
+peripherals on) and keeps each boot's UART log in OUT/bNN-ARM/. --lock-per-block holds the serial lock for a whole
+block (its installs back to back, the same steps) instead of per install, so a block's arms run in one sitting on a
+board other agents share. A keyboard bus that stops answering (the health check's I2C0 error) stops the study. It never touches firmware/PLAYABLE.json; run
 `make restore-playable` from the main checkout afterwards. The summary reads every "<app> compile source=... us=...
 peak_js_bytes=... module_bytes=..." line, the TYPEDCOMPILE line after it and the "typed compiler bytecode: PATH N
 bytes" lines, and prints per app and arm the median compile time, the peak compiler heap, the module bytes, and per
@@ -17,6 +19,7 @@ import json
 import re
 import statistics
 import sys
+import time
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[6]
@@ -92,12 +95,28 @@ def summarize(out):
     print("health:", {arm: [r["healthy"] for r in runs if r["arm"] == arm] for arm in arms})
 
 
+def install_held(device, build, out, digest):
+    """device.install's steps (hold, write, verify, boot, health with peripherals on) for a caller holding the lock."""
+    out.mkdir(parents=True, exist_ok=False)
+    with (out / "uart.log").open("wb", buffering=0) as log:
+        record = {"build": str(build), "sha256": digest, "heldBeforeFlash": device.quiesce(device.PORT, log)}
+        device.write_app(build, out, "install", device.PORT)
+        console = device.Console(device.PORT, log)
+        try:
+            record["health"] = device.health(console, "on")
+        finally:
+            console.close()
+    device.save(out / "after.json", record)
+    return record
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--arm", action="append", default=[])
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--blocks", type=int, default=3)
     p.add_argument("--summarize", action="store_true")
+    p.add_argument("--lock-per-block", action="store_true")
     a = p.parse_args()
     if a.summarize:
         return summarize(a.out)
@@ -109,19 +128,34 @@ def main():
         arm["sha256"] = device.check_build(arm["dir"])
     (a.out / "arms.json").write_text(json.dumps(arms, indent=1) + "\n")
     runs = []
-    for block in range(a.blocks):
-        order = arms[block % len(arms):] + arms[:block % len(arms)]
+
+    def block_installs(block, order):
         for arm in order:
             tag = f"b{block:02d}-{arm['arm']}"
-            print("install", tag, arm["sha256"][:12], flush=True)
+            print("install", tag, arm["sha256"][:12], time.strftime("%H:%M:%S"), flush=True)
             try:
-                record = device.install(arm["dir"], a.out / tag, "on")
+                if a.lock_per_block:
+                    record = install_held(device, arm["dir"], a.out / tag, arm["sha256"])
+                else:
+                    record = device.install(arm["dir"], a.out / tag, "on")
                 runs.append({"block": block, "arm": arm["arm"], "dir": tag, "sha256": record["sha256"], "healthy": True})
             except Exception as error:  # keep the failed boot's log; the summary reads its compile lines
                 runs.append({"block": block, "arm": arm["arm"], "dir": tag, "sha256": arm["sha256"], "healthy": False,
                              "error": repr(error)[:500]})
                 print("unhealthy:", repr(error)[:300], flush=True)
+                if "I2C0" in repr(error):
+                    (a.out / "runs.json").write_text(json.dumps(runs, indent=1) + "\n")
+                    sys.exit("the keyboard bus stopped answering: board work stops here")
             (a.out / "runs.json").write_text(json.dumps(runs, indent=1) + "\n")
+
+    for block in range(a.blocks):
+        order = arms[block % len(arms):] + arms[:block % len(arms)]
+        if a.lock_per_block:
+            with device.acquire():
+                block_installs(block, order)
+            time.sleep(5)  # let a waiting agent take the lock
+        else:
+            block_installs(block, order)
     summarize(a.out)
 
 

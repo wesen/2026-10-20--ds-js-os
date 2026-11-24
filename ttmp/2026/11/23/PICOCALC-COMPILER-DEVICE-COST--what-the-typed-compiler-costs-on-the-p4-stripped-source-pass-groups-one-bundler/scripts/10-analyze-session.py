@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Tables of the in-image session (04-typedcost-session.py OUT/rows.json), one per block of 05-session-plan.py.
 
-usage: 10-analyze-session.py OUT
+usage: 10-analyze-session.py OUT [OUT ...]   (the rows of several sessions together)
 
 Per row: total ms, load (each evaluated source's bytecode read or parse plus its top level, outside the call), the
 pass-group loads inside the call, the call without them, the teardown, the realm after loading, the compiler heap
@@ -57,8 +57,7 @@ HEAD = ("| case | n | total ms | load ms | group load in call ms | call ms | fre
 
 
 def main():
-    out = Path(sys.argv[1])
-    rows = json.loads((out / "rows.json").read_text())
+    rows = [r for out in sys.argv[1:] for r in json.loads((Path(out) / "rows.json").read_text())]
     for r in rows:
         r["p"] = phases(r)
 
