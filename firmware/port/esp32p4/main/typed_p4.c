@@ -9,138 +9,11 @@
 #include "p4.h"
 #include "typed_apps.h"
 #include "typed_cache.h"
+#include "typed_compile_heap.h"
 #include "typed_lex_index.h"
 #include "quickjs.h"
-#include "esp_heap_caps.h"
-#include "esp_cpu.h"
-#include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
-
-// QuickJS keeps small objects in 4 KB arenas that it takes from the embedder, and returns an arena the moment its last
-// object is freed. A size class whose use swings across an arena boundary therefore takes and returns the same 4 KB
-// again and again: 2,100 to 5,100 arenas in one boot compile on the host, a number that moves with whatever else the
-// realm holds (PICOCALC-COMPILER-DEVICE-COST). On the P4 each is a TLSF allocation and free in PSRAM. A compile parks
-// up to ARENA_PARKED freed arena-sized blocks and hands them out again; a parked block stays counted as live (so the
-// peak counts what the compile holds) and the runtime's teardown frees them.
-#define ARENA_MIN 3584
-#define ARENA_BLOCK 4096
-#define ARENA_PARKED 64
-
-typedef struct {
-  size_t live, peak, limit;
-  vtime_t deadline;
-  unsigned over_limit, no_psram;   // refused allocations: past the heap cap, or PSRAM had no block
-  // The calls this compile made to the port's heap (QuickJS's arenas and large blocks) and the CPU cycles inside them.
-  uint32_t mallocs, frees, reallocs, reused;
-  uint64_t heap_cycles;
-  int parked_count;
-  void *parked[ARENA_PARKED];
-} compile_heap;
-
-// Where one compile's time went, printed after it as one TYPEDCOMPILE line (outside the timed compile): each compiler
-// source it evaluated (from the bytecode cache or parsed, with the time to load the bytecode and to run the source's
-// top level), the call to the linker's entry (front end, back end and link; a pass group the back end loads is an
-// evaluation inside it), the runtime's teardown, and the calls to the port's heap with the time spent in them
-// (PICOCALC-COMPILER-DEVICE-COST).
-typedef struct {
-  char path[32];
-  bool parsed, in_call;
-  vtime_t load_us, run_us;
-  size_t live;  // the compiler heap after the evaluation
-} compile_eval;
-
-typedef struct {
-  compile_heap heap;  // first: the allocator's and the interrupt handler's opaque
-  bool in_call;
-  int evals;
-  compile_eval eval[12];
-  vtime_t before_us, setup_us, call_us, free_us;  // before: from `started` (reading the source and reactor)
-} compile_state;
-
-// QuickJS starts its cycle collector from the size the allocator reports in malloc_size (js_trigger_gc: at 1.5 times
-// the size the last collection left). Its own allocator keeps that count; a custom one must, as the worlds' does
-// (nucleus/vm.c). This one did not until PICOCALC-COMPILE-CACHE, so no compile ever collected a cycle: the gallery's
-// Typed program grew past 17.8 MB and ran PSRAM empty.
-static void account(JSMallocState *state, size_t old, size_t current) {
-  compile_heap *heap = state->opaque;
-  heap->live = heap->live - old + current;
-  if (heap->live > heap->peak) heap->peak = heap->live;
-  state->malloc_size = heap->live;
-  state->malloc_count += (current != 0) - (old != 0);
-}
-
-// A compile must not take the PSRAM the running worlds need: the gallery's Typed program, compiled beside them,
-// once left PSRAM empty and the keyboard, compositor, snake and settings worlds failed for want of memory
-// (PICOCALC-COMPILE-CACHE diary step 6). Past RESERVE_FROM bytes of live heap (no boot compile gets there), an
-// allocation that would leave less than RESERVE free is refused, and the compile fails instead.
-enum { RESERVE = 3 << 20, RESERVE_FROM = 8 << 20 };
-static bool psram_spare(compile_heap *heap, size_t size) {
-  if (heap->live < RESERVE_FROM || heap_caps_get_free_size(MALLOC_CAP_SPIRAM) >= size + RESERVE) return true;
-  heap->no_psram++;
-  return false;
-}
-
-static void *compile_malloc(JSMallocState *state, size_t size) {
-  compile_heap *heap = state->opaque;
-  bool arena = size >= ARENA_MIN && size <= ARENA_BLOCK;
-  if (arena && heap->parked_count) {
-    heap->reused++;
-    return heap->parked[--heap->parked_count];
-  }
-  if (arena) size = ARENA_BLOCK;  // every arena-sized block can serve every arena-sized request
-  if (heap->live >= heap->limit || size > heap->limit - heap->live) { heap->over_limit++; return NULL; }
-  if (!psram_spare(heap, size)) return NULL;
-  uint32_t begun = esp_cpu_get_cycle_count();
-  void *ptr = port_heap_malloc(size);
-  if (ptr) account(state, 0, port_heap_usable(ptr));
-  else heap->no_psram++;
-  heap->mallocs++;
-  heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
-  return ptr;
-}
-
-static void compile_free(JSMallocState *state, void *ptr) {
-  if (!ptr) return;
-  compile_heap *heap = state->opaque;
-  uint32_t begun = esp_cpu_get_cycle_count();
-  size_t usable = port_heap_usable(ptr);
-  if (usable >= ARENA_BLOCK && usable < ARENA_BLOCK + 64 && heap->parked_count < ARENA_PARKED) {
-    heap->parked[heap->parked_count++] = ptr;  // stays counted as live
-    heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
-    return;
-  }
-  account(state, usable, 0);
-  port_heap_free(ptr);
-  heap->frees++;
-  heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
-}
-
-static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
-  if (!ptr) return compile_malloc(state, size);
-  if (!size) { compile_free(state, ptr); return NULL; }
-  compile_heap *heap = state->opaque;
-  uint32_t begun = esp_cpu_get_cycle_count();
-  size_t old = port_heap_usable(ptr);
-  size_t retained = heap->live - old;
-  if (retained >= heap->limit || size > heap->limit - retained) { heap->over_limit++; return NULL; }
-  if (size > old && !psram_spare(heap, size)) return NULL;
-  void *next = port_heap_realloc(ptr, size);
-  if (next) account(state, old, port_heap_usable(next));
-  else heap->no_psram++;
-  heap->reallocs++;
-  heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
-  return next;
-}
-
-static const JSMallocFunctions compiler_allocator = {
-  compile_malloc, compile_free, compile_realloc, port_heap_usable,
-};
-
-static int compile_interrupt(JSRuntime *rt, void *opaque) {
-  compile_heap *heap = opaque;
-  return port_clock() >= heap->deadline;
-}
 
 // Every compile runs in a fresh runtime that evaluates the compiler's own sources, 0.41 s to
 // 0.53 s on the P4 (PICOCALC-COMPILE-BUDGET Step 3). The first runtime to evaluate a source
@@ -363,11 +236,6 @@ done:
   phase = port_clock();
   if (ctx) JS_FreeContext(ctx);
   if (rt) JS_FreeRuntime(rt);
-  while (heap->parked_count) {   // the parked arenas: freed after the runtime, counted until now
-    void *block = heap->parked[--heap->parked_count];
-    heap->live -= port_heap_usable(block);
-    port_heap_free(block);
-  }
   state.free_us = port_clock() - phase;
   const vtime_t elapsed = port_clock() - started;
   uint8_t sha[32] = {0};
@@ -375,22 +243,8 @@ done:
   printf("%s compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu sha=%02x%02x%02x%02x%02x%02x%02x%02x\n",
          app, source_kind, module ? "ok" : "failed", (long long)elapsed, heap->peak, module ? *length : 0,
          sha[0], sha[1], sha[2], sha[3], sha[4], sha[5], sha[6], sha[7]);
-  if (!module)   // why: the heap cap, PSRAM, or neither (a compile error, the deadline)
-    printf("%s compile refused_over_limit=%u refused_no_psram=%u heap_limit=%zu psram_free=%zu psram_largest=%zu\n", app,
-           heap->over_limit, heap->no_psram, heap->limit, heap_caps_get_free_size(MALLOC_CAP_SPIRAM),
-           heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
-  printf("TYPEDCOMPILE {\"app\":\"%s\",\"beforeUs\":%lld,\"setupUs\":%lld,\"callUs\":%lld,\"freeUs\":%lld,"
-         "\"heap\":{\"mallocs\":%lu,\"frees\":%lu,\"reallocs\":%lu,\"reused\":%lu,\"us\":%llu},\"evals\":[",
-         app, (long long)state.before_us, (long long)state.setup_us, (long long)state.call_us, (long long)state.free_us,
-         (unsigned long)heap->mallocs, (unsigned long)heap->frees, (unsigned long)heap->reallocs, (unsigned long)heap->reused,
-         (unsigned long long)(heap->heap_cycles / CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ));
-  for (int i = 0; i < state.evals; i++) {
-    const compile_eval *e = &state.eval[i];
-    printf("%s{\"path\":\"%s\",\"bytecode\":\"%s\",\"inCall\":%s,\"loadUs\":%lld,\"runUs\":%lld,\"liveBytes\":%zu}",
-           i ? "," : "", e->path, e->parsed ? "parsed" : "cached", e->in_call ? "true" : "false",
-           (long long)e->load_us, (long long)e->run_us, e->live);
-  }
-  printf("]}\n");
+  if (!module) compile_heap_print_refusals(app, heap);
+  compile_state_print(app, &state);
   return module;
 }
 

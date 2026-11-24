@@ -1,0 +1,18 @@
+| App | arm | median s | Δ vs control per block (ms) | Δ vs previous arm per block (ms) | load ms (outside / in call) | call s | free ms | peak KB | Δ peak KB | module bytes | % of deadline |
+|---|---|---:|---|---|---|---:|---:|---:|---:|---:|---:|
+| candela | gate1 | 2.468 |  |  | 518.1 / 133.4 | 1.779 | 21.9 | 1282 | +0 | [66816] | 30.9 |
+| candela | gate2 | 2.468 | -0.1 | -0.1 | 518.4 / 133.4 | 1.779 | 21.8 | 1282 | +0 | [66816] | 30.8 |
+| files | gate1 | 1.494 |  |  | 80.4 / 0.0 | 1.345 | 17.5 | 1414 | +0 | [243644] | 49.8 |
+| files | gate2 | 1.493 | -0.5 | -0.5 | 80.5 / 0.0 | 1.345 | 17.5 | 1414 | +0 | [243644] | 49.8 |
+| editor | gate1 | 3.484 |  |  | 170.3 / 0.0 | 3.236 | 20.3 | 2350 | +0 | [243644] | 58.1 |
+| editor | gate2 | 3.483 | -1.6 | -1.6 | 170.1 / 0.0 | 3.234 | 20.3 | 2350 | +0 | [243644] | 58.0 |
+| agenda | gate1 | 2.727 |  |  | 68.2 / 0.0 | 2.582 | 17.5 | 2042 | +0 | [243644] | 68.2 |
+| agenda | gate2 | 2.728 | +0.5 | +0.5 | 68.3 / 0.0 | 2.582 | 17.5 | 2042 | +0 | [243644] | 68.2 |
+| chess | gate1 | 4.362 |  |  | 73.8 / 4.1 | 4.198 | 22.8 | 2469 | +0 | [276412] | 72.7 |
+| chess | gate2 | 4.361 | -1.7 | -1.7 | 73.8 / 4.1 | 4.197 | 22.8 | 2469 | +0 | [276412] | 72.7 |
+| chess/painter | gate1 | 5.591 |  |  | 215.1 / 24.8 | 5.276 | 53.9 | 1362 | +0 | [33840] |  |
+| chess/painter | gate2 | 5.526 | -64.8 | -64.8 | 146.6 / 12.8 | 5.303 | 41.6 | 1362 | -0 | [33840] |  |
+gate1 bytecode cache: {"typed/tape.js": 6393, "typed/wasm.js": 60299, "typed/rv32.js": 63199, "candela/link.js": 759, "typed/rv32-inline.js": 11921, "typed/rv32-loops.js": 18968, "typed/world.js": 3536, "typed/async.js": 30895, "chess/painter/link.js": 483} total 196453
+gate2 bytecode cache: {"typed/tape.js": 6393, "typed/wasm.js": 60299, "typed/rv32.js": 63199, "candela/link.js": 759, "typed/rv32-inline.js": 11921, "typed/rv32-loops.js": 18968, "typed/world.js": 3536, "typed/async.js": 30895, "chess/painter/link.js": 483} total 196453
+health: {'gate1': [True], 'gate2': [True]}
+compiled-module cache hits (should be none): {}

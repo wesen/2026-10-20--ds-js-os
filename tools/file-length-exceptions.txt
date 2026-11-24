@@ -34,4 +34,3 @@ apps/js/picocalc/system/agent.js -- one-file QuickJS world (PICOCALC-TYPED-APP-M
 # PICOCALC-TYPED-APP-MANIFEST is rewriting, and each is one module around a block of file-scope state
 firmware/sdk/typed/world.c -- the Typed world runtime; split after PICOCALC-TYPED-APP-MANIFEST (four build lists)
 firmware/port/esp32p4/main/agent_p4.c -- Wi-Fi and HTTPS around ~20 shared statics; split after PICOCALC-TYPED-APP-MANIFEST
-firmware/port/esp32p4/main/typed_p4.c -- COMPILE-CACHE's allocator and COMPILER-DEVICE-COST's instrumentation merged together; split the compile heap and TYPEDCOMPILE out (PICOCALC-COMPILER-DEVICE-COST)

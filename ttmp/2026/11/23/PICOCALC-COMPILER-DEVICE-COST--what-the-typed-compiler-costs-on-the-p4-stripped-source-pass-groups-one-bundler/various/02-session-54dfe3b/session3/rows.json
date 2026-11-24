@@ -1,0 +1,2552 @@
+[
+ {
+  "command": "typedcost agenda 2 strip=0 park=1 flush",
+  "app": "agenda",
+  "rep": 0,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 809582379,
+  "l1iHit": 681594996,
+  "l1iMiss": 315511190,
+  "l1dHit": 240369841,
+  "l1dMiss": 131410670,
+  "l1dNextRd": 1464171,
+  "l1dNextWr": 630322,
+  "l2iHit": 13537208,
+  "l2iMiss": 115967711,
+  "l2dHit": 3663282,
+  "l2dMiss": 67443609,
+  "l2dNextRd": 732408,
+  "l2dNextWr": 272886,
+  "compile": {
+   "app": "agenda",
+   "beforeUs": 17,
+   "setupUs": 7145,
+   "callUs": 2631346,
+   "freeUs": 19623,
+   "heap": {
+    "mallocs": 1424,
+    "frees": 1360,
+    "reallocs": 1144,
+    "reused": 785,
+    "us": 73056
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 28070,
+     "runUs": 12900,
+     "liveBytes": 249008
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 270563,
+     "runUs": 8473,
+     "liveBytes": 636172
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 320848,
+     "runUs": 17710,
+     "liveBytes": 970240
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 17497,
+     "runUs": 4781,
+     "liveBytes": 980140
+    }
+   ]
+  },
+  "us": 3362361,
+  "peak": 2571476,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost agenda 2 strip=0 park=1 flush",
+  "app": "agenda",
+  "rep": 1,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 809582379,
+  "l1iHit": 558009864,
+  "l1iMiss": 265847818,
+  "l1dHit": 201319251,
+  "l1dMiss": 90466688,
+  "l1dNextRd": 1186115,
+  "l1dNextWr": 487653,
+  "l2iHit": 11917580,
+  "l2iMiss": 96912109,
+  "l2dHit": 2893720,
+  "l2dMiss": 44965912,
+  "l2dNextRd": 511344,
+  "l2dNextWr": 179661,
+  "compile": {
+   "app": "agenda",
+   "beforeUs": 18,
+   "setupUs": 7148,
+   "callUs": 2595687,
+   "freeUs": 18929,
+   "heap": {
+    "mallocs": 739,
+    "frees": 675,
+    "reallocs": 455,
+    "reused": 341,
+    "us": 27694
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1472,
+     "runUs": 12839,
+     "liveBytes": 244908
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 18016,
+     "runUs": 8051,
+     "liveBytes": 529632
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 19831,
+     "runUs": 17390,
+     "liveBytes": 883556
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 2009,
+     "runUs": 4779,
+     "liveBytes": 913936
+    }
+   ]
+  },
+  "us": 2729540,
+  "peak": 2513164,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost agenda 2 strip=1 park=1 flush",
+  "app": "agenda",
+  "rep": 0,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 809582379,
+  "l1iHit": 663472016,
+  "l1iMiss": 306340625,
+  "l1dHit": 234922200,
+  "l1dMiss": 113152755,
+  "l1dNextRd": 1405873,
+  "l1dNextWr": 591671,
+  "l2iHit": 13512803,
+  "l2iMiss": 111656428,
+  "l2dHit": 3561145,
+  "l2dMiss": 56952938,
+  "l2dNextRd": 613204,
+  "l2dNextWr": 216858,
+  "compile": {
+   "app": "agenda",
+   "beforeUs": 17,
+   "setupUs": 7122,
+   "callUs": 2621029,
+   "freeUs": 18673,
+   "heap": {
+    "mallocs": 1294,
+    "frees": 1230,
+    "reallocs": 1146,
+    "reused": 763,
+    "us": 52874
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 26944,
+     "runUs": 12631,
+     "liveBytes": 247120
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 226495,
+     "runUs": 8755,
+     "liveBytes": 465180
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 276075,
+     "runUs": 18256,
+     "liveBytes": 644872
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 16759,
+     "runUs": 4688,
+     "liveBytes": 653644
+    }
+   ]
+  },
+  "us": 3260399,
+  "peak": 2224288,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost agenda 2 strip=1 park=1 flush",
+  "app": "agenda",
+  "rep": 1,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 809582379,
+  "l1iHit": 548540089,
+  "l1iMiss": 272677601,
+  "l1dHit": 199292803,
+  "l1dMiss": 87709413,
+  "l1dNextRd": 1096656,
+  "l1dNextWr": 466668,
+  "l2iHit": 11897707,
+  "l2iMiss": 100365049,
+  "l2dHit": 2733401,
+  "l2dMiss": 43772031,
+  "l2dNextRd": 488152,
+  "l2dNextWr": 163109,
+  "compile": {
+   "app": "agenda",
+   "beforeUs": 22,
+   "setupUs": 7133,
+   "callUs": 2624391,
+   "freeUs": 18370,
+   "heap": {
+    "mallocs": 615,
+    "frees": 551,
+    "reallocs": 455,
+    "reused": 324,
+    "us": 27526
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1170,
+     "runUs": 12564,
+     "liveBytes": 243028
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 8312,
+     "runUs": 8170,
+     "liveBytes": 362784
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 9346,
+     "runUs": 17595,
+     "liveBytes": 558284
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 2008,
+     "runUs": 4586,
+     "liveBytes": 583440
+    }
+   ]
+  },
+  "us": 2737063,
+  "peak": 2178580,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost agenda 2 strip=2 park=1 flush",
+  "app": "agenda",
+  "rep": 0,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 809582379,
+  "l1iHit": 645505661,
+  "l1iMiss": 314700819,
+  "l1dHit": 231338494,
+  "l1dMiss": 110138672,
+  "l1dNextRd": 1344835,
+  "l1dNextWr": 556390,
+  "l2iHit": 13514699,
+  "l2iMiss": 115901302,
+  "l2dHit": 3410592,
+  "l2dMiss": 55270390,
+  "l2dNextRd": 593020,
+  "l2dNextWr": 206979,
+  "compile": {
+   "app": "agenda",
+   "beforeUs": 16,
+   "setupUs": 7135,
+   "callUs": 2654934,
+   "freeUs": 17835,
+   "heap": {
+    "mallocs": 1191,
+    "frees": 1127,
+    "reallocs": 1108,
+    "reused": 549,
+    "us": 48936
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 24439,
+     "runUs": 12801,
+     "liveBytes": 255292
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 197251,
+     "runUs": 8468,
+     "liveBytes": 459236
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 239995,
+     "runUs": 17538,
+     "liveBytes": 604936
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 12965,
+     "runUs": 4532,
+     "liveBytes": 605488
+    }
+   ]
+  },
+  "us": 3221165,
+  "peak": 2155724,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost agenda 2 strip=2 park=1 flush",
+  "app": "agenda",
+  "rep": 1,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 809582379,
+  "l1iHit": 550612521,
+  "l1iMiss": 262027230,
+  "l1dHit": 199319159,
+  "l1dMiss": 84303226,
+  "l1dNextRd": 1161718,
+  "l1dNextWr": 469914,
+  "l2iHit": 12037785,
+  "l2iMiss": 94563164,
+  "l2dHit": 2871941,
+  "l2dMiss": 41544509,
+  "l2dNextRd": 468462,
+  "l2dNextWr": 157663,
+  "compile": {
+   "app": "agenda",
+   "beforeUs": 22,
+   "setupUs": 7145,
+   "callUs": 2596658,
+   "freeUs": 17143,
+   "heap": {
+    "mallocs": 585,
+    "frees": 521,
+    "reallocs": 455,
+    "reused": 358,
+    "us": 27808
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1098,
+     "runUs": 12583,
+     "liveBytes": 251196
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 6807,
+     "runUs": 8203,
+     "liveBytes": 332276
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 7262,
+     "runUs": 17292,
+     "liveBytes": 477976
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 991,
+     "runUs": 3810,
+     "liveBytes": 490816
+    }
+   ]
+  },
+  "us": 2702412,
+  "peak": 2106464,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost files 2 strip=0 park=1 flush",
+  "app": "files",
+  "rep": 0,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3044432603,
+  "l1iHit": 420740438,
+  "l1iMiss": 185868592,
+  "l1dHit": 147265425,
+  "l1dMiss": 94831122,
+  "l1dNextRd": 1006024,
+  "l1dNextWr": 449309,
+  "l2iHit": 7905701,
+  "l2iMiss": 68447488,
+  "l2dHit": 2596657,
+  "l2dMiss": 48931318,
+  "l2dNextRd": 522643,
+  "l2dNextWr": 210759,
+  "compile": {
+   "app": "files",
+   "beforeUs": 14,
+   "setupUs": 7194,
+   "callUs": 1374693,
+   "freeUs": 19606,
+   "heap": {
+    "mallocs": 1240,
+    "frees": 1176,
+    "reallocs": 924,
+    "reused": 519,
+    "us": 60621
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 28452,
+     "runUs": 13220,
+     "liveBytes": 249008
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 269568,
+     "runUs": 8566,
+     "liveBytes": 636172
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 323539,
+     "runUs": 17774,
+     "liveBytes": 970232
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 17490,
+     "runUs": 4837,
+     "liveBytes": 980132
+    }
+   ]
+  },
+  "us": 2101919,
+  "peak": 1921224,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost files 2 strip=0 park=1 flush",
+  "app": "files",
+  "rep": 1,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3044432603,
+  "l1iHit": 298797022,
+  "l1iMiss": 139545552,
+  "l1dHit": 108994575,
+  "l1dMiss": 53758746,
+  "l1dNextRd": 616492,
+  "l1dNextWr": 282577,
+  "l2iHit": 6297211,
+  "l2iMiss": 50680018,
+  "l2dHit": 1561885,
+  "l2dMiss": 27072896,
+  "l2dNextRd": 307415,
+  "l2dNextWr": 118067,
+  "compile": {
+   "app": "files",
+   "beforeUs": 22,
+   "setupUs": 7243,
+   "callUs": 1352038,
+   "freeUs": 18983,
+   "heap": {
+    "mallocs": 556,
+    "frees": 492,
+    "reallocs": 235,
+    "reused": 148,
+    "us": 16747
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1453,
+     "runUs": 12686,
+     "liveBytes": 244928
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 17742,
+     "runUs": 8127,
+     "liveBytes": 529668
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 19754,
+     "runUs": 17453,
+     "liveBytes": 883592
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 2063,
+     "runUs": 4833,
+     "liveBytes": 913972
+    }
+   ]
+  },
+  "us": 1479755,
+  "peak": 1867376,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost files 2 strip=1 park=1 flush",
+  "app": "files",
+  "rep": 0,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3044432603,
+  "l1iHit": 410328444,
+  "l1iMiss": 178173594,
+  "l1dHit": 143247157,
+  "l1dMiss": 76108610,
+  "l1dNextRd": 923598,
+  "l1dNextWr": 427009,
+  "l2iHit": 7894019,
+  "l2iMiss": 64773483,
+  "l2dHit": 2266993,
+  "l2dMiss": 38229559,
+  "l2dNextRd": 405073,
+  "l2dNextWr": 155679,
+  "compile": {
+   "app": "files",
+   "beforeUs": 17,
+   "setupUs": 7282,
+   "callUs": 1363319,
+   "freeUs": 18732,
+   "heap": {
+    "mallocs": 1112,
+    "frees": 1048,
+    "reallocs": 926,
+    "reused": 437,
+    "us": 39768
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 27074,
+     "runUs": 12828,
+     "liveBytes": 247120
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 224751,
+     "runUs": 8664,
+     "liveBytes": 465192
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 277486,
+     "runUs": 18328,
+     "liveBytes": 644872
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 16872,
+     "runUs": 4805,
+     "liveBytes": 653644
+    }
+   ]
+  },
+  "us": 1997224,
+  "peak": 1582472,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost files 2 strip=1 park=1 flush",
+  "app": "files",
+  "rep": 1,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3044432603,
+  "l1iHit": 296180287,
+  "l1iMiss": 137746449,
+  "l1dHit": 107719883,
+  "l1dMiss": 49053895,
+  "l1dNextRd": 592688,
+  "l1dNextWr": 261274,
+  "l2iHit": 6298929,
+  "l2iMiss": 49860119,
+  "l2dHit": 1489071,
+  "l2dMiss": 24598449,
+  "l2dNextRd": 277202,
+  "l2dNextWr": 103293,
+  "compile": {
+   "app": "files",
+   "beforeUs": 23,
+   "setupUs": 7145,
+   "callUs": 1347462,
+   "freeUs": 18117,
+   "heap": {
+    "mallocs": 434,
+    "frees": 370,
+    "reallocs": 235,
+    "reused": 149,
+    "us": 15284
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1162,
+     "runUs": 12703,
+     "liveBytes": 243024
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 8194,
+     "runUs": 8177,
+     "liveBytes": 362780
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 9327,
+     "runUs": 17453,
+     "liveBytes": 558280
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1895,
+     "runUs": 4688,
+     "liveBytes": 583436
+    }
+   ]
+  },
+  "us": 1453318,
+  "peak": 1540912,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost files 2 strip=2 park=1 flush",
+  "app": "files",
+  "rep": 0,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3044432603,
+  "l1iHit": 392201031,
+  "l1iMiss": 181272897,
+  "l1dHit": 139696642,
+  "l1dMiss": 71018769,
+  "l1dNextRd": 814292,
+  "l1dNextWr": 367067,
+  "l2iHit": 7852969,
+  "l2iMiss": 66324733,
+  "l2dHit": 2043336,
+  "l2dMiss": 36112436,
+  "l2dNextRd": 374820,
+  "l2dNextWr": 145250,
+  "compile": {
+   "app": "files",
+   "beforeUs": 17,
+   "setupUs": 7229,
+   "callUs": 1373239,
+   "freeUs": 17722,
+   "heap": {
+    "mallocs": 1009,
+    "frees": 945,
+    "reallocs": 888,
+    "reused": 285,
+    "us": 37059
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 24762,
+     "runUs": 12964,
+     "liveBytes": 255292
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 199593,
+     "runUs": 8181,
+     "liveBytes": 459260
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 241322,
+     "runUs": 17994,
+     "liveBytes": 605000
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 12933,
+     "runUs": 4578,
+     "liveBytes": 605552
+    }
+   ]
+  },
+  "us": 1937981,
+  "peak": 1513900,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost files 2 strip=2 park=1 flush",
+  "app": "files",
+  "rep": 1,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3044432603,
+  "l1iHit": 297053079,
+  "l1iMiss": 134666283,
+  "l1dHit": 107628229,
+  "l1dMiss": 48032238,
+  "l1dNextRd": 653693,
+  "l1dNextWr": 270113,
+  "l2iHit": 6360677,
+  "l2iMiss": 48085979,
+  "l2dHit": 1595538,
+  "l2dMiss": 23691089,
+  "l2dNextRd": 266843,
+  "l2dNextWr": 98201,
+  "compile": {
+   "app": "files",
+   "beforeUs": 23,
+   "setupUs": 7263,
+   "callUs": 1343925,
+   "freeUs": 17270,
+   "heap": {
+    "mallocs": 402,
+    "frees": 338,
+    "reallocs": 235,
+    "reused": 171,
+    "us": 14780
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1106,
+     "runUs": 12619,
+     "liveBytes": 251196
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 6722,
+     "runUs": 8151,
+     "liveBytes": 332272
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 7261,
+     "runUs": 17234,
+     "liveBytes": 477972
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 994,
+     "runUs": 3871,
+     "liveBytes": 490812
+    }
+   ]
+  },
+  "us": 1443503,
+  "peak": 1460576,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost editor 2 strip=0 park=1 flush",
+  "app": "editor",
+  "rep": 0,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3207364334,
+  "l1iHit": 803074792,
+  "l1iMiss": 396593206,
+  "l1dHit": 282381886,
+  "l1dMiss": 175950949,
+  "l1dNextRd": 1721086,
+  "l1dNextWr": 753430,
+  "l2iHit": 15794997,
+  "l2iMiss": 149900204,
+  "l2dHit": 4513798,
+  "l2dMiss": 91272829,
+  "l2dNextRd": 1004184,
+  "l2dNextWr": 367274,
+  "compile": {
+   "app": "editor",
+   "beforeUs": 16,
+   "setupUs": 7134,
+   "callUs": 3227768,
+   "freeUs": 44669,
+   "heap": {
+    "mallocs": 1879,
+    "frees": 1815,
+    "reallocs": 1403,
+    "reused": 719,
+    "us": 89337
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 28615,
+     "runUs": 13098,
+     "liveBytes": 249008
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 271160,
+     "runUs": 8674,
+     "liveBytes": 636160
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 133382,
+     "runUs": 3085,
+     "liveBytes": 786132
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 328910,
+     "runUs": 17750,
+     "liveBytes": 1140172
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 14821,
+     "runUs": 4655,
+     "liveBytes": 1150064
+    }
+   ]
+  },
+  "us": 4125384,
+  "peak": 3264580,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost editor 2 strip=0 park=1 flush",
+  "app": "editor",
+  "rep": 1,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3207364334,
+  "l1iHit": 651907929,
+  "l1iMiss": 337169685,
+  "l1dHit": 235706337,
+  "l1dMiss": 129277444,
+  "l1dNextRd": 1491894,
+  "l1dNextWr": 635377,
+  "l2iHit": 13785915,
+  "l2iMiss": 126978810,
+  "l2dHit": 3693051,
+  "l2dMiss": 65280401,
+  "l2dNextRd": 742570,
+  "l2dNextWr": 254761,
+  "compile": {
+   "app": "editor",
+   "beforeUs": 22,
+   "setupUs": 7173,
+   "callUs": 3192739,
+   "freeUs": 43409,
+   "heap": {
+    "mallocs": 1014,
+    "frees": 950,
+    "reallocs": 552,
+    "reused": 994,
+    "us": 34055
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1487,
+     "runUs": 12761,
+     "liveBytes": 244908
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 18037,
+     "runUs": 8054,
+     "liveBytes": 529644
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 8947,
+     "runUs": 2871,
+     "liveBytes": 687724
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 20431,
+     "runUs": 18118,
+     "liveBytes": 1049328
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1258,
+     "runUs": 4265,
+     "liveBytes": 1067412
+    }
+   ]
+  },
+  "us": 3360555,
+  "peak": 3191332,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost editor 2 strip=1 park=1 flush",
+  "app": "editor",
+  "rep": 0,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3207364334,
+  "l1iHit": 790359549,
+  "l1iMiss": 385817118,
+  "l1dHit": 277506036,
+  "l1dMiss": 153400509,
+  "l1dNextRd": 1662922,
+  "l1dNextWr": 751004,
+  "l2iHit": 15777569,
+  "l2iMiss": 144669988,
+  "l2dHit": 4264987,
+  "l2dMiss": 78378698,
+  "l2dNextRd": 858318,
+  "l2dNextWr": 302518,
+  "compile": {
+   "app": "editor",
+   "beforeUs": 21,
+   "setupUs": 7157,
+   "callUs": 3211598,
+   "freeUs": 43104,
+   "heap": {
+    "mallocs": 1717,
+    "frees": 1653,
+    "reallocs": 1409,
+    "reused": 959,
+    "us": 65224
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 27091,
+     "runUs": 12879,
+     "liveBytes": 247120
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 226771,
+     "runUs": 8655,
+     "liveBytes": 465180
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 112352,
+     "runUs": 3273,
+     "liveBytes": 531900
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 282963,
+     "runUs": 17883,
+     "liveBytes": 731556
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 14040,
+     "runUs": 4726,
+     "liveBytes": 732128
+    }
+   ]
+  },
+  "us": 3994640,
+  "peak": 2834316,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost editor 2 strip=1 park=1 flush",
+  "app": "editor",
+  "rep": 1,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3207364334,
+  "l1iHit": 648906730,
+  "l1iMiss": 330343936,
+  "l1dHit": 234263665,
+  "l1dMiss": 122725593,
+  "l1dNextRd": 1411082,
+  "l1dNextWr": 607379,
+  "l2iHit": 13807123,
+  "l2iMiss": 123201032,
+  "l2dHit": 3547805,
+  "l2dMiss": 62054698,
+  "l2dNextRd": 703576,
+  "l2dNextWr": 238773,
+  "compile": {
+   "app": "editor",
+   "beforeUs": 18,
+   "setupUs": 7136,
+   "callUs": 3172704,
+   "freeUs": 42381,
+   "heap": {
+    "mallocs": 863,
+    "frees": 799,
+    "reallocs": 552,
+    "reused": 828,
+    "us": 33411
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1180,
+     "runUs": 12665,
+     "liveBytes": 243024
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 8217,
+     "runUs": 7959,
+     "liveBytes": 362788
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 4625,
+     "runUs": 2789,
+     "liveBytes": 429452
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 10177,
+     "runUs": 17423,
+     "liveBytes": 628536
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1032,
+     "runUs": 4106,
+     "liveBytes": 645492
+    }
+   ]
+  },
+  "us": 3313533,
+  "peak": 2788636,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost editor 2 strip=2 park=1 flush",
+  "app": "editor",
+  "rep": 0,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3207364334,
+  "l1iHit": 764688607,
+  "l1iMiss": 382182277,
+  "l1dHit": 272908103,
+  "l1dMiss": 146923793,
+  "l1dNextRd": 1549864,
+  "l1dNextWr": 685529,
+  "l2iHit": 15745149,
+  "l2iMiss": 142622543,
+  "l2dHit": 3959274,
+  "l2dMiss": 75588243,
+  "l2dNextRd": 822514,
+  "l2dNextWr": 292348,
+  "compile": {
+   "app": "editor",
+   "beforeUs": 21,
+   "setupUs": 7212,
+   "callUs": 3197139,
+   "freeUs": 41777,
+   "heap": {
+    "mallocs": 1593,
+    "frees": 1529,
+    "reallocs": 1368,
+    "reused": 1776,
+    "us": 59996
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 24715,
+     "runUs": 12814,
+     "liveBytes": 255292
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 196107,
+     "runUs": 8259,
+     "liveBytes": 459240
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 98025,
+     "runUs": 3140,
+     "liveBytes": 504492
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 244744,
+     "runUs": 17951,
+     "liveBytes": 670148
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 12871,
+     "runUs": 4619,
+     "liveBytes": 670700
+    }
+   ]
+  },
+  "us": 3890633,
+  "peak": 2760596,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost editor 2 strip=2 park=1 flush",
+  "app": "editor",
+  "rep": 1,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 243644,
+  "moduleCrc": 3207364334,
+  "l1iHit": 650378796,
+  "l1iMiss": 338998436,
+  "l1dHit": 234318364,
+  "l1dMiss": 123314498,
+  "l1dNextRd": 1461228,
+  "l1dNextWr": 628777,
+  "l2iHit": 13929883,
+  "l2iMiss": 127271573,
+  "l2dHit": 3658243,
+  "l2dMiss": 62239851,
+  "l2dNextRd": 702633,
+  "l2dNextWr": 234535,
+  "compile": {
+   "app": "editor",
+   "beforeUs": 22,
+   "setupUs": 7200,
+   "callUs": 3208951,
+   "freeUs": 40675,
+   "heap": {
+    "mallocs": 831,
+    "frees": 767,
+    "reallocs": 551,
+    "reused": 1681,
+    "us": 33337
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1119,
+     "runUs": 12665,
+     "liveBytes": 251196
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 6757,
+     "runUs": 7894,
+     "liveBytes": 332296
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 3822,
+     "runUs": 2768,
+     "liveBytes": 389780
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 7401,
+     "runUs": 17506,
+     "liveBytes": 547236
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 974,
+     "runUs": 4099,
+     "liveBytes": 568268
+    }
+   ]
+  },
+  "us": 3342715,
+  "peak": 2707284,
+  "module": 243644,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost chess 2 strip=0 park=1 flush",
+  "app": "chess",
+  "rep": 0,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 276412,
+  "moduleCrc": 1674825481,
+  "l1iHit": 1125485738,
+  "l1iMiss": 392663688,
+  "l1dHit": 399501982,
+  "l1dMiss": 162105601,
+  "l1dNextRd": 1981909,
+  "l1dNextWr": 877366,
+  "l2iHit": 20291937,
+  "l2iMiss": 134270255,
+  "l2dHit": 4761977,
+  "l2dMiss": 82226317,
+  "l2dNextRd": 894697,
+  "l2dNextWr": 342987,
+  "compile": {
+   "app": "chess",
+   "beforeUs": 17,
+   "setupUs": 7189,
+   "callUs": 4209591,
+   "freeUs": 31700,
+   "heap": {
+    "mallocs": 1974,
+    "frees": 1910,
+    "reallocs": 1964,
+    "reused": 1275,
+    "us": 107943
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 28046,
+     "runUs": 12999,
+     "liveBytes": 249008
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 268850,
+     "runUs": 8380,
+     "liveBytes": 636172
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 132133,
+     "runUs": 3063,
+     "liveBytes": 786152
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 326064,
+     "runUs": 18052,
+     "liveBytes": 1140188
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 14566,
+     "runUs": 4705,
+     "liveBytes": 1150080
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "parsed",
+     "inCall": true,
+     "loadUs": 62055,
+     "runUs": 3629,
+     "liveBytes": 1597952
+    }
+   ]
+  },
+  "us": 5089319,
+  "peak": 3302980,
+  "module": 276412,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost chess 2 strip=0 park=1 flush",
+  "app": "chess",
+  "rep": 1,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 276412,
+  "moduleCrc": 1674825481,
+  "l1iHit": 966291385,
+  "l1iMiss": 342369760,
+  "l1dHit": 349699325,
+  "l1dMiss": 112879240,
+  "l1dNextRd": 1525813,
+  "l1dNextWr": 660148,
+  "l2iHit": 18111471,
+  "l2iMiss": 116182139,
+  "l2dHit": 3688857,
+  "l2dMiss": 56319731,
+  "l2dNextRd": 632919,
+  "l2dNextWr": 227257,
+  "compile": {
+   "app": "chess",
+   "beforeUs": 19,
+   "setupUs": 7279,
+   "callUs": 4159973,
+   "freeUs": 30795,
+   "heap": {
+    "mallocs": 1043,
+    "frees": 979,
+    "reallocs": 1024,
+    "reused": 1278,
+    "us": 49993
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1477,
+     "runUs": 12701,
+     "liveBytes": 244908
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 18019,
+     "runUs": 8011,
+     "liveBytes": 529632
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 9010,
+     "runUs": 2961,
+     "liveBytes": 687712
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 20312,
+     "runUs": 17958,
+     "liveBytes": 1049328
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1240,
+     "runUs": 4275,
+     "liveBytes": 1067412
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "cached",
+     "inCall": true,
+     "loadUs": 3581,
+     "runUs": 3468,
+     "liveBytes": 1498888
+    }
+   ]
+  },
+  "us": 4317858,
+  "peak": 3219644,
+  "module": 276412,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost chess 2 strip=1 park=1 flush",
+  "app": "chess",
+  "rep": 0,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 276412,
+  "moduleCrc": 1674825481,
+  "l1iHit": 1113486001,
+  "l1iMiss": 385258482,
+  "l1dHit": 394961288,
+  "l1dMiss": 133910298,
+  "l1dNextRd": 1438718,
+  "l1dNextWr": 668203,
+  "l2iHit": 20319147,
+  "l2iMiss": 130391085,
+  "l2dHit": 3749295,
+  "l2dMiss": 69190476,
+  "l2dNextRd": 746787,
+  "l2dNextWr": 275110,
+  "compile": {
+   "app": "chess",
+   "beforeUs": 17,
+   "setupUs": 7146,
+   "callUs": 4186826,
+   "freeUs": 30578,
+   "heap": {
+    "mallocs": 1798,
+    "frees": 1734,
+    "reallocs": 1971,
+    "reused": 2221,
+    "us": 80955
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 27200,
+     "runUs": 12797,
+     "liveBytes": 247120
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 225736,
+     "runUs": 8523,
+     "liveBytes": 465204
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 112987,
+     "runUs": 3310,
+     "liveBytes": 531928
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 279886,
+     "runUs": 17897,
+     "liveBytes": 731568
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 14020,
+     "runUs": 4702,
+     "liveBytes": 732140
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "parsed",
+     "inCall": true,
+     "loadUs": 55614,
+     "runUs": 3801,
+     "liveBytes": 1143580
+    }
+   ]
+  },
+  "us": 4955810,
+  "peak": 2831692,
+  "module": 276412,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost chess 2 strip=1 park=1 flush",
+  "app": "chess",
+  "rep": 1,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 276412,
+  "moduleCrc": 1674825481,
+  "l1iHit": 962569813,
+  "l1iMiss": 335335464,
+  "l1dHit": 347829511,
+  "l1dMiss": 103002820,
+  "l1dNextRd": 1293827,
+  "l1dNextWr": 517053,
+  "l2iHit": 18028617,
+  "l2iMiss": 113065821,
+  "l2dHit": 3267389,
+  "l2dMiss": 51962829,
+  "l2dNextRd": 588586,
+  "l2dNextWr": 206005,
+  "compile": {
+   "app": "chess",
+   "beforeUs": 22,
+   "setupUs": 7206,
+   "callUs": 4127626,
+   "freeUs": 29795,
+   "heap": {
+    "mallocs": 881,
+    "frees": 817,
+    "reallocs": 1024,
+    "reused": 665,
+    "us": 48683
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1161,
+     "runUs": 12669,
+     "liveBytes": 243024
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 8209,
+     "runUs": 8100,
+     "liveBytes": 362772
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 4620,
+     "runUs": 2757,
+     "liveBytes": 429436
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 10097,
+     "runUs": 17429,
+     "liveBytes": 628520
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1053,
+     "runUs": 4103,
+     "liveBytes": 645476
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "cached",
+     "inCall": true,
+     "loadUs": 2186,
+     "runUs": 2918,
+     "liveBytes": 1065112
+    }
+   ]
+  },
+  "us": 4259521,
+  "peak": 2789452,
+  "module": 276412,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost chess 2 strip=2 park=1 flush",
+  "app": "chess",
+  "rep": 0,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 276412,
+  "moduleCrc": 1674825481,
+  "l1iHit": 1085905943,
+  "l1iMiss": 384014830,
+  "l1dHit": 389547863,
+  "l1dMiss": 129227425,
+  "l1dNextRd": 1387577,
+  "l1dNextWr": 642467,
+  "l2iHit": 20178761,
+  "l2iMiss": 130157423,
+  "l2dHit": 3629454,
+  "l2dMiss": 66783611,
+  "l2dNextRd": 714076,
+  "l2dNextWr": 265292,
+  "compile": {
+   "app": "chess",
+   "beforeUs": 14,
+   "setupUs": 7185,
+   "callUs": 4174983,
+   "freeUs": 28847,
+   "heap": {
+    "mallocs": 1664,
+    "frees": 1600,
+    "reallocs": 1921,
+    "reused": 1105,
+    "us": 78259
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 24908,
+     "runUs": 12989,
+     "liveBytes": 255300
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 197497,
+     "runUs": 8269,
+     "liveBytes": 459272
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 98915,
+     "runUs": 3125,
+     "liveBytes": 504540
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 243246,
+     "runUs": 17618,
+     "liveBytes": 670196
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 12676,
+     "runUs": 4583,
+     "liveBytes": 670748
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "parsed",
+     "inCall": true,
+     "loadUs": 48371,
+     "runUs": 3489,
+     "liveBytes": 1079132
+    }
+   ]
+  },
+  "us": 4858604,
+  "peak": 2746140,
+  "module": 276412,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost chess 2 strip=2 park=1 flush",
+  "app": "chess",
+  "rep": 1,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 276412,
+  "moduleCrc": 1674825481,
+  "l1iHit": 960214368,
+  "l1iMiss": 338885321,
+  "l1dHit": 347271125,
+  "l1dMiss": 100607681,
+  "l1dNextRd": 1234643,
+  "l1dNextWr": 556437,
+  "l2iHit": 18196307,
+  "l2iMiss": 114488446,
+  "l2dHit": 3128633,
+  "l2dMiss": 50923253,
+  "l2dNextRd": 581586,
+  "l2dNextWr": 200465,
+  "compile": {
+   "app": "chess",
+   "beforeUs": 22,
+   "setupUs": 7178,
+   "callUs": 4131555,
+   "freeUs": 28475,
+   "heap": {
+    "mallocs": 842,
+    "frees": 778,
+    "reallocs": 1025,
+    "reused": 975,
+    "us": 48766
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1104,
+     "runUs": 12385,
+     "liveBytes": 251196
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 6770,
+     "runUs": 8041,
+     "liveBytes": 332280
+    },
+    {
+     "path": "typed/async.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 3818,
+     "runUs": 2749,
+     "liveBytes": 389764
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 7443,
+     "runUs": 17509,
+     "liveBytes": 547220
+    },
+    {
+     "path": "typed/world.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1021,
+     "runUs": 4250,
+     "liveBytes": 568252
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "cached",
+     "inCall": true,
+     "loadUs": 1659,
+     "runUs": 2656,
+     "liveBytes": 984832
+    }
+   ]
+  },
+  "us": 4255821,
+  "peak": 2697412,
+  "module": 276412,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost candela 2 strip=0 park=1 flush",
+  "app": "candela",
+  "rep": 0,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 66816,
+  "moduleCrc": 900902964,
+  "l1iHit": 527334762,
+  "l1iMiss": 209348505,
+  "l1dHit": 185048406,
+  "l1dMiss": 97919396,
+  "l1dNextRd": 864092,
+  "l1dNextWr": 434136,
+  "l2iHit": 10413865,
+  "l2iMiss": 72419997,
+  "l2dHit": 2384422,
+  "l2dMiss": 51799466,
+  "l2dNextRd": 547041,
+  "l2dNextWr": 227882,
+  "compile": {
+   "app": "candela",
+   "beforeUs": 18,
+   "setupUs": 7135,
+   "callUs": 1808598,
+   "freeUs": 26572,
+   "heap": {
+    "mallocs": 1562,
+    "frees": 1498,
+    "reallocs": 1339,
+    "reused": 1069,
+    "us": 75957
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 28449,
+     "runUs": 13138,
+     "liveBytes": 249008
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 269206,
+     "runUs": 8406,
+     "liveBytes": 636184
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 321933,
+     "runUs": 17899,
+     "liveBytes": 970256
+    },
+    {
+     "path": "candela/link.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 6779,
+     "runUs": 620,
+     "liveBytes": 971152
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "parsed",
+     "inCall": true,
+     "loadUs": 62220,
+     "runUs": 3792,
+     "liveBytes": 1085052
+    },
+    {
+     "path": "typed/rv32-loops.js",
+     "bytecode": "parsed",
+     "inCall": true,
+     "loadUs": 107333,
+     "runUs": 3313,
+     "liveBytes": 1169108
+    }
+   ]
+  },
+  "us": 2512875,
+  "peak": 1854840,
+  "module": 66816,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost candela 2 strip=0 park=1 flush",
+  "app": "candela",
+  "rep": 1,
+  "strip": 0,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 66816,
+  "moduleCrc": 900902964,
+  "l1iHit": 374155354,
+  "l1iMiss": 154730007,
+  "l1dHit": 136961406,
+  "l1dMiss": 51026010,
+  "l1dNextRd": 550676,
+  "l1dNextWr": 257928,
+  "l2iHit": 8402081,
+  "l2iMiss": 51792411,
+  "l2dHit": 1471303,
+  "l2dMiss": 26423659,
+  "l2dNextRd": 295987,
+  "l2dNextWr": 115752,
+  "compile": {
+   "app": "candela",
+   "beforeUs": 26,
+   "setupUs": 7189,
+   "callUs": 1639342,
+   "freeUs": 26059,
+   "heap": {
+    "mallocs": 738,
+    "frees": 674,
+    "reallocs": 441,
+    "reused": 457,
+    "us": 21448
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1494,
+     "runUs": 12766,
+     "liveBytes": 244908
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 17901,
+     "runUs": 8005,
+     "liveBytes": 529632
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 19873,
+     "runUs": 17276,
+     "liveBytes": 883556
+    },
+    {
+     "path": "candela/link.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 662,
+     "runUs": 387,
+     "liveBytes": 884452
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "cached",
+     "inCall": true,
+     "loadUs": 3775,
+     "runUs": 3448,
+     "liveBytes": 1006540
+    },
+    {
+     "path": "typed/rv32-loops.js",
+     "bytecode": "cached",
+     "inCall": true,
+     "loadUs": 6353,
+     "runUs": 3169,
+     "liveBytes": 1110504
+    }
+   ]
+  },
+  "us": 1755161,
+  "peak": 1812780,
+  "module": 66816,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost candela 2 strip=1 park=1 flush",
+  "app": "candela",
+  "rep": 0,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 66816,
+  "moduleCrc": 900902964,
+  "l1iHit": 514645680,
+  "l1iMiss": 207488470,
+  "l1dHit": 180292880,
+  "l1dMiss": 75907504,
+  "l1dNextRd": 774123,
+  "l1dNextWr": 359253,
+  "l2iHit": 10401177,
+  "l2iMiss": 71637462,
+  "l2dHit": 2070932,
+  "l2dMiss": 39687817,
+  "l2dNextRd": 412512,
+  "l2dNextWr": 161685,
+  "compile": {
+   "app": "candela",
+   "beforeUs": 18,
+   "setupUs": 7193,
+   "callUs": 1796822,
+   "freeUs": 25520,
+   "heap": {
+    "mallocs": 1415,
+    "frees": 1351,
+    "reallocs": 1344,
+    "reused": 955,
+    "us": 50689
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 27033,
+     "runUs": 12781,
+     "liveBytes": 247120
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 225525,
+     "runUs": 8776,
+     "liveBytes": 465168
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 276054,
+     "runUs": 18145,
+     "liveBytes": 644844
+    },
+    {
+     "path": "candela/link.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 6720,
+     "runUs": 618,
+     "liveBytes": 644844
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "parsed",
+     "inCall": true,
+     "loadUs": 55879,
+     "runUs": 3739,
+     "liveBytes": 738708
+    },
+    {
+     "path": "typed/rv32-loops.js",
+     "bytecode": "parsed",
+     "inCall": true,
+     "loadUs": 94288,
+     "runUs": 3333,
+     "liveBytes": 769420
+    }
+   ]
+  },
+  "us": 2409334,
+  "peak": 1438776,
+  "module": 66816,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost candela 2 strip=1 park=1 flush",
+  "app": "candela",
+  "rep": 1,
+  "strip": 1,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 66816,
+  "moduleCrc": 900902964,
+  "l1iHit": 371597983,
+  "l1iMiss": 152957796,
+  "l1dHit": 135669464,
+  "l1dMiss": 45259269,
+  "l1dNextRd": 529421,
+  "l1dNextWr": 244869,
+  "l2iHit": 8462091,
+  "l2iMiss": 50740174,
+  "l2dHit": 1380384,
+  "l2dMiss": 23265259,
+  "l2dNextRd": 259634,
+  "l2dNextWr": 97033,
+  "compile": {
+   "app": "candela",
+   "beforeUs": 25,
+   "setupUs": 7205,
+   "callUs": 1631213,
+   "freeUs": 24994,
+   "heap": {
+    "mallocs": 596,
+    "frees": 532,
+    "reallocs": 442,
+    "reused": 485,
+    "us": 19982
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1165,
+     "runUs": 12683,
+     "liveBytes": 243024
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 8185,
+     "runUs": 8220,
+     "liveBytes": 362780
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 9243,
+     "runUs": 17369,
+     "liveBytes": 558280
+    },
+    {
+     "path": "candela/link.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 642,
+     "runUs": 357,
+     "liveBytes": 558280
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "cached",
+     "inCall": true,
+     "loadUs": 2104,
+     "runUs": 2930,
+     "liveBytes": 660336
+    },
+    {
+     "path": "typed/rv32-loops.js",
+     "bytecode": "cached",
+     "inCall": true,
+     "loadUs": 3691,
+     "runUs": 3155,
+     "liveBytes": 710984
+    }
+   ]
+  },
+  "us": 1725447,
+  "peak": 1409144,
+  "module": 66816,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost candela 2 strip=2 park=1 flush",
+  "app": "candela",
+  "rep": 0,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 66816,
+  "moduleCrc": 900902964,
+  "l1iHit": 490718405,
+  "l1iMiss": 203166000,
+  "l1dHit": 175583178,
+  "l1dMiss": 70340369,
+  "l1dNextRd": 699065,
+  "l1dNextWr": 353718,
+  "l2iHit": 10411599,
+  "l2iMiss": 69371453,
+  "l2dHit": 1876778,
+  "l2dMiss": 36774047,
+  "l2dNextRd": 377664,
+  "l2dNextWr": 150676,
+  "compile": {
+   "app": "candela",
+   "beforeUs": 19,
+   "setupUs": 7098,
+   "callUs": 1767803,
+   "freeUs": 24322,
+   "heap": {
+    "mallocs": 1291,
+    "frees": 1227,
+    "reallocs": 1280,
+    "reused": 677,
+    "us": 48293
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 24752,
+     "runUs": 12978,
+     "liveBytes": 255292
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 197015,
+     "runUs": 8608,
+     "liveBytes": 459300
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 239602,
+     "runUs": 17806,
+     "liveBytes": 605012
+    },
+    {
+     "path": "candela/link.js",
+     "bytecode": "parsed",
+     "inCall": false,
+     "loadUs": 6491,
+     "runUs": 619,
+     "liveBytes": 605012
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "parsed",
+     "inCall": true,
+     "loadUs": 48453,
+     "runUs": 3699,
+     "liveBytes": 695820
+    },
+    {
+     "path": "typed/rv32-loops.js",
+     "bytecode": "parsed",
+     "inCall": true,
+     "loadUs": 77920,
+     "runUs": 3224,
+     "liveBytes": 712440
+    }
+   ]
+  },
+  "us": 2311032,
+  "peak": 1364980,
+  "module": 66816,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ },
+ {
+  "command": "typedcost candela 2 strip=2 park=1 flush",
+  "app": "candela",
+  "rep": 1,
+  "strip": 2,
+  "backend": "lazy",
+  "padKb": 0,
+  "park": 1,
+  "ok": true,
+  "moduleBytes": 66816,
+  "moduleCrc": 900902964,
+  "l1iHit": 371089749,
+  "l1iMiss": 149888050,
+  "l1dHit": 135291832,
+  "l1dMiss": 42971485,
+  "l1dNextRd": 498131,
+  "l1dNextWr": 228778,
+  "l2iHit": 8471167,
+  "l2iMiss": 49091576,
+  "l2dHit": 1325665,
+  "l2dMiss": 22240555,
+  "l2dNextRd": 248010,
+  "l2dNextWr": 92112,
+  "compile": {
+   "app": "candela",
+   "beforeUs": 23,
+   "setupUs": 7284,
+   "callUs": 1619830,
+   "freeUs": 23745,
+   "heap": {
+    "mallocs": 555,
+    "frees": 491,
+    "reallocs": 442,
+    "reused": 272,
+    "us": 19857
+   },
+   "evals": [
+    {
+     "path": "typed/tape.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 1092,
+     "runUs": 12689,
+     "liveBytes": 251196
+    },
+    {
+     "path": "typed/wasm.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 6800,
+     "runUs": 8059,
+     "liveBytes": 332272
+    },
+    {
+     "path": "typed/rv32.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 7229,
+     "runUs": 17284,
+     "liveBytes": 477972
+    },
+    {
+     "path": "candela/link.js",
+     "bytecode": "cached",
+     "inCall": false,
+     "loadUs": 559,
+     "runUs": 264,
+     "liveBytes": 477972
+    },
+    {
+     "path": "typed/rv32-inline.js",
+     "bytecode": "cached",
+     "inCall": true,
+     "loadUs": 1642,
+     "runUs": 2856,
+     "liveBytes": 593356
+    },
+    {
+     "path": "typed/rv32-loops.js",
+     "bytecode": "cached",
+     "inCall": true,
+     "loadUs": 2051,
+     "runUs": 2349,
+     "liveBytes": 614072
+    }
+   ]
+  },
+  "us": 1708921,
+  "peak": 1316528,
+  "module": 66816,
+  "block": "E1a",
+  "blockUptimeMs": 30219.0
+ }
+]

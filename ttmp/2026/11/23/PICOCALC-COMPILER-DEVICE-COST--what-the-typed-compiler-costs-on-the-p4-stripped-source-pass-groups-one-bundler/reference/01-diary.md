@@ -645,3 +645,236 @@ dcd9d3b — "docs(device-cost): arms on the merged base, a session in blocks wit
 - Arms: `/tmp/picocalc-device-cost-arm2-{control,group,strip,final}`; bench `/tmp/picocalc-device-cost-bench`
   (`b648cf40`). All built at 54dfe3b (recorded dirty: the ticket's scripts were uncommitted at the time; the
   control, group and strip arms are dirty by construction).
+
+## Step 10: The in-image session on 54dfe3b, and what the pass-group slowdown is
+
+The in-image session ran on the bench image `b648cf40` (54dfe3b: TYPED-VALUES, CANDELA-KERNEL-CODEGEN and this
+ticket, without COMPILE-CACHE, so no compile collects cycles). Strip mode, lazy against eager groups with and without
+arena parking, and heap padding. The answer to the slowdown: the time of a compile on the P4 depends on where its heap
+lands. The same compile repeats within a few milliseconds, but anything that moves its allocations (which bundles
+the realm holds, parking, a 1 KB block held in front of it) moves it by up to about 2 percent, in either direction.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1 and Step 9.
+**Assistant interpretation:** run the in-image session with the lock per block; explain the slowdown from it.
+**Inferred user intent:** a device-measured cause, not a host simulation.
+**Commit (code):** 5e0af78, 20a4b23 (scripts only)
+
+### What I did
+- Session 2 (`/tmp/picocalc-device-cost-session2`) stopped: between the install and block E1a another agent installed
+  its image twice, and the old loop would have given up after three installs. `04-typedcost-session.py` now installs
+  under the block's own lock (the steps of `device.install`), and `--per-lock 2` runs two blocks per hold. Stopped
+  the old run with TaskStop while it was waiting for the lock (checked in `/proc/locks`).
+- Session 3: E1a. Session 4: E1b, E2, E2p and E3, two blocks per lock. E2b and E4 were left for the new base (Step
+  11), because main now collects cycles during a compile. Tables: `various/02-session-54dfe3b/tables.txt`, rows next
+  to it.
+
+### Why
+- Four other agents' sessions shared the board (CANDELA-KERNEL-CODEGEN, COMPILE-CACHE, BOARD-HARNESS); a lock hold
+  of one or two blocks kept each wait to one queue position.
+
+### What worked
+- E1 (strip, parking on, two orders): JS_STRIP_DEBUG against none, per app, cold / warm:
+  Agenda 3,365 -> 3,204 / 2,733 -> 2,693 ms, peak 2,511 -> 2,105 / 2,454 -> 2,057 KB;
+  Files 2,092 -> 1,928 / 1,475 -> 1,454 ms; Editor 4,114 -> 3,900 / 3,364 -> 3,337 ms;
+  Chess 5,110 -> 4,894 / 4,302 -> 4,250 ms, peak 3,225 -> 2,682 / 3,147 -> 2,634 KB;
+  Candela 2,509 -> 2,303 / 1,750 -> 1,717 ms, peak 1,811 -> 1,333 / 1,770 -> 1,286 KB.
+  The saving is in the load (Agenda warm 84 -> 58 ms, cold 683 -> 520 ms) and the realm (893 -> 479 KB); the call is
+  unchanged within noise. JS_STRIP_SOURCE sits between: against it, JS_STRIP_DEBUG saves another 60-110 ms cold,
+  0-25 ms warm and 50-90 KB of peak. Module bytes and CRCs identical in every mode.
+- E2 (unstripped, no parking: TYPED-PIPELINE's condition), lazy minus all, warm, six compiles each:
+  Agenda -47 ms, Chess +34 ms, Candela -9 ms. Within a condition the six compiles agree to a few ms (Chess lazy
+  4,317-4,352, all 4,302-4,313).
+- E2p (the same with parking): Agenda -38, Chess -48, Candela -7 ms. Chess changes sign.
+- E3 (Agenda and Chess, unstripped, lazy, no parking; a PSRAM block of 0, 1, 3, 8, 64 or 1024 KB held across the
+  compile): identical heap calls, totals from 2,719 to 2,766 ms for Agenda and 4,304 to 4,325 ms for Chess.
+
+### What didn't work
+- `typedcost` rows of session 2: none (the block never ran).
+
+### What I learned
+- The P4-only slowdown of TYPED-PIPELINE (15-96 ms) is a placement effect, not a cost of lazy loading: lazy loading
+  saves about 19 ms of bytecode reading per compile and adds the group's evaluation inside the call (Chess 7 ms,
+  Candela 17 ms); everything else is the compile running 1-2 percent faster or slower depending on where its
+  allocations land. In every condition the core-1 L1 instruction misses move with the time (E2 Chess +13 k misses
+  with +50 ms of call; E2p -9 k with -32 ms; E3 Agenda 261 k at 2,719 ms, 275 k at 2,766 ms), so the mechanism is
+  cache conflicts that depend on addresses. On the host, callgrind's cache simulation showed the same kind of
+  variation (Step 5).
+- Parking does not remove the effect, it moves it: with parking the lazy groups are faster in all three apps.
+
+### What was tricky to build
+- Telling a lock waiter from a holder before stopping a session: `/proc/locks` lists the holder first and the
+  waiters after `->`.
+
+### What warrants a second pair of eyes
+- One image, one session: the E3 range is the size of the effect for two apps, not a distribution.
+
+### What should be done in the future
+- A study of compile speed on the P4 needs several heap placements per arm (E3's padding), or it measures placement.
+
+### Code review instructions
+- `python3 scripts/10-analyze-session.py various/02-session-54dfe3b/session3 various/02-session-54dfe3b/session4`.
+
+### Technical details
+- Bench image `b648cf40` (54dfe3b + experiment tree). E1 n=2 per cell (two orders), E2/E2p n=6, E3 n=2 per pad.
+
+## Step 11: Main's optimistic merge, the split heap file, a console fix, and the session on the merged base
+
+The coordinator merged this branch and PICOCALC-COMPILE-CACHE into main (ebfe8fb) while the study ran. Two things
+changed under the measurements: compiles now collect cycles (the cache ticket made the allocator report
+malloc_size, the same gap Step 3 found), and the merged typed_p4.c was 602 lines. I reviewed the resolution, merged
+main, split the file, rebuilt every image on the result, and reran the parts of the in-image session that a
+collector can change (strip, production lazy against eager, parking). The first boots on the new base found a bug of
+mine: the TYPEDCOMPILE line was printed in pieces, and another task's console reply landed inside it.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1. Coordinator: "to speed things up I merged your branch (and
+PICOCALC-COMPILE-CACHE) into main optimistically (ebfe8fb); host gates and make test pass, the playable profile
+builds. Your board work continues as planned; land any fix as new commits on your branch after merging main. Two
+things in the merge you should know: 1. typed_p4.c conflicted with COMPILE-CACHE's allocator. I kept both:
+account(JSMallocState*, ...) now sets malloc_size/malloc_count (the cache ticket found compiles never collected
+cycles, the same thing you found); its PSRAM reserve (psram_spare, over_limit/no_psram counters) stays; your arena
+parking, heap timing and TYPEDCOMPILE stay; parked arenas are freed after JS_FreeRuntime with `heap->live -=`. Please
+review that resolution (git show ebfe8fb -- firmware/port/esp32p4/main/typed_p4.c). Note it changes what your arms
+measure: GC now runs during compiles on main, so state which base each study arm uses. 2. The merged typed_p4.c is
+602 lines; tools/file-length-exceptions.txt lists it with your ticket as owner. Split the compile heap and
+TYPEDCOMPILE into their own file on your branch. Do not leave the board on a non-playable image; restore from the
+main checkout."
+**Assistant interpretation:** review the resolution, merge main, split the file, measure on the merged base, fix
+what the board shows.
+**Inferred user intent:** the merged main is what ships; the numbers must describe it.
+**Commit (code):** fba4811 (merge main), f1ecb93 — "refactor(p4): the compile heap and the TYPEDCOMPILE record in
+their own file"; 91aeb52 — "fix(p4): the TYPEDCOMPILE line goes to the console in one write"
+
+### What I did
+- Reviewed ebfe8fb's typed_p4.c: correct. A parked block stays in `live` and so in `malloc_size` (at most 256 KB
+  more before the collector's threshold); a reused block skips the cap check because it is already counted; the
+  teardown subtracts the parked blocks after JS_FreeRuntime, when no runtime reads `malloc_size` any more; realloc
+  of a block that came from the park is an ordinary heap block.
+- Stopped session 4 (waiting for the lock) before E2b and E4, which now run on the new base.
+- `git merge main` (ebbade8): clean. `scripts/18-split-compile-heap.py`: `typed_compile_heap.{h,c}` (allocator,
+  PSRAM reserve, parking, counters, interrupt handler, refusal and TYPEDCOMPILE lines, moved verbatim), typed_p4.c
+  602 -> 457 lines, the exception removed, the new files in the component's sources and in the module cache's key
+  (`typed_native_files`), the P4 README and the compiler guide updated. 02 and 17 follow the moved code.
+- New bench image `a796e3ea` (f1ecb93 + experiment tree); session 5: E1a, E1b, E2b, E4, two blocks per lock.
+- Arms on 20a4b23 (f1ecb93 plus scripts), `/tmp/picocalc-device-cost-arm3-*`: control `aaf5f761` (7a503c0's RV32
+  bundles, no strip, no parking), group `0bd11a0a`, strip `41fcbca8`, final `8746adbe`. 09 now empties the module
+  cache (`typed cache clear`) before each install, so every boot compiles, and reports any cache hit.
+- Boot study block 0: two of four health checks failed with `StopIteration()` in `device.painter()`. The UART log
+  shows the painter's `{"sources":...}` record and its `#OK painter` inside the chess/painter TYPEDCOMPILE line.
+  Fixed in 91aeb52 (one buffer, one `write()`); gate image `1aa25fbf` (91aeb52, clean).
+- `make test` (154/154 node tests, exit 0), `make test-host` both policies: unchanged (ray `430f0d501659`, 4,888,369 /
+  3,239,635; Chess 6981 words; 25/25).
+
+### Why
+- The cache would serve a later block's boot from the first block's compile (same key), which measures a read, not
+  a compile.
+
+### What worked
+- New base E1 (strip, parking on, two orders), JS_STRIP_DEBUG against none, cold / warm ms and warm peak KB:
+  Agenda 3,402 -> 3,266 / 2,779 -> 2,735, 2,397 -> 2,057; Files 2,146 -> 1,972 / 1,505 -> 1,478;
+  Editor 4,206 -> 3,985 / 3,450 -> 3,380, 2,966 -> 2,368; Chess 5,192 -> 4,993 / 4,377 -> 4,365, 2,928 -> 2,488;
+  Candela 2,568 -> 2,357 / 1,791 -> 1,764, 1,673 -> 1,217. Against JS_STRIP_SOURCE, DEBUG saves 21-111 ms cold,
+  0-37 ms warm, 50-120 KB. Same modules and CRCs.
+- E2b (production): lazy minus all, Agenda -23 ms, Chess -13 ms (n=4 each).
+- E4 (strip 2, warm, three pairs per app), parking on minus off: Agenda -20, Files -1, Editor -21, Chess -23,
+  Candela -6 ms; heap calls -33 to -38 percent (Chess 4,252 -> 2,625); peak +10 to +22 KB.
+
+### What didn't work
+- The TYPEDCOMPILE line as several printf calls (fixed).
+
+### What I learned
+- On ESP-IDF a long line from several printf calls is not one console transfer; another task's reply can split it.
+- With the collector on, the compile peaks barely move (Agenda warm 2,454 -> 2,397 KB unstripped): little of a
+  compile's garbage is cyclic.
+
+### What was tricky to build
+- Making the boot study measure compiles on a firmware with a compiled-module cache.
+
+### What warrants a second pair of eyes
+- Parking's gain (about 20 ms, half a percent) is the size of the placement effect of Step 10; it is consistent over
+  four of five apps and two bases, which is why it stays.
+
+### What should be done in the future
+- N/A
+
+### Code review instructions
+- `git show f1ecb93 91aeb52`; `python3 scripts/10-analyze-session.py various/03-session-f1ecb93`.
+
+### Technical details
+- Session 5 rows and tables: `various/03-session-f1ecb93/`.
+
+## Step 12: The paired boot study on the merged base, parking taken out, the gate
+
+The boot study installed four images built from 20a4b23 in rotating order, three blocks, the lock held per block and
+the compiled-module cache emptied before each install. Every arm repeats itself to within 3 ms across blocks, so
+each step of the ladder is measured exactly, for this layout. The kernel group and the stripped bytecode pay; arena
+parking does not, and it came out. The final image passed health twice with peripherals on, every boot app within
+73 percent of its deadline.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1, Step 9 and Step 11.
+**Assistant interpretation:** run the paired study, decide parking, gate the final image, restore.
+**Inferred user intent:** each change's device effect, separately, on what main now holds.
+**Commit (code):** d76d9bf — "revert(p4): no arena parking; it did not make a boot compile faster on the P4"
+
+### What I did
+- `09-boot-study.py --arm control=... --arm group=... --arm strip=... --arm final=... --blocks 3
+  --lock-per-block` on the arm3 images (20a4b23). Rows and table: `various/04-boot-study-20a4b23/`.
+- Took parking out (d76d9bf): the allocator, the header, the guide (now says how much heap placement moves a
+  compile, and what that means for a speed claim); the TYPEDCOMPILE line loses `reused`.
+- Gate: `09-boot-study.py --arm gate1=G --arm gate2=G --blocks 1 --lock-per-block` with G the playable build of
+  d76d9bf (`f20954b9`, clean). `make test` on d76d9bf: 154/154, exit 0.
+- `make restore-playable` from the main checkout.
+
+### Why
+- Parking: the boot study is the measurement that matters (the deadlines are boot deadlines), and there it is
+  -27 ms for Candela and +2 to +21 ms for the four worlds, with more peak; the in-image -20 ms warm is the same size
+  as moving the heap by 1 KB (Step 10). No speed claim survives, so the code goes.
+
+### What worked
+- Boot compile, median of 3 (each block within 3 ms), seconds; per-step difference in ms; peak KB:
+
+  | App (deadline) | control | +kernel group | +JS_STRIP_DEBUG | +parking |
+  |---|---:|---:|---:|---:|
+  | Candela scene (8 s) | 2.818, 1,880 KB | -133, -136 KB | -216, -462 KB | -28, +46 KB |
+  | Files (3 s) | 1.522, 1,760 KB | +11 | -40, -346 KB | +4, +12 KB |
+  | Editor (6 s) | 3.558, 2,940 KB | -8 | -66, -590 KB | +21, +18 KB |
+  | Agenda (4 s) | 2.797, 2,379 KB | -19 | -50, -337 KB | +14, +15 KB |
+  | Chess (6 s) | 4.391, 2,908 KB | +13 | -40, -438 KB | +2, +19 KB |
+
+  The kernel group's real effect is Candela's: its `default` compile reads 114 KB of loops-group bytecode instead of
+  256 KB (in-call load 317 -> 179 ms). For the worlds, which load no pass group, +11 to -19 ms is placement (the core
+  bundle's registry differs by a few bytes). Module bytes identical in every arm; no cache hit in any boot.
+- Gate (f20954b9): health True twice with peripherals on; Candela 30.9 %, Files 49.8 %, Editor 58.1 %, Agenda
+  68.2 %, Chess 72.7 % of their deadlines (control: 35.2, 50.7, 59.3, 69.9, 73.2 %). Same times as the strip arm.
+- Restore (`make restore-playable` from the main checkout, 21:47-21:57, mostly waiting for the lock): playable
+  `54cfa09b` (PLAYABLE.json, main 209af25), health with peripherals on, keyboard i2c0 253 transfers and 0 errors
+  over the window, painter installed. PLAYABLE.json untouched.
+
+### What didn't work
+- Nine of twelve study boots failed health with `StopIteration()` (the split TYPEDCOMPILE line of Step 11, in every
+  arm); their compile lines are complete, so the timings stand. The gate image has the fix and passed both times.
+
+### What I learned
+- On the P4 the same image boots to the same compile times within a few ms; a change shows its true effect only
+  across several placements, and a single pair of images can show 20 ms either way.
+
+### What was tricky to build
+- Making room on a board four agents shared: per-block holds, an install inside the block's own hold, and stopping
+  my own waiting runs (never a holder) when the plan changed.
+
+### What warrants a second pair of eyes
+- The strip arm's -40 to -66 ms for the worlds includes a placement component of the same kind as the group
+  arm's +11/-19 ms; the load-time saving alone (Files 106 -> 80 ms, Editor 230 -> 170 ms) is the floor.
+
+### What should be done in the future
+- A compiler-speed study on the P4 should randomize heap placement per run (a pad, as E3) and report the spread.
+
+### Code review instructions
+- `git show d76d9bf`; `python3 scripts/09-boot-study.py --summarize --out /tmp/picocalc-device-cost-boot3` (or read
+  `various/04-boot-study-20a4b23/summary.txt`).
+
+### Technical details
+- Arms (20a4b23): control `aaf5f761`, group `0bd11a0a`, strip `41fcbca8`, final `8746adbe`. Gate `f20954b9`
+  (d76d9bf). Bench images: `b648cf40` (54dfe3b), `a796e3ea` (f1ecb93).

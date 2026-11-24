@@ -28,9 +28,11 @@ but not lines; the compile errors' messages carry their Typed positions themselv
 group only when a compile's policy needs it: `interactive` (Agenda, Editor, Files) loads none, `balanced` (Chess) the
 inline group, `default` (Candela's scene) inline and loops, `kernel` all three. After every compile the device prints
 a `TYPEDCOMPILE {...}` line: each evaluated compiler source (cached or parsed, load and run time, the heap after it),
-the linker call, the teardown, and the compile's calls to the PSRAM heap with the time spent in them. QuickJS takes
-its small objects' 4 KB arenas from that heap and returns each the moment it empties; a compile parks the freed ones
-and reuses them instead of handing them back to the heap thousands of times.
+the linker call, the teardown, and the compile's calls to the PSRAM heap with the time spent in them. The compile heap
+and the `TYPEDCOMPILE` record are `firmware/port/esp32p4/main/typed_compile_heap.{h,c}`. A compile's time on the P4
+moves by up to about 2 percent with where its heap lands (PICOCALC-COMPILER-DEVICE-COST: the same compile with a 1 KB
+block held in front of its heap), so a claim that a compiler change is faster by less than that needs several heap
+placements, not one pair of images.
 
 ## The pipeline
 

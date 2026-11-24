@@ -1,0 +1,95 @@
+[
+ {
+  "block": 0,
+  "arm": "control",
+  "dir": "b00-control",
+  "sha256": "aaf5f7614034ad6b50db24ca0b45d2ea751a259d9e8a0887b017b945164c43a9",
+  "healthy": true
+ },
+ {
+  "block": 0,
+  "arm": "group",
+  "dir": "b00-group",
+  "sha256": "0bd11a0aab9aeba242a1f1ec9da2f0a8067b8a82c856e9a2a9a1cd781a6c9554",
+  "healthy": false,
+  "error": "StopIteration()"
+ },
+ {
+  "block": 0,
+  "arm": "strip",
+  "dir": "b00-strip",
+  "sha256": "41fcbca868c1060cd8a02d44aeeb9ecdf764c649ea72c6d37c12f9c1e6ca56ca",
+  "healthy": false,
+  "error": "StopIteration()"
+ },
+ {
+  "block": 0,
+  "arm": "final",
+  "dir": "b00-final",
+  "sha256": "8746adbe55c8f441f5b5512c2d3120dc3fe6d7252d5862863d96eff6be764032",
+  "healthy": true
+ },
+ {
+  "block": 1,
+  "arm": "group",
+  "dir": "b01-group",
+  "sha256": "0bd11a0aab9aeba242a1f1ec9da2f0a8067b8a82c856e9a2a9a1cd781a6c9554",
+  "healthy": false,
+  "error": "StopIteration()"
+ },
+ {
+  "block": 1,
+  "arm": "strip",
+  "dir": "b01-strip",
+  "sha256": "41fcbca868c1060cd8a02d44aeeb9ecdf764c649ea72c6d37c12f9c1e6ca56ca",
+  "healthy": false,
+  "error": "StopIteration()"
+ },
+ {
+  "block": 1,
+  "arm": "final",
+  "dir": "b01-final",
+  "sha256": "8746adbe55c8f441f5b5512c2d3120dc3fe6d7252d5862863d96eff6be764032",
+  "healthy": false,
+  "error": "StopIteration()"
+ },
+ {
+  "block": 1,
+  "arm": "control",
+  "dir": "b01-control",
+  "sha256": "aaf5f7614034ad6b50db24ca0b45d2ea751a259d9e8a0887b017b945164c43a9",
+  "healthy": true
+ },
+ {
+  "block": 2,
+  "arm": "strip",
+  "dir": "b02-strip",
+  "sha256": "41fcbca868c1060cd8a02d44aeeb9ecdf764c649ea72c6d37c12f9c1e6ca56ca",
+  "healthy": false,
+  "error": "StopIteration()"
+ },
+ {
+  "block": 2,
+  "arm": "final",
+  "dir": "b02-final",
+  "sha256": "8746adbe55c8f441f5b5512c2d3120dc3fe6d7252d5862863d96eff6be764032",
+  "healthy": false,
+  "error": "StopIteration()"
+ },
+ {
+  "block": 2,
+  "arm": "control",
+  "dir": "b02-control",
+  "sha256": "aaf5f7614034ad6b50db24ca0b45d2ea751a259d9e8a0887b017b945164c43a9",
+  "healthy": false,
+  "error": "StopIteration()"
+ },
+ {
+  "block": 2,
+  "arm": "group",
+  "dir": "b02-group",
+  "sha256": "0bd11a0aab9aeba242a1f1ec9da2f0a8067b8a82c856e9a2a9a1cd781a6c9554",
+  "healthy": false,
+  "error": "StopIteration()"
+ }
+]

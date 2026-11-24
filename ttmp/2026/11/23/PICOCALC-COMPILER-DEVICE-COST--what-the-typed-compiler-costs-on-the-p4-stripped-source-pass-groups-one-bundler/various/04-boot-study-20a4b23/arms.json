@@ -1,0 +1,22 @@
+[
+ {
+  "arm": "control",
+  "dir": "/tmp/picocalc-device-cost-arm3-control",
+  "sha256": "aaf5f7614034ad6b50db24ca0b45d2ea751a259d9e8a0887b017b945164c43a9"
+ },
+ {
+  "arm": "group",
+  "dir": "/tmp/picocalc-device-cost-arm3-group",
+  "sha256": "0bd11a0aab9aeba242a1f1ec9da2f0a8067b8a82c856e9a2a9a1cd781a6c9554"
+ },
+ {
+  "arm": "strip",
+  "dir": "/tmp/picocalc-device-cost-arm3-strip",
+  "sha256": "41fcbca868c1060cd8a02d44aeeb9ecdf764c649ea72c6d37c12f9c1e6ca56ca"
+ },
+ {
+  "arm": "final",
+  "dir": "/tmp/picocalc-device-cost-arm3-final",
+  "sha256": "8746adbe55c8f441f5b5512c2d3120dc3fe6d7252d5862863d96eff6be764032"
+ }
+]

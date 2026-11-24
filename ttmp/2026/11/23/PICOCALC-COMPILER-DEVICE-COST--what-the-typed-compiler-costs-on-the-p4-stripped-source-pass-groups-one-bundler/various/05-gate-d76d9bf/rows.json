@@ -1,0 +1,790 @@
+[
+ {
+  "block": 0,
+  "arm": "gate1",
+  "dir": "b00-gate1",
+  "sha256": "f20954b90c6a660ebf61cb8160158f443a23841ebcb4536adf4fe5bd8e4a02a7",
+  "healthy": true,
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2468086,
+    "peak": 1313204,
+    "module": 66816,
+    "phases": {
+     "app": "candela",
+     "beforeUs": 4168,
+     "setupUs": 7150,
+     "callUs": 1912471,
+     "freeUs": 21879,
+     "heap": {
+      "mallocs": 1904,
+      "frees": 1904,
+      "reallocs": 1314,
+      "us": 56561
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 24649,
+       "runUs": 12645,
+       "liveBytes": 243024
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 197377,
+       "runUs": 10839,
+       "liveBytes": 359404
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 240823,
+       "runUs": 24749,
+       "liveBytes": 531996
+      },
+      {
+       "path": "candela/link.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 6479,
+       "runUs": 583,
+       "liveBytes": 531996
+      },
+      {
+       "path": "typed/rv32-inline.js",
+       "bytecode": "parsed",
+       "inCall": true,
+       "loadUs": 48477,
+       "runUs": 3610,
+       "liveBytes": 636080
+      },
+      {
+       "path": "typed/rv32-loops.js",
+       "bytecode": "parsed",
+       "inCall": true,
+       "loadUs": 78277,
+       "runUs": 3081,
+       "liveBytes": 664412
+      }
+     ]
+    }
+   },
+   "files": {
+    "status": "ok",
+    "us": 1493874,
+    "peak": 1447648,
+    "module": 243644,
+    "phases": {
+     "app": "files",
+     "beforeUs": 19595,
+     "setupUs": 7168,
+     "callUs": 1345144,
+     "freeUs": 17455,
+     "heap": {
+      "mallocs": 574,
+      "frees": 574,
+      "reallocs": 250,
+      "us": 17491
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 1109,
+       "runUs": 12533,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 6792,
+       "runUs": 10891,
+       "liveBytes": 327780
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 7294,
+       "runUs": 24545,
+       "liveBytes": 471948
+      },
+      {
+       "path": "typed/world.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 12966,
+       "runUs": 4319,
+       "liveBytes": 488732
+      }
+     ]
+    }
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3484113,
+    "peak": 2406144,
+    "module": 243644,
+    "phases": {
+     "app": "editor",
+     "beforeUs": 20838,
+     "setupUs": 7248,
+     "callUs": 3235514,
+     "freeUs": 20261,
+     "heap": {
+      "mallocs": 1977,
+      "frees": 1977,
+      "reallocs": 717,
+      "us": 50544
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 1104,
+       "runUs": 12580,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 6813,
+       "runUs": 10791,
+       "liveBytes": 327780
+      },
+      {
+       "path": "typed/async.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 99852,
+       "runUs": 2982,
+       "liveBytes": 396728
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 7654,
+       "runUs": 23305,
+       "liveBytes": 540456
+      },
+      {
+       "path": "typed/world.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 990,
+       "runUs": 4206,
+       "liveBytes": 561384
+      }
+     ]
+    }
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 2727190,
+    "peak": 2091288,
+    "module": 243644,
+    "phases": {
+     "app": "agenda",
+     "beforeUs": 22007,
+     "setupUs": 7192,
+     "callUs": 2581525,
+     "freeUs": 17469,
+     "heap": {
+      "mallocs": 944,
+      "frees": 944,
+      "reallocs": 454,
+      "us": 32851
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 1121,
+       "runUs": 12608,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 6814,
+       "runUs": 10833,
+       "liveBytes": 327780
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 7208,
+       "runUs": 24764,
+       "liveBytes": 471948
+      },
+      {
+       "path": "typed/world.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 973,
+       "runUs": 3925,
+       "liveBytes": 480620
+      }
+     ]
+    }
+   },
+   "chess": {
+    "status": "ok",
+    "us": 4362233,
+    "peak": 2528524,
+    "module": 276412,
+    "phases": {
+     "app": "chess",
+     "beforeUs": 23395,
+     "setupUs": 7199,
+     "callUs": 4202394,
+     "freeUs": 22819,
+     "heap": {
+      "mallocs": 1614,
+      "frees": 1614,
+      "reallocs": 1025,
+      "us": 56788
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 1116,
+       "runUs": 12617,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 6782,
+       "runUs": 10836,
+       "liveBytes": 327792
+      },
+      {
+       "path": "typed/async.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 3804,
+       "runUs": 2746,
+       "liveBytes": 384604
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 7468,
+       "runUs": 23271,
+       "liveBytes": 540496
+      },
+      {
+       "path": "typed/world.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 990,
+       "runUs": 4173,
+       "liveBytes": 561424
+      },
+      {
+       "path": "typed/rv32-inline.js",
+       "bytecode": "cached",
+       "inCall": true,
+       "loadUs": 1684,
+       "runUs": 2459,
+       "liveBytes": 969300
+      }
+     ]
+    }
+   },
+   "chess/painter": {
+    "status": "ok",
+    "us": 5591123,
+    "peak": 1394608,
+    "module": 33840,
+    "phases": {
+     "app": "chess/painter",
+     "beforeUs": 2442,
+     "setupUs": 12939,
+     "callUs": 5300624,
+     "freeUs": 53910,
+     "heap": {
+      "mallocs": 1216,
+      "frees": 1216,
+      "reallocs": 447,
+      "us": 86431
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 7596,
+       "runUs": 15162,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 109407,
+       "runUs": 18074,
+       "liveBytes": 327780
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 11251,
+       "runUs": 44082,
+       "liveBytes": 471948
+      },
+      {
+       "path": "chess/painter/link.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 8911,
+       "runUs": 655,
+       "liveBytes": 471948
+      },
+      {
+       "path": "typed/rv32-inline.js",
+       "bytecode": "cached",
+       "inCall": true,
+       "loadUs": 8259,
+       "runUs": 8476,
+       "liveBytes": 547496
+      },
+      {
+       "path": "typed/rv32-loops.js",
+       "bytecode": "cached",
+       "inCall": true,
+       "loadUs": 2403,
+       "runUs": 5654,
+       "liveBytes": 575828
+      }
+     ]
+    }
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 6393,
+   "typed/wasm.js": 60299,
+   "typed/rv32.js": 63199,
+   "candela/link.js": 759,
+   "typed/rv32-inline.js": 11921,
+   "typed/rv32-loops.js": 18968,
+   "typed/world.js": 3536,
+   "typed/async.js": 30895,
+   "chess/painter/link.js": 483
+  }
+ },
+ {
+  "block": 0,
+  "arm": "gate2",
+  "dir": "b00-gate2",
+  "sha256": "f20954b90c6a660ebf61cb8160158f443a23841ebcb4536adf4fe5bd8e4a02a7",
+  "healthy": true,
+  "compiles": {
+   "candela": {
+    "status": "ok",
+    "us": 2467972,
+    "peak": 1313204,
+    "module": 66816,
+    "phases": {
+     "app": "candela",
+     "beforeUs": 4168,
+     "setupUs": 7174,
+     "callUs": 1912145,
+     "freeUs": 21811,
+     "heap": {
+      "mallocs": 1904,
+      "frees": 1904,
+      "reallocs": 1314,
+      "us": 56401
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 24577,
+       "runUs": 12645,
+       "liveBytes": 243024
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 197269,
+       "runUs": 10851,
+       "liveBytes": 359404
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 241207,
+       "runUs": 24764,
+       "liveBytes": 531996
+      },
+      {
+       "path": "candela/link.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 6471,
+       "runUs": 598,
+       "liveBytes": 531996
+      },
+      {
+       "path": "typed/rv32-inline.js",
+       "bytecode": "parsed",
+       "inCall": true,
+       "loadUs": 48563,
+       "runUs": 3603,
+       "liveBytes": 636080
+      },
+      {
+       "path": "typed/rv32-loops.js",
+       "bytecode": "parsed",
+       "inCall": true,
+       "loadUs": 78156,
+       "runUs": 3098,
+       "liveBytes": 664412
+      }
+     ]
+    }
+   },
+   "files": {
+    "status": "ok",
+    "us": 1493411,
+    "peak": 1447648,
+    "module": 243644,
+    "phases": {
+     "app": "files",
+     "beforeUs": 19583,
+     "setupUs": 7134,
+     "callUs": 1344681,
+     "freeUs": 17475,
+     "heap": {
+      "mallocs": 574,
+      "frees": 574,
+      "reallocs": 250,
+      "us": 17624
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 1110,
+       "runUs": 12555,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 6802,
+       "runUs": 10876,
+       "liveBytes": 327780
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 7300,
+       "runUs": 24562,
+       "liveBytes": 471948
+      },
+      {
+       "path": "typed/world.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 12958,
+       "runUs": 4331,
+       "liveBytes": 488732
+      }
+     ]
+    }
+   },
+   "editor": {
+    "status": "ok",
+    "us": 3482552,
+    "peak": 2406144,
+    "module": 243644,
+    "phases": {
+     "app": "editor",
+     "beforeUs": 20837,
+     "setupUs": 7239,
+     "callUs": 3234097,
+     "freeUs": 20276,
+     "heap": {
+      "mallocs": 1977,
+      "frees": 1977,
+      "reallocs": 717,
+      "us": 50466
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 1097,
+       "runUs": 12593,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 6817,
+       "runUs": 10791,
+       "liveBytes": 327780
+      },
+      {
+       "path": "typed/async.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 99744,
+       "runUs": 2992,
+       "liveBytes": 396728
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 7644,
+       "runUs": 23269,
+       "liveBytes": 540456
+      },
+      {
+       "path": "typed/world.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 992,
+       "runUs": 4207,
+       "liveBytes": 561384
+      }
+     ]
+    }
+   },
+   "agenda": {
+    "status": "ok",
+    "us": 2727641,
+    "peak": 2091288,
+    "module": 243644,
+    "phases": {
+     "app": "agenda",
+     "beforeUs": 22005,
+     "setupUs": 7175,
+     "callUs": 2581956,
+     "freeUs": 17508,
+     "heap": {
+      "mallocs": 944,
+      "frees": 944,
+      "reallocs": 454,
+      "us": 32959
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 1112,
+       "runUs": 12659,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 6813,
+       "runUs": 10836,
+       "liveBytes": 327780
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 7183,
+       "runUs": 24748,
+       "liveBytes": 471948
+      },
+      {
+       "path": "typed/world.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 980,
+       "runUs": 3942,
+       "liveBytes": 480620
+      }
+     ]
+    }
+   },
+   "chess": {
+    "status": "ok",
+    "us": 4360578,
+    "peak": 2528524,
+    "module": 276412,
+    "phases": {
+     "app": "chess",
+     "beforeUs": 23382,
+     "setupUs": 7172,
+     "callUs": 4200792,
+     "freeUs": 22835,
+     "heap": {
+      "mallocs": 1614,
+      "frees": 1614,
+      "reallocs": 1025,
+      "us": 56676
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 1109,
+       "runUs": 12604,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 6792,
+       "runUs": 10858,
+       "liveBytes": 327792
+      },
+      {
+       "path": "typed/async.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 3809,
+       "runUs": 2736,
+       "liveBytes": 384604
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 7441,
+       "runUs": 23259,
+       "liveBytes": 540496
+      },
+      {
+       "path": "typed/world.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 983,
+       "runUs": 4178,
+       "liveBytes": 561424
+      },
+      {
+       "path": "typed/rv32-inline.js",
+       "bytecode": "cached",
+       "inCall": true,
+       "loadUs": 1674,
+       "runUs": 2473,
+       "liveBytes": 969300
+      }
+     ]
+    }
+   },
+   "chess/painter": {
+    "status": "ok",
+    "us": 5526305,
+    "peak": 1394592,
+    "module": 33840,
+    "phases": {
+     "app": "chess/painter",
+     "beforeUs": 2276,
+     "setupUs": 15200,
+     "callUs": 5315608,
+     "freeUs": 41579,
+     "heap": {
+      "mallocs": 1216,
+      "frees": 1216,
+      "reallocs": 447,
+      "us": 68439
+     },
+     "evals": [
+      {
+       "path": "typed/tape.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 34638,
+       "runUs": 22908,
+       "liveBytes": 239000
+      },
+      {
+       "path": "typed/wasm.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 11914,
+       "runUs": 18144,
+       "liveBytes": 327792
+      },
+      {
+       "path": "typed/rv32.js",
+       "bytecode": "cached",
+       "inCall": false,
+       "loadUs": 10518,
+       "runUs": 39065,
+       "liveBytes": 471964
+      },
+      {
+       "path": "chess/painter/link.js",
+       "bytecode": "parsed",
+       "inCall": false,
+       "loadUs": 8729,
+       "runUs": 637,
+       "liveBytes": 471964
+      },
+      {
+       "path": "typed/rv32-inline.js",
+       "bytecode": "cached",
+       "inCall": true,
+       "loadUs": 1753,
+       "runUs": 6319,
+       "liveBytes": 547512
+      },
+      {
+       "path": "typed/rv32-loops.js",
+       "bytecode": "cached",
+       "inCall": true,
+       "loadUs": 2305,
+       "runUs": 2437,
+       "liveBytes": 575844
+      }
+     ]
+    }
+   }
+  },
+  "bytecode": {
+   "typed/tape.js": 6393,
+   "typed/wasm.js": 60299,
+   "typed/rv32.js": 63199,
+   "candela/link.js": 759,
+   "typed/rv32-inline.js": 11921,
+   "typed/rv32-loops.js": 18968,
+   "typed/world.js": 3536,
+   "typed/async.js": 30895,
+   "chess/painter/link.js": 483
+  }
+ }
+]

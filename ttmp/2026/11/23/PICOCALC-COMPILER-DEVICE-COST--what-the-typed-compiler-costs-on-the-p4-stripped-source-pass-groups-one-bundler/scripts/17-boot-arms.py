@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Build the boot study's arms from one commit: a ladder that adds this ticket's changes one at a time.
 
+Applies to commits f1ecb93..91aeb52 (the boot study ran on 20a4b23); arena parking was taken out after them.
+
 usage: 17-boot-arms.py build ARM BUILD_DIR ARM_DIR   apply ARM, build the playable profile, copy the flashable files
                                                      (app, bootloader, partition table, picocalc-build.json) into
                                                      ARM_DIR (which must not exist), revert
@@ -8,9 +10,9 @@ usage: 17-boot-arms.py build ARM BUILD_DIR ARM_DIR   apply ARM, build the playab
        17-boot-arms.py apply ARM | revert
 
 ARM, each one change more than the one before:
-  control  main's RV32 bundles (4e35068) (no kernel group; typed-rv32-kernel.js a stub nothing loads), no strip, no parking
+  control  main's RV32 bundles (7a503c0) (no kernel group; typed-rv32-kernel.js a stub nothing loads), no strip, no parking
   group    this tree's bundles (the kernel group), no strip, no parking
-  strip    plus JS_STRIP_DEBUG (this tree's typed_p4.c without arena parking)
+  strip    plus JS_STRIP_DEBUG (typed_p4.c as it is, typed_compile_heap.c without arena parking)
   final    plus arena parking: the commit as it is
 Every edit is an exact, checked replacement; revert restores the edited files from git (they must be clean before).
 The tree is recorded as dirty in picocalc-build.json for every arm but final.
@@ -23,8 +25,9 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[5]
 TYPED_P4 = "firmware/port/esp32p4/main/typed_p4.c"
+HEAP = "firmware/port/esp32p4/main/typed_compile_heap.c"
 BUNDLES = ["compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js"]
-FILES = [TYPED_P4, *BUNDLES]
+FILES = [TYPED_P4, HEAP, *BUNDLES]
 NO_PARK = [
     ("  bool arena = size >= ARENA_MIN && size <= ARENA_BLOCK;\n",
      "  bool arena = false;  // boot-study arm without arena parking (PICOCALC-COMPILER-DEVICE-COST)\n"),
@@ -33,8 +36,10 @@ NO_PARK = [
 ]
 NO_STRIP = [("  JS_SetStripInfo(rt, COMPILER_STRIP);\n",
              "  JS_SetStripInfo(rt, 0);  // boot-study arm without stripping (PICOCALC-COMPILER-DEVICE-COST)\n")]
-ARMS = {"control": NO_PARK + NO_STRIP, "group": NO_PARK + NO_STRIP, "strip": NO_PARK, "final": []}
-MAIN = "4e35068"  # main as merged into 54dfe3b
+# Per arm, the edits of each file.
+ARMS = {"control": {HEAP: NO_PARK, TYPED_P4: NO_STRIP}, "group": {HEAP: NO_PARK, TYPED_P4: NO_STRIP},
+        "strip": {HEAP: NO_PARK}, "final": {}}
+MAIN = "7a503c0"  # main before this ticket merged (its compiler/typed equals 4e35068's)
 ESP_IDF = Path.home() / "esp/esp-idf-5.4.2/export.sh"
 
 
@@ -44,12 +49,13 @@ def git(*args, **kw):
 
 def apply(arm):
     git("diff", "--quiet", "HEAD", "--", *FILES)
-    path = REPO / TYPED_P4
-    text = path.read_text()
-    for old, new in ARMS[arm]:
-        assert text.count(old) == 1, f"{TYPED_P4}: expected one {old!r}"
-        text = text.replace(old, new)
-    path.write_text(text)
+    for rel, edits in ARMS[arm].items():
+        path = REPO / rel
+        text = path.read_text()
+        for old, new in edits:
+            assert text.count(old) == 1, f"{rel}: expected one {old!r}"
+            text = text.replace(old, new)
+        path.write_text(text)
     if arm == "control":
         for rel in BUNDLES[:2]:
             (REPO / rel).write_bytes(git("show", MAIN + ":" + rel, capture_output=True).stdout)
