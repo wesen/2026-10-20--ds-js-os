@@ -1,0 +1,68 @@
+{
+  "build": "/home/manuel/.cache/picocalc/firmware/fb0ba3bdae065083ae924bdf8f2e5be90c4b2f00a65e8c4446ab6a95c5a429d4",
+  "sha256": "fb0ba3bdae065083ae924bdf8f2e5be90c4b2f00a65e8c4446ab6a95c5a429d4",
+  "heldBeforeFlash": true,
+  "health": {
+    "peripherals": "on",
+    "boot": {
+      "uptimeMs": 0.0,
+      "rebooted": false
+    },
+    "worlds": [
+      "agenda",
+      "chess",
+      "compositor",
+      "display",
+      "editor",
+      "files",
+      "keyboard",
+      "snake"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 5834419,
+      "relocate_us": 1015,
+      "native_us": 1428,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "buses": {
+      "seconds": 5.24,
+      "deltas": {
+        "i2c0": {
+          "transfers": 240,
+          "bytes": 961,
+          "errors": 0,
+          "busyMs": 1839.17
+        },
+        "spi2": {
+          "transfers": 16,
+          "bytes": 621286,
+          "errors": 0,
+          "busyMs": 169.11
+        }
+      },
+      "totals": {
+        "i2c0": {
+          "busyMs": 3835.34,
+          "transfers": 565,
+          "bytes": 2264,
+          "errors": 0
+        },
+        "spi2": {
+          "busyMs": 338.8,
+          "transfers": 50,
+          "bytes": 1313245,
+          "errors": 0
+        }
+      }
+    },
+    "restartingAfterSettle": []
+  }
+}

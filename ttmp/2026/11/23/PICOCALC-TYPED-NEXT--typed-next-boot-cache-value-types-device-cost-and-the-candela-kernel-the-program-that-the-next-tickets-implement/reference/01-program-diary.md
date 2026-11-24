@@ -385,3 +385,45 @@ COMPILER-DEVICE-COST's board study kept debug stripping, removed arena parking, 
 ### What I learned
 
 - **My optimistic merge broke the board harness, and the agent's study caught it.** In the merged `typed_p4.c` the `TYPEDCOMPILE` line was printed in pieces. Another task's `painter` reply landed inside it, and the harness's health check raised `StopIteration` on 9 of 12 study boots. Main carried that from `ebfe8fb` to this merge. An optimistic merge of firmware is safe only while nobody installs main; it was not installed.
+
+## Step 11: COMPILE-CACHE finished; the new playable with the cache and the Typed arm installed
+
+COMPILE-CACHE delivered on the device: warm boots take their modules from the cache, and the Typed Candela arm is the gallery's default. I merged its last commits, built the playable from main (`3df1fc7`), installed it with health passing, and started the gallery check on both arms.
+
+### What I did
+
+- **Merged the rest of `worktree-agent-ad7c201df38aa233c`:** `f465d37` (the painter record found anywhere in a line), diary steps 8–10, and the evidence. `make test` exit 0; default gates pass.
+- **`make playable` at `3df1fc7`**, then `playable.py install`: exit 0, health passed with peripherals on. Cold boot compiles:
+
+  | App | Compile | Share | Peak |
+  |---|---:|---:|---:|
+  | Chess | 4.34 s | 72.3 % | 2.10 MB |
+  | painter | 5.65 s | 70.6 % | 1.21 MB |
+  | Agenda | 2.79 s | 69.7 % | 1.86 MB |
+  | Editor | 3.48 s | 58.1 % | 2.31 MB |
+  | Files | 1.52 s | 50.7 % | 1.35 MB |
+  | Candela scene | 2.45 s | 30.6 % | 1.19 MB |
+
+  Against the `54cfa09b` image, peaks fell 0.6–1.1 MB per compile (stripping, and compiles now collecting cycles); times are equal or slightly lower.
+- **Started `gallery.py --arm cpp` and `--arm typed --wait 400`.**
+
+### What the ticket measured
+
+| App | Cold compile | Warm hit | Write to FAT |
+|---|---:|---:|---:|
+| Chess | 4.34–4.40 s | 89 ms | 10–12 s |
+| Agenda | 2.75 s | 79–81 ms | 9–11 s |
+| Editor | 3.50 s | 79–80 ms | 9–11 s |
+| Files | 1.50 s | 76–78 ms | 9–11 s |
+
+- **First frames:** 18.4–21.2 s cold, 3.6–6.4 s warm. Boot work ends 3.4 s after reset.
+- **Integrity:** `typed cache verify` found 6 of 6 cached modules byte-identical to a fresh compile. A flipped and a truncated entry were each detected, deleted and recompiled.
+- **The Typed arm:** compiles in the background while C++ draws (113.5 s alone, 177–182 s beside the writer, peak 9.87 MB); cached load 0.30–0.35 s.
+- **The writer:** paced below the kernel, writing 4 KB pieces only in idle gaps of 10 ms or more. An unpaced writer made Agent, Files and the compositor overrun their turn budgets, because a flash erase pauses for 20 ms.
+- **B-01:** display digest `23d7885f` on both arms. The user's "lit from inside" is sample noise; the Typed shot had 18 spp against 39.
+
+### What warrants a second pair of eyes
+
+- **Health is judged at about 10 s uptime, before the writer starts.** A writer-induced turn overrun would not be caught. The soak (BOARD-HARNESS) is the place to see it.
+- **`typed cache clear` does not stop a queued write.**
+- **Chess's cold compile is at 72–73 % of its deadline.** The margin keeps shrinking with every front-end feature.
