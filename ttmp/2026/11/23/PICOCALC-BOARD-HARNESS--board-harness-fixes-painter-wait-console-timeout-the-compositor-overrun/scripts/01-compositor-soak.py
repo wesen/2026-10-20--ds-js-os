@@ -16,10 +16,12 @@ controller's queue and the I2C keyboard driver like a real key):
 the kernel logs a crash as "[t] W crashed handling TYPE: why" whether or not its trace is on (--trace turns it on
 for the rounds; it logs every dispatched message and slows the kernel task, so it is off by default).
 
-Other agents flash experiment images between rounds. A round starts only on a board that answers and has not been
-reset since the last round; otherwise the board is held, its flash is compared with the playable image the main
-checkout's PLAYABLE.json records (verify_flash, which resets it), and the soak continues on a fresh boot of it, or
-waits a minute (another agent's image) and tries again. Samples are split into boots in the summary.
+Other agents flash experiment images between rounds, sometimes across several lock acquisitions of their own. A round
+starts only on a board that answers and has not been reset since the last round. Otherwise the board is held (if it
+answers), its flash is compared with the playable image the main checkout's PLAYABLE.json records (verify_flash
+--after no_reset), and the soak continues on a fresh boot of the playable image. If it is another image, the board is
+left as it was found (its image running again, or a silent board left in its bootloader), and checked again only
+once it changes (a reset, or silence ending) or ten minutes pass. Samples are split into boots in the summary.
 
 Writes OUT/uart-N.log per round, OUT/samples.jsonl (one row per sample), OUT/crashes.jsonl and OUT/summary.json.
 """
@@ -103,30 +105,35 @@ def others_active():
     return found
 
 
-def board_ready(console, last_up):
-    """The uptime if the board answers and has not been reset since the last round, else None."""
+def uptime(console):
+    """The kernel clock, or None when the board does not answer (a bootloader, a study app, a hung firmware)."""
     try:
-        up = console.uptime_ms(deadline_s=15)
+        return console.uptime_ms(deadline_s=15)
     except (TimeoutError, ValueError):
         return None
-    return up if last_up is None or up >= last_up else None
 
 
-def verify_playable(log, out, rnd, port):
+def esptool(out, tag, port, after, *args):
+    with (Path(out) / f"{tag}.log").open("wb") as f:
+        return subprocess.run([device.ESPTOOL, "--chip", "esp32p4", "-p", port, "-b", "921600", "--after", after, *args],
+                              stdout=f, stderr=subprocess.STDOUT, check=False, timeout=210).returncode == 0
+
+
+def verify_playable(log, out, rnd, port, running):
     """Someone reset or flashed the board between rounds: hold it (best effort), compare its app slot and partition
-    table with the playable image main's PLAYABLE.json records (verify_flash, which resets it), and settle. False if
-    the board holds another image (another agent's experiment): wait for its restore."""
+    table with the playable image main's PLAYABLE.json records, and if they match, boot it and settle. If they do not
+    (another agent's image, perhaps between two of its operations), leave the board as it was found: its image
+    running again, or (`running` False: it was silent) waiting in its bootloader. Nothing is written."""
     record = json.loads(MAIN_PLAYABLE.read_text())
     store = playable.stored(record["app"]["sha256"])
     device.check_build(store, record["app"]["sha256"])
-    device.quiesce(port, log)
-    try:
-        device.esp("verify_flash", store, out, f"verify-{rnd:02d}", port)
-    except subprocess.CalledProcessError:
-        # Not the playable image. A failed verify leaves the chip in its bootloader: start the image it holds again.
-        with (Path(out) / f"verify-{rnd:02d}-reset.log").open("wb") as f:
-            subprocess.run([device.ESPTOOL, "--chip", "esp32p4", "-p", port, "--after", "hard_reset", "read_mac"],
-                           stdout=f, stderr=subprocess.STDOUT, check=False, timeout=60)
+    if running:
+        device.quiesce(port, log)
+    same = esptool(out, f"verify-{rnd:02d}", port, "no_reset", "verify_flash", "0x10000", str(store / device.APP),
+                   "0x8000", str(store / device.PART))
+    if same or running:
+        esptool(out, f"verify-{rnd:02d}-reset", port, "hard_reset", "read_mac")
+    if not same:
         return False
     console = device.Console(port, log)
     try:
@@ -176,6 +183,9 @@ def main():
     a.out.mkdir(parents=True, exist_ok=False)
     rng = random.Random(a.seed)
     rows, keys, crashes, events, soaked, rnd, last_up = [], [], [], [], 0.0, 0, None
+    # After a failed check: what the other image looked like ("silent" or its uptime) and when it was checked. It is
+    # not checked again (each check resets it) until it changes (a reset, silence ending) or ten minutes pass.
+    foreign, foreign_at = None, 0.0
     began = time.monotonic()
     with (a.out / "samples.jsonl").open("w") as samples:
         while soaked < a.minutes * 60 and time.monotonic() - began < a.max_hours * 3600:
@@ -185,20 +195,26 @@ def main():
             waiting = False
             with device.acquire(), log_path.open("wb", buffering=0) as log:
                 console = device.Console(a.port, log, drain_s=1)
-                if last_up is None or board_ready(console, last_up) is None:
-                    # The first round, or the board was reset or is silent: the image must be checked, which resets
-                    # it. Not while another agent is in a board session (it holds or waits for the lock), whose
-                    # image may be on the board between its operations.
+                up = uptime(console)
+                unchanged = foreign is not None and time.monotonic() - foreign_at < 600 and (
+                    (up is None and foreign == "silent") or (up is not None and foreign != "silent" and up >= foreign))
+                if unchanged:
+                    foreign = "silent" if up is None else up
+                    waiting = True
+                elif last_up is None or up is None or up < last_up:
+                    # The first round, or the board was reset or is silent: check its image (verify_playable leaves
+                    # another agent's image as it found it).
                     console.close()
                     busy = others_active()
-                    ok = False if busy else verify_playable(log, a.out, rnd, a.port)
+                    ok = verify_playable(log, a.out, rnd, a.port, running=up is not None)
                     events.append({"round": rnd, "host": round(time.time(), 3), "othersActive": busy,
+                                   "answered": up is not None,
                                    "event": "first round" if last_up is None else "reset or silent before the round",
                                    "playableVerified": ok})
-                    print(f"round {rnd}: checking the image; other board sessions {busy}; playable verified: {ok}", flush=True)
+                    print(f"round {rnd}: checking the image; answered {up is not None}; other board sessions {busy}; "
+                          f"playable verified: {ok}", flush=True)
                     waiting = not ok
-                    if waiting and sum(1 for e in events if not e["playableVerified"] and not e["othersActive"]) >= 10:
-                        raise SystemExit("the board has held another image for ten tries; stopping the soak")
+                    foreign, foreign_at = (None, 0.0) if ok else ("silent" if up is None else 0.0, time.monotonic())
                     console = device.Console(a.port, log, drain_s=1)
                 t0 = time.monotonic()
                 try:
