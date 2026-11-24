@@ -66,6 +66,23 @@ char *p4_typed_app_compile(const p4_typed_app *app, int variant, const char *tex
                            const char *kind, size_t *length);
 char *p4_typed_world_read(const char *path, size_t *length, bool *served);  // NAME/compiled.bin of a boot world
 void p4_typed_console(const char *args);
+// typed_cache_p4.c: compiled modules on /files/.cache/typed (PICOCALC-COMPILE-CACHE; typed_cache.h is the format).
+bool p4_typed_cache_key(const p4_typed_app *app, const char *bundled, const char *text, size_t text_length,
+                        const p4_compile_limits *limits, uint8_t key[32]);   // false: no filesystem, or an input missing
+char *p4_typed_cache_read(const char *name, const uint8_t key[32], size_t *length, int64_t key_us);   // NULL: a miss
+bool p4_typed_cache_has(const uint8_t key[32]);   // a valid header under this key (the module is not read)
+bool p4_typed_app_cached(const p4_typed_app *app, int variant);   // its bundled source's module is in the cache
+bool p4_typed_compiles_quiet(int core, int64_t quiet_us);   // none runs on core (-1: any), none ended in quiet_us
+void p4_typed_cache_store(const char *name, const char *label, const uint8_t key[32], const char *module,
+                          size_t length, int64_t compile_us);   // queued for the writer task; the module is copied
+void p4_typed_cache_idle(int64_t wait_us);   // the kernel task: nothing is due for wait_us (a gap for the writer)
+bool p4_typed_cache_hold(int timeout_ms);   // no further writes (a reboot or a flash follows); true when none is running
+void p4_typed_cache_console(const char *args);   // typed cache [clear | corrupt APP flip|cut]
+#define P4_TYPED_HOLD(ms) p4_typed_cache_hold(ms)
+#define P4_TYPED_IDLE(us) p4_typed_cache_idle(us)
+#else
+#define P4_TYPED_HOLD(ms) true
+#define P4_TYPED_IDLE(us) ((void)0)
 #endif
 
 #if PICOCALC_BENCH

@@ -1,38 +1,62 @@
 // The Typed compiler on the handheld, and the one path every Typed app (typed_apps.h, generated from
 // apps/typed/NAME/app.json) is compiled through: p4_typed_app_compile with the limits, policy, linker and entry of
-// its manifest. A boot world's module is served to the kernel as NAME/compiled.bin (p4_typed_world_read).
+// its manifest. A boot world's module is served to the kernel as NAME/compiled.bin (p4_typed_world_read). Every
+// compile first asks the compiled-module cache (typed_cache_p4.c) and gives it the module it compiles.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "p4.h"
 #include "typed_apps.h"
+#include "typed_cache.h"
 #include "typed_lex_index.h"
 #include "quickjs.h"
+#include "esp_heap_caps.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 
 typedef struct {
   size_t live, peak, limit;
   vtime_t deadline;
+  unsigned over_limit, no_psram;   // refused allocations: past the heap cap, or PSRAM had no block
 } compile_heap;
 
-static void account(compile_heap *heap, size_t old, size_t current) {
+// QuickJS starts its cycle collector from the size the allocator reports in malloc_size (js_trigger_gc: at 1.5 times
+// the size the last collection left). Its own allocator keeps that count; a custom one must, as the worlds' does
+// (nucleus/vm.c). This one did not until PICOCALC-COMPILE-CACHE, so no compile ever collected a cycle: the gallery's
+// Typed program grew past 17.8 MB and ran PSRAM empty.
+static void account(JSMallocState *state, size_t old, size_t current) {
+  compile_heap *heap = state->opaque;
   heap->live = heap->live - old + current;
   if (heap->live > heap->peak) heap->peak = heap->live;
+  state->malloc_size = heap->live;
+  state->malloc_count += (current != 0) - (old != 0);
+}
+
+// A compile must not take the PSRAM the running worlds need: the gallery's Typed program, compiled beside them,
+// once left PSRAM empty and the keyboard, compositor, snake and settings worlds failed for want of memory
+// (PICOCALC-COMPILE-CACHE diary step 6). Past RESERVE_FROM bytes of live heap (no boot compile gets there), an
+// allocation that would leave less than RESERVE free is refused, and the compile fails instead.
+enum { RESERVE = 3 << 20, RESERVE_FROM = 8 << 20 };
+static bool psram_spare(compile_heap *heap, size_t size) {
+  if (heap->live < RESERVE_FROM || heap_caps_get_free_size(MALLOC_CAP_SPIRAM) >= size + RESERVE) return true;
+  heap->no_psram++;
+  return false;
 }
 
 static void *compile_malloc(JSMallocState *state, size_t size) {
   compile_heap *heap = state->opaque;
-  if (heap->live >= heap->limit || size > heap->limit - heap->live) return NULL;
+  if (heap->live >= heap->limit || size > heap->limit - heap->live) { heap->over_limit++; return NULL; }
+  if (!psram_spare(heap, size)) return NULL;
   void *ptr = port_heap_malloc(size);
-  if (ptr) account(heap, 0, port_heap_usable(ptr));
+  if (ptr) account(state, 0, port_heap_usable(ptr));
+  else heap->no_psram++;
   return ptr;
 }
 
 static void compile_free(JSMallocState *state, void *ptr) {
   if (!ptr) return;
-  account(state->opaque, port_heap_usable(ptr), 0);
+  account(state, port_heap_usable(ptr), 0);
   port_heap_free(ptr);
 }
 
@@ -42,9 +66,11 @@ static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
   compile_heap *heap = state->opaque;
   size_t old = port_heap_usable(ptr);
   size_t retained = heap->live - old;
-  if (retained >= heap->limit || size > heap->limit - retained) return NULL;
+  if (retained >= heap->limit || size > heap->limit - retained) { heap->over_limit++; return NULL; }
+  if (size > old && !psram_spare(heap, size)) return NULL;
   void *next = port_heap_realloc(ptr, size);
-  if (next) account(heap, old, port_heap_usable(next));
+  if (next) account(state, old, port_heap_usable(next));
+  else heap->no_psram++;
   return next;
 }
 
@@ -242,9 +268,16 @@ rejected:
 done:
   if (ctx) JS_FreeContext(ctx);
   if (rt) JS_FreeRuntime(rt);
-  printf("%s compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu\n",
-         app, source_kind, module ? "ok" : "failed",
-         (long long)(port_clock() - started), heap.peak, module ? *length : 0);
+  const vtime_t elapsed = port_clock() - started;
+  uint8_t sha[32] = {0};
+  if (module) tc_sha256(module, *length, sha);
+  printf("%s compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu sha=%02x%02x%02x%02x%02x%02x%02x%02x\n",
+         app, source_kind, module ? "ok" : "failed", (long long)elapsed, heap.peak, module ? *length : 0,
+         sha[0], sha[1], sha[2], sha[3], sha[4], sha[5], sha[6], sha[7]);
+  if (!module)   // why: the heap cap, PSRAM, or neither (a compile error, the deadline)
+    printf("%s compile refused_over_limit=%u refused_no_psram=%u heap_limit=%zu psram_free=%zu psram_largest=%zu\n", app,
+           heap.over_limit, heap.no_psram, heap.limit, heap_caps_get_free_size(MALLOC_CAP_SPIRAM),
+           heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
   return module;
 }
 
@@ -292,17 +325,45 @@ static char *read_edited(const p4_typed_app *app, size_t *length) {
   return text;
 }
 
-char *p4_typed_app_compile(const p4_typed_app *app, int variant, const char *text, size_t text_length,
-                           const char *kind, size_t *length) {
-  vtime_t started = port_clock();
+// Real compiles (not cache hits) running now, and when the last one ended: a background compile waits for quiet.
+// Per core: the cache's writer (core 1) waits only for compiles that share its core.
+static volatile int compiles_running[2];
+static volatile vtime_t compiles_ended[2] = {-1, -1};
+bool p4_typed_compiles_quiet(int core, int64_t quiet_us) {
+  for (int c = 0; c < 2; c++)
+    if ((core < 0 || c == core) &&
+        (compiles_running[c] || (compiles_ended[c] >= 0 && port_clock() - compiles_ended[c] < quiet_us)))
+      return false;
+  return true;
+}
+
+bool p4_typed_app_cached(const p4_typed_app *app, int variant) {
+  if (!app || variant < 0 || (app->n_variants ? variant >= app->n_variants : variant != 0)) return false;
+  const p4_compile_limits limits = p4_typed_app_limits(app);
+  uint8_t key[32];
+  return p4_typed_cache_key(app, app->n_variants ? app->variants[variant].source : app->source, NULL, 0, &limits, key) &&
+         p4_typed_cache_has(key);
+}
+
+// The cache's key covers every input of the compile (typed_cache_p4.c); the deadline and heap limits apply only to a
+// real compile, whose clock starts after the lookup. The label kind (or the variant's source) groups entries for eviction.
+static char *compile_app(const p4_typed_app *app, int variant, const char *text, size_t text_length, const char *kind,
+                         size_t *length, bool cached) {
+  const vtime_t asked = port_clock();
   if (variant < 0 || (app->n_variants ? variant >= app->n_variants : variant != 0)) return NULL;
   const char *bundled = app->n_variants ? app->variants[variant].source : app->source;
+  const p4_compile_limits limits = p4_typed_app_limits(app);
+  uint8_t key[32];
+  const bool keyed = cached && p4_typed_cache_key(app, bundled, text, text_length, &limits, key);
+  char *module = keyed ? p4_typed_cache_read(app->name, key, length, port_clock() - asked) : NULL;
+  if (module) return module;
+  const int core = xPortGetCoreID();
+  __atomic_add_fetch(&compiles_running[core], 1, __ATOMIC_SEQ_CST);
+  const vtime_t started = port_clock();
   size_t source_length = text_length, reactor_length = 0;
   char *source = text ? NULL : p4_bundle_read(bundled, &source_length, NULL, 0);
   char *reactor = p4_bundle_read(app->reactor, &reactor_length, NULL, 0);
-  char *module = NULL;
   if ((text || source) && reactor) {
-    const p4_compile_limits limits = p4_typed_app_limits(app);
     module = p4_typed_compile(app->name, kind ? kind : bundled, text ? text : source, source_length, app->link,
                               app->entry, app->compiler, reactor, reactor_length, length, started, &limits);
   } else {
@@ -310,7 +371,47 @@ char *p4_typed_app_compile(const p4_typed_app *app, int variant, const char *tex
   }
   free(reactor);
   free(source);
+  compiles_ended[core] = port_clock();
+  __atomic_sub_fetch(&compiles_running[core], 1, __ATOMIC_SEQ_CST);
+  if (module && keyed) p4_typed_cache_store(app->name, kind ? kind : bundled, key, module, *length, port_clock() - started);
   return module;
+}
+
+char *p4_typed_app_compile(const p4_typed_app *app, int variant, const char *text, size_t text_length,
+                           const char *kind, size_t *length) {
+  return compile_app(app, variant, text, text_length, kind, length, true);
+}
+
+// typed cache verify [APP]: every bundled source that has an entry is compiled again, without the cache, and the two
+// modules compared. Without APP the gallery's program is left out (an 85 s compile with a 20 MB heap).
+static void cache_verify(const char *only) {
+  unsigned checked = 0, same = 0;
+  for (size_t i = 0; i < p4_typed_app_count; i++) {
+    const p4_typed_app *app = &p4_typed_apps[i];
+    if (only[0] ? strcmp(app->name, only) : !strcmp(app->name, "candela-gallery")) continue;
+    for (int v = 0; v < (app->n_variants ? app->n_variants : 1); v++) {
+      const char *bundled = app->n_variants ? app->variants[v].source : app->source;
+      const p4_compile_limits limits = p4_typed_app_limits(app);
+      uint8_t key[32], a[32] = {0}, b[32] = {0};
+      size_t cached_length = 0, fresh_length = 0;
+      if (!p4_typed_cache_key(app, bundled, NULL, 0, &limits, key)) continue;
+      char *cached = p4_typed_cache_read(app->name, key, &cached_length, 0);
+      if (!cached) continue;
+      char *fresh = compile_app(app, v, NULL, 0, "verify", &fresh_length, false);
+      tc_sha256(cached, cached_length, a);
+      if (fresh) tc_sha256(fresh, fresh_length, b);
+      const bool equal = fresh && fresh_length == cached_length && !memcmp(fresh, cached, cached_length);
+      printf("TCVERIFY {\"app\":\"%s\",\"source\":\"%s\",\"same\":%s,\"cachedBytes\":%zu,\"freshBytes\":%zu,"
+             "\"cachedSha\":\"%02x%02x%02x%02x%02x%02x%02x%02x\",\"freshSha\":\"%02x%02x%02x%02x%02x%02x%02x%02x\"}\n",
+             app->name, bundled, equal ? "true" : "false", cached_length, fresh_length, a[0], a[1], a[2], a[3], a[4], a[5],
+             a[6], a[7], b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7]);
+      checked++;
+      same += equal;
+      free(cached);
+      free(fresh);
+    }
+  }
+  printf("TCVERIFY {\"checked\":%u,\"same\":%u}\n", checked, same);
 }
 
 // The kernel reads a boot world's file while it boots (kernel.c add_world): NAME/compiled.bin is the app compiled
@@ -342,10 +443,21 @@ void p4_typed_console(const char *args) {
     }
     return;
   }
+  if (!strcmp(name, "cache")) {
+    char only[32] = "";
+    if (!strcmp(verb, "verify")) {
+      sscanf(args, "%*s %*s %31s", only);
+      cache_verify(only);
+    } else {
+      p4_typed_cache_console(strstr(args, "cache") + 5);
+    }
+    return;
+  }
   const p4_typed_app *app = p4_typed_app_find(name);
   bool edit = !strcmp(verb, "build");
   if (!app || !app->world || (!edit && strcmp(verb, "baseline")) || (edit && !app->edit_file)) {
-    puts("typed | typed WORLD baseline | typed WORLD build (an editable world, from its file under the store)");
+    puts("typed | typed WORLD baseline | typed WORLD build (an editable world, from its file under the store) | "
+         "typed cache [clear | verify [APP] | corrupt APP [flip|cut]]");
     return;
   }
   world_t *world = world_by_name(app->name);

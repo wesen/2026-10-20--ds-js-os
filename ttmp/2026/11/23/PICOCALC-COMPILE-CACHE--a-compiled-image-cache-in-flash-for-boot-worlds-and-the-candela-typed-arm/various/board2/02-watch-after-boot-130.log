@@ -1,0 +1,115 @@
+@3.014 CGAL {"ev":"pass","id":"R-01","pass":13,"renderMs":36049.0,"cyclesPerSample":38821.9,"ev100":8.3742}
+@6.046 CGAL {"ev":"pass","id":"R-01","pass":14,"renderMs":38796.6,"cyclesPerSample":38802.8,"ev100":8.3742}
+@9.271 CGAL {"ev":"pass","id":"R-01","pass":15,"renderMs":41656.5,"cyclesPerSample":38885.3,"ev100":8.3742}
+@12.281 CGAL {"ev":"pass","id":"R-01","pass":16,"renderMs":44318.2,"cyclesPerSample":38782.8,"ev100":8.3742}
+@15.353 CGAL {"ev":"pass","id":"R-01","pass":17,"renderMs":47063.6,"cyclesPerSample":38756.5,"ev100":8.3742}
+@18.094 CGAL {"ev":"pass","id":"R-01","pass":18,"renderMs":49649.5,"cyclesPerSample":38618.9,"ev100":8.3742}
+@21.194 CGAL {"ev":"pass","id":"R-01","pass":19,"renderMs":52388.5,"cyclesPerSample":38602.4,"ev100":8.3742}
+@22.380 CGAL {"ev":"scene","id":"R-01","arm":"cpp","w":160,"h":160,"reason":"time","passes":19,"samples":497440,"firstImageMs":597.2,"coarseMs":387.0,"halfMs":1155.9,"pass1Ms":3177.4,"renderMs":53271.4,"shownMs":60022.1,"secPerPass":2.7415,"samplesPerSec":9337.8,"cyclesPerSample":38383.0,"displays":39,"displayMs":6442.5,"displayCyclesMean":59303010,"skyRebuilt":1,"ev100":8.3742,"metered":3,"meanLum":62.283,"internalFree0":62263,"internalMinFree":58207,"psramFree0":9749324,"psramMinFree":4663428,"internalPeakUse":4056,"psramPeakUse":5085896}
+@22.855 CGAL {"ev":"first","id":"L-03","ms":480.0,"sub":1,"pass":0,"ev100":15.9390,"skyRebuilt":1}
+@24.290 CGAL {"ev":"pass","id":"L-03","pass":1,"renderMs":1432.3,"cyclesPerSample":20016.3,"ev100":15.9390}
+@26.542 CGAL {"ev":"pass","id":"L-03","pass":2,"renderMs":3409.2,"cyclesPerSample":23869.2,"ev100":16.1636}
+@28.575 CGAL {"ev":"pass","id":"L-03","pass":3,"renderMs":5098.5,"cyclesPerSample":23809.8,"ev100":16.1636}
+@29.899 CGAL {"ev":"pass","id":"L-03","pass":4,"renderMs":6219.8,"cyclesPerSample":21773.4,"ev100":16.1636}
+@31.944 CGAL {"ev":"pass","id":"L-03","pass":5,"renderMs":7923.0,"cyclesPerSample":22178.8,"ev100":16.1636}
+@33.533 CGAL {"ev":"pass","id":"L-03","pass":6,"renderMs":9314.8,"cyclesPerSample":21724.4,"ev100":16.1636}
+@34.973 CGAL {"ev":"pass","id":"L-03","pass":7,"renderMs":10740.4,"cyclesPerSample":21463.9,"ev100":16.1636}
+@36.805 CGAL {"ev":"pass","id":"L-03","pass":8,"renderMs":12419.5,"cyclesPerSample":21724.6,"ev100":16.1648}
+@38.227 CGAL {"ev":"pass","id":"L-03","pass":9,"renderMs":13683.5,"cyclesPerSample":21261.3,"ev100":16.1648}
+@39.992 CGAL {"ev":"pass","id":"L-03","pass":10,"renderMs":15291.8,"cyclesPerSample":21389.9,"ev100":16.1648}
+@41.565 CGAL {"ev":"pass","id":"L-03","pass":11,"renderMs":16652.7,"cyclesPerSample":21175.5,"ev100":16.1648}
+@43.345 CGAL {"ev":"pass","id":"L-03","pass":12,"renderMs":18285.2,"cyclesPerSample":21314.9,"ev100":16.1648}
+@44.993 CGAL {"ev":"pass","id":"L-03","pass":13,"renderMs":19797.7,"cyclesPerSample":21306.0,"ev100":16.1648}
+@46.577 CGAL {"ev":"pass","id":"L-03","pass":14,"renderMs":21164.2,"cyclesPerSample":21152.2,"ev100":16.1648}
+@48.046 CGAL {"ev":"pass","id":"L-03","pass":15,"renderMs":22476.6,"cyclesPerSample":20968.2,"ev100":16.1648}
+@49.620 CGAL {"ev":"pass","id":"L-03","pass":16,"renderMs":23839.8,"cyclesPerSample":20851.4,"ev100":16.1648}
+@51.304 CGAL {"ev":"pass","id":"L-03","pass":17,"renderMs":25347.8,"cyclesPerSample":20867.8,"ev100":16.1648}
+@53.031 CGAL {"ev":"pass","id":"L-03","pass":18,"renderMs":26927.6,"cyclesPerSample":20939.1,"ev100":16.1648}
+@54.726 CGAL {"ev":"pass","id":"L-03","pass":19,"renderMs":28445.0,"cyclesPerSample":20953.9,"ev100":16.1648}
+@56.148 CGAL {"ev":"pass","id":"L-03","pass":20,"renderMs":29691.4,"cyclesPerSample":20779.3,"ev100":16.1648}
+@57.945 CGAL {"ev":"pass","id":"L-03","pass":21,"renderMs":31311.9,"cyclesPerSample":20870.3,"ev100":16.1648}
+@59.356 CGAL {"ev":"pass","id":"L-03","pass":22,"renderMs":32539.8,"cyclesPerSample":20702.0,"ev100":16.1648}
+@61.067 CGAL {"ev":"pass","id":"L-03","pass":23,"renderMs":34078.4,"cyclesPerSample":20729.1,"ev100":16.1648}
+@62.626 CGAL {"ev":"pass","id":"L-03","pass":24,"renderMs":35482.6,"cyclesPerSample":20685.2,"ev100":16.1648}
+@64.428 CGAL {"ev":"pass","id":"L-03","pass":25,"renderMs":37081.9,"cyclesPerSample":20756.6,"ev100":16.1648}
+@65.939 CGAL {"ev":"pass","id":"L-03","pass":26,"renderMs":38432.2,"cyclesPerSample":20682.9,"ev100":16.1648}
+@67.748 CGAL {"ev":"pass","id":"L-03","pass":27,"renderMs":40080.4,"cyclesPerSample":20768.9,"ev100":16.1648}
+@69.458 CGAL {"ev":"pass","id":"L-03","pass":28,"renderMs":41614.7,"cyclesPerSample":20794.1,"ev100":16.1648}
+@71.200 CGAL {"ev":"pass","id":"L-03","pass":29,"renderMs":43204.4,"cyclesPerSample":20842.8,"ev100":16.1648}
+@72.699 CGAL {"ev":"pass","id":"L-03","pass":30,"renderMs":44552.6,"cyclesPerSample":20777.8,"ev100":16.1648}
+@74.446 CGAL {"ev":"pass","id":"L-03","pass":31,"renderMs":46085.4,"cyclesPerSample":20799.1,"ev100":16.1648}
+@76.305 CGAL {"ev":"pass","id":"L-03","pass":32,"renderMs":47797.3,"cyclesPerSample":20898.0,"ev100":16.1669}
+@76.588 [193852.362] keyboard: crashed: out of memory
+@76.599 [193853.770] keyboard crashed handling every 20 ms: it broke the native protocol (an end of 2)
+@76.608 #OCT1 {"ev":"fault","t":193853.770,"world":"keyboard","file":"natives/keyboard.elf","handling":"every 20 ms","why":"it broke the native protocol (an end of 2)","crashes":1,"mem_kb":67,"limit_kb":320}
+@76.622 [193886.393] compositor: crashed: out of memory
+@76.633 [193887.942] compositor crashed handling draw: it broke the native protocol (an end of 2)
+@76.640 #OCT1 {"ev":"fault","t":193887.942,"world":"compositor","file":"natives/compositor.elf","handling":"draw","why":"it broke the native protocol (an end of 2)","crashes":1,"mem_kb":427,"limit_kb":768}
+@76.725 E (196732) ELF: Error to load elf file, ret=-12
+@76.736 [193991.337] compositor crashed: natives/compositor.elf could not be loaded (elf_loader error -12)
+@76.746 #OCT1 {"ev":"fault","t":193991.337,"world":"compositor","file":"natives/compositor.elf","handling":"","why":"natives/compositor.elf could not be loaded (elf_loader error -12)","crashes":2,"mem_kb":0,"limit_kb":768}
+@76.928 E (196936) ELF: Error to load elf file, ret=-12
+@76.939 [194194.443] compositor crashed: natives/compositor.elf could not be loaded (elf_loader error -12)
+@76.949 #OCT1 {"ev":"fault","t":194194.443,"world":"compositor","file":"natives/compositor.elf","handling":"","why":"natives/compositor.elf could not be loaded (elf_loader error -12)","crashes":3,"mem_kb":0,"limit_kb":768}
+@77.334 E (197342) ELF: Error to load elf file, ret=-12
+@77.346 [194600.255] compositor crashed: natives/compositor.elf could not be loaded (elf_loader error -12)
+@77.355 #OCT1 {"ev":"fault","t":194600.255,"world":"compositor","file":"natives/compositor.elf","handling":"","why":"natives/compositor.elf could not be loaded (elf_loader error -12)","crashes":4,"mem_kb":0,"limit_kb":768}
+@77.706 CGAL {"ev":"pass","id":"L-03","pass":33,"renderMs":49055.5,"cyclesPerSample":20798.8,"ev100":16.1669}
+@78.138 E (198145) ELF: Error to load elf file, ret=-12
+@78.149 [195403.300] compositor crashed: natives/compositor.elf could not be loaded (elf_loader error -12)
+@78.160 #OCT1 {"ev":"fault","t":195403.300,"world":"compositor","file":"natives/compositor.elf","handling":"","why":"natives/compositor.elf could not be loaded (elf_loader error -12)","crashes":5,"mem_kb":0,"limit_kb":768}
+@78.165 [195403.300] compositor crashed 5 times in ten seconds; it stays stopped
+@79.984 [197248.588] keyboard: crashed: out of memory
+@79.996 [197250.072] keyboard crashed handling every 20 ms: it broke the native protocol (an end of 2)
+@80.003 #OCT1 {"ev":"fault","t":197250.072,"world":"keyboard","file":"natives/keyboard.elf","handling":"every 20 ms","why":"it broke the native protocol (an end of 2)","crashes":2,"mem_kb":67,"limit_kb":320}
+@80.266 [197530.238] snake: crashed: out of memory
+@80.277 [197531.544] snake crashed handling every 110 ms: it broke the native protocol (an end of 2)
+@80.284 #OCT1 {"ev":"fault","t":197531.544,"world":"snake","file":"natives/snake.elf","handling":"every 110 ms","why":"it broke the native protocol (an end of 2)","crashes":1,"mem_kb":98,"limit_kb":320}
+@80.369 E (200376) ELF: Error to load elf file, ret=-12
+@80.380 [197634.216] snake crashed: natives/snake.elf could not be loaded (elf_loader error -12)
+@80.387 #OCT1 {"ev":"fault","t":197634.216,"world":"snake","file":"natives/snake.elf","handling":"","why":"natives/snake.elf could not be loaded (elf_loader error -12)","crashes":2,"mem_kb":0,"limit_kb":320}
+@80.571 E (200579) ELF: Error to load elf file, ret=-12
+@80.583 [197837.164] snake crashed: natives/snake.elf could not be loaded (elf_loader error -12)
+@80.590 #OCT1 {"ev":"fault","t":197837.164,"world":"snake","file":"natives/snake.elf","handling":"","why":"natives/snake.elf could not be loaded (elf_loader error -12)","crashes":3,"mem_kb":0,"limit_kb":320}
+@80.606 [197870.091] keyboard: crashed: out of memory
+@80.617 [197871.483] keyboard crashed handling every 20 ms: it broke the native protocol (an end of 2)
+@80.625 #OCT1 {"ev":"fault","t":197871.483,"world":"keyboard","file":"natives/keyboard.elf","handling":"every 20 ms","why":"it broke the native protocol (an end of 2)","crashes":3,"mem_kb":67,"limit_kb":320}
+@80.800 [198064.091] settings: crashed: out of memory
+@80.811 [198065.581] settings crashed handling every 1000 ms: it broke the native protocol (an end of 2)
+@80.819 #OCT1 {"ev":"fault","t":198065.581,"world":"settings","file":"natives/settings.elf","handling":"every 1000 ms","why":"it broke the native protocol (an end of 2)","crashes":1,"mem_kb":190,"limit_kb":384}
+@80.903 E (200910) ELF: Error to load elf file, ret=-12
+@80.914 [198168.580] settings crashed: natives/settings.elf could not be loaded (elf_loader error -12)
+@80.923 #OCT1 {"ev":"fault","t":198168.580,"world":"settings","file":"natives/settings.elf","handling":"","why":"natives/settings.elf could not be loaded (elf_loader error -12)","crashes":2,"mem_kb":0,"limit_kb":384}
+@81.105 E (201112) ELF: Error to load elf file, ret=-12
+@81.117 [198370.899] settings crashed: natives/settings.elf could not be loaded (elf_loader error -12)
+@81.125 #OCT1 {"ev":"fault","t":198370.899,"world":"settings","file":"natives/settings.elf","handling":"","why":"natives/settings.elf could not be loaded (elf_loader error -12)","crashes":3,"mem_kb":0,"limit_kb":384}
+@81.508 E (201515) ELF: Error to load elf file, ret=-12
+@81.519 [198773.354] settings crashed: natives/settings.elf could not be loaded (elf_loader error -12)
+@81.528 #OCT1 {"ev":"fault","t":198773.354,"world":"settings","file":"natives/settings.elf","handling":"","why":"natives/settings.elf could not be loaded (elf_loader error -12)","crashes":4,"mem_kb":0,"limit_kb":384}
+@82.042 [199306.252] keyboard: crashed: out of memory
+@82.053 [199307.789] keyboard crashed handling every 20 ms: it broke the native protocol (an end of 2)
+@82.061 #OCT1 {"ev":"fault","t":199307.789,"world":"keyboard","file":"natives/keyboard.elf","handling":"every 20 ms","why":"it broke the native protocol (an end of 2)","crashes":4,"mem_kb":67,"limit_kb":320}
+@82.095 [199359.017] snake: crashed: out of memory
+@82.106 [199360.498] snake crashed handling every 110 ms: it broke the native protocol (an end of 2)
+@82.113 #OCT1 {"ev":"fault","t":199360.498,"world":"snake","file":"natives/snake.elf","handling":"every 110 ms","why":"it broke the native protocol (an end of 2)","crashes":4,"mem_kb":98,"limit_kb":320}
+@82.311 E (202318) ELF: Error to load elf file, ret=-12
+@82.323 [199576.605] settings crashed: natives/settings.elf could not be loaded (elf_loader error -12)
+@82.333 #OCT1 {"ev":"fault","t":199576.605,"world":"settings","file":"natives/settings.elf","handling":"","why":"natives/settings.elf could not be loaded (elf_loader error -12)","crashes":5,"mem_kb":0,"limit_kb":384}
+@82.337 [199576.605] settings crashed 5 times in ten seconds; it stays stopped
+@82.688 candela-gallery compile rejected: InternalError: out of memory
+@82.688     at commuteConstants (typed/rv32-inline.js:269:50)
+@82.699     at run (typed/rv32-inline.js:454:65)
+@82.699     at <anonymous> (typed/rv32.js:2297:65)
+@82.699     at time (typed/rv32.js:2277:22)
+@82.710     at lower (typed/rv32.js:2297:33)
+@82.710     at consume (typed/rv32.js:2349:24)
+@82.710     at emitFunctions (typed/wasm.js:2050:35)
+@82.722     at <anonymous> (typed/wasm.js:1931:32)
+@82.722     at withLexIndices (typed/wasm.js:28:23)
+@82.722     at compileFunctions (typed/wasm.js:1926:5)
+@82.730     at compile (typed/rv32.js:2357:103)
+@82.730     at linkCandelaGallery (candela-gallery/link.js:10:38)
+@82.730 
+@83.106 candela-gallery compile source=bundle status=failed us=160666705 peak_js_bytes=17540708 module_bytes=0 sha=0000000000000000
+@83.117 candela-gallery compile refused_over_limit=0 refused_no_psram=1 heap_limit=20971520 psram_free=17927152 psram_largest=4849664
+@83.124 CGAL {"ev":"error","what":"typed-load","error":"the Typed kernel did not compile"}
