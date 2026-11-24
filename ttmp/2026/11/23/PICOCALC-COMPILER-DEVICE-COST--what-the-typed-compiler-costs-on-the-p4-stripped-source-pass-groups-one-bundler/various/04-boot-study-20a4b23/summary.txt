@@ -1,0 +1,32 @@
+| App | arm | median s | Δ vs control per block (ms) | Δ vs previous arm per block (ms) | load ms (outside / in call) | call s | free ms | peak KB | Δ peak KB | module bytes | % of deadline |
+|---|---|---:|---|---|---|---:|---:|---:|---:|---:|---:|
+| candela | control | 2.818 |  |  | 682.8 / 316.6 | 1.774 | 29.8 | 1880 | +0 | [66816] | 35.2 |
+| candela | group | 2.684 | -134.8, -133.1, -133.1 | -134.8, -133.1, -133.1 | 682.4 / 179.3 | 1.781 | 26.1 | 1744 | -136 | [66816] | 33.6 |
+| candela | strip | 2.469 | -351.0, -347.2, -349.2 | -216.1, -214.1, -216.1 | 518.7 / 133.2 | 1.780 | 21.9 | 1282 | -597 | [66816] | 30.9 |
+| candela | final | 2.441 | -377.1, -376.1, -377.3 | -26.1, -28.9, -28.0 | 508.2 / 141.3 | 1.752 | 23.6 | 1328 | -552 | [66816] | 30.5 |
+| files | control | 1.522 |  |  | 104.7 / 0.0 | 1.353 | 19.8 | 1760 | +0 | [243644] | 50.7 |
+| files | group | 1.533 | +11.2, +10.8, +11.6 | +11.2, +10.8, +11.6 | 106.4 / 0.0 | 1.363 | 19.7 | 1760 | -0 | [243644] | 51.1 |
+| files | strip | 1.493 | -28.3, -29.1, -28.0 | -39.5, -39.9, -39.6 | 80.5 / 0.0 | 1.344 | 17.5 | 1414 | -346 | [243644] | 49.8 |
+| files | final | 1.497 | -24.5, -25.2, -24.6 | +3.8, +3.9, +3.4 | 80.5 / 0.0 | 1.347 | 17.7 | 1426 | -334 | [243644] | 49.9 |
+| editor | control | 3.558 |  |  | 229.0 / 0.0 | 3.254 | 23.0 | 2940 | +0 | [243644] | 59.3 |
+| editor | group | 3.550 | -7.6, -8.3, -8.1 | -7.6, -8.3, -8.1 | 229.5 / 0.0 | 3.247 | 22.8 | 2940 | +0 | [243644] | 59.2 |
+| editor | strip | 3.484 | -74.5, -72.7, -73.7 | -66.8, -64.4, -65.7 | 170.2 / 0.0 | 3.236 | 20.3 | 2350 | -590 | [243644] | 58.1 |
+| editor | final | 3.505 | -52.5, -52.5, -52.6 | +22.0, +20.2, +21.1 | 167.8 / 0.0 | 3.258 | 20.7 | 2368 | -572 | [243644] | 58.4 |
+| agenda | control | 2.797 |  |  | 90.7 / 0.0 | 2.635 | 19.8 | 2379 | +0 | [243644] | 69.9 |
+| agenda | group | 2.777 | -21.1, -19.4, -18.9 | -21.1, -19.4, -18.9 | 92.0 / 0.0 | 2.613 | 19.8 | 2379 | +0 | [243644] | 69.4 |
+| agenda | strip | 2.728 | -70.7, -66.6, -70.8 | -49.6, -47.2, -51.9 | 68.5 / 0.0 | 2.581 | 17.5 | 2042 | -337 | [243644] | 68.2 |
+| agenda | final | 2.742 | -56.5, -55.0, -54.1 | +14.3, +11.6, +16.7 | 68.8 / 0.0 | 2.596 | 17.7 | 2057 | -322 | [243644] | 68.5 |
+| chess | control | 4.391 |  |  | 103.9 / 7.1 | 4.201 | 24.2 | 2908 | +0 | [276412] | 73.2 |
+| chess | group | 4.404 | +14.6, +13.5, +12.4 | +14.6, +13.5, +12.4 | 105.1 / 7.0 | 4.213 | 24.2 | 2907 | -1 | [276412] | 73.4 |
+| chess | strip | 4.364 | -25.9, -26.6, -26.1 | -40.5, -40.1, -38.5 | 73.7 / 4.2 | 4.200 | 22.8 | 2469 | -439 | [276412] | 72.7 |
+| chess | final | 4.365 | -24.1, -25.1, -24.6 | +1.8, +1.4, +1.5 | 73.6 / 4.3 | 4.202 | 23.0 | 2488 | -420 | [276412] | 72.8 |
+| chess/painter | control | 5.737 |  |  | 174.3 / 50.8 | 5.417 | 66.9 | 1952 | +0 | [33840] |  |
+| chess/painter | group | 5.665 | -90.2, +11.9, -72.5 | -90.2, +11.9, -72.5 | nan / nan | nan | nan | 1830 | -122 | [33840] |  |
+| chess/painter | strip | 5.540 | -228.4, -145.2, -196.7 | -138.3, -157.1, -124.1 | nan / nan | nan | nan | 1362 | -590 | [33840] |  |
+| chess/painter | final | 5.520 | -233.6, -204.0, -162.1 | -5.2, -58.8, +34.6 | 112.0 / 21.1 | 5.288 | 41.7 | 1337 | -615 | [33840] |  |
+control bytecode cache: {"candela-gallery/link.js": 714, "typed/rv32-kernel.js": 27677, "typed/tape.js": 21203, "typed/wasm.js": 360923, "typed/rv32.js": 382191, "candela/link.js": 1874, "typed/rv32-inline.js": 65329, "typed/rv32-loops.js": 256148, "typed/world.js": 10768, "typed/async.js": 166157, "chess/painter/link.js": 1189} total 1294173
+group bytecode cache: {"typed/tape.js": 21203, "typed/wasm.js": 360923, "typed/rv32.js": 382431, "candela/link.js": 1874, "typed/rv32-inline.js": 65329, "typed/rv32-loops.js": 113551, "typed/world.js": 10768, "typed/async.js": 166157, "chess/painter/link.js": 1189} total 1123425
+strip bytecode cache: {"typed/tape.js": 6393, "typed/wasm.js": 60299, "typed/rv32.js": 63199, "candela/link.js": 759, "typed/rv32-inline.js": 11921, "typed/rv32-loops.js": 18968, "typed/world.js": 3536, "typed/async.js": 30895, "chess/painter/link.js": 483} total 196453
+final bytecode cache: {"typed/tape.js": 6393, "typed/wasm.js": 60299, "typed/rv32.js": 63199, "candela/link.js": 759, "typed/rv32-inline.js": 11921, "typed/rv32-loops.js": 18968, "typed/world.js": 3536, "typed/async.js": 30895, "chess/painter/link.js": 483} total 196453
+health: {'control': [True, True, False], 'group': [False, False, False], 'strip': [False, False, False], 'final': [True, False, False]}
+compiled-module cache hits (should be none): {}

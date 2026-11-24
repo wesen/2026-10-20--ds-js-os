@@ -1,0 +1,16 @@
+[
+ {
+  "block": 0,
+  "arm": "gate1",
+  "dir": "b00-gate1",
+  "sha256": "f20954b90c6a660ebf61cb8160158f443a23841ebcb4536adf4fe5bd8e4a02a7",
+  "healthy": true
+ },
+ {
+  "block": 0,
+  "arm": "gate2",
+  "dir": "b00-gate2",
+  "sha256": "f20954b90c6a660ebf61cb8160158f443a23841ebcb4536adf4fe5bd8e4a02a7",
+  "healthy": true
+ }
+]

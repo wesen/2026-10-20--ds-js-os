@@ -114,3 +114,17 @@ Decisions taken while implementing (details and evidence in the diary, `referenc
    against everything evaluated up front, and the compile's heap moved by a held PSRAM block.
 6. **The 84-digest harness** is PICOCALC-RV32-REGISTERS's, copied into `scripts/digests/` with Files and Agenda as
    the Typed worlds they are now (the old units no longer compile).
+
+## Refinements after the board work (2026-11-23)
+
+1. **Strip mode:** `JS_STRIP_DEBUG` stays. On the device it beats `JS_STRIP_SOURCE` by 21-111 ms cold, 0-37 ms warm
+   and 50-120 KB of peak, with the same rejected-compile messages.
+2. **The kernel group** also holds CANDELA-KERNEL-CODEGEN's `rows` and `coalesce`.
+3. **The slowdown** is heap placement: a compile on the P4 moves by up to about 2 percent with where its allocations
+   land (a 1 KB block held in front of the heap moves Agenda by up to 47 ms), and the lazy groups' sign changes with
+   anything that moves the heap. Lazy loading itself saves about 19 ms of bytecode reading per compile.
+4. **Arena parking** (not in the plan) was measured and taken out: no boot compile got faster.
+5. **The compile heap and TYPEDCOMPILE** live in `typed_compile_heap.{h,c}` (main's merge with COMPILE-CACHE made
+   typed_p4.c 602 lines); the TYPEDCOMPILE line is one console write.
+6. **Base:** the boot study and the gate ran on the merged main (compiles collect cycles, the module cache emptied
+   before each boot); the slowdown experiments (E2, E2p, E3) ran on 54dfe3b, without cycle collection.

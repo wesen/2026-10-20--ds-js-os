@@ -803,3 +803,75 @@ their own file"; 91aeb52 — "fix(p4): the TYPEDCOMPILE line goes to the console
 
 ### Technical details
 - Session 5 rows and tables: `various/03-session-f1ecb93/`.
+
+## Step 12: The paired boot study on the merged base, parking taken out, the gate
+
+The boot study installed four images built from 20a4b23 in rotating order, three blocks, the lock held per block and
+the compiled-module cache emptied before each install. Every arm repeats itself to within 3 ms across blocks, so
+each step of the ladder is measured exactly, for this layout. The kernel group and the stripped bytecode pay; arena
+parking does not, and it came out. The final image passed health twice with peripherals on, every boot app within
+73 percent of its deadline.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1, Step 9 and Step 11.
+**Assistant interpretation:** run the paired study, decide parking, gate the final image, restore.
+**Inferred user intent:** each change's device effect, separately, on what main now holds.
+**Commit (code):** d76d9bf — "revert(p4): no arena parking; it did not make a boot compile faster on the P4"
+
+### What I did
+- `09-boot-study.py --arm control=... --arm group=... --arm strip=... --arm final=... --blocks 3
+  --lock-per-block` on the arm3 images (20a4b23). Rows and table: `various/04-boot-study-20a4b23/`.
+- Took parking out (d76d9bf): the allocator, the header, the guide (now says how much heap placement moves a
+  compile, and what that means for a speed claim); the TYPEDCOMPILE line loses `reused`.
+- Gate: `09-boot-study.py --arm gate1=G --arm gate2=G --blocks 1 --lock-per-block` with G the playable build of
+  d76d9bf (`f20954b9`, clean). `make test` on d76d9bf: 154/154, exit 0.
+- `make restore-playable` from the main checkout.
+
+### Why
+- Parking: the boot study is the measurement that matters (the deadlines are boot deadlines), and there it is
+  -27 ms for Candela and +2 to +21 ms for the four worlds, with more peak; the in-image -20 ms warm is the same size
+  as moving the heap by 1 KB (Step 10). No speed claim survives, so the code goes.
+
+### What worked
+- Boot compile, median of 3 (each block within 3 ms), seconds; per-step difference in ms; peak KB:
+
+  | App (deadline) | control | +kernel group | +JS_STRIP_DEBUG | +parking |
+  |---|---:|---:|---:|---:|
+  | Candela scene (8 s) | 2.818, 1,880 KB | -133, -136 KB | -216, -462 KB | -28, +46 KB |
+  | Files (3 s) | 1.522, 1,760 KB | +11 | -40, -346 KB | +4, +12 KB |
+  | Editor (6 s) | 3.558, 2,940 KB | -8 | -66, -590 KB | +21, +18 KB |
+  | Agenda (4 s) | 2.797, 2,379 KB | -19 | -50, -337 KB | +14, +15 KB |
+  | Chess (6 s) | 4.391, 2,908 KB | +13 | -40, -438 KB | +2, +19 KB |
+
+  The kernel group's real effect is Candela's: its `default` compile reads 114 KB of loops-group bytecode instead of
+  256 KB (in-call load 317 -> 179 ms). For the worlds, which load no pass group, +11 to -19 ms is placement (the core
+  bundle's registry differs by a few bytes). Module bytes identical in every arm; no cache hit in any boot.
+- Gate (f20954b9): health True twice with peripherals on; Candela 30.9 %, Files 49.8 %, Editor 58.1 %, Agenda
+  68.2 %, Chess 72.7 % of their deadlines (control: 35.2, 50.7, 59.3, 69.9, 73.2 %). Same times as the strip arm.
+
+### What didn't work
+- Nine of twelve study boots failed health with `StopIteration()` (the split TYPEDCOMPILE line of Step 11, in every
+  arm); their compile lines are complete, so the timings stand. The gate image has the fix and passed both times.
+
+### What I learned
+- On the P4 the same image boots to the same compile times within a few ms; a change shows its true effect only
+  across several placements, and a single pair of images can show 20 ms either way.
+
+### What was tricky to build
+- Making room on a board four agents shared: per-block holds, an install inside the block's own hold, and stopping
+  my own waiting runs (never a holder) when the plan changed.
+
+### What warrants a second pair of eyes
+- The strip arm's -40 to -66 ms for the worlds includes a placement component of the same kind as the group
+  arm's +11/-19 ms; the load-time saving alone (Files 106 -> 80 ms, Editor 230 -> 170 ms) is the floor.
+
+### What should be done in the future
+- A compiler-speed study on the P4 should randomize heap placement per run (a pad, as E3) and report the spread.
+
+### Code review instructions
+- `git show d76d9bf`; `python3 scripts/09-boot-study.py --summarize --out /tmp/picocalc-device-cost-boot3` (or read
+  `various/04-boot-study-20a4b23/summary.txt`).
+
+### Technical details
+- Arms (20a4b23): control `aaf5f761`, group `0bd11a0a`, strip `41fcbca8`, final `8746adbe`. Gate `f20954b9`
+  (d76d9bf). Bench images: `b648cf40` (54dfe3b), `a796e3ea` (f1ecb93).

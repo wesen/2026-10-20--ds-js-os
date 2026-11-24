@@ -1,0 +1,12 @@
+[
+ {
+  "arm": "gate1",
+  "dir": "/tmp/picocalc-device-cost-gate2",
+  "sha256": "f20954b90c6a660ebf61cb8160158f443a23841ebcb4536adf4fe5bd8e4a02a7"
+ },
+ {
+  "arm": "gate2",
+  "dir": "/tmp/picocalc-device-cost-gate2",
+  "sha256": "f20954b90c6a660ebf61cb8160158f443a23841ebcb4536adf4fe5bd8e4a02a7"
+ }
+]

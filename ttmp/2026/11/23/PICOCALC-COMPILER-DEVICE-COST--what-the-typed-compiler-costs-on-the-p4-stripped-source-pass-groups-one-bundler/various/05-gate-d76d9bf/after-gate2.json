@@ -1,0 +1,71 @@
+{
+  "build": "/tmp/picocalc-device-cost-gate2",
+  "sha256": "f20954b90c6a660ebf61cb8160158f443a23841ebcb4536adf4fe5bd8e4a02a7",
+  "cacheCleared": [
+    "TCACHE {\"cleared\":1}"
+  ],
+  "heldBeforeFlash": true,
+  "health": {
+    "peripherals": "on",
+    "boot": {
+      "uptimeMs": 0.0,
+      "rebooted": false
+    },
+    "worlds": [
+      "agenda",
+      "chess",
+      "compositor",
+      "display",
+      "editor",
+      "files",
+      "keyboard",
+      "snake"
+    ],
+    "painter": {
+      "sources": 1,
+      "compiles": 1,
+      "installed": true,
+      "packets": 1,
+      "calls": 1,
+      "paints": 0,
+      "rejects": 0,
+      "compile_us": 6113280,
+      "relocate_us": 1239,
+      "native_us": 1514,
+      "raster_us": 0,
+      "image_bytes": 33840
+    },
+    "buses": {
+      "seconds": 5.24,
+      "deltas": {
+        "i2c0": {
+          "transfers": 236,
+          "bytes": 945,
+          "errors": 0,
+          "busyMs": 2005.44
+        },
+        "spi2": {
+          "transfers": 24,
+          "bytes": 821202,
+          "errors": 0,
+          "busyMs": 219.22
+        }
+      },
+      "totals": {
+        "i2c0": {
+          "busyMs": 4252.12,
+          "transfers": 574,
+          "bytes": 2301,
+          "errors": 0
+        },
+        "spi2": {
+          "busyMs": 386.69,
+          "transfers": 58,
+          "bytes": 1513953,
+          "errors": 0
+        }
+      }
+    },
+    "restartingAfterSettle": []
+  }
+}
