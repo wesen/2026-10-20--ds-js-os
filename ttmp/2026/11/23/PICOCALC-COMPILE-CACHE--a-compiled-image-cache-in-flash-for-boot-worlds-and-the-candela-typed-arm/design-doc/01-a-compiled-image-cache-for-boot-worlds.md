@@ -176,3 +176,12 @@ The device runs (diary Steps 5 and 6) changed points 6, 7 and 10 above and added
     gallery's Typed compile emptied PSRAM and the keyboard, compositor, snake and settings worlds failed.
 14. **The compile runtime collects cycles.** QuickJS starts its cycle collector from `malloc_state.malloc_size`, which
     the compile allocator never updated, so no device compile ever collected a cycle. It does now (`account()`).
+15. **Typed is the default arm (milestone 4).** The conditions hold on merged main (image 85be45dd, diary Step 8): the
+    cached program loads in 0.33 s (read 305 ms, relocate 47 ms), both arms agree 18/18 with their references, and
+    health passes. Point 10's presentation is what ships: after a firmware or compiler change the gallery draws with
+    C++ while the program compiles in the background (113.5–182 s; longer while the writer stores the boot apps beside
+    it), then stores it and switches at the next scene. C++ stays selectable (`gallery arm cpp`) as the benchmark.
+16. **Pieces stay below the kernel.** Point 11's first version raised the writer above the kernel for each piece. An
+    erase yields every 20 ms (`CONFIG_SPI_FLASH_YIELD_DURING_ERASE`), the kernel started a turn in the yield, and the
+    writer came back inside it (keyboard overran its 20 ms budget). The writer now stays at priority 3 and starts a
+    piece only while the kernel waits in an announced gap (`kernel_idle`), not merely when a gap token is there.
