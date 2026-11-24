@@ -78,7 +78,7 @@ bundle and restarts it, `typed WORLD build` from its editable file (`notes/agend
 Every compile first asks a cache of compiled modules in `/files/.cache/typed` (PICOCALC-COMPILE-CACHE;
 `main/typed_cache.{h,c}` is the format, `main/typed_cache_p4.c` the device side). Its key is a SHA-256 over every input
 of the compile: the source, the reactor, every bundle under `typed/` (so any pass group a policy may load), the
-linker, the entry, the policy, and a digest of the compiler's C side (`typed_lex_index`, `typed_p4.c`, QuickJS) that
+linker, the entry, the policy, and a digest of the compiler's C side (`typed_lex_index`, `typed_p4.c`, `typed_compile_heap`, QuickJS) that
 CMake takes at configure time. A new firmware therefore misses only where the compiler or the app changed. A hit
 prints `NAME cache hit us=... read_us=... sha=...`; a miss compiles as before, under the deadline and heap limits, and
 a writer task stores the module after the boot. A flash erase stops both cores' caches, so the writer (priority 3 on

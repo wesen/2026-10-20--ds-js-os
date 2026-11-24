@@ -61,12 +61,13 @@ execute_process(
 include(${typed_out}/typed-apps.cmake)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${TYPED_APPS_INPUTS})
 
-target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c typed_lex_index.c typed_cache.c typed_cache_p4.c
+target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c typed_compile_heap.c typed_lex_index.c typed_cache.c typed_cache_p4.c
                ${typed_out}/typed_apps.c ${TYPED_APPS_HOST_SOURCES})
 # The compiled-module cache's key covers the compiler's C side too (PICOCALC-COMPILE-CACHE): the native tokenizer, the
 # code that calls the compiler, and the engine it runs on. Their digest is taken at configure time, and each file is a
 # configure dependency, so an edit to one of them reconfigures and changes the key.
 set(typed_native_files ${MAIN}/typed_lex_index.c ${MAIN}/typed_lex_index.h ${MAIN}/typed_p4.c
+    ${MAIN}/typed_compile_heap.c ${MAIN}/typed_compile_heap.h
     ${QJS}/quickjs.c ${QJS}/quickjs.h ${QJS}/dtoa.c ${QJS}/libregexp.c ${QJS}/libunicode.c ${QJS}/cutils.c)
 set(typed_native "")
 set(normalized)

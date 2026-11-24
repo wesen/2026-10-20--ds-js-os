@@ -30,7 +30,8 @@ inline group, `default` (Candela's scene) inline and loops, `kernel` all three. 
 a `TYPEDCOMPILE {...}` line: each evaluated compiler source (cached or parsed, load and run time, the heap after it),
 the linker call, the teardown, and the compile's calls to the PSRAM heap with the time spent in them. QuickJS takes
 its small objects' 4 KB arenas from that heap and returns each the moment it empties; a compile parks the freed ones
-and reuses them instead of handing them back to the heap thousands of times.
+and reuses them instead of handing them back to the heap thousands of times. The compile heap and the `TYPEDCOMPILE`
+record are `firmware/port/esp32p4/main/typed_compile_heap.{h,c}`.
 
 ## The pipeline
 
