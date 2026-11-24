@@ -8,7 +8,7 @@ import {adjustsStack, compiler, destination, opcode, sourceRegister, words} from
 
 test("hoisted loop invariants keep results, stores and traps identical, including aliased buffers", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // moved: invariant loads (with the out == work guard), an invariant pure statement, y / 16
@@ -107,7 +107,7 @@ test("hoisted loop invariants keep results, stores and traps identical, includin
 
 test("fused conjunctions and loads into homes keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // band: && in two ifs, one body with an early return. pick: an inlined callee whose return
@@ -170,7 +170,7 @@ function flag(work: buffer, n: i32): i32 {
 
 test("induction variables and pointer-only sources keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // [induction, pointer-only]: rows and nested (InShadow's shape) both; mixed reads its affine
@@ -248,7 +248,7 @@ test("induction variables and pointer-only sources keep results, stores and trap
 
 test("locals in the argument registers of unhomed parameters keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // Each function reads some parameters once, outside its loop (no home), and keeps more

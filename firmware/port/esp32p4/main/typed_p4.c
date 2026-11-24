@@ -12,14 +12,51 @@
 #include "typed_lex_index.h"
 #include "quickjs.h"
 #include "esp_heap_caps.h"
+#include "esp_cpu.h"
+#include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
+
+// QuickJS keeps small objects in 4 KB arenas that it takes from the embedder, and returns an arena the moment its last
+// object is freed. A size class whose use swings across an arena boundary therefore takes and returns the same 4 KB
+// again and again: 2,100 to 5,100 arenas in one boot compile on the host, a number that moves with whatever else the
+// realm holds (PICOCALC-COMPILER-DEVICE-COST). On the P4 each is a TLSF allocation and free in PSRAM. A compile parks
+// up to ARENA_PARKED freed arena-sized blocks and hands them out again; a parked block stays counted as live (so the
+// peak counts what the compile holds) and the runtime's teardown frees them.
+#define ARENA_MIN 3584
+#define ARENA_BLOCK 4096
+#define ARENA_PARKED 64
 
 typedef struct {
   size_t live, peak, limit;
   vtime_t deadline;
   unsigned over_limit, no_psram;   // refused allocations: past the heap cap, or PSRAM had no block
+  // The calls this compile made to the port's heap (QuickJS's arenas and large blocks) and the CPU cycles inside them.
+  uint32_t mallocs, frees, reallocs, reused;
+  uint64_t heap_cycles;
+  int parked_count;
+  void *parked[ARENA_PARKED];
 } compile_heap;
+
+// Where one compile's time went, printed after it as one TYPEDCOMPILE line (outside the timed compile): each compiler
+// source it evaluated (from the bytecode cache or parsed, with the time to load the bytecode and to run the source's
+// top level), the call to the linker's entry (front end, back end and link; a pass group the back end loads is an
+// evaluation inside it), the runtime's teardown, and the calls to the port's heap with the time spent in them
+// (PICOCALC-COMPILER-DEVICE-COST).
+typedef struct {
+  char path[32];
+  bool parsed, in_call;
+  vtime_t load_us, run_us;
+  size_t live;  // the compiler heap after the evaluation
+} compile_eval;
+
+typedef struct {
+  compile_heap heap;  // first: the allocator's and the interrupt handler's opaque
+  bool in_call;
+  int evals;
+  compile_eval eval[12];
+  vtime_t before_us, setup_us, call_us, free_us;  // before: from `started` (reading the source and reactor)
+} compile_state;
 
 // QuickJS starts its cycle collector from the size the allocator reports in malloc_size (js_trigger_gc: at 1.5 times
 // the size the last collection left). Its own allocator keeps that count; a custom one must, as the worlds' does
@@ -46,24 +83,44 @@ static bool psram_spare(compile_heap *heap, size_t size) {
 
 static void *compile_malloc(JSMallocState *state, size_t size) {
   compile_heap *heap = state->opaque;
+  bool arena = size >= ARENA_MIN && size <= ARENA_BLOCK;
+  if (arena && heap->parked_count) {
+    heap->reused++;
+    return heap->parked[--heap->parked_count];
+  }
+  if (arena) size = ARENA_BLOCK;  // every arena-sized block can serve every arena-sized request
   if (heap->live >= heap->limit || size > heap->limit - heap->live) { heap->over_limit++; return NULL; }
   if (!psram_spare(heap, size)) return NULL;
+  uint32_t begun = esp_cpu_get_cycle_count();
   void *ptr = port_heap_malloc(size);
   if (ptr) account(state, 0, port_heap_usable(ptr));
   else heap->no_psram++;
+  heap->mallocs++;
+  heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
   return ptr;
 }
 
 static void compile_free(JSMallocState *state, void *ptr) {
   if (!ptr) return;
-  account(state, port_heap_usable(ptr), 0);
+  compile_heap *heap = state->opaque;
+  uint32_t begun = esp_cpu_get_cycle_count();
+  size_t usable = port_heap_usable(ptr);
+  if (usable >= ARENA_BLOCK && usable < ARENA_BLOCK + 64 && heap->parked_count < ARENA_PARKED) {
+    heap->parked[heap->parked_count++] = ptr;  // stays counted as live
+    heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
+    return;
+  }
+  account(state, usable, 0);
   port_heap_free(ptr);
+  heap->frees++;
+  heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
 }
 
 static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
   if (!ptr) return compile_malloc(state, size);
   if (!size) { compile_free(state, ptr); return NULL; }
   compile_heap *heap = state->opaque;
+  uint32_t begun = esp_cpu_get_cycle_count();
   size_t old = port_heap_usable(ptr);
   size_t retained = heap->live - old;
   if (retained >= heap->limit || size > heap->limit - retained) { heap->over_limit++; return NULL; }
@@ -71,6 +128,8 @@ static void *compile_realloc(JSMallocState *state, void *ptr, size_t size) {
   void *next = port_heap_realloc(ptr, size);
   if (next) account(state, old, port_heap_usable(next));
   else heap->no_psram++;
+  heap->reallocs++;
+  heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
   return next;
 }
 
@@ -89,14 +148,23 @@ static int compile_interrupt(JSRuntime *rt, void *opaque) {
 // instead of parsing. Bytecode does not depend on the runtime that wrote it, so the evaluated
 // functions, and the modules they compile, are the same either way. Entries are written once,
 // under the lock, and never freed.
+//
+// The bytecode keeps no debug information (PICOCALC-COMPILER-DEVICE-COST). Otherwise QuickJS keeps every function's
+// source text, and each nested function its own overlapping slice of it, in the realm and in this cache: on the host
+// the seven compiler sources make 1,065 KB of bytecode, 263 KB without source text (JS_STRIP_SOURCE) and 191 KB
+// without any debug information (JS_STRIP_DEBUG). A rejected compile's message is unchanged (its Typed position comes
+// from the compiler's own diagnostics); a stack trace through the compiler names its functions but not their lines,
+// which the host's run of the same compiler gives. Every compile runtime sets it, since whichever compile first
+// evaluates a source writes the bytecode the others read.
+#define COMPILER_STRIP JS_STRIP_DEBUG
 typedef struct {
   char path[48];
   uint8_t *bytes;
   size_t length;
 } compiled_source;
-// One entry per compiler source a firmware evaluates. The playable firmware evaluates eleven
-// (typed/tape.js, wasm.js, async.js, rv32.js, rv32-inline.js, rv32-loops.js, world.js and four
-// app linkers); a source that finds no free entry is parsed on every compile.
+// One entry per compiler source a firmware evaluates. The playable firmware evaluates twelve
+// (typed/tape.js, wasm.js, async.js, rv32.js, rv32-inline.js, rv32-loops.js, rv32-kernel.js,
+// world.js and four app linkers); a source that finds no free entry is parsed on every compile.
 static compiled_source compiled_sources[16];
 static SemaphoreHandle_t compiled_lock;
 static portMUX_TYPE compiled_lock_init = portMUX_INITIALIZER_UNLOCKED;
@@ -120,25 +188,33 @@ static compiled_source *compiled_find(const char *path, bool claim) {
 }
 
 static bool eval_file(JSContext *ctx, const char *path) {
+  compile_state *state = JS_GetContextOpaque(ctx);
+  compile_eval *record = state && state->evals < (int)(sizeof(state->eval) / sizeof(*state->eval))
+      ? &state->eval[state->evals++] : NULL;
+  vtime_t begun = port_clock();
+  if (record) {
+    snprintf(record->path, sizeof(record->path), "%s", path);
+    record->in_call = state->in_call;
+  }
   compiled_source *cached = compiled_find(path, false);
   uint8_t *bytes = cached ? cached->bytes : NULL;
+  JSValue function = JS_UNDEFINED;
   if (bytes) {
-    JSValue function = JS_ReadObject(ctx, bytes, cached->length, JS_READ_OBJ_BYTECODE);
-    if (!JS_IsException(function)) {
-      JSValue value = JS_EvalFunction(ctx, function);
-      bool ok = !JS_IsException(value);
-      JS_FreeValue(ctx, value);
-      return ok;
+    function = JS_ReadObject(ctx, bytes, cached->length, JS_READ_OBJ_BYTECODE);
+    if (JS_IsException(function)) {
+      JS_FreeValue(ctx, JS_GetException(ctx));
+      printf("typed compiler bytecode: cannot read %s, parsing it\n", path);
     }
-    JS_FreeValue(ctx, JS_GetException(ctx));
-    printf("typed compiler bytecode: cannot read %s, parsing it\n", path);
   }
-  size_t length;
-  char *text = p4_bundle_read(path, &length, NULL, 0);
-  if (!text) return false;
-  JSValue function = JS_Eval(ctx, text, length, path, JS_EVAL_TYPE_GLOBAL | JS_EVAL_FLAG_COMPILE_ONLY);
-  free(text);
-  if (JS_IsException(function)) return false;
+  if (!bytes || JS_IsException(function)) {
+    size_t length;
+    char *text = p4_bundle_read(path, &length, NULL, 0);
+    if (!text) return false;
+    function = JS_Eval(ctx, text, length, path, JS_EVAL_TYPE_GLOBAL | JS_EVAL_FLAG_COMPILE_ONLY);
+    free(text);
+    if (JS_IsException(function)) return false;
+    if (record) record->parsed = true;
+  }
   if (!bytes) {
     size_t size = 0;
     uint8_t *written = JS_WriteObject(ctx, &size, function, JS_WRITE_OBJ_BYTECODE);
@@ -158,9 +234,15 @@ static bool eval_file(JSContext *ctx, const char *path) {
     }
     if (written) js_free(ctx, written);
   }
+  vtime_t loaded = port_clock();
   JSValue value = JS_EvalFunction(ctx, function);
   bool ok = !JS_IsException(value);
   JS_FreeValue(ctx, value);
+  if (record) {
+    record->load_us = loaded - begun;
+    record->run_us = port_clock() - loaded;
+    record->live = state->heap.live;
+  }
   return ok;
 }
 
@@ -190,16 +272,22 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
                        size_t source_length, const char *linker, const char *entry,
                        const char *const *compiler, const char *reactor, size_t reactor_length,
                        size_t *length, vtime_t started, const p4_compile_limits *limits) {
-  compile_heap heap = {.limit = limits->heap_bytes, .deadline = started + limits->duration_us};
-  JSRuntime *rt = JS_NewRuntime2(&compiler_allocator, &heap);
+  compile_state state = {.heap = {.limit = limits->heap_bytes, .deadline = started + limits->duration_us}};
+  compile_heap *heap = &state.heap;
+  vtime_t phase = port_clock();
+  state.before_us = phase - started;
+  JSRuntime *rt = JS_NewRuntime2(&compiler_allocator, heap);
   JSContext *ctx = NULL;
   char *module = NULL;
   if (!rt) goto done;
   JS_SetMaxStackSize(rt, port_js_stack());
-  JS_SetInterruptHandler(rt, compile_interrupt, &heap);
+  JS_SetInterruptHandler(rt, compile_interrupt, heap);
+  JS_SetStripInfo(rt, COMPILER_STRIP);
   ctx = JS_NewContext(rt);
   if (!ctx) goto done;
+  JS_SetContextOpaque(ctx, &state);
   if (!typed_lex_index_install(ctx) || !install_rv32_load(ctx)) goto rejected;
+  state.setup_us = port_clock() - phase;
   // The tape definition, the front end, the compiler modules the app names (typed/async.js), the RV32 back end, then the linker.
   if (!eval_file(ctx, "typed/tape.js") || !eval_file(ctx, "typed/wasm.js")) goto rejected;
   for (const char *const *m = compiler; m && *m; m++)
@@ -230,7 +318,13 @@ char *p4_typed_compile(const char *app, const char *source_kind, const char *sou
       if (ready) printf("%s native compiler policy=%s\n", app, limits->policy);
     }
   }
-  if (ready) result = JS_Call(ctx, function, JS_UNDEFINED, argc, args);
+  if (ready) {
+    state.in_call = true;
+    phase = port_clock();
+    result = JS_Call(ctx, function, JS_UNDEFINED, argc, args);
+    state.call_us = port_clock() - phase;
+    state.in_call = false;
+  }
   JS_FreeValue(ctx, args[2]);
   JS_FreeValue(ctx, args[1]); JS_FreeValue(ctx, args[0]);
   JS_FreeValue(ctx, function); JS_FreeValue(ctx, global);
@@ -266,18 +360,37 @@ rejected:
     JS_FreeValue(ctx, exception);
   }
 done:
+  phase = port_clock();
   if (ctx) JS_FreeContext(ctx);
   if (rt) JS_FreeRuntime(rt);
+  while (heap->parked_count) {   // the parked arenas: freed after the runtime, counted until now
+    void *block = heap->parked[--heap->parked_count];
+    heap->live -= port_heap_usable(block);
+    port_heap_free(block);
+  }
+  state.free_us = port_clock() - phase;
   const vtime_t elapsed = port_clock() - started;
   uint8_t sha[32] = {0};
   if (module) tc_sha256(module, *length, sha);
   printf("%s compile source=%s status=%s us=%lld peak_js_bytes=%zu module_bytes=%zu sha=%02x%02x%02x%02x%02x%02x%02x%02x\n",
-         app, source_kind, module ? "ok" : "failed", (long long)elapsed, heap.peak, module ? *length : 0,
+         app, source_kind, module ? "ok" : "failed", (long long)elapsed, heap->peak, module ? *length : 0,
          sha[0], sha[1], sha[2], sha[3], sha[4], sha[5], sha[6], sha[7]);
   if (!module)   // why: the heap cap, PSRAM, or neither (a compile error, the deadline)
     printf("%s compile refused_over_limit=%u refused_no_psram=%u heap_limit=%zu psram_free=%zu psram_largest=%zu\n", app,
-           heap.over_limit, heap.no_psram, heap.limit, heap_caps_get_free_size(MALLOC_CAP_SPIRAM),
+           heap->over_limit, heap->no_psram, heap->limit, heap_caps_get_free_size(MALLOC_CAP_SPIRAM),
            heap_caps_get_largest_free_block(MALLOC_CAP_SPIRAM));
+  printf("TYPEDCOMPILE {\"app\":\"%s\",\"beforeUs\":%lld,\"setupUs\":%lld,\"callUs\":%lld,\"freeUs\":%lld,"
+         "\"heap\":{\"mallocs\":%lu,\"frees\":%lu,\"reallocs\":%lu,\"reused\":%lu,\"us\":%llu},\"evals\":[",
+         app, (long long)state.before_us, (long long)state.setup_us, (long long)state.call_us, (long long)state.free_us,
+         (unsigned long)heap->mallocs, (unsigned long)heap->frees, (unsigned long)heap->reallocs, (unsigned long)heap->reused,
+         (unsigned long long)(heap->heap_cycles / CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ));
+  for (int i = 0; i < state.evals; i++) {
+    const compile_eval *e = &state.eval[i];
+    printf("%s{\"path\":\"%s\",\"bytecode\":\"%s\",\"inCall\":%s,\"loadUs\":%lld,\"runUs\":%lld,\"liveBytes\":%zu}",
+           i ? "," : "", e->path, e->parsed ? "parsed" : "cached", e->in_call ? "true" : "false",
+           (long long)e->load_us, (long long)e->run_us, e->live);
+  }
+  printf("]}\n");
   return module;
 }
 

@@ -22,7 +22,7 @@ const plain = value => JSON.parse(JSON.stringify(value));
 
 function compiler() {
     const ctx = createContext({});
-    for (const file of ["tape.js", "typed-wasm.js", "typed-async.js", "typed-rv32.js", "typed-rv32-inline.js", "typed-rv32-loops.js", "typed-world.js"])
+    for (const file of ["tape.js", "typed-wasm.js", "typed-async.js", "typed-rv32.js", "typed-rv32-inline.js", "typed-rv32-loops.js", "typed-rv32-kernel.js", "typed-world.js"])
         runInContext(read("compiler/typed/" + file), ctx, {filename: file});
     return ctx;
 }

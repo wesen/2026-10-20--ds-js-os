@@ -7,6 +7,7 @@ import "../../compiler/typed/typed-async.js";
 import "../../compiler/typed/typed-rv32.js";
 import "../../compiler/typed/typed-rv32-inline.js";
 import "../../compiler/typed/typed-rv32-loops.js";
+import "../../compiler/typed/typed-rv32-kernel.js";
 
 function capture(name) {
     const events = [];

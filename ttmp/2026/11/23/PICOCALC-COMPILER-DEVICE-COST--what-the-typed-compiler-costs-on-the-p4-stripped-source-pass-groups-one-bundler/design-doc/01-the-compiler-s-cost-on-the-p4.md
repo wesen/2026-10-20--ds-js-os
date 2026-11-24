@@ -9,7 +9,15 @@ Topics:
 DocType: design-doc
 Intent: long-term
 Owners: []
-RelatedFiles: []
+RelatedFiles:
+    - Path: repo://compiler/typed/bundle.mjs
+      Note: the one bundler
+    - Path: repo://compiler/typed/rv32/passes/kernel-group.js
+      Note: passes only kernel runs
+    - Path: repo://compiler/typed/rv32/passes/registry.js
+      Note: groups inline, loops, kernel
+    - Path: repo://firmware/port/esp32p4/main/typed_p4.c
+      Note: TYPEDCOMPILE phases and COMPILER_STRIP
 ExternalSources: []
 Summary: ""
 LastUpdated: 2026-11-23T12:44:21.321497763-05:00
@@ -74,3 +82,35 @@ Three measured costs, each found by an earlier ticket and left open:
 - `make test`, and `make test-host` with both policies (25/25).
 - The 84-digest harness: no image changes.
 - The playable build passes health with peripherals on. Every boot app compiles within 75 % of its deadline.
+
+## Refinements (2026-11-23)
+
+Decisions taken while implementing (details and evidence in the diary, `reference/01-diary.md`):
+
+1. **Instrumentation first.** `typed_p4.c` prints a `TYPEDCOMPILE {...}` line after every compile: per evaluated
+   compiler source whether it was cached or parsed, its load and top-level run time and the heap after it, the
+   linker call, the teardown. It is permanent: the compile cache and later tickets read the same line.
+2. **Stripping: `JS_STRIP_DEBUG`, set in every compile runtime.** The runtimes `p4_typed_compile` makes are the
+   only producers of the cached bytecode (whichever compile first evaluates a source writes it), so the flag goes
+   there, not into a separate producer. On the host the seven compiler sources make 1,065 KB of bytecode, 263 KB with
+   `JS_STRIP_SOURCE` and 191 KB with `JS_STRIP_DEBUG`; the realm after reading them all is 1,139, 684 and 579 KB.
+   Rejected-compile messages are identical under all three modes (33 cases from the tests' negative cases,
+   `scripts/08-*`); with `JS_STRIP_DEBUG` a stack trace through the compiler keeps function names and loses
+   `file:line`, which the host's run of the same compiler gives. The board measures both modes before the choice is
+   final.
+3. **Files no longer loads a pass group.** Since PICOCALC-TYPED-FIRST, Files is a Typed world under `interactive`.
+   The playable image's one `default` compile is Candela's scene, the first compile of every boot. `default` needs
+   `version` (which imports `hoist`) and `split`: `split` alone in the core changes nothing, and `version` with
+   `hoist` (31 KB of source) would grow every boot compile's core. Instead the loops group is split: `loops` keeps
+   what `default` adds to `balanced` (version, hoist, induction, split), and a new `kernel` group
+   (`typed-rv32-kernel.js`) holds what only `kernel` runs (conjunctions, sets, ranges, facts).
+4. **One bundler:** `compiler/typed/bundle.mjs` (script layout, plain-script concatenation, ES-module scope hoisting,
+   the write/`--check` command line); each `build.mjs` lists its modules. Every generated bundle is byte-identical,
+   headers included.
+5. **The slowdown.** Compile runtimes never run QuickJS's cycle collector (`typed_p4.c`'s allocator does not maintain
+   `malloc_state.malloc_size`, which this QuickJS's GC trigger reads), so a GC schedule cannot be the cause. The
+   instrumented boot shows the group load inside Chess's compile costs 6.8 ms, not 96. The remaining candidates are
+   measured in one image with the `typedcost` experiment command (`scripts/02-experiment-tree.py`): lazy groups
+   against everything evaluated up front, and the compile's heap moved by a held PSRAM block.
+6. **The 84-digest harness** is PICOCALC-RV32-REGISTERS's, copied into `scripts/digests/` with Files and Agenda as
+   the Typed worlds they are now (the old units no longer compile).

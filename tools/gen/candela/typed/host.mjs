@@ -18,7 +18,7 @@ const ARENA = 4096, MAX_SIDE = 160;
 export function realm() {
   const ctx = createContext({});
   for (const f of ['compiler/typed/tape.js', 'compiler/typed/typed-wasm.js', 'compiler/typed/typed-rv32.js',
-    'compiler/typed/typed-rv32-inline.js', 'compiler/typed/typed-rv32-loops.js', 'bench/host/rv32-interp.js'])
+    'compiler/typed/typed-rv32-inline.js', 'compiler/typed/typed-rv32-loops.js', 'compiler/typed/typed-rv32-kernel.js', 'bench/host/rv32-interp.js'])
     runInContext(readFileSync(resolve(REPO, f), 'utf8'), ctx, { filename: f });
   return ctx;
 }

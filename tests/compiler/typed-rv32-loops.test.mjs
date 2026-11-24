@@ -8,7 +8,7 @@ import {adjustsStack, compiler, destination, opcode, sourceRegister, words} from
 
 test("division facts change code only for dividends proven non-negative, and keep results identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp} = ctx;
     // proven: a counter from 0, a local whose writes are 117, 177 and level / 3, a buffer read.
@@ -72,7 +72,7 @@ test("division facts change code only for dividends proven non-negative, and kee
 
 test("versioned loops and split locals keep results, stores and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp, typedTape} = ctx;
     // Every index form select.version proves: k + c, c + k, k, a*k + b with offsets, an
@@ -154,7 +154,7 @@ function fill(work: buffer, n: i32): i32 {
 
 test("value sets fold pure inlined blocks only over proven constant sets, and keep results and traps identical", () => {
     const ctx = createContext({});
-    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+    for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js", "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     const {typedRv32, typedRv32Interp, typedTape} = ctx;
     // folded: level is one of 117, 177, 39, 59 (the ray tracer's floor), right after the if that

@@ -11,6 +11,7 @@ import "../../compiler/typed/typed-async.js";
 import "../../compiler/typed/typed-rv32.js";
 import "../../compiler/typed/typed-rv32-inline.js";
 import "../../compiler/typed/typed-rv32-loops.js";
+import "../../compiler/typed/typed-rv32-kernel.js";
 import "../../compiler/typed/typed-world.js";
 
 const {entries, imports} = typedWorld;

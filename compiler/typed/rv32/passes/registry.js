@@ -24,24 +24,25 @@ export const PASSES = [
     // tapes of integer programs stay what they were.
     {name: "fields", group: "inline", kind: "transform", observe: false},
     {name: "commute", group: "inline", kind: "transform"},
-    {name: "conjunctions", group: "loops", kind: "transform"},
-    {name: "sets", group: "loops", kind: "transform"},
+    {name: "conjunctions", group: "kernel", kind: "transform"},
+    {name: "sets", group: "kernel", kind: "transform"},
     {name: "rotate", group: "inline", kind: "transform"},
-    {name: "ranges", group: "loops", kind: "analysis"},
+    {name: "ranges", group: "kernel", kind: "analysis"},
     {name: "version", group: "loops", kind: "transform", needs: ["rotate"]},
     {name: "hoist", group: "loops", kind: "option", needs: ["version"]},
     {name: "induction", group: "loops", kind: "option", needs: ["version"]},
     {name: "split", group: "loops", kind: "transform"},
-    // rows and coalesce rewrite only f32 functions and is observed only when it changes a tape, so integer programs' observed
-    // tapes stay what they were.
-    {name: "rows", group: "loops", kind: "transform", observe: "changed"},
-    {name: "coalesce", group: "loops", kind: "transform", observe: "changed"},
-    {name: "facts", group: "loops", kind: "analysis", needs: ["ranges"]},
+    // rows and coalesce rewrite only f32 functions and are observed only when they change a tape, so integer programs'
+    // observed tapes stay what they were.
+    {name: "rows", group: "kernel", kind: "transform", observe: "changed"},
+    {name: "coalesce", group: "kernel", kind: "transform", observe: "changed"},
+    {name: "facts", group: "kernel", kind: "analysis", needs: ["ranges"]},
 ];
 PASSES.forEach((pass, order) => pass.order = order);
 
-// The bundle file of each group, next to typed-rv32.js.
-export const GROUPS = Object.freeze({inline: "typed-rv32-inline.js", loops: "typed-rv32-loops.js"});
+// The bundle file of each group, next to typed-rv32.js: inline holds what "balanced" adds to the core, loops what
+// "default" adds to "balanced", kernel what only "kernel" runs. A compile loads the groups its passes need.
+export const GROUPS = Object.freeze({inline: "typed-rv32-inline.js", loops: "typed-rv32-loops.js", kernel: "typed-rv32-kernel.js"});
 
 // A transform's result is the rewritten tape, or null when it changed nothing.
 export const replaceTape = (fn, code) => { if (code) fn.code = code; };

@@ -30,7 +30,7 @@ mkdirSync(out,{recursive:true});
 const sha=b=>createHash("sha256").update(b).digest("hex");
 const cv=b=>Array.from(b).reduce((h,n)=>Math.imul(h^n,16777619)>>>0,2166136261);
 const os=join(root,"firmware"), source=read(join(root,"apps/typed/raytrace/raytrace.typed"),"utf8");
-const bundle=["tape","typed-wasm","typed-rv32","typed-rv32-inline","typed-rv32-loops","typed-pie-loops"].map(n=>read(join(root,"compiler/typed",n+".js"),"utf8")).join("\n");
+const bundle=["tape","typed-wasm","typed-rv32","typed-rv32-inline","typed-rv32-loops","typed-rv32-kernel","typed-pie-loops"].map(n=>read(join(root,"compiler/typed",n+".js"),"utf8")).join("\n");
 const realm=createContext({});runInContext(bundle,realm);
 const chess=loadSource();
 const fixtures=JSON.parse(read(join(root,"bench/reference/ray-frame-fixtures.json")));

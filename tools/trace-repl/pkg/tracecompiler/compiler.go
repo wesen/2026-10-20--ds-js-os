@@ -50,6 +50,7 @@ var Modules = []Module{
 	// typed-rv32.js held every pass. Each publishes a marker and installs its passes in typedRv32.
 	{"typedRv32Inline", "rv32Inline", compilerPaths("typed-rv32-inline.js"), false},
 	{"typedRv32Loops", "rv32Loops", compilerPaths("typed-rv32-loops.js"), false},
+	{"typedRv32Kernel", "rv32Kernel", compilerPaths("typed-rv32-kernel.js"), false},
 	{"typedPieLoops", "typedPieLoops", compilerPaths("typed-pie-loops.js"), false},
 	{"typedRv32Interp", "interp", toolPaths("rv32-interp.js"), false},
 	{"typedRayBench", "rayBench", toolPaths("typed-ray-bench.js"), false},
