@@ -645,3 +645,75 @@ dcd9d3b — "docs(device-cost): arms on the merged base, a session in blocks wit
 - Arms: `/tmp/picocalc-device-cost-arm2-{control,group,strip,final}`; bench `/tmp/picocalc-device-cost-bench`
   (`b648cf40`). All built at 54dfe3b (recorded dirty: the ticket's scripts were uncommitted at the time; the
   control, group and strip arms are dirty by construction).
+
+## Step 10: The in-image session on 54dfe3b, and what the pass-group slowdown is
+
+The in-image session ran on the bench image `b648cf40` (54dfe3b: TYPED-VALUES, CANDELA-KERNEL-CODEGEN and this
+ticket, without COMPILE-CACHE, so no compile collects cycles). Strip mode, lazy against eager groups with and without
+arena parking, and heap padding. The answer to the slowdown: the time of a compile on the P4 depends on where its heap
+lands. The same compile repeats within a few milliseconds, but anything that moves its allocations (which bundles
+the realm holds, parking, a 1 KB block held in front of it) moves it by up to about 2 percent, in either direction.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1 and Step 9.
+**Assistant interpretation:** run the in-image session with the lock per block; explain the slowdown from it.
+**Inferred user intent:** a device-measured cause, not a host simulation.
+**Commit (code):** 5e0af78, 20a4b23 (scripts only)
+
+### What I did
+- Session 2 (`/tmp/picocalc-device-cost-session2`) stopped: between the install and block E1a another agent installed
+  its image twice, and the old loop would have given up after three installs. `04-typedcost-session.py` now installs
+  under the block's own lock (the steps of `device.install`), and `--per-lock 2` runs two blocks per hold. Stopped
+  the old run with TaskStop while it was waiting for the lock (checked in `/proc/locks`).
+- Session 3: E1a. Session 4: E1b, E2, E2p and E3, two blocks per lock. E2b and E4 were left for the new base (Step
+  11), because main now collects cycles during a compile. Tables: `various/02-session-54dfe3b/tables.txt`, rows next
+  to it.
+
+### Why
+- Four other agents' sessions shared the board (CANDELA-KERNEL-CODEGEN, COMPILE-CACHE, BOARD-HARNESS); a lock hold
+  of one or two blocks kept each wait to one queue position.
+
+### What worked
+- E1 (strip, parking on, two orders): JS_STRIP_DEBUG against none, per app, cold / warm:
+  Agenda 3,365 -> 3,204 / 2,733 -> 2,693 ms, peak 2,511 -> 2,105 / 2,454 -> 2,057 KB;
+  Files 2,092 -> 1,928 / 1,475 -> 1,454 ms; Editor 4,114 -> 3,900 / 3,364 -> 3,337 ms;
+  Chess 5,110 -> 4,894 / 4,302 -> 4,250 ms, peak 3,225 -> 2,682 / 3,147 -> 2,634 KB;
+  Candela 2,509 -> 2,303 / 1,750 -> 1,717 ms, peak 1,811 -> 1,333 / 1,770 -> 1,286 KB.
+  The saving is in the load (Agenda warm 84 -> 58 ms, cold 683 -> 520 ms) and the realm (893 -> 479 KB); the call is
+  unchanged within noise. JS_STRIP_SOURCE sits between: against it, JS_STRIP_DEBUG saves another 60-110 ms cold,
+  0-25 ms warm and 50-90 KB of peak. Module bytes and CRCs identical in every mode.
+- E2 (unstripped, no parking: TYPED-PIPELINE's condition), lazy minus all, warm, six compiles each:
+  Agenda -47 ms, Chess +34 ms, Candela -9 ms. Within a condition the six compiles agree to a few ms (Chess lazy
+  4,317-4,352, all 4,302-4,313).
+- E2p (the same with parking): Agenda -38, Chess -48, Candela -7 ms. Chess changes sign.
+- E3 (Agenda and Chess, unstripped, lazy, no parking; a PSRAM block of 0, 1, 3, 8, 64 or 1024 KB held across the
+  compile): identical heap calls, totals from 2,719 to 2,766 ms for Agenda and 4,304 to 4,325 ms for Chess.
+
+### What didn't work
+- `typedcost` rows of session 2: none (the block never ran).
+
+### What I learned
+- The P4-only slowdown of TYPED-PIPELINE (15-96 ms) is a placement effect, not a cost of lazy loading: lazy loading
+  saves about 19 ms of bytecode reading per compile and adds the group's evaluation inside the call (Chess 7 ms,
+  Candela 17 ms); everything else is the compile running 1-2 percent faster or slower depending on where its
+  allocations land. In every condition the core-1 L1 instruction misses move with the time (E2 Chess +13 k misses
+  with +50 ms of call; E2p -9 k with -32 ms; E3 Agenda 261 k at 2,719 ms, 275 k at 2,766 ms), so the mechanism is
+  cache conflicts that depend on addresses. On the host, callgrind's cache simulation showed the same kind of
+  variation (Step 5).
+- Parking does not remove the effect, it moves it: with parking the lazy groups are faster in all three apps.
+
+### What was tricky to build
+- Telling a lock waiter from a holder before stopping a session: `/proc/locks` lists the holder first and the
+  waiters after `->`.
+
+### What warrants a second pair of eyes
+- One image, one session: the E3 range is the size of the effect for two apps, not a distribution.
+
+### What should be done in the future
+- A study of compile speed on the P4 needs several heap placements per arm (E3's padding), or it measures placement.
+
+### Code review instructions
+- `python3 scripts/10-analyze-session.py various/02-session-54dfe3b/session3 various/02-session-54dfe3b/session4`.
+
+### Technical details
+- Bench image `b648cf40` (54dfe3b + experiment tree). E1 n=2 per cell (two orders), E2/E2p n=6, E3 n=2 per pad.
