@@ -427,3 +427,51 @@ COMPILE-CACHE delivered on the device: warm boots take their modules from the ca
 - **Health is judged at about 10 s uptime, before the writer starts.** A writer-induced turn overrun would not be caught. The soak (BOARD-HARNESS) is the place to see it.
 - **`typed cache clear` does not stop a queued write.**
 - **Chess's cold compile is at 72–73 % of its deadline.** The margin keeps shrinking with every front-end feature.
+
+## Step 12: Wrap-up: soak results, the last merges, two vault reports
+
+The user called the soaks and tests done. I stopped the remaining board runs, merged the harness's soak evidence, committed the playable install, wrote the program's two vault reports and closed the program. `main` is not pushed this time: the push needs the user's go-ahead.
+
+### Prompt Context
+
+**User messages (verbatim, in order):**
+- "what's left?"
+- "how long for the soak?"
+- "how long for the typed gallery check?"
+- "how far is it now?"
+- "ok whatever, i think we're good with the soaks and tests. let's wrap it up"
+
+### What I did
+
+- **Stopped** my Typed gallery run (still queued behind the soak, never reached the board) and the BOARD-HARNESS agent (its soak was at round 11 of 15 in its third run). Neither flashes, so the board stayed on playable `3df1fc7`, which had passed health.
+- **The soak.**
+  - Committed the three runs' evidence on the harness branch and merged it.
+  - Summary: 71 samples over 15 rounds; i2c0 errors 0; no world with restarts or a last error; no `crashed handling` or turn-budget lines in any UART log.
+  - The compositor overrun from TYPED-FIRST did not recur, which supports it having followed the I2C error storm.
+- **Committed the playable record** (`80b8bb0`). The C++ gallery was 18/18 on this image. The Typed arm's gallery was not run on it; CANDELA-KERNEL-CODEGEN (`22abf5aa`) and COMPILE-CACHE (`3db56908`) each ran it 18/18 on images with the same compiler.
+- **Vault reports**, go-go-parc `a4e0ab1`:
+  1. "PROJECT REPORT - PicoCalc OS - Booting Without Compiling - A Compiled-Module Cache, What the Compiler Costs on the P4, and a Harness That Stopped Wedging the Keyboard - A Technical Deep Dive"
+  2. "PROJECT REPORT - PicoCalc Compiler - Value Types in a Streaming Compiler - Scalar Replacement Without a Syntax Tree, and Candela's Kernel from 1.76x to 1.46x C++ - A Technical Deep Dive"
+
+  I corrected one sentence in report 2 that went beyond the agent's evidence (why float registers went unused).
+- **Closed the 7 merge and report tasks;** added six follow-ups and the changelog entry.
+
+### What didn't work
+
+- **The push.** A combined command that ended in `git push origin main` was refused by the permission classifier. Pushing needs the user's approval in this context; the commits are local.
+
+### What the program delivered
+
+| Ticket | Result |
+|---|---|
+| COMPILE-CACHE | warm boots: first frames 3.6–6.4 s instead of 18.4–21.2 s; Typed Candela the default arm, 0.3 s cached load |
+| COMPILER-DEVICE-COST | `JS_STRIP_DEBUG`: −40 to −216 ms and −337 to −590 KB per boot compile; the pass-group slowdown explained as heap placement |
+| BOARD-HARNESS | installs hold the keyboard bus before resetting; fresh-boot health; a 5 s bus window; 18 fake-board tests |
+| TYPED-VALUES | value records, record results, local arrays, `continue`, `?:`, `u32`, stack parameters |
+| CANDELA-KERNEL-CODEGEN | P4: 1.764 → 1.463× C++ (18 scenes), 2.593 → 2.034× (kernel-bound) |
+
+### What should be done next
+
+1. **The PSRAM hypothesis** for the host–device gap.
+2. **Cold-compile speed.**
+3. **The two cache follow-ups:** cancelling queued writes on clear, and health after the writer has run.
