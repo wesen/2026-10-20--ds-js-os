@@ -1,0 +1,10 @@
+candela-gallery compile source=bundle status=ok us=114525206 peak_js_bytes=13624472 module_bytes=787712
+CGAL {"ev":"typed-load","compileMs":114529.0,"relocateMs":50.5,"moduleBytes":787712,"segmentBytes":786988,"arenaWords":12563}
+candela-gallery compile source=bundle status=ok us=113888970 peak_js_bytes=13624912 module_bytes=787712
+CGAL {"ev":"typed-load","compileMs":113897.2,"relocateMs":39.2,"moduleBytes":787712,"segmentBytes":786988,"arenaWords":12563}
+candela-gallery compile source=bundle status=ok us=114929141 peak_js_bytes=13621636 module_bytes=787712
+CGAL {"ev":"typed-load","compileMs":114932.8,"relocateMs":36.8,"moduleBytes":787712,"segmentBytes":786988,"arenaWords":12563}
+candela-gallery compile source=bundle status=ok us=113705169 peak_js_bytes=13622056 module_bytes=787712
+CGAL {"ev":"typed-load","compileMs":113733.8,"relocateMs":35.8,"moduleBytes":787712,"segmentBytes":786988,"arenaWords":12563}
+candela-gallery compile source=bundle status=ok us=115475874 peak_js_bytes=13625196 module_bytes=787712
+CGAL {"ev":"typed-load","compileMs":115479.6,"relocateMs":39.4,"moduleBytes":787712,"segmentBytes":786988,"arenaWords":12563}

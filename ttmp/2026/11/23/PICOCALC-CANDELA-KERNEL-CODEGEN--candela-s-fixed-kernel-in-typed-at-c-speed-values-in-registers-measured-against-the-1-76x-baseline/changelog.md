@@ -19,3 +19,7 @@ Step 3: RV32 kernel passes rows and coalesce (1fc5528), call-free f32 homes, ope
 ## 2026-11-23
 
 Final host counts (16 rows of frame 0): kernel-bound geometric mean 1.885 -> 1.410 of the C++ arm, 18 scenes 1.290 -> 1.034; B-01 1.790 -> 1.426. Gates: make test, make test-host (stock and kernel) 25/25, ray 430f0d501659, Chess 6,981 words. Typed reference digests unchanged. Board study (step 4) not run: paused.
+
+## 2026-11-23
+
+Step 4 (board): device compile of the regenerated kernel ran out of memory (17.8 MB peak); fixed by releasing each function's emitter after lowering (9c81fae; 13.6 MB, 115 s). Image 22abf5aa: gallery.py typed 18/18, cpp 18/18; paired study (18 scenes, 4 blocks, 4 passes, 160x160, lock per block): geometric mean 1.764 -> 1.463, kernel-bound 2.593 -> 2.034. Target not reached.

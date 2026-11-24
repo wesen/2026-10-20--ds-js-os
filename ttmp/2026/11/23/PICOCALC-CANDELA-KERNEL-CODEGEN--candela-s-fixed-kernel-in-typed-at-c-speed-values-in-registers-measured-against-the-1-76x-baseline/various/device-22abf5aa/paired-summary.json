@@ -1,0 +1,313 @@
+{
+ "blocks": 4,
+ "passes": 4,
+ "scenes": {
+  "B-01": {
+   "typedCyclesPerSample": 26473.85,
+   "cppCyclesPerSample": 12853.25,
+   "typedSecPerPass": 1.883,
+   "cppSecPerPass": 0.9141250000000001,
+   "ratioCycles": 2.058149987015108,
+   "ratioCyclesRange": [
+    2.0374365284570572,
+    2.072791574365551
+   ],
+   "ratioSeconds": 2.0582733036130882,
+   "ratioSecondsRange": [
+    2.037503421845059,
+    2.072950819672131
+   ],
+   "digestsMatchReference": true
+  },
+  "R-01": {
+   "typedCyclesPerSample": 39491.7,
+   "cppCyclesPerSample": 20069.699999999997,
+   "typedSecPerPass": 2.808625,
+   "cppSecPerPass": 1.427375,
+   "ratioCycles": 1.9647856545235198,
+   "ratioCyclesRange": [
+    1.950742896473299,
+    1.9799235991094863
+   ],
+   "ratioSeconds": 1.9647604435400292,
+   "ratioSecondsRange": [
+    1.9510783798001052,
+    1.9796918767507004
+   ],
+   "digestsMatchReference": true
+  },
+  "L-03": {
+   "typedCyclesPerSample": 21813.55,
+   "cppCyclesPerSample": 10385.1,
+   "typedSecPerPass": 1.5513750000000002,
+   "cppSecPerPass": 0.738625,
+   "ratioCycles": 2.0968422365010904,
+   "ratioCyclesRange": [
+    2.086162004862826,
+    2.124523641836548
+   ],
+   "ratioSeconds": 2.096855575763157,
+   "ratioSecondsRange": [
+    2.0861372812920593,
+    2.124448965751102
+   ],
+   "digestsMatchReference": true
+  },
+  "G-01": {
+   "typedCyclesPerSample": 38886.649999999994,
+   "cppCyclesPerSample": 20544.35,
+   "typedSecPerPass": 2.76575,
+   "cppSecPerPass": 1.4612500000000002,
+   "ratioCycles": 1.8951286964446235,
+   "ratioCyclesRange": [
+    1.8774031222374417,
+    1.9124298596950573
+   ],
+   "ratioSeconds": 1.8951740126968946,
+   "ratioSecondsRange": [
+    1.87758238005805,
+    1.9124187478617858
+   ],
+   "digestsMatchReference": true
+  },
+  "E-02": {
+   "typedCyclesPerSample": 15079.8,
+   "cppCyclesPerSample": 10004.1,
+   "typedSecPerPass": 1.0725,
+   "cppSecPerPass": 0.7115,
+   "ratioCycles": 1.5072309075196566,
+   "ratioCyclesRange": [
+    1.5030319377428796,
+    1.515501855008523
+   ],
+   "ratioSeconds": 1.5071943492660913,
+   "ratioSecondsRange": [
+    1.502808988764045,
+    1.515685583362707
+   ],
+   "digestsMatchReference": true
+  },
+  "W-02": {
+   "typedCyclesPerSample": 59314.0,
+   "cppCyclesPerSample": 30426.35,
+   "typedSecPerPass": 4.218875000000001,
+   "cppSecPerPass": 2.163875,
+   "ratioCycles": 1.9509255810822417,
+   "ratioCyclesRange": [
+    1.9412002033687041,
+    1.9615865513652224
+   ],
+   "ratioSeconds": 1.9511495368073895,
+   "ratioSecondsRange": [
+    1.9416580191398594,
+    1.9615694396502126
+   ],
+   "digestsMatchReference": true
+  },
+  "F-01": {
+   "typedCyclesPerSample": 30264.65,
+   "cppCyclesPerSample": 14994.95,
+   "typedSecPerPass": 2.152625,
+   "cppSecPerPass": 1.0663749999999999,
+   "ratioCycles": 2.0195015665532337,
+   "ratioCyclesRange": [
+    1.9849361307829771,
+    2.035620008687807
+   ],
+   "ratioSeconds": 2.019823102372049,
+   "ratioSecondsRange": [
+    1.9853420195439737,
+    2.0357058961710126
+   ],
+   "digestsMatchReference": true
+  },
+  "V-02": {
+   "typedCyclesPerSample": 57457.15,
+   "cppCyclesPerSample": 27297.8,
+   "typedSecPerPass": 4.08625,
+   "cppSecPerPass": 1.941375,
+   "ratioCycles": 2.104201084022989,
+   "ratioCyclesRange": [
+    2.0976073476073474,
+    2.127614825128703
+   ],
+   "ratioSeconds": 2.1042441200827477,
+   "ratioSecondsRange": [
+    2.0976863753213366,
+    2.127511591962906
+   ],
+   "digestsMatchReference": true
+  },
+  "G-02": {
+   "typedCyclesPerSample": 50488.0,
+   "cppCyclesPerSample": 36893.05,
+   "typedSecPerPass": 3.59075,
+   "cppSecPerPass": 2.6237500000000002,
+   "ratioCycles": 1.3686795677664945,
+   "ratioCyclesRange": [
+    1.35950462548493,
+    1.3805947715781406
+   ],
+   "ratioSeconds": 1.3687669852445252,
+   "ratioSecondsRange": [
+    1.3595269883654395,
+    1.3806169078446306
+   ],
+   "digestsMatchReference": true
+  },
+  "X-04": {
+   "typedCyclesPerSample": 61983.8,
+   "cppCyclesPerSample": 73102.25,
+   "typedSecPerPass": 1.102125,
+   "cppSecPerPass": 1.299625,
+   "ratioCycles": 0.8491656218414138,
+   "ratioCyclesRange": [
+    0.8364454110695142,
+    0.8556155662799055
+   ],
+   "ratioSeconds": 0.8492581941656856,
+   "ratioSecondsRange": [
+    0.8364156339370828,
+    0.8557951482479785
+   ],
+   "digestsMatchReference": true
+  },
+  "S-02": {
+   "typedCyclesPerSample": 73306.45,
+   "cppCyclesPerSample": 49736.0,
+   "typedSecPerPass": 1.3035,
+   "cppSecPerPass": 0.88425,
+   "ratioCycles": 1.4723149734366159,
+   "ratioCyclesRange": [
+    1.46623776111301,
+    1.4985658138853626
+   ],
+   "ratioSeconds": 1.472404480601449,
+   "ratioSecondsRange": [
+    1.4667797568560927,
+    1.4985697940503433
+   ],
+   "digestsMatchReference": true
+  },
+  "R-05": {
+   "typedCyclesPerSample": 62334.45,
+   "cppCyclesPerSample": 36061.8,
+   "typedSecPerPass": 1.108375,
+   "cppSecPerPass": 0.641125,
+   "ratioCycles": 1.7346996761758318,
+   "ratioCyclesRange": [
+    1.7032306846301897,
+    1.7429110738255034
+   ],
+   "ratioSeconds": 1.7348634901808726,
+   "ratioSecondsRange": [
+    1.7031310398144566,
+    1.7432166732206054
+   ],
+   "digestsMatchReference": true
+  },
+  "V-03": {
+   "typedCyclesPerSample": 123031.15,
+   "cppCyclesPerSample": 92356.0,
+   "typedSecPerPass": 2.1873750000000003,
+   "cppSecPerPass": 1.6422500000000002,
+   "ratioCycles": 1.3334606654323942,
+   "ratioCyclesRange": [
+    1.3191734045563284,
+    1.3435562992798413
+   ],
+   "ratioSeconds": 1.333562069322803,
+   "ratioSecondsRange": [
+    1.319216277317257,
+    1.3431089500075977
+   ],
+   "digestsMatchReference": true
+  },
+  "R-04": {
+   "typedCyclesPerSample": 1278935.5499999998,
+   "cppCyclesPerSample": 1130436.35,
+   "typedSecPerPass": 22.738,
+   "cppSecPerPass": 20.0995,
+   "ratioCycles": 1.132943736971665,
+   "ratioCyclesRange": [
+    1.1283785776085,
+    1.1459357430244164
+   ],
+   "ratioSeconds": 1.1329854085365993,
+   "ratioSecondsRange": [
+    1.1283759385389298,
+    1.1456668944523825
+   ],
+   "digestsMatchReference": true
+  },
+  "V-04": {
+   "typedCyclesPerSample": 230058.0,
+   "cppCyclesPerSample": 176954.55,
+   "typedSecPerPass": 4.09025,
+   "cppSecPerPass": 3.146,
+   "ratioCycles": 1.2975427786702582,
+   "ratioCyclesRange": [
+    1.2876396756448576,
+    1.3124374850077167
+   ],
+   "ratioSeconds": 1.2975702004706955,
+   "ratioSecondsRange": [
+    1.2876647086839181,
+    1.3124900556881465
+   ],
+   "digestsMatchReference": true
+  },
+  "G-03": {
+   "typedCyclesPerSample": 1604830.0,
+   "cppCyclesPerSample": 1331033.8,
+   "typedSecPerPass": 28.530875,
+   "cppSecPerPass": 23.663375000000002,
+   "ratioCycles": 1.2058386224094655,
+   "ratioCyclesRange": [
+    1.196077497314117,
+    1.2185562092542535
+   ],
+   "ratioSeconds": 1.2058291570633024,
+   "ratioSecondsRange": [
+    1.1960738663421344,
+    1.2185588322153316
+   ],
+   "digestsMatchReference": true
+  },
+  "R-08": {
+   "typedCyclesPerSample": 161418.15000000002,
+   "cppCyclesPerSample": 220248.5,
+   "typedSecPerPass": 2.870625,
+   "cppSecPerPass": 3.91575,
+   "ratioCycles": 0.7342127455392644,
+   "ratioCyclesRange": [
+    0.7247009157427716,
+    0.7391730226489226
+   ],
+   "ratioSeconds": 0.7342656318926677,
+   "ratioSecondsRange": [
+    0.7247495693230396,
+    0.7395387465661535
+   ],
+   "digestsMatchReference": true
+  },
+  "X-03": {
+   "typedCyclesPerSample": 680528.05,
+   "cppCyclesPerSample": 750614.3,
+   "typedSecPerPass": 12.098875,
+   "cppSecPerPass": 13.34475,
+   "ratioCycles": 0.9065358653787563,
+   "ratioCyclesRange": [
+    0.9027262789567977,
+    0.9178024435405343
+   ],
+   "ratioSeconds": 0.9065450940109361,
+   "ratioSecondsRange": [
+    0.9027036079117281,
+    0.917808988764045
+   ],
+   "digestsMatchReference": true
+  }
+ },
+ "geomeanRatioCycles": 1.4625651814628626
+}
