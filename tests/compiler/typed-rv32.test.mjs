@@ -120,10 +120,14 @@ test("the core bundle compiles interactive alone and loads a pass group through 
     lazy.typedRv32Load = file => { asked.push(file); runInContext(read(file), lazy, {filename: file}); };
     assert.equal(sha(lazy.typedRv32.compile(src, [], 65536, {policy: "balanced"})), sha(all.compile(src, [], 65536, {policy: "balanced"})));
     assert.deepEqual(asked, ["typed-rv32-inline.js"]);
+    // "default" needs the loops group (version, split), not the passes only "kernel" runs.
+    assert.equal(sha(lazy.typedRv32.compile(src, [], 65536, {policy: "default"})), sha(all.compile(src, [], 65536, {policy: "default"})));
+    assert.deepEqual(asked, ["typed-rv32-inline.js", "typed-rv32-loops.js"]);
     assert.equal(sha(lazy.typedRv32.compile(src, [], 65536, {policy: "kernel"})),
         "4323938e38a4ef2a44c80103bf43680b506195762d6faa0f5834b41c86e9d2a5");
-    assert.deepEqual(asked, ["typed-rv32-inline.js", "typed-rv32-loops.js"]);
-    assert.deepEqual(Object.fromEntries(all.passes.map(pass => [pass.name, pass.file])).version, "typed-rv32-loops.js");
+    assert.deepEqual(asked, ["typed-rv32-inline.js", "typed-rv32-loops.js", "typed-rv32-kernel.js"]);
+    const files = Object.fromEntries(all.passes.map(pass => [pass.name, pass.file]));
+    assert.deepEqual([files.version, files.split, files.facts], ["typed-rv32-loops.js", "typed-rv32-loops.js", "typed-rv32-kernel.js"]);
 });
 
 test("the rv32/ modules run as ES modules and compile what the bundles compile", async () => {
@@ -135,6 +139,7 @@ test("the rv32/ modules run as ES modules and compile what the bundles compile",
     await import(new URL("../../compiler/typed/rv32/index.js", import.meta.url));
     await import(new URL("../../compiler/typed/rv32/passes/inline-group.js", import.meta.url));
     await import(new URL("../../compiler/typed/rv32/passes/loops-group.js", import.meta.url));
+    await import(new URL("../../compiler/typed/rv32/passes/kernel-group.js", import.meta.url));
     const modular = globalThis.typedRv32;
     globalThis.typedRv32 = saved;
     const src = read("../../apps/typed/raytrace/raytrace.typed");

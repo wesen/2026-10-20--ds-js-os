@@ -10,7 +10,7 @@ import {words} from "./rv32-helpers.mjs";
 function realm() {
     const ctx = createContext({});
     for (const file of ["compiler/typed/tape.js", "compiler/typed/typed-wasm.js", "compiler/typed/typed-rv32.js",
-        "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "bench/host/rv32-interp.js"])
+        "compiler/typed/typed-rv32-inline.js", "compiler/typed/typed-rv32-loops.js", "compiler/typed/typed-rv32-kernel.js", "bench/host/rv32-interp.js"])
         runInContext(readFileSync(new URL("../../" + file, import.meta.url), "utf8"), ctx, {filename: file});
     return ctx;
 }

@@ -14,7 +14,7 @@ object on `globalThis` (the RV32 backend's three are bundled from the ES modules
 | `typed-wasm.js` | `typedWasm` | The front end (lexer, signature pass, parser and type checker writing the tape) and the WebAssembly backend, built from `frontend/*.js` and `wasm/*.js` by `node compiler/typed/frontend/build.mjs` |
 | `typed-async.js` | `typedAsync` | Lowers `async` functions into ordinary Typed functions over `WorldState` frames before emission (worlds that have them), built from `async/*.js` by `node compiler/typed/async/build.mjs` |
 | `typed-rv32.js` | `typedRv32` | The RV32 backend's core, bundled from `rv32/` by `node compiler/typed/rv32/build.mjs` ([README](../compiler/typed/rv32/README.md)) |
-| `typed-rv32-inline.js`, `typed-rv32-loops.js` | (installs passes) | The two pass groups; after `typed-rv32.js`, loaded up front or on demand through `typedRv32Load` |
+| `typed-rv32-inline.js`, `typed-rv32-loops.js`, `typed-rv32-kernel.js` | (installs passes) | The three pass groups (what `balanced`, `default` and `kernel` add in turn); after `typed-rv32.js`, loaded up front or on demand through `typedRv32Load` |
 | `typed-world.js` | `typedWorld`, `compileTypedWorld*` | The world ABI: two entries and the SDK imports, in trampoline order |
 | `typed-pie-loops.js` | `typedPieLoops` | Optional: ESP32-P4 PIE vector words for qualifying loops (`pieLoops`) |
 
@@ -22,8 +22,15 @@ Every loader lists them: `bench/lib/compiler.mjs` (all bench scripts), the tests
 `compiler/typed/tools/typed-inspect.mjs`, `bench/board/stage.mjs` (the board app's cold compiles), the trace REPL's
 module table (`tools/trace-repl/pkg/tracecompiler/compiler.go`) and the firmware, which bundles them as `typed/tape.js`, `typed/wasm.js`
 and so on (`firmware/port/esp32p4/main/CMakeLists.txt`, `BUNDLE_EXTRA`) and evaluates them in `typed_p4.c`, keeping each
-file's QuickJS bytecode so that later compiles skip the parse. The firmware evaluates a pass group only when a
-compile's policy needs it: `interactive` (Agenda, Editor) loads neither, `balanced` (Chess) the inline group.
+file's QuickJS bytecode so that later compiles skip the parse. The bytecode keeps no debug information
+(`JS_STRIP_DEBUG`: no source text, no line tables), so a stack trace through the compiler on the device names functions
+but not lines; the compile errors' messages carry their Typed positions themselves. The firmware evaluates a pass
+group only when a compile's policy needs it: `interactive` (Agenda, Editor, Files) loads none, `balanced` (Chess) the
+inline group, `default` (Candela's scene) inline and loops, `kernel` all three. After every compile the device prints
+a `TYPEDCOMPILE {...}` line: each evaluated compiler source (cached or parsed, load and run time, the heap after it),
+the linker call, the teardown, and the compile's calls to the PSRAM heap with the time spent in them. QuickJS takes
+its small objects' 4 KB arenas from that heap and returns each the moment it empties; a compile parks the freed ones
+and reuses them instead of handing them back to the heap thousands of times.
 
 ## The pipeline
 
@@ -42,7 +49,8 @@ front end       Lexer → signature pass (records, enums, distinct types, acycli
 ### The front end's modules
 
 `typed-wasm.js` is generated: `node compiler/typed/frontend/build.mjs` concatenates these modules, in this order,
-into one IIFE (one scope, so they are not ES modules), and `--check`, run by `make test-generated` and by
+into one IIFE (one scope, so they are not ES modules) with the bundler every compiler build shares
+(`compiler/typed/bundle.mjs`, which also scope-hoists the RV32 backend's ES modules), and `--check`, run by `make test-generated` and by
 `tests/compiler/typed-wasm-inspect.test.mjs`, fails when the bundle is stale. Edit the modules, never the bundle.
 
 | Module | Contents |

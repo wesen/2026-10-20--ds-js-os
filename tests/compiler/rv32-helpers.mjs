@@ -5,7 +5,7 @@ import {createContext, runInContext} from "node:vm";
 
 export function compiler() {
     const ctx = createContext({});
-    for (const file of ["tape.js", "typed-wasm.js", "typed-rv32.js", "typed-rv32-inline.js", "typed-rv32-loops.js"]) {
+    for (const file of ["tape.js", "typed-wasm.js", "typed-rv32.js", "typed-rv32-inline.js", "typed-rv32-loops.js", "typed-rv32-kernel.js"]) {
         runInContext(readFileSync(new URL("../../compiler/typed/" + file, import.meta.url), "utf8"), ctx,
             {filename: file});
     }

@@ -475,7 +475,7 @@ Signed 16-bit and 32-bit indexed arrays would let source state what it stores. T
 | `compiler/typed/typed-wasm.js` | Built from `frontend/` (lexer, parser, type checker, tape writer, `compileFunctions`) and `wasm/` (tape serializer, module writer, linker) |
 | `compiler/typed/typed-async.js` | Lowers `async` functions into step functions over `WorldState` frames before emission (needed for Editor); built from `compiler/typed/async/` |
 | `compiler/typed/rv32/` | The RV32 backend's sources, 13 files joined in name order: encoders, `FunctionCode` (the emitter), leaf code, inlining, loop versioning with hoisting and induction, live-range splitting, ranges, value sets, conjunctions and rotation, `planLocations`, `POLICIES`, `compile`. See its README |
-| `compiler/typed/typed-rv32.js` | The generated bundle every loader reads (`node compiler/rv32/build.mjs`); never edit it directly |
+| `compiler/typed/typed-rv32.js` | The generated bundle every loader reads (`node compiler/typed/rv32/build.mjs`); never edit it directly |
 | `compiler/typed/typed-pie-loops.js` | Optional PIE loop recognizer and emitter |
 | `compiler/typed/typed-world.js` | World import table (`typedWorld.imports`) and linker contract |
 | `apps/typed/raytrace/link.js` | `linkTypedRay`: the ray tracer's four entries |

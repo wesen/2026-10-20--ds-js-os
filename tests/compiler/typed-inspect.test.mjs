@@ -11,7 +11,7 @@ import vm from "node:vm";
 const cli=fileURLToPath(new URL("../../compiler/typed/tools/typed-inspect.mjs",import.meta.url));
 function compiler() {
     const ctx=vm.createContext({});
-    for(const f of ["tape","typed-wasm","typed-async","typed-rv32","typed-rv32-inline","typed-rv32-loops"])
+    for(const f of ["tape","typed-wasm","typed-async","typed-rv32","typed-rv32-inline","typed-rv32-loops","typed-rv32-kernel"])
         vm.runInContext(fs.readFileSync(new URL("../../compiler/typed/"+f+".js",import.meta.url),"utf8"),ctx);
     return ctx;
 }
