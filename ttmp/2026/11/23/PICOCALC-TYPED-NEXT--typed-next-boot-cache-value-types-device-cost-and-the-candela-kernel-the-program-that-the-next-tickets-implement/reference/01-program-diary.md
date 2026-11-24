@@ -352,3 +352,36 @@ The user's B-01 report checks out as the scene's normal look under few samples. 
 
 - **The hypothesis is the next measurement.** The host-device gap (1.41 vs 2.03) is now the largest open question about Typed's code quality. Testing it is cheap: run the same module with the gallery worker's stack in internal RAM, or with the module copied to internal RAM, and compare cycles per sample. It should be its own ticket.
 - **The 115 s first-use compile** is longer than the 85 s baseline, and the Typed default arm depends on the cache making it a one-time cost.
+
+## Step 10: COMPILER-DEVICE-COST finished and merged
+
+COMPILER-DEVICE-COST's board study kept debug stripping, removed arena parking, and explained the P4-only pass-group slowdown as heap placement. Its follow-up commits fix the problems my optimistic merge brought into main. Merged; all gates pass and the playable profile builds.
+
+### What I did
+
+- **Merged `worktree-agent-a34a9eec183baabff`** (head `a930799`).
+  - Clean merge.
+  - `typed_p4.c` is 456 lines, with the compile heap in `typed_compile_heap.{h,c}`; its file-length exception is gone.
+  - `make test` exit 0; both gates pass.
+  - `make firmware PROFILE=playable` exit 0.
+- **Did not install the agent's gate image `f20954b9`** (built from `d76d9bf`). Main has moved past it: the CANDELA-KERNEL-CODEGEN emitter fix, and COMPILE-CACHE's work, whose board validation is still running. The next playable comes from main after COMPILE-CACHE reports.
+
+### What the ticket measured (boot study, 4 arms × 3 blocks, cache emptied before every boot)
+
+| App | control | strip (Δ) |
+|---|---|---|
+| Candela scene | 2.818 s, 1,880 KB | −216 ms, −462 KB (plus −133 ms, −136 KB from the kernel group) |
+| Editor | 3.558 s | −66 ms, −590 KB |
+| Agenda | 2.797 s | −50 ms, −337 KB |
+| Files | 1.522 s | −40 ms, −346 KB |
+| Chess | 4.391 s | −40 ms, −438 KB |
+
+- **Arena parking:** no boot gain (+2 to +21 ms), so it was removed.
+- **The pass-group slowdown:** heap placement.
+  - Identical work moves up to about 2 % with allocation placement: holding a block in front of the heap moved Agenda from 2,719 to 2,766 ms.
+  - Lazy minus eager loading flips sign for Chess between two placements.
+  - Rule added to `docs/typed-compiler.md`: a compiler-speed claim below about 2 % needs several heap placements.
+
+### What I learned
+
+- **My optimistic merge broke the board harness, and the agent's study caught it.** In the merged `typed_p4.c` the `TYPEDCOMPILE` line was printed in pieces. Another task's `painter` reply landed inside it, and the harness's health check raised `StopIteration` on 9 of 12 study boots. Main carried that from `ebfe8fb` to this merge. An optimistic merge of firmware is safe only while nobody installs main; it was not installed.
