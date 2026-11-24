@@ -210,7 +210,16 @@ def hold(console):
 
 
 def painter(console):
-    return next(json.loads(line) for line in console.command("painter") if line.startswith('{"sources"'))
+    """The painter's counters, or None when the reply was lost: another task's line printed in pieces (a compile's
+    TYPEDCOMPILE record) can take the reply into its middle, so the record is looked for anywhere in a line."""
+    for line in console.command("painter"):
+        at = line.find('{"sources"')
+        if at >= 0:
+            try:
+                return json.loads(line[at:])
+            except ValueError:
+                pass
+    return None
 
 
 def wait_painter(console, calls, deadline_s=PAINTER_S):
@@ -219,7 +228,7 @@ def wait_painter(console, calls, deadline_s=PAINTER_S):
     deadline = time.monotonic() + deadline_s
     while True:
         p = painter(console)
-        if p["installed"] and not p["rejects"] and (p["calls"] or not calls):
+        if p and p["installed"] and not p["rejects"] and (p["calls"] or not calls):
             return p
         if time.monotonic() >= deadline:
             raise RuntimeError("painter " + str(p))

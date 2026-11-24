@@ -63,6 +63,24 @@ class PainterWait(BoardTest):
         self.assertGreater(record["painter"]["calls"], 0)
 
 
+    def test_a_reply_inside_another_line_is_read(self):
+        # PICOCALC-COMPILE-CACHE: on a cold boot the painter's compile printed its TYPEDCOMPILE record in pieces and
+        # the painter reply landed inside it; health stopped with StopIteration.
+        board = self.board(uptime_s=0.5, painter_after_s=0.0, glued={"painter": 1})
+        record = device.health(self.console(board), "on")
+        self.assertEqual(board.glued["painter"], 0, "the glued reply was the one health read")
+        self.assertTrue(record["painter"]["installed"])
+
+    def test_a_reply_that_cannot_be_read_is_polled_again(self):
+        board = self.board(uptime_s=20.0)
+        console = self.console(board, drain_s=0)
+        lost = iter([True, True])   # the first two replies cannot be read
+        real = device.painter
+        with mock.patch.object(device, "painter", side_effect=lambda c: None if next(lost, False) else real(c)) as polled:
+            self.assertTrue(device.wait_painter(console, calls=False)["installed"])
+        self.assertEqual(polled.call_count, 3)
+
+
 class ConsoleDeadline(BoardTest):
     """(2) A command's deadline is absolute, however many unrelated lines arrive."""
 
