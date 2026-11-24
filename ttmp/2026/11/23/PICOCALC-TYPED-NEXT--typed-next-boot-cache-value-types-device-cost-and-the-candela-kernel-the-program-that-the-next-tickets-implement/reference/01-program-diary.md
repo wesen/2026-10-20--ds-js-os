@@ -266,3 +266,43 @@ The user power-cycled the PicoCalc. The first restore with BOARD-HARNESS's new c
 ### What warrants a second pair of eyes
 
 - **Boot-compile margins are thinning.** Chess, the painter and Agenda are all at 71–73 % of their deadlines. The compile cache removes this pressure on warm boots, but a cold boot after every firmware update still compiles everything. COMPILER-DEVICE-COST's stripping and arena reuse are the candidates for the cold-boot margin.
+
+## Step 8: Optimistic merges of COMPILE-CACHE and COMPILER-DEVICE-COST
+
+Four agents queued on one board stretched every study two- to four-fold. The user asked whether we could merge optimistically and let the agents fix things in parallel. I merged both unmerged branches into main on their host evidence. Their board studies continue, and fixes land as follow-up commits. The playable firmware is not reinstalled until the board numbers are in.
+
+### Prompt Context
+
+**User messages (verbatim, in order):**
+- "i think something might be off in reandering say "B-01" can you compare ? or  is that something already on the menu"
+- "how far are we now?"
+- "can we like "optimistically merge" and then have them fix in parallel? something like that?"
+
+### What I did
+
+- **B-01.** The C++ and Typed display references are the same digest (`23d7885f`), so any visible difference between the arms on the device is a bug. Every check so far compares digests against references, and none looks at the screen. Four agents were driving the screen at the time. I asked the user what "off" looks like, and asked COMPILE-CACHE, whose image makes Typed the default arm, to check B-01's display digest on both arms.
+- **Merged COMPILE-CACHE** (`7a503c0`, branch at `2c7f5f4`, 31 commits). Clean merge.
+- **Merged COMPILER-DEVICE-COST** (`ebfe8fb`, 25 commits). `typed_p4.c` conflicted in eight hunks. Both tickets had rewritten the compile allocator, and both had found that compiles never ran QuickJS's cycle collector. Resolution:
+  - `account(JSMallocState *, …)` maintains `malloc_size`/`malloc_count` (the cache's fix);
+  - the cache's PSRAM reserve and refusal counters stay;
+  - DEVICE-COST's arena parking, heap-cycle timing, eval records and `TYPEDCOMPILE` line stay;
+  - parked arenas are freed after `JS_FreeRuntime` by subtracting from `live` directly, since no `JSMallocState` exists then.
+- **Gates.**
+  - The playable profile builds: `make firmware PROFILE=playable`, exit 0, no warnings in `typed_p4.c`.
+  - Both host gates pass.
+  - `make test` failed once:
+
+    ```
+    firmware/port/esp32p4/main/typed_p4.c: 602 lines, over 500; split it, or list it in tools/file-length-exceptions.txt with a reason
+    ```
+
+    I listed it with COMPILER-DEVICE-COST as owner; then exit 0.
+- **Told both agents** what changed under them. GC now runs during compiles on main, which changes what their arms measure, so each must state its base. DEVICE-COST is to review the resolution and split the file.
+
+### What didn't work
+
+- **My first merge-check build:** `bash firmware/port/esp32p4/build.sh playable …` failed with `idf.py: command not found` (exit 127). `make firmware PROFILE=…` loads ESP-IDF; the script alone does not.
+
+### What warrants a second pair of eyes
+
+- **The allocator resolution:** the arena-parking path never calls `account` on park or reuse, so a parked block stays in `live` and in QuickJS's `malloc_size`. That is intended: it keeps the peak honest. But the collector's trigger then sees parked memory as live. Up to 64 × 4 KB = 256 KB may make collections slightly earlier. The board study will show whether that matters.
