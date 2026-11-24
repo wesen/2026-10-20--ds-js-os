@@ -717,3 +717,89 @@ the realm holds, parking, a 1 KB block held in front of it) moves it by up to ab
 
 ### Technical details
 - Bench image `b648cf40` (54dfe3b + experiment tree). E1 n=2 per cell (two orders), E2/E2p n=6, E3 n=2 per pad.
+
+## Step 11: Main's optimistic merge, the split heap file, a console fix, and the session on the merged base
+
+The coordinator merged this branch and PICOCALC-COMPILE-CACHE into main (ebfe8fb) while the study ran. Two things
+changed under the measurements: compiles now collect cycles (the cache ticket made the allocator report
+malloc_size, the same gap Step 3 found), and the merged typed_p4.c was 602 lines. I reviewed the resolution, merged
+main, split the file, rebuilt every image on the result, and reran the parts of the in-image session that a
+collector can change (strip, production lazy against eager, parking). The first boots on the new base found a bug of
+mine: the TYPEDCOMPILE line was printed in pieces, and another task's console reply landed inside it.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1. Coordinator: "to speed things up I merged your branch (and
+PICOCALC-COMPILE-CACHE) into main optimistically (ebfe8fb); host gates and make test pass, the playable profile
+builds. Your board work continues as planned; land any fix as new commits on your branch after merging main. Two
+things in the merge you should know: 1. typed_p4.c conflicted with COMPILE-CACHE's allocator. I kept both:
+account(JSMallocState*, ...) now sets malloc_size/malloc_count (the cache ticket found compiles never collected
+cycles, the same thing you found); its PSRAM reserve (psram_spare, over_limit/no_psram counters) stays; your arena
+parking, heap timing and TYPEDCOMPILE stay; parked arenas are freed after JS_FreeRuntime with `heap->live -=`. Please
+review that resolution (git show ebfe8fb -- firmware/port/esp32p4/main/typed_p4.c). Note it changes what your arms
+measure: GC now runs during compiles on main, so state which base each study arm uses. 2. The merged typed_p4.c is
+602 lines; tools/file-length-exceptions.txt lists it with your ticket as owner. Split the compile heap and
+TYPEDCOMPILE into their own file on your branch. Do not leave the board on a non-playable image; restore from the
+main checkout."
+**Assistant interpretation:** review the resolution, merge main, split the file, measure on the merged base, fix
+what the board shows.
+**Inferred user intent:** the merged main is what ships; the numbers must describe it.
+**Commit (code):** fba4811 (merge main), f1ecb93 — "refactor(p4): the compile heap and the TYPEDCOMPILE record in
+their own file"; 91aeb52 — "fix(p4): the TYPEDCOMPILE line goes to the console in one write"
+
+### What I did
+- Reviewed ebfe8fb's typed_p4.c: correct. A parked block stays in `live` and so in `malloc_size` (at most 256 KB
+  more before the collector's threshold); a reused block skips the cap check because it is already counted; the
+  teardown subtracts the parked blocks after JS_FreeRuntime, when no runtime reads `malloc_size` any more; realloc
+  of a block that came from the park is an ordinary heap block.
+- Stopped session 4 (waiting for the lock) before E2b and E4, which now run on the new base.
+- `git merge main` (ebbade8): clean. `scripts/18-split-compile-heap.py`: `typed_compile_heap.{h,c}` (allocator,
+  PSRAM reserve, parking, counters, interrupt handler, refusal and TYPEDCOMPILE lines, moved verbatim), typed_p4.c
+  602 -> 457 lines, the exception removed, the new files in the component's sources and in the module cache's key
+  (`typed_native_files`), the P4 README and the compiler guide updated. 02 and 17 follow the moved code.
+- New bench image `a796e3ea` (f1ecb93 + experiment tree); session 5: E1a, E1b, E2b, E4, two blocks per lock.
+- Arms on 20a4b23 (f1ecb93 plus scripts), `/tmp/picocalc-device-cost-arm3-*`: control `aaf5f761` (7a503c0's RV32
+  bundles, no strip, no parking), group `0bd11a0a`, strip `41fcbca8`, final `8746adbe`. 09 now empties the module
+  cache (`typed cache clear`) before each install, so every boot compiles, and reports any cache hit.
+- Boot study block 0: two of four health checks failed with `StopIteration()` in `device.painter()`. The UART log
+  shows the painter's `{"sources":...}` record and its `#OK painter` inside the chess/painter TYPEDCOMPILE line.
+  Fixed in 91aeb52 (one buffer, one `write()`); gate image `1aa25fbf` (91aeb52, clean).
+- `make test` (154/154 node tests, exit 0), `make test-host` both policies: unchanged (ray `430f0d501659`, 4,888,369 /
+  3,239,635; Chess 6981 words; 25/25).
+
+### Why
+- The cache would serve a later block's boot from the first block's compile (same key), which measures a read, not
+  a compile.
+
+### What worked
+- New base E1 (strip, parking on, two orders), JS_STRIP_DEBUG against none, cold / warm ms and warm peak KB:
+  Agenda 3,402 -> 3,266 / 2,779 -> 2,735, 2,397 -> 2,057; Files 2,146 -> 1,972 / 1,505 -> 1,478;
+  Editor 4,206 -> 3,985 / 3,450 -> 3,380, 2,966 -> 2,368; Chess 5,192 -> 4,993 / 4,377 -> 4,365, 2,928 -> 2,488;
+  Candela 2,568 -> 2,357 / 1,791 -> 1,764, 1,673 -> 1,217. Against JS_STRIP_SOURCE, DEBUG saves 21-111 ms cold,
+  0-37 ms warm, 50-120 KB. Same modules and CRCs.
+- E2b (production): lazy minus all, Agenda -23 ms, Chess -13 ms (n=4 each).
+- E4 (strip 2, warm, three pairs per app), parking on minus off: Agenda -20, Files -1, Editor -21, Chess -23,
+  Candela -6 ms; heap calls -33 to -38 percent (Chess 4,252 -> 2,625); peak +10 to +22 KB.
+
+### What didn't work
+- The TYPEDCOMPILE line as several printf calls (fixed).
+
+### What I learned
+- On ESP-IDF a long line from several printf calls is not one console transfer; another task's reply can split it.
+- With the collector on, the compile peaks barely move (Agenda warm 2,454 -> 2,397 KB unstripped): little of a
+  compile's garbage is cyclic.
+
+### What was tricky to build
+- Making the boot study measure compiles on a firmware with a compiled-module cache.
+
+### What warrants a second pair of eyes
+- Parking's gain (about 20 ms, half a percent) is the size of the placement effect of Step 10; it is consistent over
+  four of five apps and two bases, which is why it stays.
+
+### What should be done in the future
+- N/A
+
+### Code review instructions
+- `git show f1ecb93 91aeb52`; `python3 scripts/10-analyze-session.py various/03-session-f1ecb93`.
+
+### Technical details
+- Session 5 rows and tables: `various/03-session-f1ecb93/`.
