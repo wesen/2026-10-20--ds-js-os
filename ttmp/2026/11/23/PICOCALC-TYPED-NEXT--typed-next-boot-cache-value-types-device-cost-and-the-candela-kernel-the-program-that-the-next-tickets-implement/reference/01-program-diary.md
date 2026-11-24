@@ -306,3 +306,49 @@ Four agents queued on one board stretched every study two- to four-fold. The use
 ### What warrants a second pair of eyes
 
 - **The allocator resolution:** the arena-parking path never calls `account` on park or reuse, so a parked block stays in `live` and in QuickJS's `malloc_size`. That is intended: it keeps the peak honest. But the collector's trigger then sees parked memory as live. Up to 64 × 4 KB = 256 KB may make collections slightly earlier. The board study will show whether that matters.
+
+## Step 9: B-01 looked at; CANDELA-KERNEL-CODEGEN's board study merged with an out-of-memory fix
+
+The user's B-01 report checks out as the scene's normal look under few samples. CANDELA-KERNEL-CODEGEN's paired study brought the Typed kernel from 1.764× to 1.463× C++ on the P4, short of the 1.3× target. On the way it found that the compiler's new changes made the device compile of the gallery program run out of memory. I merged its fix at once, because main also has COMPILE-CACHE making the Typed arm the default.
+
+### Prompt Context
+
+**User message (verbatim):** "it seemed like it was lit from inside (the sphere) but tbh I didn't pay too close attention and if it was just a single pass thing or so"
+
+### What I did
+
+- **B-01.**
+  - The preset is a red, rough sphere (roughness 0.4) on an 18 % grey card under a physical sky.
+  - I compared two device screenshots of the C++ arm: CANDELA-GALLERY's `scene-B-01.png` at 30 spp, and today's `02-gallery-209af25/boot.png` at 24 spp. They look the same: soft, nearly uniform sky lighting, slightly brighter at the top, a soft shadow, and bright per-pixel noise.
+  - At a few dozen samples that reads as glowing from within. The arms' display references are the same digest, and the host Typed digest did not change through today's compiler work.
+  - Conclusion: very likely the scene's look, not a bug. COMPILE-CACHE was asked to compare the arms' B-01 display digests on its image.
+- **Merged CANDELA-KERNEL-CODEGEN's board work** (`9c81fae`, `47d86d4`, `0fd2156`). Clean merge; `make test` exit 0; both gates pass.
+- **Told COMPILE-CACHE** to merge main before its final Typed-arm runs.
+
+### What the study found
+
+- **The device compile ran out of memory** on the first image (`d66fb5f`):
+
+  ```
+  candela-gallery compile ... status=failed us=114296568 peak_js_bytes=17835904
+  ```
+
+  Settings and the compositor crashed out of memory during it. The RV32 backend kept every function's emitter until assembly. `9c81fae` releases each after lowering: host peak 27.4 → 20.9 MB; device 115 s, peak 13.6 MB. Output is identical (84/84, image 434,996 B).
+- **Paired study** (18 scenes × 4 blocks, alternating order, 4 passes at 160×160; all 144 digests match):
+
+  | | Baseline | Now |
+  |---|---:|---:|
+  | 18-scene geometric mean | 1.764 | 1.463 |
+  | Kernel-bound geometric mean | 2.593 | 2.034 |
+
+  The Typed kernel's own cycles per sample fell 13–27 % on every scene but X-04. Block-to-block spread ±1 %.
+- **The device gains less than the host.** Host instructions say 1.41× kernel-bound, device cycles say 2.03×. The ticket's untested hypothesis: the remaining frame traffic hits a PSRAM stack, and the module's code is fetched from PSRAM.
+
+### What didn't work
+
+- **The board-sharing protocol.** Other agents changed the image before every one of the study's four blocks, so each block reinstalled (about 20 min under the lock). The final restore waited about 40 min for the lock. Four agents on one board roughly doubled every board step.
+
+### What warrants a second pair of eyes
+
+- **The hypothesis is the next measurement.** The host-device gap (1.41 vs 2.03) is now the largest open question about Typed's code quality. Testing it is cheap: run the same module with the gallery worker's stack in internal RAM, or with the module copied to internal RAM, and compare cycles per sample. It should be its own ticket.
+- **The 115 s first-use compile** is longer than the 85 s baseline, and the Typed default arm depends on the cache making it a one-time cost.
