@@ -43,9 +43,9 @@ test-generated:
 test-go:
 	go test ./...
 
-# The host binary, its native worlds and the Python tests that drive it.
+# The host binary, its native worlds and the Python tests that drive it; the compiled-module cache's core.
 test-native:
-	$(MAKE) -s -C firmware test-clock test-sys test-fs test-native
+	$(MAKE) -s -C firmware test-clock test-sys test-fs test-native test-typed-cache
 
 # cji's included fixtures: native worlds compiled by cji and replayed on rv32emu against their C control.
 test-cji:

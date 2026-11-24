@@ -188,6 +188,16 @@ test-sys: $(BIN)
 test-fs: $(BIN)
 	PICOCALC_TEST_BINARY=$(BIN) $(PYTHON) ../tests/native/test_fs_native.py
 
+# The compiled-module cache's portable core (PICOCALC-COMPILE-CACHE) through a host driver: the key, torn and corrupt
+# entries, the atomic store and the eviction.
+TYPED_CACHE := port/esp32p4/main/typed_cache.c port/esp32p4/main/typed_cache.h ../tests/native/typed_cache_host.c
+$(BUILD)/typed-cache-host: $(TYPED_CACHE)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -Iport/esp32p4/main -o $@ ../tests/native/typed_cache_host.c port/esp32p4/main/typed_cache.c
+
+test-typed-cache: $(BUILD)/typed-cache-host
+	PICOCALC_TYPED_CACHE_HOST=$(BUILD)/typed-cache-host $(PYTHON) ../tests/native/test_typed_cache.py
+
 # These tests make no provider API calls. The normal suite uses deterministic local fixtures.
 test-agent: $(BIN)
 	@test "$(BOARD)" = picocalc || { echo "The agent currently targets the PicoCalc QuickJS build"; exit 1; }
@@ -260,4 +270,4 @@ test-native: $(BIN) natives $(if $(filter 1,$(M32)),,wasm)
 clean:
 	rm -rf build build32 build-san build32-san build-agent build32-agent build-san-agent build32-san-agent build-papers3*
 
-.PHONY: all shots clean test-agent test-agent-live test-fs test-apps test-clock test-sys test-native natives wasm
+.PHONY: all shots clean test-agent test-agent-live test-fs test-apps test-clock test-sys test-native test-typed-cache natives wasm

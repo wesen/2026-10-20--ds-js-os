@@ -61,7 +61,29 @@ execute_process(
 include(${typed_out}/typed-apps.cmake)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${TYPED_APPS_INPUTS})
 
-target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c typed_lex_index.c ${typed_out}/typed_apps.c ${TYPED_APPS_HOST_SOURCES})
+target_sources(${COMPONENT_LIB} PRIVATE typed_p4.c typed_lex_index.c typed_cache.c typed_cache_p4.c
+               ${typed_out}/typed_apps.c ${TYPED_APPS_HOST_SOURCES})
+# The compiled-module cache's key covers the compiler's C side too (PICOCALC-COMPILE-CACHE): the native tokenizer, the
+# code that calls the compiler, and the engine it runs on. Their digest is taken at configure time, and each file is a
+# configure dependency, so an edit to one of them reconfigures and changes the key.
+set(typed_native_files ${MAIN}/typed_lex_index.c ${MAIN}/typed_lex_index.h ${MAIN}/typed_p4.c
+    ${QJS}/quickjs.c ${QJS}/quickjs.h ${QJS}/dtoa.c ${QJS}/libregexp.c ${QJS}/libunicode.c ${QJS}/cutils.c)
+set(typed_native "")
+set(normalized)
+foreach(f IN LISTS typed_native_files)
+    get_filename_component(f "${f}" ABSOLUTE)   # ../ collapsed, as Ninja names them
+    list(APPEND normalized "${f}")
+endforeach()
+set(typed_native_files ${normalized})
+foreach(f IN LISTS typed_native_files)
+    file(SHA256 "${f}" digest)
+    string(APPEND typed_native "${digest}\n")
+endforeach()
+string(SHA256 typed_native "${typed_native}")
+string(SUBSTRING "${typed_native}" 0 16 typed_native)
+list(REMOVE_ITEM typed_native_files ${TYPED_APPS_INPUTS})   # a reactor's source already is one (Ninja: one rule each)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${typed_native_files})
+set_source_files_properties(typed_cache_p4.c PROPERTIES COMPILE_DEFINITIONS "TYPED_NATIVE_SHA=\"${typed_native}\"")
 target_include_directories(${COMPONENT_LIB} PRIVATE ${TYPED_APPS_HOST_INCLUDES})
 target_compile_definitions(${COMPONENT_LIB} PRIVATE PICOCALC_TYPED_APPS=1 ${TYPED_APPS_HOST_DEFINES})
 target_link_libraries(${COMPONENT_LIB} PRIVATE idf::espressif__elf_loader)
