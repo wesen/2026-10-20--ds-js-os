@@ -848,6 +848,9 @@ parking does not, and it came out. The final image passed health twice with peri
   bundle's registry differs by a few bytes). Module bytes identical in every arm; no cache hit in any boot.
 - Gate (f20954b9): health True twice with peripherals on; Candela 30.9 %, Files 49.8 %, Editor 58.1 %, Agenda
   68.2 %, Chess 72.7 % of their deadlines (control: 35.2, 50.7, 59.3, 69.9, 73.2 %). Same times as the strip arm.
+- Restore (`make restore-playable` from the main checkout, 21:47-21:57, mostly waiting for the lock): playable
+  `54cfa09b` (PLAYABLE.json, main 209af25), health with peripherals on, keyboard i2c0 253 transfers and 0 errors
+  over the window, painter installed. PLAYABLE.json untouched.
 
 ### What didn't work
 - Nine of twelve study boots failed health with `StopIteration()` (the split TYPEDCOMPILE line of Step 11, in every
