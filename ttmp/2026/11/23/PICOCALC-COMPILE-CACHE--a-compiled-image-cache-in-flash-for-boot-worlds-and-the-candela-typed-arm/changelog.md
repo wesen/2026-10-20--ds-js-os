@@ -32,3 +32,7 @@ Session B on merged main (54ec123 = main ebbade8, image 85be45dd): no world cras
 ### Related Files
 
 - bench/board/device.py — painter reply found inside another line
+
+## 2026-11-23
+
+Sessions C and D: health passes on a cold boot (merged main, 85be45dd); on main with CANDELA-KERNEL-CODEGEN's emitter release (bd142fa, 3db56908) the Typed program compiles at a 9.87 MB peak in 177 s beside the writer and loads from the cache in 0.35 s; verify 6/6; cache cleared; board restored to playable 54cfa09b

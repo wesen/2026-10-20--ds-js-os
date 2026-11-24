@@ -686,3 +686,62 @@ leftover output directory and ran again.
 
 ### Technical details
 - Data: `various/board6/`.
+
+## Step 10: Session D on main with CANDELA-KERNEL-CODEGEN's emitter release
+
+The coordinator merged CANDELA-KERNEL-CODEGEN's fix (each function's emitter released after lowering) into main and
+asked for the final Typed-arm runs on it. I merged main (bd142fa: main cfcb183 plus this branch's harness fix and
+diary) and ran a short session on image 3db56908. With both fixes the gallery's Typed program compiles at a 9.87 MB
+peak: 17.8 MB or more with neither, 13.0–13.4 MB with the collector alone. The module is byte-identical (SHA
+`66c89cfe99cbd456`), so session B's 18/18 digests stand. The cache ends empty and the board is back on playable.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1. Coordinator: "CANDELA-KERNEL-CODEGEN found that with its compiler changes the
+device compile of the gallery's Typed program ran out of memory (peak 17.8 MB, Settings/compositor crashed), fixed by
+releasing each function's emitter after lowering (9c81fae, now merged into main ...). Merge main before your final
+Typed-arm runs ..."
+**Assistant interpretation:** Re-run the Typed first use and the cached load on an image with both memory fixes.
+**Inferred user intent:** Final numbers that hold for what main builds now.
+**Commit (code):** bd142fa (image 3db56908).
+
+### What I did
+- Restore6 (`make -C <main> restore-playable OUT=/tmp/picocalc-compile-cache-restore6`): 54cfa09b, health passed.
+- `git merge main` (bd142fa; main changed `compiler/typed/typed-rv32.js` and `rv32/compile.js`, 5 lines), build
+  `playable bd142fa dirty=false app 3db56908...`; gates: `make test` exit 0, `make test-host` ray 430f0d501659, 6981
+  words, 25/25 under both policies (4,888,369 and 3,239,635 instructions).
+- `scripts/01-boots.py /tmp/picocalc-compile-cache-board7 --build /tmp/picocalc-compile-cache-dev4 flash boot:cold1:250
+  cmd:typed_cache boot:warm1:45 cmd:typed_cache_verify cmd:typed_cache_clear cmd:typed_cache`, then restore7.
+
+### What worked
+- Cold boot (every key new, since `typed/rv32.js` changed): compiles 2.44 / 1.51 / 3.52 / 2.73 / 4.34 / 5.32 s
+  (Candela, Files, Editor, Agenda, Chess, painter; Chess 72 % of its deadline), the same SHA prefixes as every earlier
+  session; first frames at 18.4–21.2 s (kernel clock).
+- The Typed first use in the background: `candela-gallery compile ... us=177222337 peak_js_bytes=9865420
+  module_bytes=787712 sha=66c89cfe99cbd456`, stored in 26.6 s (seq 8).
+- Warm boot: hits in 29–89 ms for the boot apps; the Typed program as the default arm: `candela-gallery cache hit
+  us=321626`, `typed-load compileMs 350.0 relocateMs 69.1`; first frames at 3.7–6.4 s.
+- `TCVERIFY {"checked":6,"same":6}`; no `crashed` line except nat-import's; `typed cache clear` then
+  `{"entries":0,...,"freeKb":7884}` (this also removed the entry Step 9 left behind).
+- Restore7: 54cfa09b, health passed (i2c0 253 transfers, 0 errors).
+
+### What didn't work
+- Nothing in this session.
+
+### What I learned
+- The two memory fixes are independent and add up: the collector reclaims cycles, the emitter release drops live
+  data. Together they bring the Typed compile from more than 17.8 MB to 9.87 MB.
+
+### What was tricky to build
+- Nothing new.
+
+### What warrants a second pair of eyes
+- The first use is 177–182 s beside the writer and the C++ arm (113.5 s with nothing beside it).
+
+### What should be done in the future
+- Nothing for this ticket; the compile time belongs to the compiler tickets.
+
+### Code review instructions
+- None beyond Steps 6–8.
+
+### Technical details
+- Data: `various/board7/` (steps.jsonl, summary.json, cold, warm and verify logs).
