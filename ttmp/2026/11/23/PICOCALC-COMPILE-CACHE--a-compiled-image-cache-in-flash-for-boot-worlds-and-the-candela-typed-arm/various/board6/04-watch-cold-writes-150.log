@@ -1,0 +1,68 @@
+@0.023 CGAL {"ev":"pass","id":"B-01","pass":3,"renderMs":4263.7,"cyclesPerSample":19662.7,"ev100":15.3618}
+@2.197 CGAL {"ev":"pass","id":"B-01","pass":4,"renderMs":5889.1,"cyclesPerSample":20439.1,"ev100":15.3618}
+@4.561 candela-gallery cache miss key_us=1341 read_us=226493
+@4.953 typed compiler bytecode: candela-gallery/link.js 714 bytes
+@5.089 CGAL {"ev":"pass","id":"B-01","pass":5,"renderMs":8177.4,"cyclesPerSample":22731.6,"ev100":15.3618}
+@5.103 candela-gallery native compiler functions=streamed
+@5.103 candela-gallery native compiler policy=kernel
+@5.446 typed compiler bytecode: typed/rv32-kernel.js 27677 bytes
+@9.372 files cache stored seq=2 module_bytes=243644 us=10274236 prepare_us=14719 write_us=9835303 commit_us=424214 free_kb=7816
+@10.793 CGAL {"ev":"pass","id":"B-01","pass":6,"renderMs":12909.9,"cyclesPerSample":29948.0,"ev100":15.3618}
+@16.505 CGAL {"ev":"pass","id":"B-01","pass":7,"renderMs":17699.2,"cyclesPerSample":35279.0,"ev100":15.3618}
+@20.798 editor cache stored seq=3 module_bytes=243644 us=11423554 prepare_us=43312 write_us=10964626 commit_us=415616 free_kb=7576
+@21.620 CGAL {"ev":"pass","id":"B-01","pass":8,"renderMs":21913.0,"cyclesPerSample":38265.3,"ev100":15.3679}
+@26.395 CGAL {"ev":"pass","id":"B-01","pass":9,"renderMs":25920.5,"cyclesPerSample":40256.8,"ev100":15.3679}
+@30.785 CGAL {"ev":"pass","id":"B-01","pass":10,"renderMs":29651.2,"cyclesPerSample":41469.0,"ev100":15.3679}
+@32.327 agenda cache stored seq=4 module_bytes=243644 us=11525074 prepare_us=43461 write_us=10944875 commit_us=536738 free_kb=7336
+@34.533 CGAL {"ev":"pass","id":"B-01","pass":11,"renderMs":32892.1,"cyclesPerSample":41832.8,"ev100":15.3679}
+@38.656 CGAL {"ev":"pass","id":"B-01","pass":12,"renderMs":36342.9,"cyclesPerSample":42379.1,"ev100":15.3679}
+@42.556 CGAL {"ev":"pass","id":"B-01","pass":13,"renderMs":39755.4,"cyclesPerSample":42804.4,"ev100":15.3679}
+@44.515 chess cache stored seq=5 module_bytes=276412 us=12184382 prepare_us=49669 write_us=11791000 commit_us=343713 free_kb=7096
+@46.696 CGAL {"ev":"pass","id":"B-01","pass":14,"renderMs":43154.8,"cyclesPerSample":43143.3,"ev100":15.3679}
+@46.864 chess/painter cache stored seq=6 module_bytes=33840 us=2346833 prepare_us=70015 write_us=1861154 commit_us=415664 free_kb=6824
+@48.474 CGAL {"ev":"pass","id":"B-01","pass":15,"renderMs":44765.0,"cyclesPerSample":41771.7,"ev100":15.3679}
+@50.893 CGAL {"ev":"pass","id":"B-01","pass":16,"renderMs":47031.6,"cyclesPerSample":41137.5,"ev100":15.3679}
+@52.928 CGAL {"ev":"pass","id":"B-01","pass":17,"renderMs":48886.7,"cyclesPerSample":40245.2,"ev100":15.3679}
+@54.506 CGAL {"ev":"scene","id":"B-01","arm":"cpp","w":160,"h":160,"reason":"time","passes":17,"samples":454080,"firstImageMs":541.5,"coarseMs":374.9,"halfMs":727.6,"pass1Ms":1584.6,"renderMs":50087.6,"shownMs":60000.2,"secPerPass":2.8238,"samplesPerSec":9065.7,"cyclesPerSample":39521.1,"displays":36,"displayMs":9533.4,"displayCyclesMean":93074543,"skyRebuilt":1,"ev100":15.3679,"metered":3,"meanLum":8449.2,"internalFree0":62799,"internalMinFree":47787,"psramFree0":20068444,"psramMinFree":12851140,"internalPeakUse":15012,"psramPeakUse":7217304}
+@55.023 CGAL {"ev":"first","id":"R-01","ms":522.6,"sub":1,"pass":0,"ev100":8.5206,"skyRebuilt":1}
+@57.831 CGAL {"ev":"pass","id":"R-01","pass":1,"renderMs":2722.8,"cyclesPerSample":38066.9,"ev100":8.5206}
+@60.800 CGAL {"ev":"pass","id":"R-01","pass":2,"renderMs":5342.0,"cyclesPerSample":37414.2,"ev100":8.3467}
+@63.668 CGAL {"ev":"pass","id":"R-01","pass":3,"renderMs":7920.6,"cyclesPerSample":36999.9,"ev100":8.3467}
+@66.561 CGAL {"ev":"pass","id":"R-01","pass":4,"renderMs":10452.6,"cyclesPerSample":36634.9,"ev100":8.3467}
+@69.544 CGAL {"ev":"pass","id":"R-01","pass":5,"renderMs":13152.7,"cyclesPerSample":36882.2,"ev100":8.3467}
+@72.195 CGAL {"ev":"pass","id":"R-01","pass":6,"renderMs":15490.8,"cyclesPerSample":36185.0,"ev100":8.3467}
+@75.306 CGAL {"ev":"pass","id":"R-01","pass":7,"renderMs":18262.7,"cyclesPerSample":36573.4,"ev100":8.3467}
+@78.300 CGAL {"ev":"pass","id":"R-01","pass":8,"renderMs":21125.9,"cyclesPerSample":37025.5,"ev100":8.3742}
+@81.300 CGAL {"ev":"pass","id":"R-01","pass":9,"renderMs":23835.4,"cyclesPerSample":37137.4,"ev100":8.3742}
+@84.353 CGAL {"ev":"pass","id":"R-01","pass":10,"renderMs":26551.9,"cyclesPerSample":37236.9,"ev100":8.3742}
+@87.605 CGAL {"ev":"pass","id":"R-01","pass":11,"renderMs":29456.5,"cyclesPerSample":37558.6,"ev100":8.3742}
+@90.562 CGAL {"ev":"pass","id":"R-01","pass":12,"renderMs":32133.6,"cyclesPerSample":37560.0,"ev100":8.3742}
+@93.815 CGAL {"ev":"pass","id":"R-01","pass":13,"renderMs":35035.9,"cyclesPerSample":37801.4,"ev100":8.3742}
+@96.968 CGAL {"ev":"pass","id":"R-01","pass":14,"renderMs":37847.3,"cyclesPerSample":37920.2,"ev100":8.3742}
+@99.836 CGAL {"ev":"pass","id":"R-01","pass":15,"renderMs":40558.3,"cyclesPerSample":37927.4,"ev100":8.3742}
+@102.774 CGAL {"ev":"pass","id":"R-01","pass":16,"renderMs":43154.6,"cyclesPerSample":37831.1,"ev100":8.3742}
+@105.798 CGAL {"ev":"pass","id":"R-01","pass":17,"renderMs":45872.5,"cyclesPerSample":37849.5,"ev100":8.3742}
+@108.697 CGAL {"ev":"pass","id":"R-01","pass":18,"renderMs":48469.4,"cyclesPerSample":37771.7,"ev100":8.3742}
+@111.628 CGAL {"ev":"pass","id":"R-01","pass":19,"renderMs":51256.9,"cyclesPerSample":37843.3,"ev100":8.3742}
+@114.632 CGAL {"ev":"scene","id":"R-01","arm":"cpp","w":160,"h":160,"reason":"time","passes":19,"samples":508960,"firstImageMs":522.6,"coarseMs":334.8,"halfMs":1056.7,"pass1Ms":3325.7,"renderMs":53796.7,"shownMs":60000.6,"secPerPass":2.7059,"samplesPerSec":9460.8,"cyclesPerSample":37956.2,"displays":38,"displayMs":6015.0,"displayCyclesMean":56782761,"skyRebuilt":1,"ev100":8.3742,"metered":3,"meanLum":62.2751,"internalFree0":62699,"internalMinFree":58471,"psramFree0":13413988,"psramMinFree":9558764,"internalPeakUse":4228,"psramPeakUse":3855224}
+@115.039 CGAL {"ev":"first","id":"L-03","ms":408.9,"sub":1,"pass":0,"ev100":15.9390,"skyRebuilt":1}
+@116.632 CGAL {"ev":"pass","id":"L-03","pass":1,"renderMs":1632.1,"cyclesPerSample":22731.8,"ev100":15.9390}
+@118.643 CGAL {"ev":"pass","id":"L-03","pass":2,"renderMs":3328.6,"cyclesPerSample":23203.0,"ev100":16.1636}
+@120.565 CGAL {"ev":"pass","id":"L-03","pass":3,"renderMs":4891.8,"cyclesPerSample":22709.0,"ev100":16.1636}
+@121.849 CGAL {"ev":"pass","id":"L-03","pass":4,"renderMs":5979.1,"cyclesPerSample":20835.1,"ev100":16.1636}
+@123.825 CGAL {"ev":"pass","id":"L-03","pass":5,"renderMs":7645.4,"cyclesPerSample":21339.5,"ev100":16.1636}
+@125.108 CGAL {"ev":"pass","id":"L-03","pass":6,"renderMs":8924.7,"cyclesPerSample":20763.6,"ev100":16.1636}
+@126.862 CGAL {"ev":"pass","id":"L-03","pass":7,"renderMs":10460.0,"cyclesPerSample":20871.1,"ev100":16.1636}
+@128.618 CGAL {"ev":"pass","id":"L-03","pass":8,"renderMs":12061.6,"cyclesPerSample":21058.9,"ev100":16.1648}
+@130.514 CGAL {"ev":"pass","id":"L-03","pass":9,"renderMs":13632.5,"cyclesPerSample":21160.5,"ev100":16.1648}
+@132.106 CGAL {"ev":"pass","id":"L-03","pass":10,"renderMs":15067.5,"cyclesPerSample":21055.5,"ev100":16.1648}
+@133.819 CGAL {"ev":"pass","id":"L-03","pass":11,"renderMs":16585.2,"cyclesPerSample":21072.2,"ev100":16.1648}
+@135.476 CGAL {"ev":"pass","id":"L-03","pass":12,"renderMs":18090.2,"cyclesPerSample":21074.3,"ev100":16.1648}
+@136.790 CGAL {"ev":"pass","id":"L-03","pass":13,"renderMs":19399.8,"cyclesPerSample":20864.6,"ev100":16.1648}
+@138.487 CGAL {"ev":"pass","id":"L-03","pass":14,"renderMs":20936.5,"cyclesPerSample":20912.6,"ev100":16.1648}
+@140.129 CGAL {"ev":"pass","id":"L-03","pass":15,"renderMs":22407.6,"cyclesPerSample":20890.9,"ev100":16.1648}
+@141.778 CGAL {"ev":"pass","id":"L-03","pass":16,"renderMs":23871.1,"cyclesPerSample":20858.3,"ev100":16.1648}
+@143.388 CGAL {"ev":"pass","id":"L-03","pass":17,"renderMs":25334.5,"cyclesPerSample":20835.7,"ev100":16.1648}
+@145.028 CGAL {"ev":"pass","id":"L-03","pass":18,"renderMs":26808.6,"cyclesPerSample":20826.2,"ev100":16.1648}
+@146.470 CGAL {"ev":"pass","id":"L-03","pass":19,"renderMs":28093.9,"cyclesPerSample":20676.4,"ev100":16.1648}
+@148.815 CGAL {"ev":"pass","id":"L-03","pass":20,"renderMs":30071.3,"cyclesPerSample":21024.4,"ev100":16.1648}

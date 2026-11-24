@@ -634,3 +634,55 @@ arms (reference disp 23d7885f for both) and note what the screen shows."
 
 ### Technical details
 - Data: `various/board5/` (steps.jsonl, summary.json, logs, the B-01 screenshots, both gallery.json and cgal.jsonl).
+
+## Step 9: Session C: health on a cold boot, and the restores
+
+The cold health gate that the harness race cut short in Step 8 passes on the merged image. The first attempt never
+reached the board (its 30-minute timeout ran out behind two other agents' studies), so I stopped the restore queued
+after it rather than flash a board my session had not touched. The second attempt ran. Its restore then failed on a
+leftover output directory and ran again.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1 and Step 8.
+**Assistant interpretation:** Finish the cold-boot health gate on merged main and leave the board on playable.
+**Inferred user intent:** All four boot gates on the image main now builds.
+**Commit (code):** 54ec123 (image 85be45dd); harness f465d37.
+
+### What I did
+- `scripts/01-boots.py /tmp/picocalc-compile-cache-board6 --build /tmp/picocalc-compile-cache-dev3 flash boot:warm2:40
+  cmd:typed_cache_clear health:cold watch:cold-writes:150 cmd:typed_cache cmd:typed_cache_clear cmd:typed_cache`.
+- `make -C <main> restore-playable OUT=/tmp/picocalc-compile-cache-restore5`: `FileExistsError: [Errno 17] File
+  exists: '/tmp/picocalc-compile-cache-restore5'` (left by the stopped attempt); then `OUT=...-restore6`.
+
+### What worked
+- `health:cold` passed with peripherals on: the painter compiled cold (`compile_us 5788081`), keyboard 243 transfers,
+  0 errors in the 5 s window, no world restarting. The harness fix read the painter's reply this time.
+- The boot before it (`boot:warm2`) found the cache empty and was another cold boot: compiles 2.44 / 1.50 / 3.50 /
+  2.74 / 4.37 / 5.23 s (Candela, Files, Editor, Agenda, Chess, painter), all within 73 % of their deadlines.
+- No `crashed` line except nat-import's in the session; the writer stored all six boot entries after the cold health
+  boot (about 10–12 s per 244 KB module), and the gallery's Typed program compiled again in the background (180.3 s,
+  13.02 MB peak, SHA `66c89cfe99cbd456`).
+
+### What didn't work
+- The Typed compile finished after the session's last `typed cache clear`, so the writer stored its 788 KB entry before
+  the restore: one hidden entry stays in `/files/.cache/typed` on the board. The playable image 54cfa09b does not read
+  it; a cache-aware firmware with the same compiler and program would hit it, and any other one evicts it.
+
+### What I learned
+- A clear while a compile runs does not leave the cache empty; `typed cache clear` would need to hold the writer and
+  drop the queue to promise that.
+
+### What was tricky to build
+- Nothing new: the sequence was Step 8's, minus the steps that had passed.
+
+### What warrants a second pair of eyes
+- `typed cache clear` against a queued or running write.
+
+### What should be done in the future
+- Make `typed cache clear` drop queued writes.
+
+### Code review instructions
+- None beyond Step 8.
+
+### Technical details
+- Data: `various/board6/`.

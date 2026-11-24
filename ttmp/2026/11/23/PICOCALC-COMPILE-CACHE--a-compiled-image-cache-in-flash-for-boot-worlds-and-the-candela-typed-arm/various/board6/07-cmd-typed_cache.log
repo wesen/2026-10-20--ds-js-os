@@ -1,0 +1,8 @@
+CGAL {"ev":"pass","id":"G-01","pass":1,"renderMs":4561.9,"cyclesPerSample":63846.4,"ev100":16.0232}
+CGAL {"ev":"pass","id":"G-01","pass":2,"renderMs":7863.1,"cyclesPerSample":55093.2,"ev100":16.3264}
+candela-gallery compile source=bundle status=ok us=180315557 peak_js_bytes=13023960 module_bytes=787712 sha=66c89cfe99cbd456
+TYPEDCOMPILE {"app":"candela-gallery","beforeUs":123768,"setupUs":17823,"callUs":179517926,"freeUs":223678,"heap":{"mallocs":6954,"frees":6890,"reallocs":12160,"reused":19489,"us":1764980},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":2353,"runUs":46915,"liveBytes":251208},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":25342,"runUs":31490,"liveBytes":332272},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":13835,"runUs":113261,"liveBytes":477964},{"path":"candela-gallery/link.js","bytecode":"parsed","inCall":false,"loadUs":16978,"runUs":773,"liveBytes":477964},{"path":"typed/rv32-inline.js","bytecode":"cached","inCall":true,"loadUs":2021,"runUs":6359,"liveBytes":1599180},{"path":"typed/rv32-kernel.js","bytecode":"parsed","inCall":true,"loadUs":331740,"runUs":15269,"liveBytes":1701908},{"path":"typed/rv32-loops.js","bytecode":"cached","inCall":true,"loadUs":4926,"runUs":5879,"liveBytes":1718016}]}
+CGAL {"ev":"typed-load","compileMs":180693.3,"relocateMs":208.0,"moduleBytes":787712,"segmentBytes":786988,"arenaWords":12563}
+CGAL {"ev":"pass","id":"G-01","pass":3,"renderMs":11211.7,"cyclesPerSample":52309.0,"ev100":16.3264}
+TCACHE {"entries":0,"bytes":0,"budget":4194304,"freeKb":7736,"native":"c 9d0fcd223f46291d quickjs 2026-06-04"}
+#OK typed
