@@ -1,10 +1,10 @@
 {
   "profile": "playable",
-  "commit": "209af25",
+  "commit": "3df1fc7",
   "dirty": false,
   "app": {
     "file": "picocalc-os-p4.bin",
-    "sha256": "54cfa09beef3d121fcb29739045c00e91b7429bf7a236be4d1198afd1f6b3b4d"
+    "sha256": "fb0ba3bdae065083ae924bdf8f2e5be90c4b2f00a65e8c4446ab6a95c5a429d4"
   },
   "partitionTable": {
     "sha256": "72721dc3ce2597504dc568023e778100401a308455fea40d174d282386571d30"
@@ -12,7 +12,7 @@
   "bootloader": {
     "sha256": "8fddc159afedd2b5e83bb529ff872a35520d2a574fa51b4840e03bcd6f3b86a1"
   },
-  "store": "~/.cache/picocalc/firmware/54cfa09beef3d121fcb29739045c00e91b7429bf7a236be4d1198afd1f6b3b4d",
+  "store": "~/.cache/picocalc/firmware/fb0ba3bdae065083ae924bdf8f2e5be90c4b2f00a65e8c4446ab6a95c5a429d4",
   "peripherals": "on",
   "health": {
     "judged": [
@@ -28,10 +28,10 @@
     "restartingAfterSettle": [],
     "i2c0Window": {
       "seconds": 5.24,
-      "transfers": 252,
-      "bytes": 1009,
+      "transfers": 240,
+      "bytes": 961,
       "errors": 0,
-      "busyMs": 1527.13
+      "busyMs": 1839.17
     }
   }
 }
