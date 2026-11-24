@@ -1,0 +1,5 @@
+[180806.315] settings: crashed: out of memory
+E (183651) ELF: Error to load elf file, ret=-12
+[181036.431] compositor: crashed: out of memory
+E (183884) ELF: Error to load elf file, ret=-12
+candela-gallery compile source=bundle status=failed us=114296568 peak_js_bytes=17835904 module_bytes=0
