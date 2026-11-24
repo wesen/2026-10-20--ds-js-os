@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Turn the checkout into the experiment tree of PICOCALC-COMPILER-DEVICE-COST, or back.
 
+Applies to commits f1ecb93..91aeb52 (the split heap file with arena parking; parking was taken out after them).
+
 usage: 02-experiment-tree.py apply|revert
 
 apply: copies exp/typed_cost_bench.c into bench/board/firmware/, adds the typedcost console command to the bench

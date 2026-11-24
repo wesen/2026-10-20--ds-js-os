@@ -236,7 +236,6 @@ done:
   phase = port_clock();
   if (ctx) JS_FreeContext(ctx);
   if (rt) JS_FreeRuntime(rt);
-  compile_heap_release(heap);
   state.free_us = port_clock() - phase;
   const vtime_t elapsed = port_clock() - started;
   uint8_t sha[32] = {0};

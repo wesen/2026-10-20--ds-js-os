@@ -9,17 +9,13 @@
 #include "p4.h"
 #include "quickjs.h"
 
-#define ARENA_PARKED 64
-
 typedef struct {
   size_t live, peak, limit;
   vtime_t deadline;
   unsigned over_limit, no_psram;   // refused allocations: past the heap cap, or PSRAM had no block
   // The calls this compile made to the port's heap (QuickJS's arenas and large blocks) and the CPU cycles inside them.
-  uint32_t mallocs, frees, reallocs, reused;
+  uint32_t mallocs, frees, reallocs;
   uint64_t heap_cycles;
-  int parked_count;
-  void *parked[ARENA_PARKED];  // freed arena-sized blocks, handed out again (typed_compile_heap.c)
 } compile_heap;
 
 // Each compiler source a compile evaluated (from the bytecode cache or parsed, with the time to load the bytecode and
@@ -42,12 +38,10 @@ typedef struct {
 } compile_state;
 
 // JS_NewRuntime2(&compiler_allocator, heap): the compile's heap, capped at heap->limit, with QuickJS's malloc_size kept
-// (so the cycle collector runs) and arena-sized blocks parked for reuse.
+// (so the cycle collector runs).
 extern const JSMallocFunctions compiler_allocator;
 // JS_SetInterruptHandler(rt, compile_interrupt, heap): stops the compile at heap->deadline.
 int compile_interrupt(JSRuntime *rt, void *opaque);
-// After JS_FreeRuntime: frees the parked arenas.
-void compile_heap_release(compile_heap *heap);
 // Why a failed compile had no memory: the heap cap, PSRAM, or neither (a compile error, the deadline).
 void compile_heap_print_refusals(const char *app, const compile_heap *heap);
 // The TYPEDCOMPILE line.

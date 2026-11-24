@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Build the boot study's arms from one commit: a ladder that adds this ticket's changes one at a time.
 
+Applies to commits f1ecb93..91aeb52 (the boot study ran on 20a4b23); arena parking was taken out after them.
+
 usage: 17-boot-arms.py build ARM BUILD_DIR ARM_DIR   apply ARM, build the playable profile, copy the flashable files
                                                      (app, bootloader, partition table, picocalc-build.json) into
                                                      ARM_DIR (which must not exist), revert

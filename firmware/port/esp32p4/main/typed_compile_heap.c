@@ -11,13 +11,10 @@
 #include "sdkconfig.h"
 
 // QuickJS keeps small objects in 4 KB arenas that it takes from the embedder, and returns an arena the moment its last
-// object is freed. A size class whose use swings across an arena boundary therefore takes and returns the same 4 KB
-// again and again: 2,100 to 5,100 arenas in one boot compile on the host, a number that moves with whatever else the
-// realm holds (PICOCALC-COMPILER-DEVICE-COST). On the P4 each is a TLSF allocation and free in PSRAM. A compile parks
-// up to ARENA_PARKED freed arena-sized blocks and hands them out again; a parked block stays counted as live (so the
-// peak counts what the compile holds) and the runtime's teardown frees them.
-#define ARENA_MIN 3584
-#define ARENA_BLOCK 4096
+// object is freed, so a boot compile makes 1,000 to 4,000 calls to this heap. Parking freed arenas for reuse
+// (PICOCALC-COMPILER-DEVICE-COST, 7682d93) cut those calls by a third and the time inside them by a few milliseconds,
+// but did not make a boot compile faster on the P4 (its paired boot study: -27 to +21 ms per app, the size of what
+// moving the heap alone does), and it was taken out.
 
 // QuickJS starts its cycle collector from the size the allocator reports in malloc_size (js_trigger_gc: at 1.5 times
 // the size the last collection left). Its own allocator keeps that count; a custom one must, as the worlds' does
@@ -44,12 +41,6 @@ static bool psram_spare(compile_heap *heap, size_t size) {
 
 static void *compile_malloc(JSMallocState *state, size_t size) {
   compile_heap *heap = state->opaque;
-  bool arena = size >= ARENA_MIN && size <= ARENA_BLOCK;
-  if (arena && heap->parked_count) {
-    heap->reused++;
-    return heap->parked[--heap->parked_count];
-  }
-  if (arena) size = ARENA_BLOCK;  // every arena-sized block can serve every arena-sized request
   if (heap->live >= heap->limit || size > heap->limit - heap->live) { heap->over_limit++; return NULL; }
   if (!psram_spare(heap, size)) return NULL;
   uint32_t begun = esp_cpu_get_cycle_count();
@@ -65,13 +56,7 @@ static void compile_free(JSMallocState *state, void *ptr) {
   if (!ptr) return;
   compile_heap *heap = state->opaque;
   uint32_t begun = esp_cpu_get_cycle_count();
-  size_t usable = port_heap_usable(ptr);
-  if (usable >= ARENA_BLOCK && usable < ARENA_BLOCK + 64 && heap->parked_count < ARENA_PARKED) {
-    heap->parked[heap->parked_count++] = ptr;  // stays counted as live
-    heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
-    return;
-  }
-  account(state, usable, 0);
+  account(state, port_heap_usable(ptr), 0);
   port_heap_free(ptr);
   heap->frees++;
   heap->heap_cycles += (uint32_t)(esp_cpu_get_cycle_count() - begun);
@@ -103,14 +88,6 @@ int compile_interrupt(JSRuntime *rt, void *opaque) {
   return port_clock() >= heap->deadline;
 }
 
-void compile_heap_release(compile_heap *heap) {
-  while (heap->parked_count) {   // the parked arenas: freed after the runtime, counted until now
-    void *block = heap->parked[--heap->parked_count];
-    heap->live -= port_heap_usable(block);
-    port_heap_free(block);
-  }
-}
-
 void compile_heap_print_refusals(const char *app, const compile_heap *heap) {
   printf("%s compile refused_over_limit=%u refused_no_psram=%u heap_limit=%zu psram_free=%zu psram_largest=%zu\n", app,
          heap->over_limit, heap->no_psram, heap->limit, heap_caps_get_free_size(MALLOC_CAP_SPIRAM),
@@ -126,11 +103,11 @@ void compile_state_print(const char *app, const compile_state *state) {
   if (!line) return;
   const compile_heap *heap = &state->heap;
   int n = snprintf(line, LINE, "TYPEDCOMPILE {\"app\":\"%s\",\"beforeUs\":%lld,\"setupUs\":%lld,\"callUs\":%lld,"
-                   "\"freeUs\":%lld,\"heap\":{\"mallocs\":%lu,\"frees\":%lu,\"reallocs\":%lu,\"reused\":%lu,\"us\":%llu},"
+                   "\"freeUs\":%lld,\"heap\":{\"mallocs\":%lu,\"frees\":%lu,\"reallocs\":%lu,\"us\":%llu},"
                    "\"evals\":[",
                    app, (long long)state->before_us, (long long)state->setup_us, (long long)state->call_us,
                    (long long)state->free_us, (unsigned long)heap->mallocs, (unsigned long)heap->frees,
-                   (unsigned long)heap->reallocs, (unsigned long)heap->reused,
+                   (unsigned long)heap->reallocs,
                    (unsigned long long)(heap->heap_cycles / CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ));
   for (int i = 0; i < state->evals && n > 0 && n < LINE; i++) {
     const compile_eval *e = &state->eval[i];
