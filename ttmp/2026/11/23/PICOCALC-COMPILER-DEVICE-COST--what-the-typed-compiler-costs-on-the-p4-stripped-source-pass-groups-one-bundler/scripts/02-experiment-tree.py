@@ -5,7 +5,7 @@ usage: 02-experiment-tree.py apply|revert
 
 apply: copies exp/typed_cost_bench.c into bench/board/firmware/, adds the typedcost console command to the bench
 console and bench.cmake (with typed/rv32-all.js, the three RV32 bundles concatenated), and gives typed_p4.c two
-experiment knobs (p4_typed_strip_flags, p4_typed_bytecode_flush). Every edit is an exact, checked replacement.
+experiment knobs (p4_typed_strip_flags, p4_typed_bytecode_flush) and typed_compile_heap.c a third (p4_typed_park). Every edit is an exact, checked replacement.
 Build the bench profile from the applied tree (it is recorded as dirty), then revert.
 revert: restores the three edited files from git and deletes the copied file (checked: it must equal exp/'s).
 """
@@ -54,10 +54,12 @@ EDITS = {
         # The production flags (COMPILER_STRIP, 4239fde) become the knob's default.
         ("  JS_SetStripInfo(rt, COMPILER_STRIP);\n",
          "  JS_SetStripInfo(rt, p4_typed_strip_flags);\n"),
-        # Arena parking (7682d93) behind a knob, on by default as in production.
-        ("static void account(compile_heap *heap, size_t old, size_t current) {\n",
+    ],
+    # Arena parking (7682d93) behind a knob, on by default as in production.
+    "firmware/port/esp32p4/main/typed_compile_heap.c": [
+        ("static void account(JSMallocState *state, size_t old, size_t current) {\n",
          "int p4_typed_park = 1;  // experiment knob (PICOCALC-COMPILER-DEVICE-COST)\n\n"
-         "static void account(compile_heap *heap, size_t old, size_t current) {\n"),
+         "static void account(JSMallocState *state, size_t old, size_t current) {\n"),
         ("  bool arena = size >= ARENA_MIN && size <= ARENA_BLOCK;\n",
          "  bool arena = p4_typed_park && size >= ARENA_MIN && size <= ARENA_BLOCK;\n"),
         ("  if (usable >= ARENA_BLOCK && usable < ARENA_BLOCK + 64 && heap->parked_count < ARENA_PARKED) {\n",
