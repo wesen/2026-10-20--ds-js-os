@@ -139,7 +139,7 @@ def main():
         return summarize(a.out)
     import device
     arms = [dict(zip(("arm", "dir"), spec.split("=", 1))) for spec in a.arm]
-    assert len(arms) >= 2, "a control and at least one candidate"
+    assert arms, "at least one arm (one arm: the boots of one image, for its health and deadlines)"
     a.out.mkdir(parents=True, exist_ok=False)
     for arm in arms:
         arm["sha256"] = device.check_build(arm["dir"])
