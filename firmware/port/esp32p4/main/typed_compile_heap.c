@@ -2,6 +2,9 @@
 #include "typed_compile_heap.h"
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "esp_heap_caps.h"
 #include "esp_cpu.h"
@@ -115,18 +118,31 @@ void compile_heap_print_refusals(const char *app, const compile_heap *heap) {
 }
 
 void compile_state_print(const char *app, const compile_state *state) {
+  // One write for the whole line. Printed piece by piece (and a stdout buffer flushes a long line in pieces anyway),
+  // another task's console reply landed inside it: a health check's `painter` record, which the board harness then
+  // could not find. A write to the console is one locked transfer.
+  enum { LINE = 320 + 160 * (int)(sizeof state->eval / sizeof *state->eval) };
+  char *line = malloc(LINE);
+  if (!line) return;
   const compile_heap *heap = &state->heap;
-  printf("TYPEDCOMPILE {\"app\":\"%s\",\"beforeUs\":%lld,\"setupUs\":%lld,\"callUs\":%lld,\"freeUs\":%lld,"
-         "\"heap\":{\"mallocs\":%lu,\"frees\":%lu,\"reallocs\":%lu,\"reused\":%lu,\"us\":%llu},\"evals\":[",
-         app, (long long)state->before_us, (long long)state->setup_us, (long long)state->call_us,
-         (long long)state->free_us, (unsigned long)heap->mallocs, (unsigned long)heap->frees,
-         (unsigned long)heap->reallocs, (unsigned long)heap->reused,
-         (unsigned long long)(heap->heap_cycles / CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ));
-  for (int i = 0; i < state->evals; i++) {
+  int n = snprintf(line, LINE, "TYPEDCOMPILE {\"app\":\"%s\",\"beforeUs\":%lld,\"setupUs\":%lld,\"callUs\":%lld,"
+                   "\"freeUs\":%lld,\"heap\":{\"mallocs\":%lu,\"frees\":%lu,\"reallocs\":%lu,\"reused\":%lu,\"us\":%llu},"
+                   "\"evals\":[",
+                   app, (long long)state->before_us, (long long)state->setup_us, (long long)state->call_us,
+                   (long long)state->free_us, (unsigned long)heap->mallocs, (unsigned long)heap->frees,
+                   (unsigned long)heap->reallocs, (unsigned long)heap->reused,
+                   (unsigned long long)(heap->heap_cycles / CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ));
+  for (int i = 0; i < state->evals && n > 0 && n < LINE; i++) {
     const compile_eval *e = &state->eval[i];
-    printf("%s{\"path\":\"%s\",\"bytecode\":\"%s\",\"inCall\":%s,\"loadUs\":%lld,\"runUs\":%lld,\"liveBytes\":%zu}",
-           i ? "," : "", e->path, e->parsed ? "parsed" : "cached", e->in_call ? "true" : "false",
-           (long long)e->load_us, (long long)e->run_us, e->live);
+    n += snprintf(line + n, LINE - n,
+                  "%s{\"path\":\"%s\",\"bytecode\":\"%s\",\"inCall\":%s,\"loadUs\":%lld,\"runUs\":%lld,\"liveBytes\":%zu}",
+                  i ? "," : "", e->path, e->parsed ? "parsed" : "cached", e->in_call ? "true" : "false",
+                  (long long)e->load_us, (long long)e->run_us, e->live);
   }
-  printf("]}\n");
+  if (n > 0 && n + 3 < LINE) {
+    memcpy(line + n, "]}\n", 3);
+    fflush(stdout);
+    write(fileno(stdout), line, n + 3);
+  }
+  free(line);
 }
