@@ -1,0 +1,56 @@
+CGAL {"ev":"first","id":"B-01","ms":254.9,"sub":1,"pass":0,"ev100":14.9748,"skyRebuilt":1}
+t = 1076537.1 ms, lane busy 239259.6 ms (22.2%), 95116 turns, 3208 published, 5366 delivered, 5 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    driver   waiting      52852 122479.59     67.3    320    0  
+  power       driver   idle           213    440.21     77.2    320    0  
+  display     driver   idle            17    114.08     73.8    320    0  
+  compositor  service  idle          7453  43418.40    427.8    768    0  
+  agent       service  idle         10579   3789.58    771.0   1536    0  
+  chat        app      idle             8    147.50    238.8    768    0  
+  launcher    app      idle           532   6600.34    264.7    384    0  
+  files       app      idle             1     15.73    714.8    768    0  
+  editor      app      idle             1     14.39    714.8    768    0  
+  calc        app      idle             1    241.62    568.9   1024    0  
+  agenda      app      idle            71     34.05    714.8    768    0  
+  settings    app      idle          1059   3975.73    190.1    384    0  
+  logs        app      idle          2116   8593.59    214.3    384    0  
+  loader      app      idle          1059   4055.60    230.2    384    0  
+  sysmon      app      idle          2117  10916.52    219.9    512    0  
+  repl        app      idle             0     27.40    209.0    384    0  
+  sandbox     service  idle             0     23.66    206.1    512    0  
+  snake       app      idle          9613  17178.95     98.3    320    0  
+  faults      app      idle             5     55.87    216.0    384    0  
+  flaky       service  idle             1      8.55     48.3    320    0  
+  raytrace    app      idle             0     26.23    207.6    320    0  
+  keys        app      idle          1059   3706.56    208.0    320    0  
+  about       app      idle          1059   2153.64    208.2    320    0  
+  chess       app      idle             1     18.04    746.8    768    0  
+  gallery     app      idle          4233   9857.22    206.1    320    0  
+  toplog      service  idle             1      8.87     41.3    320    0  
+  nat-echo    service  idle             4     27.87     28.2     64    0  
+  nat-bench   service  idle             1      4.53      2.7     64    0  
+  nat-import  world    stopped          0     19.78      0.0     64    0  it links to path_open, which picocalc-os does not give a module
+  nat-dial    app      idle          1060   1305.46     14.3     64    0  
+  bus i2c0  busy 309823.62 ms, 53065 transfers, 212474 bytes, 0 errors
+  bus spi2  busy   526.92 ms, 90 transfers, 2318815 bytes, 0 errors
+#OK stats
+i2c0 held between transactions; reboot or flash now
+#OK hold
+Äó°•¡Årevision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40190020 size=4c796ch (5011820) map
+I (931) esp_image: segment 1: paddr=004d7994 vaddr=30100000 size=00068h (   104) load
+I (933) esp_image: segment 2: paddr=004d7a04 vaddr=4ff00000 size=08614h ( 34324) load
+I (943) esp_image: segment 3: paddr=004e0020 vaddr=40000020 size=18a4ach (1615020) map

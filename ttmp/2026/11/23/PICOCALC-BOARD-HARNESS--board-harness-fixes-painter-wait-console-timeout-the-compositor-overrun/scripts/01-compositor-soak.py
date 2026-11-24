@@ -2,7 +2,7 @@
 """Soak the installed playable image and watch for the compositor's 80 ms turn-budget overrun (fix 4).
 
 usage (repository root): python3 ttmp/.../scripts/01-compositor-soak.py OUT [--minutes 30] [--round 120] [--gap 6]
-                                                                           [--seed 1] [--trace]
+                                                                           [--seed 1] [--trace] [--max-hours 3]
 
 Nothing is flashed. The soak runs in rounds of --round seconds. Each round holds the board lock
 (bench/board/device.py) and releases it for --gap seconds afterwards, so other agents can use the board in between.
@@ -16,12 +16,21 @@ controller's queue and the I2C keyboard driver like a real key):
 the kernel logs a crash as "[t] W crashed handling TYPE: why" whether or not its trace is on (--trace turns it on
 for the rounds; it logs every dispatched message and slows the kernel task, so it is off by default).
 
+Other agents flash experiment images between rounds, sometimes across several lock acquisitions of their own. A round
+starts only on a board that answers and has not been reset since the last round. Otherwise the board is held (if it
+answers), its flash is compared with the playable image the main checkout's PLAYABLE.json records (verify_flash
+--after no_reset), and the soak continues on a fresh boot of the playable image. If it is another image, the board is
+left as it was found (its image running again, or a silent board left in its bootloader), and checked again only
+once it changes (a reset, or silence ending) or ten minutes pass. Samples are split into boots in the summary.
+
 Writes OUT/uart-N.log per round, OUT/samples.jsonl (one row per sample), OUT/crashes.jsonl and OUT/summary.json.
 """
 import argparse
 import json
+import os
 import random
 import re
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -29,7 +38,9 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[6]
 sys.path.insert(0, str(REPO / "bench/board"))
 import device  # noqa: E402
+import playable  # noqa: E402
 
+MAIN_PLAYABLE = Path("/home/manuel/code/wesen/2026-10-20--ds-js-os/firmware/PLAYABLE.json")
 CRASH = re.compile(r"\[\s*([\d.]+)\] (\S+) crashed(?: handling (.*?))?: (.*)$")
 WATCH = ("compositor", "chess", "gallery", "keyboard", "display", "launcher")
 FIELDS = ("state", "turns", "msgs", "cpu_ms", "mbox_peak", "restarts", "budget_ms", "last_error")
@@ -80,6 +91,84 @@ def round_(console, rnd, seconds, rng, rows, keys):
     rows.append(sample(console, rnd, phase))
 
 
+def others_active():
+    """Other processes with the board lock open: holding it, or waiting for it (another agent's board session)."""
+    me, found = os.getpid(), []
+    for fd_dir in Path("/proc").glob("[0-9]*/fd"):
+        if int(fd_dir.parent.name) == me:
+            continue
+        try:
+            if any(os.readlink(fd) == str(device.LOCK) for fd in fd_dir.iterdir()):
+                found.append(int(fd_dir.parent.name))
+        except OSError:
+            continue
+    return found
+
+
+def uptime(console):
+    """The kernel clock, or None when the board does not answer (a bootloader, a study app, a hung firmware)."""
+    try:
+        return console.uptime_ms(deadline_s=15)
+    except (TimeoutError, ValueError):
+        return None
+
+
+def esptool(out, tag, port, after, *args):
+    with (Path(out) / f"{tag}.log").open("wb") as f:
+        return subprocess.run([device.ESPTOOL, "--chip", "esp32p4", "-p", port, "-b", "921600", "--after", after, *args],
+                              stdout=f, stderr=subprocess.STDOUT, check=False, timeout=210).returncode == 0
+
+
+def verify_playable(log, out, rnd, port, running):
+    """Someone reset or flashed the board between rounds: hold it (best effort), compare its app slot and partition
+    table with the playable image main's PLAYABLE.json records, and if they match, boot it and settle. If they do not
+    (another agent's image, perhaps between two of its operations), leave the board as it was found: its image
+    running again, or (`running` False: it was silent) waiting in its bootloader. Nothing is written."""
+    record = json.loads(MAIN_PLAYABLE.read_text())
+    store = playable.stored(record["app"]["sha256"])
+    device.check_build(store, record["app"]["sha256"])
+    if running:
+        device.quiesce(port, log)
+    same = esptool(out, f"verify-{rnd:02d}", port, "no_reset", "verify_flash", "0x10000", str(store / device.APP),
+                   "0x8000", str(store / device.PART))
+    if same or running:
+        esptool(out, f"verify-{rnd:02d}-reset", port, "hard_reset", "read_mac")
+    if not same:
+        return False
+    console = device.Console(port, log)
+    try:
+        device.settle(console)
+    finally:
+        console.close()
+    return True
+
+
+def segments(rows):
+    """Rows split where the uptime goes back (a boot)."""
+    out = []
+    for r in rows:
+        if not out or r["uptimeMs"] < out[-1][-1]["uptimeMs"]:
+            out.append([])
+        out[-1].append(r)
+    return out
+
+
+def summarize(seg):
+    first, last = seg[0], seg[-1]
+    c0, c1 = first["worlds"]["compositor"], last["worlds"]["compositor"]
+    return {
+        "uptimeMs": [first["uptimeMs"], last["uptimeMs"]], "samples": len(seg),
+        "compositor": {"restarts": [c0["restarts"], c1["restarts"]],
+                       "lastErrors": sorted({r["worlds"]["compositor"]["last_error"] for r in seg}),
+                       "turns": c1["turns"] - c0["turns"], "cpuMs": round(c1["cpu_ms"] - c0["cpu_ms"], 3),
+                       "meanTurnMs": round((c1["cpu_ms"] - c0["cpu_ms"]) / max(1, c1["turns"] - c0["turns"]), 3),
+                       "mboxPeak": max(r["worlds"]["compositor"]["mbox_peak"] for r in seg)},
+        "restarts": {w: [first["worlds"][w]["restarts"], last["worlds"][w]["restarts"]] for w in WATCH
+                     if w in first["worlds"] and w in last["worlds"]},
+        "i2c0": {k: last["buses"]["i2c0"][k] - first["buses"]["i2c0"][k] for k in ("transfers", "errors")},
+    }
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("out", type=Path)
@@ -88,41 +177,75 @@ def main():
     ap.add_argument("--gap", type=float, default=6)
     ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--trace", action="store_true")
+    ap.add_argument("--max-hours", type=float, default=3, help="give up when the board stays unavailable this long")
     ap.add_argument("--port", default=device.PORT)
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=False)
     rng = random.Random(a.seed)
-    rows, keys, crashes, soaked, rnd = [], [], [], 0.0, 0
+    rows, keys, crashes, events, soaked, rnd, last_up = [], [], [], [], 0.0, 0, None
+    # After a failed check: what the other image looked like ("silent" or its uptime) and when it was checked. It is
+    # not checked again (each check resets it) until it changes (a reset, silence ending) or ten minutes pass.
+    foreign, foreign_at = None, 0.0
     began = time.monotonic()
     with (a.out / "samples.jsonl").open("w") as samples:
-        while soaked < a.minutes * 60:
+        while soaked < a.minutes * 60 and time.monotonic() - began < a.max_hours * 3600:
             seconds = min(a.round, a.minutes * 60 - soaked)
             log_path = a.out / f"uart-{rnd:02d}.log"
+            first = len(rows)
+            waiting = False
             with device.acquire(), log_path.open("wb", buffering=0) as log:
-                t0 = time.monotonic()
                 console = device.Console(a.port, log, drain_s=1)
+                up = uptime(console)
+                unchanged = foreign is not None and time.monotonic() - foreign_at < 600 and (
+                    (up is None and foreign == "silent") or (up is not None and foreign != "silent" and up >= foreign))
+                if unchanged:
+                    foreign = "silent" if up is None else up
+                    waiting = True
+                elif last_up is None or up is None or up < last_up:
+                    # The first round, or the board was reset or is silent: check its image (verify_playable leaves
+                    # another agent's image as it found it).
+                    console.close()
+                    busy = others_active()
+                    ok = verify_playable(log, a.out, rnd, a.port, running=up is not None)
+                    events.append({"round": rnd, "host": round(time.time(), 3), "othersActive": busy,
+                                   "answered": up is not None,
+                                   "event": "first round" if last_up is None else "reset or silent before the round",
+                                   "playableVerified": ok})
+                    print(f"round {rnd}: checking the image; answered {up is not None}; other board sessions {busy}; "
+                          f"playable verified: {ok}", flush=True)
+                    waiting = not ok
+                    foreign, foreign_at = (None, 0.0) if ok else ("silent" if up is None else 0.0, time.monotonic())
+                    console = device.Console(a.port, log, drain_s=1)
+                t0 = time.monotonic()
                 try:
-                    if a.trace:
-                        console.command("trace on")
-                    first = len(rows)
-                    round_(console, rnd, seconds, rng, rows, keys)
-                    if a.trace:
-                        console.command("trace off")
+                    if not waiting:
+                        if a.trace:
+                            console.command("trace on")
+                        round_(console, rnd, seconds, rng, rows, keys)
+                        if a.trace:
+                            console.command("trace off")
                 finally:
                     console.close()
-                soaked += time.monotonic() - t0
+                if not waiting:
+                    soaked += time.monotonic() - t0
+            rnd += 1
+            if waiting:
+                last_up = None
+                time.sleep(30)
+                continue
             for row in rows[first:]:
                 samples.write(json.dumps(row) + "\n")
             samples.flush()
             for line in log_path.read_bytes().decode(errors="replace").splitlines():
                 m = CRASH.search(line)
                 if m:
-                    crashes.append({"round": rnd, "kernelMs": float(m[1]) * 1, "world": m[2], "turn": m[3], "why": m[4]})
-            c = rows[-1]["worlds"].get("compositor", {})
-            print(f"round {rnd}: soaked {soaked / 60:.1f} min, uptime {rows[-1]['uptimeMs'] / 60000:.1f} min, compositor "
-                  f"turns {c.get('turns')} restarts {c.get('restarts')} '{c.get('last_error')}', crashes so far {len(crashes)}",
-                  flush=True)
-            rnd += 1
+                    crashes.append({"round": rnd - 1, "kernelMs": float(m[1]), "world": m[2], "turn": m[3], "why": m[4]})
+            if len(rows) > first:
+                last_up = rows[-1]["uptimeMs"]
+                c = rows[-1]["worlds"].get("compositor", {})
+                print(f"round {rnd - 1}: soaked {soaked / 60:.1f} min, uptime {last_up / 60000:.1f} min, compositor turns "
+                      f"{c.get('turns')} restarts {c.get('restarts')} '{c.get('last_error')}', crashes so far {len(crashes)}",
+                      flush=True)
             if soaked < a.minutes * 60:
                 time.sleep(a.gap)
     with device.acquire(), (a.out / "uart-end.log").open("wb", buffering=0) as log:
@@ -135,27 +258,16 @@ def main():
         finally:
             console.close()
     (a.out / "crashes.jsonl").write_text("".join(json.dumps(c) + "\n" for c in crashes))
-    first, last = rows[0], rows[-1]
-    ups = [r["uptimeMs"] for r in rows]
-    comp = [r["worlds"]["compositor"] for r in rows]
+    segs = [summarize(seg) for seg in segments(rows)]
+    comp = {"turns": sum(s["compositor"]["turns"] for s in segs), "cpuMs": round(sum(s["compositor"]["cpuMs"] for s in segs), 3),
+            "restartsDuringSoak": sum(s["compositor"]["restarts"][1] - s["compositor"]["restarts"][0] for s in segs),
+            "mboxPeak": max(s["compositor"]["mboxPeak"] for s in segs)}
+    comp["meanTurnMs"] = round(comp["cpuMs"] / max(1, comp["turns"]), 3)
     summary = {
         "soakedMinutes": round(soaked / 60, 2), "elapsedMinutes": round((time.monotonic() - began) / 60, 2),
         "rounds": rnd, "samples": len(rows), "keys": len(keys),
         "keyCounts": {k: keys.count(k) for k in sorted(set(keys))},
-        "uptimeMs": {"first": ups[0], "last": ups[-1]},
-        "rebootsSeen": sum(1 for x, y in zip(ups, ups[1:]) if y < x),
-        "compositor": {
-            "restartsFirst": comp[0]["restarts"], "restartsLast": comp[-1]["restarts"],
-            "lastErrors": sorted({c["last_error"] for c in comp}),
-            "turns": comp[-1]["turns"] - comp[0]["turns"], "cpuMs": round(comp[-1]["cpu_ms"] - comp[0]["cpu_ms"], 3),
-            "meanTurnMs": round((comp[-1]["cpu_ms"] - comp[0]["cpu_ms"]) / max(1, comp[-1]["turns"] - comp[0]["turns"]), 3),
-            "mboxPeak": max(c["mbox_peak"] for c in comp),
-        },
-        "worldsRestarted": {w: [first["worlds"][w]["restarts"], last["worlds"][w]["restarts"]] for w in WATCH
-                            if w in first["worlds"] and w in last["worlds"]},
-        "i2c0": {"transfers": last["buses"]["i2c0"]["transfers"] - first["buses"]["i2c0"]["transfers"],
-                 "errors": last["buses"]["i2c0"]["errors"] - first["buses"]["i2c0"]["errors"]},
-        "crashes": crashes,
+        "events": events, "boots": len(segs), "compositor": comp, "segments": segs, "crashes": crashes,
     }
     device.save(a.out / "summary.json", summary)
     print(json.dumps(summary, indent=1))
