@@ -1,0 +1,14 @@
+@0.153 CGAL {"ev":"scene","id":"R-01","arm":"typed","w":160,"h":160,"reason":"chosen","passes":4,"samples":107680,"firstImageMs":428.8,"coarseMs":316.6,"halfMs":972.8,"pass1Ms":3360.9,"renderMs":11633.8,"shownMs":12903.2,"secPerPass":2.7658,"samplesPerSec":9255.8,"cyclesPerSample":38848.0,"displays":10,"displayMs":1233.3,"displayCyclesMean":44139781,"skyRebuilt":1,"ev100":8.3467,"metered":2,"meanLum":62.0307,"internalFree0":72631,"internalMinFree":68915,"psramFree0":20337752,"psramMinFree":19792868,"internalPeakUse":3716,"psramPeakUse":544884}
+@0.509 CGAL {"ev":"first","id":"B-01","ms":362.1,"sub":1,"pass":0,"ev100":14.9748,"skyRebuilt":1}
+@2.431 CGAL {"ev":"pass","id":"B-01","pass":1,"renderMs":1990.4,"cyclesPerSample":27903.5,"ev100":14.9748}
+@4.669 CGAL {"ev":"pass","id":"B-01","pass":2,"renderMs":3977.4,"cyclesPerSample":27902.2,"ev100":15.3618}
+@6.776 CGAL {"ev":"pass","id":"B-01","pass":3,"renderMs":5820.6,"cyclesPerSample":27228.0,"ev100":15.3618}
+@8.854 CGAL {"ev":"pass","id":"B-01","pass":4,"renderMs":7663.5,"cyclesPerSample":26890.0,"ev100":15.3618}
+@10.929 CGAL {"ev":"pass","id":"B-01","pass":5,"renderMs":9505.7,"cyclesPerSample":26679.6,"ev100":15.3618}
+@12.887 CGAL {"ev":"pass","id":"B-01","pass":6,"renderMs":11345.5,"cyclesPerSample":26532.8,"ev100":15.3618}
+@14.859 CGAL {"ev":"pass","id":"B-01","pass":7,"renderMs":13175.2,"cyclesPerSample":26412.2,"ev100":15.3618}
+@16.987 CGAL {"ev":"pass","id":"B-01","pass":8,"renderMs":15185.6,"cyclesPerSample":26639.4,"ev100":15.3679}
+@19.037 CGAL {"ev":"pass","id":"B-01","pass":9,"renderMs":16953.1,"cyclesPerSample":26436.6,"ev100":15.3679}
+@21.023 CGAL {"ev":"pass","id":"B-01","pass":10,"renderMs":18829.2,"cyclesPerSample":26427.1,"ev100":15.3679}
+@22.981 CGAL {"ev":"pass","id":"B-01","pass":11,"renderMs":20659.4,"cyclesPerSample":26358.6,"ev100":15.3679}
+@24.931 CGAL {"ev":"pass","id":"B-01","pass":12,"renderMs":22489.8,"cyclesPerSample":26303.8,"ev100":15.3679}

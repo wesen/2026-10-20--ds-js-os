@@ -1,0 +1,20 @@
+@3.240 CGAL {"ev":"pass","id":"B-01","pass":2,"renderMs":7315.8,"cyclesPerSample":50922.6,"ev100":15.3618}
+@4.323 agenda cache stored seq=23 module_bytes=243644 us=13738151 prepare_us=4020334 write_us=9399893 commit_us=317924 free_kb=4780
+@7.399 CGAL {"ev":"pass","id":"B-01","pass":3,"renderMs":10883.0,"cyclesPerSample":50655.0,"ev100":15.3618}
+@11.230 CGAL {"ev":"pass","id":"B-01","pass":4,"renderMs":14017.2,"cyclesPerSample":48998.7,"ev100":15.3618}
+@14.996 chess cache stored seq=24 module_bytes=276412 us=10671350 prepare_us=82906 write_us=10176611 commit_us=411833 free_kb=4660
+@15.239 CGAL {"ev":"pass","id":"B-01","pass":5,"renderMs":17429.1,"cyclesPerSample":48786.4,"ev100":15.3618}
+@17.202 CGAL {"ev":"pass","id":"B-01","pass":6,"renderMs":19277.6,"cyclesPerSample":44980.2,"ev100":15.3618}
+@19.174 CGAL {"ev":"pass","id":"B-01","pass":7,"renderMs":21117.3,"cyclesPerSample":42244.1,"ev100":15.3618}
+@21.321 CGAL {"ev":"pass","id":"B-01","pass":8,"renderMs":23132.0,"cyclesPerSample":40499.6,"ev100":15.3679}
+@23.426 CGAL {"ev":"pass","id":"B-01","pass":9,"renderMs":25006.3,"cyclesPerSample":38920.6,"ev100":15.3679}
+@25.397 CGAL {"ev":"pass","id":"B-01","pass":10,"renderMs":26850.6,"cyclesPerSample":37618.0,"ev100":15.3679}
+@27.356 CGAL {"ev":"pass","id":"B-01","pass":11,"renderMs":28667.9,"cyclesPerSample":36517.7,"ev100":15.3679}
+@29.318 CGAL {"ev":"pass","id":"B-01","pass":12,"renderMs":30514.3,"cyclesPerSample":35632.2,"ev100":15.3679}
+@31.405 CGAL {"ev":"pass","id":"B-01","pass":13,"renderMs":32333.6,"cyclesPerSample":34852.8,"ev100":15.3679}
+@33.388 CGAL {"ev":"pass","id":"B-01","pass":14,"renderMs":34182.7,"cyclesPerSample":34217.7,"ev100":15.3679}
+@35.356 CGAL {"ev":"pass","id":"B-01","pass":15,"renderMs":36032.8,"cyclesPerSample":33666.6,"ev100":15.3679}
+@37.315 CGAL {"ev":"pass","id":"B-01","pass":16,"renderMs":37858.9,"cyclesPerSample":33164.7,"ev100":15.3679}
+@39.396 CGAL {"ev":"pass","id":"B-01","pass":17,"renderMs":39700.5,"cyclesPerSample":32734.8,"ev100":15.3679}
+@41.377 CGAL {"ev":"pass","id":"B-01","pass":18,"renderMs":41550.1,"cyclesPerSample":32357.5,"ev100":15.3679}
+@43.340 CGAL {"ev":"pass","id":"B-01","pass":19,"renderMs":43361.0,"cyclesPerSample":31992.5,"ev100":15.3679}

@@ -1,0 +1,271 @@
+@น้0x3310
+entry 0x4ff2abda
+I (25) boot: ESP-IDF v5.4.2 2nd stage bootloader
+I (26) boot: compile time Nov  1 2026 16:48:47
+I (26) boot: Multicore bootloader
+I (27) boot: chip revision: v1.3
+I (29) boot: efuse block revision: v0.3
+I (32) boot.esp32p4: SPI Speed      : 80MHz
+I (36) boot.esp32p4: SPI Mode       : DIO
+I (40) boot.esp32p4: SPI Flash Size : 32MB
+I (44) boot: Enabling RNG early entropy source...
+I (48) boot: Partition Table:
+I (51) boot: ## Label            Usage          Type ST Offset   Length
+I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+I (91) boot: End of partition table
+I (93) esp_image: segment 0: paddr=00010020 vaddr=40190020 size=4c9538h (5018936) map
+I (932) esp_image: segment 1: paddr=004d9560 vaddr=30100000 size=00068h (   104) load
+I (934) esp_image: segment 2: paddr=004d95d0 vaddr=4ff00000 size=06a48h ( 27208) load
+I (943) esp_image: segment 3: paddr=004e0020 vaddr=40000020 size=18dc70h (1629296) map
+I (1215) esp_image: segment 4: paddr=0066dc98 vaddr=4ff06a48 size=0d79ch ( 55196) load
+I (1227) esp_image: segment 5: paddr=0067b43c vaddr=4ff14200 size=0504ch ( 20556) load
+I (1237) boot: Loaded app from partition at offset 0x10000
+I (1237) boot: Disabling RNG early entropy source...
+I (1248) hex_psram: vendor id    : 0x0d (AP)
+I (1249) hex_psram: Latency      : 0x01 (Fixed)
+I (1249) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+I (1250) hex_psram: dev id       : 0x03 (generation 4)
+I (1255) hex_psram: density      : 0x07 (256 Mbit)
+I (1259) hex_psram: good-die     : 0x06 (Pass)
+I (1263) hex_psram: SRF          : 0x02 (Slow Refresh)
+I (1268) hex_psram: BurstType    : 0x00 ( Wrap)
+I (1272) hex_psram: BurstLen     : 0x03 (2048 Byte)
+I (1277) hex_psram: BitMode      : 0x01 (X16 Mode)
+I (1281) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+I (1287) hex_psram: DriveStrength: 0x00 (1/1)
+I (1291) MSPI DQS: tuning success, best phase id is 0
+I (1463) MSPI DQS: tuning success, best delayline id is 17
+I (1464) esp_psram: Found 32MB PSRAM device
+I (1464) esp_psram: Speed: 200MHz
+I (1465) hex_psram: psram CS IO is dedicated
+I (1468) cpu_start: Multicore app
+I (2377) esp_psram: SPI SRAM memory test OK
+I (2387) cpu_start: Pro cpu start user code
+I (2387) cpu_start: cpu freq: 360000000 Hz
+I (2387) app_init: Application information:
+I (2387) app_init: Project name:     picocalc-os-p4
+I (2392) app_init: App version:      picocalc-p4-smooth-chess-202611
+I (2398) app_init: ELF file SHA256:  f3e981ae5...
+I (2403) app_init: ESP-IDF:          v5.4.2
+I (2406) efuse_init: Min chip rev:     v0.1
+I (2410) efuse_init: Max chip rev:     v1.99 
+I (2414) efuse_init: Chip rev:         v1.3
+I (2418) heap_init: Initializing. RAM available for dynamic allocation:
+I (2425) heap_init: At 4FF29750 len 00011870 (70 KiB): RAM
+I (2430) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+I (2435) heap_init: At 4FF55F00 len 0004A100 (296 KiB): RAM
+I (2440) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+I (2446) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+I (2453) spi_flash: detected chip: generic
+W (2456) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+I (2466) spi_flash: flash io: dio
+I (2470) main_task: Started on CPU0
+I (2473) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+I (2481) main_task: Calling app_main()
+I (2484) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+heap: internal 385299 free (largest 294912), psram 33551748 free (largest 33030144)
+I (2548) fs: /files: 7900 KB, 7884 KB free (mounted in 26 ms)
+I (2550) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2551) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+I (2746) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+I (2747) main_task: Returned from app_main()
+[   162.757] calibration on the real clock: the 100k loop took 116.4 ms (the model says 133), fib(20) 30.4 ms (the model says 29.1)
+candela cache miss key_us=40754 read_us=2756
+typed compiler bytecode: typed/tape.js 6393 bytes
+typed compiler bytecode: typed/wasm.js 60299 bytes
+typed compiler bytecode: typed/rv32.js 63199 bytes
+typed compiler bytecode: candela/link.js 759 bytes
+candela native compiler functions=streamed
+typed compiler bytecode: typed/rv32-inline.js 11921 bytes
+typed compiler bytecode: typed/rv32-loops.js 18968 bytes
+candela compile source=candela/callback.typed status=ok us=2440925 peak_js_bytes=1359388 module_bytes=66816 sha=9744b19182c3fbfe
+TYPEDCOMPILE {"app":"candela","beforeUs":4237,"setupUs":7224,"callUs":1894000,"freeUs":23497,"heap":{"mallocs":1301,"frees":1237,"reallocs":1314,"reused":593,"us":50872},"evals":[{"path":"typed/tape.js","bytecode":"parsed","inCall":false,"loadUs":24261,"runUs":12869,"liveBytes":255292},{"path":"typed/wasm.js","bytecode":"parsed","inCall":false,"loadUs":196620,"runUs":10780,"liveBytes":459240},{"path":"typed/rv32.js","bytecode":"parsed","inCall":false,"loadUs":238234,"runUs":17783,"liveBytes":604940},{"path":"candela/link.js","bytecode":"parsed","inCall":false,"loadUs":6508,"runUs":649,"liveBytes":604940},{"path":"typed/rv32-inline.js","bytecode":"parsed","inCall":true,"loadUs":49028,"runUs":10943,"liveBytes":697124},{"path":"typed/rv32-loops.js","bytecode":"parsed","inCall":true,"loadUs":78283,"runUs":3168,"liveBytes":713232}]}
+I (5467) ELF: ELF loader version: 2.0.0
+I (5475) ELF: elf->entry=0x480c8758
+CANLOAD {"stage":2,"compileUs":2555079,"relocateUs":8909,"installTotalUs":2564178,"imageBytes":66816,"elfSegmentBytes":66092,"residentStructBytes":732,"sourceBytes":15942,"graphBytes":612,"psramMonitored":1,"psramPeakDeltaBytes":1643596}
+files cache miss key_us=21431 read_us=2760
+typed compiler bytecode: typed/world.js 3536 bytes
+files native compiler functions=streamed
+files native compiler policy=interactive
+files compile source=bundle status=ok us=1496722 peak_js_bytes=1460580 module_bytes=243644 sha=dd82179e45662f4a
+TYPEDCOMPILE {"app":"files","beforeUs":19960,"setupUs":7116,"callUs":1347252,"freeUs":17684,"heap":{"mallocs":416,"frees":352,"reallocs":250,"reused":158,"us":17121},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1119,"runUs":12512,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6786,"runUs":10742,"liveBytes":332280},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7275,"runUs":24906,"liveBytes":477972},{"path":"typed/world.js","bytecode":"parsed","inCall":false,"loadUs":12784,"runUs":4391,"liveBytes":494908}]}
+editor cache miss key_us=23776 read_us=2726
+typed compiler bytecode: typed/async.js 30895 bytes
+editor native compiler functions=streamed
+editor native compiler policy=interactive
+editor compile source=bundle status=ok us=3505026 peak_js_bytes=2424840 module_bytes=243644 sha=0e05c09c4b917968
+TYPEDCOMPILE {"app":"editor","beforeUs":21715,"setupUs":7229,"callUs":3258171,"freeUs":20686,"heap":{"mallocs":919,"frees":855,"reallocs":716,"reused":1058,"us":40265},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1105,"runUs":12490,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6818,"runUs":10761,"liveBytes":332272},{"path":"typed/async.js","bytecode":"parsed","inCall":false,"loadUs":98448,"runUs":7577,"liveBytes":479932},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7600,"runUs":17458,"liveBytes":547276},{"path":"typed/world.js","bytecode":"cached","inCall":false,"loadUs":1039,"runUs":4089,"liveBytes":568308}]}
+agenda cache miss key_us=24065 read_us=2743
+agenda native compiler functions=streamed
+agenda native compiler policy=interactive
+agenda compile source=bundle status=ok us=2745510 peak_js_bytes=2106528 module_bytes=243644 sha=abf7dfc0dbc6d1ba
+TYPEDCOMPILE {"app":"agenda","beforeUs":21749,"setupUs":7191,"callUs":2599508,"freeUs":17695,"heap":{"mallocs":585,"frees":521,"reallocs":455,"reused":359,"us":31278},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1123,"runUs":12564,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6884,"runUs":10971,"liveBytes":332260},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7326,"runUs":25012,"liveBytes":477952},{"path":"typed/world.js","bytecode":"cached","inCall":false,"loadUs":976,"runUs":3946,"liveBytes":486696}]}
+chess cache miss key_us=27500 read_us=2748
+chess native compiler functions=streamed
+chess native compiler policy=balanced
+chess compile source=bundle status=ok us=4367502 peak_js_bytes=2547240 module_bytes=276412 sha=8bea147250cfe476
+TYPEDCOMPILE {"app":"chess","beforeUs":23806,"setupUs":7224,"callUs":4208043,"freeUs":23018,"heap":{"mallocs":832,"frees":768,"reallocs":1025,"reused":780,"us":54166},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1100,"runUs":12599,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6821,"runUs":10645,"liveBytes":332260},{"path":"typed/async.js","bytecode":"cached","inCall":false,"loadUs":3833,"runUs":2728,"liveBytes":389744},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7565,"runUs":23192,"liveBytes":547200},{"path":"typed/world.js","bytecode":"cached","inCall":false,"loadUs":1024,"runUs":4094,"liveBytes":568232},{"path":"typed/rv32-inline.js","bytecode":"cached","inCall":true,"loadUs":1705,"runUs":2602,"liveBytes":976120}]}
+[ 15361.803] booting 25 worlds from js/system.typed.json
+[ 15374.376] booting 5 worlds from js/system.elf.json
+unknown command ÿ (try help)
+#OK ÿ
+t = 0.0 ms, lane busy 0.0 ms (0.0%), 0 turns, 0 published, 0 delivered, 0 crashes
+  world       kind     state        turns    cpu ms   mem KB  limit  rst  last error
+  keyboard    world    restarting       0      0.00      0.0    320    0  
+  power       world    restarting       0      0.00      0.0    320    0  
+  display     world    restarting       0      0.00      0.0    320    0  
+  compositor  world    restarting       0      0.00      0.0    768    0  
+  agent       world    restarting       0      0.00      0.0   1536    0  
+  chat        world    restarting       0      0.00      0.0    768    0  
+  launcher    world    restarting       0      0.00      0.0    384    0  
+  files       world    restarting       0      0.00      0.0    768    0  
+  editor      world    restarting       0      0.00      0.0    768    0  
+  calc        world    restarting       0      0.00      0.0   1024    0  
+  agenda      world    restarting       0      0.00      0.0    768    0  
+  settings    world    restarting       0      0.00      0.0    384    0  
+  logs        world    restarting       0      0.00      0.0    384    0  
+  loader      world    restarting       0      0.00      0.0    384    0  
+  sysmon      world    restarting       0      0.00      0.0    512    0  
+  repl        world    restarting       0      0.00      0.0    384    0  
+  sandbox     world    restarting       0      0.00      0.0    512    0  
+  snake       world    restarting       0      0.00      0.0    320    0  
+  faults      world    restarting       0      0.00      0.0    384    0  
+  flaky       world    restarting       0      0.00      0.0    320    0  
+  raytrace    world    restarting       0      0.00      0.0    320    0  
+  keys        world    restarting       0      0.00      0.0    320    0  
+  about       world    restarting       0      0.00      0.0    320    0  
+  chess       world    restarting       0      0.00      0.0    768    0  
+  gallery     world    restarting       0      0.00      0.0    320    0  
+  toplog      world    restarting       0      0.00      0.0    320    0  
+  nat-echo    world    restarting       0      0.00      0.0     64    0  
+  nat-bench   world    restarting       0      0.00      0.0     64    0  
+  nat-import  world    restarting       0      0.00      0.0     64    0  
+  nat-dial    world    restarting       0      0.00      0.0     64    0  
+  bus i2c0  busy     0.00 ms, 0 transfers, 0 bytes, 0 errors
+  bus spi2  busy     0.00 ms, 0 transfers, 0 bytes, 0 errors
+#OK stats
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"idle","turns":0,"msgs":0,"cpu_ms":10.734,"mem_kb":67.3,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"idle","turns":0,"msgs":0,"cpu_ms":10.999,"mem_kb":77.2,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"world","engine":"native","title":"display","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"world","engine":"native","title":"compositor","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"world","engine":"native","title":"agent","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":1536,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"world","engine":"js","title":"chat","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"world","engine":"js","title":"launcher","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"world","engine":"native","title":"files","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"world","engine":"native","title":"editor","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"world","engine":"js","title":"calc","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":1024,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"world","engine":"native","title":"agenda","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"world","engine":"native","title":"settings","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"world","engine":"js","title":"logs","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"world","engine":"js","title":"loader","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"world","engine":"js","title":"sysmon","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"world","engine":"js","title":"repl","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"world","engine":"js","title":"sandbox","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"world","engine":"native","title":"snake","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"world","engine":"js","title":"faults","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"world","engine":"native","title":"flaky","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"world","engine":"js","title":"raytrace","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"world","engine":"js","title":"keys","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"world","engine":"js","title":"about","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"world","engine":"native","title":"chess","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":768,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"gallery","kind":"world","engine":"js","title":"gallery","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"candela-gallery/gallery.js","claims":[]},{"name":"toplog","kind":"world","engine":"native","title":"toplog","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"world","engine":"native","title":"nat-echo","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"world","engine":"native","title":"nat-bench","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"world","engine":"native","title":"nat-dial","state":"restarting","turns":0,"msgs":0,"cpu_ms":0.000,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+quickjs prelude cache bytes=44957 build_us=54360
+[ 17192.138] toplog: hello from the top level
+[ 17195.739] nat-echo: TEST kind ok 
+[ 17196.450] nat-echo: TEST provide ok 
+[ 17196.930] nat-echo: TEST every ok 
+[ 17197.441] nat-echo: TEST title ok 
+[ 17197.992] nat-echo: TEST icon ok 
+[ 17198.439] nat-echo: TEST about ok 
+[ 17203.214] nat-echo: TEST icon-object err an icon is a JSON array of drawing operations, at most 1024 bytes
+[ 17213.322] nat-echo: TEST key-upper err a shortcut key is one of a-z and 0-9
+[ 17214.114] nat-echo: TEST init done
+E (19972) ELF: Can't find common path_open
+[ 17225.897] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":17225.897,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+I (20007) bus: spi2: panel device at 40000000 Hz requested, 40000 kHz actual
+[ 17293.178] nat-echo: TEST start self=nat-echo clock=running
+[ 17294.670] nat-bench: BENCH loop n=1000 us=36 r=122468
+[ 17295.440] nat-bench: BENCH loop n=4000 us=135 r=498743
+[ 17296.605] nat-bench: BENCH loop n=16000 us=535 r=2028337
+E (20077) ELF: Can't find common path_open
+[ 17331.106] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":17331.106,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":0,"msgs":1,"cpu_ms":12.601,"mem_kb":67.3,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"waiting","turns":0,"msgs":1,"cpu_ms":11.286,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"waiting","turns":0,"msgs":1,"cpu_ms":13.049,"mem_kb":73.8,"limit_kb":320,"mbox":2,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"waiting","turns":3,"msgs":4,"cpu_ms":65.873,"mem_kb":331.8,"limit_kb":768,"mbox":2,"mbox_peak":3,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":4,"msgs":4,"cpu_ms":57.980,"mem_kb":771.0,"limit_kb":1536,"mbox":0,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":1,"msgs":1,"cpu_ms":108.652,"mem_kb":238.8,"limit_kb":768,"mbox":3,"mbox_peak":3,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":0,"msgs":0,"cpu_ms":35.499,"mem_kb":216.6,"limit_kb":384,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":0,"msgs":0,"cpu_ms":14.343,"mem_kb":714.8,"limit_kb":768,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":0,"msgs":0,"cpu_ms":13.759,"mem_kb":714.8,"limit_kb":768,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":0,"msgs":0,"cpu_ms":236.184,"mem_kb":568.9,"limit_kb":1024,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":0,"msgs":0,"cpu_ms":14.229,"mem_kb":714.8,"limit_kb":768,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":0,"msgs":0,"cpu_ms":21.044,"mem_kb":190.1,"limit_kb":384,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":0,"msgs":0,"cpu_ms":32.845,"mem_kb":209.8,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":0,"msgs":0,"cpu_ms":39.588,"mem_kb":225.7,"limit_kb":384,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":0,"msgs":0,"cpu_ms":39.839,"mem_kb":217.8,"limit_kb":512,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.177,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.482,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":0,"msgs":0,"cpu_ms":13.442,"mem_kb":98.3,"limit_kb":320,"mbox":2,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":0,"msgs":0,"cpu_ms":30.549,"mem_kb":207.5,"limit_kb":384,"mbox":2,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.516,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.044,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":0,"msgs":0,"cpu_ms":26.946,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":0,"msgs":0,"cpu_ms":25.686,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":0,"msgs":0,"cpu_ms":15.264,"mem_kb":746.8,"limit_kb":768,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"gallery","kind":"app","engine":"js","title":"Candela","state":"idle","turns":0,"msgs":0,"cpu_ms":26.050,"mem_kb":206.1,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"candela-gallery/gallery.js","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.872,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":3,"msgs":3,"cpu_ms":30.202,"mem_kb":28.2,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":4.822,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"restarting","turns":0,"msgs":0,"cpu_ms":4.527,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":0,"msgs":0,"cpu_ms":0.704,"mem_kb":14.3,"limit_kb":64,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+[{"name":"keyboard","kind":"driver","engine":"native","title":"keyboard","state":"waiting","turns":0,"msgs":1,"cpu_ms":12.601,"mem_kb":67.3,"limit_kb":320,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/keyboard.elf","claims":["i2c0:0x1f","keys.raw"]},{"name":"power","kind":"driver","engine":"native","title":"power","state":"waiting","turns":0,"msgs":1,"cpu_ms":11.286,"mem_kb":77.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/power.elf","claims":["i2c0:0x1f"]},{"name":"display","kind":"driver","engine":"native","title":"display","state":"waiting","turns":0,"msgs":1,"cpu_ms":13.049,"mem_kb":73.8,"limit_kb":320,"mbox":2,"mbox_peak":2,"restarts":0,"budget_ms":30,"last_error":"","user":false,"file":"natives/display.elf","claims":["spi2"]},{"name":"compositor","kind":"service","engine":"native","title":"compositor","state":"waiting","turns":3,"msgs":4,"cpu_ms":65.873,"mem_kb":331.8,"limit_kb":768,"mbox":3,"mbox_peak":3,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"natives/compositor.elf","claims":["dma","keys.raw","frames.read"]},{"name":"agent","kind":"service","engine":"native","title":"agent","state":"idle","turns":4,"msgs":4,"cpu_ms":57.980,"mem_kb":771.0,"limit_kb":1536,"mbox":1,"mbox_peak":1,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"natives/agent.elf","claims":["net.agent","sys.read","fs:/notes"]},{"name":"chat","kind":"app","engine":"js","title":"Agent","state":"idle","turns":1,"msgs":1,"cpu_ms":108.652,"mem_kb":238.8,"limit_kb":768,"mbox":4,"mbox_peak":4,"restarts":0,"budget_ms":80,"last_error":"","user":false,"file":"apps/chat.js","claims":[]},{"name":"launcher","kind":"app","engine":"js","title":"PicoCalc","state":"idle","turns":1,"msgs":1,"cpu_ms":73.936,"mem_kb":264.7,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/launcher.js","claims":["sys.read"]},{"name":"files","kind":"app","engine":"native","title":"Files","state":"idle","turns":0,"msgs":0,"cpu_ms":14.343,"mem_kb":714.8,"limit_kb":768,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"files/compiled.bin","claims":["fs:/"]},{"name":"editor","kind":"app","engine":"native","title":"Editor","state":"idle","turns":0,"msgs":0,"cpu_ms":13.759,"mem_kb":714.8,"limit_kb":768,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"editor/compiled.bin","claims":[]},{"name":"calc","kind":"app","engine":"js","title":"Calc","state":"idle","turns":0,"msgs":0,"cpu_ms":236.184,"mem_kb":568.9,"limit_kb":1024,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"apps/calc.js","claims":[]},{"name":"agenda","kind":"app","engine":"native","title":"Agenda","state":"idle","turns":0,"msgs":0,"cpu_ms":14.229,"mem_kb":714.8,"limit_kb":768,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":100,"last_error":"","user":false,"file":"agenda/compiled.bin","claims":["fs:/notes"]},{"name":"settings","kind":"app","engine":"native","title":"Settings","state":"idle","turns":0,"msgs":0,"cpu_ms":21.044,"mem_kb":190.1,"limit_kb":384,"mbox":2,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/settings.elf","claims":["net.admin","sys.clock"]},{"name":"logs","kind":"app","engine":"js","title":"Logs","state":"idle","turns":0,"msgs":0,"cpu_ms":32.845,"mem_kb":209.8,"limit_kb":384,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/logs.js","claims":["sys.log"]},{"name":"loader","kind":"app","engine":"js","title":"Loader","state":"idle","turns":0,"msgs":0,"cpu_ms":39.588,"mem_kb":225.7,"limit_kb":384,"mbox":2,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/loader.js","claims":["fs:/apps","sys.spawn","sys.read"]},{"name":"sysmon","kind":"app","engine":"js","title":"System","state":"idle","turns":0,"msgs":0,"cpu_ms":39.839,"mem_kb":217.8,"limit_kb":512,"mbox":2,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/sysmon.js","claims":["sys.read"]},{"name":"repl","kind":"app","engine":"js","title":"REPL","state":"idle","turns":0,"msgs":0,"cpu_ms":27.177,"mem_kb":209.0,"limit_kb":384,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/repl.js","claims":[]},{"name":"sandbox","kind":"service","engine":"js","title":"sandbox","state":"idle","turns":0,"msgs":0,"cpu_ms":23.482,"mem_kb":206.1,"limit_kb":512,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"system/sandbox.js","claims":[]},{"name":"snake","kind":"app","engine":"native","title":"Snake","state":"idle","turns":0,"msgs":0,"cpu_ms":13.442,"mem_kb":98.3,"limit_kb":320,"mbox":2,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/snake.elf","claims":[]},{"name":"faults","kind":"app","engine":"js","title":"Faults","state":"idle","turns":0,"msgs":0,"cpu_ms":30.549,"mem_kb":207.5,"limit_kb":384,"mbox":2,"mbox_peak":2,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/faults.js","claims":["sys.admin","sys.read"]},{"name":"flaky","kind":"service","engine":"native","title":"flaky","state":"idle","turns":1,"msgs":1,"cpu_ms":8.516,"mem_kb":48.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/flaky.elf","claims":[]},{"name":"raytrace","kind":"app","engine":"js","title":"Ray Tracer","state":"idle","turns":0,"msgs":0,"cpu_ms":26.044,"mem_kb":207.6,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/raytrace.js","claims":[]},{"name":"keys","kind":"app","engine":"js","title":"Keys","state":"idle","turns":0,"msgs":0,"cpu_ms":26.946,"mem_kb":208.0,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/keys.js","claims":["keys.raw"]},{"name":"about","kind":"app","engine":"js","title":"About","state":"idle","turns":0,"msgs":0,"cpu_ms":25.686,"mem_kb":208.2,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"apps/about.js","claims":["sys.read"]},{"name":"chess","kind":"app","engine":"native","title":"Chess","state":"idle","turns":0,"msgs":0,"cpu_ms":15.264,"mem_kb":746.8,"limit_kb":768,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":200,"last_error":"","user":false,"file":"chess/compiled.bin","claims":[]},{"name":"gallery","kind":"app","engine":"js","title":"Candela","state":"idle","turns":0,"msgs":0,"cpu_ms":26.050,"mem_kb":206.1,"limit_kb":320,"mbox":2,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"candela-gallery/gallery.js","claims":[]},{"name":"toplog","kind":"service","engine":"native","title":"toplog","state":"idle","turns":1,"msgs":1,"cpu_ms":8.872,"mem_kb":41.3,"limit_kb":320,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/toplog.elf","claims":[]},{"name":"nat-echo","kind":"service","engine":"native","title":"Echo","state":"idle","turns":3,"msgs":3,"cpu_ms":30.202,"mem_kb":28.2,"limit_kb":64,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/echo.elf","claims":["i2c0:0x1f"]},{"name":"nat-bench","kind":"service","engine":"native","title":"nat-bench","state":"idle","turns":1,"msgs":1,"cpu_ms":4.822,"mem_kb":2.7,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":50,"last_error":"","user":false,"file":"natives/bench.elf","claims":[]},{"name":"nat-import","kind":"world","engine":"native","title":"nat-import","state":"restarting","turns":0,"msgs":0,"cpu_ms":4.527,"mem_kb":0.0,"limit_kb":64,"mbox":0,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"it links to path_open, which picocalc-os does not give a module","user":false,"file":"natives/wimport.elf","claims":[]},{"name":"nat-dial","kind":"app","engine":"native","title":"Dial","state":"idle","turns":0,"msgs":0,"cpu_ms":0.704,"mem_kb":14.3,"limit_kb":64,"mbox":1,"mbox_peak":0,"restarts":0,"budget_ms":20,"last_error":"","user":false,"file":"natives/dial.elf","claims":[]}]
+#OK worlds
+E (21559) ELF: Can't find common path_open
+[ 18819.513] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":18819.513,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":3,"mem_kb":0,"limit_kb":64}
+{"sources":0,"compiles":0,"installed":false,"packets":0,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+[ 18864.595] nat-echo: TEST ticks 3 timer=0
+{"sources":0,"compiles":0,"installed":false,"packets":0,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":0,"compiles":0,"installed":false,"packets":0,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+E (21990) ELF: Can't find common path_open
+[ 19243.656] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":19243.656,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+chess/painter cache miss key_us=5439 read_us=135076
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+typed compiler bytecode: chess/painter/link.js 483 bytes
+chess/painter native compiler functions=streamed
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+E (22794) ELF: Can't find common path_open
+[ 20048.067] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+#OCT1 {"ev":"fault","t":20048.067,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+[ 20048.067] nat-import crashed 5 times in ten seconds; it stays stopped
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
+chess/painter compile source=screen-message status=ok us=5554396 peak_js_bytes=1368840 module_bytes=33840 sha=dd360ab6af975078
+TYPEDCOMPILE {"app":"chess/painter","beforeUs":2485,"setupUs":13137,"callUs":5352599,"freeUs":59161,"heap":{"mallocs":563,"frees":499,"reallocs":447,"reused":773,"us":135659},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1459,"runUs":23911,"liveBytes":251208},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":9958,"runUs":15103,"liveBytes":332272},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":10428,"runUs":49628,"liveBytes":477960},{"path":"chess/painter/link.js","bytecode":"parsed","inCall":false,"loadUs":10572,"runUs":3150,"liveBytes":477960},{"path":"typed/rv32-inline.js","bytecode":"cached","inCall":true,"loadUs":4641,"runUs":4162,"liveBytes":553924}{"sources":1,"compiles":1,"installed":false,"packets":1,"calls":0,"paints":0,"rejects":0,"compile_us":0,"relocate_us":0,"native_us":0,"raster_us":0,"image_bytes":0}
+#OK painter
