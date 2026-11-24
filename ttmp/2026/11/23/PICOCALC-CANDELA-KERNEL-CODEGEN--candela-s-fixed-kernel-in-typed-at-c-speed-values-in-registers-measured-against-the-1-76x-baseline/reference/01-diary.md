@@ -553,7 +553,9 @@ the whole study, and restore the playable image afterwards.
 | geometric mean, 18 scenes | | | | 1.764 | 1.463 | | |
 | geometric mean, kernel-bound | | | | 2.593 | 2.034 | | |
 
-- Restore: `make restore-playable` in the main checkout. RESTORE_STATUS
+- Restore: `make restore-playable` in the main checkout. It waited about 40 minutes for the lock behind other agents. Then it installed
+  playable 54cfa09b (`/tmp/picocalc-install-ebbade8-20261123-210925`) and health passed with peripherals on: i2c0 253
+  transfers, 0 errors; painter installed; 8 worlds.
 
 ### What didn't work
 - Image cbb41181 (before the fix): `candela-gallery compile source=bundle status=failed us=114296568

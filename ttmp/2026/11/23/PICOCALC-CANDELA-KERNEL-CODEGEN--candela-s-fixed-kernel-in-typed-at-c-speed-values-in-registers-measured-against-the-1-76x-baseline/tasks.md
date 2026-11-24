@@ -7,4 +7,4 @@
 - [x] Step 3: compiler changes the profile justifies: rows, coalesce, call-free homes, open record-result inlining, result fusion, affine rows (1fc5528, e096e70, 0cb1e3e, 6b1f2e3) <!-- t:ojvt -->
 - [x] Gates: make test, make test-host with stock and kernel policies, 84-digest identity harness <!-- t:e48s -->
 - [x] Step 4 (board, paused until the PicoCalc is power-cycled): build candela-typed, gallery.py --arm typed and --arm cpp 18/18, paired study 18 scenes x 4 blocks x 4 passes at 160x160 against the 1.76x baseline <!-- t:0d1b -->
-- [ ] After the board study: restore the playable firmware from the main checkout and confirm health <!-- t:mpc1 -->
+- [x] After the board study: restore the playable firmware from the main checkout and confirm health <!-- t:mpc1 -->
