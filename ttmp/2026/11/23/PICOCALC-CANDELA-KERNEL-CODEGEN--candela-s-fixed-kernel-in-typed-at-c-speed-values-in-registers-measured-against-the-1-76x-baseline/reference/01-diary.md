@@ -485,3 +485,109 @@ board work as the remaining task.
 
 ### Technical details
 - Final kernel image 434,996 bytes (step 1 542,920; base 402,680), 332 functions.
+
+## Step 8: On the board: the device compile ran out of memory, then the paired study
+
+After the user power-cycled the PicoCalc, the coordinator merged the branch into main (209af25; playable 54cfa09b) and
+asked for step 4. The first candela-typed image could not compile the Typed kernel on the handheld: the compile ran
+out of memory. The compiler kept every function's emitter until assembly; releasing it after lowering (9c81fae) took
+the device compile's peak from 17.8 MB to 13.6 MB. Then both arms drew 18/18 and the paired study ran. The Typed kernel now takes 1.463 times the C++ kernel's cycles per sample (geometric mean over 18
+scenes; baseline 1.764), and 2.034 times on the kernel-bound scenes (baseline 2.593). The target (1.3 and 1.5) is
+not reached. On the device the Typed arm gained less than the host's instruction counts promised.
+
+### Prompt Context
+**User prompt (verbatim, coordinator):** "the user power-cycled the PicoCalc; the board is on playable 54cfa09b (main 209af25, health passed). Your branch is merged into main. Merge main into your worktree, then run step 4: build the candela-typed profile, gallery.py --arm typed and --arm cpp (18/18 each), the paired study with the baseline's configuration (18 scenes, 4 blocks alternating, 4 passes at 160x160), compare per scene and geomean with 1.764 (and the kernel-bound subset), then restore from the main checkout and confirm health. Other agents share the board through the lock — hold it per block. Never write PLAYABLE.json. Keep your diary, commit, stop background shells, report compactly."
+**Assistant interpretation:** Run the board study on an image built from main, without holding the board lock for
+the whole study, and restore the playable image afterwards.
+**Inferred user intent:** The measurement of record for the ticket's target, on the device.
+**Commit (code):** 9c81fae — "fix(rv32): release each function's emitter after lowering, not at the end of the compile"
+
+### What I did
+- `git merge --ff-only main` (d66fb5f). `make firmware PROFILE=candela-typed BUILD=/tmp/candela-kernel-codegen-fw`:
+  app cbb41181 (d66fb5f, clean).
+- `scripts/08-device.py /tmp/candela-kernel-codegen/dev1 --install ... "gallery digest B-01 4 psram typed" "... cpp"`:
+  installed, health passed (i2c0 252 transfers, 0 errors); the lock then went to another agent for ten minutes.
+- `scripts/13-paired-blocks.py` (new): 09-paired.py with the lock taken per block. A block runs only if the kernel
+  clock advanced by the wall time since the previous block (no reboot, so no other image). Otherwise the block first
+  reinstalls the image and warms the Typed arm up, under the same lock. With `--gallery` it first installs the image and
+  runs `bench/board/gallery.py` for both arms in one lock hold.
+- Host measurement of the compile heap: `scripts/14-compile-heap.c` runs the gallery's compile in the vendored
+  QuickJS with the device's heap accounting (`14-build.sh`, `14-source.py`).
+- Fix in `compiler/typed/rv32/compile.js`; firmware rebuilt: app 22abf5aa (9c81fae, clean),
+  `/tmp/candela-kernel-codegen-fw2`; `13-paired-blocks.py /tmp/candela-kernel-codegen/study2 ... --gallery --blocks 4 --passes 4`.
+
+### Why
+- Other agents share the board: a study that holds the lock for an hour blocks them, and one that releases it must
+  prove the image did not change between blocks.
+
+### What worked
+- Image 22abf5aa: `candela-gallery compile source=bundle status=ok us=115475874 peak_js_bytes=13625196
+  module_bytes=787712`, `typed-load` relocateMs 39.4, arena 12,563 words; no world ran out of memory.
+- `gallery.py --arm typed`: 18/18 agree with the typed reference. `--arm cpp`: 18/18 agree with the C++ reference
+  (the same on image cbb41181).
+- Paired study, image 22abf5aa, medians over 4 blocks of 4 passes at 160×160, order alternating by block. Every block
+  found another agent's image on the board and reinstalled 22abf5aa first (health passed each time, i2c0 0 errors).
+  Each block held the lock for about 20 minutes. All 144 digests equal the arms' references. Before: PICOCALC-CANDELA-TYPED's
+  study (`various/device-6c7e2ca0/`).
+
+| Scene | Typed before | Typed after | C++ | ratio before | ratio after (block range) | Typed after/before | digests |
+|---|---:|---:|---:|---:|---:|---:|---|
+| B-01 | 32,434 | 26,474 | 12,853 | 2.491 | 2.058 (2.037-2.073) | 0.816 | match |
+| R-01 | 54,131 | 39,492 | 20,070 | 2.699 | 1.965 (1.951-1.980) | 0.730 | match |
+| L-03 | 26,240 | 21,814 | 10,385 | 2.512 | 2.097 (2.086-2.125) | 0.831 | match |
+| G-01 | 50,466 | 38,887 | 20,544 | 2.438 | 1.895 (1.877-1.912) | 0.771 | match |
+| E-02 | 19,711 | 15,080 | 10,004 | 1.931 | 1.507 (1.503-1.516) | 0.765 | match |
+| W-02 | 75,778 | 59,314 | 30,426 | 2.489 | 1.951 (1.941-1.962) | 0.783 | match |
+| F-01 | 37,382 | 30,265 | 14,995 | 2.463 | 2.020 (1.985-2.036) | 0.810 | match |
+| V-02 | 76,564 | 57,457 | 27,298 | 2.786 | 2.104 (2.098-2.128) | 0.750 | match |
+| G-02 | 61,534 | 50,488 | 36,893 | 1.660 | 1.369 (1.360-1.381) | 0.820 | match |
+| X-04 | 62,459 | 61,984 | 73,102 | 0.852 | 0.849 (0.836-0.856) | 0.992 | match |
+| S-02 | 90,837 | 73,306 | 49,736 | 1.809 | 1.472 (1.466-1.499) | 0.807 | match |
+| R-05 | 80,239 | 62,334 | 36,062 | 2.244 | 1.735 (1.703-1.743) | 0.777 | match |
+| V-03 | 145,830 | 123,031 | 92,356 | 1.571 | 1.333 (1.319-1.344) | 0.844 | match |
+| R-04 | 1,472,683 | 1,278,936 | 1,130,436 | 1.304 | 1.133 (1.128-1.146) | 0.868 | match |
+| V-04 | 267,695 | 230,058 | 176,955 | 1.512 | 1.298 (1.288-1.312) | 0.859 | match |
+| G-03 | 1,866,066 | 1,604,830 | 1,331,034 | 1.403 | 1.206 (1.196-1.219) | 0.860 | match |
+| R-08 | 180,198 | 161,418 | 220,248 | 0.814 | 0.734 (0.725-0.739) | 0.896 | match |
+| X-03 | 744,668 | 680,528 | 750,614 | 0.991 | 0.907 (0.903-0.918) | 0.914 | match |
+| geometric mean, 18 scenes | | | | 1.764 | 1.463 | | |
+| geometric mean, kernel-bound | | | | 2.593 | 2.034 | | |
+
+- Restore: `make restore-playable` in the main checkout. It waited about 40 minutes for the lock behind other agents. Then it installed
+  playable 54cfa09b (`/tmp/picocalc-install-ebbade8-20261123-210925`) and health passed with peripherals on: i2c0 253
+  transfers, 0 errors; painter installed; 8 worlds.
+
+### What didn't work
+- Image cbb41181 (before the fix): `candela-gallery compile source=bundle status=failed us=114296568
+  peak_js_bytes=17835904 module_bytes=0`. Meanwhile `settings: crashed: out of memory` and `compositor: crashed: out of
+  memory` (`E (183651) ELF: Error to load elf file, ret=-12`). No "compile rejected" line: the compile returned and
+  the module copy found no memory. Every typed digest then answered `{"ev":"error",...,"error":"the Typed kernel did
+  not compile"}` (the arm keeps a failed load). The C++ arm on that image: 18/18.
+- A probe while another agent held the lock (`timeout 170 ... 08-device.py ... "stats"`) timed out waiting for it.
+
+### What I learned
+- The device gains less than the host counts: the kernel-bound geometric mean fell 22% on the device (2.593 to 2.034)
+  where host instructions fell 25% (1.885 to 1.410). On the device B-01 takes 2.06 times C++'s cycles for 1.43 times
+  its instructions. A likely cause, not measured: the instructions removed were mostly ALU and branch work, while what
+  remains is frame traffic. The gallery worker's stack is in PSRAM, so each of those loads and stores goes through the
+  PSRAM cache, and the module runs from PSRAM too.
+- Host QuickJS (64-bit) peaks of the gallery compile: base tree with the old program 25,425,568 bytes; main
+  27,420,984; without the inline pass 16,390,320; with `callerLocals` 200 25,627,728; with the fix 20,863,896. The
+  live heap grew steadily from function to function: the retained emitters, not one large function.
+- The device compile takes 115 s (the baseline's took 85 s for the old program).
+
+### What was tricky to build
+- The lock per block: a reinstall inside a block cannot call `device.install` (it takes the lock itself and would
+  wait on the lock this process already holds), so the block does install's steps itself.
+
+### What warrants a second pair of eyes
+- `gallery_checks` runs gallery.py with `device.acquire` replaced by a null context while it holds the lock.
+
+### What should be done in the future
+- See the report's last section.
+
+### Code review instructions
+- `compiler/typed/rv32/compile.js` (the slim record in `lower`), `scripts/13-paired-blocks.py`, `scripts/14-compile-heap.c`.
+
+### Technical details
+- Board results: `various/device-22abf5aa/` (summary, rows, blocks, gallery JSON).

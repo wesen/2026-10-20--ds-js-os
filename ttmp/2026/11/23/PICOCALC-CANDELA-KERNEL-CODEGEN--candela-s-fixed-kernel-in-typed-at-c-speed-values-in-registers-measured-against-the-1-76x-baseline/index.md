@@ -24,7 +24,9 @@ The Typed Candela kernel is regenerated with value records, record results, `con
 It was profiled on B-01 and R-01, and six RV32 compiler changes for f32 functions under the kernel policy follow from
 that profile: `rows`, `coalesce`, call-free homes, open inlining of record results, record-result leaves straight into
 their locals, and affine `rows`. Integer programs keep their 84 digests. On the host, B-01 went from 1.79× to about
-1.43× the C++ arm's instructions per sample. The paired board study (design step 4) is still to run. See the
+1.43× the C++ arm's instructions per sample. On the device (paired study, image 22abf5aa) the Typed/C++ cycle ratio
+went from 1.764 to 1.463 (geometric mean, 18 scenes) and from 2.593 to 2.034 on the kernel-bound scenes. The target
+(1.3 and 1.5) is not reached. See the
 [design doc](design-doc/01-candela-s-kernel-at-c-speed.md) (its Refinements section) and the
 [diary](reference/01-diary.md).
 

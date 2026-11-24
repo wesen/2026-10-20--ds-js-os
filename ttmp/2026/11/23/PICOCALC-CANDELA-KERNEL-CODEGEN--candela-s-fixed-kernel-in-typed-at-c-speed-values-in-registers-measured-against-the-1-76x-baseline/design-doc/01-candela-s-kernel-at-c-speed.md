@@ -149,6 +149,14 @@ V-02 and W-02.
 
 On the host the kernel-bound scenes went from 1.89x to 1.41x and the 18-scene geometric mean from 1.29x to 1.03x.
 
-The device ratio will differ: the device's frames sit behind the PSRAM cache, and its cycles per instruction differ
-by class. Step 4's paired board study remains the measurement of record. It was not run in this session (the
-PicoCalc's keyboard I2C was NACKing until a power cycle).
+**Board result (step 4, image 22abf5aa from 9c81fae).** The paired study used the baseline's configuration: 18 scenes,
+4 blocks with the order alternating, 4 passes at 160×160. The geometric mean of Typed/C++ cycles per sample went from
+1.764 to **1.463**. On the kernel-bound scenes it went from 2.593 to **2.034** (B-01 2.49 → 2.06, R-01 2.70 → 1.97,
+L-03 2.51 → 2.10, V-02 2.79 → 2.10, W-02 2.49 → 1.95). The Typed kernel's own cycles per sample fell by 13–27% on
+every scene except X-04 (−1%). The target (≤ 1.3 overall, ≤ 1.5 kernel-bound) is not reached. The device gained less
+than the host predicted: the kernel-bound host ratio is 1.41 where the device's is 2.03.
+
+The first device compile after the merge ran out of memory, at a peak of 17.8 MB of the 20 MiB heap. The cause was
+that the compiler kept every function's emitter until assembly. Releasing each emitter after lowering (9c81fae)
+brought the device compile down to 13.6 MB in 115 s. The per-scene table is in the diary's step 8 and in
+`various/device-22abf5aa/`.
