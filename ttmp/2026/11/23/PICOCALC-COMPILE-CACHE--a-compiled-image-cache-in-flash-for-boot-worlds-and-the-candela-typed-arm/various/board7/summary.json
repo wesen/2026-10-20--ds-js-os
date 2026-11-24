@@ -1,0 +1,175 @@
+{
+ "apps": {
+  "agenda": {
+   "coldCompileS": 2.727,
+   "deadlineShare": 0.682,
+   "missKeyMs": 25.815,
+   "warmHitMs": 80.674,
+   "hitKeyMs": 25.801,
+   "hitReadMs": 54.873,
+   "moduleBytes": 243644,
+   "writeMs": 10477.648,
+   "storeMs": 10919.156,
+   "compiledSha": [
+    "abf7dfc0dbc6d1ba"
+   ],
+   "hitSha": [
+    "abf7dfc0dbc6d1ba"
+   ],
+   "n": {
+    "cold": 1,
+    "warm": 1
+   }
+  },
+  "candela": {
+   "coldCompileS": 2.445,
+   "deadlineShare": 0.306,
+   "missKeyMs": 39.841,
+   "warmHitMs": 58.675,
+   "hitKeyMs": 39.85,
+   "hitReadMs": 18.825,
+   "moduleBytes": 66816,
+   "writeMs": 9982.571,
+   "storeMs": 28865.394,
+   "compiledSha": [
+    "9744b19182c3fbfe"
+   ],
+   "hitSha": [
+    "9744b19182c3fbfe"
+   ],
+   "n": {
+    "cold": 1,
+    "warm": 1
+   }
+  },
+  "candela-gallery": {
+   "coldCompileS": 177.222,
+   "deadlineShare": 0.591,
+   "missKeyMs": 1.228,
+   "warmHitMs": 321.626,
+   "hitKeyMs": 1.182,
+   "hitReadMs": 320.444,
+   "moduleBytes": 787712,
+   "writeMs": 26245.116,
+   "storeMs": 26614.88,
+   "compiledSha": [
+    "66c89cfe99cbd456"
+   ],
+   "hitSha": [
+    "66c89cfe99cbd456"
+   ],
+   "n": {
+    "cold": 1,
+    "warm": 1
+   }
+  },
+  "chess": {
+   "coldCompileS": 4.341,
+   "deadlineShare": 0.724,
+   "missKeyMs": 27.612,
+   "warmHitMs": 89.18,
+   "hitKeyMs": 27.474,
+   "hitReadMs": 61.706,
+   "moduleBytes": 276412,
+   "writeMs": 11084.61,
+   "storeMs": 11636.494,
+   "compiledSha": [
+    "8bea147250cfe476"
+   ],
+   "hitSha": [
+    "8bea147250cfe476"
+   ],
+   "n": {
+    "cold": 1,
+    "warm": 1
+   }
+  },
+  "chess/painter": {
+   "coldCompileS": 5.324,
+   "deadlineShare": 0.666,
+   "missKeyMs": 9.478,
+   "warmHitMs": 28.794,
+   "hitKeyMs": 9.484,
+   "hitReadMs": 19.31,
+   "moduleBytes": 33840,
+   "writeMs": 1796.953,
+   "storeMs": 2357.35,
+   "compiledSha": [
+    "dd360ab6af975078"
+   ],
+   "hitSha": [
+    "dd360ab6af975078"
+   ],
+   "n": {
+    "cold": 1,
+    "warm": 1
+   }
+  },
+  "editor": {
+   "coldCompileS": 3.521,
+   "deadlineShare": 0.587,
+   "missKeyMs": 25.619,
+   "warmHitMs": 80.435,
+   "hitKeyMs": 25.615,
+   "hitReadMs": 54.82,
+   "moduleBytes": 243644,
+   "writeMs": 10200.001,
+   "storeMs": 10610.749,
+   "compiledSha": [
+    "0e05c09c4b917968"
+   ],
+   "hitSha": [
+    "0e05c09c4b917968"
+   ],
+   "n": {
+    "cold": 1,
+    "warm": 1
+   }
+  },
+  "files": {
+   "coldCompileS": 1.509,
+   "deadlineShare": 0.503,
+   "missKeyMs": 23.16,
+   "warmHitMs": 78.291,
+   "hitKeyMs": 23.265,
+   "hitReadMs": 55.026,
+   "moduleBytes": 243644,
+   "writeMs": 9419.856,
+   "storeMs": 9892.645,
+   "compiledSha": [
+    "dd82179e45662f4a"
+   ],
+   "hitSha": [
+    "dd82179e45662f4a"
+   ],
+   "n": {
+    "cold": 1,
+    "warm": 1
+   }
+  }
+ },
+ "firstFrames": {
+  "cold": {
+   "editor": 18399.694,
+   "agenda": 20800.066,
+   "files": 21192.039,
+   "chess": 18911.356,
+   "bootWorkS": 18.018
+  },
+  "warm": {
+   "editor": 3718.666,
+   "agenda": 5980.083,
+   "files": 6403.878,
+   "chess": 4230.197,
+   "bootWorkS": 3.444
+  }
+ },
+ "boots": {
+  "cold": [
+   "01-boot-cold1-250"
+  ],
+  "warm": [
+   "03-boot-warm1-45"
+  ]
+ }
+}

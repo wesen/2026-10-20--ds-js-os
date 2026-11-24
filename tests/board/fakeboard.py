@@ -53,6 +53,7 @@ class FakeBoard:
         self.each_boot = {}              # world -> last_error that every boot produces (a real fault)
         self.silent = set()              # commands the firmware never answers
         self.ok_prefix = {}              # command -> text another task printed just before its "#OK"
+        self.glued = {}                  # command -> how many replies land inside another task's unfinished line
         self.stream_period = None        # a CGAL record every this many seconds (the gallery drawing)
         self.stream_next = None
         self.stream_count = 0
@@ -136,6 +137,9 @@ class FakeBoard:
             return
         else:
             body = f"unknown command {cmd} (try help)\n"
+        if self.glued.get(cmd):   # as a TYPEDCOMPILE record printed in pieces takes the reply into its middle
+            self.glued[cmd] -= 1
+            body = 'TYPEDCOMPILE {"app":"chess/painter","evals":[{"path":"typed/tape.js"}' + body
         self._emit(body + self.ok_prefix.get(cmd, "") + f"#OK {cmd}\n")
 
     def _reboot(self):

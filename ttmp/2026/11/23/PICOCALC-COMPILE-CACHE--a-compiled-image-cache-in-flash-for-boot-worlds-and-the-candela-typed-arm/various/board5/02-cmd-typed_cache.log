@@ -1,0 +1,22 @@
+CGAL {"ev":"pass","id":"G-01","pass":2,"renderMs":6668.4,"cyclesPerSample":46647.7,"ev100":16.3264}
+CGAL {"ev":"pass","id":"G-01","pass":3,"renderMs":9805.8,"cyclesPerSample":45756.9,"ev100":16.3264}
+CGAL {"ev":"pass","id":"G-01","pass":4,"renderMs":12812.8,"cyclesPerSample":44854.6,"ev100":16.3264}
+CGAL {"ev":"pass","id":"G-01","pass":5,"renderMs":15931.6,"cyclesPerSample":44627.7,"ev100":16.3264}
+candela-gallery compile source=bundle status=ok us=182308775 peak_js_bytes=13065500 module_bytes=787712 sha=66c89cfe99cbd456
+TYPEDCOMPILE {"app":"candela-gallery","beforeUs":124516,"setupUs":22712,"callUs":181605179,"freeUs":253428,"heap":{"mallocs":6960,"frees":6896,"reallocs":12155,"reused":19851,"us":1716773},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1896,"runUs":24328,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":9812,"runUs":37087,"liveBytes":332300},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":18664,"runUs":44131,"liveBytes":477988},{"path":"candela-gallery/link.js","bytecode":"parsed","inCall":false,"loadUs":10593,"runUs":998,"liveBytes":477988},{"path":"typed/rv32-inline.js","bytecode":"cached","inCall":true,"loadUs":2272,"runUs":5290,"liveBytes":1599204},{"path":"typed/rv32-kernel.js","bytecode":"parsed","inCall":true,"loadUs":367815,"runUs":11276,"liveBytes":1701940},{"path":"typed/rv32-loops.js","bytecode":"cached","inCall":true,"loadUs":10484,"runUs":6014,"liveBytes":1718048}]}
+CGAL {"ev":"typed-load","compileMs":182699.3,"relocateMs":164.8,"moduleBytes":787712,"segmentBytes":786988,"arenaWords":12563}
+TCACHE {"file":"9da002d710cacfa863e33afc2269e98a.cache","valid":true,"app":"candela","label":"candela/callback.typed","seq":16,"bytes":66976,"sha":"9744b19182c3fbfe","compileUs":2505696}
+TCACHE {"file":"71856f7a07420931c04db6a3a0f3a9c6.cache","valid":true,"app":"files","label":"bundle","seq":17,"bytes":243804,"sha":"dd82179e45662f4a","compileUs":1543353}
+TCACHE {"file":"73b3f5e7ca8f25cbfd86c33517344081.cache","valid":true,"app":"editor","label":"bundle","seq":18,"bytes":243804,"sha":"0e05c09c4b917968","compileUs":3559767}
+TCACHE {"file":"a2759db638726858dde3b97ebc80e942.cache","valid":true,"app":"agenda","label":"bundle","seq":13,"bytes":243804,"sha":"abf7dfc0dbc6d1ba","compileUs":3409868}
+TCACHE {"file":"b598d22ed46873487614bb0f2977a064.cache","valid":true,"app":"chess","label":"bundle","seq":20,"bytes":276572,"sha":"8bea147250cfe476","compileUs":4433013}
+TCACHE {"file":"2565b891c96d293bed378442802dce62.cache","valid":true,"app":"chess/painter","label":"screen-message","seq":21,"bytes":34000,"sha":"dd360ab6af975078","compileUs":5587044}
+TCACHE {"file":"b90278f1797e0addeb2f10057a4bff43.cache","valid":true,"app":"candela","label":"candela/callback.typed","seq":7,"bytes":66976,"sha":"9744b19182c3fbfe","compileUs":2823645}
+TCACHE {"file":"ca285cb372f5d0b89fe5c93900a48719.cache","valid":true,"app":"files","label":"bundle","seq":8,"bytes":243804,"sha":"dd82179e45662f4a","compileUs":1528239}
+TCACHE {"file":"7e2a73dc9c6a656e78b5b053d7e3fda4.cache","valid":true,"app":"editor","label":"bundle","seq":9,"bytes":243804,"sha":"0e05c09c4b917968","compileUs":3561072}
+TCACHE {"file":"c4d9f3efe1d2040675ef4ffafae917f3.cache","valid":true,"app":"chess","label":"bundle","seq":14,"bytes":276572,"sha":"8bea147250cfe476","compileUs":4563177}
+TCACHE {"file":"a25ae472b4d6e8b044291e0aa9a04d48.cache","valid":true,"app":"candela-gallery","label":"bundle","seq":15,"bytes":787872,"sha":"66c89cfe99cbd456","compileUs":113548718}
+TCACHE {"file":"db8295fd6da307b12ca7e080768ad8cd.cache","valid":true,"app":"chess/painter","label":"screen-message","seq":12,"bytes":34000,"sha":"dd360ab6af975078","compileUs":5297523}
+TCACHE {"file":"c0bed3c36294fad347dcf137eb8aa124.cache","valid":true,"app":"agenda","label":"bundle","seq":19,"bytes":243804,"sha":"abf7dfc0dbc6d1ba","compileUs":2792691}
+TCACHE {"entries":13,"bytes":3005792,"budget":4194304,"freeKb":4904,"native":"c 9d0fcd223f46291d quickjs 2026-06-04"}
+#OK typed

@@ -1,0 +1,54 @@
+CGAL {"ev":"pass","id":"B-01","pass":18,"renderMs":33666.7,"cyclesPerSample":26252.7,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":19,"renderMs":35504.1,"cyclesPerSample":26228.9,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":20,"renderMs":37361.7,"cyclesPerSample":26221.5,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":21,"renderMs":39174.4,"cyclesPerSample":26184.9,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":22,"renderMs":41019.1,"cyclesPerSample":26172.0,"ev100":15.3679}
+CGAL {"ev":"pass","id":"B-01","pass":23,"renderMs":42857.2,"cyclesPerSample":26156.1,"ev100":15.3679}
+chess cache hit us=62781 key_us=0 read_us=62781 module_bytes=276412 sha=8bea147250cfe476 seq=20 saved_us=4433013
+typed compiler bytecode: typed/tape.js 6393 bytes
+typed compiler bytecode: typed/wasm.js 60299 bytes
+typed compiler bytecode: typed/async.js 30895 bytes
+typed compiler bytecode: typed/rv32.js 63199 bytes
+typed compiler bytecode: typed/world.js 3536 bytes
+chess native compiler functions=streamed
+chess native compiler policy=balanced
+typed compiler bytecode: typed/rv32-inline.js 11921 bytes
+chess compile source=verify status=ok us=4961811 peak_js_bytes=2587932 module_bytes=276412 sha=8bea147250cfe476
+TYPEDCOMPILE {"app":"chess","beforeUs":22760,"setupUs":7213,"callUs":4247492,"freeUs":23340,"heap":{"mallocs":1654,"frees":1590,"reallocs":1922,"reused":922,"us":83195},"evals":[{"path":"typed/tape.js","bytecode":"parsed","inCall":false,"loadUs":24588,"runUs":12962,"liveBytes":255292},{"path":"typed/wasm.js","bytecode":"parsed","inCall":false,"loadUs":198778,"runUs":11038,"liveBytes":459248},{"path":"typed/async.js","bytecode":"parsed","inCall":false,"loadUs":100591,"runUs":3066,"liveBytes":504500},{"path":"typed/rv32.js","bytecode":"parsed","inCall":false,"loadUs":242804,"runUs":17617,"liveBytes":670156},{"path":"typed/world.js","bytecode":"parsed","inCall":false,"loadUs":12731,"runUs":4634,"liveBytes":670708},{"path":"typed/rv32-inline.js","bytecode":"parsed","inCall":true,"loadUs":49188,"runUs":3465,"liveBytes":1078584}]}
+TCVERIFY {"app":"chess","source":"chess/source.typed","same":true,"cachedBytes":276412,"freshBytes":276412,"cachedSha":"8bea147250cfe476","freshSha":"8bea147250cfe476"}
+chess/painter cache hit us=12325 key_us=0 read_us=12325 module_bytes=33840 sha=dd360ab6af975078 seq=21 saved_us=5587044
+typed compiler bytecode: chess/painter/link.js 483 bytes
+chess/painter native compiler functions=streamed
+typed compiler bytecode: typed/rv32-loops.js 18968 bytes
+chess/painter compile source=verify status=ok us=3046484 peak_js_bytes=1368872 module_bytes=33840 sha=dd360ab6af975078
+TYPEDCOMPILE {"app":"chess/painter","beforeUs":2749,"setupUs":7317,"callUs":2940177,"freeUs":23237,"heap":{"mallocs":641,"frees":577,"reallocs":564,"reused":808,"us":31986},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1107,"runUs":12680,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6857,"runUs":10922,"liveBytes":332272},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7319,"runUs":25134,"liveBytes":477960},{"path":"chess/painter/link.js","bytecode":"parsed","inCall":false,"loadUs":5648,"runUs":606,"liveBytes":477960},{"path":"typed/rv32-inline.js","bytecode":"cached","inCall":true,"loadUs":1716,"runUs":2624,"liveBytes":553924},{"path":"typed/rv32-loops.js","bytecode":"parsed","inCall":true,"loadUs":76553,"runUs":3065,"liveBytes":623280}]}
+TCVERIFY {"app":"chess/painter","source":"chess/painter/source.typed","same":true,"cachedBytes":33840,"freshBytes":33840,"cachedSha":"dd360ab6af975078","freshSha":"dd360ab6af975078"}
+agenda cache hit us=56148 key_us=0 read_us=56148 module_bytes=243644 sha=abf7dfc0dbc6d1ba seq=19 saved_us=2792691
+agenda native compiler functions=streamed
+agenda native compiler policy=interactive
+agenda compile source=verify status=ok us=2760458 peak_js_bytes=2106664 module_bytes=243644 sha=abf7dfc0dbc6d1ba
+TYPEDCOMPILE {"app":"agenda","beforeUs":20455,"setupUs":7284,"callUs":2615658,"freeUs":17901,"heap":{"mallocs":585,"frees":521,"reallocs":455,"reused":359,"us":29992},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1126,"runUs":12617,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6859,"runUs":10768,"liveBytes":332260},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7352,"runUs":25153,"liveBytes":477948},{"path":"typed/world.js","bytecode":"cached","inCall":false,"loadUs":1005,"runUs":3878,"liveBytes":486692}]}
+TCVERIFY {"app":"agenda","source":"agenda/source.typed","same":true,"cachedBytes":243644,"freshBytes":243644,"cachedSha":"abf7dfc0dbc6d1ba","freshSha":"abf7dfc0dbc6d1ba"}
+editor cache hit us=55840 key_us=0 read_us=55840 module_bytes=243644 sha=0e05c09c4b917968 seq=18 saved_us=3559767
+editor native compiler functions=streamed
+editor native compiler policy=interactive
+editor compile source=verify status=ok us=3410632 peak_js_bytes=2424772 module_bytes=243644 sha=0e05c09c4b917968
+TYPEDCOMPILE {"app":"editor","beforeUs":22119,"setupUs":7268,"callUs":3256614,"freeUs":20681,"heap":{"mallocs":761,"frees":697,"reallocs":551,"reused":636,"us":37599},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1110,"runUs":12542,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6837,"runUs":10721,"liveBytes":332260},{"path":"typed/async.js","bytecode":"cached","inCall":false,"loadUs":3832,"runUs":2746,"liveBytes":389744},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7528,"runUs":23300,"liveBytes":547200},{"path":"typed/world.js","bytecode":"cached","inCall":false,"loadUs":998,"runUs":4094,"liveBytes":568232}]}
+TCVERIFY {"app":"editor","source":"editor/source.typed","same":true,"cachedBytes":243644,"freshBytes":243644,"cachedSha":"0e05c09c4b917968","freshSha":"0e05c09c4b917968"}
+files cache hit us=55841 key_us=0 read_us=55841 module_bytes=243644 sha=dd82179e45662f4a seq=17 saved_us=1543353
+files native compiler functions=streamed
+files native compiler policy=interactive
+files compile source=verify status=ok us=1498050 peak_js_bytes=1456468 module_bytes=243644 sha=dd82179e45662f4a
+TYPEDCOMPILE {"app":"files","beforeUs":18376,"setupUs":7291,"callUs":1361244,"freeUs":17913,"heap":{"mallocs":401,"frees":337,"reallocs":235,"reused":160,"us":17196},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1140,"runUs":12514,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6880,"runUs":10824,"liveBytes":332260},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7351,"runUs":24996,"liveBytes":477960},{"path":"typed/world.js","bytecode":"cached","inCall":false,"loadUs":980,"runUs":3926,"liveBytes":486704}]}
+TCVERIFY {"app":"files","source":"files/source.typed","same":true,"cachedBytes":243644,"freshBytes":243644,"cachedSha":"dd82179e45662f4a","freshSha":"dd82179e45662f4a"}
+candela cache miss key_us=0 read_us=2788
+candela cache miss key_us=0 read_us=1937
+candela cache hit us=18286 key_us=0 read_us=18286 module_bytes=66816 sha=9744b19182c3fbfe seq=16 saved_us=2505696
+typed compiler bytecode: candela/link.js 759 bytes
+candela native compiler functions=streamed
+candela compile source=verify status=ok us=1876147 peak_js_bytes=1300808 module_bytes=66816 sha=9744b19182c3fbfe
+TYPEDCOMPILE {"app":"candela","beforeUs":5642,"setupUs":7311,"callUs":1766649,"freeUs":21960,"heap":{"mallocs":572,"frees":508,"reallocs":480,"reused":401,"us":23814},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1122,"runUs":12530,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6808,"runUs":10780,"liveBytes":332260},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7324,"runUs":25022,"liveBytes":477948},{"path":"candela/link.js","bytecode":"parsed","inCall":false,"loadUs":6396,"runUs":600,"liveBytes":477948},{"path":"typed/rv32-inline.js","bytecode":"cached","inCall":true,"loadUs":1721,"runUs":2667,"liveBytes":586512},{"path":"typed/rv32-loops.js","bytecode":"cached","inCall":true,"loadUs":2107,"runUs":2378,"liveBytes":614908}]}
+TCVERIFY {"app":"candela","source":"candela/callback.typed","same":true,"cachedBytes":66816,"freshBytes":66816,"cachedSha":"9744b19182c3fbfe","freshSha":"9744b19182c3fbfe"}
+raytrace cache miss key_us=0 read_us=2800
+TCVERIFY {"checked":6,"same":6}
+#OK typed

@@ -1,0 +1,512 @@
+{
+  "arm": "cpp",
+  "reference": "bench/reference/candela-gallery/rv32-4-passes.jsonl",
+  "scenes": {
+    "B-01": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "B-01",
+        "arm": "cpp",
+        "beginMs": 34.0,
+        "w": 160,
+        "h": 160,
+        "frame0": "e2ba6956",
+        "frame0MeanLum": 8406.89544,
+        "frame0CyclesPerSample": 11969.3,
+        "passes": 4,
+        "acc": "3b52c63c",
+        "meanLum": 8511.44124,
+        "disp": "23d7885f",
+        "ev100": 15.3618046,
+        "cyclesPerSample": 12868.3,
+        "seconds": 3.661,
+        "samples": 102400,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "e2ba6956",
+        "acc": "3b52c63c",
+        "disp": "23d7885f"
+      }
+    },
+    "R-01": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "R-01",
+        "arm": "cpp",
+        "beginMs": 39.7,
+        "w": 160,
+        "h": 160,
+        "frame0": "e8421c97",
+        "frame0MeanLum": 63.714543,
+        "frame0CyclesPerSample": 18889.0,
+        "passes": 4,
+        "acc": "2ac5b8e1",
+        "meanLum": 62.0379497,
+        "disp": "1d7de02e",
+        "ev100": 8.34674494,
+        "cyclesPerSample": 19745.6,
+        "seconds": 5.617,
+        "samples": 102400,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "e8421c97",
+        "acc": "2ac5b8e1",
+        "disp": "1d7de02e"
+      }
+    },
+    "L-03": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "L-03",
+        "arm": "cpp",
+        "beginMs": 62.4,
+        "w": 160,
+        "h": 160,
+        "frame0": "16cb13f0",
+        "frame0MeanLum": 9445.0545,
+        "frame0CyclesPerSample": 9237.8,
+        "passes": 4,
+        "acc": "bfc2a34a",
+        "meanLum": 9467.63478,
+        "disp": "e95af902",
+        "ev100": 16.1636437,
+        "cyclesPerSample": 10338.7,
+        "seconds": 2.941,
+        "samples": 102400,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "16cb13f0",
+        "acc": "bfc2a34a",
+        "disp": "e95af902"
+      }
+    },
+    "G-01": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "G-01",
+        "arm": "cpp",
+        "beginMs": 46.5,
+        "w": 160,
+        "h": 160,
+        "frame0": "4af50eb8",
+        "frame0MeanLum": 11649.2574,
+        "frame0CyclesPerSample": 19669.8,
+        "passes": 4,
+        "acc": "68d5a13d",
+        "meanLum": 11594.3241,
+        "disp": "7e548c18",
+        "ev100": 16.3263756,
+        "cyclesPerSample": 20434.8,
+        "seconds": 5.84,
+        "samples": 102400,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "4af50eb8",
+        "acc": "68d5a13d",
+        "disp": "7e548c18"
+      }
+    },
+    "E-02": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "E-02",
+        "arm": "cpp",
+        "beginMs": 34.2,
+        "w": 160,
+        "h": 160,
+        "frame0": "de9e22b5",
+        "frame0MeanLum": 0.444935534,
+        "frame0CyclesPerSample": 8522.3,
+        "passes": 4,
+        "acc": "6edba2ef",
+        "meanLum": 0.444963749,
+        "disp": "74c3f85c",
+        "ev100": 1.33111636,
+        "cyclesPerSample": 10186.2,
+        "seconds": 2.898,
+        "samples": 102400,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "de9e22b5",
+        "acc": "6edba2ef",
+        "disp": "74c3f85c"
+      }
+    },
+    "W-02": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "W-02",
+        "arm": "cpp",
+        "beginMs": 35.8,
+        "w": 160,
+        "h": 160,
+        "frame0": "34a669ff",
+        "frame0MeanLum": 15.7079681,
+        "frame0CyclesPerSample": 28936.2,
+        "passes": 4,
+        "acc": "865eba2b",
+        "meanLum": 15.5241421,
+        "disp": "dd654b4c",
+        "ev100": 4.3477875,
+        "cyclesPerSample": 30209.7,
+        "seconds": 8.594,
+        "samples": 102400,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "34a669ff",
+        "acc": "865eba2b",
+        "disp": "dd654b4c"
+      }
+    },
+    "F-01": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "F-01",
+        "arm": "cpp",
+        "beginMs": 47.6,
+        "w": 160,
+        "h": 160,
+        "frame0": "4dd2f3eb",
+        "frame0MeanLum": 8205.69342,
+        "frame0CyclesPerSample": 13926.1,
+        "passes": 4,
+        "acc": "1982b77b",
+        "meanLum": 8185.92001,
+        "disp": "00d099a0",
+        "ev100": 15.6120594,
+        "cyclesPerSample": 14980.7,
+        "seconds": 4.262,
+        "samples": 102400,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "4dd2f3eb",
+        "acc": "1982b77b",
+        "disp": "00d099a0"
+      }
+    },
+    "V-02": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "V-02",
+        "arm": "cpp",
+        "beginMs": 32.5,
+        "w": 160,
+        "h": 160,
+        "frame0": "9482ee60",
+        "frame0MeanLum": 161.891958,
+        "frame0CyclesPerSample": 25776.8,
+        "passes": 4,
+        "acc": "76ffc818",
+        "meanLum": 163.57964,
+        "disp": "1b6b5329",
+        "ev100": 9.52518496,
+        "cyclesPerSample": 27011.0,
+        "seconds": 7.684,
+        "samples": 102400,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "9482ee60",
+        "acc": "76ffc818",
+        "disp": "1b6b5329"
+      }
+    },
+    "G-02": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "G-02",
+        "arm": "cpp",
+        "beginMs": 8.2,
+        "w": 160,
+        "h": 160,
+        "frame0": "7834364c",
+        "frame0MeanLum": 46.8123834,
+        "frame0CyclesPerSample": 35502.2,
+        "passes": 4,
+        "acc": "81a65012",
+        "meanLum": 46.6839727,
+        "disp": "ada1739a",
+        "ev100": 8.39601048,
+        "cyclesPerSample": 37078.8,
+        "seconds": 10.548,
+        "samples": 102400,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "7834364c",
+        "acc": "81a65012",
+        "disp": "ada1739a"
+      }
+    },
+    "X-04": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "X-04",
+        "arm": "cpp",
+        "beginMs": 36.7,
+        "w": 80,
+        "h": 80,
+        "frame0": "2b9af109",
+        "frame0MeanLum": 2443.21145,
+        "frame0CyclesPerSample": 70310.0,
+        "passes": 4,
+        "acc": "a0aafa50",
+        "meanLum": 2417.46993,
+        "disp": "450d2ead",
+        "ev100": 12.9090618,
+        "cyclesPerSample": 73143.6,
+        "seconds": 5.202,
+        "samples": 25600,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "2b9af109",
+        "acc": "a0aafa50",
+        "disp": "450d2ead"
+      }
+    },
+    "S-02": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "S-02",
+        "arm": "cpp",
+        "beginMs": 30.2,
+        "w": 80,
+        "h": 80,
+        "frame0": "e32b0f6b",
+        "frame0MeanLum": 282.201178,
+        "frame0CyclesPerSample": 48386.9,
+        "passes": 4,
+        "acc": "a4d9bc0b",
+        "meanLum": 200.70751,
+        "disp": "4785e5ad",
+        "ev100": 4.61396072,
+        "cyclesPerSample": 48348.8,
+        "seconds": 3.439,
+        "samples": 25600,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "e32b0f6b",
+        "acc": "a4d9bc0b",
+        "disp": "4785e5ad"
+      }
+    },
+    "R-05": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "R-05",
+        "arm": "cpp",
+        "beginMs": 1.8,
+        "w": 80,
+        "h": 80,
+        "frame0": "74d02e3d",
+        "frame0MeanLum": 3.36202248,
+        "frame0CyclesPerSample": 33008.7,
+        "passes": 4,
+        "acc": "261b0649",
+        "meanLum": 4.92694434,
+        "disp": "658822ca",
+        "ev100": 3.13992084,
+        "cyclesPerSample": 35001.9,
+        "seconds": 2.489,
+        "samples": 25600,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "74d02e3d",
+        "acc": "261b0649",
+        "disp": "658822ca"
+      }
+    },
+    "V-03": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "V-03",
+        "arm": "cpp",
+        "beginMs": 30.8,
+        "w": 80,
+        "h": 80,
+        "frame0": "5b10021a",
+        "frame0MeanLum": 1260.68955,
+        "frame0CyclesPerSample": 90742.4,
+        "passes": 4,
+        "acc": "a9569209",
+        "meanLum": 1254.08428,
+        "disp": "b995fd34",
+        "ev100": 12.0962195,
+        "cyclesPerSample": 91794.2,
+        "seconds": 6.528,
+        "samples": 25600,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "5b10021a",
+        "acc": "a9569209",
+        "disp": "b995fd34"
+      }
+    },
+    "V-04": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "V-04",
+        "arm": "cpp",
+        "beginMs": 32.2,
+        "w": 80,
+        "h": 80,
+        "frame0": "f700ca37",
+        "frame0MeanLum": 14244.9329,
+        "frame0CyclesPerSample": 173258.0,
+        "passes": 4,
+        "acc": "c4ca0369",
+        "meanLum": 14194.0953,
+        "disp": "38566376",
+        "ev100": 16.3997005,
+        "cyclesPerSample": 175874.5,
+        "seconds": 12.507,
+        "samples": 25600,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "f700ca37",
+        "acc": "c4ca0369",
+        "disp": "38566376"
+      }
+    },
+    "R-08": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "R-08",
+        "arm": "cpp",
+        "beginMs": 33.5,
+        "w": 80,
+        "h": 80,
+        "frame0": "426121c5",
+        "frame0MeanLum": 5434.69364,
+        "frame0CyclesPerSample": 219027.9,
+        "passes": 4,
+        "acc": "67be6e6b",
+        "meanLum": 5430.94174,
+        "disp": "280382f5",
+        "ev100": 15.0614069,
+        "cyclesPerSample": 219341.1,
+        "seconds": 15.598,
+        "samples": 25600,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "426121c5",
+        "acc": "67be6e6b",
+        "disp": "280382f5"
+      }
+    },
+    "X-03": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "X-03",
+        "arm": "cpp",
+        "beginMs": 29.3,
+        "w": 80,
+        "h": 80,
+        "frame0": "390c87ec",
+        "frame0MeanLum": 907.865,
+        "frame0CyclesPerSample": 74360.3,
+        "passes": 4,
+        "acc": "4f975e1b",
+        "meanLum": 914.715455,
+        "disp": "74f26c85",
+        "ev100": 14.5,
+        "cyclesPerSample": 748301.7,
+        "seconds": 53.214,
+        "samples": 25600,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "390c87ec",
+        "acc": "4f975e1b",
+        "disp": "74f26c85"
+      }
+    },
+    "R-04": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "R-04",
+        "arm": "cpp",
+        "beginMs": 36.8,
+        "w": 80,
+        "h": 80,
+        "frame0": "a53bf8ab",
+        "frame0MeanLum": 3275.29607,
+        "frame0CyclesPerSample": 451194.3,
+        "passes": 4,
+        "acc": "76562f1c",
+        "meanLum": 3272.89081,
+        "disp": "cab1ca27",
+        "ev100": 14.4603575,
+        "cyclesPerSample": 1120823.7,
+        "seconds": 79.704,
+        "samples": 25600,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "a53bf8ab",
+        "acc": "76562f1c",
+        "disp": "cab1ca27"
+      }
+    },
+    "G-03": {
+      "same": true,
+      "device": {
+        "ev": "digest",
+        "id": "G-03",
+        "arm": "cpp",
+        "beginMs": 31.1,
+        "w": 80,
+        "h": 80,
+        "frame0": "23c854f6",
+        "frame0MeanLum": 7079.08961,
+        "frame0CyclesPerSample": 664636.3,
+        "passes": 4,
+        "acc": "b87782c2",
+        "meanLum": 7063.16686,
+        "disp": "1ead113e",
+        "ev100": 15.3374183,
+        "cyclesPerSample": 1333890.2,
+        "seconds": 94.858,
+        "samples": 25600,
+        "variant": "psram"
+      },
+      "reference": {
+        "frame0": "23c854f6",
+        "acc": "b87782c2",
+        "disp": "1ead113e"
+      }
+    }
+  },
+  "agree": 18,
+  "of": 18
+}

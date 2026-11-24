@@ -1,0 +1,1198 @@
+@0.005 «¹é0xd88
+@0.005 load:0x4ff2cbd0,len:0x3310
+@0.005 entry 0x4ff2abda
+@0.018 I (25) boot: ESP-IDF v5.4.2 2nd stage bootloader
+@0.018 I (26) boot: compile time Nov  1 2026 16:48:47
+@0.029 I (26) boot: Multicore bootloader
+@0.029 I (27) boot: chip revision: v1.3
+@0.029 I (29) boot: efuse block revision: v0.3
+@0.029 I (32) boot.esp32p4: SPI Speed      : 80MHz
+@0.040 I (36) boot.esp32p4: SPI Mode       : DIO
+@0.040 I (40) boot.esp32p4: SPI Flash Size : 32MB
+@0.052 I (44) boot: Enabling RNG early entropy source...
+@0.052 I (48) boot: Partition Table:
+@0.052 I (51) boot: ## Label            Usage          Type ST Offset   Length
+@0.062 I (57) boot:  0 nvs              WiFi data        01 02 00009000 00006000
+@0.074 I (64) boot:  1 phy_init         RF data          01 01 0000f000 00001000
+@0.074 I (70) boot:  2 factory          factory app      00 00 00010000 00800000
+@0.085 I (77) boot:  3 agentstore       WiFi data        01 02 00810000 00020000
+@0.085 I (83) boot:  4 files            Unknown data     01 81 00830000 007d0000
+@0.093 I (91) boot: End of partition table
+@0.093 I (93) esp_image: segment 0: paddr=00010020 vaddr=40190020 size=4c96f0h (5019376) map
+@0.925 I (932) esp_image: segment 1: paddr=004d9718 vaddr=30100000 size=00068h (   104) load
+@0.936 I (934) esp_image: segment 2: paddr=004d9788 vaddr=4ff00000 size=06890h ( 26768) load
+@0.937 I (943) esp_image: segment 3: paddr=004e0020 vaddr=40000020 size=18dc70h (1629296) map
+@1.204 I (1215) esp_image: segment 4: paddr=0066dc98 vaddr=4ff06890 size=0d954h ( 55636) load
+@1.216 I (1227) esp_image: segment 5: paddr=0067b5f4 vaddr=4ff14200 size=0504ch ( 20556) load
+@1.229 I (1237) boot: Loaded app from partition at offset 0x10000
+@1.229 I (1238) boot: Disabling RNG early entropy source...
+@1.241 I (1248) hex_psram: vendor id    : 0x0d (AP)
+@1.241 I (1249) hex_psram: Latency      : 0x01 (Fixed)
+@1.252 I (1249) hex_psram: DriveStr.    : 0x00 (25 Ohm)
+@1.252 I (1250) hex_psram: dev id       : 0x03 (generation 4)
+@1.252 I (1255) hex_psram: density      : 0x07 (256 Mbit)
+@1.263 I (1259) hex_psram: good-die     : 0x06 (Pass)
+@1.263 I (1263) hex_psram: SRF          : 0x02 (Slow Refresh)
+@1.274 I (1268) hex_psram: BurstType    : 0x00 ( Wrap)
+@1.274 I (1272) hex_psram: BurstLen     : 0x03 (2048 Byte)
+@1.274 I (1277) hex_psram: BitMode      : 0x01 (X16 Mode)
+@1.286 I (1282) hex_psram: Readlatency  : 0x04 (14 cycles@Fixed)
+@1.286 I (1287) hex_psram: DriveStrength: 0x00 (1/1)
+@1.288 I (1291) MSPI DQS: tuning success, best phase id is 0
+@1.456 I (1463) MSPI DQS: tuning success, best delayline id is 17
+@1.456 I (1464) esp_psram: Found 32MB PSRAM device
+@1.464 I (1464) esp_psram: Speed: 200MHz
+@1.464 I (1465) hex_psram: psram CS IO is dedicated
+@1.464 I (1468) cpu_start: Multicore app
+@2.363 I (2377) esp_psram: SPI SRAM memory test OK
+@2.380 I (2387) cpu_start: Pro cpu start user code
+@2.380 I (2387) cpu_start: cpu freq: 360000000 Hz
+@2.391 I (2387) app_init: Application information:
+@2.391 I (2387) app_init: Project name:     picocalc-os-p4
+@2.391 I (2392) app_init: App version:      picocalc-p4-smooth-chess-202611
+@2.402 I (2398) app_init: ELF file SHA256:  6dc6740da...
+@2.402 I (2402) app_init: ESP-IDF:          v5.4.2
+@2.413 I (2406) efuse_init: Min chip rev:     v0.1
+@2.413 I (2410) efuse_init: Max chip rev:     v1.99 
+@2.413 I (2414) efuse_init: Chip rev:         v1.3
+@2.424 I (2418) heap_init: Initializing. RAM available for dynamic allocation:
+@2.424 I (2425) heap_init: At 4FF29750 len 00011870 (70 KiB): RAM
+@2.435 I (2430) heap_init: At 4FF3AFC0 len 00004BF0 (18 KiB): RAM
+@2.435 I (2435) heap_init: At 4FF55F00 len 0004A100 (296 KiB): RAM
+@2.446 I (2440) heap_init: At 30100068 len 00001F98 (7 KiB): TCM
+@2.446 I (2445) esp_psram: Adding pool of 32768K of PSRAM memory to heap allocator
+@2.457 I (2453) spi_flash: detected chip: generic
+@2.468 W (2456) spi_flash: Detected flash size > 16 MB, but access beyond 16 MB is not supported for this flash model yet.
+@2.468 I (2466) spi_flash: flash io: dio
+@2.468 I (2470) main_task: Started on CPU0
+@2.480 I (2473) esp_psram: Reserving pool of 32K of internal memory for DMA/internal allocations
+@2.480 I (2481) main_task: Calling app_main()
+@2.491 I (2484) picocalc-os: picocalc-os on esp32p4 rev 1.3, 2 cores, 32768 KB PSRAM
+@2.491 heap: internal 385299 free (largest 294912), psram 33551748 free (largest 33030144)
+@2.545 I (2552) fs: /files: 7900 KB, 7816 KB free (mounted in 29 ms)
+@2.556 I (2553) gpio: GPIO[24]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+@2.556 I (2555) gpio: GPIO[25]| InputEn: 0| OutputEn: 1| OpenDrain: 0| Pullup: 0| Pulldown: 0| Intr:0 
+@2.740 I (2749) bus: i2c0 sda=50 scl=49; spi2 sck=3 mosi=2 cs=7 dc=24 rst=25
+@2.740 I (2751) main_task: Returned from app_main()
+@2.906 [   162.204] calibration on the real clock: the 100k loop took 116.2 ms (the model says 133), fib(20) 30.1 ms (the model says 29.1)
+@2.944 candela cache miss key_us=39841 read_us=2760
+@2.980 typed compiler bytecode: typed/tape.js 6393 bytes
+@3.191 typed compiler bytecode: typed/wasm.js 60299 bytes
+@3.440 typed compiler bytecode: typed/rv32.js 63249 bytes
+@3.468 typed compiler bytecode: candela/link.js 759 bytes
+@3.468 candela native compiler functions=streamed
+@3.521 typed compiler bytecode: typed/rv32-inline.js 11921 bytes
+@3.610 typed compiler bytecode: typed/rv32-loops.js 18968 bytes
+@5.409 candela compile source=candela/callback.typed status=ok us=2444708 peak_js_bytes=1195192 module_bytes=66816 sha=9744b19182c3fbfe
+@5.476 TYPEDCOMPILE {"app":"candela","beforeUs":4156,"setupUs":7227,"callUs":1897861,"freeUs":22865,"heap":{"mallocs":1265,"frees":1201,"reallocs":1315,"reused":557,"us":51565},"evals":[{"path":"typed/tape.js","bytecode":"parsed","inCall":false,"loadUs":24259,"runUs":12862,"liveBytes":255292},{"path":"typed/wasm.js","bytecode":"parsed","inCall":false,"loadUs":197496,"runUs":10743,"liveBytes":459240},{"path":"typed/rv32.js","bytecode":"parsed","inCall":false,"loadUs":238046,"runUs":17763,"liveBytes":604988},{"path":"candela/link.js","bytecode":"parsed","inCall":false,"loadUs":6469,"runUs":633,"liveBytes":604988},{"path":"typed/rv32-inline.js","bytecode":"parsed","inCall":true,"loadUs":49007,"runUs":10985,"liveBytes":697168},{"path":"typed/rv32-loops.js","bytecode":"parsed","inCall":true,"loadUs":78168,"runUs":3189,"liveBytes":713276}]}
+@5.476 I (5477) ELF: ELF loader version: 2.0.0
+@5.491 I (5479) ELF: elf->entry=0x4810a518
+@5.499 CANLOAD {"stage":2,"compileUs":2561802,"relocateUs":7552,"installTotalUs":2569550,"imageBytes":66816,"elfSegmentBytes":66092,"residentStructBytes":732,"sourceBytes":15942,"graphBytes":612,"psramMonitored":1,"psramPeakDeltaBytes":1486904}
+@5.605 files cache miss key_us=23160 read_us=2767
+@5.709 typed compiler bytecode: typed/world.js 3536 bytes
+@5.736 files native compiler functions=streamed
+@5.736 files native compiler policy=interactive
+@7.126 files compile source=bundle status=ok us=1509204 peak_js_bytes=1355352 module_bytes=243644 sha=dd82179e45662f4a
+@7.178 TYPEDCOMPILE {"app":"files","beforeUs":19482,"setupUs":7141,"callUs":1359551,"freeUs":17719,"heap":{"mallocs":390,"frees":326,"reallocs":250,"reused":154,"us":16725},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1117,"runUs":12514,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6845,"runUs":10757,"liveBytes":332260},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7293,"runUs":24936,"liveBytes":477996},{"path":"typed/world.js","bytecode":"parsed","inCall":false,"loadUs":12776,"runUs":4381,"liveBytes":494932}]}
+@7.207 editor cache miss key_us=25619 read_us=2760
+@7.366 typed compiler bytecode: typed/async.js 30895 bytes
+@7.431 editor native compiler functions=streamed
+@7.431 editor native compiler policy=interactive
+@10.739 editor compile source=bundle status=ok us=3520849 peak_js_bytes=2370560 module_bytes=243644 sha=0e05c09c4b917968
+@10.800 TYPEDCOMPILE {"app":"editor","beforeUs":21725,"setupUs":7216,"callUs":3274463,"freeUs":20554,"heap":{"mallocs":904,"frees":840,"reallocs":717,"reused":916,"us":41324},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1122,"runUs":12541,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6831,"runUs":10753,"liveBytes":332260},{"path":"typed/async.js","bytecode":"parsed","inCall":false,"loadUs":98475,"runUs":7514,"liveBytes":479912},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7650,"runUs":17289,"liveBytes":547304},{"path":"typed/world.js","bytecode":"cached","inCall":false,"loadUs":1039,"runUs":4160,"liveBytes":568336}]}
+@10.831 agenda cache miss key_us=25815 read_us=2757
+@10.957 agenda native compiler functions=streamed
+@10.957 agenda native compiler policy=interactive
+@13.569 agenda compile source=bundle status=ok us=2727023 peak_js_bytes=1868904 module_bytes=243644 sha=abf7dfc0dbc6d1ba
+@13.621 TYPEDCOMPILE {"app":"agenda","beforeUs":22129,"setupUs":7204,"callUs":2580885,"freeUs":17671,"heap":{"mallocs":527,"frees":463,"reallocs":455,"reused":418,"us":29902},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1101,"runUs":12653,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6831,"runUs":10804,"liveBytes":332260},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7341,"runUs":24852,"liveBytes":477996},{"path":"typed/world.js","bytecode":"cached","inCall":false,"loadUs":982,"runUs":3945,"liveBytes":486740}]}
+@13.665 chess cache miss key_us=27612 read_us=2770
+@13.798 chess native compiler functions=streamed
+@13.798 chess native compiler policy=balanced
+@18.018 chess compile source=bundle status=ok us=4341030 peak_js_bytes=2115248 module_bytes=276412 sha=8bea147250cfe476
+@18.093 TYPEDCOMPILE {"app":"chess","beforeUs":23176,"setupUs":7239,"callUs":4183264,"freeUs":21448,"heap":{"mallocs":735,"frees":671,"reallocs":1025,"reused":1430,"us":51757},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1123,"runUs":12607,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":6843,"runUs":10771,"liveBytes":332260},{"path":"typed/async.js","bytecode":"cached","inCall":false,"loadUs":3864,"runUs":2748,"liveBytes":389744},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7541,"runUs":23247,"liveBytes":547248},{"path":"typed/world.js","bytecode":"cached","inCall":false,"loadUs":997,"runUs":4000,"liveBytes":568280},{"path":"typed/rv32-inline.js","bytecode":"cached","inCall":true,"loadUs":1706,"runUs":2514,"liveBytes":976168}]}
+@18.093 [ 15349.936] booting 25 worlds from js/system.typed.json
+@18.109 [ 15362.609] booting 5 worlds from js/system.elf.json
+@18.109 unknown command ÿ (try help)
+@18.109 #OK ÿ
+@18.109 #OK trace
+@18.109 #OK trace
+@18.109 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.118 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.129 #OK trace
+@18.140 #OK trace
+@18.140 #OK trace
+@18.140 #OK trace
+@18.140 #OK trace
+@18.140 #OK trace
+@18.140 #OK trace
+@18.140 #OK trace
+@18.140 #OK trace
+@18.140 #OK trace
+@18.140 #OK trace
+@18.151 [ 15388.556] starting keyboard (natives/keyboard.elf)
+@18.151 [ 15408.554] keyboard: 5947 us of machine code (event 5)
+@18.152 [ 15410.250] starting power (natives/power.elf)
+@18.164 [ 15421.899] power: 6079 us of machine code (event 5)
+@18.164 [ 15423.579] starting display (natives/display.elf)
+@18.177 [ 15434.186] display: 5417 us of machine code (event 5)
+@18.177 [ 15435.924] starting compositor (natives/compositor.elf)
+@18.208 [ 15465.568] compositor: 7467 us of machine code (event 5)
+@18.208 [ 15467.393] starting agent (natives/agent.elf)
+@18.250 [ 15508.545] agent: 7003 us of machine code (event 5)
+@18.250 [ 15510.320] starting chat (apps/chat.js)
+@18.310 quickjs prelude cache bytes=44957 build_us=54568
+@18.349 #OK trace
+@18.349 [ 15611.973] starting launcher (apps/launcher.js)
+@18.386 [ 15648.696] starting files (files/compiled.bin)
+@18.406 [ 15664.235] files: 618 us of machine code (event 5)
+@18.406 [ 15665.948] starting editor (editor/compiled.bin)
+@18.422 [ 15680.286] editor: 632 us of machine code (event 5)
+@18.422 [ 15682.006] starting calc (apps/calc.js)
+@18.659 [ 15921.441] starting agenda (agenda/compiled.bin)
+@18.679 [ 15936.775] agenda: 680 us of machine code (event 5)
+@18.679 [ 15938.508] starting settings (natives/settings.elf)
+@18.702 [ 15960.238] settings: 7515 us of machine code (event 5)
+@18.702 [ 15962.017] starting logs (apps/logs.js)
+@18.733 [ 15995.624] starting loader (apps/loader.js)
+@18.775 #OK trace
+@18.775 [ 16038.040] starting sysmon (apps/sysmon.js)
+@18.816 [ 16079.160] starting repl (apps/repl.js)
+@18.846 [ 16108.291] starting sandbox (system/sandbox.js)
+@18.871 [ 16133.537] starting snake (natives/snake.elf)
+@18.890 [ 16148.160] snake: 7045 us of machine code (event 5)
+@18.890 [ 16149.866] starting faults (apps/faults.js)
+@18.918 [ 16181.084] starting flaky (natives/flaky.elf)
+@18.933 [ 16190.676] flaky: 5102 us of machine code (event 5)
+@18.933 [ 16192.317] starting raytrace (apps/raytrace.js)
+@18.956 [ 16219.431] starting keys (apps/keys.js)
+@18.985 [ 16248.052] starting about (apps/about.js)
+@19.013 [ 16275.530] starting chess (chess/compiled.bin)
+@19.035 [ 16292.321] chess: 640 us of machine code (event 5)
+@19.035 [ 16294.030] starting gallery (candela-gallery/gallery.js)
+@19.059 [ 16321.118] starting toplog (natives/toplog.elf)
+@19.073 [ 16328.612] toplog: hello from the top level
+@19.073 [ 16330.821] toplog: 5539 us of machine code (event 5)
+@19.084 [ 16331.837] starting nat-echo (natives/echo.elf)
+@19.084 [ 16333.196] nat-echo: TEST kind ok 
+@19.084 [ 16333.719] nat-echo: TEST provide ok 
+@19.095 [ 16334.172] nat-echo: TEST every ok 
+@19.095 [ 16334.683] nat-echo: TEST title ok 
+@19.095 [ 16341.832] nat-echo: TEST icon ok 
+@19.106 [ 16342.302] nat-echo: TEST about ok 
+@19.106 [ 16342.799] nat-echo: TEST icon-object err an icon is a JSON array of drawing operations, at most 1024 bytes
+@19.117 [ 16352.610] nat-echo: TEST key-upper err a shortcut key is one of a-z and 0-9
+@19.117 [ 16362.464] nat-echo: TEST init done
+@19.128 [ 16362.889] nat-echo: 29743 us of machine code (event 5)
+@19.128 [ 16372.686] starting nat-bench (natives/bench.elf)
+@19.139 [ 16373.620] nat-bench: 20 us of machine code (event 5)
+@19.139 [ 16382.733] starting nat-import (natives/wimport.elf)
+@19.139 E (19135) ELF: Can't find common path_open
+@19.150 [ 16392.796] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@19.173 #OCT1 {"ev":"fault","t":16392.796,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":1,"mem_kb":0,"limit_kb":64}
+@19.173 [ 16414.359] starting nat-dial (natives/dial.elf)
+@19.184 [ 16424.597] nat-dial: 253 us of machine code (event 5)
+@19.184 [ 16425.358] keyboard <- start from kernel 
+@19.195 [ 16435.496] keyboard: 1802 us of machine code (event 2, start)
+@19.195 [ 16436.224] power <- start from kernel 
+@19.195 [ 16436.935] power: 266 us of machine code (event 2, start)
+@19.206 [ 16444.393] display <- start from kernel 
+@19.206 [ 16446.367] display: 1481 us of machine code (event 2, start)
+@19.217 [ 16454.593] compositor <- start from kernel 
+@19.217 I (19206) bus: spi2: panel device at 40000000 Hz requested, 40000 kHz actual
+@19.228 [ 16473.857] compositor: 18452 us of machine code (event 2, start)
+@19.228 [ 16477.431] display: 1440 us of machine code (event 4)
+@19.228 [ 16478.225] agent <- start from kernel 
+@19.239 [ 16490.714] agent: 11874 us of machine code (event 2, start)
+@19.239 [ 16492.628] agent <- every 100 ms from kernel 
+@19.250 [ 16493.565] agent: 361 us of machine code (event 1)
+@19.250 [ 16494.676] starting nat-import (natives/wimport.elf)
+@19.261 E (19248) ELF: Can't find common path_open
+@19.261 [ 16504.756] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@19.284 #OCT1 {"ev":"fault","t":16504.756,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":2,"mem_kb":0,"limit_kb":64}
+@19.284 #OK trace
+@19.284 [ 16526.881] compositor <- every 500 ms from kernel 
+@19.295 [ 16536.266] compositor: 650 us of machine code (event 1)
+@19.295 [ 16537.690] keyboard: 690 us of machine code (event 4)
+@19.306 [ 16545.854] keyboard <- every 20 ms from kernel 
+@19.306 [ 16547.322] keyboard: 917 us of machine code (event 1)
+@19.317 [ 16556.069] flaky <- start from kernel 
+@19.317 [ 16556.614] flaky: 73 us of machine code (event 2, start)
+@19.317 [ 16567.248] keyboard: 989 us of machine code (event 4)
+@19.328 [ 16567.916] keyboard <- every 20 ms from kernel 
+@19.328 [ 16568.839] keyboard: 404 us of machine code (event 1)
+@19.339 [ 16577.272] power: 402 us of machine code (event 4)
+@19.339 [ 16577.896] toplog <- start from kernel 
+@19.350 [ 16586.890] toplog: 68 us of machine code (event 2, start)
+@19.350 [ 16588.103] keyboard: 496 us of machine code (event 4)
+@19.350 [ 16597.127] keyboard <- every 20 ms from kernel 
+@19.361 [ 16598.097] keyboard: 425 us of machine code (event 1)
+@19.361 [ 16607.933] power: 686 us of machine code (event 4)
+@19.373 [ 16608.659] nat-echo <- start from kernel 
+@19.373 [ 16617.334] nat-echo: TEST start self=nat-echo clock=running
+@19.384 [ 16617.982] nat-echo: 673 us of machine code (event 2, start)
+@19.384 [ 16628.132] keyboard: 415 us of machine code (event 4)
+@19.384 [ 16628.783] keyboard <- every 20 ms from kernel 
+@19.395 [ 16638.144] keyboard: 404 us of machine code (event 1)
+@19.395 [ 16640.541] power: 1666 us of machine code (event 4)
+@19.406 [ 16641.919] display: 521 us of machine code (event 4)
+@19.406 [ 16649.163] keyboard: 549 us of machine code (event 4)
+@19.417 [ 16649.880] keyboard <- every 20 ms from kernel 
+@19.417 [ 16659.106] keyboard: 495 us of machine code (event 1)
+@19.417 [ 16660.160] display: 303 us of machine code (event 4)
+@19.428 [ 16669.264] keyboard: 383 us of machine code (event 4)
+@19.428 [ 16669.914] keyboard <- every 20 ms from kernel 
+@19.439 [ 16679.247] keyboard: 321 us of machine code (event 1)
+@19.439 [ 16679.954] nat-bench <- start from kernel 
+@19.450 [ 16689.165] nat-bench: BENCH loop n=1000 us=35 r=122468
+@19.450 [ 16689.920] nat-bench: BENCH loop n=4000 us=135 r=498743
+@19.450 [ 16699.811] nat-bench: BENCH loop n=16000 us=539 r=2028337
+@19.461 [ 16700.419] nat-bench: 11367 us of machine code (event 2, start)
+@19.461 [ 16709.678] starting nat-import (natives/wimport.elf)
+@19.472 E (19463) ELF: Can't find common path_open
+@19.483 [ 16719.696] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@19.495 #OCT1 {"ev":"fault","t":16719.696,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":3,"mem_kb":0,"limit_kb":64}
+@19.506 [ 16742.767] keyboard: 1434 us of machine code (event 4)
+@19.506 [ 16750.618] keyboard <- every 20 ms from kernel 
+@19.506 [ 16752.071] keyboard: 900 us of machine code (event 1)
+@19.528 [ 16760.719] compositor <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@19.528 [ 16773.068] compositor: 1551 us of machine code (event 0, worlds.status)
+@19.539 [ 16781.952] keyboard: 503 us of machine code (event 4)
+@19.539 [ 16782.598] keyboard <- every 20 ms from kernel 
+@19.550 [ 16791.978] keyboard: 552 us of machine code (event 1)
+@19.550 [ 16792.767] nat-echo <- every 50 ms from kernel 
+@19.561 [ 16801.604] nat-echo: 4 us of machine code (event 1)
+@19.561 [ 16802.700] keyboard: 455 us of machine code (event 4)
+@19.561 [ 16803.333] keyboard <- every 20 ms from kernel 
+@19.570 [ 16812.546] keyboard: 338 us of machine code (event 1)
+@19.570 [ 16813.277] compositor <- draw from compositor 
+@19.583 [ 16839.227] compositor: 16785 us of machine code (event 0, draw)
+@19.583 [ 16842.299] display: 1046 us of machine code (event 4)
+@19.595 [ 16843.815] keyboard: 734 us of machine code (event 4)
+@19.595 [ 16844.592] keyboard <- every 20 ms from kernel 
+@19.606 [ 16845.899] keyboard: 678 us of machine code (event 1)
+@19.606 [ 16847.134] display: 438 us of machine code (event 4)
+@19.617 [ 16855.939] keyboard: 451 us of machine code (event 4)
+@19.617 [ 16856.587] keyboard <- every 20 ms from kernel 
+@19.617 [ 16865.815] keyboard: 326 us of machine code (event 1)
+@19.628 [ 16866.823] display: 314 us of machine code (event 4)
+@19.628 [ 16876.201] keyboard: 406 us of machine code (event 4)
+@19.639 [ 16876.882] keyboard <- every 20 ms from kernel 
+@19.639 [ 16886.155] keyboard: 328 us of machine code (event 1)
+@19.650 [ 16887.198] display: 338 us of machine code (event 4)
+@19.650 [ 16896.579] keyboard: 444 us of machine code (event 4)
+@19.650 [ 16897.291] keyboard <- every 20 ms from kernel 
+@19.661 [ 16898.113] keyboard: 307 us of machine code (event 1)
+@19.661 [ 16906.972] display: 230 us of machine code (event 4)
+@19.672 [ 16907.639] agent <- every 100 ms from kernel 
+@19.672 [ 16916.949] agent: 145 us of machine code (event 1)
+@19.683 [ 16918.130] keyboard: 485 us of machine code (event 4)
+@19.683 [ 16927.062] keyboard <- every 20 ms from kernel 
+@19.683 [ 16927.971] keyboard: 355 us of machine code (event 1)
+@19.694 [ 16937.493] display: 263 us of machine code (event 4)
+@19.694 [ 16938.195] nat-echo <- every 50 ms from kernel 
+@19.705 [ 16947.323] nat-echo: 4 us of machine code (event 1)
+@19.705 [ 16948.217] display: 231 us of machine code (event 4)
+@19.717 [ 16957.931] keyboard: 405 us of machine code (event 4)
+@19.717 [ 16958.592] keyboard <- every 20 ms from kernel 
+@19.717 [ 16960.132] keyboard: 996 us of machine code (event 1)
+@19.728 [ 16968.273] agent <- every 100 ms from kernel 
+@19.728 [ 16968.935] agent: 125 us of machine code (event 1)
+@19.739 [ 16979.107] keyboard: 689 us of machine code (event 4)
+@19.739 [ 16979.755] keyboard <- every 20 ms from kernel 
+@19.750 [ 16988.768] keyboard: 367 us of machine code (event 1)
+@19.750 [ 16989.452] nat-echo <- every 50 ms from kernel 
+@19.750 [ 16998.626] nat-echo: TEST ticks 3 timer=0
+@19.761 [ 16999.108] nat-echo: 551 us of machine code (event 1)
+@19.761 [ 17000.240] keyboard: 432 us of machine code (event 4)
+@19.772 [ 17009.197] keyboard <- every 20 ms from kernel 
+@19.772 [ 17010.041] keyboard: 309 us of machine code (event 1)
+@19.772 [ 17019.589] display: 193 us of machine code (event 4)
+@19.783 #OK trace
+@19.783 [ 17020.710] display <- attach from compositor {"fb":{"$h":5}}
+@19.795 [ 17031.360] display: 1654 us of machine code (event 0, attach)
+@19.795 [ 17039.647] display <- flush (ask) from compositor {"rects":[[0,0,320,320]]}
+@19.806 [ 17042.180] display: 1695 us of machine code (event 0, flush)
+@19.806 [ 17050.857] keyboard: 770 us of machine code (event 4)
+@19.817 [ 17051.865] keyboard <- every 20 ms from kernel 
+@19.817 [ 17062.225] keyboard: 1839 us of machine code (event 1)
+@19.817 [ 17064.594] display: 699 us of machine code (event 4)
+@19.828 [ 17070.872] display: 280 us of machine code (event 4)
+@19.828 [ 17071.769] display: 88 us of machine code (event 4)
+@19.839 [ 17082.414] keyboard: 1508 us of machine code (event 4)
+@19.839 [ 17083.514] keyboard <- every 20 ms from kernel 
+@19.850 [ 17085.136] keyboard: 1064 us of machine code (event 1)
+@19.850 [ 17091.318] agent <- every 100 ms from kernel 
+@19.850 [ 17092.018] agent: 155 us of machine code (event 1)
+@19.861 [ 17103.695] display: 2294 us of machine code (event 4)
+@19.861 [ 17105.089] keyboard: 568 us of machine code (event 4)
+@19.872 [ 17111.549] keyboard <- every 20 ms from kernel 
+@19.872 [ 17112.744] keyboard: 645 us of machine code (event 1)
+@19.883 [ 17121.633] starting nat-import (natives/wimport.elf)
+@19.883 E (19875) ELF: Can't find common path_open
+@19.895 [ 17131.754] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@19.906 #OCT1 {"ev":"fault","t":17131.754,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":4,"mem_kb":0,"limit_kb":64}
+@19.917 [ 17154.729] keyboard: 1347 us of machine code (event 4)
+@19.917 [ 17162.581] keyboard <- every 20 ms from kernel 
+@19.928 [ 17163.982] keyboard: 848 us of machine code (event 1)
+@19.928 [ 17173.967] compositor: 1210 us of machine code (event 4)
+@19.939 [ 17174.686] compositor <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@19.950 [ 17194.560] compositor: 1425 us of machine code (event 0, worlds.status)
+@19.950 [ 17196.019] keyboard: 510 us of machine code (event 4)
+@19.961 [ 17203.525] keyboard <- every 20 ms from kernel 
+@19.961 [ 17204.672] keyboard: 613 us of machine code (event 1)
+@19.972 [ 17213.727] compositor <- power from power {"pct":100,"charging":false,"backlight":32,"screen":true}
+@19.983 [ 17215.486] compositor: 748 us of machine code (event 0, power)
+@19.983 [ 17224.899] keyboard: 428 us of machine code (event 4)
+@19.983 [ 17234.088] keyboard <- every 20 ms from kernel 
+@19.994 [ 17235.116] keyboard: 466 us of machine code (event 1)
+@20.006 [ 17235.842] compositor <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@20.017 [ 17256.192] compositor: 1232 us of machine code (event 0, worlds.status)
+@20.017 [ 17265.407] keyboard: 453 us of machine code (event 4)
+@20.028 [ 17266.048] keyboard <- every 20 ms from kernel 
+@20.028 [ 17267.029] keyboard: 457 us of machine code (event 1)
+@20.039 [ 17275.558] compositor <- every 500 ms from kernel 
+@20.039 [ 17276.288] compositor: 174 us of machine code (event 1)
+@20.039 [ 17286.253] keyboard: 463 us of machine code (event 4)
+@20.050 [ 17286.897] keyboard <- every 20 ms from kernel 
+@20.050 [ 17296.157] keyboard: 349 us of machine code (event 1)
+@20.061 [ 17296.886] agent <- every 100 ms from kernel 
+@20.061 [ 17306.103] agent: 139 us of machine code (event 1)
+@20.072 [ 17307.169] keyboard: 412 us of machine code (event 4)
+@20.072 [ 17316.196] keyboard <- every 20 ms from kernel 
+@20.072 [ 17317.128] keyboard: 381 us of machine code (event 1)
+@20.094 [ 17326.346] compositor <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@20.094 [ 17339.171] compositor: 2093 us of machine code (event 0, worlds.status)
+@20.106 [ 17347.911] keyboard: 799 us of machine code (event 4)
+@20.106 [ 17348.633] keyboard <- every 20 ms from kernel 
+@20.112 [ 17357.733] keyboard: 686 us of machine code (event 1)
+@20.112 [ 17358.608] compositor <- draw from compositor 
+@20.128 [ 17383.909] compositor: 16620 us of machine code (event 0, draw)
+@20.128 [ 17387.024] keyboard: 1159 us of machine code (event 4)
+@20.139 [ 17387.802] keyboard <- every 20 ms from kernel 
+@20.139 [ 17389.137] keyboard: 781 us of machine code (event 1)
+@20.150 [ 17389.877] display <- flush (ask) from compositor {"rects":[[213,7,45,8],[96,59,5,7]]}
+@20.161 [ 17402.373] display: 2442 us of machine code (event 0, flush)
+@20.161 [ 17404.660] keyboard: 909 us of machine code (event 4)
+@20.161 [ 17410.381] keyboard <- every 20 ms from kernel 
+@20.173 [ 17411.515] keyboard: 583 us of machine code (event 1)
+@20.173 [ 17420.497] display: 241 us of machine code (event 4)
+@20.184 [ 17421.359] display: 89 us of machine code (event 4)
+@20.184 [ 17422.024] display: 83 us of machine code (event 4)
+@20.195 [ 17431.133] display: 104 us of machine code (event 4)
+@20.195 [ 17431.826] display: 83 us of machine code (event 4)
+@20.195 [ 17441.181] display: 91 us of machine code (event 4)
+@20.206 [ 17441.860] display: 78 us of machine code (event 4)
+@20.206 [ 17453.152] display: 1867 us of machine code (event 4)
+@20.217 [ 17454.425] keyboard: 501 us of machine code (event 4)
+@20.217 [ 17461.507] keyboard <- every 20 ms from kernel 
+@20.228 [ 17462.643] keyboard: 570 us of machine code (event 1)
+@20.228 [ 17471.725] agent <- every 100 ms from kernel 
+@20.228 [ 17472.468] agent: 222 us of machine code (event 1)
+@20.239 [ 17482.447] keyboard: 587 us of machine code (event 4)
+@20.239 [ 17483.093] keyboard <- every 20 ms from kernel 
+@20.250 [ 17484.591] keyboard: 959 us of machine code (event 1)
+@20.250 [ 17493.788] compositor: 1285 us of machine code (event 4)
+@20.261 [ 17494.584] compositor <- every 500 ms from kernel 
+@20.261 [ 17502.886] compositor: 230 us of machine code (event 1)
+@20.261 [ 17504.018] keyboard: 408 us of machine code (event 4)
+@20.273 [ 17512.882] keyboard <- every 20 ms from kernel 
+@20.273 [ 17513.907] keyboard: 492 us of machine code (event 1)
+@20.273 #OK trace
+@20.284 [ 17523.535] agent <- every 100 ms from kernel 
+@20.284 [ 17524.227] agent: 105 us of machine code (event 1)
+@20.295 [ 17533.894] keyboard: 595 us of machine code (event 4)
+@20.295 [ 17534.561] keyboard <- every 20 ms from kernel 
+@20.295 [ 17543.746] keyboard: 427 us of machine code (event 1)
+@20.298 [ 17544.491] chat <- start from kernel 
+@20.309 [ 17565.234] keyboard: 2044 us of machine code (event 4)
+@20.309 [ 17566.618] keyboard <- every 20 ms from kernel 
+@20.320 [ 17568.255] keyboard: 1053 us of machine code (event 1)
+@20.320 [ 17569.070] agent <- agent.snapshot from chat {}
+@20.331 [ 17574.066] agent: 3600 us of machine code (event 0, agent.snapshot)
+@20.331 [ 17577.283] keyboard: 1392 us of machine code (event 4)
+@20.343 [ 17580.799] keyboard <- every 20 ms from kernel 
+@20.343 [ 17582.367] keyboard: 1008 us of machine code (event 1)
+@20.354 [ 17590.843] compositor <- frames from chat {"app":"chat","title":"Agent","frame":{"tree":{"t":"col","gap":4,"kids":[{"t":"text","s":"Starting agent...","font":"s",
+@20.365 [ 17606.026] compositor: 4559 us of machine code (event 0, frames)
+@20.365 [ 17612.193] keyboard: 736 us of machine code (event 4)
+@20.376 [ 17612.906] keyboard <- every 20 ms from kernel 
+@20.376 [ 17622.000] keyboard: 618 us of machine code (event 1)
+@20.387 [ 17622.772] agent <- every 100 ms from kernel 
+@20.387 [ 17631.640] agent: 115 us of machine code (event 1)
+@20.387 [ 17632.804] keyboard: 476 us of machine code (event 4)
+@20.398 [ 17641.724] keyboard <- every 20 ms from kernel 
+@20.398 [ 17642.629] keyboard: 371 us of machine code (event 1)
+@20.400 [ 17643.397] launcher <- start from kernel 
+@20.438 [ 17693.926] keyboard: 2154 us of machine code (event 4)
+@20.438 [ 17695.381] keyboard <- every 20 ms from kernel 
+@20.449 [ 17697.063] keyboard: 1092 us of machine code (event 1)
+@20.456 [ 17697.926] compositor <- frames from launcher {"app":"launcher","title":"PicoCalc","frame":{"tree":{"t":"col","gap":6,"kids":[{"t":"row","kids":[{"t":"text","s":"Apps
+@20.477 [ 17732.816] compositor: 28446 us of machine code (event 0, frames)
+@20.477 [ 17736.120] keyboard: 1249 us of machine code (event 4)
+@20.488 [ 17737.010] keyboard <- every 20 ms from kernel 
+@20.488 [ 17738.572] keyboard: 1009 us of machine code (event 1)
+@20.499 [ 17739.283] agent <- every 100 ms from kernel 
+@20.499 [ 17739.968] agent: 149 us of machine code (event 1)
+@20.510 [ 17749.977] keyboard: 767 us of machine code (event 4)
+@20.510 [ 17750.662] keyboard <- every 20 ms from kernel 
+@20.510 [ 17759.693] keyboard: 541 us of machine code (event 1)
+@20.514 [ 17760.409] compositor <- draw from compositor 
+@20.547 [ 17802.833] compositor: 33418 us of machine code (event 0, draw)
+@20.547 [ 17806.423] keyboard: 1552 us of machine code (event 4)
+@20.558 [ 17807.314] keyboard <- every 20 ms from kernel 
+@20.558 [ 17808.757] keyboard: 899 us of machine code (event 1)
+@20.580 [ 17809.623] display <- flush (ask) from compositor {"rects":[[11,5,63,10],[8,74,303,38],[8,117,303,58],[8,180,303,58],[8,245,293,10],[8,258,111,10],[8,281,275,11],[8,307,2
+@20.580 [ 17825.300] display: 5608 us of machine code (event 0, flush)
+@20.592 [ 17831.290] keyboard: 1302 us of machine code (event 4)
+@20.592 [ 17832.601] keyboard <- every 20 ms from kernel 
+@20.592 [ 17841.364] keyboard: 1738 us of machine code (event 1)
+@20.603 [ 17843.472] display: 704 us of machine code (event 4)
+@20.603 [ 17850.444] display: 504 us of machine code (event 4)
+@20.614 [ 17851.351] display: 130 us of machine code (event 4)
+@20.614 [ 17860.340] display: 184 us of machine code (event 4)
+@20.625 [ 17861.110] display: 116 us of machine code (event 4)
+@20.625 [ 17870.130] display: 120 us of machine code (event 4)
+@20.636 [ 17870.862] display: 115 us of machine code (event 4)
+@20.636 [ 17880.311] display: 119 us of machine code (event 4)
+@20.636 [ 17881.026] display: 108 us of machine code (event 4)
+@20.647 [ 17890.497] display: 106 us of machine code (event 4)
+@20.647 [ 17891.216] display: 107 us of machine code (event 4)
+@20.658 [ 17891.921] display: 103 us of machine code (event 4)
+@20.658 [ 17901.169] display: 106 us of machine code (event 4)
+@20.669 [ 17901.881] display: 104 us of machine code (event 4)
+@20.669 [ 17911.393] display: 111 us of machine code (event 4)
+@20.669 [ 17912.892] keyboard: 893 us of machine code (event 4)
+@20.680 [ 17921.538] keyboard <- every 20 ms from kernel 
+@20.680 [ 17922.985] keyboard: 905 us of machine code (event 1)
+@20.691 [ 17931.888] display: 188 us of machine code (event 4)
+@20.691 [ 17932.548] starting nat-import (natives/wimport.elf)
+@20.703 E (20692) ELF: Can't find common path_open
+@20.703 [ 17944.173] nat-import crashed: it links to path_open, which picocalc-os does not give a module
+@20.725 #OCT1 {"ev":"fault","t":17944.173,"world":"nat-import","file":"natives/wimport.elf","handling":"","why":"it links to path_open, which picocalc-os does not give a module","crashes":5,"mem_kb":0,"limit_kb":64}
+@20.736 [ 17944.173] nat-import crashed 5 times in ten seconds; it stays stopped
+@20.736 [ 17974.327] display: 572 us of machine code (event 4)
+@20.736 [ 17983.007] display: 104 us of machine code (event 4)
+@20.747 [ 17983.742] display: 111 us of machine code (event 4)
+@20.747 [ 17993.142] display: 103 us of machine code (event 4)
+@20.758 [ 17993.861] display: 97 us of machine code (event 4)
+@20.758 [ 18003.322] display: 99 us of machine code (event 4)
+@20.769 [ 18004.022] display: 99 us of machine code (event 4)
+@20.769 [ 18013.500] display: 95 us of machine code (event 4)
+@20.769 [ 18014.206] display: 95 us of machine code (event 4)
+@20.780 [ 18024.439] display: 846 us of machine code (event 4)
+@20.780 [ 18025.252] display: 148 us of machine code (event 4)
+@20.791 [ 18025.949] display: 87 us of machine code (event 4)
+@20.791 #OK trace
+@20.791 [ 18034.863] display: 107 us of machine code (event 4)
+@20.802 [ 18044.109] display: 82 us of machine code (event 4)
+@20.802 [ 18044.792] display: 78 us of machine code (event 4)
+@20.814 [ 18047.506] display: 2128 us of machine code (event 4)
+@20.814 [ 18055.581] keyboard: 728 us of machine code (event 4)
+@20.814 [ 18056.266] keyboard <- every 20 ms from kernel 
+@20.825 [ 18065.822] keyboard: 955 us of machine code (event 1)
+@20.825 [ 18066.669] agent <- every 100 ms from kernel 
+@20.836 [ 18075.155] agent: 137 us of machine code (event 1)
+@20.836 [ 18076.560] keyboard: 656 us of machine code (event 4)
+@20.836 [ 18085.195] keyboard <- every 20 ms from kernel 
+@20.847 [ 18086.215] keyboard: 474 us of machine code (event 1)
+@20.847 [ 18096.620] compositor: 1235 us of machine code (event 4)
+@20.869 [ 18097.397] compositor <- worlds.status from kernel {"world":"nat-import","state":"stopped","why":"it links to path_open, which picocalc-os does not give a module","restart
+@20.869 [ 18117.263] compositor: 1465 us of machine code (event 0, worlds.status)
+@20.880 [ 18118.805] keyboard: 560 us of machine code (event 4)
+@20.880 [ 18126.191] keyboard <- every 20 ms from kernel 
+@20.891 [ 18127.386] keyboard: 635 us of machine code (event 1)
+@20.891 [ 18136.411] compositor <- every 500 ms from kernel 
+@20.902 [ 18137.261] compositor: 283 us of machine code (event 1)
+@20.902 [ 18147.194] keyboard: 576 us of machine code (event 4)
+@20.902 [ 18147.838] keyboard <- every 20 ms from kernel 
+@20.914 [ 18157.644] keyboard: 987 us of machine code (event 1)
+@20.914 [ 18158.551] agent <- every 100 ms from kernel 
+@20.925 [ 18159.197] agent: 121 us of machine code (event 1)
+@20.925 [ 18168.133] keyboard: 751 us of machine code (event 4)
+@20.925 [ 18168.803] keyboard <- every 20 ms from kernel 
+@20.934 [ 18177.814] keyboard: 401 us of machine code (event 1)
+@20.934 [ 18178.568] compositor <- draw from compositor 
+@20.964 [ 18219.657] compositor: 32049 us of machine code (event 0, draw)
+@20.964 [ 18222.742] keyboard: 1082 us of machine code (event 4)
+@20.975 [ 18223.520] keyboard <- every 20 ms from kernel 
+@20.975 [ 18224.800] keyboard: 728 us of machine code (event 1)
+@20.986 [ 18225.639] display <- flush (ask) from compositor {"rects":[[4,31,312,56]]}
+@20.986 [ 18228.567] display: 2024 us of machine code (event 0, flush)
+@20.997 [ 18237.329] keyboard: 854 us of machine code (event 4)
+@20.997 [ 18246.080] keyboard <- every 20 ms from kernel 
+@21.008 [ 18247.879] keyboard: 1148 us of machine code (event 1)
+@21.008 [ 18249.285] display: 517 us of machine code (event 4)
+@21.019 [ 18256.627] display: 108 us of machine code (event 4)
+@21.019 [ 18257.333] display: 99 us of machine code (event 4)
+@21.019 [ 18268.535] display: 1937 us of machine code (event 4)
+@21.031 [ 18269.994] keyboard: 663 us of machine code (event 4)
+@21.031 [ 18276.847] keyboard <- every 20 ms from kernel 
+@21.042 [ 18277.983] keyboard: 558 us of machine code (event 1)
+@21.042 [ 18286.985] agent <- every 100 ms from kernel 
+@21.053 [ 18288.953] agent: 1355 us of machine code (event 1)
+@21.053 [ 18298.968] keyboard: 1485 us of machine code (event 4)
+@21.053 [ 18299.798] keyboard <- every 20 ms from kernel 
+@21.064 [ 18308.111] keyboard: 897 us of machine code (event 1)
+@21.064 [ 18310.169] compositor: 1256 us of machine code (event 4)
+@21.075 [ 18318.093] keyboard: 389 us of machine code (event 4)
+@21.075 [ 18318.776] keyboard <- every 20 ms from kernel 
+@21.086 [ 18319.836] keyboard: 520 us of machine code (event 1)
+@21.086 [ 18328.165] agent <- every 100 ms from kernel 
+@21.086 [ 18328.780] agent: 95 us of machine code (event 1)
+@21.097 [ 18338.791] keyboard: 440 us of machine code (event 4)
+@21.097 [ 18339.445] keyboard <- every 20 ms from kernel 
+@21.108 [ 18348.710] keyboard: 366 us of machine code (event 1)
+@21.108 [ 18349.433] files <- start from kernel 
+@21.119 [ 18359.046] files: 605 us of machine code (event 2, start)
+@21.119 [ 18360.427] keyboard: 600 us of machine code (event 4)
+@21.119 [ 18368.794] keyboard <- every 20 ms from kernel 
+@21.131 [ 18369.985] keyboard: 625 us of machine code (event 1)
+@21.131 [ 18370.808] editor <- start from kernel 
+@21.142 [ 18379.530] editor: 303 us of machine code (event 2, start)
+@21.142 [ 18381.251] keyboard: 799 us of machine code (event 4)
+@21.142 [ 18389.502] keyboard <- every 20 ms from kernel 
+@21.153 [ 18390.510] keyboard: 470 us of machine code (event 1)
+@21.164 [ 18399.694] compositor <- frames from editor {"app":"editor","title":"Editor","frame":{"tree":{"t":"col","gap":8,"kids":[{"t":"text","s":"No file open.","font":"m"},
+@21.175 [ 18412.360] compositor: 2013 us of machine code (event 0, frames)
+@21.175 [ 18420.715] keyboard: 469 us of machine code (event 4)
+@21.186 [ 18421.391] keyboard <- every 20 ms from kernel 
+@21.186 [ 18430.853] keyboard: 611 us of machine code (event 1)
+@21.186 [ 18431.631] agent <- every 100 ms from kernel 
+@21.197 [ 18440.532] agent: 114 us of machine code (event 1)
+@21.197 [ 18441.652] keyboard: 477 us of machine code (event 4)
+@21.208 [ 18450.603] keyboard <- every 20 ms from kernel 
+@21.208 [ 18451.460] keyboard: 320 us of machine code (event 1)
+@21.208 [ 18452.176] calc <- start from kernel 
+@21.219 [ 18469.352] keyboard: 1942 us of machine code (event 4)
+@21.219 [ 18470.745] keyboard <- every 20 ms from kernel 
+@21.231 [ 18472.398] keyboard: 1045 us of machine code (event 1)
+@21.242 [ 18473.221] compositor <- frames from calc {"app":"calc","title":"Calc","frame":{"tree":{"t":"col","gap":4,"kids":[{"t":"text","s":"Type an expression and press En
+@21.253 [ 18494.174] compositor: 2546 us of machine code (event 0, frames)
+@21.253 [ 18495.681] keyboard: 564 us of machine code (event 4)
+@21.253 [ 18501.991] keyboard <- every 20 ms from kernel 
+@21.264 [ 18503.160] keyboard: 616 us of machine code (event 1)
+@21.264 [ 18512.170] compositor <- every 500 ms from kernel 
+@21.275 [ 18513.031] compositor: 288 us of machine code (event 1)
+@21.275 [ 18522.945] keyboard: 550 us of machine code (event 4)
+@21.286 [ 18523.629] keyboard <- every 20 ms from kernel 
+@21.286 [ 18524.509] keyboard: 360 us of machine code (event 1)
+@21.286 [ 18533.006] agent <- every 100 ms from kernel 
+@21.297 [ 18533.695] agent: 109 us of machine code (event 1)
+@21.297 #OK trace
+@21.297 [ 18544.267] keyboard: 621 us of machine code (event 4)
+@21.308 [ 18544.953] keyboard <- every 20 ms from kernel 
+@21.308 [ 18553.725] keyboard: 434 us of machine code (event 1)
+@21.319 [ 18554.481] agenda <- start from kernel 
+@21.319 [ 18565.348] agenda: 1944 us of machine code (event 2, start)
+@21.331 [ 18567.433] keyboard: 1201 us of machine code (event 4)
+@21.331 [ 18573.870] keyboard <- every 20 ms from kernel 
+@21.331 [ 18575.902] keyboard: 1411 us of machine code (event 1)
+@21.342 [ 18583.922] settings <- start from kernel 
+@21.342 [ 18588.230] settings: 3760 us of machine code (event 2, start)
+@21.353 [ 18596.226] keyboard: 1494 us of machine code (event 4)
+@21.353 [ 18597.071] keyboard <- every 20 ms from kernel 
+@21.364 [ 18598.638] keyboard: 1027 us of machine code (event 1)
+@21.375 [ 18604.734] compositor <- frames from settings {"app":"settings","title":"Settings","frame":{"tree":{"t":"col","gap":6,"kids":[{"t":"list","items":[{"label":"Wi-Fi","r
+@21.375 [ 18617.906] compositor: 2484 us of machine code (event 0, frames)
+@21.386 [ 18626.013] keyboard: 639 us of machine code (event 4)
+@21.386 [ 18626.723] keyboard <- every 20 ms from kernel 
+@21.397 [ 18635.877] keyboard: 554 us of machine code (event 1)
+@21.397 [ 18636.676] agent <- every 100 ms from kernel 
+@21.397 [ 18645.632] agent: 148 us of machine code (event 1)
+@21.408 [ 18646.835] keyboard: 547 us of machine code (event 4)
+@21.408 [ 18655.677] keyboard <- every 20 ms from kernel 
+@21.419 [ 18656.659] keyboard: 431 us of machine code (event 1)
+@21.419 [ 18665.847] loader <- start from kernel 
+@21.431 [ 18676.850] keyboard: 2166 us of machine code (event 4)
+@21.431 [ 18678.238] keyboard <- every 20 ms from kernel 
+@21.431 [ 18679.900] keyboard: 1088 us of machine code (event 1)
+@21.453 [ 18682.464] compositor <- frames from loader {"app":"loader","title":"Loader","frame":{"tree":{"t":"col","gap":6,"kids":[{"t":"col","grow":1,"kids":[{"t":"text","s":
+@21.453 [ 18695.771] compositor: 2757 us of machine code (event 0, frames)
+@21.464 [ 18703.568] keyboard: 699 us of machine code (event 4)
+@21.464 [ 18704.246] keyboard <- every 20 ms from kernel 
+@21.475 [ 18713.645] keyboard: 799 us of machine code (event 1)
+@21.475 [ 18714.489] agent <- every 100 ms from kernel 
+@21.475 [ 18723.151] agent: 125 us of machine code (event 1)
+@21.486 [ 18724.265] keyboard: 460 us of machine code (event 4)
+@21.486 [ 18733.217] keyboard <- every 20 ms from kernel 
+@21.497 [ 18734.127] keyboard: 372 us of machine code (event 1)
+@21.497 [ 18734.853] sysmon <- start from kernel 
+@21.497 [ 18750.064] keyboard: 1768 us of machine code (event 4)
+@21.508 [ 18751.212] keyboard <- every 20 ms from kernel 
+@21.508 [ 18754.835] keyboard: 941 us of machine code (event 1)
+@21.519 [ 18755.656] compositor <- frames from sysmon {"app":"sysmon","title":"System","frame":{"tree":{"t":"text","s":""},"hints":"â†‘â†“ world  â†â†’ tab"}}
+@21.531 [ 18775.304] compositor: 1173 us of machine code (event 0, frames)
+@21.531 [ 18776.711] keyboard: 579 us of machine code (event 4)
+@21.541 [ 18784.484] keyboard <- every 20 ms from kernel 
+@21.541 [ 18785.491] keyboard: 466 us of machine code (event 1)
+@21.553 [ 18794.657] snake <- start from kernel 
+@21.553 [ 18796.706] snake: 1595 us of machine code (event 2, start)
+@21.564 [ 18797.649] compositor <- frames from snake {"app":"snake","title":"Snake","frame":{"tree":{"t":"snake","v":1,"body":[182,181,180,179],"food":40,"score":0,"best":0,
+@21.575 [ 18817.635] compositor: 2220 us of machine code (event 0, frames)
+@21.575 [ 18819.275] keyboard: 658 us of machine code (event 4)
+@21.586 [ 18825.755] keyboard <- every 20 ms from kernel 
+@21.586 [ 18827.119] keyboard: 821 us of machine code (event 1)
+@21.597 [ 18835.914] agent <- every 100 ms from kernel 
+@21.597 [ 18836.611] agent: 134 us of machine code (event 1)
+@21.597 [ 18846.696] keyboard: 613 us of machine code (event 4)
+@21.608 [ 18847.382] keyboard <- every 20 ms from kernel 
+@21.608 [ 18856.506] keyboard: 429 us of machine code (event 1)
+@21.619 [ 18857.239] snake <- every 110 ms from kernel 
+@21.619 [ 18858.886] snake: 1136 us of machine code (event 1)
+@21.630 [ 18867.545] keyboard: 659 us of machine code (event 4)
+@21.630 [ 18868.224] keyboard <- every 20 ms from kernel 
+@21.630 [ 18877.448] keyboard: 589 us of machine code (event 1)
+@21.642 [ 18878.230] chess <- start from kernel 
+@21.642 [ 18890.037] chess: 2832 us of machine code (event 2, start)
+@21.653 [ 18894.030] keyboard: 2084 us of machine code (event 4)
+@21.653 [ 18897.317] keyboard <- every 20 ms from kernel 
+@21.664 [ 18898.974] keyboard: 1097 us of machine code (event 1)
+@21.664 [ 18907.479] compositor <- painter.source from chess 
+@21.664 [ 18911.356] compositor <- painter.frame from chess 
+@21.675 [ 18920.904] keyboard: 2158 us of machine code (event 4)
+@21.675 [ 18922.110] keyboard <- every 20 ms from kernel 
+@21.686 [ 18929.025] keyboard: 1272 us of machine code (event 1)
+@21.686 [ 18930.161] agent <- every 100 ms from kernel 
+@21.697 [ 18930.795] agent: 125 us of machine code (event 1)
+@21.697 [ 18939.489] keyboard: 963 us of machine code (event 4)
+@21.697 [ 18940.159] keyboard <- every 20 ms from kernel 
+@21.708 [ 18948.906] keyboard: 440 us of machine code (event 1)
+@21.708 [ 18949.653] gallery <- start from kernel 
+@21.719 [ 18963.673] keyboard: 1432 us of machine code (event 4)
+@21.719 [ 18964.707] keyboard <- every 20 ms from kernel 
+@21.719 [ 18969.544] keyboard: 796 us of machine code (event 1)
+@21.730 [ 18970.443] compositor <- open from gallery {"app":"gallery"}
+@21.730 [ 18982.751] compositor: 3514 us of machine code (event 0, open)
+@21.742 [ 18985.922] keyboard: 1360 us of machine code (event 4)
+@21.742 [ 18989.417] keyboard <- every 20 ms from kernel 
+@21.753 [ 18991.474] keyboard: 1452 us of machine code (event 1)
+@21.764 [ 18999.602] compositor <- frames from gallery {"app":"gallery","title":"Candela","frame":{"tree":{"t":"gallery","seq":0,"skip":0},"hints":"Left/Right scene  F1 home"}
+@21.775 [ 19011.681] compositor: 1439 us of machine code (event 0, frames)
+@21.775 [ 19020.810] keyboard: 680 us of machine code (event 4)
+@21.775 [ 19021.505] keyboard <- every 20 ms from kernel 
+@21.786 [ 19022.622] keyboard: 587 us of machine code (event 1)
+@21.786 [ 19030.672] compositor <- every 500 ms from kernel 
+@21.797 [ 19031.432] compositor: 200 us of machine code (event 1)
+@21.797 [ 19041.479] keyboard: 557 us of machine code (event 4)
+@21.808 [ 19042.137] keyboard <- every 20 ms from kernel 
+@21.808 [ 19051.455] keyboard: 487 us of machine code (event 1)
+@21.808 #OK trace
+@21.809 [ 19052.755] compositor <- draw from compositor 
+@21.829 [ 19084.644] compositor: 23387 us of machine code (event 0, draw)
+@21.829 [ 19087.759] keyboard: 1120 us of machine code (event 4)
+@21.840 [ 19088.540] keyboard <- every 20 ms from kernel 
+@21.840 [ 19089.859] keyboard: 767 us of machine code (event 1)
+@21.851 [ 19090.691] display <- flush (ask) from compositor {"rects":[[0,0,320,302],[8,307,239,11]]}
+@21.862 [ 19103.229] display: 2509 us of machine code (event 0, flush)
+@21.862 [ 19105.297] keyboard: 875 us of machine code (event 4)
+@21.862 [ 19111.501] keyboard <- every 20 ms from kernel 
+@21.873 [ 19113.889] keyboard: 1658 us of machine code (event 1)
+@21.873 [ 19122.797] display: 1235 us of machine code (event 4)
+@21.884 [ 19123.784] display: 104 us of machine code (event 4)
+@21.884 [ 19131.705] display: 254 us of machine code (event 4)
+@21.896 [ 19133.461] keyboard: 969 us of machine code (event 4)
+@21.896 [ 19134.425] keyboard <- every 20 ms from kernel 
+@21.896 [ 19143.157] keyboard: 1194 us of machine code (event 1)
+@21.907 [ 19144.062] agent <- every 100 ms from kernel 
+@21.907 [ 19152.192] agent: 160 us of machine code (event 1)
+@21.918 [ 19153.443] display: 404 us of machine code (event 4)
+@21.918 [ 19162.306] display: 96 us of machine code (event 4)
+@21.929 [ 19162.992] display: 87 us of machine code (event 4)
+@21.929 [ 19172.474] display: 85 us of machine code (event 4)
+@21.929 [ 19175.091] display: 2014 us of machine code (event 4)
+@21.940 [ 19183.406] keyboard: 702 us of machine code (event 4)
+@21.940 [ 19184.085] keyboard <- every 20 ms from kernel 
+@21.951 [ 19193.829] keyboard: 1058 us of machine code (event 1)
+@21.951 [ 19196.356] compositor: 1416 us of machine code (event 4)
+@21.962 [ 19205.492] keyboard: 1840 us of machine code (event 4)
+@21.962 [ 19206.663] keyboard <- every 20 ms from kernel 
+@21.973 [ 19208.289] keyboard: 1060 us of machine code (event 1)
+@21.973 [ 19214.049] agent <- every 100 ms from kernel 
+@21.973 [ 19215.496] agent: 494 us of machine code (event 1)
+@21.984 [ 19226.519] keyboard: 2053 us of machine code (event 4)
+@21.984 [ 19227.741] keyboard <- every 20 ms from kernel 
+@21.996 [ 19235.666] keyboard: 1558 us of machine code (event 1)
+@22.007 [ 19237.191] chat <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@22.007 [ 19262.606] keyboard: 2149 us of machine code (event 4)
+@22.018 [ 19263.999] keyboard <- every 20 ms from kernel 
+@22.018 [ 19265.731] keyboard: 1123 us of machine code (event 1)
+@22.040 [ 19266.637] faults <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@22.040 [ 19294.063] keyboard: 2157 us of machine code (event 4)
+@22.040 [ 19295.493] keyboard <- every 20 ms from kernel 
+@22.051 [ 19297.137] keyboard: 1079 us of machine code (event 1)
+@22.062 [ 19298.001] compositor <- frames from faults {"app":"faults","title":"Faults","frame":{"tree":{"t":"col","gap":6,"kids":[{"t":"list","items":[{"label":"Loop forever 
+@22.073 [ 19311.177] compositor: 5540 us of machine code (event 0, frames)
+@22.073 [ 19317.061] keyboard: 1274 us of machine code (event 4)
+@22.084 [ 19325.494] keyboard <- every 20 ms from kernel 
+@22.084 [ 19328.192] keyboard: 1809 us of machine code (event 1)
+@22.084 [ 19329.090] agent <- every 100 ms from kernel 
+@22.096 [ 19336.400] agent: 762 us of machine code (event 1)
+@22.096 [ 19339.056] keyboard: 1434 us of machine code (event 4)
+@22.107 [ 19346.131] keyboard <- every 20 ms from kernel 
+@22.107 [ 19348.546] keyboard: 1633 us of machine code (event 1)
+@22.107 [ 19356.359] nat-dial <- start from kernel 
+@22.118 [ 19358.402] nat-dial: 1016 us of machine code (event 2, start)
+@22.118 [ 19369.461] keyboard: 2177 us of machine code (event 4)
+@22.129 [ 19370.747] keyboard <- every 20 ms from kernel 
+@22.129 [ 19377.376] keyboard: 1220 us of machine code (event 1)
+@22.141 [ 19378.338] compositor <- frames from nat-dial {"app":"nat-dial","title":"Dial","frame":{"tree":{"t":"col","gap":8,"kids":[{"t":"row","kids":[{"t":"text","s":"Level","
+@22.154 [ 19410.111] compositor: 13332 us of machine code (event 0, frames)
+@22.154 [ 19413.607] keyboard: 1428 us of machine code (event 4)
+@22.166 [ 19414.407] keyboard <- every 20 ms from kernel 
+@22.166 [ 19415.994] keyboard: 1031 us of machine code (event 1)
+@22.176 [ 19416.808] agent <- every 100 ms from kernel 
+@22.176 [ 19417.576] agent: 145 us of machine code (event 1)
+@22.188 [ 19429.076] keyboard: 1967 us of machine code (event 4)
+@22.188 [ 19430.257] keyboard <- every 20 ms from kernel 
+@22.188 [ 19438.225] keyboard: 1493 us of machine code (event 1)
+@22.210 [ 19439.663] chat <- agent.state from agent {"run":0,"phase":"idle","model":"gpt-6-luna","entries":[{"role":"system","text":"Ask a question. I can calculate and kee
+@22.210 [ 19467.455] keyboard: 2158 us of machine code (event 4)
+@22.221 [ 19468.885] keyboard <- every 20 ms from kernel 
+@22.221 [ 19471.037] keyboard: 1538 us of machine code (event 1)
+@22.232 [ 19472.063] compositor <- frames from chat {"app":"chat","title":"Agent","frame":{"tree":{"t":"col","gap":4,"kids":[{"t":"text","s":"Ready | gpt-6-luna","font":"s"
+@22.243 [ 19482.604] compositor: 3813 us of machine code (event 0, frames)
+@22.243 [ 19490.362] keyboard: 1426 us of machine code (event 4)
+@22.254 [ 19491.439] keyboard <- every 20 ms from kernel 
+@22.254 [ 19500.097] keyboard: 1387 us of machine code (event 1)
+@22.266 [ 19501.589] compositor <- every 500 ms from kernel 
+@22.266 [ 19510.028] compositor: 1013 us of machine code (event 1)
+@22.277 [ 19513.055] keyboard: 1455 us of machine code (event 4)
+@22.277 [ 19519.446] keyboard <- every 20 ms from kernel 
+@22.277 [ 19521.967] keyboard: 1646 us of machine code (event 1)
+@22.288 [ 19529.779] agent <- every 100 ms from kernel 
+@22.288 [ 19531.892] agent: 883 us of machine code (event 1)
+@22.288 #OK trace
+@22.299 [ 19542.723] keyboard: 2059 us of machine code (event 4)
+@22.299 [ 19543.757] keyboard <- every 20 ms from kernel 
+@22.310 [ 19550.969] keyboard: 1400 us of machine code (event 1)
+@22.310 [ 19552.360] logs <- every 500 ms from kernel 
+@22.321 [ 19557.839] compositor <- frames from logs {"app":"logs","title":"Logs","frame":{"tree":{"t":"col","gap":4,"kids":[{"t":"lines","items":[{"s":"Nothing logged yet."
+@22.332 [ 19576.155] compositor: 5550 us of machine code (event 0, frames)
+@22.332 [ 19579.507] keyboard: 1355 us of machine code (event 4)
+@22.343 [ 19580.730] keyboard <- every 20 ms from kernel 
+@22.343 [ 19582.358] keyboard: 1057 us of machine code (event 1)
+@22.354 [ 19590.956] chat <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@22.366 [ 19609.274] keyboard: 2034 us of machine code (event 4)
+@22.366 [ 19611.399] keyboard <- every 20 ms from kernel 
+@22.377 [ 19613.057] keyboard: 1073 us of machine code (event 1)
+@22.377 [ 19621.683] agent <- every 100 ms from kernel 
+@22.388 [ 19622.969] agent: 542 us of machine code (event 1)
+@22.388 [ 19633.669] keyboard: 1744 us of machine code (event 4)
+@22.388 [ 19634.679] keyboard <- every 20 ms from kernel 
+@22.399 [ 19642.953] keyboard: 1292 us of machine code (event 1)
+@22.410 [ 19644.290] faults <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@22.421 [ 19661.652] keyboard: 2128 us of machine code (event 4)
+@22.421 [ 19663.071] keyboard <- every 20 ms from kernel 
+@22.421 [ 19664.730] keyboard: 1082 us of machine code (event 1)
+@22.443 [ 19673.161] compositor <- frames from faults {"app":"faults","title":"Faults","frame":{"tree":{"t":"col","gap":6,"kids":[{"t":"list","items":[{"label":"Loop forever 
+@22.443 [ 19689.700] compositor: 6076 us of machine code (event 0, frames)
+@22.454 [ 19694.812] keyboard: 1138 us of machine code (event 4)
+@22.454 [ 19695.733] keyboard <- every 20 ms from kernel 
+@22.465 [ 19704.800] keyboard: 1353 us of machine code (event 1)
+@22.465 [ 19706.114] gallery <- every 250 ms from kernel 
+@22.465 [ 19718.774] keyboard: 2061 us of machine code (event 4)
+@22.477 [ 19720.037] keyboard <- every 20 ms from kernel 
+@22.477 [ 19724.877] keyboard: 1190 us of machine code (event 1)
+@22.488 [ 19726.004] agent <- every 100 ms from kernel 
+@22.488 [ 19734.838] agent: 835 us of machine code (event 1)
+@22.499 [ 19737.823] keyboard: 1522 us of machine code (event 4)
+@22.499 [ 19738.614] keyboard <- every 20 ms from kernel 
+@22.499 [ 19746.308] keyboard: 1634 us of machine code (event 1)
+@22.521 [ 19747.871] compositor <- frames from gallery {"app":"gallery","title":"Candela","frame":{"tree":{"t":"gallery","seq":1,"skip":0},"hints":"Left/Right scene  F1 home"}
+@22.521 [ 19768.192] compositor: 2914 us of machine code (event 0, frames)
+@22.532 [ 19770.999] keyboard: 1034 us of machine code (event 4)
+@22.532 [ 19775.262] keyboard <- every 20 ms from kernel 
+@22.537 [ 19776.826] keyboard: 994 us of machine code (event 1)
+@22.537 [ 19785.363] compositor <- draw from compositor 
+@22.558 [ 19813.709] compositor: 27661 us of machine code (event 0, draw)
+@22.558 [ 19816.872] keyboard: 1139 us of machine code (event 4)
+@22.569 [ 19817.668] keyboard <- every 20 ms from kernel 
+@22.569 [ 19818.969] keyboard: 750 us of machine code (event 1)
+@22.580 [ 19819.704] display <- flush (ask) from compositor {"rects":[[0,0,320,302]]}
+@22.580 [ 19823.245] display: 2601 us of machine code (event 0, flush)
+@22.591 [ 19831.771] keyboard: 1083 us of machine code (event 4)
+@22.591 [ 19840.538] keyboard <- every 20 ms from kernel 
+@22.602 [ 19843.293] keyboard: 1838 us of machine code (event 1)
+@22.602 [ 19845.019] display: 688 us of machine code (event 4)
+@22.614 [ 19851.195] display: 434 us of machine code (event 4)
+@22.614 [ 19852.085] display: 90 us of machine code (event 4)
+@22.614 [ 19862.546] keyboard: 1495 us of machine code (event 4)
+@22.625 [ 19863.621] keyboard <- every 20 ms from kernel 
+@22.625 [ 19871.897] keyboard: 1064 us of machine code (event 1)
+@22.636 [ 19874.861] display: 1870 us of machine code (event 4)
+@22.636 [ 19881.851] keyboard: 572 us of machine code (event 4)
+@22.647 [ 19882.543] keyboard <- every 20 ms from kernel 
+@22.647 [ 19891.723] keyboard: 546 us of machine code (event 1)
+@22.647 [ 19892.503] agent <- every 100 ms from kernel 
+@22.658 [ 19901.487] agent: 142 us of machine code (event 1)
+@22.658 [ 19902.637] keyboard: 499 us of machine code (event 4)
+@22.669 [ 19911.567] keyboard <- every 20 ms from kernel 
+@22.669 [ 19913.063] keyboard: 938 us of machine code (event 1)
+@22.680 [ 19918.222] compositor: 4027 us of machine code (event 4)
+@22.680 [ 19924.246] keyboard: 1347 us of machine code (event 4)
+@22.680 [ 19925.098] agent <- every 100 ms from kernel 
+@22.691 [ 19932.660] agent: 311 us of machine code (event 1)
+@22.691 [ 19933.336] keyboard <- every 20 ms from kernel 
+@22.702 [ 19943.329] keyboard: 895 us of machine code (event 1)
+@22.702 [ 19944.215] sysmon <- every 500 ms from kernel 
+@22.714 [ 19960.155] keyboard: 1948 us of machine code (event 4)
+@22.714 [ 19961.377] keyboard <- every 20 ms from kernel 
+@22.714 [ 19963.819] keyboard: 1025 us of machine code (event 1)
+@22.736 [ 19964.772] chat <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@22.736 [ 19981.040] keyboard: 1907 us of machine code (event 4)
+@22.747 [ 19983.866] keyboard <- every 20 ms from kernel 
+@22.747 [ 19985.464] keyboard: 1036 us of machine code (event 1)
+@22.747 [ 19993.939] compositor <- every 500 ms from kernel 
+@22.758 [ 19994.773] compositor: 194 us of machine code (event 1)
+@22.758 [ 20004.879] keyboard: 655 us of machine code (event 4)
+@22.769 [ 20005.557] keyboard <- every 20 ms from kernel 
+@22.769 [ 20014.551] keyboard: 375 us of machine code (event 1)
+@22.780 [ 20015.308] agent <- every 100 ms from kernel 
+@22.780 [ 20024.474] agent: 125 us of machine code (event 1)
+@22.780 [ 20025.574] keyboard: 451 us of machine code (event 4)
+@22.791 [ 20034.548] keyboard <- every 20 ms from kernel 
+@22.791 [ 20035.426] keyboard: 339 us of machine code (event 1)
+@22.791 #OK trace
+@22.814 [ 20045.259] faults <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@22.814 [ 20063.905] keyboard: 2037 us of machine code (event 4)
+@22.825 [ 20065.343] keyboard <- every 20 ms from kernel 
+@22.825 [ 20066.999] keyboard: 1067 us of machine code (event 1)
+@22.836 [ 20067.832] compositor <- frames from faults {"app":"faults","title":"Faults","frame":{"tree":{"t":"col","gap":6,"kids":[{"t":"list","items":[{"label":"Loop forever 
+@22.847 [ 20091.412] compositor: 5330 us of machine code (event 0, frames)
+@22.847 [ 20093.115] keyboard: 651 us of machine code (event 4)
+@22.858 [ 20096.408] keyboard <- every 20 ms from kernel 
+@22.858 [ 20097.640] keyboard: 683 us of machine code (event 1)
+@22.869 [ 20106.539] settings <- every 1000 ms from kernel 
+@22.869 [ 20110.209] settings: 3051 us of machine code (event 1)
+@22.880 [ 20118.356] keyboard: 1207 us of machine code (event 4)
+@22.880 [ 20119.146] keyboard <- every 20 ms from kernel 
+@22.880 [ 20127.661] keyboard: 825 us of machine code (event 1)
+@22.891 [ 20128.483] agent <- every 100 ms from kernel 
+@22.891 [ 20137.102] agent: 118 us of machine code (event 1)
+@22.902 [ 20138.380] keyboard: 565 us of machine code (event 4)
+@22.902 [ 20147.172] keyboard <- every 20 ms from kernel 
+@22.902 [ 20148.101] keyboard: 381 us of machine code (event 1)
+@22.925 [ 20157.384] chat <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@22.925 [ 20175.590] keyboard: 1892 us of machine code (event 4)
+@22.936 [ 20176.856] keyboard <- every 20 ms from kernel 
+@22.936 [ 20179.201] keyboard: 1034 us of machine code (event 1)
+@22.947 [ 20180.102] faults <- worlds.status from kernel {"world":"nat-import","state":"crashed","why":"it links to path_open, which picocalc-os does not give a module","restart
+@22.958 [ 20206.738] keyboard: 2022 us of machine code (event 4)
+@22.958 [ 20208.066] keyboard <- every 20 ms from kernel 
+@22.969 [ 20209.858] keyboard: 1082 us of machine code (event 1)
+@22.980 [ 20210.802] compositor <- frames from faults {"app":"faults","title":"Faults","frame":{"tree":{"t":"col","gap":6,"kids":[{"t":"list","items":[{"label":"Loop forever 
+@22.991 [ 20238.032] compositor: 8647 us of machine code (event 0, frames)
+@22.991 [ 20241.451] keyboard: 1401 us of machine code (event 4)
+@22.991 [ 20242.278] keyboard <- every 20 ms from kernel 
+@23.002 [ 20243.832] keyboard: 997 us of machine code (event 1)
+@23.002 [ 20247.899] agent <- every 100 ms from kernel 
+@23.014 [ 20248.725] agent: 208 us of machine code (event 1)
+@23.014 [ 20258.761] keyboard: 662 us of machine code (event 4)
+@23.014 [ 20259.447] keyboard <- every 20 ms from kernel 
+@23.025 [ 20268.533] keyboard: 468 us of machine code (event 1)
+@23.025 [ 20269.265] keys <- every 1000 ms from kernel 
+@23.036 [ 20284.136] keyboard: 1631 us of machine code (event 4)
+@23.036 [ 20285.277] keyboard <- every 20 ms from kernel 
+@23.047 [ 20286.790] keyboard: 953 us of machine code (event 1)
+@23.058 [ 20288.940] compositor <- frames from keys {"app":"keys","title":"Keys","frame":{"tree":{"t":"text","s":""},"hints":"what the driver reads, newest first"}}
+@23.058 [ 20303.797] compositor: 3996 us of machine code (event 0, frames)
+@23.069 [ 20311.637] keyboard: 1678 us of machine code (event 4)
+@23.069 [ 20312.538] keyboard <- every 20 ms from kernel 
+@23.080 [ 20320.463] keyboard: 1016 us of machine code (event 1)
+@23.080 [ 20321.399] agent <- every 100 ms from kernel 
+@23.080 [ 20329.782] agent: 139 us of machine code (event 1)
+@23.091 [ 20331.066] keyboard: 569 us of machine code (event 4)
+@23.091 [ 20339.787] keyboard <- every 20 ms from kernel 
+@23.102 [ 20341.401] keyboard: 1056 us of machine code (event 1)
+@23.102 [ 20350.027] about <- every 1000 ms from kernel 
+@23.113 [ 20353.548] compositor <- frames from about {"app":"about","title":"About","frame":{"tree":{"t":"text","s":""},"hints":""}}
+@23.125 [ 20362.586] compositor: 1766 us of machine code (event 0, frames)
+@23.125 [ 20371.582] keyboard: 972 us of machine code (event 4)
+@23.136 [ 20372.263] keyboard <- every 20 ms from kernel 
+@23.136 [ 20381.493] keyboard: 871 us of machine code (event 1)
+@23.136 [ 20382.303] nat-dial <- every 1000 ms from kernel 
+@23.147 [ 20383.756] nat-dial: 910 us of machine code (event 1)
+@23.147 [ 20392.442] keyboard: 756 us of machine code (event 4)
+@23.158 [ 20393.137] keyboard <- every 20 ms from kernel 
+@23.158 [ 20401.901] keyboard: 451 us of machine code (event 1)
+@23.169 [ 20402.635] compositor <- frames from nat-dial {"app":"nat-dial","title":"Dial","frame":{"tree":{"t":"col","gap":8,"kids":[{"t":"row","kids":[{"t":"text","s":"Level","
+@23.180 [ 20435.255] compositor: 13154 us of machine code (event 0, frames)
+@23.180 [ 20438.864] keyboard: 1469 us of machine code (event 4)
+@23.191 [ 20439.704] keyboard <- every 20 ms from kernel 
+@23.191 [ 20441.285] keyboard: 1027 us of machine code (event 1)
+@23.202 [ 20441.994] power <- every 5000 ms from kernel 
+@23.202 [ 20442.917] power: 300 us of machine code (event 1)
+@23.214 [ 20452.935] keyboard: 847 us of machine code (event 4)
+@23.214 [ 20453.626] keyboard <- every 20 ms from kernel 
+@23.214 [ 20462.374] keyboard: 392 us of machine code (event 1)
+@23.225 [ 20463.689] power: 590 us of machine code (event 4)
+@23.225 [ 20472.569] keyboard: 264 us of machine code (event 4)
+@23.236 [ 20473.273] keyboard <- every 20 ms from kernel 
+@23.236 [ 20474.185] keyboard: 384 us of machine code (event 1)
+@23.247 [ 20482.873] agent <- every 100 ms from kernel 
+@23.247 [ 20483.527] agent: 133 us of machine code (event 1)
+@23.247 [ 20493.538] keyboard: 474 us of machine code (event 4)
+@23.258 [ 20494.192] keyboard <- every 20 ms from kernel 
+@23.258 [ 20503.452] keyboard: 384 us of machine code (event 1)
+@23.269 [ 20504.174] compositor <- every 500 ms from kernel 
+@23.269 [ 20513.510] compositor: 228 us of machine code (event 1)
+@23.280 [ 20514.712] keyboard: 468 us of machine code (event 4)
+@23.280 [ 20523.530] keyboard <- every 20 ms from kernel 
+@23.280 [ 20524.417] keyboard: 348 us of machine code (event 1)
+@23.291 [ 20533.703] agent <- every 100 ms from kernel 
+@23.291 [ 20534.310] agent: 83 us of machine code (event 1)
+@23.302 [ 20534.929] chat <- agent.state from agent {"run":0,"phase":"idle","model":"gpt-6-luna","entries":[{"role":"system","text":"Ask a question. I can calculate and kee
+@23.314 #OK trace
+@23.314 [ 20564.952] keyboard: 2068 us of machine code (event 4)
+@23.314 [ 20566.087] keyboard <- every 20 ms from kernel 
+@23.325 [ 20567.730] keyboard: 1074 us of machine code (event 1)
+@23.325 [ 20570.310] launcher <- every 2000 ms from kernel 
+@23.336 [ 20585.837] keyboard: 2146 us of machine code (event 4)
+@23.336 [ 20587.251] keyboard <- every 20 ms from kernel 
+@23.347 [ 20588.928] keyboard: 1083 us of machine code (event 1)
+@23.352 [ 20589.632] compositor <- frames from launcher {"app":"launcher","title":"PicoCalc","frame":{"tree":{"t":"col","gap":6,"kids":[{"t":"row","kids":[{"t":"text","s":"Apps
+@23.393 [ 20649.003] compositor: 48646 us of machine code (event 0, frames)
+@23.393 [ 20652.577] keyboard: 1462 us of machine code (event 4)
+@23.404 [ 20653.425] keyboard <- every 20 ms from kernel 
+@23.404 [ 20655.004] keyboard: 1032 us of machine code (event 1)
+@23.415 [ 20655.920] agent <- every 100 ms from kernel 
+@23.415 [ 20656.618] agent: 140 us of machine code (event 1)
+@23.426 [ 20666.063] keyboard: 625 us of machine code (event 4)
+@23.438 [ 20666.749] chat <- worlds.status from kernel {"world":"nat-import","state":"stopped","why":"it links to path_open, which picocalc-os does not give a module","restart
+@23.438 [ 20691.186] keyboard <- every 20 ms from kernel 
+@23.449 [ 20693.862] keyboard: 1689 us of machine code (event 1)
+@23.460 [ 20695.879] faults <- worlds.status from kernel {"world":"nat-import","state":"stopped","why":"it links to path_open, which picocalc-os does not give a module","restart
+@23.471 [ 20714.439] keyboard: 2051 us of machine code (event 4)
+@23.471 [ 20715.788] keyboard <- every 20 ms from kernel 
+@23.471 [ 20717.747] keyboard: 1052 us of machine code (event 1)
+@23.482 [ 20718.599] agent <- every 100 ms from kernel 
+@23.482 [ 20726.990] agent: 135 us of machine code (event 1)
+@23.493 [ 20728.269] keyboard: 603 us of machine code (event 4)
+@23.493 [ 20737.045] keyboard <- every 20 ms from kernel 
+@23.493 [ 20737.893] keyboard: 308 us of machine code (event 1)
+@23.516 [ 20747.159] compositor <- frames from faults {"app":"faults","title":"Faults","frame":{"tree":{"t":"col","gap":6,"kids":[{"t":"list","items":[{"label":"Loop forever 
+@23.516 [ 20763.878] compositor: 5966 us of machine code (event 0, frames)
+@23.527 [ 20768.484] keyboard: 677 us of machine code (event 4)
+@23.527 [ 20769.163] keyboard <- every 20 ms from kernel 
+@23.538 [ 20778.517] keyboard: 757 us of machine code (event 1)
+@23.538 [ 20779.692] files: 331 us of machine code (event 4)
+@23.538 [ 20788.812] keyboard: 717 us of machine code (event 4)
+@23.549 [ 20789.497] keyboard <- every 20 ms from kernel 
+@23.549 [ 20790.478] keyboard: 449 us of machine code (event 1)
+@23.560 [ 20799.255] agenda: 541 us of machine code (event 4)
+@23.571 [ 20800.066] compositor <- frames from agenda {"app":"agenda","title":"Agenda","frame":{"tree":{"t":"col","gap":4,"kids":[{"t":"text","s":"No tasks. F2 adds one, like
+@23.582 [ 20821.559] compositor: 2571 us of machine code (event 0, frames)
+@23.582 [ 20823.062] keyboard: 591 us of machine code (event 4)
+@23.582 [ 20829.320] keyboard <- every 20 ms from kernel 
+@23.593 [ 20831.141] keyboard: 1259 us of machine code (event 1)
+@23.593 [ 20839.563] agent <- every 100 ms from kernel 
+@23.604 [ 20840.305] agent: 136 us of machine code (event 1)
+@23.604 [ 20850.434] keyboard: 752 us of machine code (event 4)
+@23.610 [ 20851.120] keyboard <- every 20 ms from kernel 
+@23.610 [ 20860.047] keyboard: 356 us of machine code (event 1)
+@23.625 [ 20881.060] keyboard: 2136 us of machine code (event 4)
+@23.625 [ 20882.527] keyboard <- every 20 ms from kernel 
+@23.636 [ 20884.210] keyboard: 1091 us of machine code (event 1)
+@23.636 [ 20885.096] snake <- every 110 ms from kernel 
+@23.648 [ 20887.867] snake: 2149 us of machine code (event 1)
+@23.648 [ 20891.150] launcher <- blur from compositor 
+@23.648 [ 20901.573] keyboard: 2170 us of machine code (event 4)
+@23.659 [ 20902.914] keyboard <- every 20 ms from kernel 
+@23.659 [ 20904.568] keyboard: 1099 us of machine code (event 1)
+@23.670 [ 20909.135] gallery <- focus from compositor 
+@23.670 [ 20912.185] agent <- every 100 ms from kernel 
+@23.670 [ 20919.674] agent: 684 us of machine code (event 1)
+@23.681 [ 20921.650] keyboard: 1297 us of machine code (event 4)
+@23.681 [ 20929.129] keyboard <- every 20 ms from kernel 
+@23.692 [ 20930.478] keyboard: 794 us of machine code (event 1)
+@23.692 [ 20939.341] gallery <- every 250 ms from kernel 
+@23.703 [ 20941.770] compositor <- frames from gallery {"app":"gallery","title":"Candela","frame":{"tree":{"t":"gallery","seq":2,"skip":0},"hints":"Left/Right scene  F1 home"}
+@23.714 [ 20952.710] compositor: 2169 us of machine code (event 0, frames)
+@23.714 [ 20961.160] keyboard: 785 us of machine code (event 4)
+@23.725 [ 20961.864] keyboard <- every 20 ms from kernel 
+@23.725 [ 20971.128] keyboard: 793 us of machine code (event 1)
+@23.728 [ 20971.968] compositor <- draw from compositor 
+@23.745 [ 21000.271] compositor: 19476 us of machine code (event 0, draw)
+@23.745 [ 21003.440] keyboard: 1216 us of machine code (event 4)
+@23.756 [ 21004.191] keyboard <- every 20 ms from kernel 
+@23.756 [ 21005.626] keyboard: 889 us of machine code (event 1)
+@23.767 [ 21006.313] compositor <- every 500 ms from kernel 
+@23.767 [ 21007.127] compositor: 214 us of machine code (event 1)
+@23.778 [ 21017.228] keyboard: 635 us of machine code (event 4)
+@23.778 [ 21017.900] keyboard <- every 20 ms from kernel 
+@23.778 [ 21026.883] keyboard: 376 us of machine code (event 1)
+@23.789 [ 21027.609] agent <- every 100 ms from kernel 
+@23.789 [ 21036.761] agent: 101 us of machine code (event 1)
+@23.800 [ 21037.943] keyboard: 474 us of machine code (event 4)
+@23.800 [ 21046.862] keyboard <- every 20 ms from kernel 
+@23.811 [ 21047.758] keyboard: 352 us of machine code (event 1)
+@23.811 [ 21048.490] logs <- every 500 ms from kernel 
+@23.811 #OK trace
+@23.811 [ 21064.181] keyboard: 1690 us of machine code (event 4)
+@23.822 [ 21065.171] keyboard <- every 20 ms from kernel 
+@23.822 [ 21068.702] keyboard: 969 us of machine code (event 1)
+@23.834 [ 21069.627] sysmon <- every 500 ms from kernel 
+@23.834 [ 21084.712] keyboard: 1798 us of machine code (event 4)
+@23.845 [ 21085.886] keyboard <- every 20 ms from kernel 
+@23.845 [ 21089.012] keyboard: 987 us of machine code (event 1)
+@23.845 [ 21089.834] nat-dial <- every 1000 ms from kernel 
+@23.856 [ 21099.154] nat-dial: 937 us of machine code (event 1)
+@23.856 [ 21100.913] keyboard: 818 us of machine code (event 4)
+@23.867 [ 21108.395] keyboard <- every 20 ms from kernel 
+@23.867 [ 21109.454] keyboard: 511 us of machine code (event 1)
+@23.878 [ 21118.593] compositor <- frames from nat-dial {"app":"nat-dial","title":"Dial","frame":{"tree":{"t":"col","gap":8,"kids":[{"t":"row","kids":[{"t":"text","s":"Level","
+@23.889 [ 21142.878] compositor: 13349 us of machine code (event 0, frames)
+@23.889 [ 21146.338] keyboard: 1451 us of machine code (event 4)
+@23.900 [ 21147.142] keyboard <- every 20 ms from kernel 
+@23.900 [ 21148.693] keyboard: 999 us of machine code (event 1)
+@23.911 [ 21150.976] agent <- every 100 ms from kernel 
+@23.911 [ 21151.771] agent: 160 us of machine code (event 1)
+@23.922 [ 21161.844] keyboard: 707 us of machine code (event 4)
+@23.922 [ 21162.514] keyboard <- every 20 ms from kernel 
+@23.922 [ 21171.597] keyboard: 476 us of machine code (event 1)
+@23.933 [ 21172.828] files: 488 us of machine code (event 4)
+@23.933 [ 21182.558] keyboard: 904 us of machine code (event 4)
+@23.944 [ 21183.250] keyboard <- every 20 ms from kernel 
+@23.944 [ 21184.399] keyboard: 610 us of machine code (event 1)
+@23.956 [ 21192.039] compositor <- frames from files {"app":"files","title":"Files","frame":{"tree":{"t":"col","gap":4,"kids":[{"t":"row","gap":6,"kids":[{"t":"text","s":"/"
+@23.967 [ 21206.179] compositor: 3489 us of machine code (event 0, frames)
+@23.967 [ 21213.170] keyboard: 541 us of machine code (event 4)
+@23.978 [ 21213.857] keyboard <- every 20 ms from kernel 
+@23.978 [ 21223.128] keyboard: 535 us of machine code (event 1)
+@23.985 [ 21223.888] agent <- every 100 ms from kernel 
+@23.985 [ 21232.863] agent: 125 us of machine code (event 1)
+@23.985 #OK trace
+@24.026 chess/painter cache miss key_us=9478 read_us=2793
+@24.217 typed compiler bytecode: chess/painter/link.js 483 bytes
+@24.221 chess/painter native compiler functions=streamed
+@29.359 chess/painter compile source=screen-message status=ok us=5324288 peak_js_bytes=1227608 module_bytes=33840 sha=dd360ab6af975078
+@29.437 TYPEDCOMPILE {"app":"chess/painter","beforeUs":19642,"setupUs":45702,"callUs":5078955,"freeUs":49705,"heap":{"mallocs":529,"frees":465,"reallocs":447,"reused":505,"us":52961},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":1146,"runUs":19414,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":10081,"runUs":17438,"liveBytes":332272},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":7333,"runUs":60705,"liveBytes":478008},{"path":"chess/painter/link.js","bytecode":"parsed","inCall":false,"loadUs":10775,"runUs":647,"liveBytes":478008},{"path":"typed/rv32-inline.js","bytecode":"cached","inCall":true,"loadUs":1753,"runUs":9430,"liveBytes":553972},{"path":"typed/rv32-loops.js","bytecode":"cached","inCall":true,"loadUs":4744,"runUs":2836,"liveBytes":582368}]}
+@29.464 CGAL {"ev":"first","id":"B-01","ms":568.0,"sub":1,"pass":0,"ev100":14.9748,"skyRebuilt":1}
+@30.615 CGAL {"ev":"pass","id":"B-01","pass":1,"renderMs":1113.2,"cyclesPerSample":15570.3,"ev100":14.9748}
+@31.984 CGAL {"ev":"pass","id":"B-01","pass":2,"renderMs":2366.2,"cyclesPerSample":16560.7,"ev100":15.3618}
+@34.211 CGAL {"ev":"pass","id":"B-01","pass":3,"renderMs":3964.0,"cyclesPerSample":18499.2,"ev100":15.3618}
+@34.339 candela cache stored seq=2 module_bytes=66816 us=28865394 prepare_us=18578369 write_us=9982571 commit_us=304454 free_kb=7816
+@36.485 CGAL {"ev":"pass","id":"B-01","pass":4,"renderMs":5675.8,"cyclesPerSample":19878.6,"ev100":15.3618}
+@38.659 CGAL {"ev":"pass","id":"B-01","pass":5,"renderMs":7347.5,"cyclesPerSample":20588.8,"ev100":15.3618}
+@39.571 candela-gallery cache miss key_us=1228 read_us=115368
+@39.937 typed compiler bytecode: candela-gallery/link.js 714 bytes
+@40.032 candela-gallery native compiler functions=streamed
+@40.032 candela-gallery native compiler policy=kernel
+@40.319 typed compiler bytecode: typed/rv32-kernel.js 27677 bytes
+@43.285 CGAL {"ev":"pass","id":"B-01","pass":6,"renderMs":11456.3,"cyclesPerSample":26775.9,"ev100":15.3618}
+@44.233 files cache stored seq=3 module_bytes=243644 us=9892645 prepare_us=20226 write_us=9419856 commit_us=452563 free_kb=7748
+@48.547 CGAL {"ev":"pass","id":"B-01","pass":7,"renderMs":15973.2,"cyclesPerSample":32010.0,"ev100":15.3618}
+@54.681 CGAL {"ev":"pass","id":"B-01","pass":8,"renderMs":21190.2,"cyclesPerSample":37128.4,"ev100":15.3679}
+@54.850 editor cache stored seq=4 module_bytes=243644 us=10610749 prepare_us=63129 write_us=10200001 commit_us=347619 free_kb=7508
+@59.819 CGAL {"ev":"pass","id":"B-01","pass":9,"renderMs":25337.8,"cyclesPerSample":39470.6,"ev100":15.3679}
+@64.720 CGAL {"ev":"pass","id":"B-01","pass":10,"renderMs":29281.9,"cyclesPerSample":41054.5,"ev100":15.3679}
+@65.771 agenda cache stored seq=5 module_bytes=243644 us=10919156 prepare_us=71903 write_us=10477648 commit_us=369605 free_kb=7268
+@68.659 CGAL {"ev":"pass","id":"B-01","pass":11,"renderMs":32725.4,"cyclesPerSample":41717.8,"ev100":15.3679}
+@72.647 CGAL {"ev":"pass","id":"B-01","pass":12,"renderMs":36156.1,"cyclesPerSample":42262.2,"ev100":15.3679}
+@76.490 CGAL {"ev":"pass","id":"B-01","pass":13,"renderMs":39368.1,"cyclesPerSample":42479.5,"ev100":15.3679}
+@77.410 chess cache stored seq=6 module_bytes=276412 us=11636494 prepare_us=92646 write_us=11084610 commit_us=459238 free_kb=7028
+@79.771 chess/painter cache stored seq=7 module_bytes=33840 us=2357350 prepare_us=71957 write_us=1796953 commit_us=488440 free_kb=6756
+@80.277 CGAL {"ev":"pass","id":"B-01","pass":14,"renderMs":42553.6,"cyclesPerSample":42639.6,"ev100":15.3679}
+@82.146 CGAL {"ev":"scene","id":"B-01","arm":"cpp","w":160,"h":160,"reason":"time","passes":14,"samples":383840,"firstImageMs":568.0,"coarseMs":396.1,"halfMs":7815.9,"pass1Ms":8682.6,"renderMs":44076.6,"shownMs":60026.4,"secPerPass":2.9397,"samplesPerSec":8708.5,"cyclesPerSample":41237.5,"displays":33,"displayMs":8658.4,"displayCyclesMean":94343774,"skyRebuilt":1,"ev100":15.3679,"metered":3,"meanLum":8450.35,"internalFree0":63167,"internalMinFree":48707,"psramFree0":20167216,"psramMinFree":12851088,"internalPeakUse":14460,"psramPeakUse":7316128}
+@82.519 CGAL {"ev":"first","id":"R-01","ms":377.0,"sub":1,"pass":0,"ev100":8.5206,"skyRebuilt":1}
+@85.749 CGAL {"ev":"pass","id":"R-01","pass":1,"renderMs":3036.0,"cyclesPerSample":42390.7,"ev100":8.5206}
+@88.978 CGAL {"ev":"pass","id":"R-01","pass":2,"renderMs":5959.8,"cyclesPerSample":41716.3,"ev100":8.3467}
+@91.813 CGAL {"ev":"pass","id":"R-01","pass":3,"renderMs":8449.4,"cyclesPerSample":39456.0,"ev100":8.3467}
+@94.621 CGAL {"ev":"pass","id":"R-01","pass":4,"renderMs":10955.0,"cyclesPerSample":38360.6,"ev100":8.3467}
+@97.529 CGAL {"ev":"pass","id":"R-01","pass":5,"renderMs":13563.7,"cyclesPerSample":38011.2,"ev100":8.3467}
+@100.314 CGAL {"ev":"pass","id":"R-01","pass":6,"renderMs":16002.7,"cyclesPerSample":37374.3,"ev100":8.3467}
+@103.302 CGAL {"ev":"pass","id":"R-01","pass":7,"renderMs":18649.9,"cyclesPerSample":37343.2,"ev100":8.3467}
+@105.915 CGAL {"ev":"pass","id":"R-01","pass":8,"renderMs":21119.4,"cyclesPerSample":37008.0,"ev100":8.3742}
+@109.008 CGAL {"ev":"pass","id":"R-01","pass":9,"renderMs":23880.7,"cyclesPerSample":37189.3,"ev100":8.3742}
+@111.928 CGAL {"ev":"pass","id":"R-01","pass":10,"renderMs":26467.2,"cyclesPerSample":37100.7,"ev100":8.3742}
+@115.010 CGAL {"ev":"pass","id":"R-01","pass":11,"renderMs":29245.0,"cyclesPerSample":37279.1,"ev100":8.3742}
+@117.882 CGAL {"ev":"pass","id":"R-01","pass":12,"renderMs":31911.2,"cyclesPerSample":37291.2,"ev100":8.3742}
+@120.759 CGAL {"ev":"pass","id":"R-01","pass":13,"renderMs":34419.1,"cyclesPerSample":37130.4,"ev100":8.3742}
+@123.641 CGAL {"ev":"pass","id":"R-01","pass":14,"renderMs":37006.9,"cyclesPerSample":37069.6,"ev100":8.3742}
+@126.835 CGAL {"ev":"pass","id":"R-01","pass":15,"renderMs":39868.2,"cyclesPerSample":37275.7,"ev100":8.3742}
+@129.963 CGAL {"ev":"pass","id":"R-01","pass":16,"renderMs":42638.6,"cyclesPerSample":37374.0,"ev100":8.3742}
+@132.799 CGAL {"ev":"pass","id":"R-01","pass":17,"renderMs":45318.0,"cyclesPerSample":37386.2,"ev100":8.3742}
+@135.779 CGAL {"ev":"pass","id":"R-01","pass":18,"renderMs":47970.7,"cyclesPerSample":37376.0,"ev100":8.3742}
+@138.794 CGAL {"ev":"pass","id":"R-01","pass":19,"renderMs":50640.3,"cyclesPerSample":37378.4,"ev100":8.3742}
+@141.701 CGAL {"ev":"pass","id":"R-01","pass":20,"renderMs":53210.0,"cyclesPerSample":37312.8,"ev100":8.3742}
+@142.312 CGAL {"ev":"scene","id":"R-01","arm":"cpp","w":160,"h":160,"reason":"time","passes":20,"samples":519200,"firstImageMs":377.0,"coarseMs":237.4,"halfMs":907.9,"pass1Ms":3605.8,"renderMs":53658.8,"shownMs":60010.0,"secPerPass":2.6457,"samplesPerSec":9675.9,"cyclesPerSample":37105.9,"displays":38,"displayMs":6150.7,"displayCyclesMean":58104111,"skyRebuilt":1,"ev100":8.3742,"metered":3,"meanLum":62.3238,"internalFree0":62575,"internalMinFree":58423,"psramFree0":14156064,"psramMinFree":11219360,"internalPeakUse":4152,"psramPeakUse":2936704}
+@142.813 CGAL {"ev":"first","id":"L-03","ms":505.1,"sub":1,"pass":0,"ev100":15.9390,"skyRebuilt":1}
+@144.522 CGAL {"ev":"pass","id":"L-03","pass":1,"renderMs":1793.4,"cyclesPerSample":25066.2,"ev100":15.9390}
+@146.195 CGAL {"ev":"pass","id":"L-03","pass":2,"renderMs":3296.2,"cyclesPerSample":23067.5,"ev100":16.1636}
+@147.771 CGAL {"ev":"pass","id":"L-03","pass":3,"renderMs":4700.5,"cyclesPerSample":21924.5,"ev100":16.1636}
+@149.389 CGAL {"ev":"pass","id":"L-03","pass":4,"renderMs":6170.2,"cyclesPerSample":21595.7,"ev100":16.1636}
+@150.792 CGAL {"ev":"pass","id":"L-03","pass":5,"renderMs":7421.6,"cyclesPerSample":20782.6,"ev100":16.1636}
+@152.309 CGAL {"ev":"pass","id":"L-03","pass":6,"renderMs":8712.4,"cyclesPerSample":20334.4,"ev100":16.1636}
+@153.933 CGAL {"ev":"pass","id":"L-03","pass":7,"renderMs":10189.5,"cyclesPerSample":20387.7,"ev100":16.1636}
+@155.642 CGAL {"ev":"pass","id":"L-03","pass":8,"renderMs":11758.6,"cyclesPerSample":20588.9,"ev100":16.1648}
+@157.368 CGAL {"ev":"pass","id":"L-03","pass":9,"renderMs":13297.0,"cyclesPerSample":20686.8,"ev100":16.1648}
+@158.863 CGAL {"ev":"pass","id":"L-03","pass":10,"renderMs":14656.2,"cyclesPerSample":20518.1,"ev100":16.1648}
+@160.652 CGAL {"ev":"pass","id":"L-03","pass":11,"renderMs":16258.8,"cyclesPerSample":20695.0,"ev100":16.1648}
+@162.196 CGAL {"ev":"pass","id":"L-03","pass":12,"renderMs":17634.1,"cyclesPerSample":20576.6,"ev100":16.1648}
+@163.800 CGAL {"ev":"pass","id":"L-03","pass":13,"renderMs":19087.2,"cyclesPerSample":20560.3,"ev100":16.1648}
+@165.432 CGAL {"ev":"pass","id":"L-03","pass":14,"renderMs":20528.2,"cyclesPerSample":20531.3,"ev100":16.1648}
+@166.901 CGAL {"ev":"pass","id":"L-03","pass":15,"renderMs":21837.1,"cyclesPerSample":20385.3,"ev100":16.1648}
+@168.741 CGAL {"ev":"pass","id":"L-03","pass":16,"renderMs":23531.7,"cyclesPerSample":20595.9,"ev100":16.1648}
+@170.280 CGAL {"ev":"pass","id":"L-03","pass":17,"renderMs":24930.6,"cyclesPerSample":20537.6,"ev100":16.1648}
+@171.925 CGAL {"ev":"pass","id":"L-03","pass":18,"renderMs":26375.4,"cyclesPerSample":20521.7,"ev100":16.1648}
+@173.543 CGAL {"ev":"pass","id":"L-03","pass":19,"renderMs":27815.4,"cyclesPerSample":20500.3,"ev100":16.1648}
+@175.222 CGAL {"ev":"pass","id":"L-03","pass":20,"renderMs":29316.5,"cyclesPerSample":20527.5,"ev100":16.1648}
+@176.772 CGAL {"ev":"pass","id":"L-03","pass":21,"renderMs":30703.6,"cyclesPerSample":20475.7,"ev100":16.1648}
+@178.394 CGAL {"ev":"pass","id":"L-03","pass":22,"renderMs":32172.1,"cyclesPerSample":20478.3,"ev100":16.1648}
+@179.946 CGAL {"ev":"pass","id":"L-03","pass":23,"renderMs":33551.0,"cyclesPerSample":20428.1,"ev100":16.1648}
+@181.774 CGAL {"ev":"pass","id":"L-03","pass":24,"renderMs":35207.7,"cyclesPerSample":20544.9,"ev100":16.1648}
+@183.438 CGAL {"ev":"pass","id":"L-03","pass":25,"renderMs":36712.4,"cyclesPerSample":20566.6,"ev100":16.1648}
+@184.954 CGAL {"ev":"pass","id":"L-03","pass":26,"renderMs":38044.8,"cyclesPerSample":20493.8,"ev100":16.1648}
+@186.716 CGAL {"ev":"pass","id":"L-03","pass":27,"renderMs":39642.6,"cyclesPerSample":20564.0,"ev100":16.1648}
+@188.054 CGAL {"ev":"pass","id":"L-03","pass":28,"renderMs":40828.6,"cyclesPerSample":20423.2,"ev100":16.1648}
+@189.781 CGAL {"ev":"pass","id":"L-03","pass":29,"renderMs":42371.3,"cyclesPerSample":20464.5,"ev100":16.1648}
+@191.115 CGAL {"ev":"pass","id":"L-03","pass":30,"renderMs":43701.5,"cyclesPerSample":20403.7,"ev100":16.1648}
+@193.012 CGAL {"ev":"pass","id":"L-03","pass":31,"renderMs":45273.5,"cyclesPerSample":20456.4,"ev100":16.1648}
+@194.877 CGAL {"ev":"pass","id":"L-03","pass":32,"renderMs":46947.5,"cyclesPerSample":20549.6,"ev100":16.1669}
+@196.461 CGAL {"ev":"pass","id":"L-03","pass":33,"renderMs":48369.0,"cyclesPerSample":20530.5,"ev100":16.1669}
+@198.346 CGAL {"ev":"pass","id":"L-03","pass":34,"renderMs":50093.3,"cyclesPerSample":20637.9,"ev100":16.1669}
+@199.931 CGAL {"ev":"pass","id":"L-03","pass":35,"renderMs":51506.2,"cyclesPerSample":20611.8,"ev100":16.1669}
+@201.473 CGAL {"ev":"pass","id":"L-03","pass":36,"renderMs":52874.7,"cyclesPerSample":20572.0,"ev100":16.1669}
+@202.495 CGAL {"ev":"scene","id":"L-03","arm":"cpp","w":160,"h":160,"reason":"time","passes":36,"samples":938880,"firstImageMs":505.1,"coarseMs":354.5,"halfMs":834.4,"pass1Ms":2207.6,"renderMs":53715.4,"shownMs":60006.2,"secPerPass":1.4646,"samplesPerSec":17478.8,"cyclesPerSample":20514.5,"displays":37,"displayMs":6004.0,"displayCyclesMean":58231141,"skyRebuilt":1,"ev100":16.1669,"metered":4,"meanLum":9473.18,"internalFree0":62515,"internalMinFree":57883,"psramFree0":11656980,"psramMinFree":10399900,"internalPeakUse":4632,"psramPeakUse":1257080}
+@203.062 CGAL {"ev":"first","id":"G-01","ms":577.7,"sub":1,"pass":0,"ev100":16.0232,"skyRebuilt":1}
+@206.380 CGAL {"ev":"pass","id":"G-01","pass":1,"renderMs":3396.2,"cyclesPerSample":47450.7,"ev100":16.0232}
+@209.737 CGAL {"ev":"pass","id":"G-01","pass":2,"renderMs":6399.6,"cyclesPerSample":44801.2,"ev100":16.3264}
+@213.397 CGAL {"ev":"pass","id":"G-01","pass":3,"renderMs":9598.9,"cyclesPerSample":44835.5,"ev100":16.3264}
+@216.820 candela-gallery compile source=bundle status=ok us=177222337 peak_js_bytes=9865420 module_bytes=787712 sha=66c89cfe99cbd456
+@216.905 TYPEDCOMPILE {"app":"candela-gallery","beforeUs":108572,"setupUs":21287,"callUs":176418913,"freeUs":310932,"heap":{"mallocs":6220,"frees":6156,"reallocs":12149,"reused":19058,"us":1670212},"evals":[{"path":"typed/tape.js","bytecode":"cached","inCall":false,"loadUs":2632,"runUs":55604,"liveBytes":251196},{"path":"typed/wasm.js","bytecode":"cached","inCall":false,"loadUs":50510,"runUs":50014,"liveBytes":332264},{"path":"typed/rv32.js","bytecode":"cached","inCall":false,"loadUs":11818,"runUs":51560,"liveBytes":478000},{"path":"candela-gallery/link.js","bytecode":"parsed","inCall":false,"loadUs":11745,"runUs":1621,"liveBytes":478000},{"path":"typed/rv32-inline.js","bytecode":"cached","inCall":true,"loadUs":3324,"runUs":3803,"liveBytes":1599216},{"path":"typed/rv32-kernel.js","bytecode":"parsed","inCall":true,"loadUs":275828,"runUs":9203,"liveBytes":1701944},{"path":"typed/rv32-loops.js","bytecode":"cached","inCall":true,"loadUs":2917,"runUs":6330,"liveBytes":1718052}]}
+@217.068 CGAL {"ev":"typed-load","compileMs":177505.1,"relocateMs":129.0,"moduleBytes":787712,"segmentBytes":786988,"arenaWords":12563}
+@217.295 CGAL {"ev":"pass","id":"G-01","pass":4,"renderMs":12954.5,"cyclesPerSample":45367.6,"ev100":16.3264}
+@220.551 CGAL {"ev":"pass","id":"G-01","pass":5,"renderMs":15737.6,"cyclesPerSample":44113.1,"ev100":16.3264}
+@223.863 CGAL {"ev":"pass","id":"G-01","pass":6,"renderMs":18625.5,"cyclesPerSample":43522.4,"ev100":16.3264}
+@227.117 CGAL {"ev":"pass","id":"G-01","pass":7,"renderMs":21397.0,"cyclesPerSample":42866.4,"ev100":16.3264}
+@230.660 CGAL {"ev":"pass","id":"G-01","pass":8,"renderMs":24393.2,"cyclesPerSample":42769.4,"ev100":16.3292}
+@233.917 CGAL {"ev":"pass","id":"G-01","pass":9,"renderMs":27114.3,"cyclesPerSample":42259.2,"ev100":16.3292}
+@237.149 CGAL {"ev":"pass","id":"G-01","pass":10,"renderMs":29952.1,"cyclesPerSample":42017.4,"ev100":16.3292}
+@240.363 CGAL {"ev":"pass","id":"G-01","pass":11,"renderMs":32659.5,"cyclesPerSample":41654.8,"ev100":16.3292}
+@243.363 CGAL {"ev":"pass","id":"G-01","pass":12,"renderMs":35410.5,"cyclesPerSample":41402.4,"ev100":16.3292}
+@243.554 candela-gallery cache stored seq=8 module_bytes=787712 us=26614880 prepare_us=53493 write_us=26245116 commit_us=316271 free_kb=6720
+@244.967 CGAL {"ev":"pass","id":"G-01","pass":13,"renderMs":36897.5,"cyclesPerSample":39823.1,"ev100":16.3292}
+@246.522 CGAL {"ev":"pass","id":"G-01","pass":14,"renderMs":38321.5,"cyclesPerSample":38406.1,"ev100":16.3292}
+@248.054 CGAL {"ev":"pass","id":"G-01","pass":15,"renderMs":39739.4,"cyclesPerSample":37172.3,"ev100":16.3292}
+@249.624 CGAL {"ev":"pass","id":"G-01","pass":16,"renderMs":41176.0,"cyclesPerSample":36109.4,"ev100":16.3292}

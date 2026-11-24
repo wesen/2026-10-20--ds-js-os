@@ -547,3 +547,201 @@ kernel's priority breaks turns: keyboard, snake, settings and nat-dial overran w
 ### Technical details
 - Data: `various/board3/` (steps.jsonl, summary.json, logs of the cold, warm, verify, corrupt and Typed steps, two
   screenshots).
+
+## Step 8: Session B on merged main: no crashes, 18/18 on both arms, B-01's display digest on both
+
+The coordinator merged this branch at 2c7f5f4 into main (7a503c0) with PICOCALC-COMPILER-DEVICE-COST (ebfe8fb) and
+asked for the final measurements on merged main, and for B-01's display digest on both arms (a user reported that
+B-01 may look off). I stopped session B while it still waited for the lock (it had not touched the board), merged main
+(54ec123: its tree equals main ebbade8) and ran it on image 85be45dd. With the writer below the kernel no world
+crashed in the whole session, both arms agree 18/18, and B-01's display digest is 23d7885f on both. The cold health
+check stopped on a harness race, fixed in f465d37.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1. Coordinator: "to speed things up I merged your branch at 2c7f5f4 into main
+optimistically (7a503c0), together with PICOCALC-COMPILER-DEVICE-COST (ebfe8fb) ... rebuild from merged main for your
+final measurements and say which base you used. Also: the user reports something may look off when rendering B-01 on
+the device; your image makes Typed the default arm — when you have the board, check B-01's display digest on both
+arms (reference disp 23d7885f for both) and note what the screen shows."
+**Assistant interpretation:** Re-base the device evidence on merged main; add a B-01 check with screenshots.
+**Inferred user intent:** Know whether the Typed default changed what B-01 shows.
+**Commit (code):** 54ec123 (merge of main ebbade8), image 85be45dd; harness fix f465d37.
+
+### What I did
+- `git merge main` (54ec123), `build.sh playable /tmp/picocalc-compile-cache-dev3`: `playable 54ec123 dirty=false
+  app 85be45dd...`. Gates on 54ec123: `make test` exit 0; `make test-host`: 4,888,369 instructions, ray 430f0d501659,
+  6981 words, 25/25; with `{"policy":"kernel"}`: 3,239,635 instructions, 430f0d501659, 6981 words, 25/25.
+- `scripts/01-boots.py /tmp/picocalc-compile-cache-board5 --build /tmp/picocalc-compile-cache-dev3 flash boot:cold1:210
+  cmd:typed_cache shot:cold1-after boot:warm1:45 cmd:typed_cache_verify cmd:gallery_arm_typed cmd:gallery_scene_B-01
+  watch:b01-typed:25 shot:b01-typed cmd:gallery_arm_cpp cmd:gallery_scene_B-01 watch:b01-cpp:25 shot:b01-cpp
+  cmd:gallery_arm_typed gallery:typed gallery:cpp health:warm cmd:typed_cache_corrupt_chess_flip
+  cmd:typed_cache_corrupt_agenda_cut health:corrupt watch:corrupt-writes:45 cmd:typed_cache_clear health:cold ...`,
+  then `make -C <main> restore-playable OUT=/tmp/picocalc-compile-cache-restore4`.
+
+### What worked
+- `03-summary.py` (cold boot all misses, warm boot all hits; SHA prefixes equal for every boot app):
+
+  | app | cold s | share | hit ms | key ms | read ms | write ms | bytes |
+  |---|---|---|---|---|---|---|---|
+  | agenda | 2.75 | 0.686 | 78.9 | 24.0 | 54.9 | 8,809 | 243,644 |
+  | candela | 2.44 | 0.305 | 59.5 | 40.7 | 18.8 | 9,875 | 66,816 |
+  | chess | 4.37 | 0.728 | 89.2 | 27.5 | 61.7 | 9,947 | 276,412 |
+  | chess/painter | 5.52 | 0.690 | 28.2 | 10.4 | 17.8 | 1,967 | 33,840 |
+  | editor | 3.51 | 0.584 | 78.7 | 23.9 | 54.8 | 10,617 | 243,644 |
+  | files | 1.50 | 0.499 | 76.5 | 21.4 | 55.0 | 9,877 | 243,644 |
+  | candela-gallery | 182.3 (background) | — | 306.4 | 1.1 | 305.3 | 22,841 | 787,712 |
+
+  First frames (kernel ms), cold / warm: Editor 18,388 / 3,622, Chess 18,900 / 4,111, Agenda 20,840 / 5,923, Files
+  21,182 / 6,385; reset to the last boot compile or hit 18.0 s / 3.4 s.
+- No `crashed` line except nat-import's in any of the session's logs: the cold boot's 1.1 MB of writes, the Typed
+  program's 788 KB, the corrupt gate's rewrites.
+- The Typed default on a cold boot: the gallery drew C++ while the program compiled in the background
+  (`candela-gallery compile ... us=182308775 peak_js_bytes=13065500 module_bytes=787712 sha=66c89cfe99cbd456`; 113.5 s
+  in A3, where no writer ran beside it), stored it in 23.3 s, and the warm boot loaded it as the default arm:
+  `candela-gallery cache hit us=306396`, `typed-load compileMs 327.3 relocateMs 47.2`.
+- `typed cache verify`: `TCVERIFY {"checked":6,"same":6}`.
+- `gallery:typed` 18/18 against `typed-4-passes.jsonl`, `gallery:cpp` 18/18 against `rv32-4-passes.jsonl`.
+- B-01: Typed `frame0 952a91d9 acc 03389cb1 disp 23d7885f`; C++ `frame0 e2ba6956 acc 3b52c63c disp 23d7885f`: both
+  equal to their references, and the display digest is the same on both arms. The screenshots (`09-shot-b01-typed.png`
+  at 18 spp, `13-shot-b01-cpp.png` at 39 spp) show the same picture: a red sphere on a grey floor under a grey sky,
+  with a speckled, mottled sphere surface and a grainy floor (path-tracing noise at low sample counts; the Typed shot
+  has fewer samples, so it is noisier and its sphere reads brighter). Nothing on screen differs between the arms beyond
+  the sample count.
+- `health:warm` and `health:corrupt` passed (keyboard 0 errors); the corrupt boot deleted both damaged entries,
+  recompiled and stored them again.
+
+### What didn't work
+- `health:cold` stopped in `device.painter` with `StopIteration`: the painter's compile printed its TYPEDCOMPILE
+  record (new in DEVICE-COST) in pieces, and the reply to `painter` landed inside it:
+  `..."liveBytes":553924}{"sources":1,"compiles":1,"installed":false,...`. A harness race, not a firmware fault;
+  the session's remaining steps did not run.
+
+### What I learned
+- The Typed compile beside the writer took 182 s instead of 113.5 s: every flash piece stalls core 0 too.
+
+### What was tricky to build
+- f465d37: `device.painter` looks for `{"sources"` anywhere in a line and returns None for a reply it cannot read;
+  `wait_painter` polls again. Two fake-board tests (`glued` replies in `tests/board/fakeboard.py`).
+
+### What warrants a second pair of eyes
+- TYPEDCOMPILE records are printed with several `printf` calls; any console reply can land inside one.
+
+### What should be done in the future
+- Print TYPEDCOMPILE in one write.
+
+### Code review instructions
+- `bench/board/device.py` `painter`, `wait_painter`; `tests/board/test_device.py` the two new PainterWait tests.
+
+### Technical details
+- Data: `various/board5/` (steps.jsonl, summary.json, logs, the B-01 screenshots, both gallery.json and cgal.jsonl).
+
+## Step 9: Session C: health on a cold boot, and the restores
+
+The cold health gate that the harness race cut short in Step 8 passes on the merged image. The first attempt never
+reached the board (its 30-minute timeout ran out behind two other agents' studies), so I stopped the restore queued
+after it rather than flash a board my session had not touched. The second attempt ran. Its restore then failed on a
+leftover output directory and ran again.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1 and Step 8.
+**Assistant interpretation:** Finish the cold-boot health gate on merged main and leave the board on playable.
+**Inferred user intent:** All four boot gates on the image main now builds.
+**Commit (code):** 54ec123 (image 85be45dd); harness f465d37.
+
+### What I did
+- `scripts/01-boots.py /tmp/picocalc-compile-cache-board6 --build /tmp/picocalc-compile-cache-dev3 flash boot:warm2:40
+  cmd:typed_cache_clear health:cold watch:cold-writes:150 cmd:typed_cache cmd:typed_cache_clear cmd:typed_cache`.
+- `make -C <main> restore-playable OUT=/tmp/picocalc-compile-cache-restore5`: `FileExistsError: [Errno 17] File
+  exists: '/tmp/picocalc-compile-cache-restore5'` (left by the stopped attempt); then `OUT=...-restore6`.
+
+### What worked
+- `health:cold` passed with peripherals on: the painter compiled cold (`compile_us 5788081`), keyboard 243 transfers,
+  0 errors in the 5 s window, no world restarting. The harness fix read the painter's reply this time.
+- The boot before it (`boot:warm2`) found the cache empty and was another cold boot: compiles 2.44 / 1.50 / 3.50 /
+  2.74 / 4.37 / 5.23 s (Candela, Files, Editor, Agenda, Chess, painter), all within 73 % of their deadlines.
+- No `crashed` line except nat-import's in the session; the writer stored all six boot entries after the cold health
+  boot (about 10–12 s per 244 KB module), and the gallery's Typed program compiled again in the background (180.3 s,
+  13.02 MB peak, SHA `66c89cfe99cbd456`).
+
+### What didn't work
+- The Typed compile finished after the session's last `typed cache clear`, so the writer stored its 788 KB entry before
+  the restore: one hidden entry stays in `/files/.cache/typed` on the board. The playable image 54cfa09b does not read
+  it; a cache-aware firmware with the same compiler and program would hit it, and any other one evicts it.
+
+### What I learned
+- A clear while a compile runs does not leave the cache empty; `typed cache clear` would need to hold the writer and
+  drop the queue to promise that.
+
+### What was tricky to build
+- Nothing new: the sequence was Step 8's, minus the steps that had passed.
+
+### What warrants a second pair of eyes
+- `typed cache clear` against a queued or running write.
+
+### What should be done in the future
+- Make `typed cache clear` drop queued writes.
+
+### Code review instructions
+- None beyond Step 8.
+
+### Technical details
+- Data: `various/board6/`.
+
+## Step 10: Session D on main with CANDELA-KERNEL-CODEGEN's emitter release
+
+The coordinator merged CANDELA-KERNEL-CODEGEN's fix (each function's emitter released after lowering) into main and
+asked for the final Typed-arm runs on it. I merged main (bd142fa: main cfcb183 plus this branch's harness fix and
+diary) and ran a short session on image 3db56908. With both fixes the gallery's Typed program compiles at a 9.87 MB
+peak: 17.8 MB or more with neither, 13.0–13.4 MB with the collector alone. The module is byte-identical (SHA
+`66c89cfe99cbd456`), so session B's 18/18 digests stand. The cache ends empty and the board is back on playable.
+
+### Prompt Context
+**User prompt (verbatim):** see Step 1. Coordinator: "CANDELA-KERNEL-CODEGEN found that with its compiler changes the
+device compile of the gallery's Typed program ran out of memory (peak 17.8 MB, Settings/compositor crashed), fixed by
+releasing each function's emitter after lowering (9c81fae, now merged into main ...). Merge main before your final
+Typed-arm runs ..."
+**Assistant interpretation:** Re-run the Typed first use and the cached load on an image with both memory fixes.
+**Inferred user intent:** Final numbers that hold for what main builds now.
+**Commit (code):** bd142fa (image 3db56908).
+
+### What I did
+- Restore6 (`make -C <main> restore-playable OUT=/tmp/picocalc-compile-cache-restore6`): 54cfa09b, health passed.
+- `git merge main` (bd142fa; main changed `compiler/typed/typed-rv32.js` and `rv32/compile.js`, 5 lines), build
+  `playable bd142fa dirty=false app 3db56908...`; gates: `make test` exit 0, `make test-host` ray 430f0d501659, 6981
+  words, 25/25 under both policies (4,888,369 and 3,239,635 instructions).
+- `scripts/01-boots.py /tmp/picocalc-compile-cache-board7 --build /tmp/picocalc-compile-cache-dev4 flash boot:cold1:250
+  cmd:typed_cache boot:warm1:45 cmd:typed_cache_verify cmd:typed_cache_clear cmd:typed_cache`, then restore7.
+
+### What worked
+- Cold boot (every key new, since `typed/rv32.js` changed): compiles 2.44 / 1.51 / 3.52 / 2.73 / 4.34 / 5.32 s
+  (Candela, Files, Editor, Agenda, Chess, painter; Chess 72 % of its deadline), the same SHA prefixes as every earlier
+  session; first frames at 18.4–21.2 s (kernel clock).
+- The Typed first use in the background: `candela-gallery compile ... us=177222337 peak_js_bytes=9865420
+  module_bytes=787712 sha=66c89cfe99cbd456`, stored in 26.6 s (seq 8).
+- Warm boot: hits in 29–89 ms for the boot apps; the Typed program as the default arm: `candela-gallery cache hit
+  us=321626`, `typed-load compileMs 350.0 relocateMs 69.1`; first frames at 3.7–6.4 s.
+- `TCVERIFY {"checked":6,"same":6}`; no `crashed` line except nat-import's; `typed cache clear` then
+  `{"entries":0,...,"freeKb":7884}` (this also removed the entry Step 9 left behind).
+- Restore7: 54cfa09b, health passed (i2c0 253 transfers, 0 errors).
+
+### What didn't work
+- Nothing in this session.
+
+### What I learned
+- The two memory fixes are independent and add up: the collector reclaims cycles, the emitter release drops live
+  data. Together they bring the Typed compile from more than 17.8 MB to 9.87 MB.
+
+### What was tricky to build
+- Nothing new.
+
+### What warrants a second pair of eyes
+- The first use is 177–182 s beside the writer and the C++ arm (113.5 s with nothing beside it).
+
+### What should be done in the future
+- Nothing for this ticket; the compile time belongs to the compiler tickets.
+
+### Code review instructions
+- None beyond Steps 6–8.
+
+### Technical details
+- Data: `various/board7/` (steps.jsonl, summary.json, cold, warm and verify logs).
